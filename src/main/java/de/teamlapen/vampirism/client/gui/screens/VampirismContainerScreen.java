@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -26,7 +23,6 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -138,22 +134,26 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             this.level = Component.empty();
         }
 
-        this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137 + 7, 104, 21, () -> new ArrayList<>(this.menu.getTaskInfos())));
+        this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137, 104, 21, () -> new ArrayList<>(this.menu.getTaskInfos())));
 
-        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
+        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, 40, 205, 20, BACKGROUND, 256, 256, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
                 Minecraft.getInstance().setScreen(new SkillsScreen(FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).orElse(null), this));
             }
         }, Component.empty()));
         button1.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.skill_screen")));
 
-        var button2 = this.addRenderableWidget(new ImageButton(this.leftPos + 26, this.topPos + 90, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
-            IPlayableFaction<?> factionNew = VampirismPlayerAttributes.get(this.minecraft.player).faction;
-            Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(factionNew.getColor()), true));
+        var button2 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 126, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
+            EditSelectActionScreen.show();
         }, Component.empty()));
         button2.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_actions")));
+        var button3 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 147, 20, 20, 0, 205, 20, BACKGROUND, 256, 256, (context) -> {
+            EditSelectMinionTaskScreen.show();
+        }, Component.empty()));
+        button3.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_tasks")));
+        button3.visible = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).map(a -> a.getLordLevel()> 0).orElse(false);
 
-        Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 47, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
+        Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 29, this.topPos + 90, 20, 20, 20, 205, 20, BACKGROUND, 256, 256, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
         }, Component.empty()));
         appearanceButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.appearance_menu")));
@@ -249,7 +249,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             public TaskEntry(ITaskInstance taskInstance) {
                 super(taskInstance);
 
-                if (!taskInstance.isUnique()) {
+                if (!taskInstance.isUnique(menu.getRegistry())) {
                     this.button = new ImageButton(0, 0, 8, 11, 0, 229, 11, TASKMASTER_GUI_TEXTURE, 256, 256, this::clickLocator, Component.empty());
                     this.button.setTooltip(Tooltip.create(createTooltip()));
                 }

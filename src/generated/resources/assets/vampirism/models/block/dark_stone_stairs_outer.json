@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "vampirism:block/dark_stone",
+    "side": "vampirism:block/dark_stone",
+    "top": "vampirism:block/dark_stone"
+  }
+}

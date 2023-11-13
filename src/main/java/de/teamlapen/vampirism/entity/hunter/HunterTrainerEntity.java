@@ -5,18 +5,18 @@ import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -98,6 +99,13 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         }
     }
 
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        this.setItemSlot(EquipmentSlot.HEAD, HatType.HAT_0.getHeadItem());
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return super.removeWhenFarAway(distanceToClosestPlayer) && getHome() == null;
@@ -124,8 +132,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
             if (!this.level().isClientSide && lvl > 0) {
-                int levelCorrect = HunterLevelingConf.instance().isLevelValidForTrainer(lvl + 1);
-                if (levelCorrect == 0) {
+                if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
                         this.trainee = player;
@@ -134,10 +141,8 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         player.sendSystemMessage(Component.translatable("text.vampirism.i_am_busy_right_now"));
                     }
 
-                } else if (levelCorrect == -1) {
-                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_wrong"));
                 } else {
-                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_to_high"));
+                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_wrong"));
                 }
 
             }

@@ -139,6 +139,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpNaturalArmorIncrease;
     public final ForgeConfigSpec.IntValue vpNaturalArmorToughnessIncrease;
     public final ForgeConfigSpec.BooleanValue vpArmorPenalty;
+    public final ForgeConfigSpec.BooleanValue vpNightVisionDisabled;
+    public final ForgeConfigSpec.BooleanValue vpBloodVisionDisabled;
 
 
     public final ForgeConfigSpec.IntValue vaFreezeCooldown;
@@ -188,6 +190,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
     public final ForgeConfigSpec.IntValue miDeathRecoveryTime;
     public final ForgeConfigSpec.IntValue miMinionPerLordLevel;
+    public final ForgeConfigSpec.IntValue miEquipmentRepairAmount;
 
     public final ForgeConfigSpec.DoubleValue vrSwordTrainingSpeedMod;
     public final ForgeConfigSpec.IntValue vrBloodChargeSpeedMod;
@@ -246,8 +249,8 @@ public class BalanceConfig {
         taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
         taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
         taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
-        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 1 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 1D, 1D, 20D);
-        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 1 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 1D, 1D, 20D);
+        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 2 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 2D, 1D, 20D);
+        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 2 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 2D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
 
@@ -360,11 +363,14 @@ public class BalanceConfig {
         vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease", 10, 0, 100);
         vpNaturalArmorToughnessIncrease = builder.comment("The amount of natural armor toughness a max level vampire has").defineInRange("naturalArmorToughnessIncrease", 8, 0, 100);
         vpArmorPenalty = builder.comment("Whether vampire have a reduced speed and attack boost when wearing heavy armor").define("armorPenalty", true);
+        vpNightVisionDisabled = builder.comment("Disable vampire night vision").define("nightVisionDisabled", false);
+        vpBloodVisionDisabled = builder.comment("Disable vampire blood vision").define("bloodVisionDisabled", false);
+
 
         //Vampire actions
         builder.category("vampireActions", "va");
         vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
-        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 6, 1, 30);
+        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 3, 1, 30);
         vaFreezeEnabled = builder.define("freezeEnabled", true);
         vaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
         vaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);
@@ -412,6 +418,7 @@ public class BalanceConfig {
         miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);
         miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
         miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
+        miEquipmentRepairAmount = builder.comment("How much the equipments should be repaired on minion resource tasks").defineInRange("equipmentRepairAmount", 10, 1, Integer.MAX_VALUE);
 
         builder.category("vampire_refinements", "vr");
         vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainingSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);

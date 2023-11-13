@@ -132,7 +132,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
                     player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
-                    SanguinareEffect.addRandom(player, true);
+                    SanguinareEffect.addRandom(player, true, true);
                     player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
                     return true;
                 }

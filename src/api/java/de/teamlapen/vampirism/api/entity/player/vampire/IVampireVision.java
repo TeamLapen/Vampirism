@@ -12,4 +12,8 @@ public interface IVampireVision {
     void onDeactivated(IVampirePlayer player);
 
     void tick(IVampirePlayer player);
+
+    default boolean isEnabled() {
+        return true;
+    }
 }

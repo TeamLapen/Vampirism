@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.LogBlock;
@@ -12,6 +14,7 @@ import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
+import de.teamlapen.vampirism.client.renderer.blockentity.ModBlockEntityItemRenderer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
@@ -26,10 +29,14 @@ import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -49,9 +56,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
@@ -66,14 +71,17 @@ public class ClientProxy extends CommonProxy {
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
     private RenderHandler renderHandler;
+    private Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
+    private ModBlockEntityItemRenderer blockEntityItemRenderer;
 
     public ClientProxy() {
         //Minecraft.instance is null during runData.
         //noinspection ConstantConditions
-        if (Minecraft.getInstance() != null) {
-            this.renderHandler = new RenderHandler(Minecraft.getInstance());
+        Minecraft instance = Minecraft.getInstance();
+        if (instance != null) {
+            this.renderHandler = new RenderHandler(instance);
             MinecraftForge.EVENT_BUS.register(this.renderHandler);
-            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
+            ((ReloadableResourceManager) instance.getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
         }
     }
 
@@ -84,6 +92,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
         openScreen(new GarlicDiffuserScreen(tile, title));
+    }
+
+    @Override
+    public void displayFogDiffuserScreen(FogDiffuserBlockEntity tile, Component title) {
+        openScreen(new FogDiffuserScreen(tile, title));
     }
 
     @Override
@@ -122,6 +135,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleBloodValuePacket(@NotNull ClientboundBloodValuePacket msg) {
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyDataConvertibleOverlays((Map<EntityType<? extends PathfinderMob>, ResourceLocation>) (Object) msg.convertibleOverlay());
         Map<ResourceLocation, Float> entities = msg.getValues()[0];
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
         BloodConversionRegistry.applyNewEntitiesResources(entities);
@@ -133,6 +147,9 @@ public class ClientProxy extends CommonProxy {
     public void handlePlayEventPacket(@NotNull ClientboundPlayEventPacket msg) {
         if (msg.type() == 1) {
             spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
+        }
+        else if(msg.type() == 2){
+            Minecraft.getInstance().getMusicManager().stopPlaying();
         }
     }
 
@@ -190,8 +207,10 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP -> {
-                this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+                Minecraft instance = Minecraft.getInstance();
+                this.overlay = new VampirismHUDOverlay(instance);
                 registerSubscriptions();
+                //noinspection deprecation
                 ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
                 event.enqueueWork(() -> {
@@ -279,5 +298,26 @@ public class ClientProxy extends CommonProxy {
 
     public static void openScreen(Screen screen) {
         runOnRenderThread(() -> Minecraft.getInstance().setScreen(screen));
+    }
+
+    public static ClientProxy get() {
+        return (ClientProxy) VampirismMod.proxy;
+    }
+
+    public ModBlockEntityItemRenderer getBlockEntityItemRenderer() {
+        return blockEntityItemRenderer;
+    }
+
+    @Override
+    public void addBossEventSound(UUID bossEventUuid, ResourceKey<SoundEvent> sound) {
+        this.bossEventSounds.put(bossEventUuid, sound);
+    }
+
+    public ResourceKey<SoundEvent> getBossEventSound(UUID bossEventUuid) {
+        return this.bossEventSounds.get(bossEventUuid);
+    }
+
+    public void registerBlockEntityItemRenderer() {
+        this.blockEntityItemRenderer = new ModBlockEntityItemRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
     }
 }

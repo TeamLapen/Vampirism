@@ -56,7 +56,7 @@
         "It's been one day since my so called \"friends\" left me in the middle of this desert. I must be going crazy because not only have I been hearing these...whispers..but also had this urge...like something powerful is calling me..Ah why bother, i'm just losing myself aren't I?",
         "I've been wandering for a few days now, each day the whispers seem to grow louder and clearer? I feel a greater desire to find whatever is making it..I'm not even sure why i'm still walking- its just something tells me I need to keep going this way, maybe god is trying to save me?",
         "I- I could hear her clearly today! The whispers were so...beautiful so..elegant! Whatever it- She is, she's calling me! The pull I feel is so strong now, I feel so close to her now!",
-        "I may have made a mistake..I-I wandered into these dark woods searching for her..but as I get closer I feel such a deep level of dread, red eyes watch me from the fog but vanish when I try to reach them..Every time I turn to leave the screaming turns me around..back to her..",
+        "I may have made a mistake..I-I wandered into these dark woods searching for her..but as I get closer I feel such a deep level of dread, red eyes watch me from the fog but vanish when I try to reach them .Every time I turn to leave the screaming turns me around..back to her..",
         "It's all fine now. The storm has passed, mother has guided me. My hands once vacant now are filled with purpose- Her purpose- mothers purpose. I feel so charmed, so complete. Mother has given me purpose, she can give you purpose to. Come to the woods. Come to the woods.",
         "§oMOTHER§r"
       ]
@@ -145,9 +145,9 @@
       ]
     }
   },  {
-  "id": "S_olace",
+  "id": "s_olace",
   "tags": [
-    "S_olace"
+    "s_olace"
   ],
   "unique": true,
   "book": {
@@ -157,5 +157,47 @@
       "It all started that night, about three hundred and.. twenty seven..? No.. twenty nine.. years ago..\\nMy parents had locked me in my room, not wanting to hear my begging for food anymore. I sat there crying, the sounds of their shouting and arguing filling the house, when suddenly I heard a light tap on my window. There stood a pale woman with terrible red eyes, dressed in fine silken robes. She beckoned me to the window, a sweet smile on her face. I was frozen in fear. Someone.. no.. something.. dressed in the form of a human woman of which I had never seen was trying to convince me to let it in, and my parents were none the wiser. Then suddenly she vanished, her body melting into smoke. To my absolute horror I felt a tap on my shoulder.. The woman- monster, was standing right behind me. Frozen in fear, all I could do was watch, waiting for her to do something- anything, when to my utter shock she spoke. Her words were as smooth as honey, \"My dear, be not afraid. I am here to help you..\" She said with a smile, fangs clearly displayed. \"They've hurt you, I know they have. I've been watching and listening.\" She placed a hand on my shoulder. \"Such petty wants and worries, such pathetic reasons to harm a poor sweet child..\" She continued, both her hands on my shoulders. She chuckled, and with a speed far greater than I could perceive; she was in front of me, her sinister eyes  holding me in place. \"Why don't we deal with them? Won't that be fun?\" I then felt something hard in my hand, a large, serrated knife. She then walked towards the door and with a soft knock, blew it off its hinges and stepped forth. My parents fell silent, both a mixture of awe and terror on their face. With a burst of speed both my mother and father crumpled to the floor, the woman having broken their legs. She beckoned me over, and I admit I felt a sense of joy. I was finally going to take back all that these two had taken from me, the nights without food, filled with terror and pain. I would take them back.. and so I did. I drove the blade deep into my father.. The woman just smiled and said \"Excellent.\".. The next few moments i'm not entirely sure of. I remember a feeling of pain, deep pain.. then an icy chill, as if all the life had been drained from me. I awoke several days later, far away from my home. I awoke as something far greater than what I was."
     ]
   }
-}
+  },
+  {
+    "id": "martha1",
+    "tags": [
+      "sanguinare",
+      "milk"
+    ],
+    "unique": false,
+    "book": {
+      "title": "Dear Martha",
+      "author": "Unknown",
+      "content": [
+        "To Martha, \nI hope you are feeling better.\n\nI think I found a cure to your illness, it seems milk will do the trick with almost any poison!\nDon't worry my sister, I am on my way and I will make you better. I just hope that whatever bited you did not carry any mortal disease, the way you described it seems like nothing I've seen before. My maid and all the servants at my mansion will take care of it in my absence, when it comes to family, it's a priority.\nI heard rumors about strange creatures in the forest near your home, please stay safe, It won't be long before I arrive.\n\nWith all my love, your brother."
+      ]
+    }
+  },
+  {
+    "id": "volqonah",
+    "tags": [
+      "volqonah"
+    ],
+    "unique": true,
+    "book": {
+      "title": "A Valorous tale",
+      "author": "Unknown",
+      "content": [
+        "Once upon a time, or perhaps centuries ago. There was a group of people dedicated solely to the art of war and battle. They lived and died for battle, for the thrill of bloodshed, and for the hope of a warrior's death. Among these people was a woman known as their greatest warrior, never defeated in battle and driven by the single goal of \"bravery\".\n Tragically, she was never given a name, for there was no need. For she was valued solely for her prowess in battle. As a result, the only true name given to her was by those who fled in her wake. \"The Valorous One\", earned from tales of her strength, said to be that of a raging volcano, never to be stopped or felled in battle.\nThat is, until the fateful battle. Not much is known about this battle, in fact, there's no way to prove its existence other than first-hand accounts. Legend has it that The Valorous One and her army had come to slay a \"walking disaster,\" often described as a pale, finely dressed man with dark red eyes and terribly sharp teeth. With a simple gesture, The Valorous One ordered her army to attack. Upon this transgression, the \"walking disaster\" slaughtered the entirety of The Valorous One's army, leaving only the undefeated warrior herself.\nUndeterred, she simply drew her blade and met the man in combat. Each inflicted grievous wounds on the other, only for the man's wounds to heal faster than they could be made. Sensing her impending doom, the brave One refused to be defeated. Drawing on the last of her life, she tore every limb from his body in one swift motion that resembled a raging fire. Both, having sustained terrible blows, collapsed. Only the man recovered and rose to his feet. A look of awe and terror on his face. In an instant, the man had moved over her near-dead body and bit her, infecting her with his vile blood."
+      ]
+    }
+  },
+  {
+    "id": "vampirediary1",
+    "tags": [
+      "vampire"
+    ],
+    "book": {
+      "title": "Nocturnal",
+      "author": "William",
+      "content": [
+        "Upon the moonlit tapestry of night, mine eyes have perceived thee, a mortal, dare to peer into the night, where only those of mine own kind fear to tread. An unwieldy edifice thou hast raised, the product of thy witless endeavour, 'tis but an illumination to mine night-ridden eyes. I watched thee, in thy folly, attempt to fashion a mechanism, a contraption of strange design. Alas, compromised by the foolishness of its creator, 'twas set aflame by thee.\n\nYet, amidst mine figure draped in darkness appeared, as panic seized thee, and my gaze bidding thee to stillness, whilst ascending to quell the blaze. Frozen thou standest, atop thine fiery creation, when a noble vein in me stirred, compelling me to have felt a peculiar affection.\n\nA chronicle, whispering of the ancient paths I left, guiding thee to my shrine. Thereafter, thou embarked on a sacred pilgrimage, building thine own devoted shrine in the shadows of thy attic, adorned with blood-drenched altars, eternal flames, and gold that gleamed like the starlit night.\n\nThy soul, thou gifted unto me, a moment of great merriment that echoed through the ether, the sweet symphony of thy devotion. In thine sire’s honour, thou built a tavern of sanguine sustenance, a beacon of respite for those of my ilk, acknowledging our shared existence, not as predator and prey, but as equals in these planes of infinite twilight.\n\nUpon mine throne, in a fit of primal desire, I tasted thy life's essence when I sank my fangs into thy tender flesh. Yet quickly remorse followed, ‘twas when I reversed the curse of mine kin, only to banish the monster within thee. Such is the sovereign of a vampiric prince, such is the might of my will."
+      ]
+    }
+  }
 ]

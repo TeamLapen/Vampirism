@@ -9,8 +9,12 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostPieces;
+import de.teamlapen.vampirism.world.gen.structure.mother.MotherPiece;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
+import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarPieces;
+import de.teamlapen.vampirism.world.gen.structure.vampirehut.VampireHutPieces;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +29,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -39,6 +42,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePl
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
@@ -57,7 +61,6 @@ import java.util.List;
 import java.util.OptionalInt;
 
 import static net.minecraft.data.worldgen.placement.OrePlacements.commonOrePlacement;
-import static net.minecraft.data.worldgen.placement.OrePlacements.rareOrePlacement;
 
 public class VampirismFeatures {
 
@@ -68,6 +71,10 @@ public class VampirismFeatures {
     public static final RegistryObject<StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
     public static final RegistryObject<StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
     public static final RegistryObject<StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
+    public static final RegistryObject<StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
+    public static final RegistryObject<StructurePieceType> HUNTER_OUTPOST_PIECE = STRUCTURE_PIECES.register("outpost", () -> (StructurePieceType.StructureTemplateType) HunterOutpostPieces.OutpostPiece::new);
+    public static final RegistryObject<StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
+    public static final RegistryObject<StructurePieceType> MOTHER = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
 
     public static final RegistryObject<StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
@@ -90,8 +97,7 @@ public class VampirismFeatures {
     public static final ResourceKey<PlacedFeature> WATER_LAKE_PLACED = createPlacedKey("mod_lake_placed");
     public static final ResourceKey<PlacedFeature> VAMPIRE_TREES_PLACED = createPlacedKey("vampire_trees");
     public static final ResourceKey<PlacedFeature> FOREST_GRASS_PLACED = createPlacedKey("forest_grass");
-    public static final ResourceKey<PlacedFeature> ORE_DARK_STONE_UPPER_PLACED = createPlacedKey("ore_dark_stone_upper");
-    public static final ResourceKey<PlacedFeature> ORE_DARK_STONE_LOWER_PLACED = createPlacedKey("ore_dark_stone_lower");
+    public static final ResourceKey<PlacedFeature> ORE_DARK_STONE_PLACED = createPlacedKey("ore_dark_stone_lower");
     public static final ResourceKey<PlacedFeature> ORE_CURSED_DIRT_PLACED = createPlacedKey("ore_cursed_dirt");
 
     public static final ResourceKey<BiomeModifier> VAMPIRE_SPAWN = createModifierKey("spawn/vampire_spawns");
@@ -99,8 +105,12 @@ public class VampirismFeatures {
     public static final ResourceKey<BiomeModifier> ADVANCED_VAMPIRE_SPAWN = createModifierKey("spawn/advanced_vampire_spawns");
     public static final ResourceKey<BiomeModifier> ADVANCED_HUNTER_SPAWN = createModifierKey("spawn/advanced_hunter_spawns");
     public static final ResourceKey<BiomeModifier> VAMPIRE_DUNGEON_MODIFIER = createModifierKey("feature/vampire_dungeon");
-
     public static final ResourceKey<StructureSet> HUNTER_CAMP = createStructureSetKey("hunter_camp");
+    public static final ResourceKey<StructureSet> VAMPIRE_HUT = createStructureSetKey("vampire_hut");
+    public static final ResourceKey<StructureSet> VAMPIRE_ALTAR = createStructureSetKey("vampire_altar");
+    public static final ResourceKey<StructureSet> OUTPOST = createStructureSetKey("outpost");
+    public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
+    public static final ResourceKey<StructureSet> MOTHER_SET = createStructureSetKey("mother");
 
 
     public static void register(IEventBus ctx) {
@@ -131,9 +141,9 @@ public class VampirismFeatures {
         context.register(DARK_SPRUCE_TREE, new ConfiguredFeature<>(Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LOG.get()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).ignoreVines().build()));
         context.register(CURSED_SPRUCE_TREE, new ConfiguredFeature<>(Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(ModBlocks.CURSED_SPRUCE_LOG.get()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).decorators(ImmutableList.of(TrunkCursedVineDecorator.INSTANCE)).ignoreVines().build()));
         context.register(VAMPIRE_DUNGEON, new ConfiguredFeature<>(ModFeatures.VAMPIRE_DUNGEON.get(), FeatureConfiguration.NONE));
-        context.register(WATER_LAKE, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(Blocks.WATER), BlockStateProvider.simple(ModBlocks.CASTLE_BLOCK_DARK_STONE.get()))));
+        context.register(WATER_LAKE, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(Blocks.WATER), BlockStateProvider.simple(ModBlocks.DARK_STONE.get()))));
         context.register(VAMPIRE_TREES, new ConfiguredFeature<>(Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(placedFeatures.getOrThrow(CURSED_SPRUCE_TREE_PLACED), 0.3f)), placedFeatures.getOrThrow(DARK_SPRUCE_TREE_PLACED))));
-        context.register(ORE_DARK_STONE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CASTLE_BLOCK_DARK_STONE.get().defaultBlockState(), 64)));
+        context.register(ORE_DARK_STONE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.DARK_STONE.get().defaultBlockState(), 64)));
         context.register(ORE_CURSED_DIRT, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CURSED_EARTH.get().defaultBlockState(), 33)));
     }
 
@@ -147,8 +157,7 @@ public class VampirismFeatures {
         context.register(WATER_LAKE_PLACED, new PlacedFeature(placedFeatures.getOrThrow(WATER_LAKE), List.of(RarityFilter.onAverageOnceEvery(200), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
         context.register(VAMPIRE_TREES_PLACED, new PlacedFeature(placedFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(10, 0.1f, 1))));
         context.register(FOREST_GRASS_PLACED, new PlacedFeature(placedFeatures.getOrThrow(VegetationFeatures.PATCH_GRASS), VegetationPlacements.worldSurfaceSquaredWithCount(2)));
-        context.register(ORE_DARK_STONE_UPPER_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_DARK_STONE), rareOrePlacement(6, HeightRangePlacement.uniform(VerticalAnchor.absolute(64), VerticalAnchor.absolute(128)))));
-        context.register(ORE_DARK_STONE_LOWER_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_DARK_STONE), commonOrePlacement(2, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(60)))));
+        context.register(ORE_DARK_STONE_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_DARK_STONE), commonOrePlacement(30, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
         context.register(ORE_CURSED_DIRT_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_CURSED_DIRT), commonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
     }
 
@@ -156,15 +165,20 @@ public class VampirismFeatures {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
         context.register(VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.VAMPIRE.get(), 80, 1, 3, MobCategory.MONSTER)));
-        context.register(HUNTER_SPAWN, ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 0, 1, 3)));
         context.register(ADVANCED_VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 30, 1, 3, MobCategory.MONSTER)));
-        context.register(ADVANCED_HUNTER_SPAWN,ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 0, 1, 1)));
         context.register(VAMPIRE_DUNGEON_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
     }
 
     public static void createStructureSets(BootstapContext<StructureSet> context) {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
-        context.register(HUNTER_CAMP, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(9, 4, RandomSpreadType.LINEAR, 1724616580)));
+        HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
+        var villageSet = structureSetLookup.getOrThrow(BuiltinStructureSets.VILLAGES);
+        // hunter camp holder is not available in data generation see ModFeatures#createStructures
+        // context.register(HUNTER_CAMP, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
+        context.register(VAMPIRE_HUT, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
+        context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
+        context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(24, 8, RandomSpreadType.LINEAR, 364135095)));
+        context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
     }
 
 }

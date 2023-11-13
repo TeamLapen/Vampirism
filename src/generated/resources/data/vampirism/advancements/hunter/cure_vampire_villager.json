@@ -4,6 +4,14 @@
     "cure": {
       "conditions": {},
       "trigger": "vampirism:cured_vampire_villager"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
     }
   },
   "display": {
@@ -24,6 +32,9 @@
   "requirements": [
     [
       "cure"
+    ],
+    [
+      "main"
     ]
   ],
   "sends_telemetry_event": true

@@ -8,7 +8,7 @@
       "type": "vampirism:advanced_vampire",
       "maxCount": 3,
       "minCount": 1,
-      "weight": 25
+      "weight": 30
     }
   }
 }

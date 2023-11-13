@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -22,9 +23,19 @@ import java.util.function.Supplier;
 public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
 
     private final Map<Attribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
+    @Range(from = 0, to = 9)
+    private final int skillPointCost;
     private int renderRow;
     private int renderColumn;
     private Component name;
+
+    public DefaultSkill() {
+        this(1);
+    }
+
+    public DefaultSkill(@Range(from = 0, to = 9) int skillPointCost) {
+        this.skillPointCost = skillPointCost;
+    }
 
     @Override
     public Component getName() {
@@ -154,5 +165,9 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         return VampirismRegistries.SKILLS.get().getKey(this);
     }
 
-
+    @Range(from = 0, to = 9)
+    @Override
+    public int getSkillPointCost() {
+        return this.skillPointCost;
+    }
 }

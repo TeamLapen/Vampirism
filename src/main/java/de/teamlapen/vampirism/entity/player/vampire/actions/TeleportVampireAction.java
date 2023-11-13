@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -75,8 +76,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playLocalSound(ox, oy, oz, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F, false);
-        player.getCommandSenderWorld().playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1, 1, false);
+        player.getCommandSenderWorld().playSound(null, ox,oy,oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(),ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
         return true;
     }
 

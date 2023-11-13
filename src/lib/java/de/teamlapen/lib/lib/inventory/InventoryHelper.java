@@ -57,7 +57,7 @@ public class InventoryHelper {
      *
      * @param amounts Has to have the same size as the inventory
      */
-    public static void removeItems(@NotNull Container inventory, int @NotNull [] amounts) {
+    public static void removeItems(@NotNull Container inventory, int... amounts) {
         if (inventory.getContainerSize() < amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack value for each amount");
         }

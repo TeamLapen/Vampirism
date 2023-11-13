@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "vampirism:block/active_vulnerable_remains"
+    }
+  }
+}

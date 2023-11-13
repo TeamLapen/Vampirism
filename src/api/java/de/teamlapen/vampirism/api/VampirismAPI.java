@@ -12,16 +12,16 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.world.IVampirismWorld;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import static de.teamlapen.vampirism.api.VampirismCapabilities.*;
 
 /**
  * Class for core api methods
@@ -30,12 +30,6 @@ import org.jetbrains.annotations.NotNull;
 public class VampirismAPI {
 
     private static boolean INIT;
-    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = CapabilityManager.get(new CapabilityToken<>() {
-    });
-    private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IVampirismWorld> CAP_WORLD = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IVampirePlayer> CAP_VAMPIRE = CapabilityManager.get(new CapabilityToken<>(){});
-    private static final Capability<IHunterPlayer> CAP_HUNTER = CapabilityManager.get(new CapabilityToken<>(){});
 
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
@@ -45,6 +39,7 @@ public class VampirismAPI {
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
+    private static ISettingsProvider settings;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -88,6 +83,10 @@ public class VampirismAPI {
         return extendedBrewingRecipeRegistry;
     }
 
+    public static ISettingsProvider settings() {
+        return settings;
+    }
+
     /**
      * Set up the API registries
      * FOR INTERNAL USAGE ONLY
@@ -96,7 +95,7 @@ public class VampirismAPI {
      */
     @ApiStatus.Internal
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
@@ -106,6 +105,7 @@ public class VampirismAPI {
         vampireVisionRegistry = vampireVisionRegistryIn;
         entityActionManager = entityActionManagerIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
+        settings = settingsIn;
         INIT = true;
     }
 
@@ -116,39 +116,39 @@ public class VampirismAPI {
     @SuppressWarnings("EmptyMethod")
     @ApiStatus.Internal
     public static void onSetupComplete() {
-
+        settings.syncSettingsCache();
     }
 
     /**
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static @NotNull LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
-        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
+        return player.getCapability(FACTION_HANDLER_PLAYER, null);
     }
 
     /**
      * @return The respective {@link IVampirePlayer}
      */
     public static @NotNull LazyOptional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
-        return player.getCapability(CAP_VAMPIRE, null);
+        return player.getCapability(VAMPIRE_PLAYER, null);
     }
 
     /**
      * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
      */
     public static @NotNull LazyOptional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
-        return player.getCapability(CAP_HUNTER, null);
+        return player.getCapability(HUNTER_PLAYER, null);
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
     public static @NotNull LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
-        return creature.getCapability(CAP_CREATURE, null);
+        return creature.getCapability(EXTENDED_CREATURE, null);
     }
 
     public static @NotNull LazyOptional<IVampirismWorld> getVampirismWorld(@NotNull Level w) {
-        return w.getCapability(CAP_WORLD);
+        return w.getCapability(WORLD);
     }
 
 

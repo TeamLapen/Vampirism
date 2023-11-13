@@ -2,6 +2,9 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.data.provider.ConvertiblesGenerator;
+import de.teamlapen.vampirism.data.provider.SingleJigsawPiecesGenerator;
+import de.teamlapen.vampirism.data.provider.SundamageProvider;
 import de.teamlapen.vampirism.mixin.RegistriesDatapackGeneratorAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -38,5 +41,8 @@ public class DataGeneration {
         generator.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
         generator.addProvider(event.includeClient(), new BlockStateGenerator(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelGenerator(packOutput, existingFileHelper));
+        generator.addProvider(event.includeServer(), new SingleJigsawPiecesGenerator(packOutput, REFERENCE.MODID));
+        generator.addProvider(event.includeServer(), new ConvertiblesGenerator(packOutput, REFERENCE.MODID));
+        generator.addProvider(event.includeServer(), new SundamageProvider(packOutput, REFERENCE.MODID));
     }
 }

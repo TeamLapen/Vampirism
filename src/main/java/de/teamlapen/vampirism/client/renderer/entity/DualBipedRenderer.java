@@ -2,19 +2,26 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.mixin.client.HumanoidArmorLayerAccessor;
+import de.teamlapen.vampirism.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
@@ -61,7 +68,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
         return set.map(r -> {
             boolean b = r.getPath().endsWith("slim.png");
             return Pair.of(r, b);
-        }).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+        }).sorted(alphaNumericComparator()).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
     }
 
     /**
@@ -78,5 +85,42 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");
         }
         return textures;
+    }
+
+    protected Comparator<Pair<ResourceLocation, Boolean>> alphaNumericComparator() {
+        return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.getLeft(), o2.getLeft());
+    }
+
+    protected class ArmorLayer<A extends HumanoidModel<T>> extends HumanoidArmorLayer<T, M, A> {
+
+        private final A pInnerModel;
+        private final A pInnerModelSlim;
+        private final A pOuterModel;
+        private final A pOuterModelSlim;
+
+        public ArmorLayer(RenderLayerParent<T, M> pRenderer, A pInnerModel, A pInnerModelSlim, A pOuterModel, A pOuterModelSlim, ModelManager pModelManager) {
+            super(pRenderer, pInnerModel, pOuterModel, pModelManager);
+            this.pInnerModel = pInnerModel;
+            this.pInnerModelSlim = pInnerModelSlim;
+            this.pOuterModel = pOuterModel;
+            this.pOuterModelSlim = pOuterModelSlim;
+        }
+
+        @Override
+        public void render(@NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, @NotNull T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+            Pair<ResourceLocation, Boolean> b = determineTextureAndModel(pLivingEntity);
+
+            A innerModel = b.getRight() ? pInnerModelSlim : pInnerModel;
+            A outerModel = b.getRight() ? pOuterModelSlim : pOuterModel;
+
+            ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.FEET, pPackedLight, this.getArmorModel(EquipmentSlot.FEET, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.HEAD, pPackedLight, this.getArmorModel(EquipmentSlot.HEAD, innerModel, outerModel));
+        }
+
+        private A getArmorModel(EquipmentSlot slot, A innerModel, A outerModel) {
+            return ((HumanoidArmorLayerAccessor) this).invoke_usesInnerModel(slot) ? innerModel : outerModel;
+        }
     }
 }

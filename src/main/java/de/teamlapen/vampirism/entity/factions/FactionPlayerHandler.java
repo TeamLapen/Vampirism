@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -14,11 +16,10 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.tasks.reward.LordLevelReward;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -31,7 +32,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
@@ -47,8 +50,7 @@ import java.util.Optional;
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final Capability<IFactionPlayerHandler> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IFactionPlayerHandler> CAP = VampirismCapabilities.FACTION_HANDLER_PLAYER;
 
     /**
      * Must check Entity#isAlive before
@@ -213,6 +215,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender != null && titleGender);
     }
 
+    @Override
+    public boolean useFemaleLordTitle() {
+        return this.titleGender != null && this.titleGender;
+    }
+
     public int getMaxMinions() {
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
     }
@@ -297,7 +304,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * @param minLevel the lord level the player now has
      */
     public void resetLordTasks(int minLevel) {
-        RegUtil.values(ModRegistries.TASKS).stream().filter(task -> task.isUnique() && task.getReward() instanceof LordLevelReward && ((LordLevelReward) task.getReward()).targetLevel > minLevel).forEach(task -> getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> manager.resetUniqueTask(task)));
+        getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> {
+            this.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
+                holder.unwrapKey().ifPresent(manager::resetUniqueTask);
+            });
+        });
     }
 
     public void setBoundAction(int id, @Nullable IAction<?> boundAction, boolean sync, boolean notify) {
@@ -374,6 +385,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (player instanceof ServerPlayer serverPlayer) {
             if (old != faction) {
                 ModAdvancements.TRIGGER_FACTION.revokeAll(serverPlayer);
+                ModAdvancements.revoke(ModAdvancements.TRIGGER_MOTHER_WIN, serverPlayer);
             } else if (oldLevel > level) {
                 ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
             }
@@ -512,6 +524,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
 
         this.currentLordLevel = level;
+        this.getCurrentFactionPlayer().ifPresent(player -> {
+            player.getSkillHandler().addSkillPoints((int) ((level - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
+        });
         if (this.currentLordLevel > 0) {
             this.updateSkillTypes();
         }

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
@@ -114,14 +114,14 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     public void startRitual(@NotNull Player p) {
         if (ritualTicksLeft > 0 || !p.isAlive()) return;
         targetLevel = VampirismPlayerAttributes.get(p).vampireLevel + 1;
-        VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
-        if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
+        var requirement = VampireLeveling.getInspirationRequirement(targetLevel);
+        if (requirement.isEmpty()) {
             if (p.level().isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             }
             return;
         }
-        int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
+        int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
             if (p.level().isClientSide) {
                 p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
@@ -151,8 +151,8 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
                 blockEntity.ritualPlayer.setHealth(blockEntity.ritualPlayer.getMaxHealth());
             }
             case 1 -> {
-                VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
-                int blood = levelingConf.getRequiredBloodForAltarInspiration(blockEntity.targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
+                var req = VampireLeveling.getInspirationRequirement(blockEntity.targetLevel);
+                int blood = req.map(VampireLeveling.AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
                 FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));

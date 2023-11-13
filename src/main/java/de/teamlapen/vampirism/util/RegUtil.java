@@ -6,14 +6,19 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -40,10 +45,6 @@ public class RegUtil {
 
     public static ResourceLocation id(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().getKey(entityAction);
-    }
-
-    public static ResourceLocation id(@NotNull Task skill) {
-        return ModRegistries.TASKS.get().getKey(skill);
     }
 
     public static ResourceLocation id(@NotNull IRefinement refinement) {
@@ -86,7 +87,6 @@ public class RegUtil {
         return ModRegistries.OILS.get().getKey(oil);
     }
 
-
     public static boolean has(@NotNull IAction<?> action) {
         return ModRegistries.ACTIONS.get().containsValue(action);
     }
@@ -101,10 +101,6 @@ public class RegUtil {
 
     public static boolean has(@NotNull IEntityAction entityAction) {
         return ModRegistries.ENTITY_ACTIONS.get().containsValue(entityAction);
-    }
-
-    public static boolean has(@NotNull Task skill) {
-        return ModRegistries.TASKS.get().containsValue(skill);
     }
 
     public static boolean has(@NotNull IRefinement refinement) {
@@ -140,10 +136,6 @@ public class RegUtil {
         return get(ModRegistries.ENTITY_ACTIONS.get(), id);
     }
 
-    public static Task getTask(@NotNull ResourceLocation id) {
-        return get(ModRegistries.TASKS.get(), id);
-    }
-
     public static IRefinement getRefinement(@NotNull ResourceLocation id) {
         return get(ModRegistries.REFINEMENTS.get(), id);
     }
@@ -154,6 +146,14 @@ public class RegUtil {
 
     public static IOil getOil(@NotNull ResourceLocation id) {
         return get(ModRegistries.OILS.get(), id);
+    }
+
+    public static <T, Z extends Registry<T>> Holder<T> getHolder(Level level, ResourceKey<Z> registry, T type) {
+        return level.registryAccess().registryOrThrow(registry).wrapAsHolder(type);
+    }
+
+    public static Holder<DamageType> getHolder(Level level, DamageType type) {
+        return getHolder(level, Registries.DAMAGE_TYPE, type);
     }
 
 

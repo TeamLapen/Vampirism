@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.lib.lib.util.VersionChecker;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -16,6 +16,8 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -26,7 +28,6 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -48,24 +49,9 @@ public class GeneralEventHandler {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-        VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
-        if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
-
         Player player = event.getEntity();
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(player);
 
-        if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
-            if (isAdminLikePlayer || player.getRandom().nextInt(5) == 0) {
-                if (player.getRandom().nextInt(4) == 0) {
-                    VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    player.sendSystemMessage(Component.translatable("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
-                    Component download = Component.translatable("text.vampirism.update_message.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).withUnderlined(true).applyFormat(ChatFormatting.BLUE));
-                    Component changelog = Component.translatable("text.vampirism.update_message.changelog").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).withUnderlined(true));
-                    Component modpage = Component.translatable("text.vampirism.update_message.modpage").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).withUnderlined(true).applyFormat(ChatFormatting.BLUE));
-                    player.sendSystemMessage(Component.literal("").append(download).append(Component.literal(" ")).append(changelog).append(Component.literal(" ")).append(modpage));
-                }
-            }
-        }
         if (isAdminLikePlayer) {
             //TODO 1.19
 //            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
@@ -97,13 +83,14 @@ public class GeneralEventHandler {
         bloodValues[0] = BloodConversionRegistry.getEntityConversions();
         bloodValues[1] = BloodConversionRegistry.getItemConversions();
         bloodValues[2] = BloodConversionRegistry.getFluidConversions();
+        Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = VampirismAPI.entityRegistry().getConvertibleOverlay();
 
         if (player instanceof ServerPlayer serverPlayer) {
-            VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues), serverPlayer);
+            VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues, (Map<EntityType<?>, ResourceLocation>) (Object) convertibleOverlay), serverPlayer);
         }
         FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
-        if (player instanceof ServerPlayer && !PermissionAPI.getPermission((ServerPlayer) player, Permissions.GENERAL_CHECK)) {
+        if (player instanceof ServerPlayer && !Permissions.isSetupCorrectly(((ServerPlayer) player))) {
             player.sendSystemMessage(Component.literal("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.GENERAL_CHECK.getNodeName() + "' to suppress this warning)."));
         }
     }

@@ -5,10 +5,8 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.entity.ai.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.mixin.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
@@ -22,13 +20,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -37,33 +33,30 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 /**
  * Converted creature class.
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
-public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBaseEntity implements ICurableConvertedCreature<T>, ISyncable {
+public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBaseEntity implements CurableConvertedCreature<T, ConvertedCreatureEntity<T>>, ISyncable {
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
-
+    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.STRING);
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModTags.Blocks.CURSED_EARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
     }
 
-    private @Nullable T entityCreature;
     private boolean entityChanged = false;
+    public T entityCreature;
     private boolean canDespawn = false;
-    @Nullable
-    private Component name;
-    private int conversionTime;
-    private @Nullable UUID conversationStarter;
+    private final Data<T> convertibleData = new Data<>();
 
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
         super(type, world, false);
@@ -72,30 +65,100 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        writeOldEntityToNBT(nbt);
-        nbt.putBoolean("converter_canDespawn", canDespawn);
-        nbt.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.conversationStarter != null) {
-            nbt.putUUID("ConversionPlayer", this.conversationStarter);
-        }
+    public Data<T> data() {
+        return this.convertibleData;
+    }
+
+    @Override
+    public void handleEntityEventSuper(byte id) {
+        super.handleEntityEvent(id);
+    }
+
+    @Override
+    public InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public boolean hurtSuper(DamageSource damageSource, float amount) {
+        return super.hurt(damageSource, amount);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        writeOldEntityToNBT(pCompound);
+        pCompound.putBoolean("converter_canDespawn", this.canDespawn);
+        this.addAdditionalSaveDataC(pCompound);
     }
 
     @Override
     public void aiStep() {
-        if (!this.level().isClientSide && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                //noinspection unchecked
-                this.cureEntity((ServerLevel) this.level(), this, ((EntityType<T>) entityCreature.getType()));
-            }
+        if (!nil()) {
+            aiStepC((EntityType<T>) this.entityCreature.getType());
         }
         super.aiStep();
     }
 
     @Override
-    public T createCuredEntity(PathfinderMob entity, EntityType<T> newType) {
+    public void die(@NotNull DamageSource pDamageSource) {
+        super.die(pDamageSource);
+        this.dieC(pDamageSource);
+    }
+
+    @Override
+    public @NotNull MobType getMobType() {
+        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
+    }
+
+    @Override
+    public @NotNull Component getName() {
+        return this.getNameC(this.entityCreature.getType()::getDescription);
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        return this.hurtC(pSource, pAmount);
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
+        return mobInteractC(pPlayer, pHand);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.registerConvertingData(this);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.registerGoalsC();
+    }
+
+    @Override
+    protected void tickDeath() {
+        super.tickDeath();
+        this.tickDeathC();
+    }
+
+    @Override
+    public void tick() {
+        if (!level().isClientSide && this.entityCreature == null) {
+            LOGGER.debug("Setting dead, since creature is null");
+            this.discard();
+        }
+        super.tick();
+        this.tickC();
+    }
+
+    @Override
+    public T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
+        if (this.entityCreature == null) {
+            return CurableConvertedCreature.super.cureEntity(world, entity, newType);
+        }
         this.entityCreature.revive();
         return this.entityCreature;
     }
@@ -134,27 +197,18 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public EntityDataAccessor<Boolean> getConvertingDataParam() {
+    public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
 
     @Override
-    protected @NotNull Component getTypeName() {
-        if (name == null) {
-            this.name = Component.translatable("entity.vampirism.vampire").append(" ").append((nil() ? super.getTypeName() : entityCreature.getName()));
-        }
-        return name;
+    public EntityDataAccessor<String> getSourceEntityDataParam() {
+        return OVERLAY_TEXTURE;
     }
+
 
     public T getOldCreature() {
-        return entityCreature;
-    }
-
-    @Override
-    public void handleEntityEvent(byte id) {
-        if (!handleSound(id, this)) {
-            super.handleEntityEvent(id);
-        }
+        return this.entityCreature;
     }
 
     @Override
@@ -168,6 +222,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
+        this.readAdditionalSaveDataC(nbt);
         if (nbt.contains("entity_old")) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level()).orElse(null));
@@ -183,19 +238,24 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
             this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
+        if (!nbt.contains("source_entity")) {
+            getSourceEntityDataParamOpt().ifPresent(p -> {
+                this.getRepresentingEntity().getEntityData().set(p, ForgeRegistries.ENTITY_TYPES.getKey(getOldCreature().getType()).toString());
+            });
+        }
     }
 
     @Override
     public void playAmbientSound() {
         if (!nil()) {
-            entityCreature.playAmbientSound();
+            this.entityCreature.playAmbientSound();
         }
     }
 
     @Override
     public void refreshDimensions() {
         super.refreshDimensions();
-        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
+        this.eyeHeight = this.entityCreature == null ? 0.5f : this.entityCreature.getEyeHeight();
     }
 
     @Override
@@ -214,27 +274,20 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
      * Set the old creature (the one before conversion)
      */
     public void setEntityCreature(@Nullable T creature) {
-        if ((creature == null && entityCreature != null)) {
+        if ((creature == null && this.entityCreature != null)) {
             entityChanged = true;
-            entityCreature = null;
+            this.entityCreature = null;
         } else if (creature != null) {
-            if (!creature.equals(entityCreature)) {
-                entityCreature = creature;
+            if (!creature.equals(this.entityCreature)) {
+                this.entityCreature = creature;
                 entityChanged = true;
                 this.dimensions = creature.dimensions;
             }
         }
-        if (entityCreature != null && getConvertedHelper() == null) {
-            LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, entityCreature);
-            entityCreature = null;
+        if (this.entityCreature != null && getConvertedHandler() == null) {
+            LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);
+            this.entityCreature = null;
         }
-    }
-
-    @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
-        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.conversationStarter = conversionStarterIn;
-        this.conversionTime = conversionTimeIn;
     }
 
     @Nullable
@@ -253,46 +306,26 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @NotNull
     @Override
     public String toString() {
-        return "[" + super.toString() + " representing " + entityCreature + "]";
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (!level().isClientSide && entityCreature == null) {
-            LOGGER.debug("Setting dead, since creature is null");
-            this.discard();
-        }
+        return "[" + super.toString() + " representing " + this.entityCreature + "]";
     }
 
     @Override
     public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
         writeOldEntityToNBT(nbt);
-
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.registerConvertingData(this);
     }
 
     /**
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
     @Nullable
-    protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
+    protected IConvertingHandler<?> getConvertedHandler() {
         if (nil()) return null;
         BiteableEntry biteableEntry = VampirismAPI.entityRegistry().getEntry(entityCreature);
         if (biteableEntry == null) {
             LOGGER.warn("Cannot find biteable entry for {}", entityCreature);
             return null;
         }
-        IConvertingHandler<?> handler = biteableEntry.convertingHandler;
-        if (handler instanceof DefaultConvertingHandler) {
-            return ((DefaultConvertingHandler<?>) handler).getHelper();
-        }
-        return null;
+        return biteableEntry.convertingHandler;
     }
 
     @Override
@@ -313,53 +346,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return entityCreature == null;
     }
 
-    @NotNull
-    @Override
-    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == Items.GOLDEN_APPLE){
-            return interactWithCureItem(player, stack, this);
-        }
-        return super.mobInteract(player, hand);
-    }
-
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
-        //this.tasks.addTask(3, new FleeSunVampireGoal(this, 1F));
-        this.goalSelector.addGoal(4, new RestrictSunGoal(this));
-        this.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(this, 0.9D, false));
-        this.xpReward = 2;
-
-        this.goalSelector.addGoal(11, new RandomStrollGoal(this, 0.7));
-        this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(15, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-    }
-
-    @SuppressWarnings({"unchecked", "ConstantConditions"})
     protected void updateEntityAttributes() {
-        IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
-        try {
-            if (helper != null) {
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) entityCreature.getType()));
-            } else {
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
-                this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(0);
-                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
-            }
-        } catch (NullPointerException e) {
-            LOGGER.error("Failed to update entity attributes for {} {}", this, e);
+        IConvertingHandler<?> convertedHandler = getConvertedHandler();
+        if (convertedHandler != null) {
+            convertedHandler.updateEntityAttributes(this);
         }
-
-
     }
 
     /**
@@ -384,6 +375,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public boolean canBeLeashed(@NotNull Player player) {
         return true;
+    }
+
+    @Override
+    public float calculateFireDamage(float amount) {
+        return CurableConvertedCreature.super.calculateFireDamage(amount);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

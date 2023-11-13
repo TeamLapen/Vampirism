@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
@@ -33,13 +33,15 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Gui which is used to select vampire actions
  */
+@Deprecated
 @OnlyIn(Dist.CLIENT)
 public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<IAction<T>> {
     public final static List<IAction<?>> ACTIONORDER = NonNullList.create();
@@ -74,7 +76,7 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      * safes the action order to client config
      */
     private static void saveActionOrder() {
-        VampirismConfig.CLIENT.actionOrder.set(ACTIONORDER.stream().filter(action -> action != fakeAction).map(action -> RegUtil.id(action).toString()).collect(Collectors.toList()));
+        ClientConfigHelper.saveActionOrder(new ResourceLocation(REFERENCE.MODID, "old"), ACTIONORDER.stream().filter(action -> action != fakeAction).collect(Collectors.toList()));
     }
 
     /**
@@ -82,11 +84,12 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
      */
     public static void loadActionOrder() {
         List<IAction<?>> actions = Lists.newArrayList(RegUtil.values(ModRegistries.ACTIONS));
+
         //Keep in mind some previously saved actions may have been removed
-        VampirismConfig.CLIENT.actionOrder.get().stream().map(action -> RegUtil.getAction(new ResourceLocation(action))).filter(Objects::nonNull).forEachOrdered(action -> {
+        Optional.ofNullable(ClientConfigHelper.getActionOrder(new ResourceLocation(REFERENCE.MODID, "old"))).ifPresent(list -> list.forEach(action -> {
             actions.remove(action);
             ACTIONORDER.add(action);
-        });
+        }));
         if (!actions.isEmpty()) {
             ACTIONORDER.addAll(actions);
             saveActionOrder();
@@ -270,15 +273,11 @@ public class ActionSelectScreen<T extends IFactionPlayer<T>> extends GuiPieMenu<
         if (elements.get(getSelectedElement()) == fakeAction) {
             return true;
         }
-        if (func.apply(ModKeys.ACTION1) && ModKeys.ACTION1.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(1);
-            return true;
-        } else if (func.apply(ModKeys.ACTION2) && ModKeys.ACTION2.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(2);
-            return true;
-        } else if (func.apply(ModKeys.ACTION3) && ModKeys.ACTION3.getKeyModifier().isActive(KeyConflictContext.GUI)) {
-            setBinding(3);
-            return true;
+        for (Map.Entry<Integer, KeyMapping> entry : ModKeys.ACTION_KEYS.entrySet()) {
+            if (func.apply(entry.getValue()) && entry.getValue().getKeyModifier().isActive(KeyConflictContext.GUI)) {
+                setBinding(entry.getKey());
+                return true;
+            }
         }
         return false;
     }

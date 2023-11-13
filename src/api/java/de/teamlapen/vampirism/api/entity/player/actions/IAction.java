@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -32,6 +33,17 @@ public interface IAction<T extends IFactionPlayer<T>> {
      */
     @NotNull
     Optional<IPlayableFaction<?>> getFaction();
+
+    /**
+     * @param faction The faction to test
+     * @return of the action can be used by the given faction
+     */
+    default boolean matchesFaction(@Nullable IPlayableFaction<?> faction) {
+        if (getFaction().isEmpty() && faction == null) {
+            return true;
+        }
+        return getFaction().map(f -> f == faction).orElse(true);
+    }
 
     default Component getName() {
         return Component.translatable(getTranslationKey());

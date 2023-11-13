@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GPG",
+    "PPP"
+  ],
+  "result": {
+    "item": "vampirism:bat_cage"
+  },
+  "show_notification": true
+}

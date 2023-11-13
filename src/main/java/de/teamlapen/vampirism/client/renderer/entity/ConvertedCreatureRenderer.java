@@ -35,11 +35,9 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     public void render(@NotNull ConvertedCreatureEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource renderTypeBuffer, int packedLightIn) {
         PathfinderMob creature = entity.getOldCreature();
         if (creature != null) {
-//            creature.removed = false;
             renderOverlay = true;
             this.entityRenderDispatcher.render(creature, 0, 0, 0, 0, 0, matrixStack, renderTypeBuffer, packedLightIn);
             renderOverlay = false;
-//            creature.removed = true;
         }
     }
 }

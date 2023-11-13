@@ -6,6 +6,14 @@
         "action": "SUCK_BLOOD"
       },
       "trigger": "vampirism:vampire_action"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:vampire",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
     }
   },
   "display": {
@@ -27,6 +35,9 @@
   "requirements": [
     [
       "flower"
+    ],
+    [
+      "main"
     ]
   ],
   "sends_telemetry_event": true

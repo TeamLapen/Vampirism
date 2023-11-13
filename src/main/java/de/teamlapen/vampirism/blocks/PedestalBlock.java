@@ -122,4 +122,18 @@ public class PedestalBlock extends VampirismBlockContainer {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.BLOOD_PEDESTAL.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
+
+    @Override
+    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+        var tile = getTileEntity(pLevel, pPos);
+        if (tile != null) {
+            return tile.getChargedProgress();
+        }
+        return 0;
+    }
 }

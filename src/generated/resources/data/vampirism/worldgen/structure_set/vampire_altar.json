@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 573190874,
+    "separation": 15,
+    "spacing": 32
+  },
+  "structures": [
+    {
+      "structure": "vampirism:vampire_altar",
+      "weight": 1
+    }
+  ]
+}

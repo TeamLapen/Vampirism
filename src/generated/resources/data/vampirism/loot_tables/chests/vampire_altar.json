@@ -1,0 +1,99 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_fang",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.6,
+                "min": 0.0
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:blood_bottle",
+          "weight": 20
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 8.0,
+        "min": 5.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "weight": 16
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": 1.0,
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "minecraft:iron_ingot",
+          "weight": 22
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 18.0,
+        "min": 10.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_0",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_1",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_2",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_3",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_blood_4",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 25
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "vampirism:chests/vampire_altar"
+}

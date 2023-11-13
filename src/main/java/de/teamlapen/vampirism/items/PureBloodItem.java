@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -33,7 +32,7 @@ public class PureBloodItem extends Item {
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static @NotNull Item getBloodItemForLevel(int level) {
+    public static @NotNull PureBloodItem getBloodItemForLevel(int level) {
         return switch (level) {
             case 0 -> ModItems.PURE_BLOOD_0.get();
             case 1 -> ModItems.PURE_BLOOD_1.get();
@@ -42,7 +41,7 @@ public class PureBloodItem extends Item {
             case 4 -> ModItems.PURE_BLOOD_4.get();
             default -> {
                 LOGGER.warn("Pure blood of level {} does not exist", level);
-                yield  ModItems.PURE_BLOOD_4.get();
+                yield ModItems.PURE_BLOOD_4.get();
             }
         };
     }
@@ -96,11 +95,9 @@ public class PureBloodItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         int playerLevel = VampirismAPI.getFactionPlayerHandler(playerIn).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
-        if (VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(playerLevel)) {
-            int pureLevel = VampireLevelingConf.getInstance().getAltarInfusionRequirements(playerLevel).pureBloodLevel();
-            if (getLevel() < pureLevel) {
-                playerIn.startUsingItem(handIn);
-            }
+        if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() < getLevel()).isPresent()) {
+            playerIn.startUsingItem(handIn);
+            return InteractionResultHolder.sidedSuccess(playerIn.getItemInHand(handIn), worldIn.isClientSide);
         }
         return super.use(worldIn, playerIn, handIn);
     }

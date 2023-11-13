@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "vampirism:block/cobbled_dark_stone",
+    "side": "vampirism:block/cobbled_dark_stone",
+    "top": "vampirism:block/cobbled_dark_stone"
+  }
+}

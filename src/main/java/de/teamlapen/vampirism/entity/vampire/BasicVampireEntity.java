@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
+import de.teamlapen.vampirism.entity.IEntityFollower;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -63,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
  * Basic vampire mob.
  * Follows nearby advanced vampire
  */
-public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
+public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser, IEntityFollower {
 
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
@@ -214,6 +215,22 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      */
     public void setAdvancedLeader(@Nullable IEntityLeader advancedLeader) {
         this.advancedLeader = advancedLeader;
+    }
+
+    @Override
+    public boolean isFollowing() {
+        return this.advancedLeader != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends LivingEntity & IEntityLeader> T getLeader() {
+        return (T) this.advancedLeader;
+    }
+
+    @Override
+    public <T extends LivingEntity & IEntityLeader> void setLeader(T leader) {
+        this.advancedLeader = leader;
     }
 
     @Nullable

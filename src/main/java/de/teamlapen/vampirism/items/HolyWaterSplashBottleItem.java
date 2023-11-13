@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -34,24 +38,43 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     @Override
     public void onImpact(@NotNull ThrowableItemEntity entity, ItemStack stack, @NotNull HitResult result, boolean remote) {
-        TIER tier = getVampirismTier();
         if (!remote) {
-            AABB axisalignedbb = entity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-            List<LivingEntity> list1 = entity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, axisalignedbb);
-            @Nullable Entity thrower = entity.getOwner();
-
-            if (!list1.isEmpty()) {
-                for (LivingEntity entitylivingbase : list1) {
-                    if (thrower instanceof Player source && entitylivingbase instanceof Player target && !source.canHarmPlayer(target)) {
-                        continue;
-                    }
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.distanceToSqr(entitylivingbase), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
-                }
-            }
-
+            impactEntities(entity, stack, result, remote);
+            impactBlocks(entity, stack, result, remote);
             entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), PotionUtils.getColor(Potions.MUNDANE));
         }
+    }
 
+    protected void impactEntities(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+        AABB impactArea = bottleEntity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+        List<LivingEntity> list1 = bottleEntity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, impactArea);
+        @Nullable Entity thrower = bottleEntity.getOwner();
+
+        if (!list1.isEmpty()) {
+            for (LivingEntity entity : list1) {
+                if (thrower instanceof Player source && entity instanceof Player target && !source.canHarmPlayer(target)) {
+                    continue;
+                }
+                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+            }
+        }
+    }
+
+    protected void impactBlocks(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+        int size = switch (getVampirismTier()) {
+            case NORMAL -> 1;
+            case ENHANCED -> 2;
+            case ULTIMATE -> 3;
+        };
+        AABB impactArea = bottleEntity.getBoundingBox().inflate(size);
+        Level level = bottleEntity.getCommandSenderWorld();
+        UtilLib.forEachBlockPos(impactArea, pos -> {
+            BlockState state = level.getBlockState(pos);
+            Block block = state.getBlock();
+            if (block instanceof HolyWaterEffectConsumer) {
+                ((HolyWaterEffectConsumer) block).onHolyWaterEffect(level, state, pos, stack, getVampirismTier());
+            }
+        });
     }
 
 

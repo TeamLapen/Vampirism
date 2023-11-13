@@ -94,23 +94,36 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
             player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
             return InteractionResult.SUCCESS;
         }
-        AltarInfusionBlockEntity.Result result = te.canActivate(player, true);
-        if (heldItem.isEmpty()) {
-            if (result == AltarInfusionBlockEntity.Result.OK) {
-                te.startRitual(player);
-                return InteractionResult.SUCCESS;
+        if (!player.isShiftKeyDown()) {
+            AltarInfusionBlockEntity.Result result = te.canActivate(player);
+            switch (result) {
+                case ISRUNNING -> {
+                    player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
+                    return InteractionResult.SUCCESS;
+                }
+                case NIGHTONLY -> {
+                    player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_night_only"), true);
+                    return InteractionResult.SUCCESS;
+                }
+                case STRUCTUREWRONG -> {
+                    player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_missing_pillars"), true);
+                    return InteractionResult.SUCCESS;
+                }
+                case INVMISSING -> player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_missing_times"), true);
+                case OK -> {
+                    if (heldItem.isEmpty()) {
+                        te.startRitual(player);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
             }
 
-        }
-        //If non-empty hand or missing tileInventory -> open GUI
-        if (!heldItem.isEmpty() || result == AltarInfusionBlockEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionBlockEntity.PHASE.NOT_RUNNING) {
                 player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
                 return InteractionResult.SUCCESS;
             }
-            player.openMenu(te);
-            return InteractionResult.SUCCESS;
         }
+        player.openMenu(te);
         return InteractionResult.SUCCESS;
     }
 

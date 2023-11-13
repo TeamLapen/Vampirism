@@ -121,7 +121,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         RecipeManager recipeManager = world.getRecipeManager();
         registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
         registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
-        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks());
+        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(world.registryAccess()));
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));
         registration.addRecipes(ALCHEMY_TABLE, recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).values().stream().toList());

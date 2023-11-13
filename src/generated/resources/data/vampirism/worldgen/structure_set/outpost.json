@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 364135095,
+    "separation": 8,
+    "spacing": 24
+  },
+  "structures": [
+    {
+      "structure": "vampirism:hunter_outpost",
+      "weight": 1
+    }
+  ]
+}

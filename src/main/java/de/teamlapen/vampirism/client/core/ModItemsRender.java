@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.client.core;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
@@ -14,9 +18,12 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemDecorator;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -32,6 +39,9 @@ public class ModItemsRender {
             ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, tint) -> {
                 return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
             });
+        });
+        ItemProperties.register(ModItems.ARROW_CLIP.get(), new ResourceLocation(REFERENCE.MODID, "filled"), (stack, world, entity, tint) -> {
+            return (float)((IArrowContainer) stack.getItem()).getArrows(stack).size()/(float)((IArrowContainer) stack.getItem()).getMaxArrows(stack);
         });
     }
 
@@ -68,5 +78,24 @@ public class ModItemsRender {
             }
             return 0xFFFFFF;
         }, ModItems.OIL_BOTTLE.get());
+    }
+
+    public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
+        Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
+            event.register(item.get(), new IItemDecorator() {
+                @Override
+                public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
+                    ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
+                        PoseStack posestack = graphics.pose();
+                        posestack.pushPose();
+                        posestack.translate(xOffset, yOffset + 8, 0);
+                        posestack.scale(0.5f, 0.5f, 0.5f);
+                        graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
+                        posestack.popPose();
+                    });
+                    return false;
+                }
+            });
+        });
     }
 }

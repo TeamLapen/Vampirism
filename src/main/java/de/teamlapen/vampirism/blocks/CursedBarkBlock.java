@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
@@ -8,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +27,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CursedBarkBlock extends Block {
+public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
     private static final VoxelShape shape =  Shapes.empty();
 
@@ -78,5 +82,10 @@ public abstract class CursedBarkBlock extends Block {
     @Override
     public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
         return true;
+    }
+
+    @Override
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+        level.destroyBlock(pos, false);
     }
 }

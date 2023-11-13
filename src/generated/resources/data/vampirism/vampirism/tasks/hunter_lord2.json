@@ -1,0 +1,46 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 32,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 50,
+        "description": {
+          "translate": "entity_tag.vampirism.vampire"
+        },
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:lord_level",
+    "description": {
+      "translate": "task_reward.vampirism.lord_level_reward",
+      "with": [
+        "2"
+      ]
+    },
+    "targetLevel": 2
+  },
+  "title": {
+    "translate": "task.vampirism.hunter_lord2"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": true,
+      "reqLordLevel": 1
+    }
+  ]
+}

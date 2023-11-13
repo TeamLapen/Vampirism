@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
+import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -16,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -29,12 +34,15 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock {
+public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock, HolyWaterEffectConsumer {
 
     public CursedGrass(@NotNull Properties properties) {
         super(properties);
@@ -80,13 +88,13 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
     /**
      * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState)}
-     * and changed from grass to cursed grass
+     * and add a random flower
+     * and use vampire forest as flower source
      */
     @Override
     public void performBonemeal(@NotNull ServerLevel level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
         BlockPos blockpos = pos.above();
-        // changed from grass to cursed grass
-        BlockState blockstate = ModBlocks.CURSED_GRASS.get().defaultBlockState();
+        BlockState blockstate = Blocks.GRASS.defaultBlockState();
         Optional<Holder.Reference<PlacedFeature>> optional = level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE).getHolder(VegetationPlacements.GRASS_BONEMEAL);
 
 
@@ -109,12 +117,13 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
             if (blockstate1.isAir()) {
                 Holder<PlacedFeature> holder;
                 if (random.nextInt(8) == 0) {
-                    List<ConfiguredFeature<?, ?>> list = level.getBiome(blockpos1).value().getGenerationSettings().getFlowerFeatures();
+                    BlockPos finalBlockpos = blockpos1;
+                    List<ConfiguredFeature<?, ?>> list = level.registryAccess().registry(Registries.BIOME).flatMap(x -> x.getHolder(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures();
                     if (list.isEmpty()) {
                         continue;
                     }
 
-                    holder = ((RandomPatchConfiguration) list.get(0).config()).feature();
+                    holder = ((RandomPatchConfiguration) list.get(level.random.nextInt(list.size())).config()).feature();
                 } else {
                     if (optional.isEmpty()) {
                         continue;
@@ -133,14 +142,24 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         ItemStack heldItemStack = player.getItemInHand(handIn);
         Item heldItem = heldItemStack.getItem();
-        if (heldItem instanceof HolyWaterBottleItem) {
+        if (heldItem instanceof HolyWaterBottleItem&& !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
-            if (player.getRandom().nextInt(uses) == 0) {
+            if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
                 heldItemStack.setCount(heldItemStack.getCount() - 1);
             }
             worldIn.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
             return InteractionResult.SUCCESS;
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Override
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+        level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
+    }
+
+    @Override
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
+        return toolAction == ToolActions.SHOVEL_FLATTEN ? ModBlocks.CURSED_EARTH_PATH.get().defaultBlockState() : super.getToolModifiedState(state, context, toolAction, simulate);
     }
 }

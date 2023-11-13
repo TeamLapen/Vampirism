@@ -47,7 +47,6 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
 
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        output.accept(getDefaultInstance());
         output.accept(getEnchantedStack());
     }
 

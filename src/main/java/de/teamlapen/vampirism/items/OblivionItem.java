@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class OblivionItem extends Item {
             if (((SkillHandler<?>) skillHandler).getRootNodes().stream().flatMap(a -> a.getChildren().stream()).flatMap(a -> Arrays.stream(a.getElements())).noneMatch(skillHandler::isSkillEnabled)) {
                 return;
             }
-            boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+            boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
             player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
             if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst) {
                 HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);

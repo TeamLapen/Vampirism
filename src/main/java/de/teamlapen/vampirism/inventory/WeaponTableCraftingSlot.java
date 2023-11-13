@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -85,8 +87,7 @@ public class WeaponTableCraftingSlot extends Slot {
         }
         worldPos.execute(((world, pos) -> {
             if (recipe != null && !world.isClientSide) {
-                //Play anvil sound
-                world.levelEvent(1030, pos, 0);
+                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.WEAPON_TABLE_CRAFTING.get(), SoundSource.PLAYERS, 1f, 1f);
             }
         }));
         playerIn.awardStat(ModStats.weapon_table);

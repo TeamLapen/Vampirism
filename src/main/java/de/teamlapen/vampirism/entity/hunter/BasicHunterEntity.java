@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
@@ -25,7 +26,7 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
@@ -56,7 +57,6 @@ import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -256,19 +256,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
+        randomEquipments();
 
-        SpawnGroupData livingData = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
 
-        if (this.getRandom().nextInt(4) == 0) {
-            this.setLeftHanded(true);
-            Item crossBow = getEntityLevel() > 1 ? ModItems.ENHANCED_CROSSBOW.get() : ModItems.BASIC_CROSSBOW.get();
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(crossBow));
+    protected void randomEquipments() {
+        HatType[] hatTypes = HatType.values();
+        HatType hat = hatTypes[this.getRandom().nextInt(hatTypes.length)];
+        this.setItemSlot(EquipmentSlot.HEAD, hat.getHeadItem());
 
-        } else {
-            this.setLeftHanded(false);
-        }
-
-        return livingData;
+        EquipmentType equipment = switch (random.nextInt(4)) {
+            case 1 -> EquipmentType.STAKE;
+            case 2 -> EquipmentType.AXE;
+            case 3 -> EquipmentType.CROSSBOW;
+            default -> EquipmentType.NONE;
+        };
+        this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
+        this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
+        this.setDontDropEquipment();
     }
 
     @Override
@@ -409,7 +415,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide) {
-                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
+                if (HunterLeveling.getBasicHunterRequirement(hunterLevel + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicMenu(id, playerInventory, this), name));
                         trainee = player;
@@ -488,9 +494,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
-            return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+            return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
         }
-        return ItemStack.EMPTY;
+        return super.getProjectile(stack);
     }
 
     @Override
@@ -507,7 +513,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, VampireBaseEntity.class, 17F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IHunterMob.class));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));

@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.entity.player.tasks;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.FactionPlayerBooleanSupplier;
+import de.teamlapen.vampirism.api.entity.player.FactionPlayerConsumer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
@@ -11,8 +13,14 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.api.util.NonnullSupplier;
 import de.teamlapen.vampirism.api.util.NullableSupplier;
 import de.teamlapen.vampirism.entity.player.tasks.req.*;
+import de.teamlapen.vampirism.entity.player.tasks.reward.ConsumerReward;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.entity.player.tasks.unlock.ParentUnlocker;
+import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -20,9 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class TaskBuilder {
@@ -30,78 +38,191 @@ public class TaskBuilder {
         return new TaskBuilder();
     }
 
+    /**
+     * @deprecated this method is available to support legacy ids.
+     */
+    @Deprecated
+    public static @NotNull TaskBuilder builder(ResourceKey<Task> taskKey) {
+        return new TaskBuilder(taskKey);
+    }
+
     @NotNull
-    private final Map<TaskRequirement.Type, List<TaskRequirement.Requirement<?>>> requirement = Maps.newHashMapWithExpectedSize(TaskRequirement.Type.values().length);
+    private final Map<ResourceLocation, TaskRequirement.Requirement<?>> requirement = new HashMap<>();
     @NotNull
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
-    @NotNull
-    private NullableSupplier<IPlayableFaction<?>> faction = () -> null;
-    @NotNull
-    private Task.Variant variant = Task.Variant.REPEATABLE;
-    private boolean useDescription = false;
+    private Component title;
+    private Component description;
+
+    @Nullable
+    private ResourceLocation taskId;
 
     private TaskBuilder() {
     }
 
+    private TaskBuilder(@NotNull ResourceKey<Task> taskKey) {
+        this.taskId = taskKey.location();
+    }
+
+    @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull EntityType<?> entityType, int amount) {
-        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount));
+        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount, requirementDescription(name)));
     }
 
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull EntityType<?> entityType, int amount, Component description) {
+        return this.addRequirement(new EntityRequirement(entityType, amount, description));
+    }
+
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull EntityType<?> entityType, int amount) {
+        return this.addRequirement(new EntityRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity", RegUtil.id(entityType)))));
+    }
+
+    @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull TagKey<EntityType<?>> entityType, int amount) {
-        return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
+        return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount, requirementDescription(name)));
     }
 
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull TagKey<EntityType<?>> entityType, int amount, Component description) {
+        return this.addRequirement(new EntityTypeRequirement(entityType, amount, description));
+    }
+
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull TagKey<EntityType<?>> entityType, int amount) {
+        return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity_tag", entityType.location()))));
+    }
+
+    @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull ResourceLocation stat, int amount) {
-        return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount));
+        return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount, requirementDescription(name)));
     }
 
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull ResourceLocation stat, int amount, Component description) {
+        return this.addRequirement(new StatRequirement(stat, amount, description));
+    }
+
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull ResourceLocation stat, int amount) {
+        return this.addRequirement(new StatRequirement(stat, amount, Component.translatable(Util.makeDescriptionId("stat", stat))));
+    }
+
+    /**
+     * @deprecated Use {@link #addRequirement(String, ItemStack)}
+     */
+    @Deprecated(forRemoval = true)
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, NonnullSupplier<ItemStack> itemStack) {
-        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack));
+        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack.get(), requirementDescription(name)));
+    }
+
+    @Deprecated
+    public TaskBuilder addRequirement(@NotNull String name, ItemStack itemStack) {
+        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack, requirementDescription(name)));
+    }
+
+    public TaskBuilder addRequirement(ItemStack itemStack, Component description) {
+        return this.addRequirement(new ItemRequirement(itemStack, description));
+    }
+
+    public TaskBuilder addRequirement(ItemStack itemStack) {
+        return this.addRequirement(new ItemRequirement(itemStack, Component.translatable(Util.makeDescriptionId("item", RegUtil.id(itemStack.getItem())))));
+    }
+
+    @Deprecated
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull String name, @NotNull FactionPlayerBooleanSupplier function) {
+        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function, requirementDescription(name)));
     }
 
     @NotNull
-    public TaskBuilder addRequirement(@NotNull String name, @NotNull BooleanRequirement.BooleanSupplier function) {
-        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function));
+    public TaskBuilder addRequirement(@NotNull FactionPlayerBooleanSupplier function, Component description) {
+        return this.addRequirement(new BooleanRequirement(function, description));
+    }
+
+    @NotNull
+    public TaskBuilder addRequirement(@NotNull FactionPlayerBooleanSupplier function) {
+        return this.addRequirement(new BooleanRequirement(function, Component.translatable(Util.makeDescriptionId("faction_boolean_supplier", FactionPlayerBooleanSupplier.getId(function)))));
     }
 
     @NotNull
     public TaskBuilder addRequirement(@NotNull TaskRequirement.Requirement<?> requirement) {
-        this.requirement.computeIfAbsent(requirement.getType(), type -> Lists.newArrayListWithExpectedSize(3)).add(requirement);
+        Preconditions.checkArgument(!this.requirement.containsKey(requirement.id()), String.format("Requirement %s already exists", requirement.id()));
+        this.requirement.put(requirement.id(), requirement);
         return this;
     }
+
+    @NotNull
+    public TaskBuilder setTitle(@NotNull Component title) {
+        this.title = title;
+        return this;
+    }
+
+    @NotNull
+    public TaskBuilder setTitle(@NotNull ResourceLocation title) {
+        this.title = Component.translatable(Util.makeDescriptionId("task", title));
+        return this;
+    }
+
+    @Deprecated
+    @NotNull
+    public TaskBuilder defaultTitle() {
+        Preconditions.checkArgument(this.taskId != null, "If you want to use legacy naming, you need to provide the builder with a task key");
+        this.title = Component.translatable(Util.makeDescriptionId("task", this.taskId));
+        return this;
+    }
+
+    @Deprecated
+    private Component requirementDescription(String name) {
+        Preconditions.checkArgument(this.taskId != null, "If you want to use legacy naming, you need to provide the builder with a task key");
+        return Component.translatable(Util.makeDescriptionId("task", this.taskId) + ".req." + new ResourceLocation(modId(), name).toString().replace(":", "."));
+    }
+
 
     @NotNull
     public Task build() {
-        if (requirement.isEmpty()) throw new IllegalStateException("Task needs requirements");
-        if (reward == null) throw new IllegalStateException("Task needs a reward");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription);
+        Preconditions.checkArgument(!this.requirement.isEmpty(), "Task needs requirements");
+        Preconditions.checkArgument(this.reward != null, "Task needs a reward");
+        Preconditions.checkArgument(this.title != null, "Task needs a title");
+        return new Task(new TaskRequirement(this.requirement.values()), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.description, this.title);
     }
 
     @NotNull
-    public TaskBuilder enableDescription() {
-        this.useDescription = true;
+    public TaskBuilder setDescription(Component description) {
+        this.description = description;
         return this;
     }
 
     @NotNull
-    public TaskBuilder requireParent(@NotNull Task parentTask) {
-        return this.requireParent(() -> parentTask);
+    public TaskBuilder setDescription(ResourceLocation title) {
+        this.description = Component.translatable(Util.makeDescriptionId("task", title) + ".desc");
+        return this;
     }
 
     @NotNull
-    public TaskBuilder requireParent(@Nullable Supplier<Task> parentTask) {
+    public TaskBuilder requireParent(@Nullable Holder<Task> parentTask) {
         this.unlocker.add(new ParentUnlocker(parentTask));
         return this;
     }
 
+    /**
+     * @deprecated Use {@link #setReward(ItemStack)}
+     */
+    @Deprecated(forRemoval = true)
     @NotNull
     public TaskBuilder setReward(NonnullSupplier<ItemStack> reward) {
+        this.reward = new ItemReward(reward.get());
+        return this;
+    }
+
+    @NotNull
+    public TaskBuilder setReward(ItemStack reward) {
         this.reward = new ItemReward(reward);
         return this;
     }
@@ -113,8 +234,16 @@ public class TaskBuilder {
     }
 
     @NotNull
+    public TaskBuilder setReward(FactionPlayerConsumer reward, Component description) {
+        return setReward(new ConsumerReward(reward, description));
+    }
+
+    /**
+     * @deprecated Use {@link de.teamlapen.vampirism.core.ModTags.Tasks#IS_UNIQUE}
+     */
+    @Deprecated(forRemoval = true)
+    @NotNull
     public TaskBuilder setUnique() {
-        this.variant = Task.Variant.UNIQUE;
         return this;
     }
 
@@ -124,9 +253,12 @@ public class TaskBuilder {
         return this;
     }
 
+    /**
+     * @deprecated Use faction tags, like {@link de.teamlapen.vampirism.core.ModTags.Tasks#IS_VAMPIRE}
+     */
+    @Deprecated(forRemoval = true)
     @NotNull
     public TaskBuilder withFaction(@NotNull NullableSupplier<IPlayableFaction<?>> faction) {
-        this.faction = faction;
         return this;
     }
 

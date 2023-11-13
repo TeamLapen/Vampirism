@@ -58,10 +58,6 @@ import java.util.List;
 
 public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
 
-    public static void init() {
-        MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
-    }
-
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return BasicVampireEntity.getAttributeBuilder();
     }
@@ -280,7 +276,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             this.hasIncreasedStats = hasIncreasedStats;
         }
 
-        private VampireMinionData() {
+        public VampireMinionData() {
             super();
         }
 

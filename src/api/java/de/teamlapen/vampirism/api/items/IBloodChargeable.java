@@ -18,4 +18,14 @@ public interface IBloodChargeable {
      * @return The actual amount charged
      */
     int charge(ItemStack stack, int amount);
+
+    /**
+     * Gets the charge percentage of the item
+     *
+     * @param stack Stack of this item
+     * @return the charge percentage of the item
+     */
+    default float getChargePercentage(ItemStack stack) {
+        return canBeCharged(stack) ? 0 : 1;
+    }
 }

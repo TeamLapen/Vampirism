@@ -8,7 +8,10 @@ import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.mixin.CrossbowItemMixin;
+import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -24,15 +27,16 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class VampirismCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
@@ -49,9 +53,16 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltips, @Nonnull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltips, flag);
+        this.addAmmunitionTypeHoverText(stack, level, tooltips, flag);
         this.addFactionToolTips(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+    }
+
+    protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+        getAmmunition(stack).ifPresent(ammunition -> {
+            tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY));
+        });
     }
 
     @Override
@@ -64,7 +75,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public boolean isValidRepairItem(@Nonnull ItemStack crossbow, ItemStack repairItem) {
+    public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.STRING) || super.isValidRepairItem(crossbow, repairItem);
     }
 
@@ -74,23 +85,23 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public int getMinLevel(@Nonnull ItemStack stack) {
+    public int getMinLevel(@NotNull ItemStack stack) {
         return 0;
     }
 
     @Override
-    public @org.jetbrains.annotations.Nullable IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
+    public @Nullable IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
         return  VReference.HUNTER_FACTION;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
-        return (stack) -> false;
+        return getAllSupportedProjectiles();
     }
 
     @Override
-    public int getUseDuration(@Nonnull ItemStack crossbow) {
+    public int getUseDuration(@NotNull ItemStack crossbow) {
         return getChargeDurationMod(crossbow) + 3;
     }
 
@@ -99,8 +110,8 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * check comments for changes
      */
-    @Nonnull
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level p_77659_1_, Player p_77659_2_, @Nonnull InteractionHand p_77659_3_) {
+    @NotNull
+    public InteractionResultHolder<ItemStack> use(@NotNull Level p_77659_1_, Player p_77659_2_, @NotNull InteractionHand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if (isCharged(itemstack)) {
             performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F); //call modded shoot function with shooting power
@@ -203,7 +214,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public void releaseUsing(@Nonnull ItemStack p_77615_1_, @Nonnull Level p_77615_2_, @Nonnull LivingEntity p_77615_3_, int p_77615_4_) {
+    public void releaseUsing(@NotNull ItemStack p_77615_1_, @NotNull Level p_77615_2_, @NotNull LivingEntity p_77615_3_, int p_77615_4_) {
         int i = this.getUseDuration(p_77615_1_) - p_77615_4_;
         float f = getPowerForTimeMod(i, p_77615_1_);
         if (f >= 1.0F && !isCharged(p_77615_1_) && tryLoadProjectilesMod(p_77615_3_, p_77615_1_)) {
@@ -256,8 +267,8 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         boolean flag = entity instanceof Player && ((Player)entity).getAbilities().instabuild;
         ItemStack projectile = entity.getProjectile(crossbow);
 
-        if (projectile.isEmpty() && flag) {
-            projectile = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get()); // use crossbow arrow
+        if ((projectile.isEmpty() || projectile.getItem() == Items.ARROW) && flag) {
+            projectile = getAmmunition(crossbow).orElse(ModItems.CROSSBOW_ARROW_NORMAL.get()).getDefaultInstance();
         }
 
         if (canBeInfinit(crossbow) && isInfinit(crossbow) && projectile.getItem() instanceof IVampirismCrossbowArrow<?> && ((IVampirismCrossbowArrow<?>) projectile.getItem()).isCanBeInfinite()) {
@@ -272,29 +283,65 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * changes at comments
      */
-    protected boolean loadProjectileMod(LivingEntity p_220023_0_, ItemStack p_220023_1_, ItemStack p_220023_2_, boolean p_220023_3_, boolean p_220023_4_) {
-        if (p_220023_2_.isEmpty()) {
+    protected boolean loadProjectileMod(LivingEntity entity, ItemStack crossbow, ItemStack projectile, boolean p_220023_3_, boolean noConsume) {
+        if (projectile.isEmpty()) {
             return false;
         } else {
-            boolean flag = p_220023_4_ && p_220023_2_.getItem() instanceof ArrowItem;
+            boolean flag = noConsume && projectile.getItem() instanceof ArrowItem;
             ItemStack itemstack;
-            if (!flag && !p_220023_4_ && !p_220023_3_) {
-                itemstack = p_220023_2_.split(1);
-                if (p_220023_2_.isEmpty() && p_220023_0_ instanceof Player) {
-                    ((Player)p_220023_0_).getInventory().removeItem(p_220023_2_);
+            if (!flag && !noConsume && !p_220023_3_) {
+                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.split(1);
+                if (projectile.isEmpty() && entity instanceof Player) {
+                    ((Player)entity).getInventory().removeItem(projectile);
                 }
             } else {
-                itemstack = p_220023_2_.copy();
+                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.copy();
             }
 
-            if (itemstack.getItem() instanceof IArrowContainer) { // if arrow container use contents
-                for (ItemStack arrow : ((IArrowContainer) itemstack.getItem()).getArrows(itemstack)) {
-                    CrossbowItemMixin.addChargedProjectile(p_220023_1_, arrow);
+            if (itemstack.getItem() instanceof IArrowContainer container) { // if arrow container use contents
+                Collection<ItemStack> projectiles = noConsume ? container.getArrows(projectile) : container.getAndRemoveArrows(projectile);
+                for (ItemStack arrow : projectiles) {
+                    CrossbowItemMixin.addChargedProjectile(crossbow, arrow);
                 }
             } else {
-                CrossbowItemMixin.addChargedProjectile(p_220023_1_, itemstack);
+                CrossbowItemMixin.addChargedProjectile(crossbow, itemstack);
             }
             return true;
         }
+    }
+
+    @Override
+    public boolean canSelectAmmunition(ItemStack crossbow) {
+        return true;
+    }
+
+    @Override
+    public Optional<Item> getAmmunition(ItemStack crossbow) {
+        return Optional.ofNullable(crossbow.getTag()).filter(a -> a.contains("ammunition")).map(a -> a.getString("ammunition")).map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue);
+    }
+
+    @Override
+    public void setAmmunition(ItemStack crossbow, @Nullable Item ammo) {
+        setAmmunition(crossbow, ammo == null ? null : RegUtil.id(ammo));
+    }
+
+    @Override
+    public void setAmmunition(ItemStack crossbow, @Nullable ResourceLocation ammo) {
+        if (ammo == null) {
+            crossbow.getOrCreateTag().remove("ammunition");
+        } else {
+            crossbow.getOrCreateTag().putString("ammunition", ammo.toString());
+        }
+    }
+
+    @Override
+    public Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow) {
+        return getAllSupportedProjectiles().and(stack -> {
+            if (canSelectAmmunition(crossbow)) {
+                return getAmmunition(crossbow).map(restriction -> stack.getItem() == restriction).orElse(true);
+            } else {
+                return true;
+            }
+        });
     }
 }

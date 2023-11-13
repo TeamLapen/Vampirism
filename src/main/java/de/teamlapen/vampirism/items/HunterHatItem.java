@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.model.armor.HunterHatModel;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,7 +36,7 @@ public class HunterHatItem extends VampirismHunterArmorItem {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return "vampirism:textures/entity/hunter_extra.png";
+        return "vampirism:textures/models/armor/" + RegUtil.id(this).getPath() + ".png";
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -62,10 +64,10 @@ public class HunterHatItem extends VampirismHunterArmorItem {
 
     @Override
     public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if(stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString())){
+        if (stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
             UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
-            if(player.tickCount % 16 == 4) {
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION,30,0));
+            if (player.tickCount % 16 == 4) {
+                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
             }
         }

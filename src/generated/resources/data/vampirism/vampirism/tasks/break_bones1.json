@@ -1,0 +1,29 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:entity",
+        "amount": 20,
+        "description": {
+          "translate": "entity.minecraft.skeleton"
+        },
+        "entityType": "minecraft:skeleton",
+        "id": "minecraft:skeleton"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:chainmail_chestplate",
+      "tag": {
+        "Damage": 0
+      }
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.break_bones1"
+  },
+  "unlocker": []
+}

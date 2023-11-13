@@ -1,39 +1,36 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.items.HunterIntelItem;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerListener;
-import net.minecraft.world.SimpleContainer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * Container which handles hunter levelup at a hunter trainer
  */
-public class HunterTrainerMenu extends InventoryContainerMenu implements ContainerListener {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Items.IRON_INGOT, 27, 26), new SelectorInfo(Items.GOLD_INGOT, 57, 26), new SelectorInfo(ModTags.Items.HUNTER_INTEL, 86, 26)};
+public class HunterTrainerMenu extends ItemCombinerMenu {
+
     private final @NotNull Player player;
-    @Nullable
-    private final HunterTrainerEntity entity;
-    private boolean changed = false;
-    private @NotNull ItemStack missing = ItemStack.EMPTY;
+    private final @Nullable HunterTrainerEntity entity;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private @NotNull Optional<HunterLeveling.HunterTrainerRequirement> lvlRequirement;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
@@ -42,75 +39,77 @@ public class HunterTrainerMenu extends InventoryContainerMenu implements Contain
     }
 
     public HunterTrainerMenu(int id, @NotNull Inventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
-        ((SimpleContainer) this.inventory).addListener(this);
+        super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()));
         this.player = playerInventory.player;
-        this.addPlayerSlots(playerInventory);
         this.entity = trainer;
+        this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) + 1);
     }
 
     @Override
-    public void containerChanged(@NotNull Container iInventory) {
-        changed = true;
+    protected boolean mayPickup(@NotNull Player pPlayer, boolean pHasStack) {
+        return true;
     }
+
+    @Override
+    protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
+    }
+
+    @Override
+    protected boolean isValidBlock(@NotNull BlockState pState) {
+        return true;
+    }
+
+    @Override
+    public void createResult() {
+    }
+
+    @Override
+    protected @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
+        return ItemCombinerMenuSlotDefinition.create()
+                .withSlot(0, 27, 26, stack -> this.lvlRequirement.filter(req -> req.ironQuantity() > 0).isPresent() && stack.is(Items.IRON_INGOT))
+                .withSlot(1, 57, 26, stack -> this.lvlRequirement.filter(req -> req.goldQuantity() > 0).isPresent() && stack.is(Items.GOLD_INGOT))
+                .withSlot(2, 86, 26, stack -> this.lvlRequirement.map(req -> req.tableRequirement().resultIntelItem().get()).filter(stack::is).isPresent())
+                .withResultSlot(0, 0, 0)
+                .build();
+    }
+
+    @Override
+    public void createResultSlot(@NotNull ItemCombinerMenuSlotDefinition definition) {
+
+    }
+
 
     /**
      * @return If the player can levelup with the given tileInventory
      */
     public boolean canLevelup() {
-        int targetLevel = FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) + 1;
-        HunterLevelingConf levelingConf = HunterLevelingConf.instance();
-        if (levelingConf.isLevelValidForTrainer(targetLevel) != 0) return false;
-        int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
-        int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
-        missing = InventoryHelper.checkItems(inventory, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1}, (supplied, required) -> supplied.equals(required) || (supplied instanceof HunterIntelItem && required instanceof HunterIntelItem && ((HunterIntelItem) supplied).getLevel() >= ((HunterIntelItem) required).getLevel()));
-        return missing.isEmpty();
+        return this.lvlRequirement.map(req -> req.ironQuantity() <= this.inputSlots.countItem(Items.IRON_INGOT) && req.goldQuantity() <= this.inputSlots.countItem(Items.GOLD_INGOT) && this.inputSlots.countItem(req.tableRequirement().resultIntelItem().get()) >= 1).orElse(false);
     }
 
-    /**
-     * @return The missing Itemstack or null if nothing is missing
-     */
-    public ItemStack getMissingItems() {
-        return this.missing;
+    public Optional<HunterLeveling.HunterTrainerRequirement> getRequirement() {
+        return lvlRequirement;
     }
 
-    /**
-     * @return If the inventory has changed since the last call
-     */
-    public boolean hasChanged() {
-        if (changed) {
-            changed = false;
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Called via input packet, when the player clicks the levelup button.
      */
     public void onLevelupClicked() {
         if (canLevelup()) {
-            int old = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
-            FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
-            int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
-            InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
-            player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
-            changed = true;
+            this.lvlRequirement.ifPresent(req -> {
+                FactionPlayerHandler.get(this.player).setFactionLevel(VReference.HUNTER_FACTION, req.targetLevel());
+                InventoryHelper.removeItems(this.inputSlots, req.ironQuantity(), req.goldQuantity(), 1);
+                this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
+                this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
+            });
         }
     }
 
-    @Override
-    public void removed(@NotNull Player playerIn) {
-        super.removed(playerIn);
-        if (!playerIn.getCommandSenderWorld().isClientSide) {
-            clearContainer(playerIn, inventory);
-        }
-    }
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        if (entity == null) return false;
-        return new Vec3(player.getX(), player.getY(), player.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
+        if (this.entity == null) return false;
+        return new Vec3(player.getX(), player.getY(), player.getZ()).distanceToSqr(new Vec3(this.entity.getX(), this.entity.getY(), this.entity.getZ())) < 64;
     }
 
 }

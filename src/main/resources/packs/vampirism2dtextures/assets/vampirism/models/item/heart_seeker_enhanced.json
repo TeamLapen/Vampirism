@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:item/heart_seeker_model",
+  "textures": {
+    "layer0": "vampirism:item/heart_seeker_enhanced"
+  }
+}

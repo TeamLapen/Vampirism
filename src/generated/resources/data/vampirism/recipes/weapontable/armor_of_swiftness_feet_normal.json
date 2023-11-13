@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "X": {
-      "item": "minecraft:leather"
+      "tag": "forge:leather"
     },
     "Y": {
       "tag": "forge:crops/garlic"

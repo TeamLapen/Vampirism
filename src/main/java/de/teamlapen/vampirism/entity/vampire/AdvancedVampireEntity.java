@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
+import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -54,6 +55,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -183,7 +185,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int getEyeType() {
+    public int getVampireType() {
         return getEntityData().get(TYPE);
     }
 
@@ -337,12 +339,21 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomVampire(random);
-        lootBookId = supporter.bookID();
-        this.getEntityData().set(TYPE, supporter.typeId());
-        this.getEntityData().set(NAME, supporter.senderName() == null ? "none" : supporter.senderName());
-        this.getEntityData().set(TEXTURE, supporter.textureName() == null ? "none" : supporter.textureName());
+        Supporter supporter = SupporterManager.getRandomVampire(random);
+        lootBookId = supporter.bookId();
+        this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
+        this.getEntityData().set(NAME, supporter.name());
+        this.getEntityData().set(TEXTURE, supporter.texture());
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    private static int createCustomisationFlag(Supporter supporter) {
+        Map<String, String> appearance = supporter.appearance();
+        int type = 0;
+        type |= (Integer.parseInt(appearance.getOrDefault("eye", "0")) & 0b111111);
+        type |= (Integer.parseInt(appearance.getOrDefault("fang", "6"))  & 0b111111) << 6;
+        type |= (Integer.parseInt(appearance.getOrDefault("body", "16")) & 0b11111111) << 12;
+        return type;
     }
 
     @Override

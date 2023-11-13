@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "exclusion_zone": {
+      "chunk_count": 2,
+      "other_set": "minecraft:villages"
+    },
+    "salt": 1724616580,
+    "separation": 4,
+    "spacing": 9
+  },
+  "structures": [
+    {
+      "structure": "vampirism:hunter_camp",
+      "weight": 1
+    }
+  ]
+}

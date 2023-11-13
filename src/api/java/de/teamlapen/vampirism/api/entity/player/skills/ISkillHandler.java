@@ -45,6 +45,10 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      */
     int getLeftSkillPoints();
 
+    int getMaxSkillPoints();
+
+    void addSkillPoints(int points);
+
     ISkill<T>[] getParentSkills(ISkill<T> skill);
 
     boolean isRefinementEquipped(IRefinement refinement);
@@ -72,6 +76,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      * Enables all root skills that are available for the player
      */
     void enableRootSkills();
+
+    void reset();
 
     enum Result {
         /**

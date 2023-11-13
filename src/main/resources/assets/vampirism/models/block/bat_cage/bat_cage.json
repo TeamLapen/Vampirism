@@ -1,0 +1,12 @@
+{
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/dirt",
+    "gold": "minecraft:block/gold_block",
+    "concrete": "minecraft:block/black_concrete",
+    "oak": "minecraft:block/oak_planks",
+    "dark_oak": "minecraft:block/dark_oak_planks",
+    "spruce": "minecraft:block/spruce_planks"
+  }
+}

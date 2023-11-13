@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -19,11 +20,14 @@ import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.village.ReputationEventType;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -39,9 +43,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-    public static final Capability<IExtendedCreatureVampirism> CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
+    public static final Capability<IExtendedCreatureVampirism> CAP = VampirismCapabilities.EXTENDED_CREATURE;
 
     public static @NotNull LazyOptional<IExtendedCreatureVampirism> getSafe(@NotNull Entity mob) {
         return mob.getCapability(CAP);
@@ -247,6 +249,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (entity.getRandom().nextInt(4) == 0) {
                 amt = 2 * amt;
             }
+        }
+        if (this.entity instanceof Villager villager) {
+            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
         }
 
         return amt;

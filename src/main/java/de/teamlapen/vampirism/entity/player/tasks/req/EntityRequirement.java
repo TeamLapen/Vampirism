@@ -1,33 +1,37 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
+import de.teamlapen.vampirism.core.ModTasks;
+import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
-public class EntityRequirement implements TaskRequirement.Requirement<EntityType<?>> {
-    @NotNull
-    private final EntityType<?> entityType;
-    private final int amount;
-    @NotNull
-    private final ResourceLocation id;
+public record EntityRequirement(@NotNull ResourceLocation id, @NotNull EntityType<?> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount, @NotNull Component description) implements TaskRequirement.Requirement<EntityType<?>> {
 
-    public EntityRequirement(@NotNull ResourceLocation id, @NotNull EntityType<?> entityType, int amount) {
-        this.id = id;
-        this.entityType = entityType;
-        this.amount = amount;
+    public static final Codec<EntityRequirement> CODEC = RecordCodecBuilder.create(inst -> {
+        return inst.group(
+                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
+                ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entityType").forGetter(i -> i.entityType),
+                Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
+                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(s -> s.description)
+        ).apply(inst, (id, type, amount, desc) -> new EntityRequirement(id.orElseGet(() -> RegUtil.id(type)), type, amount, desc));
+    });
+
+    public EntityRequirement(@NotNull EntityType<?> entityType, int amount, Component component) {
+        this(RegUtil.id(entityType), entityType, amount, component);
     }
 
     @Override
     public int getAmount(IFactionPlayer<?> player) {
         return amount;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @NotNull
@@ -42,4 +46,8 @@ public class EntityRequirement implements TaskRequirement.Requirement<EntityType
         return TaskRequirement.Type.ENTITY;
     }
 
+    @Override
+    public Codec<? extends TaskRequirement.Requirement<?>> codec() {
+        return ModTasks.ENTITY_REQUIREMENT.get();
+    }
 }

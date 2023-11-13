@@ -28,7 +28,14 @@ public class MixinHooks {
      */
     public static boolean enforcingGlowing_bloodVision = false;
 
+    public static float armorLayerPartialTicks;
+
     public static void addSingleInstanceStructure(@NotNull List<ResourceLocation> structures) {
+        onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
+    }
+
+    public static void replaceSingleInstanceStructure(@NotNull List<ResourceLocation> structures) {
+        onlyOneStructure.clear();
         onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
     }
 

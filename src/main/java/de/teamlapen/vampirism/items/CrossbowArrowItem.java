@@ -17,6 +17,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
@@ -62,7 +63,9 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         if (this.type == EnumArrowType.SPITFIRE) {
             arrowEntity.setSecondsOnFire(100);
         }
-        arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
+        if (entity instanceof Player) {
+            arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
+        }
         return arrowEntity;
     }
 

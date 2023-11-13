@@ -24,6 +24,14 @@
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
     }
   },
   "display": {
@@ -48,6 +56,9 @@
     ],
     [
       "advanced"
+    ],
+    [
+      "main"
     ]
   ],
   "sends_telemetry_event": true

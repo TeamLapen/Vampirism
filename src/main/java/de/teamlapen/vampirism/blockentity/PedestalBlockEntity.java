@@ -223,6 +223,15 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         });
     }
 
+    public int getChargedProgress() {
+        IBloodChargeable chargeItem = getChargeItem(this.internalStack);
+        if (chargeItem != null) {
+            return (int) (chargeItem.getChargePercentage(this.internalStack) * 10);
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * Tries to retrieve a {@link IBloodChargeable} instance from the given stack
      *

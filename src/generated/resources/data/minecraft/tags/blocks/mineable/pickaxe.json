@@ -18,6 +18,7 @@
     "vampirism:garlic_diffuser_weak",
     "vampirism:garlic_diffuser_normal",
     "vampirism:garlic_diffuser_improved",
+    "vampirism:fog_diffuser",
     "vampirism:chandelier",
     "vampirism:candelabra",
     "vampirism:candelabra_wall",
@@ -25,6 +26,11 @@
     "#vampirism:castle_block",
     "#vampirism:castle_slaps",
     "#vampirism:castle_stairs",
-    "#vampirism:totem_top"
+    "#vampirism:totem_top",
+    "#vampirism:dark_stone",
+    "#vampirism:dark_stone_bricks",
+    "#vampirism:dark_brick_tiles",
+    "#vampirism:polished_dark_brick",
+    "#vampirism:cobbled_dark_brick"
   ]
 }

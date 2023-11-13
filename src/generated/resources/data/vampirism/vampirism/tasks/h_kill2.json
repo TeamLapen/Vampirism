@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:entity_type",
+        "amount": 15,
+        "description": {
+          "translate": "entity_tag.vampirism.vampire"
+        },
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 2,
+      "id": "minecraft:diamond"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.h_kill2"
+  },
+  "unlocker": []
+}

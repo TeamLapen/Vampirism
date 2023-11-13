@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "vampirism:mother_core"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GCG",
+    "OOO"
+  ],
+  "result": {
+    "item": "vampirism:vampire_beacon"
+  },
+  "show_notification": true
+}

@@ -24,6 +24,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
+@Deprecated
 @OnlyIn(Dist.CLIENT)
 public class SelectMinionTaskScreen extends GuiPieMenu<SelectMinionTaskScreen.Entry> {
 

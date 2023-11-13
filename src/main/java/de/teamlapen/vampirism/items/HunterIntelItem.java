@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -70,9 +68,6 @@ public class HunterIntelItem extends Item {
         return Component.translatable(this.getOrCreateDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
     }
 
-    /**
-     * @return Level of this hunter intel 0 - {@link HunterLevelingConf#HUNTER_INTEL_COUNT}-1
-     */
     public int getLevel() {
         return level;
     }

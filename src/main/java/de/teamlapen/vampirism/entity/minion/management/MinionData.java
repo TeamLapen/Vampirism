@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -29,23 +31,28 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     protected final static Logger LOGGER = LogManager.getLogger();
     private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
 
-
+    /**
+     * @deprecated use {@link de.teamlapen.vampirism.api.entity.factions.IMinionBuilder} from  {@link de.teamlapen.vampirism.api.entity.factions.ILordPlayerBuilder} instead
+     */
+    @Deprecated(forRemoval = true)
     public static void registerDataType(ResourceLocation id, Supplier<? extends MinionData> supplier) {
         constructors.put(id, supplier);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void registerDataTypes() {
+        constructors.forEach((id, supplier) -> {
+            ((FactionRegistry) VampirismAPI.factionRegistry()).addMinionData(id, supplier);
+        });
     }
 
     @NotNull
     public static MinionData fromNBT(@NotNull CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
-        Supplier<? extends MinionData> c = constructors.get(dataType);
-        if (c == null) {
-            LOGGER.error("No data constructor available for {}", dataType);
-            return new MinionData();
-        }
-
-        MinionData d = c.get();
-        d.deserializeNBT(nbt);
-        return d;
+        return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(Supplier::get).map(s-> {
+            ((MinionData)s).deserializeNBT(nbt);
+            return (MinionData)s;
+        }).orElse(new MinionData());
     }
 
     private final @NotNull MinionInventory inventory;

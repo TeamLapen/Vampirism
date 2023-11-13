@@ -13,12 +13,14 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -75,10 +77,11 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
         if (!attacker.getCommandSenderWorld().isClientSide) {
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {
-                    DamageHandler.hurtVanilla(target, sources -> attacker instanceof Player ? sources.playerAttack((Player) attacker) : sources.mobAttack(attacker), 10000F);
+                    DamageHandler.hurtModded(target, sources -> sources.stake(attacker), 10000F);
                     if (attacker instanceof ServerPlayer) {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayer) attacker, HunterActionCriterionTrigger.Action.STAKE);
                     }
+                    target.getCommandSenderWorld().playSound(null, target.getX(), target.getY()+0.5*target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);
                 }
 
             }

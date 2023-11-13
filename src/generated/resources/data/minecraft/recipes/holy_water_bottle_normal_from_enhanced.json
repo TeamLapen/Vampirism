@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "vampirism:holy_water_bottle_enhanced"
+    },
+    {
+      "item": "vampirism:pure_salt_water"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "vampirism:holy_water_bottle_normal"
+  }
+}

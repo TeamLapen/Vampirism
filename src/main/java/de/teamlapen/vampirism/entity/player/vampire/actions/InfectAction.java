@@ -44,7 +44,7 @@ public class InfectAction extends DefaultVampireAction {
         }).orElse(null);
         if(creature != null ){
             player.awardStat(ModStats.infected_creatures);
-            player.level().playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.PLAYER_BITE.get(), SoundSource.PLAYERS, 1, 1);
+            player.level().playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1, 1);
         }
         else{
             player.level().playSound(null, vampire.getRepresentingPlayer().getX(), vampire.getRepresentingPlayer().getY() + 1.5d, vampire.getRepresentingPlayer().getZ(), SoundEvents.NOTE_BLOCK_BANJO.get(), SoundSource.PLAYERS, 1, 1);

@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.mixin.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
@@ -13,6 +10,7 @@ import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
 import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
+import de.teamlapen.vampirism.world.loot.functions.SetOilFunction;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -46,7 +44,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     /**
      * copied from {@link net.minecraft.data.loot.packs.VanillaBlockLoot}
@@ -110,6 +108,8 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
             this.add(ModEntities.CONVERTED_HORSE.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_DONKEY.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_MULE.get(), LootTable.lootTable());
+            this.add(ModEntities.CONVERTED_FOX.get(), LootTable.lootTable());
+            this.add(ModEntities.CONVERTED_GOAT.get(), LootTable.lootTable());
             this.add(ModEntities.DUMMY_CREATURE.get(), LootTable.lootTable());
             this.add(ModEntities.HUNTER_TRAINER.get(), LootTable.lootTable());
             LootTable.Builder vampire = LootTable.lootTable()
@@ -149,13 +149,14 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
             this.add(ModEntities.TASK_MASTER_HUNTER.get(), LootTable.lootTable());
             this.add(ModEntities.VAMPIRE_MINION.get(), LootTable.lootTable());
             this.add(ModEntities.HUNTER_MINION.get(), LootTable.lootTable());
+            this.add(ModEntities.GHOST.get(), LootTable.lootTable());
         }
     }
 
     private static class ModChestLootTables implements LootTableSubProvider {
         @Override
         public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
-            consumer.accept(ModLootTables.chest_hunter_trainer, LootTable.lootTable()
+            consumer.accept(ModLootTables.CHEST_HUNTER_TRAINER, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 9))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(40))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(20))
@@ -183,7 +184,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setWeight(10))));
-            consumer.accept(ModLootTables.chest_vampire_dungeon, LootTable.lootTable()
+            consumer.accept(ModLootTables.CHEST_VAMPIRE_DUNGEON, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(7))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(35))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(ConstantValue.exactly(1f)))))
@@ -200,6 +201,74 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))));
+            consumer.accept(ModLootTables.CHEST_VAMPIRE_HUT, LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 5))
+                            .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0, 1))
+                            .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(70).apply(AddBookNbtFunction.builder())))
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
+                            .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
+                            .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ENHANCED.get()).setWeight(21).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodChargeFunction.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ULTIMATE.get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodChargeFunction.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ENHANCED.get()).setWeight(21).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodChargeFunction.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ULTIMATE.get()).setWeight(9).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.99f))).apply(SetItemBloodChargeFunction.builder(UniformGenerator.between(500f, 2000f))))
+                            .add(EmptyLootItem.emptyItem().setWeight(60)))
+            );
+            consumer.accept(ModLootTables.CHEST_VAMPIRE_ALTAR, LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 8))
+                            .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(10, 18))
+                            .add(LootItem.lootTableItem(Items.GOLD_INGOT).setWeight(16))
+                            .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(22).apply(SetItemDamageFunction.setDamage(ConstantValue.exactly(1f)))))
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_0.get()).setWeight(25))
+                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_1.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_2.get()).setWeight(15))
+                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_3.get()).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setWeight(5))
+                            .add(EmptyLootItem.emptyItem().setWeight(25))
+                    )
+            );
+            consumer.accept(ModLootTables.CHEST_HUNTER_OUTPOST, LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
+                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_NORMAL.get()).setWeight(30))
+                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ENHANCED.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ULTIMATE.get()).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_NORMAL.get()).setWeight(30))
+                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ENHANCED.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ULTIMATE.get()).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.BASIC_CROSSBOW.get()).setWeight(30))
+                            .add(LootItem.lootTableItem(ModItems.BASIC_DOUBLE_CROSSBOW.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.BASIC_TECH_CROSSBOW.get()).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.ENHANCED_CROSSBOW.get()).setWeight(30))
+                            .add(LootItem.lootTableItem(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.ENHANCED_TECH_CROSSBOW.get()).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.HUNTER_AXE_NORMAL.get()).setWeight(60))
+                            .add(LootItem.lootTableItem(ModItems.HUNTER_AXE_ENHANCED.get()).setWeight(40))
+                            .add(LootItem.lootTableItem(ModItems.HUNTER_AXE_ULTIMATE.get()).setWeight(20))
+                    )
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 9))
+                            .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(20))
+                            .add(LootItem.lootTableItem(Items.GOLD_BLOCK).setWeight(10))
+                            .add(LootItem.lootTableItem(ModItems.GARLIC_BREAD.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
+                    )
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0, 1))
+                            .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).apply(AddBookNbtFunction.builder()).setWeight(50))));
+            consumer.accept(ModLootTables.CHEST_HUNTER_OUTPOST_ALCHEMY, LootTable.lootTable()
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(2, 5))
+                            .add(LootItem.lootTableItem(ModItems.OIL_BOTTLE.get()).setWeight(20).apply(SetOilFunction.random()))
+                            .add(LootItem.lootTableItem(ModItems.OIL_BOTTLE.get()).setWeight(20).apply(SetOilFunction.setOil(ModOils.VAMPIRE_BLOOD.get())))
+                            .add(LootItem.lootTableItem(Items.GLASS_BOTTLE).setWeight(10)))
+                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 6))
+                            .add(LootItem.lootTableItem(Items.BLAZE_ROD).setWeight(20))
+                            .add(LootItem.lootTableItem(Items.GUNPOWDER).setWeight(20))
+                            .add(LootItem.lootTableItem(Items.REDSTONE).setWeight(20))));
         }
     }
 
@@ -227,16 +296,15 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
             this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
             this.dropSelf(ModBlocks.POTION_TABLE.get());
             this.dropSelf(ModBlocks.BLOOD_SIEVE.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICKS.get());
+            this.dropSelf(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
+            this.dropSelf(ModBlocks.DARK_STONE.get());
             this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
-            this.dropSelf(ModBlocks.CASTLE_SLAB_DARK_BRICK.get());
-            this.dropSelf(ModBlocks.CASTLE_SLAB_DARK_STONE.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICK_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_STONE_SLAB.get());
             this.dropSelf(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
-            this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get());
-            this.dropSelf(ModBlocks.CASTLE_STAIRS_DARK_STONE.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_STONE_STAIRS.get());
             this.dropSelf(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
             this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
@@ -290,15 +358,17 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
             this.dropSelf(ModBlocks.TOMBSTONE2.get());
             this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.GRAVE_CAGE.get());
-            this.add(ModBlocks.CURSED_GRASS.get(), createSingleItemTable(ModBlocks.CURSED_EARTH.get()));
+            this.add(ModBlocks.CURSED_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_EARTH.get()));
             this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
             this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG_CURED.get());
             this.add(ModBlocks.DIRECT_CURSED_BARK.get(), noDrop());
             this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get());
             this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_SIGN.get());
@@ -320,6 +390,50 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
             this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
             this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
             this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
+            this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
+            this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
+            this.dropOther(ModBlocks.CURSED_EARTH_PATH.get(), ModBlocks.CURSED_EARTH.get());
+            this.dropSelf(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
+            this.add(ModBlocks.DARK_STONE.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.COBBLED_DARK_STONE.get()));
+            this.dropSelf(ModBlocks.DARK_STONE_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_STONE_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_STONE_WALL.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICKS.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICK_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_STONE_BRICK_WALL.get());
+            this.dropSelf(ModBlocks.COBBLED_DARK_STONE.get());
+            this.dropSelf(ModBlocks.COBBLED_DARK_STONE_STAIRS.get());
+            this.dropSelf(ModBlocks.COBBLED_DARK_STONE_SLAB.get());
+            this.dropSelf(ModBlocks.COBBLED_DARK_STONE_WALL.get());
+            this.dropSelf(ModBlocks.POLISHED_DARK_STONE.get());
+            this.dropSelf(ModBlocks.POLISHED_DARK_STONE_STAIRS.get());
+            this.dropSelf(ModBlocks.POLISHED_DARK_STONE_SLAB.get());
+            this.dropSelf(ModBlocks.POLISHED_DARK_STONE_WALL.get());
+            this.dropSelf(ModBlocks.DARK_STONE_TILES.get());
+            this.dropSelf(ModBlocks.DARK_STONE_TILES_STAIRS.get());
+            this.dropSelf(ModBlocks.DARK_STONE_TILES_SLAB.get());
+            this.dropSelf(ModBlocks.DARK_STONE_TILES_WALL.get());
+            this.dropSelf(ModBlocks.CRACKED_DARK_STONE_TILES.get());
+            this.dropSelf(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
+            this.otherWhenSilkTouch(ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.DARK_STONE.get());
+            this.dropSelf(ModBlocks.BAT_CAGE.get());
+            this.add(ModBlocks.CURSED_HANGING_ROOTS.get(), ModBlockLootTables::createShearsOnlyDrop);
+            this.add(ModBlocks.MOTHER.get(),
+                    createSingleItemTable(ModItems.MOTHER_CORE.get())
+                            .withPool(applyExplosionCondition(ModBlocks.MOTHER_TROPHY.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.MOTHER_TROPHY.get()))))
+                            .withPool(applyExplosionCondition(ModItems.SOUL_ORB_VAMPIRE.get(), LootPool.lootPool().name("souls").setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SOUL_ORB_VAMPIRE.get()).setQuality(10))))
+                            .withPool(LootPool.lootPool().name("bonus").setRolls(UniformGenerator.between(1, 4))
+                                    .add(applyExplosionCondition(ModItems.PURE_BLOOD_4.get(), LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setQuality(2)))
+                                    .add(applyExplosionCondition(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setQuality(10)))));
+            this.dropSelf(ModBlocks.MOTHER_TROPHY.get());
+            this.dropSelf(ModBlocks.FOG_DIFFUSER.get());
+            this.dropPottedContents(ModBlocks.POTTED_DARK_SPRUCE_SAPLING.get());
+            this.dropPottedContents(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get());
+            this.dropSelf(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
+            this.dropSelf(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+            this.add(ModBlocks.VAMPIRE_BEACON.get(), this::createNameableBlockEntityTable);
         }
 
         @NotNull
@@ -332,7 +446,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
     private static class InjectLootTables implements LootTableSubProvider {
         @Override
         public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
-            consumer.accept(ModLootTables.abandoned_mineshaft, LootTable.lootTable()
+            consumer.accept(ModLootTables.ABANDONED_MINESHAFT, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
@@ -361,7 +475,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
             );
-            consumer.accept(ModLootTables.desert_pyramid, LootTable.lootTable()
+            consumer.accept(ModLootTables.DESERT_PYRAMID, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(15))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.6f))))
@@ -372,7 +486,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
             );
-            consumer.accept(ModLootTables.jungle_temple, LootTable.lootTable()
+            consumer.accept(ModLootTables.JUNGLE_TEMPLE, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1f, 1f))))
@@ -396,7 +510,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
             );
-            consumer.accept(ModLootTables.stronghold_corridor, LootTable.lootTable()
+            consumer.accept(ModLootTables.STRONGHOLD_CORRIDOR, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(50))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(20).apply(AddBookNbtFunction.builder()))
@@ -416,7 +530,7 @@ public class LootTablesGenerator { //TODO 1.20 move to de.teamlapen.vampirism.da
                             .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
                             .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION))))
             );
-            consumer.accept(ModLootTables.stronghold_library, LootTable.lootTable()
+            consumer.accept(ModLootTables.STRONGHOLD_LIBRARY, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(AddBookNbtFunction.builder())))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(3))

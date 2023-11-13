@@ -56,6 +56,7 @@ public class RegistryManager implements IInitListener {
         ModSounds.register(modbus);
         ModTasks.register(modbus);
         ModTiles.register(modbus);
+        ModAi.register(modbus);
         ModVillage.register(modbus);
         VampireActions.register(modbus);
         HunterActions.register(modbus);
@@ -82,13 +83,11 @@ public class RegistryManager implements IInitListener {
     public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
-                ModEntities.registerConvertibles();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
-                ModPotions.registerPotionMixes();
                 ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(() -> {
-                    ModEntities.initializeEntities();
+                    ModPotions.registerPotionMixes();
                     ModStats.registerCustomStats();
                     ModVillage.villagerTradeSetup();
                 });
@@ -116,6 +115,11 @@ public class RegistryManager implements IInitListener {
         ModEnchantments.fixMapping(event);
         ModEntities.fixMapping(event);
         ModEffects.fixMappings(event);
+    }
+
+    @SubscribeEvent
+    public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
+        ModRegistries.registerDatapackRegistries(event);
     }
 
     @SubscribeEvent

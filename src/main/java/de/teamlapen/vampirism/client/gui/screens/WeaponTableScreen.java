@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Gui for the weapon table. Only draws the background and the lava status
@@ -122,7 +123,8 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    protected void slotClicked(@NotNull Slot slotIn, int slotId, int mouseButton, @NotNull ClickType type) {
+    protected void slotClicked(@Nullable Slot slotIn, int slotId, int mouseButton, @NotNull ClickType type) {
+        //noinspection ConstantConditions
         super.slotClicked(slotIn, slotId, mouseButton, type);
         this.recipeBookGui.slotClicked(slotIn);
     }

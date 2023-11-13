@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModContainer;
@@ -12,6 +14,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -47,6 +50,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     public @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
     private @Nullable Runnable listener;
     private final boolean refinementsAvailable;
+    private final Registry<Task> registry;
 
     public VampirismMenu(int id, @NotNull Inventory playerInventory) {
         super(ModContainer.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
@@ -60,32 +64,36 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
                 this.refinementStacks.set(i, sets[i]);
             }
         }
+        this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+    }
+
+    @Override
+    public Registry<Task> getRegistry() {
+        return this.registry;
     }
 
     @Override
     public boolean areRequirementsCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Type type) {
-        if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
-                Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
-                for (TaskRequirement.Requirement<?> requirement : taskInfo.getTask().getRequirement().requirements().get(type)) {
-                    if (!data.containsKey(requirement.getId()) || data.get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
-                        return false;
-                    }
+        if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
+            Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
+            for (TaskRequirement.Requirement<?> requirement : getTask(taskInfo.getTask()).getRequirement().requirements().get(type)) {
+                if (!data.containsKey(requirement.id()) || data.get(requirement.id()) < requirement.getAmount(this.factionPlayer)) {
+                    return false;
                 }
-                return true;
             }
+            return true;
         }
         return false;
     }
 
     @Override
     public @NotNull TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
-        return taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp() ? TaskMenu.TaskAction.ABORT : TaskAction.REMOVE;
+        return taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp() ? TaskMenu.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
     @Override
     public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
-        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique() || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
@@ -110,7 +118,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     public int getRequirementStatus(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         assert this.completedRequirements != null;
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard())) {
-            return this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId()).get(requirement.getId());
+            return this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId()).get(requirement.id());
         } else {
             return requirement.getAmount(this.factionPlayer);
         }
@@ -140,7 +148,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
                 Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
-                return data.containsKey(requirement.getId()) && data.get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
+                return data.containsKey(requirement.id()) && data.get(requirement.id()) >= requirement.getAmount(this.factionPlayer);
             }
         }
         return false;

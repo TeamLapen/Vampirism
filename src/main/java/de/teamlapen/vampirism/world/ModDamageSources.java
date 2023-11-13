@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,7 @@ public class ModDamageSources {
     private final DamageSource vampireInFire;
     private final DamageSource holyWater;
     private final DamageSource noBlood;
+    private final DamageSource mother;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.registryOrThrow(Registries.DAMAGE_TYPE);
@@ -33,6 +35,7 @@ public class ModDamageSources {
         this.vampireInFire = init(ModDamageTypes.VAMPIRE_IN_FIRE);
         this.holyWater = init(ModDamageTypes.HOLY_WATER);
         this.noBlood = init(ModDamageTypes.NO_BLOOD);
+        this.mother = init(ModDamageTypes.MOTHER);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -57,6 +60,14 @@ public class ModDamageSources {
 
     public DamageSource noBlood() {
         return this.noBlood;
+    }
+
+    public DamageSource mother() {
+        return this.mother;
+    }
+
+    public DamageSource stake(LivingEntity attacker) {
+        return new DamageSource(this.damageTypes.getHolderOrThrow(ModDamageTypes.STAKE), attacker);
     }
 
     public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {

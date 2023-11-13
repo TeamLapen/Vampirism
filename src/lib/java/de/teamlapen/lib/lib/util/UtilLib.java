@@ -64,6 +64,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -799,6 +800,16 @@ public class UtilLib {
         return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
     }
 
+    public static void forEachBlockPos(AABB area, Consumer<BlockPos> action) {
+        for (double x = area.minX; x <= area.maxX; x++) {
+            for (double y = area.minY; y <= area.maxY; y++) {
+                for (double z = area.minZ; z <= area.maxZ; z++) {
+                    action.accept(new BlockPos((int) x, (int) y, (int) z));
+                }
+            }
+        }
+    }
+
     public static float horizontalDistance(BlockPos pos1, BlockPos pos2) {
         int i = pos2.getX() - pos1.getX();
         int j = pos2.getZ() - pos1.getZ();
@@ -807,5 +818,31 @@ public class UtilLib {
 
     public static boolean never(BlockState state, BlockGetter block, BlockPos pos) {
         return false;
+    }
+
+    public static boolean always(BlockState state, BlockGetter block, BlockPos pos) {
+        return true;
+    }
+
+    @Nullable
+    public static Direction getDirection(BlockPos origin, BlockPos offset) {
+        if(origin.getX() > offset.getX()) {
+            return Direction.EAST;
+        } else if (origin.getX() < offset.getX()) {
+            return Direction.WEST;
+        }
+
+        if(origin.getZ() > offset.getZ()) {
+            return Direction.SOUTH;
+        } else if (origin.getZ() < offset.getZ()) {
+            return Direction.NORTH;
+        }
+
+        if(origin.getY() > offset.getY()) {
+            return Direction.UP;
+        } else if (origin.getY() < offset.getY()) {
+            return Direction.DOWN;
+        }
+        return null;
     }
 }

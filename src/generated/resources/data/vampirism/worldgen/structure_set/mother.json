@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1897236459,
+    "separation": 6,
+    "spacing": 48,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "vampirism:mother",
+      "weight": 1
+    }
+  ]
+}

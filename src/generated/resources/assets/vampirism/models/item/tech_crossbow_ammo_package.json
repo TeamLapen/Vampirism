@@ -1,6 +1,32 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "vampirism:arrow_clip/arrow_clip0",
+      "predicate": {
+        "vampirism:filled": 0.0
+      }
+    },
+    {
+      "model": "vampirism:arrow_clip/arrow_clip1",
+      "predicate": {
+        "vampirism:filled": 0.01
+      }
+    },
+    {
+      "model": "vampirism:arrow_clip/arrow_clip2",
+      "predicate": {
+        "vampirism:filled": 0.55
+      }
+    },
+    {
+      "model": "vampirism:arrow_clip/arrow_clip3",
+      "predicate": {
+        "vampirism:filled": 0.99
+      }
+    }
+  ],
   "textures": {
-    "layer0": "vampirism:item/tech_crossbow_ammo_package"
+    "layer0": "vampirism:item/arrow_clip0"
   }
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -10,9 +11,13 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+
+import static net.minecraft.client.renderer.entity.LivingEntityRenderer.isEntityUpsideDown;
 
 @OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
@@ -29,11 +34,12 @@ public class CloakModel extends VampirismArmorModel {
 
     private static CloakModel cloakItemModel;
 
-    public static CloakModel getAdjustedCloak(HumanoidModel<?> wearerModel) {
+    public static CloakModel getAdjustedCloak(HumanoidModel<?> wearerModel, LivingEntity entity) {
         if (cloakItemModel == null) {
             cloakItemModel = new CloakModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModEntitiesRender.CLOAK));
         }
         cloakItemModel.copyFromHumanoid(wearerModel);
+        cloakItemModel.setupAnimation(entity);
         return cloakItemModel;
     }
 
@@ -74,47 +80,91 @@ public class CloakModel extends VampirismArmorModel {
         shoulderright = part.getChild(SHOULDER_RIGHT);
     }
 
-//    @Override
-//    public void setupAnim(@NotNull LivingEntity entity, float f, float f1, float ageInTicks, float netHeadYaw, float headPitch) {
-//        super.setupAnim(entity, f, f1, ageInTicks, netHeadYaw, headPitch);
-//        //Isn't use afaik
-//
-//
-//        boolean flag = entity != null && entity.getFallFlyingTicks() > 4;
-//
-//        float f6 = 1.0F;
-//        if (flag) {
-//            f6 = (float) (entity.getDeltaMovement().x * entity.getDeltaMovement().x + entity.getDeltaMovement().y * entity.getDeltaMovement().y
-//                    + entity.getDeltaMovement().z * entity.getDeltaMovement().z);
-//            f6 = f6 / 0.2F;
-//            f6 = f6 * f6 * f6;
-//        }
-//
-//        if (f6 < 1.0F) {
-//            f6 = 1.0F;
-//        }
-//
-//        float rotation = Mth.cos(f * 0.6662F) * 1.4F * f1 / f6;
-//        if (rotation < 0.0F)
-//            rotation *= -1;
-//        this.cloakback.xRot = 0.0872665F + (rotation / 3);
-//        this.leftlong.xRot = 0.0872665F + (rotation / 3);
-//        this.rightlong.xRot = 0.0872665F + (rotation / 3);
-//        this.leftmedium.xRot = 0.0872665F + (rotation / 3);
-//        this.rightmedium.xRot = 0.0872665F + (rotation / 3);
-//        this.rightshort.xRot = 0.0872665F + (rotation / 3);
-//        this.leftshort.xRot = 0.0872665F + (rotation / 3);
-//
-//        if (this.crouching) {
-//            this.cloakback.xRot += 0.5F;
-//            this.leftlong.xRot += 0.5F;
-//            this.rightlong.xRot += 0.5F;
-//            this.leftmedium.xRot += 0.5F;
-//            this.rightmedium.xRot += 0.5F;
-//            this.leftshort.xRot += 0.5F;
-//            this.rightshort.xRot += 0.5F;
-//        }
-//    }
+    private void setupAnimation(LivingEntity entity)  {
+        boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null && entity.getVehicle().shouldRiderSit());
+
+        float f = Mth.rotLerp(MixinHooks.armorLayerPartialTicks, entity.yBodyRotO, entity.yBodyRot);
+        float f1 = Mth.rotLerp(MixinHooks.armorLayerPartialTicks, entity.yHeadRotO, entity.yHeadRot);
+        float f2 = f1 - f;
+
+        float f6 = Mth.lerp(MixinHooks.armorLayerPartialTicks, entity.xRotO, entity.getXRot());
+
+        if (shouldSit && entity.getVehicle() instanceof LivingEntity livingentity) {
+            f = Mth.rotLerp(MixinHooks.armorLayerPartialTicks, livingentity.yBodyRotO, livingentity.yBodyRot);
+            f2 = f1 - f;
+            float f3 = Mth.wrapDegrees(f2);
+            if (f3 < -85.0F) {
+                f3 = -85.0F;
+            }
+
+            if (f3 >= 85.0F) {
+                f3 = 85.0F;
+            }
+
+            f = f1 - f3;
+            if (f3 * f3 > 2500.0F) {
+                f += f3 * 0.2F;
+            }
+
+            f2 = f1 - f;
+        }
+
+        if (isEntityUpsideDown(entity)) {
+            f6 *= -1.0F;
+            f2 *= -1.0F;
+        }
+
+        float f8 = 0.0F;
+        float f5 = 0.0F;
+        if (!shouldSit && entity.isAlive()) {
+            f8 = entity.walkAnimation.speed(MixinHooks.armorLayerPartialTicks);
+            f5 = entity.walkAnimation.position(MixinHooks.armorLayerPartialTicks);
+            if (entity.isBaby()) {
+                f5 *= 3.0F;
+            }
+
+            if (f8 > 1.0F) {
+                f8 = 1.0F;
+            }
+        }
+        cloakItemModel.setupAnim(entity, f5, f8,entity.tickCount + MixinHooks.armorLayerPartialTicks, f2, f6);
+    }
+
+    public void setupAnim(@NotNull LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        boolean flag = entity != null && entity.getFallFlyingTicks() > 4;
+
+        float f6 = 1.0F;
+        if (flag) {
+            f6 = (float) (entity.getDeltaMovement().x * entity.getDeltaMovement().x + entity.getDeltaMovement().y * entity.getDeltaMovement().y + entity.getDeltaMovement().z * entity.getDeltaMovement().z);
+            f6 = f6 / 0.2F;
+            f6 = f6 * f6 * f6;
+        }
+
+        if (f6 < 1.0F) {
+            f6 = 1.0F;
+        }
+
+        float rotation = Mth.cos(limbSwing * 0.6662F) * 1.4F * (limbSwingAmount / 1.8f) / f6;
+        if (rotation < 0.0F)
+            rotation *= -1;
+        this.cloakback.xRot = 0.0872665F + (rotation / 3);
+        this.leftlong.xRot = 0.0872665F + (rotation / 3);
+        this.rightlong.xRot = 0.0872665F + (rotation / 3);
+        this.leftmedium.xRot = 0.0872665F + (rotation / 3);
+        this.rightmedium.xRot = 0.0872665F + (rotation / 3);
+        this.rightshort.xRot = 0.0872665F + (rotation / 3);
+        this.leftshort.xRot = 0.0872665F + (rotation / 3);
+
+        if (entity.isCrouching()) {
+            this.cloakback.xRot += 0.5F;
+            this.leftlong.xRot += 0.5F;
+            this.rightlong.xRot += 0.5F;
+            this.leftmedium.xRot += 0.5F;
+            this.rightmedium.xRot += 0.5F;
+            this.leftshort.xRot += 0.5F;
+            this.rightshort.xRot += 0.5F;
+        }
+    }
 
     @Override
     protected @NotNull Iterable<ModelPart> getBodyModels() {

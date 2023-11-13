@@ -1,18 +1,24 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Proxy interface
@@ -20,6 +26,9 @@ import java.util.List;
 public interface IProxy extends IInitListener {
 
     default void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
+    }
+
+    default void displayFogDiffuserScreen(FogDiffuserBlockEntity tile, Component title) {
     }
 
     default void displayNameSwordScreen(ItemStack stack) {
@@ -90,4 +99,15 @@ public interface IProxy extends IInitListener {
 
     }
 
+    default void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
+
+    }
+
+    default Collection<Player> getServerPlayers() {
+        return Collections.emptyList();
+    }
+
+    default void addBossEventSound(UUID bossEventUuid, ResourceKey<SoundEvent> sound){
+
+    }
 }

@@ -19,6 +19,8 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> NO_BLOOD = createKey("blood_loss");
     public static final ResourceKey<DamageType> MINION = createKey("minion");
     public static final ResourceKey<DamageType> DBNO = createKey("dbno");
+    public static final ResourceKey<DamageType> MOTHER = createKey("mother");
+    public static final ResourceKey<DamageType> STAKE = createKey("stake");
 
     private static ResourceKey<DamageType> createKey(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));
@@ -32,5 +34,7 @@ public class ModDamageTypes {
         context.register(NO_BLOOD, new DamageType("blood_loss", 0.0F));
         context.register(MINION, new DamageType("minion", DamageScaling.NEVER, 0.1F, DamageEffects.HURT, DeathMessageType.DEFAULT));
         context.register(DBNO, new DamageType(REFERENCE.MODID + ".dbno", DamageScaling.NEVER, 0.0F, DamageEffects.HURT, DeathMessageType.DEFAULT));
+        context.register(MOTHER, new DamageType(REFERENCE.MODID + ".mother", DamageScaling.NEVER, 0.0F, DamageEffects.THORNS, DeathMessageType.DEFAULT));
+        context.register(STAKE, new DamageType(REFERENCE.MODID + ".stake", DamageScaling.NEVER, 0.0F, DamageEffects.HURT, DeathMessageType.DEFAULT));
     }
 }

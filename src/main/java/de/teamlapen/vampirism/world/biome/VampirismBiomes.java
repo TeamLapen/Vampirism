@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.biome;
 
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
@@ -28,8 +29,8 @@ public class VampirismBiomes {
 
         BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313).foliageColorOverride(0x101010).grassColorOverride(0x101010)
                 .ambientMoodSound(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D))
-                .ambientAdditionsSound(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))
-                .backgroundMusic(Musics.createGameMusic(SoundEvents.MUSIC_BIOME_CRIMSON_FOREST));
+                .ambientAdditionsSound(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D));
+        ModSounds.VAMPIRE_FOREST_AMBIENT.getHolder().ifPresent(m -> biomeSpecialEffectsBuilder.backgroundMusic(Musics.createGameMusic(m)));
 
         return prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder).build();
     }
@@ -73,8 +74,7 @@ public class VampirismBiomes {
     public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED);
-        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_LOWER_PLACED);
-        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_UPPER_PLACED);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_DARK_STONE_PLACED);
     }
 
     public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -27,9 +29,12 @@ public class ModTags {
     }
 
     public static class Blocks {
+        @Deprecated
         public static final TagKey<Block> CASTLE_BLOCK = tag("castle_block");
         public static final TagKey<Block> CURSED_EARTH = tag("cursed_earth");
+        @Deprecated
         public static final TagKey<Block> CASTLE_STAIRS = tag("castle_stairs");
+        @Deprecated
         public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
@@ -37,6 +42,19 @@ public class ModTags {
         public static final TagKey<Block> TOTEM_TOP_FRAGILE = tag("totem_top_fragile");
         public static final TagKey<Block> TOTEM_TOP = tag("totem_top");
         public static final TagKey<Block> COFFIN = tag("coffin");
+        public static final TagKey<Block> DARK_STONE = tag("dark_stone");
+        public static final TagKey<Block> DARK_STONE_BRICKS = tag("dark_stone_bricks");
+        public static final TagKey<Block> POLISHED_DARK_STONE = tag("polished_dark_brick");
+        public static final TagKey<Block> COBBLED_DARK_STONE = tag("cobbled_dark_brick");
+        public static final TagKey<Block> DARK_STONE_TILES = tag("dark_brick_tiles");
+        public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
+        public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
+        public static final TagKey<Block> REMAINS = tag("remains");
+        public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
+        public static final TagKey<Block> VULNERABLE_REMAINS = tag("vulnerable_remains");
+        public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
+        public static final TagKey<Block> VAMPIRE_BEACON_BASE_BLOCKS = tag("vampire_beacon_base_blocks");
+        public static final TagKey<Block> VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS = tag("vampire_beacon_base_enhanced_blocks");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);
@@ -65,6 +83,15 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_SWORD = tag("applicable_oil/sword");
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
+        public static final TagKey<Item> HUNTER_COAT = tag("armo/hunter_coat");
+        public static final TagKey<Item> DARK_STONE = tag("dark_stone");
+        public static final TagKey<Item> DARK_STONE_BRICKS = tag("dark_stone_bricks");
+        public static final TagKey<Item> POLISHED_DARK_STONE = tag("polished_dark_brick");
+        public static final TagKey<Item> COBBLED_DARK_STONE = tag("cobbled_dark_brick");
+        public static final TagKey<Item> DARK_STONE_TILES = tag("dark_brick_tiles");
+        public static final TagKey<Item> NO_SPAWN = tag("no_spawn");
+        public static final TagKey<Item> VAMPIRE_SPAWN = tag("vampire_spawn");
+        public static final TagKey<Item> VAMPIRE_BEACON_PAYMENT_ITEM = tag("vampire_beacon_payment_item");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);
@@ -97,6 +124,7 @@ public class ModTags {
          * Vanilla zombies
          */
         public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
+        public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");
 
         private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
             return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
@@ -129,6 +157,10 @@ public class ModTags {
         public static class HasStructure {
             public static final TagKey<Biome> HUNTER_TENT = tag("has_structure/hunter_tent");
             public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
+            public static final TagKey<Biome> VAMPIRE_HUT = tag("has_structure/vampire_hut");
+            public static final TagKey<Biome> HUNTER_OUTPOST = tag("has_structure/outpost");
+            public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
+            public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         }
 
         public static class HasSpawn {
@@ -173,9 +205,24 @@ public class ModTags {
     public static class DamageTypes {
 
         public static final TagKey<DamageType> ENTITY_PHYSICAL = tag("entity_physical");
+        public static final TagKey<DamageType> REMAINS_INVULNERABLE = tag("remains_invulnerable");
+        public static final TagKey<DamageType> MOTHER_RESISTANT_TO = tag("mother_resistant_to");
 
         private static @NotNull TagKey<DamageType> tag(@NotNull String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Tasks {
+
+        public static final TagKey<Task> HAS_FACTION = tag("has_faction");
+        public static final TagKey<Task> IS_VAMPIRE = tag("has_faction/vampire");
+        public static final TagKey<Task> IS_HUNTER = tag("has_faction/hunter");
+        public static final TagKey<Task> IS_UNIQUE = tag("is_unique");
+        public static final TagKey<Task> AWARDS_LORD_LEVEL = tag("awards_lord_level");
+
+        private static @NotNull TagKey<Task> tag(@NotNull String name) {
+            return TagKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

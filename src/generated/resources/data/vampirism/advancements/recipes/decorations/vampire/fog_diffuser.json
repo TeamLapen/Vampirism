@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cursed_plank": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:cursed_spruce_planks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_diamond": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:gems/diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_mother_core": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:mother_core"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:vampire/fog_diffuser"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_diamond",
+      "has_cursed_plank",
+      "has_mother_core",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/fog_diffuser"
+    ]
+  },
+  "sends_telemetry_event": false
+}

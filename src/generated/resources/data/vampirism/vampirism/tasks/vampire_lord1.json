@@ -1,0 +1,62 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:stat",
+        "amount": 25,
+        "description": {
+          "translate": "stat.vampirism.infected_creatures"
+        },
+        "id": "vampirism:infected_creatures",
+        "stat": "vampirism:infected_creatures"
+      },
+      {
+        "type": "vampirism:stat",
+        "amount": 3,
+        "description": {
+          "translate": "stat.vampirism.win_village_capture"
+        },
+        "id": "vampirism:win_village_capture",
+        "stat": "vampirism:win_village_capture"
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 32,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.vampirism.pure_blood_4"
+        },
+        "id": "vampirism:pure_blood_4",
+        "item": {
+          "Count": 5,
+          "id": "vampirism:pure_blood_4"
+        }
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:lord_level",
+    "description": {
+      "translate": "task.vampirism.vampire_lord1.reward"
+    },
+    "targetLevel": 1
+  },
+  "title": {
+    "translate": "task.vampirism.vampire_lord1"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:level",
+      "reqLevel": 14
+    }
+  ]
+}

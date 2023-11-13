@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.CrossbowItemMixin;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +21,7 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class TechCrossbowItem extends VampirismCrossbowItem {
@@ -38,7 +39,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Nonnull
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return stack -> stack.getItem() == ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get();
+        return stack -> stack.getItem() instanceof IArrowContainer && !((IArrowContainer) stack.getItem()).getArrows(stack).isEmpty();
     }
 
     /**
@@ -128,5 +129,15 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment != Enchantments.QUICK_CHARGE && enchantment != Enchantments.INFINITY_ARROWS && super.canApplyAtEnchantingTable(stack, enchantment);
+    }
+
+    @Override
+    public boolean canSelectAmmunition(ItemStack crossbow) {
+        return false;
+    }
+
+    @Override
+    public Optional<Item> getAmmunition(ItemStack crossbow) {
+        return Optional.empty();
     }
 }

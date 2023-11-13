@@ -20,7 +20,7 @@ import java.util.function.Predicate;
  * A player can have levels.
  * A player can only be part of one faction at once, this means only one IFactionPlayer capability belonging to a single player can have a level >0.
  * <p>
- * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
+ * If you are writing an addon and not a standalone mod, consider extending FactionPlayerBase instead of implementing this
  */
 public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity {
     /**

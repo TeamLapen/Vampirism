@@ -6,6 +6,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
@@ -34,11 +35,13 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private int fangType;
     private int eyeType;
     private boolean glowingEyes;
+    private boolean titleGender;
     private HoverList<?> eyeList;
     private HoverList<?> fangList;
     private ExtendedButton eyeButton;
     private ExtendedButton fangButton;
     private Checkbox glowingEyesButton;
+    private Checkbox titleGenderButton;
 
 
     public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
@@ -57,20 +60,30 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     public void removed() {
-        VampirismMod.dispatcher.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0));
+        VampirismMod.dispatcher.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0));
         super.removed();
     }
 
     @Override
     protected void init() {
         super.init();
-        IFaction<?> f = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+        VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(Minecraft.getInstance().player);
+        IFaction<?> f = attributes.faction;
         this.color = f == null ? Color.GRAY.getRGBColorComponents() : new Color(f.getColor()).getRGBColorComponents();
-        VampirePlayerSpecialAttributes vampAtt = VampirismPlayerAttributes.get(this.minecraft.player).getVampSpecial();
+        VampirePlayerSpecialAttributes vampAtt = attributes.getVampSpecial();
         this.fangType = vampAtt.fangType;
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
+        this.titleGender = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::useFemaleLordTitle).orElse(false);
 
+        this.titleGenderButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 91, 99, 20, Component.translatable("gui.vampirism.appearance.title_gender"), this.titleGender) {
+            @Override
+            public void onPress() {
+                super.onPress();
+                titleGender = selected();
+                FactionPlayerHandler.getOpt(entity).ifPresent(p -> p.setTitleGender(titleGender));
+            }
+        });
         this.glowingEyesButton = this.addRenderableWidget(new Checkbox(this.guiLeft + 20, this.guiTop + 70, 99, 20, Component.translatable("gui.vampirism.appearance.glowing_eye"), glowingEyes) {
             @Override
             public void onPress() {
@@ -140,6 +153,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.eyeList.isVisible = show;
         this.fangButton.visible = !show;
         this.glowingEyesButton.visible = !show;
+        this.titleGenderButton.visible = !show;
         if (show) this.fangList.isVisible = false;
     }
 
@@ -147,6 +161,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         fangButton.setMessage(Component.translatable("gui.vampirism.appearance.fang").append(" " + (fangType + 1)));
         this.fangList.isVisible = show;
         this.glowingEyesButton.visible = !show;
+        this.titleGenderButton.visible = !show;
         if (show) this.eyeList.isVisible = false;
     }
 }

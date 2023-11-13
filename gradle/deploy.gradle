@@ -24,8 +24,8 @@ curseforge {
         }
 
         relations {
-            optionalLibrary 'jei'
-            optionalLibrary 'guide-api-village-and-pillage'
+            optionalDependency 'jei'
+            optionalDependency 'guide-api-village-and-pillage'
         }
 
     }
@@ -83,15 +83,9 @@ publishing {
 
             }
 
-            // Adds the api as an artifact.
             artifact apiJar
-
-            // Adds the sources as an artifact.
             artifact sourcesJar
-
-            // Adds the deobfuscated jar as an artifact.
             artifact deobfJar
-
             artifact javadocJar
 
         }
@@ -113,7 +107,7 @@ publishing {
 
 
 // Make sure it runs after build!
-modrinth{
+modrinth {
     if (project.type == "beta") {
         versionType = 'beta'
         //changelog = new File("resources/changelog/${project.version}.txt").text
@@ -137,8 +131,7 @@ modrinth{
 }
 
 
-
-task checkIfPublicVersion{
+tasks.register('checkIfPublicVersion') {
     doFirst {
         if (project.classification != "public") {
             throw new PublishException("Trying to publish a version that is not intended for public release")

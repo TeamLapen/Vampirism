@@ -23,23 +23,6 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob {
         return true;
     }
 
-    /**
-     * current crossbow arm pose to use for rendering
-     */
-    default ArmPose getArmPose() {
-        if (isHoldingCrossbow()) {
-            if (isChargingCrossbow()) {
-                return ArmPose.CROSSBOW_CHARGE;
-            }
-            InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(((LivingEntity) this), IVampirismCrossbow.class::isInstance);
-            ItemStack itemstack = ((LivingEntity) this).getItemInHand(hand);
-            if (itemstack.getItem() instanceof IVampirismCrossbow && CrossbowItem.isCharged(itemstack)) {
-                return ArmPose.CROSSBOW_HOLD;
-            }
-        }
-        return ArmPose.NEUTRAL;
-    }
-
     @Override
     default void performCrossbowAttack(@Nonnull LivingEntity entity, float speed) {
         InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(entity, IVampirismCrossbow.class::isInstance);

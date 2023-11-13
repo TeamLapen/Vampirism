@@ -34,7 +34,14 @@ public class SanguinareEffect extends VampirismEffect implements EffectWithNoCou
      * @param player Whether to use the player effect duration or the mob duration
      */
     public static void addRandom(@NotNull LivingEntity entity, boolean player) {
+        addRandom(entity, player, false);
+    }
+
+    public static void addRandom(@NotNull LivingEntity entity, boolean player, boolean fasterInfection) {
         int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
+        if (fasterInfection) {
+            avgDuration /= 2;
+        }
         int duration = (int) ((entity.getRandom().nextFloat() + 0.5F) * avgDuration);
         MobEffectInstance effect = new SanguinareEffectInstance(duration);
         Preconditions.checkNotNull(effect);

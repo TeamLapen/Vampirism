@@ -63,10 +63,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(HunterMinionEntity.class, EntityDataSerializers.BOOLEAN);
 
 
-    public static void init() {
-        MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
-    }
-
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return BasicHunterEntity.getAttributeBuilder();
     }
@@ -233,7 +229,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                return ModItems.TECH_CROSSBOW_AMMO_PACKAGE.get().getDefaultInstance();
+                return ModItems.ARROW_CLIP.get().getDefaultInstance();
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
             }
@@ -285,7 +281,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.hasIncreasedStats = hasIncreasedStats;
         }
 
-        private HunterMinionData() {
+        public HunterMinionData() {
             super();
         }
 

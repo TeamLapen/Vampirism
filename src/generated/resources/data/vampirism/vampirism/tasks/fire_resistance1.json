@@ -1,0 +1,40 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.magma_cream"
+        },
+        "id": "minecraft:magma_cream",
+        "item": {
+          "Count": 3,
+          "id": "minecraft:magma_cream"
+        }
+      },
+      {
+        "type": "vampirism:entity_type",
+        "amount": 10,
+        "description": {
+          "translate": "entity_tag.vampirism.hunter"
+        },
+        "entityType": "vampirism:hunter",
+        "id": "vampirism:hunter"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "vampirism:vampire_fire_resistance"
+      }
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.fire_resistance1"
+  },
+  "unlocker": []
+}

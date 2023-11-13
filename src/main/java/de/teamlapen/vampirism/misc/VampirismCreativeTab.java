@@ -97,6 +97,7 @@ public class VampirismCreativeTab {
             addItem(PURE_SALT);
 
             addItem(SOUL_ORB_VAMPIRE);
+            addItem(MOTHER_CORE);
             addItem(VAMPIRE_BLOOD_BOTTLE);
             addGen(VAMPIRE_BOOK);
             addItem(VAMPIRE_FANG);
@@ -138,8 +139,10 @@ public class VampirismCreativeTab {
             addBlock(GARLIC_DIFFUSER_NORMAL);
             addBlock(GARLIC_DIFFUSER_WEAK);
             addBlock(GARLIC_DIFFUSER_IMPROVED);
+            addBlock(FOG_DIFFUSER);
             addBlock(HUNTER_TABLE);
             addBlock(SUNSCREEN_BEACON);
+            addBlock(VAMPIRE_BEACON);
             addBlock(TOTEM_BASE);
             addBlock(TOTEM_TOP);
             addBlock(TOTEM_TOP_CRAFTED);
@@ -147,6 +150,7 @@ public class VampirismCreativeTab {
             addBlock(POTION_TABLE);
             addBlock(MED_CHAIR);
             addBlock(ALCHEMY_TABLE);
+            addBlock(VAMPIRE_BEACON);
 
             addBuildingBlocks();
             addPlantBlocks();
@@ -157,6 +161,7 @@ public class VampirismCreativeTab {
             addBlock(DARK_SPRUCE_SAPLING);
             addBlock(CURSED_SPRUCE_SAPLING);
             addBlock(CURSED_ROOTS);
+            addBlock(CURSED_HANGING_ROOTS);
             addBlock(VAMPIRE_ORCHID);
             addBlock(DARK_SPRUCE_LEAVES);
             addBlock(DIRECT_CURSED_BARK);
@@ -165,6 +170,7 @@ public class VampirismCreativeTab {
         private void addBuildingBlocks() {
             addBlock(CURSED_GRASS);
             addBlock(CURSED_EARTH);
+            addBlock(CURSED_EARTH_PATH);
 
             addBlock(DARK_SPRUCE_LOG);
             addBlock(DARK_SPRUCE_WOOD);
@@ -180,9 +186,12 @@ public class VampirismCreativeTab {
             addBlock(DARK_SPRUCE_PRESSURE_PLACE);
             addBlock(DARK_SPRUCE_BUTTON);
             addItem(ModItems.DARK_SPRUCE_SIGN);
+            addItem(ModItems.DARK_SPRUCE_HANGING_SIGN);
 
             addBlock(CURSED_SPRUCE_LOG);
+            addBlock(CURSED_SPRUCE_LOG_CURED);
             addBlock(CURSED_SPRUCE_WOOD);
+            addBlock(CURSED_SPRUCE_WOOD_CURED);
             addBlock(STRIPPED_CURSED_SPRUCE_LOG);
             addBlock(STRIPPED_CURSED_SPRUCE_WOOD);
             addBlock(CURSED_SPRUCE_PLANKS);
@@ -195,18 +204,39 @@ public class VampirismCreativeTab {
             addBlock(CURSED_SPRUCE_PRESSURE_PLACE);
             addBlock(CURSED_SPRUCE_BUTTON);
             addItem(ModItems.CURSED_SPRUCE_SIGN);
+            addItem(ModItems.CURSED_SPRUCE_HANGING_SIGN);
 
-            addBlock(CASTLE_BLOCK_DARK_STONE);
-            addBlock(CASTLE_STAIRS_DARK_STONE);
-            addBlock(CASTLE_SLAB_DARK_STONE);
-            addBlock(CASTLE_BLOCK_DARK_BRICK);
-            addBlock(CASTLE_STAIRS_DARK_BRICK);
-            addBlock(CASTLE_SLAB_DARK_BRICK);
-            addBlock(CASTLE_BLOCK_DARK_BRICK_BLOODY);
+            addBlock(DARK_STONE);
+            addBlock(DARK_STONE_STAIRS);
+            addBlock(DARK_STONE_SLAB);
+            addBlock(DARK_STONE_WALL);
+            addBlock(INFESTED_DARK_STONE);
+            addBlock(DARK_STONE_BRICKS);
+            addBlock(DARK_STONE_BRICK_STAIRS);
+            addBlock(DARK_STONE_BRICK_SLAB);
+            addBlock(DARK_STONE_BRICK_WALL);
+            addBlock(CRACKED_DARK_STONE_BRICKS);
+            addBlock(CHISELED_DARK_STONE_BRICKS);
+            addBlock(BLOODY_DARK_STONE_BRICKS);
+            addBlock(COBBLED_DARK_STONE);
+            addBlock(COBBLED_DARK_STONE_STAIRS);
+            addBlock(COBBLED_DARK_STONE_SLAB);
+            addBlock(COBBLED_DARK_STONE_WALL);
+            addBlock(POLISHED_DARK_STONE);
+            addBlock(POLISHED_DARK_STONE_STAIRS);
+            addBlock(POLISHED_DARK_STONE_SLAB);
+            addBlock(POLISHED_DARK_STONE_WALL);
+            addBlock(DARK_STONE_TILES);
+            addBlock(DARK_STONE_TILES_STAIRS);
+            addBlock(DARK_STONE_TILES_SLAB);
+            addBlock(DARK_STONE_TILES_WALL);
+            addBlock(CRACKED_DARK_STONE_TILES);
             addBlock(CASTLE_BLOCK_PURPLE_BRICK);
             addBlock(CASTLE_STAIRS_PURPLE_BRICK);
             addBlock(CASTLE_SLAB_PURPLE_BRICK);
-            addBlock(CASTLE_BLOCK_NORMAL_BRICK);
+            addBlock(CASTLE_BLOCK_PURPLE_BRICK_WALL);
+            addBlock(BLOOD_INFUSED_IRON_BLOCK);
+            addBlock(BLOOD_INFUSED_ENHANCED_IRON_BLOCK);
         }
 
         private void addDecorativeBlocks() {
@@ -220,6 +250,8 @@ public class VampirismCreativeTab {
             addBlock(VAMPIRE_RACK);
             addBlock(THRONE);
             addItem(ITEM_CANDELABRA);
+            addBlock(BAT_CAGE);
+            addBlock(MOTHER_TROPHY);
 
             addBlock(COFFIN_WHITE);
             addBlock(COFFIN_LIGHT_GRAY);
@@ -293,9 +325,9 @@ public class VampirismCreativeTab {
             addItem(HEART_STRIKER_ENHANCED);
             addItem(HEART_STRIKER_ULTIMATE);
 
-            addItem(HUNTER_AXE_NORMAL);
-            addItem(HUNTER_AXE_ENHANCED);
-            addItem(HUNTER_AXE_ULTIMATE);
+            addGen(HUNTER_AXE_NORMAL);
+            addGen(HUNTER_AXE_ENHANCED);
+            addGen(HUNTER_AXE_ULTIMATE);
 
             addItem(BASIC_CROSSBOW);
             addItem(BASIC_DOUBLE_CROSSBOW);
@@ -308,7 +340,7 @@ public class VampirismCreativeTab {
             addItem(CROSSBOW_ARROW_SPITFIRE);
             addItem(CROSSBOW_ARROW_VAMPIRE_KILLER);
             addItem(CROSSBOW_ARROW_TELEPORT);
-            addItem(TECH_CROSSBOW_AMMO_PACKAGE);
+            addItem(ARROW_CLIP);
 
             addItem(PITCHFORK);
             addItem(STAKE);

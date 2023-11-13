@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
@@ -78,7 +79,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        float charged = getCharged(stack);
+        float charged = getChargePercentage(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
         tooltip.add(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
@@ -97,13 +98,13 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
 
     @Override
     public boolean canBeCharged(@NotNull ItemStack stack) {
-        return getCharged(stack) < 1f;
+        return getChargePercentage(stack) < 1f;
     }
 
     @Override
     public int charge(@NotNull ItemStack stack, int amount) {
         float factor = getChargingFactor(stack);
-        float charge = getCharged(stack);
+        float charge = getChargePercentage(stack);
         float actual = Math.min(factor * amount, 1f - charge);
         this.setCharged(stack, charge + actual);
         return (int) (actual / factor);
@@ -148,7 +149,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
                 this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
             }
         });
-        if (getCharged(stack) == 1) {
+        if (getChargePercentage(stack) == 1) {
             tryName(stack, (Player) entityLiving);
         }
         return stack;
@@ -157,7 +158,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     @Override
     public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         //Vampire Finisher skill
-        if (attacker instanceof Player player && !Helper.isVampire(target)) {
+        if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt(player).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 DamageHandler.hurtModded(target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
@@ -178,7 +179,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
             setTrained(stack, attacker, trained);
         }
         //Consume blood
-        float charged = getCharged(stack);
+        float charged = getChargePercentage(stack);
         charged -= getChargeUsage();
         setCharged(stack, charged);
         attacker.setItemInHand(InteractionHand.MAIN_HAND, stack);
@@ -187,7 +188,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     public boolean isFullyCharged(@NotNull ItemStack stack) {
-        return getCharged(stack) == 1f;
+        return getChargePercentage(stack) == 1f;
     }
 
     @Override
@@ -199,7 +200,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
-            float charged = getCharged(stack);
+            float charged = getChargePercentage(stack);
             if (charged > 0 && entityIn.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entityIn instanceof LivingEntity) {
                 boolean secondHand = !isSelected && ((LivingEntity) entityIn).getItemInHand(InteractionHand.OFF_HAND).equals(stack);
                 if (isSelected || secondHand) {
@@ -294,7 +295,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     protected float getAttackDamageModifier(@NotNull ItemStack stack) {
-        return getCharged(stack) > 0 ? 1f : minStrength;
+        return getChargePercentage(stack) > 0 ? 1f : minStrength;
     }
 
     protected float getSpeedModifier(@NotNull ItemStack stack) {
@@ -311,7 +312,8 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      *
      * @return Value between 0 and 1
      */
-    protected float getCharged(@NotNull ItemStack stack) {
+    @Override
+    public float getChargePercentage(@NotNull ItemStack stack) {
         if (stack.hasTag()) {
             return stack.getTag().getFloat("charged");
         }

@@ -3,8 +3,6 @@ package de.teamlapen.vampirism.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
-import de.teamlapen.vampirism.client.renderer.entity.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
 import de.teamlapen.vampirism.mixin.client.VillagerModelAccessor;
@@ -30,7 +28,6 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
 //        this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
-        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), h -> HunterEquipmentModel.StakeType.NONE, h -> HunterEquipmentModel.HatType.HAT2, ((VillagerModelAccessor) getModel()).getHat()));
     }
 
     @NotNull

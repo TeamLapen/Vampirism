@@ -42,6 +42,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.teamlapen.lib.lib.util.RegisterHelper.compostable;
+
 /**
  * Handles all item registrations and reference.
  */
@@ -91,19 +93,19 @@ public class ModItems {
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE = register("garlic_diffuser_core", () -> new Item(props()));
     public static final RegistryObject<Item> GARLIC_DIFFUSER_CORE_IMPROVED = register("garlic_diffuser_core_improved", () -> new Item(props()));
 
-    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = register("heart_seeker_enhanced", () -> new HeartSeekerItem(HeartSeekerItem.ENHANCED));
     public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_NORMAL = register("heart_seeker_normal", () -> new HeartSeekerItem(HeartSeekerItem.NORMAL));
+    public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ENHANCED = register("heart_seeker_enhanced", () -> new HeartSeekerItem(HeartSeekerItem.ENHANCED));
     public static final RegistryObject<HeartSeekerItem> HEART_SEEKER_ULTIMATE = register("heart_seeker_ultimate", () -> new HeartSeekerItem(HeartSeekerItem.ULTIMATE));
 
-    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ENHANCED = register("heart_striker_enhanced", () -> new HeartStrikerItem(HeartStrikerItem.ENHANCED));
     public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_NORMAL = register("heart_striker_normal", () -> new HeartStrikerItem(HeartStrikerItem.NORMAL));
+    public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ENHANCED = register("heart_striker_enhanced", () -> new HeartStrikerItem(HeartStrikerItem.ENHANCED));
     public static final RegistryObject<HeartStrikerItem> HEART_STRIKER_ULTIMATE = register("heart_striker_ultimate", () -> new HeartStrikerItem(HeartStrikerItem.ULTIMATE));
 
-    public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = register("holy_water_bottle_enhanced", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = register("holy_water_bottle_normal", () -> new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = register("holy_water_bottle_enhanced", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = register("holy_water_bottle_ultimate", () -> new HolyWaterBottleItem(IItemWithTier.TIER.ULTIMATE));
-    public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = register("holy_water_splash_bottle_enhanced", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = register("holy_water_splash_bottle_normal", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL));
+    public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = register("holy_water_splash_bottle_enhanced", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED));
     public static final RegistryObject<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = register("holy_water_splash_bottle_ultimate", () -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE));
 
     public static final RegistryObject<BlessableItem> PURE_SALT_WATER = register("pure_salt_water", () -> new BlessableItem(new Item.Properties().stacksTo(1), HOLY_WATER_BOTTLE_NORMAL::get, HOLY_WATER_BOTTLE_ENHANCED::get) {
@@ -113,8 +115,8 @@ public class ModItems {
         }
     });
 
-    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = register("hunter_axe_enhanced", () -> new HunterAxeItem(HunterAxeItem.ENHANCED));
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_NORMAL = register("hunter_axe_normal", () -> new HunterAxeItem(HunterAxeItem.NORMAL));
+    public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ENHANCED = register("hunter_axe_enhanced", () -> new HunterAxeItem(HunterAxeItem.ENHANCED));
     public static final RegistryObject<HunterAxeItem> HUNTER_AXE_ULTIMATE = register("hunter_axe_ultimate", () -> new HunterAxeItem(HunterAxeItem.ULTIMATE));
 
     public static final RegistryObject<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = register("hunter_coat_chest_normal", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.NORMAL));
@@ -151,7 +153,7 @@ public class ModItems {
     public static final RegistryObject<InjectionItem> INJECTION_SANGUINARE = register("injection_sanguinare", () -> new InjectionItem(InjectionItem.TYPE.SANGUINARE));
 
     public static final RegistryObject<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final RegistryObject<GarlicItem> ITEM_GARLIC = register("item_garlic", GarlicItem::new);
+    public static final RegistryObject<GarlicItem> ITEM_GARLIC = register("item_garlic", () -> compostable(new GarlicItem(), 0.65F));
     public static final RegistryObject<GarlicBreadItem> GARLIC_BREAD = register("garlic_bread", GarlicBreadItem::new);
     public static final RegistryObject<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = register("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -171,10 +173,12 @@ public class ModItems {
     public static final RegistryObject<Item> SOUL_ORB_VAMPIRE = register("soul_orb_vampire", () -> new Item(props()));
 
     public static final RegistryObject<StakeItem> STAKE = register("stake", StakeItem::new);
-    public static final RegistryObject<Item> TECH_CROSSBOW_AMMO_PACKAGE = register("tech_crossbow_ammo_package", () -> new ArrowContainer(new Item.Properties(), CROSSBOW_ARROW_NORMAL, 12) {
+    public static final RegistryObject<Item> ARROW_CLIP = register("tech_crossbow_ammo_package", () -> new ArrowContainer(props().stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())) {
         @Override
-        public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-            tooltip.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+        public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
+            texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+            texts.add(Component.empty());
+            super.appendHoverText(stack, level, texts, flag);
         }
 
     });
@@ -236,6 +240,10 @@ public class ModItems {
     public static final RegistryObject<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, props().stacksTo(1)));
 
     public static final RegistryObject<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
+    public static final RegistryObject<HangingSignItem> DARK_SPRUCE_HANGING_SIGN = register("dark_spruce_hanging_sign", () -> new HangingSignItem(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<HangingSignItem> CURSED_SPRUCE_HANGING_SIGN = register("cursed_spruce_hanging_sign", () -> new HangingSignItem(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Item> MOTHER_CORE = register("mother_core", () -> new Item(props().rarity(Rarity.UNCOMMON)));
 
     static void registerCraftingRecipes() {
         // Brewing

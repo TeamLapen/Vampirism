@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:stat",
+        "amount": 1,
+        "description": {
+          "translate": "stat.vampirism.capture_village"
+        },
+        "id": "vampirism:capture_village",
+        "stat": "vampirism:capture_village"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:item",
+    "item": {
+      "Count": 10,
+      "id": "minecraft:emerald"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.v_capture1"
+  },
+  "unlocker": []
+}

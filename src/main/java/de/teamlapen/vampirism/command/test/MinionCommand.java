@@ -26,7 +26,9 @@ import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -54,10 +56,18 @@ public class MinionCommand extends BasicCommand {
                                 )
                         )
                 )
-                .then(Commands.literal("recall").executes(context -> recall(context.getSource())))
-                .then(Commands.literal("respawnAll").executes(context -> respawn(context.getSource())))
-                .then(Commands.literal("purge").executes(context -> purge(context.getSource())))
-                .executes(context -> 0);
+                .then(Commands.literal("recall")
+                        .executes(context -> recall(context.getSource(), context.getSource().getPlayerOrException()))
+                        .then(Commands.argument("target", EntityArgument.player())
+                                .executes(context -> recall(context.getSource(), EntityArgument.getPlayer(context, "target")))))
+                .then(Commands.literal("respawnAll")
+                        .executes(context -> respawn(context.getSource(), context.getSource().getPlayerOrException()))
+                        .then(Commands.argument("target", EntityArgument.player())
+                                .executes(context -> respawn(context.getSource(), EntityArgument.getPlayer(context, "target")))))
+                .then(Commands.literal("purge")
+                        .executes(context -> purge(context.getSource(), context.getSource().getPlayerOrException()))
+                        .then(Commands.argument("target", EntityArgument.player())
+                                .executes(context -> purge(context.getSource(), EntityArgument.getPlayer(context, "target")))));
     }
 
 
@@ -104,14 +114,13 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int recall(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
-        Player p = ctx.getPlayerOrException();
-        FactionPlayerHandler fph = FactionPlayerHandler.get(p);
+    private static int recall(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+        FactionPlayerHandler fph = FactionPlayerHandler.get(player);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.recallMinions(true);
             for (Integer id : ids) {
-                controller.createMinionEntityAtPlayer(id, p);
+                controller.createMinionEntityAtPlayer(id, player);
             }
         } else {
             throw fail.create("Can't have minions");
@@ -122,14 +131,13 @@ public class MinionCommand extends BasicCommand {
 
 
     @SuppressWarnings("SameReturnValue")
-    private static int respawn(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
-        Player p = ctx.getPlayerOrException();
-        FactionPlayerHandler fph = FactionPlayerHandler.get(p);
+    private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+        FactionPlayerHandler fph = FactionPlayerHandler.get(player);
         if (fph.getMaxMinions() > 0) {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.getUnclaimedMinions();
             for (Integer id : ids) {
-                controller.createMinionEntityAtPlayer(id, p);
+                controller.createMinionEntityAtPlayer(id, player);
             }
 
         } else {
@@ -140,10 +148,9 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int purge(@NotNull CommandSourceStack ctx) throws CommandSyntaxException {
-        Player p = ctx.getPlayerOrException();
-        MinionWorldData.getData(ctx.getServer()).purgeController(p.getUUID());
-        p.displayClientMessage(Component.literal("Reload world"), false);
+    private static int purge(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+        MinionWorldData.getData(ctx.getServer()).purgeController(player.getUUID());
+        ((Player) player).displayClientMessage(Component.literal("Reload world"), false);
         return 0;
     }
 }

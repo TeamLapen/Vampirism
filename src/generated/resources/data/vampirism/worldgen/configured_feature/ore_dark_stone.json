@@ -6,7 +6,7 @@
     "targets": [
       {
         "state": {
-          "Name": "vampirism:castle_block_dark_stone"
+          "Name": "vampirism:dark_stone"
         },
         "target": {
           "predicate_type": "minecraft:tag_match",

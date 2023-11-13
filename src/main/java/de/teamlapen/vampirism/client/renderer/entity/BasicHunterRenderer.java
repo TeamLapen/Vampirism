@@ -3,10 +3,11 @@ package de.teamlapen.vampirism.client.renderer.entity;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
-import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
-import de.teamlapen.vampirism.client.renderer.entity.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import net.minecraft.client.model.HumanoidArmorModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,12 +27,11 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
-    private final Pair<ResourceLocation, Boolean> textureDefault = Pair.of(new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png"), false);
     private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
 
     public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, context.getModelSet(), entity -> entity.isHoldingCrossbow() ? HunterEquipmentModel.StakeType.NONE : entity.getEntityLevel() < 2 ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getEntityLevel() == 0 ? HunterEquipmentModel.HatType.from(entity.getEntityTextureType() % 3) : HunterEquipmentModel.HatType.HAT1, () -> Optional.of(this.getModel().hat)));
+        this.addLayer(new ArmorLayer<HumanoidModel<BasicHunterEntity>>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getEntityLevel() > 0));
         textures = gatherTextures("textures/entity/hunter", true);
     }
@@ -39,8 +39,6 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     @Override
     protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
-        int level = entity.getEntityLevel();
-        if (level > 0) return textureDefault;
         return textures[entity.getEntityTextureType() % textures.length];
     }
 }

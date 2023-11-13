@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
+import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
@@ -79,21 +79,16 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int targetLevel;
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALTAR_INFUSION.get(), pos, state, 3, AltarInfusionMenu.SELECTOR_INFOS);
+        super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
     }
 
     /**
      * Checks all the requirements
      *
-     * @param player        trying to execute the ritual
-     * @param messagePlayer If the player should be notified on fail
+     * @param player trying to execute the ritual
      */
-    public @NotNull Result canActivate(@NotNull Player player, boolean messagePlayer) {
+    public @NotNull Result canActivate(@NotNull Player player) {
         if (runningTick > 0) {
-            if (messagePlayer) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_still_running"), true);
-            }
-
             return Result.ISRUNNING;
         }
         this.player = null;
@@ -101,22 +96,13 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
-            if (messagePlayer) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
-            }
             return Result.WRONGLEVEL;
         } else if (player.getCommandSenderWorld().isDay()) {
-            if (messagePlayer) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_night_only"), true);
-            }
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
-            if (messagePlayer) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
-            }
             tips = null;
             return Result.STRUCTUREWRONG;
-        } else if (!checkItemRequirements(player, messagePlayer)) {
+        } else if (!checkItemRequirements()) {
             tips = null;
             return Result.INVMISSING;
         }
@@ -235,7 +221,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     /**
      * Starts the ritual.
-     * ONLY call if {@link AltarInfusionBlockEntity#canActivate(Player, boolean)} returned 1
+     * ONLY call if {@link #canActivate(Player)} returned 1
      */
     public void startRitual(@NotNull Player player) {
         if (level == null) return;
@@ -350,26 +336,16 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Checks for the requirements for the give player to level up
      *
-     * @param messagePlayer If the player should be notified about missing ones
      */
-    private boolean checkItemRequirements(@NotNull Player player, boolean messagePlayer) {
+    private boolean checkItemRequirements() {
         int newLevel = targetLevel;
-        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
-                        PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
-                new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()},
-                (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
-
-        if (!missing.isEmpty()) {
-            if (messagePlayer) {
-                Component item = missing.getItem() instanceof PureBloodItem pureBloodItem ? pureBloodItem.getCustomName() : Component.translatable(missing.getDescriptionId());
-                Component main = Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
-                player.sendSystemMessage(main);
-            }
-
-            return false;
-        }
-        return true;
+        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> {
+            return InventoryHelper.checkItems(this, new Item[]{
+                            PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
+                    new int[]{req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
+                    (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
+        }).orElse(ItemStack.EMPTY);
+        return missing.isEmpty();
 
     }
 
@@ -380,11 +356,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int checkRequiredLevel() {
         int newLevel = targetLevel;
 
-        if (!VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(newLevel)) {
-            return -1;
-        }
-        return VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(newLevel);
-
+        return VampireLeveling.getInfusionRequirement(newLevel).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElse(-1);
     }
 
     /**
@@ -438,8 +410,9 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Consume the required tileInventory
      */
     private void consumeItems() {
-        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);
-        InventoryHelper.removeItems(this, new int[]{requirements.blood(), requirements.heart(), requirements.vampireBook()});
+        VampireLeveling.getInfusionRequirement(targetLevel).ifPresent(req -> {
+            InventoryHelper.removeItems(this, req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity());
+        });
     }
 
     /**

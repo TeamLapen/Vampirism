@@ -1,0 +1,36 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:stat",
+        "amount": 15,
+        "description": {
+          "translate": "stat.minecraft.traded_with_villager"
+        },
+        "id": "minecraft:traded_with_villager",
+        "stat": "minecraft:traded_with_villager"
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "Count": 2,
+          "id": "minecraft:gold_ingot"
+        }
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:refinement",
+    "faction": {
+      "id": "vampirism:vampire"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.random_refinement3"
+  },
+  "unlocker": []
+}

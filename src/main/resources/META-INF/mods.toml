@@ -1,38 +1,64 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
-issueTrackerURL = "https://github.com/TeamLapen/Vampirism/issues"
-license = "LGPL-3.0"
+loaderVersion = "${loader_version_range}"
+issueTrackerURL = "${mod_issue_tracker}"
+license = "${mod_license}"
 
 [[mods]]
-    modId="vampirism"
+    modId="${mod_id}"
     namespace="vampirism"
-    version="${version}"
-    displayName="Vampirism"
-    authors="Maxanier, Cheaterpaul"
-    credits="1LiterZinalco (triage/textures/models), TheRebelT (textures), TinkerHatWill (textures), Alis (textures), dimensionpainter (textures), S_olace (textures), Mistadon (code/models), wildbill22 (code), LRA_10 (models/textures), Oreo365 (models), Slippingchip400 (models),  Йода (textures), XxKidDowdallxX (texture), F_Spade (textures), Matheo (lore), cournualllama2 (lore), special_krab (lore), Random (textures/models), Shumnik (textures/models), BugraaK (textures/models), MrVityaTrash (textures), FrostedOver (textures), Grid (textures), T_Corvus (textures), freesound.org (sounds), freeSFX.co.uk (sounds)"
-    description="Allows you to become a vampire"
-    displayURL="https://vampirism.maxanier.de"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    authors="${mod_authors}"
+    credits='''\n
+     - 1LiterZinalco (triage/textures/models)
+     - TheRebelT (textures)
+     - TinkerHatWill (textures)
+     - Alis (textures)
+     - dimensionpainter (textures)
+     - S_olace (textures)
+     - Mistadon (code/models)
+     - wildbill22 (code)
+     - LRA_10 (models/textures)
+     - Oreo365 (models)
+     - Slippingchip400 (models)
+     - Йода (textures)
+     - XxKidDowdallxX (texture)
+     - F_Spade (textures)
+     - Matheo (lore)
+     - cournualllama2 (lore)
+     - special_krab (lore)
+     - Random (textures/models)
+     - Shumnik (textures/models)
+     - BugraaK (textures/models)
+     - MrVityaTrash (textures)
+     - FrostedOver (textures)
+     - Grid (textures)
+     - T_Corvus (textures)
+     - freesound.org (sounds)
+     - freeSFX.co.uk (sounds)'''
+    description='''${mod_description}'''
+    displayURL="${mod_url}"
     logoFile="logo.png"
-    updateJSONURL="https://maxanier.de/projects/vampirism/versions.json"
-    [[dependencies.vampirism]]
+    updateJSONURL="https://api.modrinth.com/updates/vampirism/forge_updates.json"
+    [[dependencies.${mod_id}]]
         modId="forge"
         mandatory=true
-        versionRange="[${forge_version},)"
+        versionRange="${forge_version_range}"
         ordering="NONE"
         side="BOTH"
-    [[dependencies.vampirism]]
+    [[dependencies.${mod_id}]]
         modId="teamlapenlib"
         mandatory=true
-        versionRange="[${version},)"
+        versionRange="[${mod_version},)"
         ordering="AFTER"
         side="BOTH"
-    [[dependencies.vampirism]]
+    [[dependencies.${mod_id}]]
         modId = "guideapi-vp"
         mandatory = false
         versionRange = "[${guideapi_version},)"
         ordering = "AFTER"
         side = "BOTH"
-    [[dependencies.vampirism]]
+    [[dependencies.${mod_id}]]
         modId = "jei"
         mandatory = false
         versionRange = "[${jei_version},)"
@@ -41,14 +67,14 @@ license = "LGPL-3.0"
 [[mods]]
     modId="teamlapenlib"
     namespace="teamlapenlib"
-    version="${version}"
+    version="${mod_version}"
     displayName="Teamlapen Library"
-    authors="Maxanier, Cheaterpaul"
+    authors="${mod_authors}"
     description="Required by Vampirism"
     displayURL="https://vampirism.maxanier.de"
     [[dependencies.teamlapen-lib]]
         modId="forge"
         mandatory=true
-        versionRange="[${forge_version},)"
+        versionRange="${forge_version_range}"
         ordering="NONE"
         side="BOTH"

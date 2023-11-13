@@ -1,0 +1,7 @@
+{
+  "handler": {
+    "type": "vampirism:special",
+    "converted_type": "vampirism:converted_sheep"
+  },
+  "overlay": "vampirism:textures/entity/vanilla/sheep_overlay.png"
+}

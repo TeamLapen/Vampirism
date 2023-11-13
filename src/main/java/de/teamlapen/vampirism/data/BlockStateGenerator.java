@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.data;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 
-public class BlockStateGenerator extends BlockStateProvider {
+public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
 
     public BlockStateGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
         super(packOutput, REFERENCE.MODID, exFileHelper);
@@ -30,6 +30,10 @@ public class BlockStateGenerator extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        createDarkStone();
+        createWoodStates();
+        createCursedBark();
+
         ResourceLocation cutout = new ResourceLocation("cutout");
         ResourceLocation cutout_mipped = new ResourceLocation("cutout_mipped");
         ResourceLocation translucent = new ResourceLocation("translucent");
@@ -44,11 +48,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.ALTAR_CLEANSING.get(), models().getExistingFile(modLoc("block/altar_cleansing")));
         horizontalBlock(ModBlocks.BLOOD_GRINDER.get(), models().getExistingFile(modLoc("block/blood_grinder")));
 
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_BRICK_BLOODY.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_DARK_STONE.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_NORMAL_BRICK.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
         simpleBlock(ModBlocks.CURSED_EARTH.get());
         simpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), models().withExistingParent("vampirism:block/sunscreen_beacon", "minecraft:block/beacon").texture("beacon", "vampirism:block/cursed_earth").renderType(cutout));
         BlockModelBuilder builder1 = models().getBuilder("vampirism:block/empty").texture("particle", "minecraft:block/spruce_planks");
@@ -72,15 +71,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.DARK_SPRUCE_LEAVES.get(), models().getExistingFile(mcLoc("block/oak_leaves")));
         simpleBlock(ModBlocks.DARK_SPRUCE_SAPLING.get(), dark_spruce_sapling);
         simpleBlock(ModBlocks.CURSED_SPRUCE_SAPLING.get(), cursed_spruce_sapling);
-
-
-        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"));
-        stairsBlock(ModBlocks.CASTLE_STAIRS_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"));
-        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
-
-        slabBlock(ModBlocks.CASTLE_SLAB_DARK_BRICK.get(), modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
-        slabBlock(ModBlocks.CASTLE_SLAB_DARK_STONE.get(), modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
-        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
 
 
         //variants
@@ -241,16 +231,13 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .part().modelFile(models().cubeBottomTop("vampirism:cursed_grass_snowy", modLoc("block/cursed_grass_side_snowy"), modLoc("block/cursed_earth"), modLoc("block/cursed_grass_top"))).addModel().condition(BlockStateProperties.SNOWY, true).end();
 
         simpleBlock(ModBlocks.CURSED_ROOTS.get(), models().cross("cursed_roots", modLoc("block/cursed_roots")).renderType(cutout));
-        simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots"));
+        simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots").renderType(cutout));
 
         trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_trapdoor"), true);
         trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_trapdoor"), true);
 
         doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
         doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
-
-        createWoodStates();
-        createCursedBark();
 
         horizontalBlock(ModBlocks.VAMPIRE_RACK.get(), models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.THRONE.get(), models().getExistingFile(modLoc("block/throne")));
@@ -267,6 +254,40 @@ public class BlockStateGenerator extends BlockStateProvider {
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_input_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_0")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true));
         applyHorizontalModel(alchemy_table, models().getExistingFile(modLoc("block/alchemy_table/alchemy_table_output_1")), partBuilder -> partBuilder.condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true));
+
+        var cursedEarthPath = models().getBuilder(ModBlocks.CURSED_EARTH_PATH.getId().getPath())
+                .parent(models().getExistingFile(mcLoc("block/block")))
+                .texture("particle", modLoc("block/cursed_earth_path_side"))
+                .texture("side", modLoc("block/cursed_earth_path_side"))
+                .texture("top", modLoc("block/cursed_earth_path_top"))
+                .texture("bottom", modLoc("block/cursed_earth_path_top"))
+                .element()
+                .from(0,0,0).to(16,15,16)
+                .allFaces((direction, builder) -> {
+                    switch (direction) {
+                        case UP -> builder.uvs(0, 0, 16, 16).texture("#top").end();
+                        case DOWN -> builder.uvs(0, 0, 16, 16).texture("#bottom").end();
+                        default -> builder.uvs(0, 1, 16, 16).texture("#side").end();
+                    }
+                })
+                .end()
+                .renderType(cutout);
+        simpleBlock(ModBlocks.CURSED_EARTH_PATH.get(), cursedEarthPath);
+        horizontalBlock(ModBlocks.BAT_CAGE.get(), models().getExistingFile(modLoc("block/bat_cage/block")));
+        var remainsModel = models().cubeAll("remains", modLoc("block/remains"));
+        simpleBlock(ModBlocks.REMAINS.get(), remainsModel);
+        simpleBlock(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get(), models().cubeAll("incapacitated_vulnerable_remains", modLoc("block/incapacitated_vulnerable_remains")));
+        simpleBlock(ModBlocks.VULNERABLE_REMAINS.get(), models().cubeAll("vulnerable_remains", modLoc("block/vulnerable_remains")));
+        simpleBlock(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), models().cubeAll("active_vulnerable_remains", modLoc("block/active_vulnerable_remains")));
+        simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")));
+        simpleBlock(ModBlocks.MOTHER.get(), models().cubeAll("mother", modLoc("block/mother")));
+        simpleBlock(ModBlocks.MOTHER_TROPHY.get(), models().getExistingFile(modLoc("block/mother_trophy")));
+        simpleBlock(ModBlocks.FOG_DIFFUSER.get(), models().withExistingParent("fog_diffuser_normal", modLoc("block/fog_diffuser")).renderType(cutout));
+        simpleBlock(ModBlocks.POTTED_DARK_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_dark_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/dark_spruce_sapling").renderType(cutout));
+        simpleBlock(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get(), models().withExistingParent("vampirism:block/potted_cursed_spruce_sapling", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_spruce_sapling").renderType(cutout));
+        simpleBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
+        simpleBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+        simpleBlock(ModBlocks.VAMPIRE_BEACON.get(), models().withExistingParent("vampire_beacon", mcLoc("block/beacon")).texture("beacon", modLoc("block/vampire_beacon")).renderType(cutout));
     }
 
     private void createWoodStates() {
@@ -287,8 +308,10 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         logBlock(ModBlocks.DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.CURSED_SPRUCE_LOG.get());
+        axisBlock(ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), UtilLib.amend(blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), "_top"));
         axisBlock(ModBlocks.DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()));
         axisBlock(ModBlocks.CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
+        axisBlock(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
         logBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
         axisBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()));
@@ -304,6 +327,11 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
         simpleBlock(ModBlocks.DARK_SPRUCE_SIGN.get(), models().getBuilder("vampirism:dark_spruce_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+
+        simpleBlock(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
     }
 
     private void createCursedBark() {
@@ -325,6 +353,39 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .part().modelFile(side2).rotationX(90).rotationY(180).addModel().condition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL).end()
                 ;
         simpleBlock(ModBlocks.DIAGONAL_CURSED_BARK.get(), models().getBuilder("vampirism:cursed_bark_empty"));
+    }
+
+    private void createDarkStone() {
+        simpleBlock(ModBlocks.DARK_STONE_BRICKS.get());
+        stairsBlock(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), modLoc("block/dark_stone_bricks"));
+        slabBlock(ModBlocks.DARK_STONE_BRICK_SLAB.get(), modLoc("block/dark_stone_bricks"), modLoc("block/dark_stone_bricks"));
+        wallBlock(ModBlocks.DARK_STONE_BRICK_WALL.get(), modLoc("block/dark_stone_bricks"));
+        simpleBlock(ModBlocks.DARK_STONE.get());
+        simpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), models().getExistingFile(modLoc("block/dark_stone")));
+        stairsBlock(ModBlocks.DARK_STONE_STAIRS.get(), modLoc("block/dark_stone"));
+        slabBlock(ModBlocks.DARK_STONE_SLAB.get(), modLoc("block/dark_stone"), modLoc("block/dark_stone"));
+        wallBlock(ModBlocks.DARK_STONE_WALL.get(), modLoc("block/dark_stone"));
+        simpleBlock(ModBlocks.COBBLED_DARK_STONE.get());
+        stairsBlock(ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), modLoc("block/cobbled_dark_stone"));
+        slabBlock(ModBlocks.COBBLED_DARK_STONE_SLAB.get(), modLoc("block/cobbled_dark_stone"), modLoc("block/cobbled_dark_stone"));
+        wallBlock(ModBlocks.COBBLED_DARK_STONE_WALL.get(), modLoc("block/cobbled_dark_stone"));
+        simpleBlock(ModBlocks.POLISHED_DARK_STONE.get());
+        stairsBlock(ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), modLoc("block/polished_dark_stone"));
+        slabBlock(ModBlocks.POLISHED_DARK_STONE_SLAB.get(), modLoc("block/polished_dark_stone"), modLoc("block/polished_dark_stone"));
+        wallBlock(ModBlocks.POLISHED_DARK_STONE_WALL.get(), modLoc("block/polished_dark_stone"));
+        simpleBlock(ModBlocks.DARK_STONE_TILES.get());
+        simpleBlock(ModBlocks.CRACKED_DARK_STONE_TILES.get());
+        stairsBlock(ModBlocks.DARK_STONE_TILES_STAIRS.get(), modLoc("block/dark_stone_tiles"));
+        slabBlock(ModBlocks.DARK_STONE_TILES_SLAB.get(), modLoc("block/dark_stone_tiles"), modLoc("block/dark_stone_tiles"));
+        wallBlock(ModBlocks.DARK_STONE_TILES_WALL.get(), modLoc("block/dark_stone_tiles"));
+        simpleBlock(ModBlocks.CHISELED_DARK_STONE_BRICKS.get());
+
+        simpleBlock(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
+        simpleBlock(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
+        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
+        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
+        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
     }
 
     private void button(Block block, @NotNull ResourceLocation texture) {

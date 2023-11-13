@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -78,7 +79,24 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         return newEntity;
     }
 
+    @NotNull
     EntityDataAccessor<Boolean> getConvertingDataParam();
+
+    @Nullable
+    default EntityDataAccessor<String> getSourceEntityDataParam() {
+        return null;
+    }
+
+    @NotNull
+    @Deprecated
+    default Optional<EntityDataAccessor<String>> getSourceEntityDataParamOpt() {
+        return Optional.ofNullable(getSourceEntityDataParam());
+    }
+
+    @Override
+    default @Nullable String getSourceEntityId() {
+        return getSourceEntityDataParamOpt().map(s -> this.getRepresentingEntity().getEntityData().get(s)).orElse(null);
+    }
 
     /**
      * call in {@link Entity#handleEntityEvent(byte)}
@@ -132,6 +150,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      */
     default void registerConvertingData(@NotNull PathfinderMob entity) {
         entity.getEntityData().define(this.getConvertingDataParam(), false);
+        getSourceEntityDataParamOpt().ifPresent(s -> entity.getEntityData().define(s, ""));
     }
 
     /**
@@ -146,4 +165,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         entity.removeEffect(MobEffects.WEAKNESS);
         entity.level().broadcastEntityEvent(entity, (CURE_EVENT_ID));
     }
+
+
 }

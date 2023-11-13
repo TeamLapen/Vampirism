@@ -159,4 +159,17 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         }
         return InteractionResult.SUCCESS;
     }
+
+    @Override
+    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+        return true;
+    }
+
+    /**
+     * @return 0-14
+     */
+    @Override
+    public int getAnalogOutputSignal(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+        return FluidUtil.getFluidHandler(pLevel, pPos, null).map(handler -> (int) ((handler.getFluidInTank(0).getAmount() * 14f) / (float) handler.getTankCapacity(0))).orElse(0);
+    }
 }

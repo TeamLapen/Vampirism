@@ -1,19 +1,24 @@
 package de.teamlapen.vampirism.core;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.*;
+import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
+import de.teamlapen.vampirism.entity.converted.converter.SpecialConverter;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.sit.SitEntity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
@@ -26,7 +31,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
  */
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<Codec<? extends Converter>> CONVERTING_HELPER = DeferredRegister.create(VampirismRegistries.ENTITY_CONVERTER_ID, REFERENCE.MODID);
 
     public static final RegistryObject<EntityType<BasicHunterEntity>> HUNTER = prepareEntityType("hunter", () -> EntityType.Builder.of(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
     public static final RegistryObject<EntityType<HunterTrainerEntity>> HUNTER_TRAINER = prepareEntityType("hunter_trainer", () -> EntityType.Builder.of(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
@@ -70,6 +75,14 @@ public class ModEntities {
     public static final RegistryObject<EntityType<SitEntity>> dummy_sit_entity = prepareEntityType("dummy_sit_entity", () -> EntityType.Builder.of(SitEntity::new, MobCategory.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false);
     public static final RegistryObject<EntityType<VampirismBoatEntity>> BOAT = prepareEntityType("boat", () -> EntityType.Builder.<VampirismBoatEntity>of(VampirismBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnEntity, level) -> new VampirismBoatEntity(level, spawnEntity.getPosX(), spawnEntity.getPosY(), spawnEntity.getPosZ())), false);
     public static final RegistryObject<EntityType<VampirismChestBoatEntity>> CHEST_BOAT = prepareEntityType("chest_boat", () -> EntityType.Builder.<VampirismChestBoatEntity>of(VampirismChestBoatEntity::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).setCustomClientFactory((spawnEntity, level) -> new VampirismChestBoatEntity(level, spawnEntity.getPosX(), spawnEntity.getPosY(), spawnEntity.getPosZ())), false);
+    public static final RegistryObject<EntityType<ConvertedFoxEntity>> CONVERTED_FOX = prepareEntityType("converted_fox", () -> EntityType.Builder.of(ConvertedFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH), true);
+    public static final RegistryObject<EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = prepareEntityType("converted_goat", () -> EntityType.Builder.of(ConvertedGoatEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), true);
+    public static final RegistryObject<EntityType<VulnerableRemainsDummyEntity>> VULNERABLE_REMAINS_DUMMY = prepareEntityType("vulnerable_remains_dummy", () -> EntityType.Builder.of(VulnerableRemainsDummyEntity::new, MobCategory.MISC).sized(1.02f, 1.02f).setTrackingRange(10).setUpdateInterval(20), false);
+    public static final RegistryObject<EntityType<RemainsDefenderEntity>> REMAINS_DEFENDER = prepareEntityType("remains_defender", () -> EntityType.Builder.of(RemainsDefenderEntity::new, MobCategory.MISC).sized(0.3f, 0.3f).setTrackingRange(10).setUpdateInterval(20), false);
+    public static final RegistryObject<EntityType<GhostEntity>> GHOST = prepareEntityType("ghost", () -> EntityType.Builder.of(GhostEntity::new, VReference.VAMPIRE_CREATURE_TYPE).sized(0.35F, 0.5F).setTrackingRange(10).setUpdateInterval(20).fireImmune(), true);
+
+    public static final RegistryObject<Codec<? extends Converter>> DEFAULT_CONVERTER = CONVERTING_HELPER.register("default", () -> DefaultConverter.CODEC);
+    public static final RegistryObject<Codec<? extends Converter>> SPECIAL_CONVERTER = CONVERTING_HELPER.register("special", () -> SpecialConverter.CODEC);
 
 
     /**
@@ -79,34 +92,9 @@ public class ModEntities {
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
     }
 
-    /**
-     * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
-     */
-    static void registerConvertibles() {
-        Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
-        IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
-
-        registry.addConvertible(EntityType.COW, overlay.apply("cow"), new ConvertedCowEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.LLAMA, overlay.apply("llama"));
-        registry.addConvertible(EntityType.OCELOT, overlay.apply("cat"));
-        registry.addConvertible(EntityType.PANDA, overlay.apply("panda"));
-        registry.addConvertible(EntityType.PIG, overlay.apply("pig"));
-        registry.addConvertible(EntityType.POLAR_BEAR, overlay.apply("polarbear"));
-        registry.addConvertible(EntityType.RABBIT, overlay.apply("rabbit"));
-        registry.addConvertible(EntityType.SHEEP, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.VILLAGER, null, new ConvertedVillagerEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_HORSE.get()));
-        registry.addConvertible(EntityType.DONKEY, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_DONKEY.get()));
-        registry.addConvertible(EntityType.MULE, overlay.apply("horse"), new SpecialConvertingHandler<>(ModEntities.CONVERTED_MULE.get()));
-    }
-
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
-    }
-
-    static void initializeEntities() {
-        VampireMinionEntity.init();
-        HunterMinionEntity.init();
+        CONVERTING_HELPER.register(bus);
     }
 
     static void onRegisterSpawns(@NotNull SpawnPlacementRegisterEvent event) {
@@ -115,8 +103,8 @@ public class ModEntities {
         event.register(BLINDING_BAT.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlindingBatEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(DUMMY_CREATURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(CONVERTED_CREATURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_SHEEP.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_SHEEP.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedSheepEntity::checkConvertedSheepSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCowEntity::checkConvertedCowSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(HUNTER_TRAINER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(HUNTER_TRAINER_DUMMY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(VAMPIRE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, SpawnPlacementRegisterEvent.Operation.OR);
@@ -127,6 +115,8 @@ public class ModEntities {
         event.register(CONVERTED_HORSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedHorseEntity::checkConvertedHorseSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(CONVERTED_DONKEY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedDonkeyEntity::checkConvertedDonkeySpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
         event.register(CONVERTED_MULE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedMuleEntity::checkConvertedMuleSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_FOX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedFoxEntity::checkConvertedFoxSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(CONVERTED_GOAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedGoatEntity::checkConvertedGoatSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
     }
 
     static void onRegisterEntityTypeAttributes(@NotNull EntityAttributeCreationEvent event) {
@@ -138,8 +128,8 @@ public class ModEntities {
         event.put(CONVERTED_CREATURE.get(), BasicVampireEntity.getAttributeBuilder().build());
         event.put(CONVERTED_CREATURE_IMOB.get(), BasicVampireEntity.getAttributeBuilder().build());
         event.put(CONVERTED_HORSE.get(), ConvertedHorseEntity.getAttributeBuilder().build());
-        event.put(CONVERTED_SHEEP.get(), BasicVampireEntity.getAttributeBuilder().build());
-        event.put(CONVERTED_COW.get(), BasicVampireEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_SHEEP.get(), ConvertedSheepEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_COW.get(), ConvertedCowEntity.getAttributeBuilder().build());
         event.put(CONVERTED_DONKEY.get(), ConvertedDonkeyEntity.getAttributeBuilder().build());
         event.put(CONVERTED_MULE.get(), ConvertedMuleEntity.getAttributeBuilder().build());
         event.put(DUMMY_CREATURE.get(), BasicVampireEntity.getAttributeBuilder().build());
@@ -156,6 +146,11 @@ public class ModEntities {
         event.put(VAMPIRE_MINION.get(), VampireMinionEntity.getAttributeBuilder().build());
         event.put(TASK_MASTER_HUNTER.get(), HunterTaskMasterEntity.getAttributeBuilder().build());
         event.put(TASK_MASTER_VAMPIRE.get(), VampireTaskMasterEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_FOX.get(), ConvertedFoxEntity.createAttributes().build());
+        event.put(CONVERTED_GOAT.get(), ConvertedGoatEntity.createAttributes().build());
+        event.put(VULNERABLE_REMAINS_DUMMY.get(), VulnerableRemainsDummyEntity.createAttributes().build());
+        event.put(REMAINS_DEFENDER.get(), RemainsDefenderEntity.createAttributes().build());
+        event.put(GHOST.get(), GhostEntity.createAttributes().build());
     }
 
     static void onModifyEntityTypeAttributes(@NotNull EntityAttributeModificationEvent event) {

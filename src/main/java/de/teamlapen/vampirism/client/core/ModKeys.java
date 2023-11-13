@@ -1,21 +1,21 @@
 package de.teamlapen.vampirism.client.core;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
-import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.screens.ActionSelectScreen;
-import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
+import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundStartFeedingPacket;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
 import de.teamlapen.vampirism.util.RegUtil;
+import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -37,6 +37,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Map;
+
 /**
  * Handles all key/input related stuff
  */
@@ -51,15 +53,20 @@ public class ModKeys {
 
     private static final String CATEGORY = "keys.vampirism.category";
     private static final String SUCK_BLOOD = "keys.vampirism.suck";
-    //    private static final String AUTO_BLOOD = "keys.vampirism.auto";
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
     private static final String OPEN_VAMPIRISM_MENU = "keys.vampirism.select_skills";
     private static final String SWITCH_VISION = "keys.vampirism.vision";
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
     private static final String ACTIVATE_ACTION3 = "keys.vampirism.action3";
-
+    private static final String ACTIVATE_ACTION4 = "keys.vampirism.action4";
+    private static final String ACTIVATE_ACTION5 = "keys.vampirism.action5";
+    private static final String ACTIVATE_ACTION6 = "keys.vampirism.action6";
+    private static final String ACTIVATE_ACTION7 = "keys.vampirism.action7";
+    private static final String ACTIVATE_ACTION8 = "keys.vampirism.action8";
+    private static final String ACTIVATE_ACTION9 = "keys.vampirism.action9";
     private static final String MINION_TASK = "keys.vampirism.minion_task";
+    private static final String SELECT_AMMO_NAME = "keys.vampirism.select_ammo";
 
     public static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
@@ -68,97 +75,49 @@ public class ModKeys {
     public static final KeyMapping ACTION1 = new KeyMapping(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
     public static final KeyMapping ACTION2 = new KeyMapping(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
     public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
+    public static final KeyMapping ACTION4 = new KeyMapping(ACTIVATE_ACTION4, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION5 = new KeyMapping(ACTIVATE_ACTION5, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION6 = new KeyMapping(ACTIVATE_ACTION6, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION7 = new KeyMapping(ACTIVATE_ACTION7, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION8 = new KeyMapping(ACTIVATE_ACTION8, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION9 = new KeyMapping(ACTIVATE_ACTION9, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping SELECT_AMMO = new KeyMapping(SELECT_AMMO_NAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+
+    public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1,ACTION1, 2,ACTION2, 3,ACTION3, 4,ACTION4, 5,ACTION5, 6,ACTION6, 7,ACTION7, 8,ACTION8, 9,ACTION9);
 
     static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.register(ACTION);
         event.register(SUCK);
         event.register(VAMPIRISM_MENU);
         event.register(VISION);
-        event.register(ACTION1);
-        event.register(ACTION2);
-        event.register(ACTION3);
         event.register(MINION);
+        event.register(SELECT_AMMO);
+        ACTION_KEYS.forEach((i, k) -> event.register(k));
     }
 
     private boolean suckKeyDown = false;
-    private long lastAction1Trigger = 0;
-    private long lastAction2Trigger = 0;
-    private long lastAction3Trigger = 0;
 
+    private final Map<KeyMapping, Runnable> keyMappingActions;
+    private final Minecraft mc;
+    private final Int2LongArrayMap actionTriggerTime = new Int2LongArrayMap();
 
-    public void handleInputEvent(InputEvent event, int keyAction) {
-        if (SUCK.isDown()) {
-            if (!suckKeyDown) {
-                HitResult mouseOver = Minecraft.getInstance().hitResult;
-                suckKeyDown = true;
-                Player player = Minecraft.getInstance().player;
-                if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
-                    if (mouseOver instanceof EntityHitResult) {
-                        VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
-                    } else if (mouseOver instanceof BlockHitResult) {
-                        BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                        VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(pos));
-                    } else {
-                        LOGGER.warn("Unknown mouse over type while trying to feed");
-                    }
-                }
-            }
-        } else {
-            if (suckKeyDown) {
-                suckKeyDown = false;
-                VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
-            }
+    public ModKeys() {
+        ImmutableMap.Builder<KeyMapping, Runnable> keyMappingActions = ImmutableMap.builder();
+        keyMappingActions.put(ACTION, this::openActionMenu);
+        keyMappingActions.put(VAMPIRISM_MENU, this::openVampirismMenu);
+        keyMappingActions.put(VISION, this::switchVision);
+        keyMappingActions.put(MINION, this::openMinionTaskMenu);
+        keyMappingActions.put(SELECT_AMMO, this::selectAmmo);
+        ACTION_KEYS.forEach((i, key) -> keyMappingActions.put(key, () -> toggleAction(i)));
+        this.keyMappingActions = keyMappingActions.build();
+        this.mc = Minecraft.getInstance();
 
-            if (keyAction == InputConstants.PRESS) {
-                if (ACTION.isDown()) {
-                    if (Minecraft.getInstance().player.isAlive() && !Minecraft.getInstance().player.isSpectator()) {
-                        IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
-                        if (faction != null) {
-                            Minecraft.getInstance().setScreen(new ActionSelectScreen<>(new Color(faction.getColor()), false));
-                        }
-                    }
-                } else if (VAMPIRISM_MENU.isDown()) {
-                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
-                } else if (VISION.isDown()) {
-                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
-                } else if (ACTION1.isDown()) {
-                    long t = System.currentTimeMillis();
-                    if (t - lastAction1Trigger > ACTION_BUTTON_COOLDOWN) {
-                        lastAction1Trigger = System.currentTimeMillis();
-                        Player player = Minecraft.getInstance().player;
-                        if (player.isAlive()) {
-                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(1))));
-                        }
-                    }
+    }
 
-                } else if (ACTION2.isDown()) {
-                    long t = System.currentTimeMillis();
-                    if (t - lastAction2Trigger > ACTION_BUTTON_COOLDOWN) {
-                        lastAction2Trigger = System.currentTimeMillis();
-                        Player player = Minecraft.getInstance().player;
-                        if (player.isAlive()) {
-                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(2))));
-                        }
-                    }
-
-                } else if (ACTION3.isDown()) {
-                    long t = System.currentTimeMillis();
-                    if (t - lastAction3Trigger > ACTION_BUTTON_COOLDOWN) {
-                        lastAction3Trigger = System.currentTimeMillis();
-                        Player player = Minecraft.getInstance().player;
-                        if (player.isAlive()) {
-                            FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(3))));
-                        }
-                    }
-
-                } else if (MINION.isDown()) {
-                    if (!Minecraft.getInstance().player.isSpectator() && FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                        Minecraft.getInstance().setScreen(new SelectMinionTaskScreen());
-                    }
-                }
-            }
-        }
+    @SubscribeEvent
+    public void handleMouseButton(InputEvent.MouseButton.Pre event) {
+        handleInputEvent(event, event.getAction());
     }
 
     @SubscribeEvent
@@ -166,9 +125,77 @@ public class ModKeys {
         handleInputEvent(event, event.getAction());
     }
 
-    @SubscribeEvent
-    public void handleMouseButton(InputEvent.MouseButton.Pre event) {
-        handleInputEvent(event, event.getAction());
+    public void handleInputEvent(InputEvent event, int action) {
+        if (SUCK.isDown()) {
+            suck();
+        } else {
+            endSuck();
+            if (action == InputConstants.PRESS) {
+                for (Map.Entry<KeyMapping, Runnable> entry : this.keyMappingActions.entrySet()) {
+                    if (entry.getKey().isDown()) {
+                        entry.getValue().run();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void suck() {
+        if (!suckKeyDown) {
+            HitResult mouseOver = Minecraft.getInstance().hitResult;
+            suckKeyDown = true;
+            Player player = Minecraft.getInstance().player;
+            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
+                if (mouseOver instanceof EntityHitResult) {
+                    VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
+                } else if (mouseOver instanceof BlockHitResult) {
+                    BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
+                    VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(pos));
+                } else {
+                    LOGGER.warn("Unknown mouse over type while trying to feed");
+                }
+            }
+        }
+    }
+
+    private void endSuck() {
+        if (suckKeyDown) {
+            suckKeyDown = false;
+            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
+        }
+    }
+
+    private void openActionMenu() {
+        if (mc.player.isAlive() && !mc.player.isSpectator()) {
+            SelectActionRadialScreen.show();
+        }
+    }
+
+    private void openVampirismMenu() {
+        VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
+    }
+
+    private void switchVision() {
+        VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
+    }
+
+    private void openMinionTaskMenu() {
+        if(Minecraft.getInstance().player.isSpectator()) return;
+        FactionPlayerHandler.getOpt(mc.player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
+            SelectMinionTaskRadialScreen.show();
+        });
+    }
+
+    private void toggleAction(int id) {
+        long t = System.currentTimeMillis();
+        if (t - this.actionTriggerTime.getOrDefault(id,0) > ACTION_BUTTON_COOLDOWN) {
+            this.actionTriggerTime.put(id, t);
+            Player player = mc.player;
+            if (player.isAlive()) {
+                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(id))));
+            }
+        }
     }
 
     /**
@@ -184,6 +211,11 @@ public class ModKeys {
                 VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }
         }
+    }
 
+    private void selectAmmo() {
+        if (mc.player.isAlive()) {
+            SelectAmmoScreen.show();
+        }
     }
 }
