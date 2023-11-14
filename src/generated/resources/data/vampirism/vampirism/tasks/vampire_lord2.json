@@ -13,6 +13,15 @@
         }
       },
       {
+        "type": "vampirism:entity_type",
+        "amount": 30,
+        "description": {
+          "translate": "entity_tag.vampirism.hunter"
+        },
+        "entityType": "vampirism:hunter",
+        "id": "vampirism:hunter"
+      },
+      {
         "type": "vampirism:item",
         "description": {
           "translate": "item.vampirism.pure_blood_4"
@@ -22,15 +31,6 @@
           "Count": 5,
           "id": "vampirism:pure_blood_4"
         }
-      },
-      {
-        "type": "vampirism:entity_type",
-        "amount": 30,
-        "description": {
-          "translate": "entity_tag.vampirism.hunter"
-        },
-        "entityType": "vampirism:hunter",
-        "id": "vampirism:hunter"
       }
     ]
   },

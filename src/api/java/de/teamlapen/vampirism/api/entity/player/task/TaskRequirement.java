@@ -11,10 +11,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,7 +19,7 @@ public class TaskRequirement {
 
     public static final Codec<TaskRequirement> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
-                Requirement.CODEC.listOf().fieldOf("requirements").forGetter(i -> i.requirements.values().stream().flatMap(Collection::stream).toList())
+                Requirement.CODEC.listOf().fieldOf("requirements").forGetter(i -> i.requirements.values().stream().flatMap(Collection::stream).sorted(Comparator.comparing(Requirement::id)).toList())
         ).apply(inst, TaskRequirement::new);
     });
 
