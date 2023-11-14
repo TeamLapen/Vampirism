@@ -179,7 +179,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Blocks.COFFIN).add(ModBlocks.COFFIN_RED.get()).add(ModBlocks.COFFIN_BLUE.get()).add(ModBlocks.COFFIN_GREEN.get()).add(ModBlocks.COFFIN_BROWN.get()).add(ModBlocks.COFFIN_BLACK.get()).add(ModBlocks.COFFIN_GRAY.get()).add(ModBlocks.COFFIN_LIGHT_BLUE.get()).add(ModBlocks.COFFIN_WHITE.get()).add(ModBlocks.COFFIN_LIGHT_GRAY.get()).add(ModBlocks.COFFIN_CYAN.get()).add(ModBlocks.COFFIN_PURPLE.get()).add(ModBlocks.COFFIN_PINK.get()).add(ModBlocks.COFFIN_LIME.get()).add(ModBlocks.COFFIN_YELLOW.get()).add(ModBlocks.COFFIN_ORANGE.get()).add(ModBlocks.COFFIN_MAGENTA.get());
             tag(BlockTags.CEILING_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
             tag(BlockTags.WALL_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
-            tag(ModTags.Blocks.DARK_STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES.get(), ModBlocks.INFESTED_DARK_STONE.get());
+            tag(ModTags.Blocks.DARK_STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.INFESTED_DARK_STONE.get());
             tag(ModTags.Blocks.DARK_STONE_BRICKS).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.CHISELED_DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
             tag(ModTags.Blocks.POLISHED_DARK_STONE).add(ModBlocks.POLISHED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
             tag(ModTags.Blocks.COBBLED_DARK_STONE).add(ModBlocks.COBBLED_DARK_STONE.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
@@ -330,6 +330,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Biomes.HasStructure.VAMPIRE_HUT).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, Tags.Biomes.IS_PLAINS, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_WASTELAND);
             tag(ModTags.Biomes.HasStructure.MOTHER).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(ModTags.Biomes.HasStructure.CRYPT).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
         }
     }
 

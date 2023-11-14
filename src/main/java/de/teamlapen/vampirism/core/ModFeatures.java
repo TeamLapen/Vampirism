@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
+import de.teamlapen.vampirism.world.gen.structure.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostStructure;
 import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
@@ -22,13 +23,18 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -49,6 +55,7 @@ public class ModFeatures {
     public static final ResourceKey<Structure> HUNTER_OUTPOST = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost"));
     public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_altar"));
     public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "mother"));
+    public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "crypt"));
 
     public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
     public static final RegistryObject<StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
@@ -69,6 +76,7 @@ public class ModFeatures {
 
     public static void createStructures(BootstapContext<Structure> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
+        HolderGetter<StructureTemplatePool> lookup1 = context.lookup(Registries.TEMPLATE_POOL);
 
         // it is currently not possible to create a not holder in datagen see https://github.com/MinecraftForge/MinecraftForge/issues/9629
         // this file is not generated, but added through the main source set
@@ -77,5 +85,6 @@ public class ModFeatures {
         context.register(ModFeatures.HUNTER_OUTPOST, new HunterOutpostStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 60, 1, 2), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 1)))) , GenerationStep.Decoration.SURFACE_STRUCTURES,TerrainAdjustment.BEARD_BOX)));
         context.register(ModFeatures.VAMPIRE_ALTAR, new VampireAltarStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_ALTAR), TerrainAdjustment.BEARD_BOX)));
         context.register(ModFeatures.MOTHER, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
+        context.register(ModFeatures.CRYPT, new JigsawStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.CRYPT), TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(CryptStructurePieces.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Heightmap.Types.WORLD_SURFACE_WG));
     }
 }

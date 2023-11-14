@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.world.gen.structure.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
@@ -16,7 +17,6 @@ import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -42,6 +42,7 @@ public class ModStructures {
         Holder<StructureTemplatePool> empty = holderGetter.getOrThrow(Pools.EMPTY);
 
         context.register(HUNTER_TRAINER, new StructureTemplatePool(empty , Lists.newArrayList(Pair.of(singleJigsawPieceFunction(processorList, "village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
+        CryptStructurePieces.bootstrap(context);
     }
 
     public static void createStructureProcessorLists(BootstapContext<StructureProcessorList> context) {

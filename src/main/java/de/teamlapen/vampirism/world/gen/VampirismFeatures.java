@@ -111,6 +111,7 @@ public class VampirismFeatures {
     public static final ResourceKey<StructureSet> OUTPOST = createStructureSetKey("outpost");
     public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
     public static final ResourceKey<StructureSet> MOTHER_SET = createStructureSetKey("mother");
+    public static final ResourceKey<StructureSet> CRYPT_SET = createStructureSetKey("crypt");
 
 
     public static void register(IEventBus ctx) {
@@ -179,6 +180,7 @@ public class VampirismFeatures {
         context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
         context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(24, 8, RandomSpreadType.LINEAR, 364135095)));
         context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
+        context.register(CRYPT_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.CRYPT), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 643510199)));
     }
 
 }

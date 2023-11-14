@@ -161,6 +161,7 @@ public class ModTags {
             public static final TagKey<Biome> HUNTER_OUTPOST = tag("has_structure/outpost");
             public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
             public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
+            public static final TagKey<Biome> CRYPT = tag("has_structure/crypt");
         }
 
         public static class HasSpawn {
