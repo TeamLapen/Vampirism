@@ -1,14 +1,9 @@
 {
   "values": [
-    "#forge:is_wasteland",
-    "#forge:is_plateau",
-    "#vampirism:has_faction/hunter",
-    "#forge:is_plains",
-    "#minecraft:is_badlands",
-    "#minecraft:is_badlands",
-    "#minecraft:is_forest",
+    "#forge:is_desert",
     "#forge:is_plains",
     "#forge:is_plateau",
+    "#forge:is_snowy",
     "#forge:is_wasteland"
   ]
 }

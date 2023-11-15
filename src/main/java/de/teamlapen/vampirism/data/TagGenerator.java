@@ -312,7 +312,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
             tag(ModTags.Biomes.IS_HUNTER_BIOME);
             tag(ModTags.Biomes.HasStructure.VAMPIRE_ALTAR).addTags(Tags.Biomes.IS_WASTELAND, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_RARE, Tags.Biomes.IS_SPOOKY, Tags.Biomes.IS_SWAMP, ModTags.Biomes.IS_VAMPIRE_BIOME);
-            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST).addTags(Tags.Biomes.IS_WASTELAND, Tags.Biomes.IS_PLATEAU, ModTags.Biomes.IS_HUNTER_BIOME, Tags.Biomes.IS_PLAINS);
+            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST).addTags(Tags.Biomes.IS_DESERT, Tags.Biomes.IS_PLAINS, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_SNOWY, Tags.Biomes.IS_WASTELAND);
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
             tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
             tag(Tags.Biomes.IS_DENSE_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
@@ -328,7 +328,6 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Biomes.HasSpawn.ADVANCED_HUNTER).addTags(BiomeTags.IS_OVERWORLD); //TODO 1.19 determine spawn-able biomes
             tag(ModTags.Biomes.NoSpawn.ADVANCED_HUNTER).addTags(ModTags.Biomes.IS_FACTION_BIOME);
             tag(ModTags.Biomes.HasStructure.VAMPIRE_HUT).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
-            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, Tags.Biomes.IS_PLAINS, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_WASTELAND);
             tag(ModTags.Biomes.HasStructure.MOTHER).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.HasStructure.CRYPT).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
         }

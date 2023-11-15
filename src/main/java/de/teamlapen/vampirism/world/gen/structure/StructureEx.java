@@ -23,7 +23,7 @@ public abstract class StructureEx extends Structure {
         ChunkPos chunkPos = pContext.chunkPos();
         int y = ConstantHeight.of(VerticalAnchor.absolute(0)).sample(pContext.random(), new WorldGenerationContext(pContext.chunkGenerator(), pContext.heightAccessor()));
         y += pContext.chunkGenerator().getFirstFreeHeight(chunkPos.getMiddleBlockX(), chunkPos.getMiddleBlockZ(), Heightmap.Types.WORLD_SURFACE_WG, pContext.heightAccessor(), pContext.randomState());
-        BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), y, chunkPos.getMinBlockZ());
+        BlockPos pos = new BlockPos(chunkPos.getMinBlockX(), Math.max(63, y), chunkPos.getMinBlockZ());
         return Optional.of(new GenerationStub(pos, b -> builder.accept(b, pos.above(0))));
     }
 }

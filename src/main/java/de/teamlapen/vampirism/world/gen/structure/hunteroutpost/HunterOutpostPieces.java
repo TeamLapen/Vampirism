@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.world.gen.structure.hunteroutpost;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.blocks.GarlicBlock;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -74,6 +77,10 @@ public class HunterOutpostPieces {
                     Horse horse = EntityType.HORSE.create(pLevel.getLevel());
                     horse.setPos(pPos.getX(), pPos.getY(), pPos.getZ());
                     pLevel.addFreshEntity(horse);
+                }
+                case "garlic" -> {
+                    pLevel.setBlock(pPos, Blocks.FARMLAND.defaultBlockState().setValue(FarmBlock.MOISTURE, FarmBlock.MAX_MOISTURE), 3);
+                    pLevel.setBlock(pPos.above(), ModBlocks.GARLIC.get().defaultBlockState().setValue(GarlicBlock.AGE, pRandom.nextInt(GarlicBlock.MAX_AGE)), 3);
                 }
             }
         }

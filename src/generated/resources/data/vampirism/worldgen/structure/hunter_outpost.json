@@ -3,7 +3,7 @@
   "biomes": "#vampirism:has_structure/outpost",
   "spawn_overrides": {
     "monster": {
-      "bounding_box": "full",
+      "bounding_box": "piece",
       "spawns": [
         {
           "type": "vampirism:hunter",
@@ -21,5 +21,5 @@
     }
   },
   "step": "surface_structures",
-  "terrain_adaptation": "beard_box"
+  "terrain_adaptation": "beard_thin"
 }
