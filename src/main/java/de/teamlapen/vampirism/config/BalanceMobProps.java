@@ -37,16 +37,16 @@ public class BalanceMobProps {
     //    @DefaultDouble(value = 20D, minValue = 10D, maxValue = 10000D, name = "hunter_villager_max_health")
     public final double HUNTER_VILLAGER_MAX_HEALTH = 20;
     //    @DefaultDouble(value = 2D, minValue = 0D, name = "hunter_villager_attack_damage")
-    public final double HUNTER_VILLAGER_ATTACK_DAMAGE = 2;
+    public final double HUNTER_VILLAGER_ATTACK_DAMAGE = 1;
 
     //    @DefaultDouble(value = 60D, minValue = 10D, maxValue = 10000D, name = "advanced_hunter_max_health")
     public final double ADVANCED_HUNTER_MAX_HEALTH = 60;
     //    @DefaultDouble(value = 30D, minValue = 0D, maxValue = 10000, name = "advanced_hunter_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
     public final double ADVANCED_HUNTER_MAX_HEALTH_PL = 30;
     //    @DefaultDouble(value = 5D, minValue = 0D, name = "advanced_hunter_attack_damage")
-    public final double ADVANCED_HUNTER_ATTACK_DAMAGE = 5;
+    public final double ADVANCED_HUNTER_ATTACK_DAMAGE = 1;
     //    @DefaultDouble(value = 3D, minValue = 0D, name = "advanced_hunter_attack_damage_pl")
-    public final double ADVANCED_HUNTER_ATTACK_DAMAGE_PL = 3;
+    public final double ADVANCED_HUNTER_ATTACK_DAMAGE_PL = 1;
     //    @DefaultDouble(value = 0.285D, minValue = 0.1, maxValue = 2, name = "advanced_hunter_speed")
     public final double ADVANCED_HUNTER_SPEED = 0.285;
 
