@@ -107,11 +107,11 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onFinalizeSpawn(@NotNull MobSpawnEvent.FinalizeSpawn event) {
-        BlockPos pos = new BlockPos((int) (event.getX() - 0.4F), (int) event.getY(), (int) (event.getZ() - 0.4F)).below();
+        BlockPos pos = new BlockPos((int) (event.getX() - 0.6f), (int) event.getY(), (int) (event.getZ() - 0.6f)).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
 
-        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) || event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE)) {
+        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
             event.setSpawnCancelled(true);
         }
     }
