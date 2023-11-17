@@ -194,8 +194,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         block(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), "garlic_diffuser_normal");
         block(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), "garlic_diffuser_improved");
 
-        block(ModBlocks.HUNTER_TABLE.get(), "hunter_table/hunter_table");
-
         withExistingParent(ModBlocks.DARK_SPRUCE_LEAVES.get(), mcLoc("block/oak_leaves"));
 
         withExistingParent(ModBlocks.DARK_SPRUCE_SAPLING.get(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/dark_spruce_sapling");

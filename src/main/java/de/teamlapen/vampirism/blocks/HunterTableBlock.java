@@ -36,27 +36,36 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterTableBlock extends VampirismHorizontalBlock {
     public static final EnumProperty<TABLE_VARIANT> VARIANT = EnumProperty.create("variant", TABLE_VARIANT.class);
-    private static final VoxelShape SOUTH = makeShape();
-    private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
-    private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-    private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+    private static final VoxelShape NORTH = makeShape();
+    private static final VoxelShape NORTH_HAMMER = Shapes.or(makeShape(), makeHammerShape());
+    private static final VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
+    private static final VoxelShape EAST_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.NINETY);
+    private static final VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+    private static final VoxelShape SOUTH_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+    private static final VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+    private static final VoxelShape WEST_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
     private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(0, 0, 0, 2, 10, 2);
-        VoxelShape b = Block.box(14, 0, 0, 16, 10, 2);
-        VoxelShape c = Block.box(0, 0, 14, 2, 10, 16);
-        VoxelShape d = Block.box(14, 0, 14, 16, 10, 16);
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.or(shape, Shapes.box(0.125, 0.625, 0.375, 0.5, 0.6875, 0.875));
+        shape = Shapes.or(shape, Shapes.box(0.125, 0.75, 0.375, 0.5, 0.8125, 0.875));
+        shape = Shapes.or(shape, Shapes.box(0.125, 0.6875, 0.375, 0.1875, 0.75, 0.875));
+        shape = Shapes.or(shape, Shapes.box(0.1875, 0.6875, 0.40625, 0.46875, 0.75, 0.84375));
+        shape = Shapes.or(shape, Shapes.box(0, 0.5, 0, 1, 0.625, 1));
+        shape = Shapes.or(shape, Shapes.box(0.0625, 0, 0.75, 0.25, 0.5, 0.9375));
+        shape = Shapes.or(shape, Shapes.box(0.75, 0, 0.75, 0.9375, 0.5, 0.9375));
+        shape = Shapes.or(shape, Shapes.box(0.75, 0, 0.0625, 0.9375, 0.5, 0.25));
+        shape = Shapes.or(shape, Shapes.box(0.0625, 0, 0.0625, 0.25, 0.5, 0.25));
 
-        VoxelShape e = Block.box(1, 8, 1, 15, 10, 15);
-        VoxelShape f = Block.box(8.5, 10, 3.5, 13.5, 11, 10);
+        return shape;
+    }
 
-        VoxelShape d1 = Shapes.or(a, b);
-        VoxelShape d2 = Shapes.or(c, d);
+    private static @NotNull VoxelShape makeHammerShape() {
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.or(shape, Shapes.box(0.4375, 0, 0.5625, 0.75, 0.1875, 0.75));
+        shape = Shapes.or(shape, Shapes.box(0.5625, 0.1875, 0.625, 0.625, 0.624375, 0.6875));
 
-        VoxelShape d3 = Shapes.or(d1, d2);
-        VoxelShape f1 = Shapes.or(e, f);
-
-        return Shapes.or(d3, f1);
+        return shape;
     }
 
     public static @NotNull TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
@@ -72,11 +81,19 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     @NotNull
     @Override
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case EAST -> EAST;
-            case SOUTH -> SOUTH;
-            case WEST -> WEST;
-            default -> NORTH;
+        return switch (state.getValue(VARIANT)) {
+            default -> switch (state.getValue(FACING)) {
+                case EAST -> EAST;
+                case SOUTH -> SOUTH;
+                case WEST -> WEST;
+                default -> NORTH;
+            };
+            case WEAPON_CAULDRON, WEAPON_POTION, COMPLETE, WEAPON -> switch (state.getValue(FACING)) {
+                case EAST -> EAST_HAMMER;
+                case SOUTH -> SOUTH_HAMMER;
+                case WEST -> WEST_HAMMER;
+                default -> NORTH_HAMMER;
+            };
         };
     }
 

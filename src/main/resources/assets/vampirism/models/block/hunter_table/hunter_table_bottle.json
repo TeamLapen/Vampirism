@@ -1,42 +1,79 @@
 {
-  "__comment": "Designed by Maxanier",
-  "textures": {
-    "potion": "vampirism:item/blood_bottle_9"
-  },
-  "render_type": "minecraft:cutout",
-  "elements": [
-    {
-      "__comment": "Element",
-      "from": [
-        1,
-        10,
-        4
-      ],
-      "to": [
-        7.5,
-        16,
-        4.0625
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#potion"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#potion"
-        }
-      }
-    }
-  ]
+	"credit": "By Grid and FoxPrince",
+	"textures": {
+		"particle": "vampirism:block/weapon_table",
+		"potion": "vampirism:item/blood_bottle_9"
+	},
+	"render_type": "minecraft:cutout",
+	"elements": [
+		{
+			"name": "Element",
+			"from": [
+				1,
+				10,
+				3
+			],
+			"to": [
+				7.5,
+				16,
+				3.0625
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#potion"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						0,
+						0
+					],
+					"texture": "#potion"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#potion"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						0,
+						0
+					],
+					"texture": "#potion"
+				},
+				"up": {
+					"uv": [
+						0,
+						0,
+						0,
+						0
+					],
+					"texture": "#potion"
+				},
+				"down": {
+					"uv": [
+						0,
+						0,
+						0,
+						0
+					],
+					"texture": "#potion"
+				}
+			}
+		}
+	]
 }
