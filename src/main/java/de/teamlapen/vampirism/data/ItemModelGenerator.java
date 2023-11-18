@@ -307,8 +307,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         withExistingParent(ModBlocks.DARK_SPRUCE_FENCE.get().asItem(), modLoc("block/dark_spruce_fence_inventory"));
         withExistingParent(ModBlocks.CURSED_SPRUCE_FENCE.get().asItem(), modLoc("block/cursed_spruce_fence_inventory"));
 
-        withExistingParent(ModBlocks.HUNTER_TABLE.get(), modLoc("block/hunter_table/hunter_table"));
-
         for (DyeColor dye : DyeColor.values()) {
             getBuilder("coffin_" + dye.getName()).parent(new ModelFile.UncheckedModelFile(REFERENCE.MODID + ":block/coffin/coffin_bottom_" + dye.getName()))
                     .transforms()
