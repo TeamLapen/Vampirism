@@ -119,6 +119,7 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(Permissions.class);
         MinecraftForge.EVENT_BUS.register(SitHandler.class);
+        MinecraftForge.EVENT_BUS.register(MigrationData.class);
         MinecraftForge.EVENT_BUS.register(new GeneralEventHandler());
         MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);

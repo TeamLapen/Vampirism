@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
@@ -32,7 +31,6 @@ public class RegistryManager implements IInitListener {
 
     public RegistryManager() {
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
-        MinecraftForge.EVENT_BUS.addListener(this::onMissingMappings);
     }
 
     public static void setupRegistries(@NotNull IEventBus modbus) {
@@ -103,18 +101,6 @@ public class RegistryManager implements IInitListener {
             default:
                 break;
         }
-    }
-
-    public void onMissingMappings(@NotNull MissingMappingsEvent event) {
-        VampireSkills.fixMappings(event);
-        HunterSkills.fixMappings(event);
-        ModPotions.fixMappings(event);
-        ModTiles.fixMappings(event);
-        ModItems.fixMappings(event);
-        ModBlocks.fixMappings(event);
-        ModEnchantments.fixMapping(event);
-        ModEntities.fixMapping(event);
-        ModEffects.fixMappings(event);
     }
 
     @SubscribeEvent

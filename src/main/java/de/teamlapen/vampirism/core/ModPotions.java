@@ -17,9 +17,7 @@ import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -149,17 +147,5 @@ public class ModPotions {
 
     private static void master(Supplier<? extends Potion> out, NonNullSupplier<Ingredient> in, int count, int countReduced) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(() -> Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
-    }
-
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(ForgeRegistries.Keys.POTIONS).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> missingMapping.remap(ModPotions.LONG_RESISTANCE.get());
-                case "vampirism:very_strong_resistance" -> missingMapping.remap(ModPotions.STRONG_RESISTANCE.get());
-                case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> missingMapping.ignore();
-                case "vampirism:very_strong_harming" -> missingMapping.remap(Potions.STRONG_HARMING);
-            }
-        });
     }
 }

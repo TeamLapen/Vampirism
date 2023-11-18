@@ -31,9 +31,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -306,39 +304,6 @@ public class ModItems {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
             if (event.getTabKey() == tab) {
                 items.forEach(item -> event.accept(item.get()));
-            }
-        });
-    }
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(ForgeRegistries.Keys.ITEMS).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:blood_potion", "vampirism:blood_potion_table" -> missingMapping.ignore();
-                case "vampirism:vampire_clothing_head" -> missingMapping.remap(VAMPIRE_CLOTHING_CROWN.get());
-                case "vampirism:vampire_clothing_feet" -> missingMapping.remap(VAMPIRE_CLOTHING_BOOTS.get());
-                case "vampirism:garlic_beacon_core" -> missingMapping.remap(GARLIC_DIFFUSER_CORE.get());
-                case "vampirism:garlic_beacon_core_improved" -> missingMapping.remap(GARLIC_DIFFUSER_CORE_IMPROVED.get());
-                case "vampirism:garlic_beacon_normal" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get().asItem());
-                case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get().asItem());
-                case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get().asItem());
-                case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get().asItem());
-                case "vampirism:item_med_chair" -> missingMapping.remap(ModBlocks.MED_CHAIR.get().asItem());
-                case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
-                case "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
-                case "vampirism:coffin" -> missingMapping.remap(ModBlocks.COFFIN_RED.get().asItem());
-                case "vampirism:holy_salt_water" -> missingMapping.remap(PURE_SALT_WATER.get());
-                case "vampirism:holy_salt" -> missingMapping.remap(PURE_SALT.get());
-                case "vampirism:injection_zombie_blood" -> missingMapping.remap(Items.APPLE);
-                case "vampirism:cure_apple" -> missingMapping.remap(Items.GOLDEN_APPLE);
-            }
-            if (missingMapping.getKey().toString().startsWith("vampirism:obsidian_armor")) {
-                Item hunterArmorReplacement = (Item) event.getRegistry().getValue(new ResourceLocation(missingMapping.getKey().toString().replace("obsidian_armor", "hunter_coat")));
-                if (hunterArmorReplacement != null) {
-                    missingMapping.remap(hunterArmorReplacement);
-                } else {
-                    LogManager.getLogger().warn("Could not find hunter armor replacement for {}", missingMapping.getKey().toString());
-                    missingMapping.ignore();
-                }
             }
         });
     }

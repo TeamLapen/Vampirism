@@ -25,7 +25,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -227,36 +226,6 @@ public class ModBlocks {
 
     private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> supplier) {
         return registerWithItem(name, supplier, new Item.Properties());
-    }
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(ForgeRegistries.Keys.BLOCKS).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:blood_potion_table" -> missingMapping.remap(ModBlocks.POTION_TABLE.get());
-                case "vampirism:garlic_beacon_normal" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
-                case "vampirism:garlic_beacon_weak" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
-                case "vampirism:garlic_beacon_improved" -> missingMapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
-                case "vampirism:church_altar" -> missingMapping.remap(ModBlocks.ALTAR_CLEANSING.get());
-                case "vampirism:vampire_spruce_leaves", "vampirism:bloody_spruce_leaves" -> missingMapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
-                case "vampirism:bloody_spruce_log" -> missingMapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
-                case "vampirism:cursed_grass_block" -> missingMapping.remap(ModBlocks.CURSED_GRASS.get());
-                case "cursed_bark" -> missingMapping.ignore();
-                case "castle_block_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICKS.get());
-                case "castle_block_dark_brick_bloody" -> missingMapping.remap(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
-                case "castle_block_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE.get());
-                case "castle_block_normal_brick" -> missingMapping.remap(Blocks.STONE_BRICKS);
-                case "castle_slab_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_SLAB.get());
-                case "castle_slab_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE_SLAB.get());
-                case "castle_stairs_dark_brick" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
-                case "castle_stairs_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE_STAIRS.get());
-                case "castle_block_dark_brick_cracked" -> missingMapping.remap(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-                case "castle_block_dark_brick_wall" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_WALL.get());
-                case "castle_block_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICKS.get());
-                case "castle_slab_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
-                case "castle_stairs_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
-                case "castle_block_purple_brick_wall" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_WALL.get());
-            }
-        });
     }
 
     public static @NotNull Set<Block> getAllBlocks() {

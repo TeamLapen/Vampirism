@@ -14,7 +14,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -109,14 +112,5 @@ public class ModEffects {
         }
         return true;
     }
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(ForgeRegistries.Keys.MOB_EFFECTS).forEach(missingMapping -> {
-            if ("vampirism:thirst".equals(missingMapping.getKey().toString())) {
-                missingMapping.remap(MobEffects.HUNGER);
-            }
-        });
-    }
-
 
 }

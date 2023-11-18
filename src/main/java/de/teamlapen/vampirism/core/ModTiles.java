@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,12 +67,4 @@ public class ModTiles {
 
     }
 
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(missingMapping -> {
-            //noinspection SwitchStatementWithTooFewBranches
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:garlic_beacon" -> missingMapping.remap(GARLIC_DIFFUSER.get());
-            }
-        });
-    }
 }

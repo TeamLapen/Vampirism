@@ -18,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -88,14 +87,5 @@ public class VampireSkills {
     static {
         SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(2, false));
         SKILLS.register(SkillType.LORD.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(2, false));
-    }
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:creeper_avoided", "vampirism:enhanced_crossbow", "vampirism:vampire_forest_fog" -> missingMapping.ignore();
-                case "vampirism:bat" -> missingMapping.remap(FLEDGLING.get());
-            }
-        });
     }
 }

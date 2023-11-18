@@ -16,10 +16,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Registers the default hunter skills
@@ -91,20 +89,5 @@ public class HunterSkills {
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
         SKILLS.register(bus);
-    }
-
-    public static void fixMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(missingMapping -> {
-            switch (missingMapping.getKey().toString()) {
-                case "vampirism:garlic_beacon_improved" -> missingMapping.remap(GARLIC_DIFFUSER_IMPROVED.get());
-                case "vampirism:garlic_beacon" -> missingMapping.remap(GARLIC_DIFFUSER.get());
-                case "vampirism:holy_water_enhanced" -> missingMapping.remap(ENHANCED_BLESSING.get());
-                default -> {
-                    if (missingMapping.getKey().toString().startsWith("vampirism:blood_potion_")) {
-                        missingMapping.ignore();
-                    }
-                }
-            }
-        });
     }
 }

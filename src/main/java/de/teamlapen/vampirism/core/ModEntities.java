@@ -26,7 +26,6 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -167,16 +166,6 @@ public class ModEntities {
             return type.build(REFERENCE.MODID + ":" + id);
         });
     }
-
-    static void fixMapping(@NotNull MissingMappingsEvent missingMappings) {
-        missingMappings.getAllMappings(ForgeRegistries.Keys.ENTITY_TYPES).forEach((mapping) -> {
-            switch (mapping.getKey().toString()) {
-                case "vampirism:vampire_hunter" -> mapping.remap(ModEntities.HUNTER.get());
-                case "vampirism:vampire_hunter_imob" -> mapping.remap(ModEntities.HUNTER_IMOB.get());
-            }
-        });
-    }
-
 
     public static @NotNull Set<EntityType<?>> getAllEntities() {
         return ENTITY_TYPES.getEntries().stream().map(RegistryObject::get).collect(Collectors.toUnmodifiableSet());
