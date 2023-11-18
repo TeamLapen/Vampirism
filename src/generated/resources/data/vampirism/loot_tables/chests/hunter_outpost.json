@@ -6,36 +6,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:heart_striker_normal",
-          "weight": 30
-        },
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:heart_striker_enhanced",
-          "weight": 20
-        },
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:heart_striker_ultimate",
-          "weight": 10
-        },
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:heart_seeker_normal",
-          "weight": 30
-        },
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:heart_seeker_enhanced",
-          "weight": 20
-        },
-        {
-          "type": "minecraft:item",
-          "name": "vampirism:heart_seeker_ultimate",
-          "weight": 10
-        },
-        {
-          "type": "minecraft:item",
           "name": "vampirism:basic_crossbow",
           "weight": 30
         },
@@ -78,6 +48,10 @@
           "type": "minecraft:item",
           "name": "vampirism:hunter_axe_ultimate",
           "weight": 20
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 80
         }
       ],
       "rolls": 2.0

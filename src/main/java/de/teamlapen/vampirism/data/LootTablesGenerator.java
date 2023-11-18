@@ -236,12 +236,6 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             );
             consumer.accept(ModLootTables.CHEST_HUNTER_OUTPOST, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
-                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_NORMAL.get()).setWeight(30))
-                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ENHANCED.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.HEART_STRIKER_ULTIMATE.get()).setWeight(10))
-                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_NORMAL.get()).setWeight(30))
-                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ENHANCED.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ULTIMATE.get()).setWeight(10))
                             .add(LootItem.lootTableItem(ModItems.BASIC_CROSSBOW.get()).setWeight(30))
                             .add(LootItem.lootTableItem(ModItems.BASIC_DOUBLE_CROSSBOW.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.BASIC_TECH_CROSSBOW.get()).setWeight(10))
