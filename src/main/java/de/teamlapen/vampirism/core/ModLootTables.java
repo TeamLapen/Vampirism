@@ -35,6 +35,7 @@ public class ModLootTables {
     public static final ResourceLocation CHEST_HUNTER_OUTPOST = register("chests/hunter_outpost");
     public static final ResourceLocation CHEST_HUNTER_OUTPOST_ALCHEMY = register("chests/hunter_outpost_alchemy");
     public static final ResourceLocation CHEST_VAMPIRE_ALTAR = register("chests/vampire_altar");
+    public static final ResourceLocation CHEST_CRYPT = register("chests/crypt");
 
     private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
     //inject

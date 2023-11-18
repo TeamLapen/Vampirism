@@ -1,0 +1,157 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:oblivion_potion",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:blood_infused_iron_ingot",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:blood_infused_enhanced_iron_ingot",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_fang",
+          "weight": 40
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_orchid",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "vampirism:blood_bottle",
+          "weight": 20
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 7.0,
+        "min": 1.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:amulet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:ring"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:obi_belt"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": 0.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 70
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_normal",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_enhanced",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_striker_ultimate",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_normal",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_enhanced",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:heart_seeker_ultimate",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 200
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "vampirism:chests/crypt"
+}
