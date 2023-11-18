@@ -47,6 +47,8 @@ public class ModTags {
         public static final TagKey<Block> POLISHED_DARK_STONE = tag("polished_dark_brick");
         public static final TagKey<Block> COBBLED_DARK_STONE = tag("cobbled_dark_brick");
         public static final TagKey<Block> DARK_STONE_TILES = tag("dark_brick_tiles");
+        public static final TagKey<Block> PURPLE_STONE_BRICKS = tag("purple_brick_bricks");
+        public static final TagKey<Block> PURPLE_STONE_TILES = tag("purple_brick_tiles");
         public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
         public static final TagKey<Block> REMAINS = tag("remains");

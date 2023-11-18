@@ -58,9 +58,9 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
         protected void addTags(HolderLookup.Provider holderLookup) {
             tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CURSED_EARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
-            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
-            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
+            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE.get(), ModBlocks.PURPLE_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
+            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
             tag(ModTags.Blocks.REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get(), ModBlocks.REMAINS.get(), ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
             tag(ModTags.Blocks.ACTIVE_REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get());
@@ -180,16 +180,18 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(BlockTags.CEILING_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
             tag(BlockTags.WALL_HANGING_SIGNS).add(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
             tag(ModTags.Blocks.DARK_STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.INFESTED_DARK_STONE.get());
-            tag(ModTags.Blocks.DARK_STONE_BRICKS).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.CHISELED_DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            tag(ModTags.Blocks.DARK_STONE_BRICKS).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.CHISELED_DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
+            tag(ModTags.Blocks.PURPLE_STONE_BRICKS).add(ModBlocks.PURPLE_STONE_BRICKS.get(), ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
             tag(ModTags.Blocks.POLISHED_DARK_STONE).add(ModBlocks.POLISHED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
             tag(ModTags.Blocks.COBBLED_DARK_STONE).add(ModBlocks.COBBLED_DARK_STONE.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get());
             tag(ModTags.Blocks.DARK_STONE_TILES).add(ModBlocks.DARK_STONE_TILES.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.CRACKED_DARK_STONE_TILES.get());
+            tag(ModTags.Blocks.PURPLE_STONE_TILES).add(ModBlocks.PURPLE_STONE_TILES.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
             tag(ModTags.Blocks.NO_SPAWN).addTag(ModTags.Blocks.DARK_STONE);
             tag(ModTags.Blocks.VAMPIRE_SPAWN).addTags(ModTags.Blocks.DARK_STONE_BRICKS, ModTags.Blocks.COBBLED_DARK_STONE, ModTags.Blocks.POLISHED_DARK_STONE, ModTags.Blocks.DARK_STONE_TILES);
             tag(Tags.Blocks.STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE.get());
-            tag(BlockTags.WALLS).add(ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
-            tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
-            tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
+            tag(BlockTags.WALLS).add(ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
+            tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
+            tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get());
             tag(ModTags.Blocks.MOTHER_GROWS_ON).addTag(BlockTags.DIRT);
             tag(Tags.Blocks.STORAGE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
             tag(ModTags.Blocks.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());

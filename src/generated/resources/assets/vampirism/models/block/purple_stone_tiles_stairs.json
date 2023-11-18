@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "vampirism:block/purple_stone_tiles",
+    "side": "vampirism:block/purple_stone_tiles",
+    "top": "vampirism:block/purple_stone_tiles"
+  }
+}

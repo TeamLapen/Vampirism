@@ -30,7 +30,7 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
 
     @Override
     protected void registerStatesAndModels() {
-        createDarkStone();
+        createStone();
         createWoodStates();
         createCursedBark();
 
@@ -355,7 +355,7 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.DIAGONAL_CURSED_BARK.get(), models().getBuilder("vampirism:cursed_bark_empty"));
     }
 
-    private void createDarkStone() {
+    private void createStone() {
         simpleBlock(ModBlocks.DARK_STONE_BRICKS.get());
         stairsBlock(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), modLoc("block/dark_stone_bricks"));
         slabBlock(ModBlocks.DARK_STONE_BRICK_SLAB.get(), modLoc("block/dark_stone_bricks"), modLoc("block/dark_stone_bricks"));
@@ -382,10 +382,14 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
 
         simpleBlock(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
         simpleBlock(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-        simpleBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
-        stairsBlock(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"));
-        wallBlock(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), blockTexture(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()));
-        slabBlock(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get(), modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
+        simpleBlock(ModBlocks.PURPLE_STONE_BRICKS.get());
+        stairsBlock(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), modLoc("block/purple_stone_bricks"));
+        slabBlock(ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), modLoc("block/purple_stone_bricks"), modLoc("block/purple_stone_bricks"));
+        wallBlock(ModBlocks.PURPLE_STONE_BRICK_WALL.get(), modLoc("block/purple_stone_bricks"));
+        simpleBlock(ModBlocks.PURPLE_STONE_TILES.get());
+        stairsBlock(ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), modLoc("block/purple_stone_tiles"));
+        slabBlock(ModBlocks.PURPLE_STONE_TILES_SLAB.get(), modLoc("block/purple_stone_tiles"), modLoc("block/purple_stone_tiles"));
+        wallBlock(ModBlocks.PURPLE_STONE_TILES_WALL.get(), modLoc("block/purple_stone_tiles"));
     }
 
     private void button(Block block, @NotNull ResourceLocation texture) {

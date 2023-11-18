@@ -30,9 +30,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         Set<Block> blocks = new HashSet<>() {{
             add(ModBlocks.ALTAR_TIP.get());
             add(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
-            add(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
-            add(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
-            add(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             add(ModBlocks.BLOOD_GRINDER.get());
             add(ModBlocks.BLOOD_PEDESTAL.get());
             add(ModBlocks.POTION_TABLE.get());
@@ -104,6 +101,14 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
             add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
             add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
             add(ModBlocks.VAMPIRE_BEACON.get());
+            add(ModBlocks.PURPLE_STONE_BRICKS.get());
+            add(ModBlocks.PURPLE_STONE_BRICK_WALL.get());
+            add(ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
+            add(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
+            add(ModBlocks.PURPLE_STONE_TILES.get());
+            add(ModBlocks.PURPLE_STONE_TILES_WALL.get());
+            add(ModBlocks.PURPLE_STONE_TILES_SLAB.get());
+            add(ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -320,10 +325,11 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         }
         this.item(ModItems.OIL_BOTTLE.get(), modLoc("item/oil_bottle"), modLoc("item/oil_bottle_overlay"));
         withExistingParent(ModBlocks.ALCHEMY_TABLE.get(), modLoc("block/alchemy_table/alchemy_table"));
-        withExistingParent(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/castle_block_purple_brick"));
         withExistingParent(ModBlocks.DARK_STONE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone_bricks"));
+        withExistingParent(ModBlocks.PURPLE_STONE_BRICK_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/purple_stone_bricks"));
         withExistingParent(ModBlocks.DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone"));
         withExistingParent(ModBlocks.DARK_STONE_TILES_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/dark_stone_tiles"));
+        withExistingParent(ModBlocks.PURPLE_STONE_TILES_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/purple_stone_tiles"));
         withExistingParent(ModBlocks.COBBLED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/cobbled_dark_stone"));
         withExistingParent(ModBlocks.POLISHED_DARK_STONE_WALL.get(), mcLoc("block/wall_inventory")).texture("wall", modLoc("block/polished_dark_stone"));
         withExistingParent(ModBlocks.INFESTED_DARK_STONE.get(), modLoc("block/dark_stone"));

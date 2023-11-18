@@ -317,13 +317,10 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.DARK_STONE_BRICKS.get());
             this.dropSelf(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
             this.dropSelf(ModBlocks.DARK_STONE.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get());
             this.dropSelf(ModBlocks.DARK_STONE_BRICK_SLAB.get());
             this.dropSelf(ModBlocks.DARK_STONE_SLAB.get());
-            this.dropSelf(ModBlocks.CASTLE_SLAB_PURPLE_BRICK.get());
             this.dropSelf(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
             this.dropSelf(ModBlocks.DARK_STONE_STAIRS.get());
-            this.dropSelf(ModBlocks.CASTLE_STAIRS_PURPLE_BRICK.get());
             this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
             this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
             this.dropSelf(ModBlocks.DARK_SPRUCE_PLANKS.get());
@@ -412,7 +409,6 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
             this.dropOther(ModBlocks.CURSED_EARTH_PATH.get(), ModBlocks.CURSED_EARTH.get());
             this.dropSelf(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-            this.dropSelf(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK_WALL.get());
             this.add(ModBlocks.DARK_STONE.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.COBBLED_DARK_STONE.get()));
             this.dropSelf(ModBlocks.DARK_STONE_STAIRS.get());
             this.dropSelf(ModBlocks.DARK_STONE_SLAB.get());
@@ -452,6 +448,14 @@ public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.dat
             this.dropSelf(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
             this.dropSelf(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
             this.add(ModBlocks.VAMPIRE_BEACON.get(), this::createNameableBlockEntityTable);
+            this.dropSelf(ModBlocks.PURPLE_STONE_BRICKS.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_BRICK_WALL.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_TILES.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_TILES_SLAB.get());
+            this.dropSelf(ModBlocks.PURPLE_STONE_TILES_WALL.get());
         }
 
         @NotNull

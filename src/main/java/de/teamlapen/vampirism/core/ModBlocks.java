@@ -22,9 +22,6 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -56,9 +53,6 @@ public class ModBlocks {
     public static final RegistryObject<GrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", GrinderBlock::new);
     public static final RegistryObject<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new);
     public static final RegistryObject<SieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", SieveBlock::new);
-    public static final RegistryObject<DarkStoneBlock> CASTLE_BLOCK_PURPLE_BRICK = registerWithItem("castle_block_purple_brick", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
-    public static final RegistryObject<DarkStoneSlabBlock> CASTLE_SLAB_PURPLE_BRICK = registerWithItem("castle_slab_purple_brick", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(CASTLE_BLOCK_PURPLE_BRICK.get())));
-    public static final RegistryObject<DarkStoneStairsBlock> CASTLE_STAIRS_PURPLE_BRICK = registerWithItem("castle_stairs_purple_brick", () -> new DarkStoneStairsBlock(CASTLE_BLOCK_PURPLE_BRICK.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(CASTLE_BLOCK_PURPLE_BRICK.get())));
     public static final RegistryObject<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new);
     public static final RegistryObject<CursedEarthBlock> CURSED_EARTH = registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final RegistryObject<FirePlaceBlock> FIRE_PLACE = registerWithItem("fire_place", FirePlaceBlock::new);
@@ -154,17 +148,16 @@ public class ModBlocks {
     public static final RegistryObject<WallHangingSignBlock> DARK_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("dark_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(DARK_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(DARK_SPRUCE_HANGING_SIGN), LogBlock.DARK_SPRUCE));
     public static final RegistryObject<WallHangingSignBlock> CURSED_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("cursed_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(CURSED_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_HANGING_SIGN), LogBlock.CURSED_SPRUCE));
     public static final RegistryObject<CursedEarthPathBlock> CURSED_EARTH_PATH = registerWithItem("cursed_earth_path", () -> new CursedEarthPathBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIRT).strength(0.65F).sound(SoundType.GRASS).isViewBlocking(UtilLib::always).isSuffocating(UtilLib::always)));
-    public static final RegistryObject<WallBlock> CASTLE_BLOCK_PURPLE_BRICK_WALL = registerWithItem("castle_block_purple_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(ModBlocks.CASTLE_BLOCK_PURPLE_BRICK.get()).forceSolidOn()));
-    public static final RegistryObject<DarkStoneBlock> DARK_STONE = registerWithItem("dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneBlock> DARK_STONE = registerWithItem("dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
     public static final RegistryObject<DarkStoneStairsBlock> DARK_STONE_STAIRS = registerWithItem("dark_stone_stairs", () -> new DarkStoneStairsBlock(DARK_STONE.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(DARK_STONE.get())));
     public static final RegistryObject<DarkStoneSlabBlock> DARK_STONE_SLAB = registerWithItem("dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(DARK_STONE.get())));
     public static final RegistryObject<WallBlock> DARK_STONE_WALL = registerWithItem("dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(DARK_STONE.get()).forceSolidOn()));
-    public static final RegistryObject<DarkStoneBlock> DARK_STONE_BRICKS = registerWithItem("dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneBlock> DARK_STONE_BRICKS = registerWithItem("dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
     public static final RegistryObject<DarkStoneStairsBlock> DARK_STONE_BRICK_STAIRS = registerWithItem("dark_stone_brick_stairs", () -> new DarkStoneStairsBlock(DARK_STONE_BRICKS.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
     public static final RegistryObject<DarkStoneSlabBlock> DARK_STONE_BRICK_SLAB = registerWithItem("dark_stone_brick_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
     public static final RegistryObject<WallBlock> DARK_STONE_BRICK_WALL = registerWithItem("dark_stone_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get()).forceSolidOn()));
     public static final RegistryObject<Block> CRACKED_DARK_STONE_BRICKS = registerWithItem("cracked_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.copy(DARK_STONE_BRICKS.get())));
-    public static final RegistryObject<DarkStoneBlock> COBBLED_DARK_STONE = registerWithItem("cobbled_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 10f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<DarkStoneBlock> COBBLED_DARK_STONE = registerWithItem("cobbled_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(2.5f, 10f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
     public static final RegistryObject<DarkStoneStairsBlock> COBBLED_DARK_STONE_STAIRS = registerWithItem("cobbled_dark_stone_stairs", () -> new DarkStoneStairsBlock(ModBlocks.COBBLED_DARK_STONE.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
     public static final RegistryObject<DarkStoneSlabBlock> COBBLED_DARK_STONE_SLAB = registerWithItem("cobbled_dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get())));
     public static final RegistryObject<WallBlock> COBBLED_DARK_STONE_WALL = registerWithItem("cobbled_dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(COBBLED_DARK_STONE.get()).forceSolidOn()));
@@ -198,7 +191,14 @@ public class ModBlocks {
     public static final RegistryObject<Block> BLOOD_INFUSED_IRON_BLOCK = registerWithItem("blood_infused_iron_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = registerWithItem("blood_infused_enhanced_iron_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final RegistryObject<VampireBeaconBlock> VAMPIRE_BEACON = registerWithItem("vampire_beacon", () -> new VampireBeaconBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).instrument(NoteBlockInstrument.HAT).strength(3.0F).lightLevel((p_50828_) -> 15).noOcclusion().isRedstoneConductor(UtilLib::never)), new Item.Properties().rarity(Rarity.RARE));
-
+    public static final RegistryObject<Block> PURPLE_STONE_BRICKS = registerWithItem("purple_stone_bricks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<StairBlock> PURPLE_STONE_BRICK_STAIRS = registerWithItem("purple_stone_brick_stairs", () -> new StairBlock(PURPLE_STONE_BRICKS.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(PURPLE_STONE_BRICKS.get())));
+    public static final RegistryObject<SlabBlock> PURPLE_STONE_BRICK_SLAB = registerWithItem("purple_stone_brick_slab", () -> new SlabBlock(BlockBehaviour.Properties.copy(PURPLE_STONE_BRICKS.get())));
+    public static final RegistryObject<WallBlock> PURPLE_STONE_BRICK_WALL = registerWithItem("purple_stone_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(PURPLE_STONE_BRICKS.get()).forceSolidOn()));
+    public static final RegistryObject<Block> PURPLE_STONE_TILES = registerWithItem("purple_stone_tiles", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
+    public static final RegistryObject<StairBlock> PURPLE_STONE_TILES_STAIRS = registerWithItem("purple_stone_tiles_stairs", () -> new StairBlock(PURPLE_STONE_TILES.map(Block::defaultBlockState)::get, BlockBehaviour.Properties.copy(PURPLE_STONE_TILES.get())));
+    public static final RegistryObject<SlabBlock> PURPLE_STONE_TILES_SLAB = registerWithItem("purple_stone_tiles_slab", () -> new SlabBlock(BlockBehaviour.Properties.copy(PURPLE_STONE_TILES.get())));
+    public static final RegistryObject<WallBlock> PURPLE_STONE_TILES_WALL = registerWithItem("purple_stone_tiles_wall", () -> new WallBlock(BlockBehaviour.Properties.copy(PURPLE_STONE_TILES.get()).forceSolidOn()));
 
     /**
      * TUTORIAL:
@@ -251,6 +251,10 @@ public class ModBlocks {
                 case "castle_stairs_dark_stone" -> missingMapping.remap(ModBlocks.DARK_STONE_STAIRS.get());
                 case "castle_block_dark_brick_cracked" -> missingMapping.remap(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
                 case "castle_block_dark_brick_wall" -> missingMapping.remap(ModBlocks.DARK_STONE_BRICK_WALL.get());
+                case "castle_block_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICKS.get());
+                case "castle_slab_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
+                case "castle_stairs_purple_brick" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
+                case "castle_block_purple_brick_wall" -> missingMapping.remap(ModBlocks.PURPLE_STONE_BRICK_WALL.get());
             }
         });
     }

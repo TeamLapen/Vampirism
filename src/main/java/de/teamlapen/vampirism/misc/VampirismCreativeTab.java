@@ -18,7 +18,6 @@ import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
-import static net.minecraft.world.item.CreativeModeTabs.BUILDING_BLOCKS;
 
 @Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
@@ -231,10 +230,14 @@ public class VampirismCreativeTab {
             addBlock(DARK_STONE_TILES_SLAB);
             addBlock(DARK_STONE_TILES_WALL);
             addBlock(CRACKED_DARK_STONE_TILES);
-            addBlock(CASTLE_BLOCK_PURPLE_BRICK);
-            addBlock(CASTLE_STAIRS_PURPLE_BRICK);
-            addBlock(CASTLE_SLAB_PURPLE_BRICK);
-            addBlock(CASTLE_BLOCK_PURPLE_BRICK_WALL);
+            addBlock(PURPLE_STONE_BRICKS);
+            addBlock(PURPLE_STONE_BRICK_STAIRS);
+            addBlock(PURPLE_STONE_BRICK_SLAB);
+            addBlock(PURPLE_STONE_BRICK_WALL);
+            addBlock(PURPLE_STONE_TILES);
+            addBlock(PURPLE_STONE_TILES_STAIRS);
+            addBlock(PURPLE_STONE_TILES_SLAB);
+            addBlock(PURPLE_STONE_TILES_WALL);
             addBlock(BLOOD_INFUSED_IRON_BLOCK);
             addBlock(BLOOD_INFUSED_ENHANCED_IRON_BLOCK);
         }
