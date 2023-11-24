@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 90
+    },
+    "facing=east,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 90
+    },
+    "facing=east,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 90
+    },
+    "facing=east,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 90
+    },
+    "facing=north,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white"
+    },
+    "facing=north,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white"
+    },
+    "facing=north,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white_lit"
+    },
+    "facing=north,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white_lit"
+    },
+    "facing=south,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 180
+    },
+    "facing=south,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 180
+    },
+    "facing=south,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 180
+    },
+    "facing=south,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 180
+    },
+    "facing=west,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 270
+    },
+    "facing=west,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white",
+      "y": 270
+    },
+    "facing=west,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 270
+    },
+    "facing=west,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick_white_lit",
+      "y": 270
+    }
+  }
+}

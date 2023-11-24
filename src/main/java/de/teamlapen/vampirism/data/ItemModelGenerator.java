@@ -335,6 +335,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move
         withExistingParent(ModBlocks.INFESTED_DARK_STONE.get(), modLoc("block/dark_stone"));
         block(ModBlocks.FOG_DIFFUSER.get(), "fog_diffuser");
         withExistingParent(ModBlocks.CURSED_HANGING_ROOTS.get().asItem(), mcLoc("item/generated")).texture("layer0", REFERENCE.MODID + ":block/cursed_hanging_roots");
+        withExistingParent(ModItems.CANDLE_STICK.get(), modLoc("block/candle_stick"));
     }
 
 }

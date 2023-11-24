@@ -242,6 +242,7 @@ public class ModItems {
     public static final RegistryObject<HangingSignItem> CURSED_SPRUCE_HANGING_SIGN = register("cursed_spruce_hanging_sign", () -> new HangingSignItem(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
 
     public static final RegistryObject<Item> MOTHER_CORE = register("mother_core", () -> new Item(props().rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<StandingAndWallBlockItem> CANDLE_STICK = register("candle_stick", () -> new StandingAndWallBlockItem(ModBlocks.CANDLE_STICK.get(), ModBlocks.WALL_CANDLE_STICK.get(), new Item.Properties(), Direction.DOWN));
 
     static void registerCraftingRecipes() {
         // Brewing

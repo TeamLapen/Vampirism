@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 90
+    },
+    "facing=east,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 90
+    },
+    "facing=east,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 90
+    },
+    "facing=east,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 90
+    },
+    "facing=north,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick"
+    },
+    "facing=north,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick"
+    },
+    "facing=north,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick"
+    },
+    "facing=north,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick"
+    },
+    "facing=south,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 180
+    },
+    "facing=south,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 180
+    },
+    "facing=south,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 180
+    },
+    "facing=south,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 180
+    },
+    "facing=west,lit=false,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 270
+    },
+    "facing=west,lit=false,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 270
+    },
+    "facing=west,lit=true,waterlogged=false": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 270
+    },
+    "facing=west,lit=true,waterlogged=true": {
+      "model": "vampirism:block/wall_candle_stick",
+      "y": 270
+    }
+  }
+}

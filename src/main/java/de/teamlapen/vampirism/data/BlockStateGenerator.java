@@ -9,6 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -332,6 +334,45 @@ public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to
         simpleBlock(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:dark_spruce_wall_hanging_sign").texture("particle", "vampirism:block/dark_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
         simpleBlock(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), models().getBuilder("vampirism:cursed_spruce_wall_hanging_sign").texture("particle", "vampirism:block/cursed_spruce_planks"));
+        horizontalBlock(ModBlocks.WALL_CANDLE_STICK.get(), models().getExistingFile(modLoc("block/wall_candle_stick")));
+        horizontalBlock(ModBlocks.CANDLE_STICK.get(), models().getExistingFile(modLoc("block/candle_stick")));
+        candleHolder(ModBlocks.CANDLE_STICK_NORMAL.get(), ModBlocks.WALL_CANDLE_STICK_NORMAL.get(), Items.CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_WHITE.get(), ModBlocks.WALL_CANDLE_STICK_WHITE.get(), Items.WHITE_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_ORANGE.get(), ModBlocks.WALL_CANDLE_STICK_ORANGE.get(), Items.ORANGE_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_MAGENTA.get(), ModBlocks.WALL_CANDLE_STICK_MAGENTA.get(), Items.MAGENTA_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_LIGHT_BLUE.get(), ModBlocks.WALL_CANDLE_STICK_LIGHT_BLUE.get(), Items.LIGHT_BLUE_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_YELLOW.get(), ModBlocks.WALL_CANDLE_STICK_YELLOW.get(), Items.YELLOW_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_LIME.get(), ModBlocks.WALL_CANDLE_STICK_LIME.get(), Items.LIME_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_PINK.get(), ModBlocks.WALL_CANDLE_STICK_PINK.get(), Items.PINK_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_GRAY.get(), ModBlocks.WALL_CANDLE_STICK_GRAY.get(), Items.GRAY_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_LIGHT_GRAY.get(), ModBlocks.WALL_CANDLE_STICK_LIGHT_GRAY.get(), Items.LIGHT_GRAY_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_CYAN.get(), ModBlocks.WALL_CANDLE_STICK_CYAN.get(), Items.CYAN_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_PURPLE.get(), ModBlocks.WALL_CANDLE_STICK_PURPLE.get(), Items.PURPLE_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_BLUE.get(), ModBlocks.WALL_CANDLE_STICK_BLUE.get(), Items.BLUE_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_BROWN.get(), ModBlocks.WALL_CANDLE_STICK_BROWN.get(), Items.BROWN_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_GREEN.get(), ModBlocks.WALL_CANDLE_STICK_GREEN.get(), Items.GREEN_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_RED.get(), ModBlocks.WALL_CANDLE_STICK_RED.get(), Items.RED_CANDLE);
+        candleHolder(ModBlocks.CANDLE_STICK_BLACK.get(), ModBlocks.WALL_CANDLE_STICK_BLACK.get(), Items.BLACK_CANDLE);
+    }
+
+    private static final int DEFAULT_ANGLE_OFFSET = 180;
+
+    private void candleHolder(StandingCandleStickBlock standingBlock, WallCandleStickBlock wallBlock, Item candle) {
+        ResourceLocation candleId = RegUtil.id(candle);
+        ResourceLocation candleOut = candleId.withPrefix("block/");
+        ResourceLocation candleLit = candleOut.withSuffix("_lit");
+        var standingOut = models().withExistingParent(RegUtil.id(standingBlock).withPrefix("block/").getPath(), modLoc("block/candle_stick_filled")).texture("candle", candleOut);
+        var standingLit = models().withExistingParent(RegUtil.id(standingBlock).withPrefix("block/").withSuffix("_lit").getPath(), modLoc("block/candle_stick_filled")).texture("candle", candleLit);
+        getVariantBuilder(standingBlock).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(StandingCandleStickBlock.LIT) ? standingLit : standingOut)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + DEFAULT_ANGLE_OFFSET) % 360)
+                .build());
+        var wallOut = models().withExistingParent(RegUtil.id(wallBlock).withPrefix("block/").getPath(), modLoc("block/wall_candle_stick_filled")).texture("candle", candleOut);
+        var wallLit = models().withExistingParent(RegUtil.id(wallBlock).withPrefix("block/").withSuffix("_lit").getPath(), modLoc("block/wall_candle_stick_filled")).texture("candle", candleLit);
+        getVariantBuilder(wallBlock).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(WallCandleStickBlock.LIT) ? wallLit : wallOut)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + DEFAULT_ANGLE_OFFSET) % 360)
+                .build());
     }
 
     private void createCursedBark() {

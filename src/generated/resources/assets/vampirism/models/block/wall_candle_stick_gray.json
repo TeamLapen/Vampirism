@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/wall_candle_stick_filled",
+  "textures": {
+    "candle": "minecraft:block/gray_candle"
+  }
+}
