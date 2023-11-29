@@ -463,7 +463,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-            this.tag(ModTags.Structures.HUNTER_OUTPOST).add(ModFeatures.HUNTER_OUTPOST_BADLANDS, ModFeatures.HUNTER_OUTPOST_DESERT, ModFeatures.HUNTER_OUTPOST_PLAINS, ModFeatures.HUNTER_OUTPOST_VAMPIRE_FOREST);
+            this.tag(ModTags.Structures.HUNTER_OUTPOST).add(ModStructures.HUNTER_OUTPOST_BADLANDS, ModStructures.HUNTER_OUTPOST_DESERT, ModStructures.HUNTER_OUTPOST_PLAINS, ModStructures.HUNTER_OUTPOST_VAMPIRE_FOREST);
         }
     }
 }

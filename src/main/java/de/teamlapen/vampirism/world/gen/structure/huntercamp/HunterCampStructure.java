@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.huntercamp;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import de.teamlapen.vampirism.world.gen.structure.StructureEx;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -25,6 +25,6 @@ public class HunterCampStructure extends StructureEx {
     @NotNull
     @Override
     public StructureType<?> type() {
-        return ModFeatures.HUNTER_CAMP_TYPE.get();
+        return ModStructures.HUNTER_CAMP_TYPE.get();
     }
 }

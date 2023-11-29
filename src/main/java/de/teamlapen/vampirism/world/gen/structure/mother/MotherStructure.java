@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.mother;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.world.level.levelgen.structure.SinglePieceStructure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,6 @@ public class MotherStructure extends SinglePieceStructure {
 
     @Override
     public @NotNull StructureType<?> type() {
-        return ModFeatures.MOTHER_TYPE.get();
+        return ModStructures.MOTHER_TYPE.get();
     }
 }

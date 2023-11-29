@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.world.gen.structure.mother;
 
 import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,11 +25,11 @@ import java.util.function.Consumer;
 public class MotherPiece extends ScatteredFeaturePiece {
 
     public MotherPiece(RandomSource random, int x, int z) {
-        super(VampirismFeatures.MOTHER.get(), x, 64, z, 18, 14, 18, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+        super(ModStructures.MOTHER_PIECE.get(), x, 64, z, 18, 14, 18, Direction.Plane.HORIZONTAL.getRandomDirection(random));
     }
 
     public MotherPiece(CompoundTag tag) {
-        super(VampirismFeatures.MOTHER.get(), tag);
+        super(ModStructures.MOTHER_PIECE.get(), tag);
     }
 
     @Override

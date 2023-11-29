@@ -2,37 +2,36 @@ package de.teamlapen.vampirism.world.gen.structure.hunteroutpost;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
+import static de.teamlapen.vampirism.core.ModStructures.createTemplatePool;
 import static de.teamlapen.vampirism.world.gen.structure.PoolExtensions.single;
 
 public class PlainsHunterOutpostPools {
 
-    public static final ResourceKey<StructureTemplatePool> START = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate"));
-    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE1 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_1/side_1"));
-    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE2 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_1/side_2"));
-    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE3 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_1/side_3"));
-    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE4 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_1/side_4"));
-    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE1 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_2/side_1"));
-    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE2 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_2/side_2"));
-    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE3 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_2/side_3"));
-    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE4 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_2/side_4"));
-    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE1 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_3/side_1"));
-    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE2 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_3/side_2"));
-    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE3 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_3/side_3"));
-    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE4 = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/plate/plate_3/side_4"));
-    public static final ResourceKey<StructureTemplatePool> WALL_STRAIGHT = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/wall/straight"));
-    public static final ResourceKey<StructureTemplatePool> WALL_STRAIGHT_LONG = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/wall/straight_long"));
-    public static final ResourceKey<StructureTemplatePool> WALL_CORNER = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/wall/corner"));
-    public static final ResourceKey<StructureTemplatePool> WALL_GATE = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/plains/wall/gate"));
+    public static final ResourceKey<StructureTemplatePool> START = createTemplatePool("hunter_outpost/plains/plate");
+    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE1 = createTemplatePool("hunter_outpost/plains/plate/plate_1/side_1");
+    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE2 = createTemplatePool("hunter_outpost/plains/plate/plate_1/side_2");
+    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE3 = createTemplatePool("hunter_outpost/plains/plate/plate_1/side_3");
+    public static final ResourceKey<StructureTemplatePool> PLATE1_SIDE4 = createTemplatePool("hunter_outpost/plains/plate/plate_1/side_4");
+    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE1 = createTemplatePool("hunter_outpost/plains/plate/plate_2/side_1");
+    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE2 = createTemplatePool("hunter_outpost/plains/plate/plate_2/side_2");
+    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE3 = createTemplatePool("hunter_outpost/plains/plate/plate_2/side_3");
+    public static final ResourceKey<StructureTemplatePool> PLATE2_SIDE4 = createTemplatePool("hunter_outpost/plains/plate/plate_2/side_4");
+    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE1 = createTemplatePool("hunter_outpost/plains/plate/plate_3/side_1");
+    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE2 = createTemplatePool("hunter_outpost/plains/plate/plate_3/side_2");
+    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE3 = createTemplatePool("hunter_outpost/plains/plate/plate_3/side_3");
+    public static final ResourceKey<StructureTemplatePool> PLATE3_SIDE4 = createTemplatePool("hunter_outpost/plains/plate/plate_3/side_4");
+    public static final ResourceKey<StructureTemplatePool> WALL_STRAIGHT = createTemplatePool("hunter_outpost/plains/wall/straight");
+    public static final ResourceKey<StructureTemplatePool> WALL_STRAIGHT_LONG = createTemplatePool("hunter_outpost/plains/wall/straight_long");
+    public static final ResourceKey<StructureTemplatePool> WALL_CORNER = createTemplatePool("hunter_outpost/plains/wall/corner");
+    public static final ResourceKey<StructureTemplatePool> WALL_GATE = createTemplatePool("hunter_outpost/plains/wall/gate");
 
 
     public static void bootstrap(BootstapContext<StructureTemplatePool> context) {

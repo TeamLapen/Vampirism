@@ -2,20 +2,19 @@ package de.teamlapen.vampirism.world.gen.structure.crypt;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 import static de.teamlapen.vampirism.world.gen.structure.PoolExtensions.single;
 
 public class CryptStructurePieces {
-    public static final ResourceKey<StructureTemplatePool> START = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "crypt/church"));
+    public static final ResourceKey<StructureTemplatePool> START = ModStructures.createTemplatePool("crypt/church");
 
     public static void bootstrap(BootstapContext<StructureTemplatePool> context) {
         HolderGetter<StructureTemplatePool> holdergetter1 = context.lookup(Registries.TEMPLATE_POOL);

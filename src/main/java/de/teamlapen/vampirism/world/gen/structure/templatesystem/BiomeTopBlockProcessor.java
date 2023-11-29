@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -48,7 +48,7 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
     @NotNull
     @Override
     protected StructureProcessorType<?> getType() {
-        return VampirismFeatures.BIOME_BASED.get();
+        return ModStructures.BIOME_BASED.get();
     }
 
 }

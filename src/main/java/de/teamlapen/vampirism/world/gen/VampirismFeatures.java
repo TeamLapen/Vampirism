@@ -8,12 +8,6 @@ import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
-import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
-import de.teamlapen.vampirism.world.gen.structure.mother.MotherPiece;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
-import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
-import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarPieces;
-import de.teamlapen.vampirism.world.gen.structure.vampirehut.VampireHutPieces;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -41,20 +35,10 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePl
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.*;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
-import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -62,20 +46,6 @@ import java.util.OptionalInt;
 import static net.minecraft.data.worldgen.placement.OrePlacements.commonOrePlacement;
 
 public class VampirismFeatures {
-
-    public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, REFERENCE.MODID);
-    public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, REFERENCE.MODID);
-
-
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
-    public static final RegistryObject<StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
-    public static final RegistryObject<StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
-    public static final RegistryObject<StructurePieceType> MOTHER = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
-
-    public static final RegistryObject<StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
-    public static final RegistryObject<StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> VAMPIRE_FLOWER = createConfiguredKey("vampire_flower");
     public static final ResourceKey<ConfiguredFeature<?, ?>> CURSED_ROOT = createConfiguredKey("cursed_root");
@@ -103,19 +73,6 @@ public class VampirismFeatures {
     public static final ResourceKey<BiomeModifier> ADVANCED_VAMPIRE_SPAWN = createModifierKey("spawn/advanced_vampire_spawns");
     public static final ResourceKey<BiomeModifier> ADVANCED_HUNTER_SPAWN = createModifierKey("spawn/advanced_hunter_spawns");
     public static final ResourceKey<BiomeModifier> VAMPIRE_DUNGEON_MODIFIER = createModifierKey("feature/vampire_dungeon");
-    public static final ResourceKey<StructureSet> HUNTER_CAMP = createStructureSetKey("hunter_camp");
-    public static final ResourceKey<StructureSet> VAMPIRE_HUT = createStructureSetKey("vampire_hut");
-    public static final ResourceKey<StructureSet> VAMPIRE_ALTAR = createStructureSetKey("vampire_altar");
-    public static final ResourceKey<StructureSet> OUTPOST = createStructureSetKey("outpost");
-    public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
-    public static final ResourceKey<StructureSet> MOTHER_SET = createStructureSetKey("mother");
-    public static final ResourceKey<StructureSet> CRYPT_SET = createStructureSetKey("crypt");
-
-
-    public static void register(IEventBus ctx) {
-        STRUCTURE_PIECES.register(ctx);
-        STRUCTURE_PROCESSOR_TYPES.register(ctx);
-    }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(REFERENCE.MODID, name));
@@ -127,10 +84,6 @@ public class VampirismFeatures {
 
     private static ResourceKey<BiomeModifier> createModifierKey(String name) {
         return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(REFERENCE.MODID, name));
-    }
-
-    private static ResourceKey<StructureSet> createStructureSetKey(String name) {
-        return ResourceKey.create(Registries.STRUCTURE_SET, new ResourceLocation(REFERENCE.MODID, name));
     }
 
     public static void createConfiguredFeatures(BootstapContext<ConfiguredFeature<?, ?>> context) {
@@ -167,18 +120,4 @@ public class VampirismFeatures {
         context.register(ADVANCED_VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 30, 1, 3, MobCategory.MONSTER)));
         context.register(VAMPIRE_DUNGEON_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
     }
-
-    public static void createStructureSets(BootstapContext<StructureSet> context) {
-        HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
-        HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
-        var villageSet = structureSetLookup.getOrThrow(BuiltinStructureSets.VILLAGES);
-        // hunter camp holder is not available in data generation see ModFeatures#createStructures
-        // context.register(HUNTER_CAMP, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
-        context.register(VAMPIRE_HUT, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
-        context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
-        context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
-        context.register(CRYPT_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.CRYPT), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 643510199)));
-        context.register(OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 13, RandomSpreadType.LINEAR, 36413509)));
-    }
-
 }

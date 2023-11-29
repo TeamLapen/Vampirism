@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.world.gen.structure.vampirehut;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,11 +42,11 @@ public class VampireHutPieces {
     public static class VampireHutPiece extends TemplateStructurePiece {
 
         public VampireHutPiece(StructureTemplateManager pStructureTemplateManager, ResourceLocation pLocation, BlockPos pPos, Rotation pRotation) {
-            super(VampirismFeatures.VAMPIRE_HUT_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(pRotation), pPos);
+            super(ModStructures.VAMPIRE_HUT_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(pRotation), pPos);
         }
 
         public VampireHutPiece(StructureTemplateManager pStructureTemplateManager, CompoundTag pTag) {
-            super(VampirismFeatures.VAMPIRE_HUT_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings(Rotation.valueOf(pTag.getString("Rot"))));
+            super(ModStructures.VAMPIRE_HUT_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings(Rotation.valueOf(pTag.getString("Rot"))));
         }
 
         protected void addAdditionalSaveData(@NotNull StructurePieceSerializationContext pContext, @NotNull CompoundTag pTag) {

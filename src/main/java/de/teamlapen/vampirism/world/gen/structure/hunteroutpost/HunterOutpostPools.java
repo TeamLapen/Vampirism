@@ -2,31 +2,30 @@ package de.teamlapen.vampirism.world.gen.structure.hunteroutpost;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
+import static de.teamlapen.vampirism.core.ModStructures.createTemplatePool;
 import static de.teamlapen.vampirism.world.gen.structure.PoolExtensions.single;
 
 public class HunterOutpostPools {
 
-    public static final ResourceKey<StructureTemplatePool> HORSES = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/horses"));
-    public static final ResourceKey<StructureTemplatePool> TRAINER = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/trainer"));
-    public static final ResourceKey<StructureTemplatePool> TENTS = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/tents"));
-    public static final ResourceKey<StructureTemplatePool> TRAINING_DUMMIES = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/training_dummies"));
-    public static final ResourceKey<StructureTemplatePool> STABLES = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/stables"));
-    public static final ResourceKey<StructureTemplatePool> TOOL_SMITH = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/tool_smith"));
-    public static final ResourceKey<StructureTemplatePool> TOWER = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/tower"));
-    public static final ResourceKey<StructureTemplatePool> ALCHEMY = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/alchemy"));
-    public static final ResourceKey<StructureTemplatePool> FLAG = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(REFERENCE.MODID, "hunter_outpost/flag"));
+    public static final ResourceKey<StructureTemplatePool> HORSES = createTemplatePool("hunter_outpost/horses");
+    public static final ResourceKey<StructureTemplatePool> TRAINER = createTemplatePool("hunter_outpost/trainer");
+    public static final ResourceKey<StructureTemplatePool> TENTS = createTemplatePool("hunter_outpost/tents");
+    public static final ResourceKey<StructureTemplatePool> TRAINING_DUMMIES = createTemplatePool("hunter_outpost/training_dummies");
+    public static final ResourceKey<StructureTemplatePool> STABLES = createTemplatePool("hunter_outpost/stables");
+    public static final ResourceKey<StructureTemplatePool> TOOL_SMITH = createTemplatePool("hunter_outpost/tool_smith");
+    public static final ResourceKey<StructureTemplatePool> TOWER = createTemplatePool("hunter_outpost/tower");
+    public static final ResourceKey<StructureTemplatePool> ALCHEMY = createTemplatePool("hunter_outpost/alchemy");
+    public static final ResourceKey<StructureTemplatePool> FLAG = createTemplatePool("hunter_outpost/flag");
 
     public static void bootstrap(BootstapContext<StructureTemplatePool> context) {
         PlainsHunterOutpostPools.bootstrap(context);

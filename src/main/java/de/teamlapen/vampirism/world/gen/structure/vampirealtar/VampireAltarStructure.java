@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirealtar;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import de.teamlapen.vampirism.world.gen.structure.StructureEx;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class VampireAltarStructure extends StructureEx {
 
     @Override
     public @NotNull StructureType<?> type() {
-        return ModFeatures.VAMPIRE_ALTAR_TYPE.get();
+        return ModStructures.VAMPIRE_ALTAR_TYPE.get();
     }
 
 }

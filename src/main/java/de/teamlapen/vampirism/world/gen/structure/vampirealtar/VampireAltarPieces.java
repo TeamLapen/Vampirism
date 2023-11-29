@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.core.ModStructures;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -44,11 +44,11 @@ public class VampireAltarPieces {
     public static class VampireAltarPiece extends TemplateStructurePiece {
 
         public VampireAltarPiece(StructureTemplateManager pStructureTemplateManager, ResourceLocation pLocation, BlockPos pPos) {
-            super(VampirismFeatures.VAMPIRE_ALTAR_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(), pPos);
+            super(ModStructures.VAMPIRE_ALTAR_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(), pPos);
         }
 
         public VampireAltarPiece(StructureTemplateManager pStructureTemplateManager, CompoundTag pTag) {
-            super(VampirismFeatures.VAMPIRE_ALTAR_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings());
+            super(ModStructures.VAMPIRE_ALTAR_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings());
         }
 
         @Override

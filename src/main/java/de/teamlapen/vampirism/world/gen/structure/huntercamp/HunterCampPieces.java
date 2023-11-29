@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -66,12 +66,12 @@ public abstract class HunterCampPieces extends StructurePiece {
         private boolean advanced;
 
         public Fireplace(@NotNull RandomSource random, BlockPos pos) {
-            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), 0, pos);
+            super(ModStructures.HUNTER_CAMP_FIREPLACE.get(), 0, pos);
             this.setOrientation(Direction.Plane.HORIZONTAL.getRandomDirection(random));
         }
 
         public Fireplace(@NotNull CompoundTag nbt) {
-            super(VampirismFeatures.HUNTER_CAMP_FIREPLACE.get(), nbt);
+            super(ModStructures.HUNTER_CAMP_FIREPLACE.get(), nbt);
             this.advanced = nbt.getBoolean("advanced");
             this.specialComponentAdd = nbt.getBoolean("specialComponentAdd");
         }
@@ -157,14 +157,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private int mirror;
 
         public Tent(BlockPos pos, @NotNull Direction direction, boolean advanced) {
-            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), 1, pos);
+            super(ModStructures.HUNTER_CAMP_TENT.get(), 1, pos);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public Tent(@NotNull CompoundTag nbt) {
-            super(VampirismFeatures.HUNTER_CAMP_TENT.get(), nbt);
+            super(ModStructures.HUNTER_CAMP_TENT.get(), nbt);
             this.direction = Direction.from2DDataValue(nbt.getInt("direction"));
             this.mirror = nbt.getInt("mirror");
             this.advanced = nbt.getBoolean("advanced");
@@ -262,14 +262,14 @@ public abstract class HunterCampPieces extends StructurePiece {
         private final boolean advanced;
 
         public SpecialBlock(BlockPos pos, Direction direction, boolean advanced) {
-            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), 2, pos);
+            super(ModStructures.HUNTER_CAMP_SPECIAL.get(), 2, pos);
             this.setOrientation(direction);
             this.direction = direction;
             this.advanced = advanced;
         }
 
         public SpecialBlock(@NotNull CompoundTag compoundNBT) {
-            super(VampirismFeatures.HUNTER_CAMP_SPECIAL.get(), compoundNBT);
+            super(ModStructures.HUNTER_CAMP_SPECIAL.get(), compoundNBT);
             this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
             this.advanced = compoundNBT.getBoolean("advanced");
         }

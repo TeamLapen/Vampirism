@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirehut;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -36,7 +36,7 @@ public class VampireHutStructure extends Structure {
 
     @Override
     public @NotNull StructureType<?> type() {
-        return ModFeatures.VAMPIRE_HUT_TYPE.get();
+        return ModStructures.VAMPIRE_HUT_TYPE.get();
     }
 
 }

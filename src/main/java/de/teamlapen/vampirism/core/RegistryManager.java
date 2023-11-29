@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
-import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,6 +42,7 @@ public class RegistryManager implements IInitListener {
         ModEnchantments.register(modbus);
         ModEntities.register(modbus);
         ModFeatures.register(modbus);
+        ModStructures.register(modbus);
         ModFluids.register(modbus);
         ModItems.register(modbus);
         ModLoot.register(modbus);
@@ -66,8 +66,6 @@ public class RegistryManager implements IInitListener {
         HunterSkills.register(modbus);
         ModCommands.register(modbus);
         ModOils.register(modbus);
-
-        VampirismFeatures.register(modbus);
     }
 
     @SubscribeEvent
