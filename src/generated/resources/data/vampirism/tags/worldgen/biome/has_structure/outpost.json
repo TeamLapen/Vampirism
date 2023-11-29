@@ -1,9 +1,0 @@
-{
-  "values": [
-    "#forge:is_desert",
-    "#forge:is_plains",
-    "#forge:is_plateau",
-    "#forge:is_snowy",
-    "#forge:is_wasteland"
-  ]
-}

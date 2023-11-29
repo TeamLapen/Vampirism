@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.gen.structure.crypt.CryptStructurePieces;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostPools;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
@@ -43,6 +44,7 @@ public class ModStructures {
 
         context.register(HUNTER_TRAINER, new StructureTemplatePool(empty , Lists.newArrayList(Pair.of(singleJigsawPieceFunction(processorList, "village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
         CryptStructurePieces.bootstrap(context);
+        HunterOutpostPools.bootstrap(context);
     }
 
     public static void createStructureProcessorLists(BootstapContext<StructureProcessorList> context) {

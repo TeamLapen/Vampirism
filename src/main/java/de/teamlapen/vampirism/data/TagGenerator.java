@@ -17,6 +17,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -40,6 +41,7 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
         gen.addProvider(event.includeServer(), new ModVillageProfessionProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModDamageTypeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModTasksProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModStructuresProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -315,7 +317,10 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             tag(ModTags.Biomes.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
             tag(ModTags.Biomes.IS_HUNTER_BIOME);
             tag(ModTags.Biomes.HasStructure.VAMPIRE_ALTAR).addTags(Tags.Biomes.IS_WASTELAND, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_RARE, Tags.Biomes.IS_SPOOKY, Tags.Biomes.IS_SWAMP, ModTags.Biomes.IS_VAMPIRE_BIOME);
-            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST).addTags(Tags.Biomes.IS_DESERT, Tags.Biomes.IS_PLAINS, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_SNOWY, Tags.Biomes.IS_WASTELAND);
+            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_PLAINS).addTags(Tags.Biomes.IS_PLAINS, BiomeTags.IS_FOREST);
+            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_DESERT).addTags(Tags.Biomes.IS_DESERT);
+            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_VAMPIRE_FOREST).add(ModBiomes.VAMPIRE_FOREST);
+            tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_BADLANDS).addTags(BiomeTags.IS_BADLANDS);
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
             tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
             tag(Tags.Biomes.IS_DENSE_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
@@ -447,6 +452,18 @@ public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provi
             this.tag(ModTags.Tasks.IS_UNIQUE)
                     .addTag(ModTags.Tasks.AWARDS_LORD_LEVEL)
             ;
+        }
+    }
+
+    public static class ModStructuresProvider extends TagsProvider<Structure> {
+
+        protected ModStructuresProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.STRUCTURE, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(ModTags.Structures.HUNTER_OUTPOST).add(ModFeatures.HUNTER_OUTPOST_BADLANDS, ModFeatures.HUNTER_OUTPOST_DESERT, ModFeatures.HUNTER_OUTPOST_PLAINS, ModFeatures.HUNTER_OUTPOST_VAMPIRE_FOREST);
         }
     }
 }

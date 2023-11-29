@@ -1,0 +1,96 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bread",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beef",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chicken",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:mutton",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:porkchop",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rabbit",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wheat",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:potato",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:carrot",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:apple",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:item_garlic",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:garlic_bread",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:purified_garlic",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:pure_salt",
+          "weight": 5
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 20.0,
+        "min": 5.0
+      }
+    }
+  ],
+  "random_sequence": "vampirism:chests/hunter_outpost_tent"
+}

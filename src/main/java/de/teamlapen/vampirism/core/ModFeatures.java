@@ -9,7 +9,10 @@ import de.teamlapen.vampirism.world.gen.feature.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.structure.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;
-import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostStructure;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.BadlandsHunterOutpostPools;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.DesertHunterOutpostPools;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.PlainsHunterOutpostPools;
+import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.VampireForestHunterOutpostPools;
 import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
 import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarStructure;
 import de.teamlapen.vampirism.world.gen.structure.vampirehut.VampireHutStructure;
@@ -52,14 +55,16 @@ public class ModFeatures {
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_hut"));
-    public static final ResourceKey<Structure> HUNTER_OUTPOST = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_PLAINS = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost_plains"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_DESERT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost_desert"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_VAMPIRE_FOREST = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost_vampire_forest"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_BADLANDS = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_outpost_badlands"));
     public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_altar"));
     public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "mother"));
     public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "crypt"));
 
     public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
     public static final RegistryObject<StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
-    public static final RegistryObject<StructureType<HunterOutpostStructure>> HUNTER_OUTPOST_TYPE = STRUCTURE_TYPES.register("outpost", () -> () -> HunterOutpostStructure.CODEC);
     public static final RegistryObject<StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
     public static final RegistryObject<StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
 
@@ -82,7 +87,10 @@ public class ModFeatures {
         // this file is not generated, but added through the main source set
         // context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(new AndHolderSet<>(List.of(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), new NotHolderSet<>(context.registryLookup(Registries.BIOME).orElseThrow(),lookup.getOrThrow(ModTags.Biomes.IS_FACTION_BIOME)))), TerrainAdjustment.BEARD_THIN)));
         context.register(ModFeatures.VAMPIRE_HUT, new VampireHutStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_HUT), TerrainAdjustment.NONE)));
-        context.register(ModFeatures.HUNTER_OUTPOST, new HunterOutpostStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 60, 1, 2), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 1)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN)));
+        context.register(ModFeatures.HUNTER_OUTPOST_PLAINS, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_PLAINS), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(PlainsHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
+        context.register(ModFeatures.HUNTER_OUTPOST_DESERT, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_DESERT), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(DesertHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
+        context.register(ModFeatures.HUNTER_OUTPOST_VAMPIRE_FOREST, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_VAMPIRE_FOREST), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(VampireForestHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
+        context.register(ModFeatures.HUNTER_OUTPOST_BADLANDS, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_BADLANDS), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(BadlandsHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
         context.register(ModFeatures.VAMPIRE_ALTAR, new VampireAltarStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_ALTAR), TerrainAdjustment.BEARD_BOX)));
         context.register(ModFeatures.MOTHER, new MotherStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.MOTHER), TerrainAdjustment.NONE)));
         context.register(ModFeatures.CRYPT, new JigsawStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.CRYPT), TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(CryptStructurePieces.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Heightmap.Types.WORLD_SURFACE_WG));

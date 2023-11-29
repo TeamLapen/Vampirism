@@ -16,6 +16,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
@@ -160,7 +161,10 @@ public class ModTags {
             public static final TagKey<Biome> HUNTER_TENT = tag("has_structure/hunter_tent");
             public static final TagKey<Biome> VAMPIRE_DUNGEON = tag("has_structure/vampire_dungeon");
             public static final TagKey<Biome> VAMPIRE_HUT = tag("has_structure/vampire_hut");
-            public static final TagKey<Biome> HUNTER_OUTPOST = tag("has_structure/outpost");
+            public static final TagKey<Biome> HUNTER_OUTPOST_PLAINS = tag("has_structure/outpost/plains");
+            public static final TagKey<Biome> HUNTER_OUTPOST_DESERT = tag("has_structure/outpost/desert");
+            public static final TagKey<Biome> HUNTER_OUTPOST_VAMPIRE_FOREST = tag("has_structure/outpost/vampire_forest");
+            public static final TagKey<Biome> HUNTER_OUTPOST_BADLANDS = tag("has_structure/outpost/badlands");
             public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
             public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
             public static final TagKey<Biome> CRYPT = tag("has_structure/crypt");
@@ -227,5 +231,14 @@ public class ModTags {
         private static @NotNull TagKey<Task> tag(@NotNull String name) {
             return TagKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, name));
         }
+    }
+
+    public static class Structures {
+        public static final TagKey<Structure> HUNTER_OUTPOST = tag("hunter_outpost");
+
+        private static @NotNull TagKey<Structure> tag(@NotNull String name) {
+            return TagKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, name));
+        }
+
     }
 }

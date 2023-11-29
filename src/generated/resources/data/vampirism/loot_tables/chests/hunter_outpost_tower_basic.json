@@ -1,0 +1,114 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_crossbow",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_double_crossbow",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:enhanced_crossbow",
+          "weight": 30
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:enhanced_double_crossbow",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:hunter_axe_normal",
+          "weight": 60
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:hunter_axe_enhanced",
+          "weight": 40
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 90
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_block",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:garlic_bread",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:item_garlic",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:oblivion_potion",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:item_alchemical_fire",
+          "weight": 15
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 9.0,
+        "min": 5.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 80
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": 0.0
+      }
+    }
+  ],
+  "random_sequence": "vampirism:chests/hunter_outpost_tower_basic"
+}

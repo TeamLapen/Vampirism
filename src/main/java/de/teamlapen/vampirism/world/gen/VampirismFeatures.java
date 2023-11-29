@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
-import de.teamlapen.vampirism.world.gen.structure.hunteroutpost.HunterOutpostPieces;
 import de.teamlapen.vampirism.world.gen.structure.mother.MotherPiece;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
@@ -72,7 +71,6 @@ public class VampirismFeatures {
     public static final RegistryObject<StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
     public static final RegistryObject<StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
     public static final RegistryObject<StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_OUTPOST_PIECE = STRUCTURE_PIECES.register("outpost", () -> (StructurePieceType.StructureTemplateType) HunterOutpostPieces.OutpostPiece::new);
     public static final RegistryObject<StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
     public static final RegistryObject<StructurePieceType> MOTHER = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
 
@@ -178,9 +176,9 @@ public class VampirismFeatures {
         // context.register(HUNTER_CAMP, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
         context.register(VAMPIRE_HUT, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
         context.register(VAMPIRE_ALTAR, new StructureSet(structureLookup.getOrThrow(ModFeatures.VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
-        context.register(OUTPOST, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST), new RandomSpreadStructurePlacement(24, 8, RandomSpreadType.LINEAR, 364135095)));
         context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
         context.register(CRYPT_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.CRYPT), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 643510199)));
+        context.register(OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(ModFeatures.HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 13, RandomSpreadType.LINEAR, 36413509)));
     }
 
 }
