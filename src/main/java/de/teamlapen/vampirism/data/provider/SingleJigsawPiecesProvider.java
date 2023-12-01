@@ -18,14 +18,14 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class SingleJigsawPiecesGenerator implements DataProvider {
+public class SingleJigsawPiecesProvider implements DataProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected final PackOutput.PathProvider pathProvider;
     private final String modId;
 
-    public SingleJigsawPiecesGenerator(PackOutput packOutput, String modId) {
+    public SingleJigsawPiecesProvider(PackOutput packOutput, String modId) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "vampirism");
         this.modId = modId;
     }

@@ -1,9 +1,10 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.ShapedRecipeBuilderAccessor;
@@ -47,9 +48,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class RecipesGenerator extends VanillaRecipeProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class RecipesProvider extends VanillaRecipeProvider {
 
-    public RecipesGenerator(@NotNull PackOutput packOutput) {
+    public RecipesProvider(@NotNull PackOutput packOutput) {
         super(packOutput);
     }
 

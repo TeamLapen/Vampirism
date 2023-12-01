@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
@@ -16,7 +16,10 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +27,9 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 
-public class BlockStateGenerator extends BlockStateProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class BlockStateProvider extends net.minecraftforge.client.model.generators.BlockStateProvider {
 
-    public BlockStateGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
+    public BlockStateProvider(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
         super(packOutput, REFERENCE.MODID, exFileHelper);
     }
 

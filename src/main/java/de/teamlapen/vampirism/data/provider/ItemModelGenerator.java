@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.lib.lib.data.BaseItemModelGenerator;
 import de.teamlapen.vampirism.REFERENCE;
@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ItemModelGenerator extends BaseItemModelGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class ItemModelGenerator extends BaseItemModelGenerator {
 
     public ItemModelGenerator(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper existingFileHelper) {
         super(packOutput, REFERENCE.MODID, existingFileHelper);

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.data.recipebuilder.FinishedSkillNode;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public abstract class SkillNodeProvider implements DataProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public abstract class SkillNodeProvider implements DataProvider {
 
     protected final PackOutput.PathProvider skillNodePathProvider;
     protected final String modId;

@@ -27,7 +27,7 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "vampirism:textures/block/castle_block_dark_brick.png",
+    "background": "vampirism:textures/block/dark_stone_bricks.png",
     "description": {
       "translate": "advancement.vampirism.desc"
     },

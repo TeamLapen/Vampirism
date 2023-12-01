@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.data.recipebuilder.FinishedSkillNode;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ModSkillNodeProvider extends SkillNodeProvider {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class ModSkillNodeProvider extends SkillNodeProvider {
 
     public ModSkillNodeProvider(PackOutput packOutput) {
         super(packOutput, REFERENCE.MODID);

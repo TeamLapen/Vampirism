@@ -236,12 +236,12 @@ public class ModBlocks {
      * TUTORIAL:
      * - Register blocks here.
      * - To register itemblock, use {@link ModBlocks#registerWithItem}
-     * - Register blockstate in {@link de.teamlapen.vampirism.data.BlockStateGenerator#registerStatesAndModels()} (pass existent model if desired)
+     * - Register blockstate in {@link de.teamlapen.vampirism.data.provider.BlockStateProvider#registerStatesAndModels()} (pass existent model if desired)
      * - Maybe set render layer in the json model or blockstate generator.
-     * - Register itemrender in {@link de.teamlapen.vampirism.data.ItemModelGenerator#registerModels()}
-     * - Register loot table in {@link de.teamlapen.vampirism.data.LootTablesGenerator.ModBlockLootTables#addTables()}
+     * - Register itemrender in {@link de.teamlapen.vampirism.data.provider.ItemModelGenerator#registerModels()}
+     * - Register loot table in {@link de.teamlapen.vampirism.data.provider.LootTablesProvider.ModBlockLootTables#addTables()}
      * - Add lang keys
-     * - Consider adding tool type in {@link de.teamlapen.vampirism.data.TagGenerator.ModBlockTagsProvider}
+     * - Consider adding tool type in {@link de.teamlapen.vampirism.data.provider.TagProvider.ModBlockTagsProvider}
      * - Run genData (twice?)
      */
     @SuppressWarnings("JavadocReference")

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.*;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-public class LootTablesGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class LootTablesProvider {
 
     /**
      * copied from {@link net.minecraft.data.loot.packs.VanillaBlockLoot}

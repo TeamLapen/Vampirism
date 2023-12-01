@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
@@ -9,45 +9,45 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.advancements.AdvancementProvider;
-import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class AdvancementGenerator extends AdvancementProvider { //TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class AdvancementProvider extends ForgeAdvancementProvider {
 
-    public AdvancementGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider, List.of(new VampirismAdvancements()));
+    public AdvancementProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+        super(packOutput, lookupProvider, existingFileHelper, List.of(new VampirismAdvancements()));
     }
 
     private interface VampirismAdvancementSubProvider {
         void generate(@NotNull Advancement root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<Advancement> consumer);
     }
 
-    private static class VampirismAdvancements implements AdvancementSubProvider {
+    private static class VampirismAdvancements implements AdvancementGenerator {
 
         private final List<VampirismAdvancementSubProvider> subProvider = List.of(new MainAdvancements(), new HunterAdvancements(), new VampireAdvancements(), new MinionAdvancements());
 
         @Override
-        public void generate(HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<Advancement> consumer) {
+        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<Advancement> consumer, @NotNull ExistingFileHelper existingFileHelper) {
+
             Advancement root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/castle_block_dark_brick.png"), FrameType.TASK, false, false, false) //TODO BREAKING: change background texture to "textures/gui/advancements/backgrounds/vampirism.png"
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/dark_stone_bricks.png"), FrameType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
                     .requirements(RequirementsStrategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/root");
 
-            this.subProvider.forEach(provider -> provider.generate(root, holderProvider, consumer));
+            this.subProvider.forEach(provider -> provider.generate(root, registries, consumer));
         }
-
     }
 
     private static class HunterAdvancements implements VampirismAdvancementSubProvider {

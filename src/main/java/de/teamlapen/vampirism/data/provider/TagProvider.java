@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TagGenerator {//TODO 1.20 move to de.teamlapen.vampirism.data.provider
+public class TagProvider {
 
     public static void register(DataGenerator gen, @NotNull GatherDataEvent event, PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper existingFileHelper) {
         BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, future, existingFileHelper);

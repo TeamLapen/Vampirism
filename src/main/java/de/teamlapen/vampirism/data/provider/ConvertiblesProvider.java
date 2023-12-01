@@ -21,12 +21,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class ConvertiblesGenerator implements DataProvider {
+public class ConvertiblesProvider implements DataProvider {
 
     protected final PackOutput.PathProvider pathProvider;
     private final String modId;
 
-    public ConvertiblesGenerator(PackOutput packOutput, String modId) {
+    public ConvertiblesProvider(PackOutput packOutput, String modId) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "vampirism");
         this.modId = modId;
     }
