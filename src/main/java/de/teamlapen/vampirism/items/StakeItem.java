@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -79,8 +80,10 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstant(target, attacker)) {
                     DamageHandler.hurtModded(target, sources -> sources.stake(attacker), 10000F);
-                    if (attacker instanceof ServerPlayer) {
-                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayer) attacker, HunterActionCriterionTrigger.Action.STAKE);
+                    if (attacker instanceof ServerPlayer player) {
+                        player.awardStat(ModStats.killed_with_stake);
+                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger(player, HunterActionCriterionTrigger.Action.STAKE);
+
                     }
                     target.getCommandSenderWorld().playSound(null, target.getX(), target.getY()+0.5*target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);
                 }

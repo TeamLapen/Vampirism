@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillNode;
@@ -56,6 +57,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                         VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
+                        ((Player) entityLivingBaseIn).awardStat(ModStats.skills_reset);
                     }
                 });
             }

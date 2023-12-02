@@ -27,6 +27,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class RegUtil {
@@ -85,6 +86,10 @@ public class RegUtil {
 
     public static ResourceLocation id(@NotNull IOil oil) {
         return ModRegistries.OILS.get().getKey(oil);
+    }
+
+    public static Optional<ResourceKey<IAction<?>>> key(@NotNull IAction<?> action) {
+        return ModRegistries.ACTIONS.get().getResourceKey(action);
     }
 
     public static boolean has(@NotNull IAction<?> action) {

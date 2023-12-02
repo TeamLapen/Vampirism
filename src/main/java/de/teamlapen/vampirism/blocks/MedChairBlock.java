@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
@@ -73,6 +74,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
+            player.awardStat(ModStats.interact_with_injection_chair);
             if (handleInjections(player, world, stack)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {

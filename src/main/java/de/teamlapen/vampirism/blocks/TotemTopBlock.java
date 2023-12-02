@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -122,6 +123,7 @@ public class TotemTopBlock extends BaseEntityBlock {
         if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemBlockEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
+            player.awardStat(ModStats.interact_with_totem);
             t.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }

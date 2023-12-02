@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
@@ -183,7 +184,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     return InteractionResult.CONSUME;
                 }
             }
-
+            player.awardStat(ModStats.interact_with_coffin);
             if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
                 worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
                 BlockPos otherPos = getOtherPos(pos, state);

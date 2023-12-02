@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -17,7 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -282,6 +282,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player, context)) {
+                    ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
                     if (action instanceof ILastingAction) {
                         activeTimers.put(id, ((ILastingAction<T>) action).getDuration(player));
                     } else {
@@ -355,6 +356,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 if (action.onUpdate(player)) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
+                    ModStats.updateActionTime(player.getRepresentingPlayer(), action);
                     entry.setValue(newtimer);
                 }
             }

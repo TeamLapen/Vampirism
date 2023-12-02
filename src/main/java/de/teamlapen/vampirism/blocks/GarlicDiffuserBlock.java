@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -132,6 +133,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
+        player.awardStat(ModStats.interact_with_garlic_diffuser);
         if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
                 GarlicDiffuserBlockEntity t = getTile(world, pos);

@@ -278,6 +278,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (e instanceof LivingEntity) {
             if (e.distanceTo(player) <= player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
+                player.awardStat(ModStats.amount_bitten);
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
                         player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
@@ -370,6 +371,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (useRemaining && left > 0) {
             handleSpareBlood(left);
         }
+        this.player.awardStat(ModStats.blood_drunk, amt * VReference.FOOD_TO_FLUID_BLOOD);
     }
 
     /**
@@ -1055,6 +1057,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
             }
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
+            this.player.awardStat(ModStats.resurrected);
         } else {
             if (this.isRemote()) {
                 this.setDBNOTimer(-1);

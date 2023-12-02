@@ -78,7 +78,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
             if (tile instanceof PotionTableBlockEntity) {
                 if (((PotionTableBlockEntity) tile).canOpen(player)) {
                     NetworkHooks.openScreen((ServerPlayer) player, (PotionTableBlockEntity) tile, buffer -> buffer.writeBoolean(((PotionTableBlockEntity) tile).isExtended()));
-                    player.awardStat(ModStats.interact_alchemical_cauldron);
+                    player.awardStat(ModStats.interact_with_potion_table);
                 }
             }
         }

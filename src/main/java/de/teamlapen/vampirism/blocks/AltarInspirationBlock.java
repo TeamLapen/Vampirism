@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -75,6 +76,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             if (opt.isPresent()) {
                 AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
                 if (!player.isShiftKeyDown() && tileEntity != null) {
+                    player.awardStat(ModStats.interact_with_altar_inspiration);
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getDirection());
                 }
                 return InteractionResult.SUCCESS;
@@ -82,6 +84,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         } else {
             BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             if (tileEntity instanceof AltarInspirationBlockEntity altar) {
+                player.awardStat(ModStats.altar_of_inspiration_rituals_performed);
                 altar.startRitual(player);
             }
         }

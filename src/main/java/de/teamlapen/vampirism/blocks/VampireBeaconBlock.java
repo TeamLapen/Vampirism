@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -50,6 +51,7 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
     public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pPlayer instanceof ServerPlayer serverPlayer) {
+                serverPlayer.awardStat(ModStats.interact_with_ancient_beacon);
                 if (Helper.isHunter(serverPlayer)) {
                     if (pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockentity) {
                         pPlayer.openMenu(blockentity);

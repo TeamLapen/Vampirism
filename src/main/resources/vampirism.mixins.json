@@ -53,6 +53,8 @@
     "client.MinecraftMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.SheetsMixin",
+    "client.StatsEntryAccessor",
+    "client.StatsScreenMixin",
     "client.VillagerModelAccessor"
   ],
   "injectors": {

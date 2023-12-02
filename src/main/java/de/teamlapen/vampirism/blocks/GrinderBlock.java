@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -123,6 +124,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
+        player.awardStat(ModStats.interact_with_blood_grinder);
         player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderBlockEntity ? (BloodGrinderBlockEntity) world.getBlockEntity(pos) : null);
         return InteractionResult.SUCCESS;
     }

@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.RefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -171,6 +172,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             dirty = true;
             //noinspection ConstantValue
             if (this.player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
+                serverPlayer.awardStat(ModStats.skills_unlocked);
                 ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger(serverPlayer, skill);
             }
         }

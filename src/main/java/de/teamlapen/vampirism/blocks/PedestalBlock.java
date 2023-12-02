@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
+import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import net.minecraft.core.BlockPos;
@@ -82,6 +83,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
             ItemStack stack2 = tile.extractItem(0, 1, false);
+            player.awardStat(ModStats.items_filled_on_blood_pedestal);
             takeItemPlayer(player, hand, stack2);
             return InteractionResult.SUCCESS;
 
