@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.core.ModAttributes;
@@ -90,8 +90,8 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, bloodSource);
+    default void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         ((PathfinderMob) this).addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
     }
 

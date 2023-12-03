@@ -16,8 +16,8 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -37,6 +37,7 @@ import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
 import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
@@ -89,7 +90,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -366,8 +366,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, bloodSource);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+        BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, drinkContext);
         int remainingBlood = this.bloodStats.addBlood(event.getAmount(), event.getSaturation());
         if (event.useRemaining() && remainingBlood > 0) {
             handleSpareBlood(remainingBlood);
@@ -1268,7 +1268,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                         }
                     }
                     if (blood > 0) {
-                        drinkBlood(blood, IBloodStats.LOW_SATURATION, EnumBloodSource.CONTAINER);
+                        drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(blockState, pos));
 
                         CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
                         sync(updatePacket, true);
@@ -1309,8 +1309,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
         }
         if (blood > 0) {
-            Pair<Integer, Float> bloodDrunk = VampirismEventFactory.fireBiteFeedEvent(this, entity, blood, saturationMod);
-            drinkBlood(bloodDrunk.getLeft(), bloodDrunk.getRight(), EnumBloodSource.BITE_FEED);
+            drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
             CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);

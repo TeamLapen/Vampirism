@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
@@ -261,8 +261,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, bloodSource);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
         boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
         bloodtimer += event.getAmount() * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);

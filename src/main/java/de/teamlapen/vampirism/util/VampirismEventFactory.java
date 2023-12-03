@@ -2,14 +2,13 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,19 +65,13 @@ public class VampirismEventFactory {
         return Pair.of(event.getDefendStrength(), event.getAttackStrength());
     }
 
-    public static @NotNull Pair<Integer, Float> fireBiteFeedEvent(@NotNull IVampirePlayer vampirePlayer, @NotNull LivingEntity target, int amount, float saturationAmount) {
-        BloodDrinkEvent.BiteFeedEvent event = new BloodDrinkEvent.BiteFeedEvent(vampirePlayer, target, amount, saturationAmount);
-        MinecraftForge.EVENT_BUS.post(event);
-        return Pair.of(event.getAmount(), event.getSaturation());
-    }
-
-    public static @NotNull BloodDrinkEvent.PlayerDrinkBloodEvent fireVampirePlayerDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
+    public static @NotNull BloodDrinkEvent.PlayerDrinkBloodEvent fireVampirePlayerDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining, IDrinkBloodContext bloodSource) {
         BloodDrinkEvent.PlayerDrinkBloodEvent event = new BloodDrinkEvent.PlayerDrinkBloodEvent(vampirePlayer, amount, saturationAmount, useRemaining, bloodSource);
         MinecraftForge.EVENT_BUS.post(event);
         return event;
     }
 
-    public static @NotNull BloodDrinkEvent.EntityDrinkBloodEvent fireVampireDrinkBlood(@NotNull IVampire vampire, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
+    public static @NotNull BloodDrinkEvent.EntityDrinkBloodEvent fireVampireDrinkBlood(@NotNull IVampire vampire, int amount, float saturationAmount, boolean useRemaining, IDrinkBloodContext bloodSource) {
         BloodDrinkEvent.EntityDrinkBloodEvent event = new BloodDrinkEvent.EntityDrinkBloodEvent(vampire, amount, saturationAmount, useRemaining, bloodSource);
         MinecraftForge.EVENT_BUS.post(event);
         return event;

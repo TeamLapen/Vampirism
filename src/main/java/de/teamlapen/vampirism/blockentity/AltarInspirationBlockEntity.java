@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -10,6 +9,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.core.BlockPos;
@@ -157,7 +157,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
                 ((InternalTank) blockEntity.tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
                 FactionPlayerHandler.getOpt(blockEntity.ritualPlayer).ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, blockEntity.targetLevel));
-                VampirePlayer.getOpt(blockEntity.ritualPlayer).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false, EnumBloodSource.OTHER));
+                VampirePlayer.getOpt(blockEntity.ritualPlayer).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none()));
             }
         }
 

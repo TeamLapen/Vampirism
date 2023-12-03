@@ -4,8 +4,8 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -185,7 +185,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     public boolean doHurtTarget(@NotNull Entity entity) {
         if (canSuckBloodFromPlayer && !level().isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
             int amt = VampirePlayer.getOpt(player).map(v -> v.onBite(this)).orElse(0);
-            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, EnumBloodSource.BITE_FEED);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, new DrinkBloodContext(player));
             VampirePlayer.getOpt(player).ifPresent(v -> v.tryInfect(this));
             return true;
         }
@@ -214,8 +214,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, bloodSource);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
     }
 

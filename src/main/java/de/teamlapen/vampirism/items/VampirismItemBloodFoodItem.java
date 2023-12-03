@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,11 +29,11 @@ public class VampirismItemBloodFoodItem extends Item {
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player player) {
-            assert stack.getItem().getFoodProperties() != null;//Don't shrink stack before retrieving food
-            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), EnumBloodSource.VAMPIRE_FOOD));
+            //Don't shrink stack before retrieving food
+            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), new DrinkBloodContext(stack)));
         }
         if (entityLiving instanceof IVampire) {
-            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), EnumBloodSource.VAMPIRE_FOOD);
+            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), new DrinkBloodContext(stack));
             stack.shrink(1);
         } else {
             entityLiving.eat(worldIn, stack); //Shrinks stack and applies human food effects
