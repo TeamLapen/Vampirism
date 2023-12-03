@@ -15,7 +15,6 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,15 +72,16 @@ public class VampirismEventFactory {
         return Pair.of(event.getAmount(), event.getSaturation());
     }
 
-    public static @NotNull Triple<Integer, Float, Boolean> fireVampirePlayerDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
+    public static @NotNull BloodDrinkEvent.PlayerDrinkBloodEvent fireVampirePlayerDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
         BloodDrinkEvent.PlayerDrinkBloodEvent event = new BloodDrinkEvent.PlayerDrinkBloodEvent(vampirePlayer, amount, saturationAmount, useRemaining, bloodSource);
         MinecraftForge.EVENT_BUS.post(event);
-        return Triple.of(event.getAmount(), event.getSaturation(), event.useRemaining());
+        return event;
     }
-    public static @NotNull Triple<Integer, Float, Boolean> fireVampireDrinkBlood(@NotNull IVampire vampire, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
+
+    public static @NotNull BloodDrinkEvent.EntityDrinkBloodEvent fireVampireDrinkBlood(@NotNull IVampire vampire, int amount, float saturationAmount, boolean useRemaining, EnumBloodSource bloodSource) {
         BloodDrinkEvent.EntityDrinkBloodEvent event = new BloodDrinkEvent.EntityDrinkBloodEvent(vampire, amount, saturationAmount, useRemaining, bloodSource);
         MinecraftForge.EVENT_BUS.post(event);
-        return Triple.of(event.getAmount(), event.getSaturation(), useRemaining);
+        return event;
     }
 
 }

@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
@@ -42,11 +43,7 @@ import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
-import de.teamlapen.vampirism.util.DamageHandler;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.util.ScoreboardUtil;
-import de.teamlapen.vampirism.util.VampirismEventFactory;
+import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
@@ -93,7 +90,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -370,9 +366,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, bloodSource);
-        int remainingBlood = this.bloodStats.addBlood(bloodDrunk.getLeft(), bloodDrunk.getMiddle());
-        if (bloodDrunk.getRight() && remainingBlood > 0) {
+        BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, bloodSource);
+        int remainingBlood = this.bloodStats.addBlood(event.getAmount(), event.getSaturation());
+        if (event.useRemaining() && remainingBlood > 0) {
             handleSpareBlood(remainingBlood);
         }
     }
