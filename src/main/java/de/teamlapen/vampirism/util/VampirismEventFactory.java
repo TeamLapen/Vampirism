@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.util;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
@@ -71,10 +72,15 @@ public class VampirismEventFactory {
         return Pair.of(event.getAmount(), event.getSaturation());
     }
 
-    public static @NotNull Triple<Integer, Float, Boolean> fireDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining) {
+    public static @NotNull Triple<Integer, Float, Boolean> fireVampirePlayerDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining) {
         BloodDrinkEvent.PlayerDrinkBloodEvent event = new BloodDrinkEvent.PlayerDrinkBloodEvent(vampirePlayer, amount, saturationAmount, useRemaining);
         MinecraftForge.EVENT_BUS.post(event);
         return Triple.of(event.getAmount(), event.getSaturation(), event.useRemaining());
+    }
+    public static @NotNull Triple<Integer, Float, Boolean> fireVampireDrinkBlood(@NotNull IVampire vampire, int amount, float saturationAmount, boolean useRemaining) {
+        BloodDrinkEvent.EntityDrinkBloodEvent event = new BloodDrinkEvent.EntityDrinkBloodEvent(vampire, amount, saturationAmount, useRemaining);
+        MinecraftForge.EVENT_BUS.post(event);
+        return Triple.of(event.getAmount(), event.getSaturation(), useRemaining);
     }
 
 }
