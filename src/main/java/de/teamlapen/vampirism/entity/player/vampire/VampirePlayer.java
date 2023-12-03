@@ -45,6 +45,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
@@ -90,6 +91,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -366,9 +369,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        int left = this.bloodStats.addBlood(amt, saturationMod);
-        if (useRemaining && left > 0) {
-            handleSpareBlood(left);
+        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireDrinkBloodEvent(this, amt, saturationMod, useRemaining);
+        int remainingBlood = this.bloodStats.addBlood(bloodDrunk.getLeft(), bloodDrunk.getMiddle());
+        if (bloodDrunk.getRight() && remainingBlood > 0) {
+            handleSpareBlood(remainingBlood);
         }
     }
 
@@ -1302,7 +1306,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
         }
         if (blood > 0) {
-            drinkBlood(blood, saturationMod);
+            Pair<Integer, Float> bloodDrunk = VampirismEventFactory.fireBiteFeedEvent(this, entity, blood, saturationMod);
+            drinkBlood(bloodDrunk.getLeft(), bloodDrunk.getRight());
             CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);
