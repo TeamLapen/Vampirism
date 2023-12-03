@@ -1,11 +1,15 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
+import de.teamlapen.vampirism.mixin.EntitySubPredicateTypesAccessor;
 import de.teamlapen.vampirism.mixin.PlayerAdvancementsAccessor;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
@@ -49,5 +53,12 @@ public class ModAdvancements {
                 advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
             }
         });
+    }
+
+    public static void registerSubPredicatesUnsafe() {
+        BiMap<String, EntitySubPredicate.Type> types = EntitySubPredicate.Types.TYPES;
+        types = HashBiMap.create(types);
+        types.put("vampirism:faction", FactionSubPredicate::fromJson);
+        EntitySubPredicateTypesAccessor.setTypes(types);
     }
 }

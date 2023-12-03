@@ -1,0 +1,67 @@
+{
+  "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "killed": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "effects": {
+                "vampirism:neonatal": {}
+              },
+              "type_specific": {
+                "faction": {
+                  "id": "vampirism:vampire"
+                },
+                "level": 1
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    },
+    "main": {
+      "conditions": {
+        "type": "LEVEL",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "vampirism:faction"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "extra": [
+        {
+          "text": "\n"
+        },
+        {
+          "translate": "advancement.vampirism.kill_resurrected_vampire.desc"
+        }
+      ],
+      "translate": "advancement.vampirism.kill_resurrected_vampire"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "vampirism:soul_orb_vampire"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.vampirism.kill_resurrected_vampire"
+    }
+  },
+  "requirements": [
+    [
+      "killed"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

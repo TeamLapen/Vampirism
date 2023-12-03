@@ -241,6 +241,8 @@
   "advancement.vampirism.vampire_kill_mother.desc": "You've have vanquishing the local source of power, a questionable accomplishment.",
   "advancement.vampirism.resurrect": "I always come back",
   "advancement.vampirism.resurrect.desc": "Resurrect as a vampire",
+  "advancement.vampirism.kill_resurrected_vampire": "Stay dead monster. You don't belong in this world",
+  "advancement.vampirism.kill_resurrected_vampire.desc": "Kill a recently resurrected vampire",
   "__comment": "effect",
   "effect.vampirism.sunscreen": "Sunscreen",
   "effect.vampirism.thirst": "Thirst",

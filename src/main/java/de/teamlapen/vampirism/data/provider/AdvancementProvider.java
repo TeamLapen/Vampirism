@@ -105,6 +105,12 @@ public class AdvancementProvider extends ForgeAdvancementProvider {
                     .addCriterion("killed", new PlayerTrigger.TriggerInstance(ModAdvancements.TRIGGER_MOTHER_WIN.getId(), ContextAwarePredicate.ANY))
                     .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
+            Advancement kill_resurrected_vampire = Advancement.Builder.advancement()
+                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire").append("\n").append(Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc")), null, FrameType.TASK, true, true, true)
+                    .parent(become_hunter)
+                    .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.effects().and(ModEffects.NEONATAL.get())).subPredicate(FactionSubPredicate.of(VReference.VAMPIRE_FACTION))))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.HUNTER_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/kill_resurrected_vampire");
         }
     }
 
