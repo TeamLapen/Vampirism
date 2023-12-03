@@ -239,6 +239,8 @@
   "advancement.vampirism.hunter_kill_mother.desc": "You've proven your mettle as a true hunter by conquering the 'Ancient Remains' and dealing a blow to vampiric power.",
   "advancement.vampirism.vampire_kill_mother": "Ancient Dominion",
   "advancement.vampirism.vampire_kill_mother.desc": "You've have vanquishing the local source of power, a questionable accomplishment.",
+  "advancement.vampirism.resurrect": "I always come back",
+  "advancement.vampirism.resurrect.desc": "Resurrect as a vampire",
   "__comment": "effect",
   "effect.vampirism.sunscreen": "Sunscreen",
   "effect.vampirism.thirst": "Thirst",

@@ -1058,6 +1058,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
             this.player.awardStat(ModStats.resurrected);
+            if (this.player instanceof ServerPlayer serverPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(serverPlayer, VampireActionCriterionTrigger.Action.RESURRECT);
+            }
         } else {
             if (this.isRemote()) {
                 this.setDBNOTimer(-1);

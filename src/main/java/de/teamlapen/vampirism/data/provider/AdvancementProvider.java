@@ -165,6 +165,12 @@ public class AdvancementProvider extends ForgeAdvancementProvider {
                     .addCriterion("flower", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION))
                     .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/blood_cult");
+            Advancement resurrect = Advancement.Builder.advancement()
+                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.resurrect"), Component.translatable("advancement.vampirism.resurrect.desc"), null, FrameType.TASK, true, true, true)
+                    .parent(become_vampire)
+                    .addCriterion("resurrected", VampireActionCriterionTrigger.builder(VampireActionCriterionTrigger.Action.RESURRECT))
+                    .addCriterion("main", FactionCriterionTrigger.level(VReference.VAMPIRE_FACTION, 1))
+                    .save(consumer, REFERENCE.MODID + ":vampire/resurrect");
             Advancement extra_storage = Advancement.Builder.advancement()
                     .display(ModBlocks.BLOOD_CONTAINER.get(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), null, FrameType.TASK, true, true, true)
                     .parent(first_blood)
