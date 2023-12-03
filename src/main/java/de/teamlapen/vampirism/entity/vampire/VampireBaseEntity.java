@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -212,6 +213,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
     }
 

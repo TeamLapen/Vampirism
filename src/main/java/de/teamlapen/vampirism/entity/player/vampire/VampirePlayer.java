@@ -369,7 +369,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireDrinkBloodEvent(this, amt, saturationMod, useRemaining);
+        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining);
         int remainingBlood = this.bloodStats.addBlood(bloodDrunk.getLeft(), bloodDrunk.getMiddle());
         if (bloodDrunk.getRight() && remainingBlood > 0) {
             handleSpareBlood(remainingBlood);
