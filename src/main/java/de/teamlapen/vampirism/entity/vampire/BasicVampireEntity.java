@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -28,6 +29,7 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.VampireVillage;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -259,10 +261,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, EnumBloodSource bloodSource) {
-        super.drinkBlood(amt, saturationMod, EnumBloodSource.BITE_FEED);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
+        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, bloodSource);
+        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
         boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
-        bloodtimer += amt * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);
+        bloodtimer += event.getAmount() * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
     @Nullable

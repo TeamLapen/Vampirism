@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAi;
@@ -15,10 +16,7 @@ import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.villager.Trades;
-import de.teamlapen.vampirism.util.DamageHandler;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.RegUtil;
-import de.teamlapen.vampirism.util.TotemHelper;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -152,7 +150,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public boolean doHurtTarget(@NotNull Entity entity) {
         if (!level().isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(vampire -> vampire.onBite(this)).orElse(0);
-            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, EnumBloodSource.OTHER);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, EnumBloodSource.BITE_FEED);
             return true;
         }
         return super.doHurtTarget(entity);
@@ -170,7 +168,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
-        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
+        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, bloodSource);
+        this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
         bloodTimer = -1200 - random.nextInt(1200);
     }
 

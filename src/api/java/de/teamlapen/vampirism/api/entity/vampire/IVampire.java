@@ -31,18 +31,21 @@ public interface IVampire extends IFactionEntity {
     }
 
     /**
-     * Should use {@link #drinkBlood(int, float, EnumBloodSource)} but this is provided for compatibility purposes.
-     * Adds blood to the vampires blood stats
-     * Consume blood. Any remaining blood might be filled into blood bottles or used otherwise
-     *
-     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
-     * @param saturationMod Similar to the food saturation modifier
+     * @deprecated Use {@link #drinkBlood(int, float, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}  instead
      */
     @Deprecated
     default void drinkBlood(int amt, float saturationMod) {
         drinkBlood(amt, saturationMod, true, EnumBloodSource.OTHER);
     }
 
+
+    /**
+     * @deprecated Use {@link #drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)} instead
+     */
+    @Deprecated
+    default void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+        drinkBlood(amt, saturationMod, useRemaining, EnumBloodSource.OTHER);
+    }
 
     /**
      * Adds blood to the vampires blood stats.

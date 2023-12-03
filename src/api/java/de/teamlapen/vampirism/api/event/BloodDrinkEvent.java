@@ -96,7 +96,7 @@ public abstract class BloodDrinkEvent extends Event {
             this.useRemaining = useRemaining;
         }
         /**
-         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean)}.
+         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;
@@ -121,7 +121,7 @@ public abstract class BloodDrinkEvent extends Event {
             this.useRemaining = useRemaining;
         }
         /**
-         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean)}.
+         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;
