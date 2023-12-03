@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.event;
 
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,12 +14,14 @@ public abstract class BloodDrinkEvent extends Event {
     private final IVampire vampire;
     private int amount;
     private float saturation;
+    private final EnumBloodSource bloodSource;
 
 
-    private BloodDrinkEvent(@NotNull IVampire vampire, int amount, float saturation) {
+    private BloodDrinkEvent(@NotNull IVampire vampire, int amount, float saturation, EnumBloodSource bloodSource) {
         this.vampire = vampire;
         this.amount = amount;
         this.saturation = saturation;
+        this.bloodSource = bloodSource;
     }
 
     /**
@@ -39,6 +42,12 @@ public abstract class BloodDrinkEvent extends Event {
      */
     public float getSaturation() {
         return this.saturation;
+    }
+    /**
+     * @return The type of blood source that the blood was obtained from.
+     */
+    public EnumBloodSource getBloodSource() {
+        return this.bloodSource;
     }
 
     /**
@@ -63,7 +72,7 @@ public abstract class BloodDrinkEvent extends Event {
     public static class BiteFeedEvent extends BloodDrinkEvent {
         private final LivingEntity target;
         public BiteFeedEvent(@NotNull IVampirePlayer player, LivingEntity target, int amount, float saturation) {
-            super(player,amount, saturation);
+            super(player,amount, saturation, EnumBloodSource.BITE_FEED);
             this.target = target;
         }
 
@@ -82,8 +91,8 @@ public abstract class BloodDrinkEvent extends Event {
     public static class PlayerDrinkBloodEvent extends BloodDrinkEvent {
         private boolean useRemaining;
 
-        public PlayerDrinkBloodEvent(@NotNull IVampirePlayer player, int amount, float saturation, boolean useRemaining) {
-            super(player, amount, saturation);
+        public PlayerDrinkBloodEvent(@NotNull IVampirePlayer player, int amount, float saturation, boolean useRemaining, EnumBloodSource bloodSource) {
+            super(player, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
         /**
@@ -107,8 +116,8 @@ public abstract class BloodDrinkEvent extends Event {
 
         private boolean useRemaining;
 
-        public EntityDrinkBloodEvent(@NotNull IVampire vampire, int amount, float saturation, boolean useRemaining) {
-            super(vampire, amount, saturation);
+        public EntityDrinkBloodEvent(@NotNull IVampire vampire, int amount, float saturation, boolean useRemaining, EnumBloodSource bloodSource) {
+            super(vampire, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
         /**

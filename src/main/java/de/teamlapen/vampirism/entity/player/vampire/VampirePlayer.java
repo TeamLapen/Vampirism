@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
@@ -368,8 +369,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining);
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
+        Triple<Integer, Float, Boolean> bloodDrunk = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, bloodSource);
         int remainingBlood = this.bloodStats.addBlood(bloodDrunk.getLeft(), bloodDrunk.getMiddle());
         if (bloodDrunk.getRight() && remainingBlood > 0) {
             handleSpareBlood(remainingBlood);
@@ -1265,7 +1266,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                         }
                     }
                     if (blood > 0) {
-                        drinkBlood(blood, IBloodStats.LOW_SATURATION);
+                        drinkBlood(blood, IBloodStats.LOW_SATURATION, EnumBloodSource.CONTAINER);
 
                         CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
                         sync(updatePacket, true);
@@ -1307,7 +1308,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         if (blood > 0) {
             Pair<Integer, Float> bloodDrunk = VampirismEventFactory.fireBiteFeedEvent(this, entity, blood, saturationMod);
-            drinkBlood(bloodDrunk.getLeft(), bloodDrunk.getRight());
+            drinkBlood(bloodDrunk.getLeft(), bloodDrunk.getRight(), EnumBloodSource.BITE_FEED);
             CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +25,10 @@ public interface IVampire extends IFactionEntity {
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
      * @param saturationMod Similar to the food saturation modifier
      */
-    default void drinkBlood(int amt, float saturationMod) {
-        drinkBlood(amt, saturationMod, true);
+    default void drinkBlood(int amt, float saturationMod, EnumBloodSource bloodSource) {
+        drinkBlood(amt, saturationMod, true, bloodSource);
     }
+
 
     /**
      * Adds blood to the vampires blood stats.
@@ -35,7 +37,7 @@ public interface IVampire extends IFactionEntity {
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
      * @param saturationMod Similar to the food saturation modifier
      */
-    void drinkBlood(int amt, float saturationMod, boolean useRemaining);
+    void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource);
 
     @NotNull
     @Override

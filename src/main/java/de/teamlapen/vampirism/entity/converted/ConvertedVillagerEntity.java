@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModAdvancements;
@@ -151,7 +152,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public boolean doHurtTarget(@NotNull Entity entity) {
         if (!level().isClientSide && wantsBlood() && entity instanceof Player && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.getOpt((Player) entity).map(vampire -> vampire.onBite(this)).orElse(0);
-            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, EnumBloodSource.OTHER);
             return true;
         }
         return super.doHurtTarget(entity);
@@ -168,7 +169,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
         bloodTimer = -1200 - random.nextInt(1200);
     }

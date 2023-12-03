@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
@@ -89,7 +90,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
             int drink = Math.min(blood, MULTIPLIER);
             ItemStack[] result = new ItemStack[1];
             int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> result[0] = containerStack);
-            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, false);
+            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, EnumBloodSource.BLOOD_BOTTLE);
             return result[0];
         }
         return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() -> super.finishUsingItem(stack, worldIn, entityLiving));
@@ -130,7 +131,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
             InteractionHand activeHand = pLivingEntity.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> pLivingEntity.setItemInHand(activeHand, containerStack)) > 0) {
-                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
+                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, EnumBloodSource.BLOOD_BOTTLE);
             }
 
             blood = BloodHelper.getBlood(stack);

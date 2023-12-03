@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -30,10 +31,10 @@ public class VampirismItemBloodFoodItem extends Item {
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player player) {
             assert stack.getItem().getFoodProperties() != null;//Don't shrink stack before retrieving food
-            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier()));
+            VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), EnumBloodSource.VAMPIRE_FOOD));
         }
         if (entityLiving instanceof IVampire) {
-            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier());
+            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), EnumBloodSource.VAMPIRE_FOOD);
             stack.shrink(1);
         } else {
             entityLiving.eat(worldIn, stack); //Shrinks stack and applies human food effects

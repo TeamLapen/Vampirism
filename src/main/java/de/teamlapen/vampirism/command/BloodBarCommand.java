@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
@@ -38,7 +39,7 @@ public class BloodBarCommand extends BasicCommand {
     private static int setBloodBar(int amount, @NotNull Collection<ServerPlayer> player) {
         player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(FactionBasePlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> {
             vampire.useBlood(Integer.MAX_VALUE, true);
-            vampire.drinkBlood(amount, 0, false);
+            vampire.drinkBlood(amount, 0, false, EnumBloodSource.OTHER);
         }));
         return 0;
     }
