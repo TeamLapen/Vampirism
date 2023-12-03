@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
@@ -287,7 +288,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                     return;
                 }
                 handler.ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
-                VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false));
+                VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false, EnumBloodSource.OTHER));
                 if (player instanceof ServerPlayer serverPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }

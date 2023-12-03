@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.client.gui.screens.VampireMinionAppearanceScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireMinionStatsScreen;
@@ -75,7 +76,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
         this.heal(amt / 3f); //blood bottle = 900 amt = 9 amt = 2.5 health
     }
 

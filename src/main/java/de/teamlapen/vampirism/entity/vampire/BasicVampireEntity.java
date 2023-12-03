@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -258,8 +259,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
-        super.drinkBlood(amt, saturationMod);
+    public void drinkBlood(int amt, float saturationMod, EnumBloodSource bloodSource) {
+        super.drinkBlood(amt, saturationMod, EnumBloodSource.BITE_FEED);
         boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
         bloodtimer += amt * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);
     }

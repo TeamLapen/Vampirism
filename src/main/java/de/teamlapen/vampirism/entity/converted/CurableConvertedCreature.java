@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -87,7 +88,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
+    default void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource) {
         ((PathfinderMob) this).addEffect(new MobEffectInstance(MobEffects.REGENERATION, amt * 20));
     }
 

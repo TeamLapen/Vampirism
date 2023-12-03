@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
@@ -64,7 +65,7 @@ public class PureBloodItem extends Item {
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player) {
             VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
-                v.drinkBlood(50, 0.3f, false);
+                v.drinkBlood(50, 0.3f, false, EnumBloodSource.OTHER);
                 entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
             });
