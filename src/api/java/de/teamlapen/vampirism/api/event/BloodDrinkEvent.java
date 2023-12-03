@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.api.event;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,10 +13,10 @@ public abstract class BloodDrinkEvent extends Event {
     private final IVampire vampire;
     private int amount;
     private float saturation;
-    private final EnumBloodSource bloodSource;
+    private final IDrinkBloodContext bloodSource;
 
 
-    private BloodDrinkEvent(@NotNull IVampire vampire, int amount, float saturation, EnumBloodSource bloodSource) {
+    private BloodDrinkEvent(@NotNull IVampire vampire, int amount, float saturation, IDrinkBloodContext bloodSource) {
         this.vampire = vampire;
         this.amount = amount;
         this.saturation = saturation;
@@ -46,7 +45,7 @@ public abstract class BloodDrinkEvent extends Event {
     /**
      * @return The type of blood source that the blood was obtained from.
      */
-    public EnumBloodSource getBloodSource() {
+    public IDrinkBloodContext getBloodSource() {
         return this.bloodSource;
     }
 
@@ -66,37 +65,17 @@ public abstract class BloodDrinkEvent extends Event {
     }
 
     /**
-     * Posted whenever a Vampire Player feeds by biting another mob.
-     * This does not change the amount drained from the entity, meaning it only changes the amount of blood the vampire receives from biting.
-     */
-    public static class BiteFeedEvent extends BloodDrinkEvent {
-        private final LivingEntity target;
-        public BiteFeedEvent(@NotNull IVampirePlayer player, LivingEntity target, int amount, float saturation) {
-            super(player,amount, saturation, EnumBloodSource.BITE_FEED);
-            this.target = target;
-        }
-
-        /**
-         * @return The LivingEntity that is being bitten
-         */
-        @NotNull
-        public LivingEntity getTarget() {
-            return this.target;
-        }
-    }
-
-    /**
      * Posted whenever a Vampire Player drinks blood, such as when drinking blood from a bottle, eating a human heart or biting another mob
      */
     public static class PlayerDrinkBloodEvent extends BloodDrinkEvent {
         private boolean useRemaining;
 
-        public PlayerDrinkBloodEvent(@NotNull IVampirePlayer player, int amount, float saturation, boolean useRemaining, EnumBloodSource bloodSource) {
+        public PlayerDrinkBloodEvent(@NotNull IVampirePlayer player, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
             super(player, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
         /**
-         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}.
+         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;
@@ -109,6 +88,7 @@ public abstract class BloodDrinkEvent extends Event {
             this.useRemaining = useRemaining;
         }
     }
+
     /**
      * Posted whenever any non-player vampire entity drinks any blood at all.
      */
@@ -116,12 +96,12 @@ public abstract class BloodDrinkEvent extends Event {
 
         private boolean useRemaining;
 
-        public EntityDrinkBloodEvent(@NotNull IVampire vampire, int amount, float saturation, boolean useRemaining, EnumBloodSource bloodSource) {
+        public EntityDrinkBloodEvent(@NotNull IVampire vampire, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
             super(vampire, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
         /**
-         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}.
+         * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;

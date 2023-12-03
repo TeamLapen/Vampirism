@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -86,11 +86,12 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof IVampire) {
+            ItemStack copy = stack.copy();
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
             ItemStack[] result = new ItemStack[1];
             int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> result[0] = containerStack);
-            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, EnumBloodSource.BLOOD_BOTTLE);
+            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, new DrinkBloodContext(copy));
             return result[0];
         }
         return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() -> super.finishUsingItem(stack, worldIn, entityLiving));
@@ -120,6 +121,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
             pLivingEntity.releaseUsingItem();
             return;
         }
+        ItemStack copy = stack.copy();
         int blood = BloodHelper.getBlood(stack);
         VampirePlayer vampire = VampirePlayer.getOpt((Player) pLivingEntity).resolve().orElse(null);
         if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
@@ -131,7 +133,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
             InteractionHand activeHand = pLivingEntity.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> pLivingEntity.setItemInHand(activeHand, containerStack)) > 0) {
-                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, EnumBloodSource.BLOOD_BOTTLE);
+                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, new DrinkBloodContext(copy));
             }
 
             blood = BloodHelper.getBlood(stack);

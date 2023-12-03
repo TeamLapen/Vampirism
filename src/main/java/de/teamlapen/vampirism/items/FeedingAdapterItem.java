@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -55,7 +55,7 @@ public class FeedingAdapterItem extends Item {
         if (blood > 0 && count == 1) {
             int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
             BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.BLOOD.get(), blood - drink));
-            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, EnumBloodSource.CONTAINER);
+            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, new DrinkBloodContext(bloodContainer));
 
             blood = blood - drink;
             if (blood > 0) {

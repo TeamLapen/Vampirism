@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,27 +24,27 @@ public interface IVampire extends IFactionEntity {
      *
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
      * @param saturationMod Similar to the food saturation modifier
-     * @param bloodSource   The type of blood source used. See {@link de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource}
+     * @param drinkContext  The context where the blood is obtained from
      */
-    default void drinkBlood(int amt, float saturationMod, EnumBloodSource bloodSource) {
-        drinkBlood(amt, saturationMod, true, bloodSource);
+    default void drinkBlood(int amt, float saturationMod, IDrinkBloodContext drinkContext) {
+        drinkBlood(amt, saturationMod, true, drinkContext);
     }
 
     /**
-     * @deprecated Use {@link #drinkBlood(int, float, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)}  instead
+     * @deprecated Use {@link #drinkBlood(int, float, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}  instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     default void drinkBlood(int amt, float saturationMod) {
-        drinkBlood(amt, saturationMod, true, EnumBloodSource.OTHER);
+        drinkBlood(amt, saturationMod, true, IDrinkBloodContext.none());
     }
 
 
     /**
-     * @deprecated Use {@link #drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource)} instead
+     * @deprecated Use {@link #drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     default void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        drinkBlood(amt, saturationMod, useRemaining, EnumBloodSource.OTHER);
+        drinkBlood(amt, saturationMod, useRemaining, IDrinkBloodContext.none());
     }
 
     /**
@@ -53,8 +53,9 @@ public interface IVampire extends IFactionEntity {
      *
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
      * @param saturationMod Similar to the food saturation modifier
+     * @param drinkContext  The context where the blood is obtained from
      */
-    void drinkBlood(int amt, float saturationMod, boolean useRemaining, EnumBloodSource bloodSource);
+    void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext);
 
     @NotNull
     @Override

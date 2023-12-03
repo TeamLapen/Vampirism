@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.player.vampire.EnumBloodSource;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
@@ -87,7 +87,7 @@ public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Go
             if (canFeed(creature)) {
                 int amount = creature.onBite(vampire);
                 vampire.playSound(ModSounds.VAMPIRE_BITE.get(), 1, 1);
-                vampire.drinkBlood(amount, creature.getBloodSaturation(), EnumBloodSource.BITE_FEED);
+                vampire.drinkBlood(amount, creature.getBloodSaturation(), new DrinkBloodContext(e));
             }
         }
     }
