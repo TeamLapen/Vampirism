@@ -2,14 +2,18 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,4 +64,17 @@ public class VampirismEventFactory {
         MinecraftForge.EVENT_BUS.post(event);
         return Pair.of(event.getDefendStrength(), event.getAttackStrength());
     }
+
+    public static @NotNull Pair<Integer, Float> fireBiteFeedEvent(@NotNull IVampirePlayer vampirePlayer, @NotNull LivingEntity target, int amount, float saturationAmount) {
+        BloodDrinkEvent.BiteFeedEvent event = new BloodDrinkEvent.BiteFeedEvent(vampirePlayer, target, amount, saturationAmount);
+        MinecraftForge.EVENT_BUS.post(event);
+        return Pair.of(event.getAmount(), event.getSaturation());
+    }
+
+    public static @NotNull Triple<Integer, Float, Boolean> fireDrinkBloodEvent(@NotNull IVampirePlayer vampirePlayer, int amount, float saturationAmount, boolean useRemaining) {
+        BloodDrinkEvent.PlayerDrinkBloodEvent event = new BloodDrinkEvent.PlayerDrinkBloodEvent(vampirePlayer, amount, saturationAmount, useRemaining);
+        MinecraftForge.EVENT_BUS.post(event);
+        return Triple.of(event.getAmount(), event.getSaturation(), event.useRemaining());
+    }
+
 }
