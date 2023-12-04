@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -10,17 +11,11 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RegenVampireAction extends DefaultVampireAction {
-
-    public RegenVampireAction() {
-        super();
-    }
+public class RegenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
     public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
-        Player player = vampire.getRepresentingPlayer();
-        int dur = VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
-        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, dur, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, vampire.getActionHandler().getModifiedDuration(this), vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0));
         return true;
     }
 
@@ -37,5 +32,35 @@ public class RegenVampireAction extends DefaultVampireAction {
     @Override
     public boolean showHudCooldown(Player player) {
         return true;
+    }
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
+    }
+
+
+    @Override
+    public int getDuration(IVampirePlayer player) {
+        return VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
+    }
+
+    @Override
+    public void onActivatedClient(IVampirePlayer player) {
+
+    }
+
+    @Override
+    public void onDeactivated(IVampirePlayer player) {
+        removePotionEffect(player, MobEffects.REGENERATION);
+    }
+
+    @Override
+    public void onReActivated(IVampirePlayer player) {
+
+    }
+
+    @Override
+    public boolean onUpdate(IVampirePlayer player) {
+        return false;
     }
 }
