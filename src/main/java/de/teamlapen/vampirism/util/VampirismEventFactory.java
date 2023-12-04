@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.event.ActionEvent;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
@@ -75,6 +78,25 @@ public class VampirismEventFactory {
         BloodDrinkEvent.EntityDrinkBloodEvent event = new BloodDrinkEvent.EntityDrinkBloodEvent(vampire, amount, saturationAmount, useRemaining, bloodSource);
         MinecraftForge.EVENT_BUS.post(event);
         return event;
+    }
+    public static boolean firePreActionActivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action) {
+        ActionEvent.PreActionActivatedEvent event = new ActionEvent.PreActionActivatedEvent(factionPlayer, action);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.isCanceled();
+    }
+    public static @NotNull ActionEvent.ActionActivatedEvent fireActionActivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int cooldown, int duration) {
+        ActionEvent.ActionActivatedEvent event = new ActionEvent.ActionActivatedEvent(factionPlayer, action, cooldown, duration);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event;
+    }
+    public static void fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
+        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration);
+        MinecraftForge.EVENT_BUS.post(event);
+    }
+    public static boolean fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, boolean shouldDeactivate) {
+        ActionEvent.ActionUpdateEvent event = new ActionEvent.ActionUpdateEvent(factionPlayer, action, remainingDuration, shouldDeactivate);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.shouldDeactivate();
     }
 
 }
