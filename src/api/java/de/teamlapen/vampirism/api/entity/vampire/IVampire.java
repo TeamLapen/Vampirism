@@ -55,7 +55,9 @@ public interface IVampire extends IFactionEntity {
      * @param saturationMod Similar to the food saturation modifier
      * @param drinkContext  The context where the blood is obtained from
      */
-    void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext);
+    default void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+
+    }
 
     @NotNull
     @Override
