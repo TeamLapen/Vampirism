@@ -90,8 +90,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(r);
             assert action != null;
-            deactivateAction(action);
+            deactivateAction(action, true);
         }
+        this.activeTimers.clear();
+        this.cooldownTimers.clear();
+        dirty = true;
     }
 
     @Override
@@ -267,13 +270,16 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
             deactivateAction(action, true);
         }
+        activeTimers.clear();
         cooldownTimers.clear();
+        dirty = true;
     }
 
     @Override
     public void resetTimer(@NotNull IAction<T> action) {
         ILastingAction<T> lastingAction = (ILastingAction<T>) action;
         deactivateAction(lastingAction, true);
+        cooldownTimers.removeInt(RegUtil.id(action));
 
     }
     /**
@@ -314,14 +320,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 modifiedDurationTimer.put(id, activationEvent.getDuration());
                 if (action.onActivated(player, context)) {
                     ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
+                    //Even though lasting actions do not activate their cooldown until they deactivate
+                    //we probably want to keep this here so that they are edited by one event.
+                    int cooldown = activationEvent.getCooldown();
+                    modifiedCooldownTimers.put(id, cooldown);
                     if (action instanceof ILastingAction) {
                         duration = activationEvent.getDuration();
                         activeTimers.put(id, duration);
-
                     } else {
-                        int cooldown = activationEvent.getCooldown();
                         cooldownTimers.put(id, cooldown);
-                        modifiedCooldownTimers.put(id, cooldown);
                     }
                     dirty = true;
                 } else {
@@ -338,20 +345,21 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void deactivateAction(@NotNull ILastingAction<T> action) {
         deactivateAction(action, false);
     }
-    public void deactivateAction(@NotNull ILastingAction<T> action, boolean resetCooldown) {
+    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
-
             int cooldown = modifiedCooldownTimers.getInt(id);
             int leftTime = activeTimers.getInt(id);
             int duration = modifiedDurationTimer.getInt(id);
-            if(!resetCooldown) {
+            if(!ignoreCooldown) {
                 cooldown -= cooldown * (leftTime / (float) duration / 2f);
                 //Entries should to be at least 1
                 cooldownTimers.put(id, Math.max(cooldown, 1));
+                modifiedCooldownTimers.removeInt(id);
+                activeTimers.put(id, 1);
             }
+            modifiedDurationTimer.removeInt(id);
             VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime);
-            activeTimers.put(id, 1);
             action.onDeactivated(player);
             dirty = true;
         }
@@ -393,13 +401,14 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(entry.getKey());
             assert action != null;
             if (newtimer == 0) {
-                action.onDeactivated(player);
+                deactivateAction(action, true);
                 cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(RegUtil.id(action)));
                 it.remove();//Do not access entry after this
+                modifiedCooldownTimers.removeInt(RegUtil.id(action));
                 dirty = true;
             } else {
                 boolean shouldDeactivate= action.onUpdate(player);
-                boolean shouldReallyDeactivate =  VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer, shouldDeactivate);
+                boolean shouldReallyDeactivate = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer, shouldDeactivate);
                 if (shouldReallyDeactivate) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
