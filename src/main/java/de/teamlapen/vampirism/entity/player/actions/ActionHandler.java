@@ -90,10 +90,9 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(r);
             assert action != null;
-            deactivateAction(action, true);
+            deactivateAction(action, false, true);
         }
         this.activeTimers.clear();
-        this.cooldownTimers.clear();
         dirty = true;
     }
 
@@ -339,13 +338,18 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         deactivateAction(action, false);
     }
     public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
+        deactivateAction(action, false, false);
+    }
+    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             int cooldown = modifiedCooldownTimers.getInt(id);
             int leftTime = activeTimers.getInt(id);
             int duration = modifiedDurationTimer.getInt(id);
-            if(!ignoreCooldown) {
-                cooldown -= cooldown * (leftTime / (float) duration / 2f);
+            if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
+                if(!fullCooldown) {
+                    cooldown -= cooldown * (leftTime / (float) duration / 2f);
+                }
                 //Entries should to be at least 1
                 cooldownTimers.put(id, Math.max(cooldown, 1));
                 modifiedCooldownTimers.removeInt(id);
@@ -395,7 +399,9 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             assert action != null;
             if (newtimer == 0) {
                 deactivateAction(action, true);
-                cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(RegUtil.id(action)));
+                if(!cooldownTimers.containsKey(entry.getKey())) {
+                    cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(RegUtil.id(action)));
+                }
                 it.remove();//Do not access entry after this
                 modifiedCooldownTimers.removeInt(RegUtil.id(action));
                 dirty = true;
