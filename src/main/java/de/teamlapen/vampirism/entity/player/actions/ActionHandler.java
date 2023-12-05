@@ -104,13 +104,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             activeTimers.put(RegUtil.id(action), i + duration);
         }
     }
-    public int getModifiedDuration(ILastingAction<T> action) {
-        ResourceLocation id = RegUtil.id(action);
-        if(modifiedDurationTimer.containsKey(id)) {
-            return modifiedDurationTimer.getInt(id);
-        }
-        return action.getDuration(player);
-    }
 
     @Override
     public @NotNull List<IAction<T>> getAvailableActions() {
