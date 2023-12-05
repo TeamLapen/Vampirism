@@ -303,20 +303,20 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if(isCancelled) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
-                int duration = 0;
-                if (action instanceof ILastingAction) {
-                    duration = ((ILastingAction<T>) action).getDuration(player);
-                }
-                //We need to know the modified duration before the action is activated for actions such as sunscreen
-                ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
-                modifiedDurationTimer.put(id, activationEvent.getDuration());
+
                 if (action.onActivated(player, context)) {
                     ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
+                    int duration = 0;
+                    if (action instanceof ILastingAction) {
+                        duration = ((ILastingAction<T>) action).getDuration(player);
+                    }
+                    ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
                     int cooldown = activationEvent.getCooldown();
                     modifiedCooldownTimers.put(id, cooldown);
                     if (action instanceof ILastingAction) {
+                        modifiedDurationTimer.put(id, activationEvent.getDuration());
                         duration = activationEvent.getDuration();
                         activeTimers.put(id, duration);
                     } else {
