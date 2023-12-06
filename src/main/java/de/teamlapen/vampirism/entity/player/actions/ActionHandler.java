@@ -264,6 +264,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         }
         activeTimers.clear();
         cooldownTimers.clear();
+        modifiedCooldownTimers.clear();
         dirty = true;
     }
 
@@ -272,6 +273,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         ILastingAction<T> lastingAction = (ILastingAction<T>) action;
         deactivateAction(lastingAction, true);
         cooldownTimers.removeInt(RegUtil.id(action));
+        modifiedCooldownTimers.removeInt(RegUtil.id(action));
 
     }
     /**
@@ -352,7 +354,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 }
                 //Entries should to be at least 1
                 cooldownTimers.put(id, Math.max(cooldown, 1));
-                modifiedCooldownTimers.removeInt(id);
                 activeTimers.put(id, 1);
             }
             modifiedDurationTimer.removeInt(id);
@@ -385,6 +386,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int value = entry.getIntValue();
             if (value <= 1) { //<= Just in case we have missed something
+                modifiedCooldownTimers.removeInt(entry);
                 it.remove();
             } else {
                 entry.setValue(value - 1);
@@ -403,7 +405,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(RegUtil.id(action)));
                 }
                 it.remove();//Do not access entry after this
-                modifiedCooldownTimers.removeInt(RegUtil.id(action));
+
                 dirty = true;
             } else {
                 boolean shouldDeactivate= action.onUpdate(player);
