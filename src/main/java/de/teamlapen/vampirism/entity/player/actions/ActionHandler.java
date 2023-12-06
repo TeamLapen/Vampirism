@@ -48,21 +48,21 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      */
     private final @NotNull Object2IntMap<ResourceLocation> cooldownTimers;
     /**
-     * Stores the modified cooldown of an action, this is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)}
-     * Actions represented by any key in this map have to be registerer…
-     * <p>
-     * Keys should be mutually exclusive with {@link #activeTimers}
+     * Stores the modified cooldown of an action after it has been changed by an event. this is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)}
+     * The values stored here are only changed when the modified cooldown is added, it is not decremented like the map for cooldown timers.
      */
     private final @NotNull Object2IntMap<ResourceLocation> modifiedCooldownTimers;
     /**
-     * Stores the modified duration of an action, this is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getCooldown(IFactionPlayer)}
-     * Actions represented by any key in this map have to be registerer…
+     * Stores the modified duration of an action, this is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)}
+     * The values stored here are only changed when the modified duration is added, it is not decremented like the map for duration timers.
      */
     private final @NotNull Object2IntMap<ResourceLocation> modifiedDurationTimer;
     /**
      * Holds any active action. Maps it to the corresponding action timer.
      * Actions represented by any key in this map have to be registered and must implement ILastingAction.
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
+     * <p>
+     * Keys should be mutually exclusive with {@link #cooldownTimers}
      */
     private final @NotNull Object2IntMap<ResourceLocation> activeTimers;
 
@@ -288,6 +288,14 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         nbt.put("actions_duration_modified", writeTimersToNBT(modifiedDurationTimer.object2IntEntrySet()));
     }
 
+    /**
+     * After server receives action toggle packet this is called.
+     * Actions here can be cancelled through {@link de.teamlapen.vampirism.api.event.ActionEvent.PreActionActivatedEvent}
+     * Actions can have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
+     * @param action  Action being toggled
+     * @param context Context holding Block/Entity the player was looking at when activating if any
+     *
+     */
     @Override
     public IAction.PERM toggleAction(@NotNull IAction<T> action, IAction.ActivationContext context) {
         ResourceLocation id = RegUtil.id(action);
@@ -342,22 +350,30 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
         deactivateAction(action, false, false);
     }
+
+    /**
+     * Lasting actions are deactivated here, which fires the {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionDeactivatedEvent}
+     * @param action - The lasting action being deactivated
+     * @param ignoreCooldown - Whether the cooldown is ignored for the action
+     * @param fullCooldown - Whether the lasting action should get the full or reduced cooldown
+     */
     public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             int cooldown = modifiedCooldownTimers.getInt(id);
             int leftTime = activeTimers.getInt(id);
             int duration = modifiedDurationTimer.getInt(id);
+            cooldown = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, cooldown);
             if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
                 if(!fullCooldown) {
                     cooldown -= cooldown * (leftTime / (float) duration / 2f);
                 }
                 //Entries should to be at least 1
                 cooldownTimers.put(id, Math.max(cooldown, 1));
+                modifiedCooldownTimers.put(id, cooldown);
                 activeTimers.put(id, 1);
             }
             modifiedDurationTimer.removeInt(id);
-            VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime);
             action.onDeactivated(player);
             dirty = true;
         }

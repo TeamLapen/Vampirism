@@ -31,7 +31,7 @@ public abstract class ActionEvent extends Event {
     }
 
     /**
-     * Posted before an action fires. Use this to modify the cooldown or duration of an event
+     * Posted after an action fires. Use this to modify the cooldown or duration of an event
      */
     public static class ActionActivatedEvent extends ActionEvent {
 
@@ -44,25 +44,25 @@ public abstract class ActionEvent extends Event {
             this.duration = duration;
         }
         /**
-         * @return The original cooldown of the action
+         * @return The original cooldown of the action, in ticks
          */
         public int getCooldown() {
             return cooldown;
         }
         /**
-         * @param cooldown the new cooldown of the action.
+         * @param cooldown the new cooldown of the action, in ticks.
          */
         public void setCooldown(int cooldown) {
             this.cooldown = cooldown;
         }
         /**
-         * @return The original cooldown of the duration, this will return 0 if the action does not implement ILastingAction.
+         * @return The original duration of the action, this will return 0 if the action does not implement ILastingAction.
          */
         public int getDuration() {
             return duration;
         }
         /**
-         * @param duration the new duration of the action.
+         * @param duration the new duration of the action, in ticks.
          */
         public void setDuration(int duration) {
             this.duration = duration;
@@ -73,17 +73,32 @@ public abstract class ActionEvent extends Event {
      */
     public static class ActionDeactivatedEvent extends ActionEvent {
         private final int remainingDuration;
-        public ActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
+        private int cooldown;
+        public ActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
+            this.cooldown = cooldown;
         }
         /**
-         * @return The remaining cooldown of the action.
+         * @return The remaining duration of the action, in ticks.
          */
         public int getRemainingDuration() {
             return remainingDuration;
         }
+        /**
+         * @return The original cooldown of the action, in ticks
+         */
+        public int getCooldown() {
+            return cooldown;
+        }
 
+        /**
+         *
+         * @param cooldown The new cooldown of the action, in ticks
+         */
+        public void setCooldown(int cooldown) {
+            this.cooldown = cooldown;
+        }
     }
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
@@ -97,7 +112,7 @@ public abstract class ActionEvent extends Event {
             this.shouldDeactivate = shouldDeactivate;
         }
         /**
-         * @return The remaining cooldown of the action.
+         * @return The remaining duration of the action, in ticks.
          */
         public int getRemainingDuration() {
             return this.remainingDuration;

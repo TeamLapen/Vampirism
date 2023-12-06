@@ -89,9 +89,10 @@ public class VampirismEventFactory {
         MinecraftForge.EVENT_BUS.post(event);
         return event;
     }
-    public static void fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
-        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration);
+    public static int fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown) {
+        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration, cooldown);
         MinecraftForge.EVENT_BUS.post(event);
+        return event.getCooldown();
     }
     public static boolean fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, boolean shouldDeactivate) {
         ActionEvent.ActionUpdateEvent event = new ActionEvent.ActionUpdateEvent(factionPlayer, action, remainingDuration, shouldDeactivate);
