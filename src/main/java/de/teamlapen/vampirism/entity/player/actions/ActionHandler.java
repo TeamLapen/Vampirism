@@ -301,6 +301,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             deactivateAction((ILastingAction<T>) action);
+            this.activeTimers.removeInt(id);
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(id)) {
