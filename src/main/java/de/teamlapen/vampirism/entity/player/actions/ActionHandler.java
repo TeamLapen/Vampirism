@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -427,9 +428,20 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
                 dirty = true;
             } else {
-                boolean shouldDeactivate= action.onUpdate(player);
-                boolean shouldReallyDeactivate = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer, shouldDeactivate);
-                if (shouldReallyDeactivate) {
+                /**
+                 * If the event result is DENY, the lasting action will always be deactivated next tick and won't call {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#onUpdate(de.teamlapen.vampirism.api.entity.player.IFactionPlayer)}.
+                 * If the event result is ALLOW, the lasting action will call onUpdate, but the return value will be ignored.
+                 * If its the default, there will be no change, onUpdate will be called and deactivated if it should.
+                 */
+                boolean shouldDeactivate = true;
+                Event.Result eventResult = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
+                if(eventResult != Event.Result.DENY) {
+                    shouldDeactivate = action.onUpdate(player);
+                }
+                if(eventResult == Event.Result.ALLOW) {
+                    shouldDeactivate = false;
+                }
+                if (shouldDeactivate) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
                     ModStats.updateActionTime(player.getRepresentingPlayer(), action);

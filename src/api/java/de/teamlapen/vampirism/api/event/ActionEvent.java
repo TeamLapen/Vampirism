@@ -72,7 +72,6 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
      */
-
     public static class ActionDeactivatedEvent extends ActionEvent {
         private final int remainingDuration;
         private int cooldown;
@@ -105,31 +104,18 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
      */
+    @HasResult
     public static class ActionUpdateEvent extends ActionEvent {
         private final int remainingDuration;
-        private boolean shouldDeactivate;
-        public ActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, boolean shouldDeactivate) {
+        public ActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
-            this.shouldDeactivate = shouldDeactivate;
         }
         /**
          * @return The remaining duration of the action, in ticks.
          */
         public int getRemainingDuration() {
             return this.remainingDuration;
-        }
-        /**
-         * @return Whether the lasting action should be deactivated
-         */
-        public boolean shouldDeactivate() {
-            return this.shouldDeactivate;
-        }
-        /**
-         * @param deactivate If set to true, the action will deactivate. If set to false, the action will not deactivate at all on that update.
-         */
-        public void setDeactivation(boolean deactivate) {
-            this.shouldDeactivate = deactivate;
         }
 
     }
