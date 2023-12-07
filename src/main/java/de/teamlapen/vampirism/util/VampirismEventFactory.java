@@ -89,10 +89,11 @@ public class VampirismEventFactory {
         MinecraftForge.EVENT_BUS.post(event);
         return event.getCooldown();
     }
-    public static Event.Result fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
+
+    public static ActionEvent.ActionUpdateEvent fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
         ActionEvent.ActionUpdateEvent event = new ActionEvent.ActionUpdateEvent(factionPlayer, action, remainingDuration);
         MinecraftForge.EVENT_BUS.post(event);
-        return event.getResult();
+        return event;
     }
 
 }

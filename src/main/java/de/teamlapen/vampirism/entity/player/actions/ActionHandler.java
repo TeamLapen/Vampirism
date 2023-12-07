@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -49,16 +48,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      */
     private final @NotNull Object2IntMap<ResourceLocation> cooldownTimers;
     /**
-     * Stores the expected cooldown of an action after it has been changed by an event. this is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)}
-     * The values stored here are only changed when the modified cooldown is added, it is not decremented like the map for cooldown timers.
-     */
-    private final @NotNull Object2IntMap<ResourceLocation> expectedCooldownTimes;
-    /**
-     * Stores the expected duration of an action, this is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)}
-     * The values stored here are only changed when the modified duration is added, it is not decremented like the map for duration timers.
-     */
-    private final @NotNull Object2IntMap<ResourceLocation> expectedDurations;
-    /**
      * Holds any active action. Maps it to the corresponding action timer.
      * Actions represented by any key in this map have to be registered and must implement ILastingAction.
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
@@ -66,6 +55,18 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * Keys should be mutually exclusive with {@link #cooldownTimers}
      */
     private final @NotNull Object2IntMap<ResourceLocation> activeTimers;
+    /**
+     * Stores the expected cooldown of an action after it was activated.
+     * This is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)} as the cooldown might be modified before activation.
+     * The values stored here are only changed when the cooldown is added, it is not decremented like the map for cooldown timers, but removed when the action's cooldown is over.
+     */
+    private final @NotNull Object2IntMap<ResourceLocation> expectedCooldownTimes;
+    /**
+     * Stores the expected duration of an action after it was activated.
+     * This is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)} as the duration might be modified before activation.
+     * The values stored here are only changed when the duration is added, it is not decremented like the map for duration timers, but removed when the action's duration is over.
+     */
+    private final @NotNull Object2IntMap<ResourceLocation> expectedDurations;
 
     private final T player;
 
@@ -305,7 +306,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
             deactivateAction((ILastingAction<T>) action);
-            this.activeTimers.removeInt(id);
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(id)) {
@@ -317,13 +317,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
-                /**
+                /*
                  * Only lasting actions have a cooldown, so regular actions will return a duration of -1.
                  */
-                int duration = -1;
-                if (action instanceof ILastingAction) {
-                    duration = ((ILastingAction<T>) action).getDuration(player);
-                }
+                int duration = action instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
                 ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
                 if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.onActivated(player, context)) {
@@ -370,7 +367,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             cooldown = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, cooldown);
             if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
                 if(!fullCooldown) {
-                    cooldown -= cooldown * (leftTime / (float) duration / 2f);
+                    cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
                     expectedCooldownTimes.put(id, cooldown);
                 }
@@ -378,6 +375,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 cooldownTimers.put(id, Math.max(cooldown, 1));
                 activeTimers.put(id, 1);
             }
+            activeTimers.removeInt(id);
             expectedDurations.removeInt(id);
             action.onDeactivated(player);
             dirty = true;
@@ -417,28 +415,26 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int newtimer = entry.getIntValue() - 1;
+            ResourceLocation id = entry.getKey();
             @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(entry.getKey());
-            assert action != null;
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
             if (newtimer == 0) {
-                deactivateAction(action, true);
-                cooldownTimers.put(entry.getKey(), expectedCooldownTimes.getInt(entry.getKey()));
                 it.remove();//Do not access entry after this
+                deactivateAction(action, true);
+                cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
 
                 dirty = true;
             } else {
-                /**
+                /*
                  * If the event result is DENY, the lasting action will always be deactivated next tick and won't call {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#onUpdate(de.teamlapen.vampirism.api.entity.player.IFactionPlayer)}.
                  * If the event result is ALLOW, the lasting action will call onUpdate, but the return value will be ignored.
                  * If its the default, there will be no change, onUpdate will be called and deactivated if it should.
                  */
-                boolean shouldDeactivate = true;
-                Event.Result eventResult = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
-                if(eventResult != Event.Result.DENY) {
-                    shouldDeactivate = action.onUpdate(player);
-                }
-                if(eventResult == Event.Result.ALLOW) {
-                    shouldDeactivate = false;
+                ActionEvent.ActionUpdateEvent event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
+                boolean shouldDeactivate = event.shouldOverrideDeactivation();
+                switch (event.getResult()) {
+                    case DEFAULT -> shouldDeactivate = action.onUpdate(player);
+                    case ALLOW -> action.onUpdate(player);
                 }
                 if (shouldDeactivate) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
