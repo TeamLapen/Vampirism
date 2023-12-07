@@ -371,10 +371,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
                 if(!fullCooldown) {
                     cooldown -= cooldown * (leftTime / (float) duration / 2f);
+                } else {
+                    expectedCooldownTimes.put(id, cooldown);
                 }
                 //Entries should to be at least 1
                 cooldownTimers.put(id, Math.max(cooldown, 1));
-                expectedCooldownTimes.put(id, cooldown);
                 activeTimers.put(id, 1);
             }
             expectedDurations.removeInt(id);
