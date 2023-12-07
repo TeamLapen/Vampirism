@@ -120,10 +120,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public float getPercentageForAction(@NotNull IAction<T> action) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
-            return activeTimers.getInt(id) / ((float) modifiedDurationTimer.getOrDefault(id, ((ILastingAction<T>) action).getDuration(player)));
+            return activeTimers.getInt(id) / ((float) modifiedDurationTimer.getInt(id));
         }
         if (cooldownTimers.containsKey(id)) {
-            return -cooldownTimers.getInt(id) / (float) modifiedCooldownTimers.getOrDefault(id, action.getCooldown(player));
+            return -cooldownTimers.getInt(id) / (float) modifiedCooldownTimers.getInt(id);
         }
         return 0f;
     }
@@ -265,15 +265,19 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         activeTimers.clear();
         cooldownTimers.clear();
         modifiedCooldownTimers.clear();
+        modifiedDurationTimer.clear();
         dirty = true;
     }
 
     @Override
     public void resetTimer(@NotNull IAction<T> action) {
-        ILastingAction<T> lastingAction = (ILastingAction<T>) action;
-        deactivateAction(lastingAction, true);
-        cooldownTimers.removeInt(RegUtil.id(action));
-        modifiedCooldownTimers.removeInt(RegUtil.id(action));
+        ResourceLocation id = RegUtil.id(action);
+        if(action instanceof ILastingAction<T> lastingAction) {
+            deactivateAction(lastingAction, true);
+        }
+        cooldownTimers.removeInt(id);
+        modifiedCooldownTimers.removeInt(id);
+        dirty = true;
 
     }
     /**
@@ -335,10 +339,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                         cooldownTimers.put(id, cooldown);
                     }
                     dirty = true;
-                } else {
-                    modifiedDurationTimer.removeInt(id);
                 }
-
                 return IAction.PERM.ALLOWED;
             } else {
                 return r;
@@ -420,7 +421,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if (newtimer == 0) {
                 deactivateAction(action, true);
                 if(!cooldownTimers.containsKey(entry.getKey())) {
-                    cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(RegUtil.id(action)));
+                    cooldownTimers.put(entry.getKey(), modifiedCooldownTimers.getInt(entry.getKey()));
                 }
                 it.remove();//Do not access entry after this
 
