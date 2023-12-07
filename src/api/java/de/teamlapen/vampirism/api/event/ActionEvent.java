@@ -31,8 +31,9 @@ public abstract class ActionEvent extends Event {
     }
 
     /**
-     * Posted after an action fires. Use this to modify the cooldown or duration of an event
+     * Posted before an action fires. Use this to modify the cooldown or duration of action, or to prevent the action from activating.
      */
+    @Cancelable
     public static class ActionActivatedEvent extends ActionEvent {
 
         private int cooldown;
@@ -56,7 +57,7 @@ public abstract class ActionEvent extends Event {
             this.cooldown = cooldown;
         }
         /**
-         * @return The original duration of the action, this will return 0 if the action does not implement ILastingAction.
+         * @return The original duration of the action, this will return -1 if the action does not implement ILastingAction.
          */
         public int getDuration() {
             return duration;
@@ -71,6 +72,7 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
      */
+
     public static class ActionDeactivatedEvent extends ActionEvent {
         private final int remainingDuration;
         private int cooldown;
@@ -130,15 +132,6 @@ public abstract class ActionEvent extends Event {
             this.shouldDeactivate = deactivate;
         }
 
-    }
-    /**
-     * Posted before a player activates an action, can be used to prevent an action being fired.
-     */
-    @Cancelable
-    public static class PreActionActivatedEvent extends ActionEvent {
-        public PreActionActivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action) {
-            super(factionPlayer, action);
-        }
     }
 
 }

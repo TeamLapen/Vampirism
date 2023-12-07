@@ -290,8 +290,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     /**
      * After server receives action toggle packet this is called.
-     * Actions here can be cancelled through {@link de.teamlapen.vampirism.api.event.ActionEvent.PreActionActivatedEvent}
-     * Actions can have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
+     * Actions can be cancelled, have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
      * @param action  Action being toggled
      * @param context Context holding Block/Entity the player was looking at when activating if any
      *
@@ -310,18 +309,20 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
-            boolean isCancelled = VampirismEventFactory.firePreActionActivatedEvent(player, action);
-            if(isCancelled) return IAction.PERM.DISALLOWED;
+
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
-
+                /**
+                 * Only lasting actions have a cooldown, so regular actions will return a duration of -1.
+                 */
+                int duration = -1;
+                if (action instanceof ILastingAction) {
+                    duration = ((ILastingAction<T>) action).getDuration(player);
+                }
+                ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
+                if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.onActivated(player, context)) {
                     ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
-                    int duration = 0;
-                    if (action instanceof ILastingAction) {
-                        duration = ((ILastingAction<T>) action).getDuration(player);
-                    }
-                    ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
                     int cooldown = activationEvent.getCooldown();
