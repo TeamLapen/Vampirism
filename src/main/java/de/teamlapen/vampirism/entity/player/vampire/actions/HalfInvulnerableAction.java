@@ -48,14 +48,16 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public boolean onUpdate(IVampirePlayer player) {
+    public boolean onUpdate(IVampirePlayer vampire) {
+        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
+            addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 22, 1, false, false));
+        }
         return false;
     }
 
     @Override
     protected boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, getDuration(vampire) - 1, 1, false, false));
         return true;
     }
 

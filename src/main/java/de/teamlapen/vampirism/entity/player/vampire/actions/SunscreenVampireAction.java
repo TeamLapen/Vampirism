@@ -14,7 +14,6 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
-        addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(vampire), 3, false, false));
         return true;
     }
 
@@ -22,6 +21,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     public int getCooldown(IVampirePlayer player) {
         return VampirismConfig.BALANCE.vaSunscreenCooldown.get() * 20;
     }
+
 
     @Override
     public int getDuration(@NotNull IVampirePlayer player) {
@@ -54,6 +54,10 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
+        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
+            addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN.get(), 22, 3, false, false));
+        }
+
         return false;
     }
 

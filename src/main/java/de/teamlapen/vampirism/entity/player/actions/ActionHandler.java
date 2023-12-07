@@ -6,9 +6,11 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.event.ActionEvent;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -53,6 +55,18 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * Keys should be mutually exclusive with {@link #cooldownTimers}
      */
     private final @NotNull Object2IntMap<ResourceLocation> activeTimers;
+    /**
+     * Stores the expected cooldown of an action after it was activated.
+     * This is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)} as the cooldown might be modified before activation.
+     * The values stored here are only changed when the cooldown is added, it is not decremented like the map for cooldown timers, but removed when the action's cooldown is over.
+     */
+    private final @NotNull Object2IntMap<ResourceLocation> expectedCooldownTimes;
+    /**
+     * Stores the expected duration of an action after it was activated.
+     * This is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)} as the duration might be modified before activation.
+     * The values stored here are only changed when the duration is added, it is not decremented like the map for duration timers, but removed when the action's duration is over.
+     */
+    private final @NotNull Object2IntMap<ResourceLocation> expectedDurations;
 
     private final T player;
 
@@ -69,7 +83,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
         cooldownTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
         activeTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
-
+        expectedCooldownTimes = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
+        expectedDurations = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
     }
 
     public void deactivateAllActions() {
@@ -77,9 +92,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(r);
             assert action != null;
-            int cooldown = action.getCooldown(player);
-            cooldownTimers.put(r, cooldown);
-            action.onDeactivated(player);
+            deactivateAction(action, false, true);
         }
         this.activeTimers.clear();
         dirty = true;
@@ -107,11 +120,12 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public float getPercentageForAction(@NotNull IAction<T> action) {
-        if (activeTimers.containsKey(RegUtil.id(action))) {
-            return activeTimers.getInt(RegUtil.id(action)) / ((float) ((ILastingAction<T>) action).getDuration(player));
+        ResourceLocation id = RegUtil.id(action);
+        if (activeTimers.containsKey(id)) {
+            return activeTimers.getInt(id) / ((float) expectedDurations.getInt(id));
         }
-        if (cooldownTimers.containsKey(RegUtil.id(action))) {
-            return -cooldownTimers.getInt(RegUtil.id(action)) / (float) action.getCooldown(player);
+        if (cooldownTimers.containsKey(id)) {
+            return -cooldownTimers.getInt(id) / (float) expectedCooldownTimes.getInt(id);
         }
         return 0f;
     }
@@ -149,8 +163,12 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
         cooldownTimers.clear();
+        expectedCooldownTimes.clear();
+        expectedDurations.clear();
         if (nbt.contains("actions_active")) loadTimerMapFromNBT(nbt.getCompound("actions_active"), activeTimers);
         if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
+        if (nbt.contains("actions_cooldown_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
+        if (nbt.contains("actions_duration_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
     }
 
     /**
@@ -197,8 +215,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 } else {
                     @SuppressWarnings("unchecked")
                     ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(client_active.getKey());
-                    assert action != null;
-                    action.onDeactivated(player);
+                    deactivateAction(action);
                     it.remove();
                 }
             }
@@ -220,7 +237,14 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             cooldownTimers.clear();
             loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
         }
-
+        if (nbt.contains("actions_cooldown_expected")) {
+            expectedCooldownTimes.clear();
+            loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
+        }
+        if (nbt.contains("actions_duration_expected")) {
+            expectedDurations.clear();
+            loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
+        }
     }
 
     @Override
@@ -238,24 +262,26 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (ResourceLocation id : activeTimers.keySet()) {
             @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-            assert action != null;
-            action.onDeactivated(player);
+            deactivateAction(action, true);
         }
         activeTimers.clear();
         cooldownTimers.clear();
+        expectedCooldownTimes.clear();
+        expectedDurations.clear();
         dirty = true;
     }
 
     @Override
     public void resetTimer(@NotNull IAction<T> action) {
-        if (activeTimers.containsKey(RegUtil.id(action))) {
-            ((ILastingAction<T>) action).onDeactivated(player);
-            activeTimers.removeInt(RegUtil.id(action));
+        ResourceLocation id = RegUtil.id(action);
+        if(action instanceof ILastingAction<T> lastingAction) {
+            deactivateAction(lastingAction, true);
         }
-        cooldownTimers.removeInt(RegUtil.id(action));
+        cooldownTimers.removeInt(id);
+        expectedCooldownTimes.removeInt(id);
         dirty = true;
-    }
 
+    }
     /**
      * Saves action timings to nbt
      * Should only be called by the corresponding Capability instance
@@ -264,8 +290,17 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
+        nbt.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
+        nbt.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
     }
 
+    /**
+     * After server receives action toggle packet this is called.
+     * Actions can be cancelled, have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
+     * @param action  Action being toggled
+     * @param context Context holding Block/Entity the player was looking at when activating if any
+     *
+     */
     @Override
     public IAction.PERM toggleAction(@NotNull IAction<T> action, IAction.ActivationContext context) {
         ResourceLocation id = RegUtil.id(action);
@@ -279,39 +314,74 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
+
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
+                /*
+                 * Only lasting actions have a cooldown, so regular actions will return a duration of -1.
+                 */
+                int duration = action instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
+                ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
+                if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.onActivated(player, context)) {
                     ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
+                    //Even though lasting actions do not activate their cooldown until they deactivate
+                    //we probably want to keep this here so that they are edited by one event.
+                    int cooldown = activationEvent.getCooldown();
+                    expectedCooldownTimes.put(id, cooldown);
                     if (action instanceof ILastingAction) {
-                        activeTimers.put(id, ((ILastingAction<T>) action).getDuration(player));
+                        expectedDurations.put(id, activationEvent.getDuration());
+                        duration = activationEvent.getDuration();
+                        activeTimers.put(id, duration);
                     } else {
-                        cooldownTimers.put(id, action.getCooldown(player));
+                        cooldownTimers.put(id, cooldown);
                     }
                     dirty = true;
                 }
-
                 return IAction.PERM.ALLOWED;
             } else {
                 return r;
             }
         }
     }
-
     @Override
     public void deactivateAction(@NotNull ILastingAction<T> action) {
+        deactivateAction(action, false);
+    }
+    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
+        deactivateAction(action, false, false);
+    }
+
+    /**
+     * Lasting actions are deactivated here, which fires the {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionDeactivatedEvent}
+     * @param action - The lasting action being deactivated
+     * @param ignoreCooldown - Whether the cooldown is ignored for the action
+     * @param fullCooldown - Whether the lasting action should get the full or reduced cooldown
+     */
+    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
-            int cooldown = action.getCooldown(player);
+            int cooldown = expectedCooldownTimes.getInt(id);
             int leftTime = activeTimers.getInt(id);
-            int duration = action.getDuration(player);
-            cooldown -= cooldown * (leftTime / (float) duration / 2f);
-            action.onDeactivated(player);
+            int duration = expectedDurations.getInt(id);
+            cooldown = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, cooldown);
+            if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
+                if(!fullCooldown) {
+                    cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
+                } else {
+                    expectedCooldownTimes.put(id, cooldown);
+                }
+                //Entries should to be at least 1
+                cooldownTimers.put(id, Math.max(cooldown, 1));
+                activeTimers.put(id, 1);
+            }
             activeTimers.removeInt(id);
-            cooldownTimers.put(id, Math.max(cooldown, 1));//Entries should to be at least 1
+            expectedDurations.removeInt(id);
+            action.onDeactivated(player);
             dirty = true;
         }
     }
+
 
     @Override
     public void unlockActions(@NotNull Collection<IAction<T>> actions) {
@@ -335,6 +405,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int value = entry.getIntValue();
             if (value <= 1) { //<= Just in case we have missed something
+                expectedCooldownTimes.removeInt(entry);
                 it.remove();
             } else {
                 entry.setValue(value - 1);
@@ -344,16 +415,28 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int newtimer = entry.getIntValue() - 1;
+            ResourceLocation id = entry.getKey();
             @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(entry.getKey());
-            assert action != null;
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
             if (newtimer == 0) {
-                action.onDeactivated(player);
-                cooldownTimers.put(entry.getKey(), action.getCooldown(player));
                 it.remove();//Do not access entry after this
+                deactivateAction(action, true);
+                cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
+
                 dirty = true;
             } else {
-                if (action.onUpdate(player)) {
+                /*
+                 * If the event result is DENY, the lasting action will always be deactivated next tick and won't call {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#onUpdate(de.teamlapen.vampirism.api.entity.player.IFactionPlayer)}.
+                 * If the event result is ALLOW, the lasting action will call onUpdate, but the return value will be ignored.
+                 * If its the default, there will be no change, onUpdate will be called and deactivated if it should.
+                 */
+                ActionEvent.ActionUpdateEvent event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
+                boolean shouldDeactivate = event.shouldOverrideDeactivation();
+                switch (event.getResult()) {
+                    case DEFAULT -> shouldDeactivate = action.onUpdate(player);
+                    case ALLOW -> action.onUpdate(player);
+                }
+                if (shouldDeactivate) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
                     ModStats.updateActionTime(player.getRepresentingPlayer(), action);
@@ -375,6 +458,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void writeUpdateForClient(@NotNull CompoundTag nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
+        nbt.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
+        nbt.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {
