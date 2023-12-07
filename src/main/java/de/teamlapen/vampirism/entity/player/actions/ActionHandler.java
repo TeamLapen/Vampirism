@@ -422,9 +422,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             assert action != null;
             if (newtimer == 0) {
                 deactivateAction(action, true);
-                if(!cooldownTimers.containsKey(entry.getKey())) {
-                    cooldownTimers.put(entry.getKey(), expectedCooldownTimes.getInt(entry.getKey()));
-                }
+                cooldownTimers.put(entry.getKey(), expectedCooldownTimes.getInt(entry.getKey()));
                 it.remove();//Do not access entry after this
 
                 dirty = true;
