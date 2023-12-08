@@ -179,6 +179,7 @@ public class BloodStats implements IBloodStats {
             AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
             amount *= attribute.getValue();
         }
+        amount *= player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).getValue();
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 

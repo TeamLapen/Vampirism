@@ -330,8 +330,8 @@ public class BalanceConfig {
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
         vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
         vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
-        vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5, 0, 1);
-        vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, 0, 1);
+        vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5, -1024, 1024);
+        vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, -1024, 1024);
 
 
         //Vampire Player TODO 1.19 rename *MaxMod to *MaxLevelMod and clarify whether it is a multiplicative or additive modifier

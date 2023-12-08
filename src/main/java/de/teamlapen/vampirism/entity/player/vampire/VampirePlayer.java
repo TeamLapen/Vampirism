@@ -36,7 +36,6 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
@@ -441,11 +440,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     public int getDbnoDuration() {
-        int duration = VampirismConfig.BALANCE.vpDbnoDuration.get() * 20;
-        if (this.skillHandler.isSkillEnabled(VampireSkills.DBNO_DURATION.get())) {
-            duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsDbnoReduction.get()));
-        }
-        return duration;
+        return Math.max(1, (int) player.getAttribute(ModAttributes.DBNO_TIMER.get()).getValue());
     }
 
     public int getDbnoTimer() {
@@ -1053,10 +1048,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            int duration = VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20;
-            if (this.skillHandler.isSkillEnabled(VampireSkills.NEONATAL_DECREASE.get())) {
-                duration = Math.max(1, (int) (duration * VampirismConfig.BALANCE.vsNeonatalReduction.get()));
-            }
+            int duration = Math.max((int) player.getAttribute(ModAttributes.NEONATAL_FORM.get()).getValue(), 1);
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
             this.player.awardStat(ModStats.resurrected);
             if (this.player instanceof ServerPlayer serverPlayer) {
@@ -1226,11 +1218,17 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
+        player.getAttribute(ModAttributes.NEONATAL_FORM.get()).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
+        player.getAttribute(ModAttributes.DBNO_TIMER.get()).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(1);
     }
 
     private void removeEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(0);
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.NEONATAL_FORM.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.DBNO_TIMER.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(0);
     }
 
     /**
