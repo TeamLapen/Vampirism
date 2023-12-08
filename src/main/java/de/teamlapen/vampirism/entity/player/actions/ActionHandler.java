@@ -215,8 +215,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 } else {
                     @SuppressWarnings("unchecked")
                     ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(client_active.getKey());
+                    it.remove(); //Remove here so that deactivate action does not break the iterator
                     deactivateAction(action);
-                    it.remove();
                 }
             }
             for (String key : active.getAllKeys()) {
@@ -419,7 +419,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             @SuppressWarnings("unchecked")
             ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
             if (newtimer == 0) {
-                it.remove();//Do not access entry after this
+                it.remove();//Remove here so that deactivate action does not break the iterator
                 deactivateAction(action, true);
                 cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
 
