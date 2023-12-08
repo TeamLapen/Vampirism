@@ -55,7 +55,7 @@ public class FeedingAdapterItem extends Item {
         if (blood > 0 && count == 1) {
             int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
             BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.BLOOD.get(), blood - drink));
-            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, new DrinkBloodContext(bloodContainer));
+            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(bloodContainer));
 
             blood = blood - drink;
             if (blood > 0) {

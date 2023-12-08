@@ -22,14 +22,16 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Recipe category for {@link IWeaponTableRecipe}
@@ -110,14 +112,29 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         if (recipe instanceof ShapelessWeaponTableRecipe) {
             builder.setShapeless();
         }
+        List<List<ItemStack>> list = recipe.getIngredients().stream().map(s -> List.of(s.getItems())).toList();
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 32);
         output.addItemStack(RecipeUtil.getResultItem(recipe));
 
-        NonNullList<Ingredient> ingredients = recipe.getIngredients();
+        List<IRecipeSlotBuilder> inputSlots = new ArrayList<>();
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 4; ++x) {
-                if (ingredients.size() <= y * 4 + x) break;
-                builder.addSlot(RecipeIngredientRole.INPUT, 2 + x * 19, 2 + y * 19).addIngredients(ingredients.get(y * 4 + x));
+                IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, 2 + x * 19, 2 + y * 19);
+                inputSlots.add(slot);
+            }
+        }
+
+        int height = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeHeight() : 4;
+        int width = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeWidth() : 4;
+
+        for (int i = 0; i < height; i++) {
+            for (int i1 = 0; i1 < width; i1++) {
+                IRecipeSlotBuilder slot = inputSlots.get(i1 + i * 4);
+
+                List<ItemStack> itemList = list.get(i1 + i * width);
+                if (itemList != null) {
+                    slot.addIngredients(VanillaTypes.ITEM_STACK, itemList);
+                }
             }
         }
     }

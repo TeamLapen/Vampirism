@@ -65,7 +65,7 @@ public class PureBloodItem extends Item {
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player) {
             VampirePlayer.getOpt((Player) entityLiving).ifPresent(v -> {
-                v.drinkBlood(50, 0.3f, false, DrinkBloodContext.none());
+                v.drinkBlood(50, 0.4f + (0.15f * getLevel()), false, new DrinkBloodContext(stack));
                 entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION.get()));
                 stack.shrink(1);
             });

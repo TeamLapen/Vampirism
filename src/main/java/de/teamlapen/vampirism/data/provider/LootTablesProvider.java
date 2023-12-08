@@ -50,9 +50,9 @@ import java.util.stream.Stream;
 public class LootTablesProvider {
 
     /**
-     * copied from {@link net.minecraft.data.loot.packs.VanillaBlockLoot}
+     * from {@link net.minecraft.data.loot.packs.VanillaBlockLoot} but halved
      */
-    public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
+    public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[] {0.025F, 0.03125f, 0.041666668f, 0.05f};
 
     public static LootTableProvider getProvider(PackOutput output) {
         return new LootTableProvider(output, ModLootTables.getLootTables(),
@@ -81,7 +81,8 @@ public class LootTablesProvider {
             splash.putBoolean("splash", true);
 
             LootTable.Builder advanced_hunter = LootTable.lootTable()
-                    .withPool(LootPool.lootPool().when(LootItemKilledByPlayerCondition.killedByPlayer()).setRolls(ConstantValue.exactly(1))
+                    .withPool(LootPool.lootPool().when(LootItemKilledByPlayerCondition.killedByPlayer())
+                            .setRolls(UniformGenerator.between(0, 1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(4))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(4).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1))))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).setWeight(3).apply(SetNbtFunction.setTag(splash)))

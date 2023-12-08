@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -31,8 +29,8 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
 
     private static final VoxelShape shape =  Shapes.empty();
 
-    public CursedBarkBlock() {
-        super(BlockBehaviour.Properties.of().noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never).sound(SoundType.VINE));
+    public CursedBarkBlock(BlockBehaviour.Properties properties) {
+        super(properties.noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 

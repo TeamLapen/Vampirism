@@ -15,6 +15,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -36,6 +38,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     public static final BiMap<Direction, EnumProperty<Type>> SIDE_MAP = ImmutableBiMap.<Direction, EnumProperty<Type>>builder().put(Direction.UP, UP_TYPE).put(Direction.DOWN, DOWN_TYPE).put(Direction.EAST, EAST_TYPE).put(Direction.WEST, WEST_TYPE).put(Direction.NORTH, NORTH_TYPE).put(Direction.SOUTH, SOUTH_TYPE).build();
 
     public DirectCursedBarkBlock() {
+        super(BlockBehaviour.Properties.of().sound(SoundType.WOOD));
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(UP_TYPE, Type.NONE)
                 .setValue(DOWN_TYPE, Type.NONE)

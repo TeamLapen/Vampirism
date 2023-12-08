@@ -133,7 +133,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
             InteractionHand activeHand = pLivingEntity.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> pLivingEntity.setItemInHand(activeHand, containerStack)) > 0) {
-                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false, new DrinkBloodContext(copy));
+                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(copy));
             }
 
             blood = BloodHelper.getBlood(stack);

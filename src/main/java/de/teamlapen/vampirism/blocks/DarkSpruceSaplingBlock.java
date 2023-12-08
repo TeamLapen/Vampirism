@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.BlockPos;
@@ -44,7 +43,7 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
             pLevel.setBlock(pPos, pState.cycle(STAGE), 4);
         } else {
             var grower = this.darkTreeGrower;
-            if (pLevel.getBiome(pPos).is(ModBiomes.VAMPIRE_FOREST) && pRandom.nextFloat() < 0.3) {
+            if (pLevel.getBlockState(pPos.below()).is(ModTags.Blocks.CURSED_EARTH) && pRandom.nextFloat() < 0.3) {
                 grower = cursedTreeGrower;
             }
             grower.growTree(pLevel, pLevel.getChunkSource().getGenerator(), pPos, pState, pRandom);
