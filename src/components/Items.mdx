@@ -1,27 +1,8 @@
-import React from "react";
-
-interface Image {
-    src: string;
-    alt: string;
-}
-interface ItemImgProps {
-    src: string;
-    alt: string;
-    imageHeight: string | number;
-}
-export const ItemImg = ({src, alt, imageHeight = 200} : ItemImgProps) => (
-    <img src={src} alt={alt} style={{height: (typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight) as string, imageRendering: "pixelated"}}/>
+export const ItemImg = ({src, alt, imageHeight = 200}) => (
+    <img src={src} alt={alt} style={{height: (typeof imageHeight === 'number' ? `${imageHeight}px` : imageHeight), imageRendering: "pixelated"}}/>
 );
 
-interface ItemsImgProps {
-    children: any;
-    title: any;
-    img: Image[];
-    source: any;
-    subHeading?: boolean;
-    imageHeight?: string | number;
-}
-export const Items = ({children, title, img, source, subHeading = false, imageHeight = 100} : ItemsImgProps) => (
+export const Items = ({children, title, img, source, subHeading = false, imageHeight = 100}) => (
     <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-')}>
         <div>
             {!subHeading && <h1 style={{fontSize: 'xx-large'}}>{title}</h1>}
@@ -39,6 +20,7 @@ export const Items = ({children, title, img, source, subHeading = false, imageHe
         {source != null && <div style={{marginTop: '20px'}}>
             <details>
                 <summary>How to Acquire</summary>
+                <div>
                 {source.map(item => {
                     switch (item.type) {
                         case "list":
@@ -60,7 +42,7 @@ export const Items = ({children, title, img, source, subHeading = false, imageHe
                                 ))}
                            </span>);
                     }
-                })}
+                })}</div>
             </details>
         </div>}
         </div>
