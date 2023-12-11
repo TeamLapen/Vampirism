@@ -43,11 +43,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;
+    private final @NotNull IDrawable bucket;
 
     WeaponTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         this.background = guiHelper.drawableBuilder(BACKGROUND, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.WEAPON_TABLE.get()));
+        this.bucket = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Items.LAVA_BUCKET));
     }
 
     @Override
@@ -57,6 +59,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
         if (recipe.getRequiredLavaUnits() > 0) {
+            this.bucket.draw(graphics, 83, 13);
             PoseStack pose = graphics.pose();
             pose.pushPose();
             RenderSystem.backupProjectionMatrix();

@@ -274,8 +274,8 @@ public class RecipesProvider extends VanillaRecipeProvider {
         woodFromLogs(consumer, ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
         woodenBoat(consumer, ModItems.DARK_SPRUCE_BOAT.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
         woodenBoat(consumer, ModItems.CURSED_SPRUCE_BOAT.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
-        chestBoat(consumer, ModItems.DARK_SPRUCE_CHEST_BOAT.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
-        chestBoat(consumer, ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
+        chestBoat(consumer, ModItems.DARK_SPRUCE_CHEST_BOAT.get(), ModItems.DARK_SPRUCE_BOAT.get());
+        chestBoat(consumer, ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), ModItems.CURSED_SPRUCE_BOAT.get());
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.THRONE.get()).pattern(" YZ").pattern("YYZ").pattern("XZX").define('Y', Blocks.RED_CARPET).define('Z', ItemTags.PLANKS).define('X', Items.STICK).unlockedBy("has_stick", has(Items.STICK)).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_wool", has(Blocks.RED_CARPET)).save(consumer, general("throne"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_RACK.get()).pattern("XYX").pattern("ABC").pattern("XYX").define('X', ItemTags.PLANKS).define('Y', Items.BOOK).define('A', ModItems.VAMPIRE_FANG.get()).define('B', Items.GLASS_BOTTLE).define('C', Items.HONEYCOMB).unlockedBy("has_planks", has(ItemTags.PLANKS)).unlockedBy("has_book", has(Items.BOOK)).unlockedBy("has_fangs", has(ModItems.VAMPIRE_FANG.get())).unlockedBy("has_honey", has(Items.HONEYCOMB)).unlockedBy("has_potion", has(Items.GLASS_BOTTLE)).save(consumer, general("vampire_rack"));
@@ -448,6 +448,7 @@ public class RecipesProvider extends VanillaRecipeProvider {
         stonecutterResultFromBase(consumer, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
         stonecutterResultFromBase(consumer, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES.get());
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK.get()).pattern(" X ").pattern("YYY").define('X', iron_ingot).define('Y', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(consumer, vampire("candle_stick"));
     }
 
     private @NotNull JsonObject enchantment(int level, Enchantment enchantment) {
