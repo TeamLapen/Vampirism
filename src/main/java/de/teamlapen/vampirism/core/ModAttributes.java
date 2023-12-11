@@ -26,12 +26,12 @@ public class ModAttributes {
      * Allows modifying the duration of the neonatal effect.
      * Registered for EntityPlayer
      */
-    public static final RegistryObject<RangedAttribute> NEONATAL_FORM = ATTRIBUTES.register("neonatal_form", () -> (RangedAttribute) new RangedAttribute("vampirism.neonatal_form", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> NEONATAL_DURATION = ATTRIBUTES.register("neonatal_duration", () -> (RangedAttribute) new RangedAttribute("vampirism.neonatal_duration", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
     /**
      * Allows modifying the length of the resurrection timer.
      * Registered for EntityPlayer
      */
-    public static final RegistryObject<RangedAttribute> DBNO_TIMER = ATTRIBUTES.register("dbno_timer", () -> (RangedAttribute) new RangedAttribute("vampirism.dbno_timer", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> DBNO_DURATION = ATTRIBUTES.register("dbno_duration", () -> (RangedAttribute) new RangedAttribute("vampirism.dbno_duration", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
     /**
      * Allows modifying the blood exhaustion except it also applies to exhaustion increased from healing as well. Like the other attribute, multiplies the value.
      * Registered for EntityPlayer

@@ -440,7 +440,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     public int getDbnoDuration() {
-        return Math.max(1, (int) player.getAttribute(ModAttributes.DBNO_TIMER.get()).getValue());
+        return (int) player.getAttribute(ModAttributes.DBNO_DURATION.get()).getValue();
     }
 
     public int getDbnoTimer() {
@@ -1048,7 +1048,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            int duration = Math.max((int) player.getAttribute(ModAttributes.NEONATAL_FORM.get()).getValue(), 1);
+            int duration = (int) player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).getValue();
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
             this.player.awardStat(ModStats.resurrected);
             if (this.player instanceof ServerPlayer serverPlayer) {
@@ -1218,16 +1218,16 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void applyEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
-        player.getAttribute(ModAttributes.NEONATAL_FORM.get()).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
-        player.getAttribute(ModAttributes.DBNO_TIMER.get()).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
+        player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
+        player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(1);
     }
 
     private void removeEntityAttributes() {
         player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(0);
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.NEONATAL_FORM.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.DBNO_TIMER.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(0);
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(0);
     }
 

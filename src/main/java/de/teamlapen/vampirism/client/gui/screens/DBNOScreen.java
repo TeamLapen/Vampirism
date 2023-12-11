@@ -75,7 +75,7 @@ public class DBNOScreen extends Screen {
         if (this.enableButtonsTimer == 20) {
             dieButton.active = true;
         }
-        float prog = this.minecraft.player != null ? VampirePlayer.getOpt(this.minecraft.player).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(1f) : 1f;
+        float prog = this.minecraft.player != null ? VampirePlayer.getOpt(this.minecraft.player).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f) : 0f;
         resurrectButton.updateState(prog);
 
     }
