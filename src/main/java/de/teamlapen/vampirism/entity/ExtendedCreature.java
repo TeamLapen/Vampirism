@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.world.ModDamageSources;
@@ -286,7 +287,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
                 entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 41, 2));
-                if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
+                if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0 && LevelAttributeModifier.calculateModifierValue(blood, getMaxBlood(), 1, 0.8) < entity.getRandom().nextDouble()) {
                     setBlood(getBlood() + 1);
                     sync();
                 }
