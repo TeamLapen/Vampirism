@@ -31,14 +31,6 @@ public class VampirismSwordItem extends SwordItem {
         super(material, attackDamageIn, attackSpeedIn, builder);
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if ((enchantment == Enchantments.MENDING && (this instanceof IItemWithTier) && ((IItemWithTier) this).getVampirismTier() == IItemWithTier.TIER.ULTIMATE)) {
-            return false;
-        }
-        return super.canApplyAtEnchantingTable(stack, enchantment);
-    }
-
     @NotNull
     @Override
     protected String getOrCreateDescriptionId() {
