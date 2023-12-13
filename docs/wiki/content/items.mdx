@@ -37,7 +37,7 @@ import {
     hunterIntelImage,
     hunterMinionBindingImage,
     hunterMinionUpgradeImages, image,
-    injectionImages,
+    injectionImages, motherCoreImage,
     pitchforkImage,
     potionOfOblivionImage,
     pureBloodImages,
@@ -63,32 +63,45 @@ import {
     bloodInfusedIronIngotRecipes,
     crossbowArrowClipRecipes,
     crossbowArrowRecipes,
-    crossbowRecipes,
+    crossbowRecipes, cursedSpruceBoatRecipes, darkSpruceBoatRecipes,
     feedingAdapterRecipes,
     garlicBreadRecipes,
     garlicFinderRecipes,
-    garlicRecipes,
+    garlicRecipes, goldCrucifixRecipes,
     heartSeekerEnhancedRecipes,
     heartSeekerNormalRecipes,
     heartSeekerUltimateRecipes,
     heartStrikerEnhancedRecipes,
     heartStrikerNormalRecipes,
-    heartStrikerUltimateRecipes, holyWaterRecipes, humanHeartRecipes,
+    heartStrikerUltimateRecipes,
+    holyWaterRecipes,
+    humanHeartRecipes,
     hunterAxeEnhancedRecipes,
     hunterAxeNormalRecipes,
     hunterCoatEnhancedRecipes,
     hunterCoatNormalRecipes,
-    hunterHatRecipes, hunterIntelRecipes, hunterMinionBindingRecipes, hunterMinionUpgradesRecipes,
-    injectionCraftingRecipes,
+    hunterHatRecipes,
+    hunterIntelRecipes,
+    hunterMinionBindingRecipes,
+    hunterMinionUpgradesRecipes,
+    injectionCraftingRecipes, ironCrucifixRecipes, motherCoreRecipes,
     pitchforkRecipes,
-    potionOfOblivionRecipes, pureBloodRecipes,
-    purifiedGarlicRecipes, soulOrbRecipes, splashHolyWaterRecipes,
-    stakeRecipes, vampireBloodRecipes,
+    potionOfOblivionRecipes,
+    pureBloodRecipes,
+    purifiedGarlicRecipes,
+    soulOrbRecipes,
+    splashHolyWaterRecipes,
+    stakeRecipes,
+    vampireBloodRecipes,
     vampireBookRecipes,
     vampireClothBootsRecipes,
     vampireClothChestRecipes,
     vampireClothHeadRecipes,
-    vampireClothLegsRecipes, vampireFangRecipes, vampireMinionBindingRecipes, vampireMinionUpgradesRecipes
+    vampireClothLegsRecipes,
+    vampireFangRecipes,
+    vampireMinionBindingRecipes,
+    vampireMinionUpgradesRecipes,
+    woodenCrucifixRecipes
 } from "./_recipes.mdx";
 
 Recipes may be outdated. Just Enough items is recommended
@@ -118,7 +131,8 @@ Used in recipes or for placing Alchemical Fire.
     }
 ]}>
 
-Armor of Swiftness is a better leather armor that provides speed and a minimal jump boost
+Armor of Swiftness is a better leather armor that comes in 3 tiers. Each being better than the previous one.
+They provide minimal protection, but give a speed boost and a minor jump boost when worn.
 </TieredItem>
 <Items title="Beacon Core" img={beaconImages} source={beaconCoreRecipes}>
 
@@ -126,11 +140,11 @@ The Beacon Cores are used in crafting [Garlic Diffuser](blocks.mdx#garlic-diffus
 </Items>
 <Items title="Blood Bottle" img={bloodBottleImages}>
 
-Blood Bottle are used to store blood to drink or transport.
+Blood Bottle can store blood. The blood can be directly drunk from the bottle.
 
-Glass Bottles are automatically transformed into Blood Bottles and back when they are filled/emptied.
+Glass Bottles are automatically transformed into Blood Bottles and back when they are filled or emptied.
 
-<details><summary>disable autoconvert</summary>
+<details><summary>Disable Autoconvert</summary>
 
 You can disable the automatic conversion of Glass Bottles to Blood Bottles by setting `autoConvertGlassBottles` in the common config to `false`. Then you must craft the bottles.
 
@@ -337,34 +351,47 @@ Stylish vampire clothing that provides minimal protection but can be fully encha
 </TieredItem>
 <Item title="Vampire Fang" img={vampireFangImage} source={vampireFangRecipes}/>
 <Item title="Vampire Blood" img={vampireBloodImage} source={vampireBloodRecipes}/>
-<Item title="Vampire Book" img={vampireBookImage} source={vampireBookRecipes}/>
+<Item title="'Vampire Book'" img={vampireBookImage} source={vampireBookRecipes}>
+The Vampire Book is a special book that is filled with diary entries or other interesting information. They all have different names.
+</Item>
 <TieredItem title={"Crucifix"} tiers={
   [
       {
           title: "Wooden Crucifix",
-          img: [{src: crucifixNormalImage}]
+          img: [{src: crucifixNormalImage}],
+          source: woodenCrucifixRecipes
       },
       {
           title: "Iron Crucifix",
-          img: [{src: crucifixEnhancedImage}]
+          img: [{src: crucifixEnhancedImage}],
+          source: ironCrucifixRecipes
       },
       {
           title: "Golden Crucifix",
-          img: [{src: crucifixUltimateImage}]
+          img: [{src: crucifixUltimateImage}],
+          source: goldCrucifixRecipes
       },
   ]
-}/>
+}>
+Crucifixes are used to repel vampires.
+
+Once the required skill is unlocked, hunter player can use crucifix to slow vampires down. The slowdown and range increases with the tier of the crucifix.
+</TieredItem>
 <Items title={"Dark Spruce Boat"} img=
     {
         [
             {src: image("dark_spruce_boat.png")},
             {src: image("dark_spruce_chest_boat.png")},
         ]
-    }/>
+    } source={darkSpruceBoatRecipes}/>
 <Items title={"Cursed Spruce Boat"} img=
     {
         [
             {src: image("cursed_spruce_boat.png")},
             {src: image("cursed_spruce_chest_boat.png")},
         ]
-    }/>
+    } source={cursedSpruceBoatRecipes}/>
+<Item title={"Mother Core"} img={motherCoreImage} source={motherCoreRecipes}>
+
+The Mother Core is a rare item that can only be obtained by destroying the [Ancient Remains](entities/ancient_remains).
+</Item>

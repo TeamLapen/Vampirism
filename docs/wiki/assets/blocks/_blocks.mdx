@@ -89,8 +89,31 @@ import darkSpruceWood from './dark_spruce_wood.png'
 import darkSprucePlanks from './dark_spruce_planks.png'
 import darkStrippedSpruceLog from './stripped_dark_spruce_log.png'
 import darkStrippedSpruceWood from './stripped_dark_spruce_wood.png'
+import batCage from './bat_cage.png'
+import chiseledDarkStoneBricks from './chiseled_dark_stone_bricks.png'
+import cobbledDarkStone from './cobbled_dark_stone.png'
+import crackedDarkStoneBricks from './cracked_dark_stone_bricks.png'
+import crackedDarkStoneTiles from './cracked_dark_stone_tiles.png'
+import darkStoneTiles from './dark_stone_tiles.png'
+import fogDiffuser from './fog_diffuser.png'
+import garlicDiffuserEnhanced from './garlic_diffuser_enhanced.png'
+import motherBlock from './mother_block.png'
+import polishedDarkStone from './polished_dark_stone.png'
+import purpleStoneTiles from './purple_stone_tiles.png'
+import vulnerableRemains from './vulnerable_remains.png'
+import vulnerableRemains2 from './vulnerable_remains_2.png'
+import remains from './remains.png'
+import bloodInfusedIronBlock from './blood_infused_iron_block.png'
+import bloodInfusedEnhancedIronBlock from './blood_infused_enhanced_iron_block.png'
+import cursedGrassPath from './cursed_grass_path.png'
+import vampireBeacon from './vampire_beacon.png'
+import ancientBeaconGui from './ancient_beacon_gui.png'
+import ancientBeaconPreview from './ancient_beacon_preview.png'
+import candle from './candle.png'
+import wallCandle from './wall_candle.png'
 
-export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/c3accd4f5a45ee590a5e3f7539666493d56d4ba7/src/main/resources/assets/vampirism/textures/block/"
+
+export const baseUrl = "https://raw.githubusercontent.com/TeamLapen/Vampirism/49b96d1eb82b7ddf336d79f1ca4b832a42ac62f4/src/main/resources/assets/vampirism/textures/block/"
 
 export function blockImage(imageName) {
     return baseUrl + imageName;
@@ -137,20 +160,18 @@ export const darkStoneBricksImage = darkStoneBricks
 export const darkStoneBricksSlapImage = darkStoneBricksSlap
 export const darkStoneSlapImage = darkStoneSlap
 export const darkStoneBrickStairsImage = darkStoneBrickStairs
-export const garlic1Image = garlic1
-export const garlic2Image = garlic2
-export const garlic3Image = garlic3
-export const garlic4Image = garlic4
+export const garlic1Image = blockImage("garlic_stage_0.png")
+export const garlic2Image = blockImage("garlic_stage_1.png")
+export const garlic3Image = blockImage("garlic_stage_2.png")
+export const garlic4Image = blockImage("garlic_stage_3.png")
 export const garlicImages = [garlic1Image, garlic2Image, garlic3Image, garlic4Image]
-export const garlicDiffuserImage = garlicDiffuser
+export const garlicDiffuserImages = [garlicDiffuser, garlicDiffuserEnhanced]
 export const hunterTableImage = hunterTable
 export const hunterTableFullImage = hunterTableFull
 export const hunterTableImages = [hunterTableImage, hunterTableFullImage]
 export const injectionChairImage = injectionChair
 export const potionTableImage = potionTable
-export const purpleStairsImage = purpleStairs
-export const purpleStoneSlapImage = purpleStoneSlap
-export const purpleStoneBricksImage = purpleStoneBricks
+
 export const sunscreenBeaconImage = sunscreenBeacon
 export const totemImage = totem
 export const totemFragileImage = totemFragile
@@ -160,9 +181,7 @@ export const vampiricStoneBricksImage = vampiricStoneBricks
 export const weaponTableImage = weaponTable
 export const weaponTableLavaImage = weaponTableLava
 export const weaponTableImages = [weaponTableImage, weaponTableLavaImage]
-export const stoneBrickImages = [darkStoneImage, darkStoneBricksImage,  purpleStoneBricksImage, vampiricStoneBricksImage, bloodyStoneBricksImage]
-export const stoneSlapImages = [darkStoneSlapImage, darkStoneBricksSlapImage, purpleStoneSlapImage]
-export const stoneStairImages = [darkStairsImage, darkStoneBrickStairsImage, purpleStairsImage]
+
 export const spruceLeavesImage = darkSpruceLeavesImage
 export const firePlaceImage = firePlace
 export const cursedGrassImages  = [cursedGrass, cursedGrassSnowy]
@@ -172,3 +191,26 @@ export const vampireRackImage = vampireRack
 export const graveCageImage = graveCage
 export const darkSpruceWoodItems = [darkSpruceLog, darkSpruceWood, darkStrippedSpruceLog, darkStrippedSpruceWood, darkSprucePlanks]
 export const cursedSpruceWoodItems = [cursedSpruceLog, cursedSpruceWood, cursedStrippedSpruceLog, cursedStrippedSpruceWood, cursedSprucePlanks]
+export const batCageImage = batCage
+export const darkStoneImages = [darkStone]
+export const darkStoneBricksImages = [darkStoneBricks]
+export const polishedDarkStoneImages = [polishedDarkStone]
+export const cobbledDarkStoneImages = [cobbledDarkStone]
+export const darkStoneTilesImages = [darkStoneTiles]
+export const purpleStoneBricksImages = [purpleStoneBricks]
+export const purpleStoneTilesImages = [purpleStoneTiles]
+export const bloodInfusedIronBlockImages = [bloodInfusedIronBlock, bloodInfusedEnhancedIronBlock]
+export const cursedGrassPathImage = cursedGrassPath
+export const purpleStairsImage = purpleStairs
+export const purpleStoneSlapImage = purpleStoneSlap
+export const purpleStoneBricksImage = purpleStoneBricks
+export const stoneBrickImages = [darkStoneImage, darkStoneBricksImage,  purpleStoneBricksImage, vampiricStoneBricksImage, bloodyStoneBricksImage]
+export const stoneSlapImages = [darkStoneSlapImage, darkStoneBricksSlapImage, purpleStoneSlapImage]
+export const stoneStairImages = [darkStairsImage, darkStoneBrickStairsImage, purpleStairsImage]
+export const fogDiffuserImage = fogDiffuser
+export const vampireBeaconImage = vampireBeacon
+export const ancientBeaconGuiImage = ancientBeaconGui
+export const ancientBeaconPreviewImage = ancientBeaconPreview
+export const candleImage = candle
+export const wallCandleImage = wallCandle
+export const candleImages = [candleImage, wallCandleImage]

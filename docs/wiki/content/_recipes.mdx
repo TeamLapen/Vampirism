@@ -49,11 +49,13 @@ import {
     enhancedTechCrossbowRecipe,
     garlicBreadRecipe,
     garlicDiffuserRecipe,
+    garlicDiffuserEnhancedRecipe,
     garlicFinderRecipe,
     heartSeekerEnhancedRecipe,
     heartSeekerNormalRecipe,
     heartStrikerEnhancedRecipe,
-    heartStrikerNormalRecipe, holySaltWaterRecipe,
+    heartStrikerNormalRecipe,
+    holySaltWaterRecipe,
     hunterAxeEnhancedRecipe,
     hunterAxeRecipe,
     hunterBootsEnhancedRecipe,
@@ -73,7 +75,8 @@ import {
     injectionGarlicRecipe,
     injectionSanguinemRecipe,
     pitchForkRecipe,
-    potionTableRecipe, pureSaltRecipe,
+    potionTableRecipe,
+    pureSaltRecipe,
     purifiedGarlicRecipe,
     purpleStoneBrickRecipe,
     purpleStoneBrickSlapRecipe,
@@ -96,7 +99,27 @@ import {
     vampireCrownRecipe,
     vampireHatRecipe,
     vampireLegsRecipe,
-    weaponTableRecipe
+    weaponTableRecipe,
+    tombStone1Recipe,
+    tombStone2Recipe,
+    tombStone3Recipe,
+    cageRecipe,
+    vampireRackRecipe,
+    throneRecipe,
+    fogDiffuserRecipe,
+    ancientBeaconRecipe,
+    bloodInfusedIronBlockRecipe,
+    bloodInfusedEnhancedIronBlockRecipe,
+    batCageRecipe,
+    candleStickRecipe,
+    bloodInfusedIronBlock1Recipe,
+    bloodInfusedEnhancedIronBlock1Recipe,
+    bloodIron2Recipe,
+    enhancedBloodIron2Recipe,
+    crucifixRecipe,
+    ironCrucifixRecipe,
+    goldCrucifixRecipe,
+    cursedSpruceBoatRecipe, darkSpruceBoatRecipe, cursedSpruceBoatChestRecipe, darkSpruceBoatChestRecipe
 } from "../assets/recipes/_recipes.mdx";
 import {craftingRecipes, craftingRecipe, sumSource} from "@site/src/components/Recipes.tsx";
 
@@ -117,7 +140,7 @@ export const accessoriesRecipes = [
 ];
 export const alchemicalFireBrewingRecipes = craftingRecipes([alchemicalFire1Recipe,alchemicalFire2Recipe,alchemicalFire3Recipe], "Brewing")
 export const beaconCoreRecipes = craftingRecipes([beaconCoreRecipe, beaconCoreEnhancedRecipe])
-export const bloodInfusedIronIngotRecipes = craftingRecipes([bloodInfusedIngotRecipe, enhancedBloodInfusedIngotRecipe])
+export const bloodInfusedIronIngotRecipes = craftingRecipes([bloodInfusedIngotRecipe, enhancedBloodInfusedIngotRecipe, bloodIron2Recipe, enhancedBloodIron2Recipe])
 export const crossbowRecipes = craftingRecipes([crossbowRecipe, doubleCrossbowRecipe, enhancedCrossbowRecipe, enhancedDoubleCrossbowRecipe, techCrossbowRecipe, enhancedTechCrossbowRecipe])
 export const armorOfSwiftnessNormalRecipes = craftingRecipes([armorOfSwiftnessHelmetNormalRecipe, armorOfSwiftnessChestNormalRecipe, armorOfSwiftnessLegsNormalRecipe, armorOfSwiftnessBootsNormalRecipe], "Weapon Table")
 export const armorOfSwiftnessEnhancedRecipes = craftingRecipes([armorOfSwiftnessHelmetEnhancedRecipe, armorOfSwiftnessChestEnhancedRecipe, armorOfSwiftnessLegsEnhancedRecipe, armorOfSwiftnessBootsEnhancedRecipe], "Weapon Table")
@@ -127,6 +150,11 @@ export const armorOfSwiftnessUltimateRecipes = [
         type: "list",
         title: "Trading",
         source : ["Hunter Expert"]
+    },
+    {
+        type: "list",
+        title: "World",
+        source: ["Mineshaft Chests", "Stronghold Chests", "Jungle Temple Chests"]
     }
 ];
 export const crossbowArrowRecipes = craftingRecipes([crossbowArrow1Recipe, crossbowArrow2Recipe, crossbowArrowVampireKillerRecipe, crossbowArrowSpitfireRecipe])
@@ -142,7 +170,7 @@ export const garlicRecipes = [
     {
         type: "list",
         title: "World",
-        source: ["Garlic can be found at hunter trainer houses in villages"]
+        source: ["Garlic can be found at hunter trainer houses in villages", "Drops from the Garlic plant block"]
     }
 ];
 export const garlicBreadRecipes = craftingRecipe(garlicBreadRecipe)
@@ -219,14 +247,19 @@ export const spruceSaplingRecipes = [
     {
         type: "list",
         title: "World",
-        source: ["Dark Spruce Saplings drop from Dark Spruce Leaves", "Cursed Spruce Saplings drop from Cursed Spruce Leaves" ]
-    }
+        source: ["Dark Spruce Saplings drop from Dark Spruce Leaves" ]
+    },
+    {
+        type: "list",
+        title: "Interaction",
+        source: ["Use Pure Blood on a Dark Spruce Sapling to convert it into a Cursed Sapling" ]
+    },
 ]
 export const spruceLeavesRecipes = [
     {
         type: "list",
         title: "World",
-        source: ["Dark and Bloody Spruce Leaves spawns at spruce trees in the Vampire Forest"]
+        source: ["Dark Spruce Leaves spawns at dark spruce trees and cursed spruce trees"]
     }
 ]
 export const candelabraRecipes = craftingRecipe(candelabraRecipe)
@@ -237,14 +270,14 @@ export const cursedEarthRecipes = [
     {
         type: "list",
         title: "World",
-        source: ["Cursed Dirt is the ground block in the Vampire Forest"]
+        source: ["Cursed Dirt is a ground block in the Vampire Forest"]
     }
 ]
 export const cursedGrassRecipes = [
     {
         type: "list",
         title: "World",
-        source: ["Cursed Grass is the ground block in the Vampire Forest"]
+        source: ["Cursed Grass is a ground block in the Vampire Forest"]
     }
 ]
 export const firePlaceRecipes = craftingRecipe(campfireRecipe)
@@ -255,7 +288,7 @@ export const garlicBlockRecipes = [
         source: ["Garlic can be found at hunter trainer houses in villages"]
     }
 ]
-export const garlicDiffuserRecipes = craftingRecipe(garlicDiffuserRecipe)
+export const garlicDiffuserRecipes = craftingRecipes([garlicDiffuserRecipe, garlicDiffuserEnhancedRecipe])
 export const hunterTableRecipes = craftingRecipe(hunterTableRecipe)
 export const injectionChairRecipes = craftingRecipe(injectionChairRecipe)
 export const potionTableRecipes = craftingRecipe(potionTableRecipe)
@@ -399,3 +432,33 @@ export const humanHeartRecipes = [
 ]
 export const holySaltWaterRecipes = craftingRecipe(holySaltWaterRecipe)
 export const alchemyTableRecipes = craftingRecipe(alchemyTable)
+export const cursedGrassPathRecipes = [
+    {
+        type: "list",
+        title: "Interaction",
+        source: ["Right click Cursed Grass with a shovel to create Cursed Grass Path"]
+    }
+]
+export const tombstoneRecipes = craftingRecipes([tombStone1Recipe, tombStone2Recipe, tombStone3Recipe])
+export const cageRecipes = craftingRecipe(cageRecipe)
+export const vampireRackRecipes = craftingRecipe(vampireRackRecipe)
+export const throneRecipes = craftingRecipe(throneRecipe)
+export const fogDiffuserRecipes = craftingRecipe(fogDiffuserRecipe)
+export const ancientBeaconRecipes = craftingRecipe(ancientBeaconRecipe)
+export const bloodInfusedIronBlock1Recipes = craftingRecipes([bloodInfusedIronBlockRecipe, bloodInfusedEnhancedIronBlockRecipe])
+export const bloodInfusedIronBlock2Recipes = craftingRecipes([bloodInfusedIronBlock1Recipe, bloodInfusedEnhancedIronBlock1Recipe], "Weapon Table")
+export const bloodInfusedIronBlockRecipes = sumSource([bloodInfusedIronBlock1Recipes, bloodInfusedIronBlock2Recipes])
+export const batCageRecipes = craftingRecipe(batCageRecipe)
+export const candleStickRecipes = craftingRecipe(candleStickRecipe)
+export const woodenCrucifixRecipes = craftingRecipe(crucifixRecipe)
+export const ironCrucifixRecipes = craftingRecipe(ironCrucifixRecipe)
+export const goldCrucifixRecipes = craftingRecipe(goldCrucifixRecipe)
+export const darkSpruceBoatRecipes = craftingRecipes([darkSpruceBoatRecipe, darkSpruceBoatChestRecipe])
+export const cursedSpruceBoatRecipes = craftingRecipes([cursedSpruceBoatRecipe, cursedSpruceBoatChestRecipe])
+export const motherCoreRecipes = [
+    {
+        type: "list",
+        title: "World",
+        source: ["Ancient Remains"]
+    }
+]
