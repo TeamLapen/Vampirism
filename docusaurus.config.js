@@ -39,7 +39,7 @@ const config = {
               /** this value must be changed if a new version is released */
               label: '1.10',
             }
-          }
+          },
         },
         blog: {
           showReadingTime: true,
@@ -52,6 +52,23 @@ const config = {
           customCss: require.resolve('./src/css/custom.css'),
         },
       }),
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'integrations',
+        path: 'integrations',
+        routeBasePath: 'integrations',
+        sidebarPath: './sidebarsIntegrations.js',
+        versions: {
+          current: {
+            label: '1.8',
+          }
+        }
+      },
     ],
   ],
 
@@ -88,6 +105,13 @@ const config = {
             position: 'left',
             label: 'Data Packs',
           },
+          {
+            type: 'doc',
+            docId: 'wiki/intro',
+            docsPluginId: 'integrations',
+            position: 'left',
+            label: 'Integrations',
+          },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
             type: 'docsVersionDropdown',
@@ -96,7 +120,16 @@ const config = {
               { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.7.10' },
               { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.12' },
             ],
+            dropdownActiveClassDisabled: true,
+          },
+          {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownItemsAfter: [
+              { to: 'https://github.com/TeamLapen/VampirismIntegrations/wiki', label: 'For MC 1.19 or older' },
+            ],
             dropdownActiveClassDisabled: false,
+            docsPluginId: 'integrations',
           },
           {
             href: 'https://github.com/Teamlapen/Vampirism',
