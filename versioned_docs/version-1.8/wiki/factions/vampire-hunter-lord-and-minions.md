@@ -11,7 +11,7 @@ To become a lord you have to fulfill a certain task for your faction. You can ac
 There are different ranks that determine how many minions you can command.
 **Vampires**
 "Baron(ess)" -> "Viscount(ess)" -> "Count(ess)" -> "Duke/Duchess" -> "Prince(ss)"
-The gender used is determined based on your skin t**ype (steve -> male, alex -> female), but this can be changed using ("/vampirism title-gender <true/false>").  
+The gender used is determined based on your skin t**ype (steve -> male, alex -> female), but this can be changed using ("/vampirism title-gender \<true/false\>").  
 **Hunter**
 "Lieutenant" -> "Captain" -> "Major" -> "Colonel"-> "Brigadier"
 
