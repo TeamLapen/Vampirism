@@ -104,8 +104,8 @@ public class BloodStats implements IBloodStats {
         if (regen && this.bloodSaturationLevel > 0 && player.isHurt() && this.bloodLevel >= maxBlood) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {
-                float f = Math.min(this.bloodSaturationLevel, 4F);
-                player.heal(f / 4F);
+                float f = Math.min(this.bloodSaturationLevel, 6F);
+                player.heal(f / 6F);
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
@@ -114,7 +114,7 @@ public class BloodStats implements IBloodStats {
 
             if (this.bloodTimer >= 80) {
                 player.heal(1.0F);
-                this.addExhaustion(2.8F, true);
+                this.addExhaustion(6F, true);
                 this.bloodTimer = 0;
             }
         } else if (this.bloodLevel <= 0) {
