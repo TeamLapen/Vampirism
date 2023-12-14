@@ -32,11 +32,6 @@ public class ModAttributes {
      * Registered for EntityPlayer
      */
     public static final RegistryObject<RangedAttribute> DBNO_DURATION = ATTRIBUTES.register("dbno_duration", () -> (RangedAttribute) new RangedAttribute("vampirism.dbno_duration", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
-    /**
-     * Allows modifying the blood exhaustion except it also applies to exhaustion increased from healing as well. Like the other attribute, multiplies the value.
-     * Registered for EntityPlayer
-     */
-    public static final RegistryObject<RangedAttribute> BLOOD_EXHAUSTION_INCLUDE_HEALING = ATTRIBUTES.register("blood_exhaustion_healing", () -> (RangedAttribute) new RangedAttribute("vampirism.blood_exhaustion_healing", 1.0, 0.0, 1000).setSyncable(true));
 
     static void register(IEventBus bus) {
         ATTRIBUTES.register(bus);

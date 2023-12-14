@@ -440,7 +440,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     public int getDbnoDuration() {
-        return (int) player.getAttribute(ModAttributes.DBNO_DURATION.get()).getValue();
+        return (int) player.getAttributeValue(ModAttributes.DBNO_DURATION.get());
     }
 
     public int getDbnoTimer() {
@@ -1048,7 +1048,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            int duration = (int) player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).getValue();
+            int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION.get());
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
             this.player.awardStat(ModStats.resurrected);
             if (this.player instanceof ServerPlayer serverPlayer) {
@@ -1220,7 +1220,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
         player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
         player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(1);
     }
 
     private void removeEntityAttributes() {
@@ -1228,7 +1227,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(0);
         player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(0);
         player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION_INCLUDE_HEALING.get()).setBaseValue(0);
     }
 
     /**
