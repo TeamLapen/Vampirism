@@ -979,7 +979,6 @@
   "vampirism.sundamage": "Sun Damage",
   "vampirism.neonatal_duration": "Neonatal Duration",
   "vampirism.dbno_duration": "DBNO Duration",
-  "vampirism.blood_exhaustion_healing": "Blood Exhaustion Healing",
   "__comment": "item tooltips",
   "item.vampirism.crossbow_arrow_vampire_killer.tooltip": "Instantly kills low level vampire NPCs.",
   "item.vampirism.crossbow_arrow_spitfire.tooltip": "Creates a alchemical fire on impact",

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.components.CooldownButton;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,8 +14,11 @@ import net.minecraft.network.chat.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class DBNOScreen extends Screen {
@@ -75,9 +79,7 @@ public class DBNOScreen extends Screen {
         if (this.enableButtonsTimer == 20) {
             dieButton.active = true;
         }
-        float prog = this.minecraft.player != null ? VampirePlayer.getOpt(this.minecraft.player).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f) : 0f;
-        resurrectButton.updateState(prog);
-
+        resurrectButton.updateState(Optional.ofNullable(this.minecraft.player).map(VampirePlayer::getOpt).flatMap(LazyOptional::resolve).filter(v -> v.getDbnoDuration() > 0).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f));
     }
 
     protected void init() {
