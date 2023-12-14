@@ -22,6 +22,16 @@ public class ModAttributes {
      * Registered for EntityPlayer
      */
     public static final RegistryObject<RangedAttribute> BLOOD_EXHAUSTION = ATTRIBUTES.register("blood_exhaustion", () -> (RangedAttribute) new RangedAttribute("vampirism.blood_exhaustion", 1.0, 0.0, 10).setSyncable(true));
+    /**
+     * Allows modifying the duration of the neonatal effect.
+     * Registered for EntityPlayer
+     */
+    public static final RegistryObject<RangedAttribute> NEONATAL_DURATION = ATTRIBUTES.register("neonatal_duration", () -> (RangedAttribute) new RangedAttribute("vampirism.neonatal_duration", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
+    /**
+     * Allows modifying the length of the resurrection timer.
+     * Registered for EntityPlayer
+     */
+    public static final RegistryObject<RangedAttribute> DBNO_DURATION = ATTRIBUTES.register("dbno_duration", () -> (RangedAttribute) new RangedAttribute("vampirism.dbno_duration", 1.0, 0.0, Integer.MAX_VALUE).setSyncable(true));
 
     static void register(IEventBus bus) {
         ATTRIBUTES.register(bus);

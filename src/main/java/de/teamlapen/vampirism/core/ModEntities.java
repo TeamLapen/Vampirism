@@ -155,6 +155,8 @@ public class ModEntities {
     static void onModifyEntityTypeAttributes(@NotNull EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ModAttributes.SUNDAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.BLOOD_EXHAUSTION.get());
+        event.add(EntityType.PLAYER, ModAttributes.NEONATAL_DURATION.get());
+        event.add(EntityType.PLAYER, ModAttributes.DBNO_DURATION.get());
     }
 
     private static <T extends Entity> RegistryObject<EntityType<T>> prepareEntityType(String id, @NotNull Supplier<EntityType.Builder<T>> builder, boolean spawnable) {

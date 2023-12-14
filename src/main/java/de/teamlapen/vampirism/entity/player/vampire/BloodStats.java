@@ -104,9 +104,9 @@ public class BloodStats implements IBloodStats {
         if (regen && this.bloodSaturationLevel > 0 && player.isHurt() && this.bloodLevel >= maxBlood) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {
-                float f = Math.min(this.bloodSaturationLevel, 4F);
-                player.heal(f / 4F);
-                this.addExhaustion(f, true);
+                float f = Math.min(this.bloodSaturationLevel, 6F);
+                player.heal(f / 6F);
+                this.addExhaustion(f);
                 this.bloodTimer = 0;
             }
         } else if (regen && this.bloodLevel >= (18) && player.isHurt()) {
@@ -114,7 +114,7 @@ public class BloodStats implements IBloodStats {
 
             if (this.bloodTimer >= 80) {
                 player.heal(1.0F);
-                this.addExhaustion(2.8F, true);
+                this.addExhaustion(6F);
                 this.bloodTimer = 0;
             }
         } else if (this.bloodLevel <= 0) {
@@ -174,10 +174,9 @@ public class BloodStats implements IBloodStats {
      *
      * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#BLOOD_EXHAUSTION} should be ignored
      */
-    void addExhaustion(float amount, boolean ignoreModifier) {
+    void addExhaustion(float amount, @SuppressWarnings("SameParameterValue") boolean ignoreModifier) {
         if (!ignoreModifier) {
-            AttributeInstance attribute = player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get());
-            amount *= attribute.getValue();
+            amount *= (float) player.getAttributeValue(ModAttributes.BLOOD_EXHAUSTION.get());
         }
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
