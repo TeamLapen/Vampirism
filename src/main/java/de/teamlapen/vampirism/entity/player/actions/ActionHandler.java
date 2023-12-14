@@ -206,19 +206,21 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
          */
         if (nbt.contains("actions_active")) {
             CompoundTag active = nbt.getCompound("actions_active");
-            for (ObjectIterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
-                Object2IntMap.Entry<ResourceLocation> client_active = it.next();
+            List<ResourceLocation> toRemove = new ArrayList<>();
+            for (Object2IntMap.Entry<ResourceLocation> client_active : activeTimers.object2IntEntrySet()) {
                 String key = client_active.getKey().toString();
                 if (active.contains(key)) {
                     client_active.setValue(active.getInt(key));
                     nbt.remove(key);
                 } else {
-                    @SuppressWarnings("unchecked")
-                    ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(client_active.getKey());
-                    it.remove(); //Remove here so that deactivate action does not break the iterator
-                    deactivateAction(action);
+                    toRemove.add(client_active.getKey());
                 }
             }
+            toRemove.forEach(id -> {
+                @SuppressWarnings("unchecked")
+                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
+                deactivateAction(action);
+            });
             for (String key : active.getAllKeys()) {
                 ResourceLocation id = new ResourceLocation(key);
                 @SuppressWarnings("unchecked")
@@ -412,19 +414,16 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             }
         }
 
-        for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
-            Object2IntMap.Entry<ResourceLocation> entry = it.next();
+        List<ResourceLocation> toRemove = new ArrayList<>();
+        for (Object2IntMap.Entry<ResourceLocation> entry : activeTimers.object2IntEntrySet()) {
             int newtimer = entry.getIntValue() - 1;
             ResourceLocation id = entry.getKey();
-            @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-            if (newtimer == 0) {
-                it.remove();//Remove here so that deactivate action does not break the iterator
-                deactivateAction(action, true);
-                cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
 
-                dirty = true;
+            if (newtimer == 0) {
+                toRemove.add(id);
             } else {
+                @SuppressWarnings("unchecked")
+                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
                 /*
                  * If the event result is DENY, the lasting action will always be deactivated next tick and won't call {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#onUpdate(de.teamlapen.vampirism.api.entity.player.IFactionPlayer)}.
                  * If the event result is ALLOW, the lasting action will call onUpdate, but the return value will be ignored.
@@ -444,6 +443,13 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 }
             }
         }
+        toRemove.forEach(id -> {
+            @SuppressWarnings("unchecked")
+            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
+            deactivateAction(action, true);
+            cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
+            dirty = true;
+        });
         if (dirty) {
             dirty = false;
             return true;
