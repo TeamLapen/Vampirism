@@ -172,10 +172,12 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (vampireBiomeTicks == 0) return;
         float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
         f *= vampireBiomeFogDistanceMultiplier;
-        float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
-        float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.setShaderFogStart(event.getMode() == FogRenderer.FogMode.FOG_SKY ? 0 : fogStart);
-        RenderSystem.setShaderFogEnd(fogEnd);
+        event.setNearPlaneDistance(switch (event.getMode()) {
+            case FOG_TERRAIN -> Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
+            case FOG_SKY -> 0;
+        });
+        event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 50 * f));
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -307,7 +309,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
 
     @SubscribeEvent
     public void onWorldLoad(LevelEvent.Load event) {
-        this.bloodVisionTicks = 0;//Reset blood vision on world load
+        this.bloodVisionTicks = 0;
+        this.vampireBiomeTicks = 0;
+        this.insideFog = false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
