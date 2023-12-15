@@ -30,6 +30,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
@@ -125,6 +127,10 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
             int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
+            Integer unbreakingLevel = EnchantmentHelper.getEnchantments(stack).get(Enchantments.UNBREAKING);
+            if (unbreakingLevel != null) {
+                damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
+            }
             stack.setDamageValue(stack.getDamageValue() + damage);
             if (stack.getDamageValue() >= stack.getMaxDamage()) {
                 stack.setCount(0);
