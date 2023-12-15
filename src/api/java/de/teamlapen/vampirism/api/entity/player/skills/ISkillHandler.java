@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -17,6 +18,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     Result canSkillBeEnabled(ISkill<T> skill);
 
     ItemStack[] createRefinementItems();
+
+    NonNullList<ItemStack> getRefinementItems();
 
     void damageRefinements();
 

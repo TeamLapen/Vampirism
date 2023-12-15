@@ -38,13 +38,13 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     private static final Function<Player, SelectorInfo[]> SELECTOR_INFOS = player -> {
         IPlayableFaction<?> faction = FactionPlayerHandler.getCurrentFactionPlayer(player).orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
         return new SelectorInfo[]{
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 8),
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 26),
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack).equals(faction), 58, 44)};
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 8),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 26),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 44)};
     };
     private final IFactionPlayer<?> factionPlayer;
     private final TextColor factionColor;
-    private final NonNullList<ItemStack> refinementStacks = NonNullList.withSize(3, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> refinementStacks;
     public @NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper = new HashMap<>();
     public @NotNull Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
     public @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
@@ -58,12 +58,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();
         this.addPlayerSlots(playerInventory, 37, 124);
-        ItemStack[] sets = this.factionPlayer.getSkillHandler().createRefinementItems();
-        for (int i = 0; i < sets.length; i++) {
-            if (sets[i] != null) {
-                this.refinementStacks.set(i, sets[i]);
-            }
-        }
+        this.refinementStacks = this.factionPlayer.getSkillHandler().getRefinementItems();
         this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
     }
 
@@ -169,7 +164,6 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     }
 
     public void setRefinement(int slot, @NotNull ItemStack stack) {
-        this.factionPlayer.getSkillHandler().equipRefinementItem(stack);
         this.refinementStacks.set(slot, stack);
     }
 

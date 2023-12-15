@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -15,14 +16,19 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.refinements.Refinement;
+import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.items.RefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
@@ -45,8 +51,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private final ArrayList<ISkill<T>> enabledSkills = new ArrayList<>();
     private final T player;
     private final IPlayableFaction<T> faction;
-    private final IRefinementSet[] appliedRefinementSets = new IRefinementSet[3];
-    private final int[] refinementSetDamage = new int[3];
+    private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
     private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
     private int maxSkillpoints;
@@ -107,26 +112,24 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public ItemStack @NotNull [] createRefinementItems() {
-        ItemStack[] items = new ItemStack[this.appliedRefinementSets.length];
-        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
-            if (this.appliedRefinementSets[i] != null) {
-                items[i] = new ItemStack((ItemLike) this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]));
-                this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]).applyRefinementSet(items[i], this.appliedRefinementSets[i]);
-                items[i].setDamageValue(this.refinementSetDamage[i]);
-            }
-        }
-        return items;
+        return this.refinementItems.toArray(ItemStack[]::new);
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRefinementItems() {
+        return this.refinementItems;
     }
 
     @Override
     public void damageRefinements() {
-        for (int i = 0; i < this.refinementSetDamage.length; i++) {
-            if (this.appliedRefinementSets[i] == null) continue;
-            int damage = 40 + (this.appliedRefinementSets[i].getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
-            if ((this.refinementSetDamage[i] += damage) >= RefinementItem.MAX_DAMAGE) {
-                this.removeRefinementSet(i);
+        this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
+            IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
+            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
+            stack.setDamageValue(stack.getDamageValue() + damage);
+            if (stack.getDamageValue() >= stack.getMaxDamage()) {
+                stack.setCount(0);
             }
-        }
+        });
     }
 
     public void disableAllSkills() {
@@ -182,16 +185,14 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     @Override
     public boolean equipRefinementItem(@NotNull ItemStack stack) {
         if (stack.getItem() instanceof IRefinementItem refinementItem) {
-            if (refinementItem.getExclusiveFaction(stack).equals(this.faction)) {
+            if (this.faction.equals(refinementItem.getExclusiveFaction(stack))) {
                 @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
                 IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 
                 removeRefinementItem(setSlot);
                 this.dirty = true;
 
-                if (newSet != null && newSet.getFaction() == faction) {
-                    applyRefinementSet(newSet, setSlot.getSlot());
-                }
+                applyRefinementItem(stack, setSlot.getSlot());
                 return true;
             }
         }
@@ -201,7 +202,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public void removeRefinementItem(IRefinementItem.@NotNull AccessorySlotType slot) {
-        this.removeRefinementSet(slot.getSlot());
+        removeRefinementItem(slot.getSlot());
         this.dirty = true;
     }
 
@@ -328,8 +329,25 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 if ("none".equals(setName)) continue;
                 ResourceLocation setId = new ResourceLocation(setName);
                 IRefinementSet set = RegUtil.getRefinementSet(setId);
-                this.applyRefinementSet(set, i);
-                this.refinementSetDamage[i] = damage;
+                Item refinementItem = this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]);
+                ItemStack itemStack = new ItemStack(refinementItem);
+                itemStack.setDamageValue(damage);
+                ((IRefinementItem) refinementItem).applyRefinementSet(itemStack, set);
+                this.applyRefinementItem(itemStack, i);
+            }
+        }
+        if (nbt.contains("refinement_items")) {
+            ListTag refinements = nbt.getList("refinement_items", 10);
+            for (int i = 0; i < refinements.size(); i++) {
+                CompoundTag stackNbt = refinements.getCompound(i);
+                int slot = stackNbt.getInt("slot");
+                ItemStack stack = ItemStack.of(stackNbt);
+                if (stack.getItem() instanceof IRefinementItem refinementItem) {
+                    IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
+                    if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
+                        applyRefinementItem(stack, slot);
+                    }
+                }
             }
         }
         if (nbt.contains("skill_points")) {
@@ -362,23 +380,18 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-        if (nbt.contains("refinement_set")) {
-            CompoundTag setsNBT = nbt.getCompound("refinement_set");
-            for (String id : setsNBT.getAllKeys()) {
-                int i = Integer.parseInt(id);
-                CompoundTag setNBT = setsNBT.getCompound(id);
-                String setName = setNBT.getString("id");
-                int damage = setNBT.getInt("damage");
-                IRefinementSet set = null;
-                if (!"none".equals(setName)) {
-                    set = RegUtil.getRefinementSet(new ResourceLocation(setName));
+        if (nbt.contains("refinement_items")) {
+            ListTag refinements = nbt.getList("refinement_items", 10);
+            for (int i = 0; i < refinements.size(); i++) {
+                CompoundTag stackNbt = refinements.getCompound(i);
+                int slot = stackNbt.getInt("slot");
+                ItemStack stack = ItemStack.of(stackNbt);
+                if (stack.getItem() instanceof IRefinementItem refinementItem) {
+                    IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
+                    if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
+                        applyRefinementItem(stack, slot);
+                    }
                 }
-                IRefinementSet oldSet = this.appliedRefinementSets[i];
-                if (oldSet != set) {
-                    this.removeRefinementSet(i);
-                    this.applyRefinementSet(set, i);
-                }
-                this.refinementSetDamage[i] = damage;
             }
         }
         if (nbt.contains("skill_points")) {
@@ -388,9 +401,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public void resetRefinements() {
-        for (int i = 0; i < this.appliedRefinementSets.length; i++) {
-            this.removeRefinementSet(i);
-        }
+        this.refinementItems.clear();
     }
 
     public void resetSkills() {
@@ -404,16 +415,17 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             skills.putBoolean(RegUtil.id(skill).toString(), true);
         }
         nbt.put("skills", skills);
-        CompoundTag refinements = new CompoundTag();
-        for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
-            CompoundTag setNbt = new CompoundTag();
-            IRefinementSet set = this.appliedRefinementSets[i];
-            int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null ? RegUtil.id(set).toString() : "none");
-            setNbt.putInt("damage", damage);
-            refinements.put(String.valueOf(i), setNbt);
+        ListTag refinements = new ListTag();
+        for (int i = 0; i < this.refinementItems.size(); i++) {
+            ItemStack stack = this.refinementItems.get(i);
+            if (!stack.isEmpty()) {
+                CompoundTag stackNbt = new CompoundTag();
+                stackNbt.putInt("slot", i);
+                stack.save(stackNbt);
+                refinements.add(stackNbt);
+            }
         }
-        nbt.put("refinement_set", refinements);
+        nbt.put("refinement_items", refinements);
         nbt.putInt("skill_points", this.maxSkillpoints);
     }
 
@@ -423,68 +435,66 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             skills.putBoolean(RegUtil.id(skill).toString(), true);
         }
         nbt.put("skills", skills);
-        CompoundTag refinements = new CompoundTag();
-        for (int i = 0; i < this.appliedRefinementSets.length; ++i) {
-            CompoundTag setNbt = new CompoundTag();
-            IRefinementSet set = this.appliedRefinementSets[i];
-            int damage = this.refinementSetDamage[i];
-            setNbt.putString("id", set != null ? RegUtil.id(set).toString() : "none");
-            setNbt.putInt("damage", damage);
-            refinements.put(String.valueOf(i), setNbt);
+        ListTag refinementItems = new ListTag();
+        for (int i = 0; i < this.refinementItems.size(); i++) {
+            ItemStack stack = this.refinementItems.get(i);
+            if (!stack.isEmpty()) {
+                CompoundTag stackNbt = new CompoundTag();
+                stackNbt.putInt("slot", i);
+                stack.save(stackNbt);
+                refinementItems.add(stackNbt);
+            }
         }
-        nbt.put("refinement_set", refinements);
+        nbt.put("refinement_items", refinementItems);
         nbt.putInt("skill_points", this.maxSkillpoints);
         dirty = false;
     }
 
-    private void applyRefinementSet(@Nullable IRefinementSet set, int slot) {
-        this.appliedRefinementSets[slot] = set;
-        this.refinementSetDamage[slot] = 0;
-        if (set != null) {
-            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinements();
-            for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
-                IRefinement refinement = refinementObject.get();
-                this.activeRefinements.add(refinement);
-                if (!this.player.isRemote()) {
-                    Attribute a = refinement.getAttribute();
-                    if (a != null) {
-                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
-                        double value = refinement.getModifierValue();
-                        AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
+    private void applyRefinementItem(@NotNull ItemStack stack, int slot) {
+        this.refinementItems.set(slot, stack);
+        if (stack.getItem() instanceof IRefinementItem refinementItem) {
+            IRefinementSet set = refinementItem.getRefinementSet(stack);
+            if (set != null) {
+                set.getRefinements().stream().map(RegistryObject::get).forEach(x -> {
+                    this.activeRefinements.add(x);
+                    if (!this.player.isRemote() && x.getAttribute() != null) {
+                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
+                        double value = x.getModifierValue();
+                        AttributeModifier t = attributeInstance.getModifier(x.getUUID());
                         if (t != null) {
                             attributeInstance.removeModifier(t);
                             value += t.getAmount();
                         }
-                        t = refinement.createAttributeModifier(refinement.getUUID(), value);
-                        this.refinementModifier.put(refinement, t);
+                        t = x.createAttributeModifier(x.getUUID(), value);
+                        this.refinementModifier.put(x, t);
                         attributeInstance.addTransientModifier(t);
                     }
-                }
+                });
             }
         }
     }
 
-    private void removeRefinementSet(int slot) {
-        IRefinementSet set = this.appliedRefinementSets[slot];
-        this.appliedRefinementSets[slot] = null;
-        if (set != null) {
-            Collection<RegistryObject<? extends IRefinement>> refinements = set.getRefinements();
-            for (RegistryObject<? extends IRefinement> refinementObject : refinements) {
-                IRefinement refinement = refinementObject.get();
-                if (!this.player.isRemote()) {
-                    Attribute a = refinement.getAttribute();
-                    if (a != null) {
-                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(a);
-                        AttributeModifier modifier = this.refinementModifier.get(refinement);
-                        double value = modifier.getAmount() - refinement.getModifierValue();
-                        this.refinementModifier.remove(refinement);
-                        attributeInstance.removeModifier(modifier);
-                        if (value != 0) {
-                            attributeInstance.addTransientModifier(modifier = refinement.createAttributeModifier(modifier.getId(), value));
-                            this.refinementModifier.put(refinement, modifier);
-                            this.activeRefinements.add(refinement);
+    private void removeRefinementItem(int slot) {
+        ItemStack stack = this.refinementItems.get(slot);
+        if (!stack.isEmpty()) {
+            this.refinementItems.set(slot, ItemStack.EMPTY);
+            if (stack.getItem() instanceof IRefinementItem refinementItem) {
+                IRefinementSet set = refinementItem.getRefinementSet(stack);
+                if (set != null) {
+                    set.getRefinements().stream().map(RegistryObject::get).forEach(x -> {
+                        this.activeRefinements.remove(x);
+                        if (!this.player.isRemote() && x.getAttribute() != null) {
+                            AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
+                            AttributeModifier t = this.refinementModifier.remove(x);
+                            attributeInstance.removeModifier(t);
+                            double value = t.getAmount() - x.getModifierValue();
+                            if (value != 0) {
+                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.getId(), value));
+                                this.refinementModifier.put(x, t);
+                                this.activeRefinements.add(x);
+                            }
                         }
-                    }
+                    });
                 }
             }
         }
