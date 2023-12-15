@@ -144,15 +144,17 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
                     ItemStack glass = playerIn.getItemInHand(hand);
-                    ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
-                    playerIn.setItemInHand(hand, bloodBottle);
-                    bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
-                    if (glass.getCount() > 1) {
-                        glass.shrink(1);
-                        playerIn.setItemInHand(hand, glass);
-                        playerIn.addItem(bloodBottle);
+                    ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1), fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
+                    if (bloodBottle.isEmpty()) {
+                        playerIn.displayClientMessage(Component.translatable("text.vampirism.container.not_enough_blood"), true);
                     } else {
-                        playerIn.setItemInHand(hand, bloodBottle);
+                        if (glass.getCount() > 1) {
+                            glass.shrink(1);
+                            playerIn.setItemInHand(hand, glass);
+                            playerIn.addItem(bloodBottle);
+                        } else {
+                            playerIn.setItemInHand(hand, bloodBottle);
+                        }
                     }
                 }
             }));

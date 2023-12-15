@@ -117,6 +117,7 @@
   "text.vampirism.fog_diffuser.booting": "Starting up",
   "text.vampirism.fog_diffuser.idle": "Inactive",
   "text.vampirism.fog_diffuser.active": "Running",
+  "text.vampirism.container.not_enough_blood": "Not enough blood",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",
