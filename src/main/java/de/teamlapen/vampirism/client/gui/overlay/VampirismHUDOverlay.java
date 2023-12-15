@@ -220,8 +220,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGuiOverlayEvent.@NotNull Pre event) {
+        if (mc.player == null || !mc.player.isAlive() || !Helper.isVampire(mc.player)) return;
         //disable foodbar if bloodbar is rendered
-        if (event.getOverlay().id() == VanillaGuiOverlay.FOOD_LEVEL.id() && mc.player != null && Helper.isVampire(mc.player) && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience() && mc.player.isAlive()) {
+        if (event.getOverlay().id() == VanillaGuiOverlay.FOOD_LEVEL.id() && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience()) {
+            event.setCanceled(true);
+        }
+        if (event.getOverlay().id().equals(VanillaGuiOverlay.AIR_LEVEL.id())) {
             event.setCanceled(true);
         }
     }
