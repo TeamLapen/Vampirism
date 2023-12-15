@@ -47,9 +47,9 @@ public class ModVillage {
             new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
 
 
-    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession("vampire_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), null));
-    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession("hunter_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
-    public static final RegistryObject<VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession("priest", holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
+    public static final RegistryObject<VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession(REFERENCE.MODID + ":vampire_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), (holder) -> holder.is(ModTags.PoiTypes.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession(REFERENCE.MODID + ":hunter_expert", (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), (holder) -> holder.is(ModTags.PoiTypes.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(), null));
+    public static final RegistryObject<VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession(REFERENCE.MODID + ":priest", holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
 
     static void register(IEventBus bus) {
         POI_TYPES.register(bus);
