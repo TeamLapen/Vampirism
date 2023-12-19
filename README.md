@@ -14,11 +14,12 @@ After being bitten by a vampire or manually injecting some vampire blood you get
 
 For a more detailed description head over to the Minecraft Forum or the Curseforge page.
 ## Links
-[Downloads on CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)   
-[Downloads on Modrinth](https://modrinth.com/mod/vampirism/versions)   
-[Help to translate](https://translate.vampirism.dev)   
-[Short feature overview](https://wiki.vampirism.dev/blog/vampirism-an-overview)   
-[Official Wiki](https://wiki.vampirism.dev/docs/wiki/intro)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/vampirism/versions)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/translate/crowdin_vector.svg)](https://translate.vampirism.dev)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/wiki/intro)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/website_vector.svg)](https://vampirism.dev)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/wuamm4P)
 
 ## Issues
 https://github.com/TeamLapen/Vampirism/issues
