@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class VampireNightVisionEffectInstance extends MobEffectInstance implements IHiddenEffectInstance {
 
     public VampireNightVisionEffectInstance() {
-        super(MobEffects.NIGHT_VISION, 10000, 0, false, false);
+        super(MobEffects.NIGHT_VISION, -1, 0, false, false, false);
         setCurativeItems(new ArrayList<>());
     }
 
