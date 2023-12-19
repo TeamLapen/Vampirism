@@ -331,7 +331,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1));
+                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1, false, false));
             }
             if (level == 1) {
                 this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));

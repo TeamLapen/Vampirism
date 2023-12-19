@@ -319,7 +319,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 3) {
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1));
+                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1, false, false));
             }
         }
     }
