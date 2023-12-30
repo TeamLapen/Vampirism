@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.api.effects.IHiddenEffectInstance;
+import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -17,6 +18,7 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance implemen
     public VampireNightVisionEffectInstance() {
         super(MobEffects.NIGHT_VISION, -1, 0, false, false, false);
         setCurativeItems(new ArrayList<>());
+        ((EffectInstanceWithSource) this).setSource(VampirismNightVisionPotion.ID);
     }
 
     @Override

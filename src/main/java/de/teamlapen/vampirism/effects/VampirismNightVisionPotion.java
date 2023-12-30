@@ -1,9 +1,17 @@
 package de.teamlapen.vampirism.effects;
 
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.effects.IHiddenEffectInstance;
+import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
+import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
+import de.teamlapen.vampirism.mixin.MixinPlayerEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +29,7 @@ import java.util.function.Consumer;
  */
 public class VampirismNightVisionPotion extends MobEffect {
 
-    private final static Logger LOGGER = LogManager.getLogger(VampirismNightVisionPotion.class);
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "permanent");
 
     public VampirismNightVisionPotion() {
         super(MobEffectCategory.BENEFICIAL, 2039713);
@@ -33,12 +41,18 @@ public class VampirismNightVisionPotion extends MobEffect {
         consumer.accept(new IClientMobEffectExtensions() {
             @Override
             public boolean isVisibleInInventory(MobEffectInstance instance) {
-                return !(instance instanceof IHiddenEffectInstance);
+                if (instance instanceof EffectInstanceWithSource withSource) {
+                    return !withSource.hasSource() || !ID.equals(withSource.getSource());
+                }
+                return true;
             }
 
             @Override
             public boolean isVisibleInGui(MobEffectInstance instance) {
-                return !(instance instanceof IHiddenEffectInstance);
+                if (instance instanceof EffectInstanceWithSource withSource) {
+                    return !withSource.hasSource() || !ID.equals(withSource.getSource());
+                }
+                return true;
             }
 
             @Override
