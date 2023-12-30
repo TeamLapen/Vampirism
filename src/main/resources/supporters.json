@@ -244,5 +244,19 @@
       "body": "12",
       "equipment": "double_axe"
     }
+  },
+  {
+    "faction": "vampirism:hunter",
+    "name": "One-Eyed Rand",
+    "texture": "RandRanson",
+    "type": 1,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "hat": "none",
+      "equipment": "crossbow",
+      "hasCloak": "true",
+      "body": "8"
+    }
   }
 ]
