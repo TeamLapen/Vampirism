@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -62,7 +63,7 @@ public class TotemTopBlock extends BaseEntityBlock {
      * @param faction faction must be faction registryname;
      */
     public TotemTopBlock(boolean crafted, ResourceLocation faction) {
-        super(Properties.of().mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE));
+        super(Properties.of().mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
         this.faction = faction;
         this.crafted = crafted;
         blocks.add(this);
