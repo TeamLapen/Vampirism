@@ -1,12 +1,14 @@
 name: Update API
 
 on:
+
   push:
     branches:
       - ${{ github.event.repository.default_branch }}
     paths:
-      - 'src/main/resources/supporters.json'
-      - 'src/main/resources/default_remote_config.json'
+      - '**/src/main/resources/supporters.json'
+      - '**/src/main/resources/default_remote_config.json'
+  workflow_dispatch:
 
 jobs:
   upload:
