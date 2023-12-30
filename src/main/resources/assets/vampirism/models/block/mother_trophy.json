@@ -1,8 +1,8 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"0": "block/oak_planks",
-		"particle": "block/oak_planks"
+		"0": "vampirism:block/dark_stone",
+		"particle": "vampirism:block/dark_stone"
 	},
 	"elements": [
 		{
