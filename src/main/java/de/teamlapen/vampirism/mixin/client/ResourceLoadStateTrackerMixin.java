@@ -13,6 +13,9 @@ public class ResourceLoadStateTrackerMixin {
 
     @Inject(method = "finishReload", at = @At("RETURN"))
     private void updateOverlays(CallbackInfo ci) {
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).syncOverlays();
+        VampirismEntityRegistry vampirismEntityRegistry = (VampirismEntityRegistry) VampirismAPI.entityRegistry();
+        if (vampirismEntityRegistry != null){
+            vampirismEntityRegistry.syncOverlays();
+        }
     }
 }
