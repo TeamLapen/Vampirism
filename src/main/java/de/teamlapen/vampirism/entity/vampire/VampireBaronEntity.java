@@ -353,16 +353,15 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     protected void updateEntityAttributes(boolean aggressive) {
         if (aggressive) {
             this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(20D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getEntityLevel())));
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getEntityLevel())));
         } else {
             this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5D);
-            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getEntityLevel()) / 3);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getEntityLevel()) / 3);
         }
+        float healthPercentage = getHealth() / getMaxHealth();
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getEntityLevel()));
-        this.getAttribute(Attributes.ATTACK_DAMAGE)
-                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getEntityLevel()));
+        setHealth(healthPercentage * getMaxHealth());
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getEntityLevel()));
     }
 
     private boolean isLowerLevel(LivingEntity player) {
