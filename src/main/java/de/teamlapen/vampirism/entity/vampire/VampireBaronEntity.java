@@ -373,6 +373,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return false;
     }
 
+    @Override
+    protected boolean canRide(@NotNull Entity pVehicle) {
+        return false;
+    }
+
     private class BaronAIAttackMelee extends MeleeAttackGoal {
 
         BaronAIAttackMelee(@NotNull PathfinderMob creature, double speedIn) {
