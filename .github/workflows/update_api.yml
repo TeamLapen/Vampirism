@@ -10,7 +10,7 @@ on:
 jobs:
   upload:
     runs-on: ubuntu-latest
-    if: github.ref == github.event.repository.default_branch
+    if: github.ref_name == github.event.repository.default_branch
     steps:
       - uses: actions/checkout@v3
       - name: Upload supporters
