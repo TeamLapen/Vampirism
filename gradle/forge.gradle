@@ -34,20 +34,24 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
-    if (include_jei) {
+    if (include_jei.toBoolean()) {
         compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}") //API for compile
         compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge-api:${project.jei_version}") //API for compile
         runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${project.jei_version}") //Full for runtime
     }
 
-    if (include_guideapi) {
+    if (include_guideapi.toBoolean()) {
         compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
         runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
     }
 
-    if (include_terrablender) {
+    if (include_terrablender.toBoolean()) {
         compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
         runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+    }
+
+    if (include_jade.toBoolean()) {
+        runtimeOnly fg.deobf("curse.maven:jade-324717:" + project.jade_version)
     }
 }
 
