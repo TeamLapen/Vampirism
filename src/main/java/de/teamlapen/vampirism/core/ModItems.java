@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
@@ -12,18 +13,24 @@ import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
+import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -307,5 +314,19 @@ public class ModItems {
                 items.forEach(item -> event.accept(item.get()));
             }
         });
+    }
+
+    public static void registerDispenserBehaviourUnsafe() {
+        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
+        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
+        AbstractProjectileDispenseBehavior crossbowArrowBehaviour = new AbstractProjectileDispenseBehavior() {
+            protected @NotNull Projectile getProjectile(@NotNull Level level, @NotNull Position position, @NotNull ItemStack stack) {
+                return ((CrossbowArrowItem) stack.getItem()).createArrow(level, stack, position);
+            }
+        };
+        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get(), crossbowArrowBehaviour);
+        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), crossbowArrowBehaviour);
+        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get(), crossbowArrowBehaviour);
+        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), crossbowArrowBehaviour);
     }
 }

@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
@@ -66,6 +67,18 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         if (entity instanceof Player) {
             arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
         }
+        return arrowEntity;
+    }
+
+    @NotNull
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack);
+        arrowEntity.setEffectsFromItem(stack);
+        arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
+        if (this.type == EnumArrowType.SPITFIRE) {
+            arrowEntity.setSecondsOnFire(100);
+        }
+        arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
         return arrowEntity;
     }
 
