@@ -190,7 +190,11 @@ public class VampirismMod {
     }
 
     private void onDataPackSyncEvent(OnDatapackSyncEvent event) {
-        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(event.getPlayer());
+        if (event.getPlayer() != null) {
+            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(event.getPlayer());
+        } else {
+            event.getPlayerList().getPlayers().forEach(player -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(player));
+        }
     }
 
     private void finalizeConfiguration(RegisterEvent event) {

@@ -80,7 +80,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         VampirismMod.dispatcher.sendToAll(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)));
     }
 
-    public void updateClient(ServerPlayer player) {
+    public void updateClient(@NotNull ServerPlayer player) {
         VampirismMod.dispatcher.sendTo(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)), player);
     }
 
