@@ -11,15 +11,21 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -75,7 +81,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
             player.awardStat(ModStats.interact_with_injection_chair);
-            if (handleInjections(player, world, stack)) {
+            if (handleInjections(player, world, stack, pos)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
                     player.getInventory().removeItem(stack);
@@ -104,30 +110,35 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleInjections(@NotNull Player player, @NotNull Level world, @NotNull ItemStack stack) {
+    private boolean handleInjections(@NotNull Player player, @NotNull Level world, @NotNull ItemStack stack, @NotNull BlockPos pos) {
         return FactionPlayerHandler.getOpt(player).map(handler -> {
             IPlayableFaction<?> faction = handler.getCurrentFaction();
             if (stack.getItem().equals(ModItems.INJECTION_GARLIC.get())) {
                 return handleGarlicInjection(player, world, handler, faction);
             }
             if (stack.getItem().equals(ModItems.INJECTION_SANGUINARE.get())) {
-                return handleSanguinareInjection(player, handler, faction);
+                return handleSanguinareInjection(world, pos, player, handler, faction);
             }
             return false;
         }).orElse(false);
 
     }
 
-    private boolean handleSanguinareInjection(@NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
+    private boolean handleSanguinareInjection(@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
         if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
             player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), false);
             return false;
         }
         if (VReference.HUNTER_FACTION.equals(currentFaction)) {
-            if (player.level().isClientSide()) {
-                VampirismMod.proxy.displayRevertBackScreen();
+            if (!level.isClientSide) {
+                player.openMenu(new SimpleMenuProvider(new MenuConstructor() {
+                    @Override
+                    public @NotNull AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
+                        return new RevertBackMenu(i, inventory, ContainerLevelAccess.create(level, pos));
+                    }
+                }, Component.empty()));
             }
-            return true;
+            return false;
         }
         if (currentFaction == null) {
             if (handler.canJoin(VReference.VAMPIRE_FACTION)) {

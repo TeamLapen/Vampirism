@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
+import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import de.teamlapen.vampirism.items.OblivionItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,9 +48,14 @@ public record ServerboundSimpleInputEvent(Type type) implements IMessage.IServer
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
                     factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
                 }
-                case REVERT_BACK -> FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                    handler.leaveFaction(!player.server.isHardcore());
-                });
+                case REVERT_BACK -> {
+                    if (player.containerMenu instanceof RevertBackMenu menu) {
+                        menu.consume();
+                    }
+                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
+                        handler.leaveFaction(!player.server.isHardcore());
+                    });
+                }
                 case TOGGLE_VAMPIRE_VISION -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
                 case TRAINER_LEVELUP -> {
                     if (player.containerMenu instanceof HunterTrainerMenu) {

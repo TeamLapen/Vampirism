@@ -27,6 +27,7 @@ public class ModContainer {
     public static final RegistryObject<MenuType<VampirismMenu>> VAMPIRISM = MENUS.register("vampirism", () -> create(VampirismMenu::new));
     public static final RegistryObject<MenuType<AlchemyTableMenu>> ALCHEMICAL_TABLE = MENUS.register("alchemical_table", () -> create(AlchemyTableMenu::new));
     public static final RegistryObject<MenuType<VampireBeaconMenu>> VAMPIRE_BEACON = MENUS.register("vampire_beacon", () -> create(VampireBeaconMenu::new));
+    public static final RegistryObject<MenuType<RevertBackMenu>> REVERT_BACK = MENUS.register("revert_back", () -> create(RevertBackMenu::new));
 
     private static <T extends AbstractContainerMenu> MenuType<T> create(MenuType.MenuSupplier<T> supplier) {
         return new MenuType<>(supplier, FeatureFlags.DEFAULT_FLAGS);
