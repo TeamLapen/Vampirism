@@ -55,7 +55,7 @@ public class VampireBookManager {
     }
 
     public BookContext getRandomBook(@NotNull RandomSource rng) {
-        return nonUnique.size() > 0 ? nonUnique.get(rng.nextInt(nonUnique.size())) : DUMMY;
+        return !nonUnique.isEmpty() ? nonUnique.get(rng.nextInt(nonUnique.size())) : DUMMY;
     }
 
     public @NotNull ItemStack getRandomBookItem(@NotNull RandomSource rng) {
@@ -65,11 +65,7 @@ public class VampireBookManager {
     }
 
     public @NotNull Collection<ItemStack> getAllBookItems() {
-        List<ItemStack> list = new ArrayList<>();
-        this.nonUnique.forEach(context -> {
-            list.add(ModItems.VAMPIRE_BOOK.get().contentInstance(context));
-        });
-        return list;
+        return idToBook.values().stream().filter(s -> s != DUMMY && s != OLD).map(context -> ModItems.VAMPIRE_BOOK.get().contentInstance(context)).toList();
     }
 
     public void init() {
