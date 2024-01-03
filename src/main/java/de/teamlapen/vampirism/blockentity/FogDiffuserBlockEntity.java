@@ -82,12 +82,22 @@ public class FogDiffuserBlockEntity extends BlockEntity {
         }
     }
 
+    @Override
+    public void setRemoved() {
+        updateFogArea((AABB) null);
+        super.setRemoved();
+    }
+
     public void updateFogArea(Level level) {
-        VampirismWorld.getOpt(level).ifPresent(w -> w.updateTemporaryArtificialFog(this.worldPosition, switch (this.state) {
+        updateFogArea(switch (this.state) {
             case BOOTING -> getArea((int) (this.getRange() * this.bootProgress));
             case ACTIVE -> getArea();
             default -> null;
-        }));
+        });
+    }
+
+    protected void updateFogArea(AABB area) {
+        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, area));
     }
 
     public void interact(ItemStack itemInHand) {
