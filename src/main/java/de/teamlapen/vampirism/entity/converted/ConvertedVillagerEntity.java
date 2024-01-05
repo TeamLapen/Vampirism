@@ -30,6 +30,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -41,6 +42,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -56,7 +58,7 @@ import java.util.UUID;
 /**
  * Vampire Villager
  */
-public class ConvertedVillagerEntity extends VampirismVillagerEntity implements ICurableConvertedCreature<Villager> {
+public class ConvertedVillagerEntity extends VampirismVillagerEntity implements CurableConvertedCreature<Villager, ConvertedVillagerEntity> {
 
     public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
@@ -82,35 +84,12 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("ConversionTime", this.isConverting(this) ? this.conversionTime : -1);
-        if (this.conversationStarter != null) {
-            compound.putUUID("ConversionPlayer", this.conversationStarter);
-        }
+        this.addAdditionalSaveDataC(compound);
     }
 
     @Override
     public void aiStep() {
-        if (!this.level().isClientSide && this.isAlive() && this.isConverting(this)) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(this, EntityType.VILLAGER, (timer) -> this.conversionTime = timer)) {
-                this.cureEntity((ServerLevel) this.level(), this, EntityType.VILLAGER);
-            }
-        }
-
-        if (this.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(level(), true);
-        }
-        if (this.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(level(), true);
-        }
-        if (!level().isClientSide) {
-            if (isGettingSundamage(level()) && tickCount % 40 == 11) {
-                this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 42));
-            }
-            if (isGettingGarlicDamage(level()) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level()), this.tickCount);
-            }
-        }
+        aiStepC(EntityType.VILLAGER);
         bloodTimer++;
         super.aiStep();
     }
@@ -132,11 +111,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
-        Villager villager = ICurableConvertedCreature.super.cureEntity(world, entity, newType);
-        villager.setVillagerData(this.getVillagerData());
-        villager.setGossips(this.getGossips().store(NbtOps.INSTANCE));
-        villager.setOffers(this.getOffers());
-        villager.setVillagerXp(this.getVillagerXp());
+        Villager villager = CurableConvertedCreature.super.cureEntity(world, entity, newType);
         if (this.conversationStarter != null) {
             Player playerentity = world.getPlayerByUUID(this.conversationStarter);
             if (playerentity instanceof ServerPlayer) {
@@ -180,6 +155,26 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
+    public void handleEntityEventSuper(byte id) {
+        super.handleEntityEvent(id);
+    }
+
+    @Override
+    public InteractionResult mobInteractSuper(@NotNull Player player, @NotNull InteractionHand hand) {
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public boolean hurtSuper(DamageSource damageSource, float amount) {
+        return super.hurt(damageSource, amount);
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource src, float amount) {
+        return this.hurtC(src, amount);
+    }
+
+    @Override
     protected @NotNull Component getTypeName() {
         ResourceLocation profName = RegUtil.id(this.getVillagerData().getProfession());
         return Component.translatable(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
@@ -215,26 +210,13 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @NotNull
     @Override
     public InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == Items.GOLDEN_APPLE) {
-            return interactWithCureItem(player, stack, this);
-        }
-        return super.mobInteract(player, hand);
+        return this.mobInteractC(player, hand);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
-            this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), this);
-        }
-    }
-
-    @Override
-    public void startConverting(@Nullable UUID conversionStarterIn, int conversionTimeIn, @NotNull PathfinderMob entity) {
-        ICurableConvertedCreature.super.startConverting(conversionStarterIn, conversionTimeIn, entity);
-        this.conversationStarter = conversionStarterIn;
-        this.conversionTime = conversionTimeIn;
+        this.readAdditionalSaveDataC(compound);
     }
 
     @Override
@@ -287,4 +269,17 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public Data<Villager> data() {
         return this.convertedData;
     }
+
+    @Override
+    public void die(@NotNull DamageSource pCause) {
+        super.die(pCause);
+        this.dieC(pCause);
+    }
+
+    @Override
+    protected void tickDeath() {
+        super.tickDeath();
+        this.tickDeathC();
+    }
+
 }
