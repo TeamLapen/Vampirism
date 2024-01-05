@@ -22,9 +22,9 @@ import static de.teamlapen.vampirism.util.ArmorMaterial.createReduction;
  */
 @Deprecated(forRemoval = true, since = "1.9")
 public enum VampirismArmorMaterials implements ArmorMaterial {
-    MASTERLY_IRON("masterly_iron", 30, createReduction(2, 5, 6, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON)),
-    MASTERLY_LEATHER("masterly_leather", 20, createReduction(1, 2, 3, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER)),
-    VAMPIRE_CLOTH("vampire_cloth", 5, createReduction(1, 2, 3, 1), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, () -> Ingredient.of(ModTags.Items.HEART));
+    MASTERLY_IRON("masterly_iron", 30, createReduction(2, 6,5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 0, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON)),
+    MASTERLY_LEATHER("masterly_leather", 20, createReduction(1, 3, 2,  1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER)),
+    VAMPIRE_CLOTH("vampire_cloth", 5, createReduction(1, 3, 2,  1), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, () -> Ingredient.of(ModTags.Items.HEART));
 
     private static final EnumMap<ArmorItem.Type, Integer> HEALTH_FUNCTION_FOR_TYPE = Util.make(new EnumMap<>(ArmorItem.Type.class), (p_266653_) -> {
         p_266653_.put(ArmorItem.Type.BOOTS, 13);

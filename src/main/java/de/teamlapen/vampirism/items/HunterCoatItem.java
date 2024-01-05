@@ -41,9 +41,9 @@ public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWit
         return IItemWithTier.TIER.values()[minLevel];
     }
 
-    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("vampirism:hunter_coat", TIER.NORMAL, 17, ArmorMaterial.createReduction(2, 5, 6, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("vampirism:hunter_coat_enhanced", TIER.ENHANCED, 25, ArmorMaterial.createReduction(3, 6, 8, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("vampirism:hunter_coat_ultimate", TIER.ULTIMATE, 33, ArmorMaterial.createReduction(3, 7, 9, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("vampirism:hunter_coat", TIER.NORMAL, 17, ArmorMaterial.createReduction(2, 6,5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("vampirism:hunter_coat_enhanced", TIER.ENHANCED, 25, ArmorMaterial.createReduction(3, 8,6, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("vampirism:hunter_coat_ultimate", TIER.ULTIMATE, 33, ArmorMaterial.createReduction(3, 9, 9, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
 
     private final @NotNull TIER tier;
 
