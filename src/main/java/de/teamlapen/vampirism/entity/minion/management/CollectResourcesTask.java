@@ -87,9 +87,11 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
             WeightedRandom.getRandomItem(rng, resources).map(WeightedEntry.Wrapper::getData).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
-            ItemStack stack = stacks.get(rng.nextInt(stacks.size()));
-            if (stack.isRepairable() && stack.getDamageValue() > 0) {
-                stack.setDamageValue(Math.max(0, stack.getDamageValue() - VampirismConfig.BALANCE.miEquipmentRepairAmount.get()));
+            if (!stacks.isEmpty()) {
+                ItemStack stack = stacks.get(rng.nextInt(stacks.size()));
+                if (stack.isRepairable() && stack.getDamageValue() > 0) {
+                    stack.setDamageValue(Math.max(0, stack.getDamageValue() - VampirismConfig.BALANCE.miEquipmentRepairAmount.get()));
+                }
             }
         }
     }
