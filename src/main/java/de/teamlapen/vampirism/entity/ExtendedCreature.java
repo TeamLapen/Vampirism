@@ -285,8 +285,10 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 DamageHandler.hurtModded(entity, ModDamageSources::noBlood, 1000);
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
-                entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 41, 2));
+                if (blood < getMaxBlood() * 0.5) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 41, 2));
+                }
                 if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0 && LevelAttributeModifier.calculateModifierValue(blood, getMaxBlood(), 1, 0.8) < entity.getRandom().nextDouble()) {
                     setBlood(getBlood() + 1);
                     sync();
