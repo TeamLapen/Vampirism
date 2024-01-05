@@ -15,6 +15,7 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
 
     @Override
     public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+        applyEffect(vampire);
         return true;
     }
 
@@ -60,9 +61,13 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
-            addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, 22, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0, false, false));
+        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 50 == 0) {
+            applyEffect(vampire);
         }
         return false;
+    }
+
+    protected void applyEffect(IVampirePlayer vampire) {
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, 52, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION.get()) ? 1 : 0, false, false));
     }
 }

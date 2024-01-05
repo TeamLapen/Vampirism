@@ -50,7 +50,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
-            addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 22, 1, false, false));
+            applyEffect(vampire);
         }
         return false;
     }
@@ -58,6 +58,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     protected boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
+        applyEffect(vampire);
         return true;
     }
 
@@ -69,6 +70,10 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public boolean showHudDuration(Player player) {
         return true;
+    }
+
+    protected void applyEffect(IVampirePlayer vampire) {
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 22, 1, false, false));
     }
 
 }

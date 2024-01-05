@@ -17,6 +17,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+        applyEffects(vampire);
         return true;
     }
 
@@ -60,10 +61,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
-            int duration = 22;
-            addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, 2, false, false));
-            addEffectInstance(vampire, new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 0, false, false));
-            addEffectInstance(vampire, new MobEffectInstance(MobEffects.DIG_SPEED, duration, 0, false, false));
+            applyEffects(vampire);
         }
 
         return false;
@@ -77,5 +75,11 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public boolean showHudDuration(Player player) {
         return true;
+    }
+
+    protected void applyEffects(IVampirePlayer vampire) {
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 22, 2, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DAMAGE_BOOST, 22, 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DIG_SPEED, 22, 0, false, false));
     }
 }
