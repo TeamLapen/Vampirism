@@ -1,11 +1,11 @@
 {
   "type": "vampirism:hunter_camp",
   "biomes": {
-    "type": "forge:and",
+    "type": "neoforge:and",
     "values": [
       "#vampirism:has_structure/hunter_tent",
       {
-        "type": "forge:not",
+        "type": "neoforge:not",
         "value": "#vampirism:has_faction"
       }
     ]

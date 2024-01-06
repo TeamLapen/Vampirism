@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullSupplier;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.common.util.NonNullSupplier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -21,8 +21,8 @@ import java.util.function.Function;
 public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
     private final int highestLordLevel;
-    private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
-    private final BiFunction<Integer, Boolean, Component> lordTitleFunction;
+    private final NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier;
+    private final BiFunction<Integer, TitleGender, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private final boolean hasLordSkills;
 
@@ -58,14 +58,14 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
 
     @NotNull
     @Override
-    public Component getLordTitle(int level, boolean female) {
+    public Component getLordTitle(int level, TitleGender female) {
         assert level <= highestLordLevel;
         return lordTitleFunction.apply(level, female);
     }
 
     @Override
-    public @NotNull LazyOptional<T> getPlayerCapability(@NotNull Player player) {
-        return player.getCapability(playerCapabilitySupplier.get(), null);
+    public @NotNull Optional<T> getPlayerCapability(@NotNull Player player) {
+        return Optional.ofNullable(player.getData(playerCapabilitySupplier.get()));
     }
 
     @Override

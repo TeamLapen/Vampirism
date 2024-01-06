@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,8 +45,7 @@ public class PlayerFactionEvent extends Event {
      * If canceled the level/faction change is canceled.
      * But the player is not notified, so you should probably consider doing so.
      */
-    @Cancelable
-    public static class FactionLevelChangePre extends PlayerFactionEvent {
+    public static class FactionLevelChangePre extends PlayerFactionEvent implements ICancellableEvent {
         private final int currentLevel;
         private final int newLevel;
         @Nullable

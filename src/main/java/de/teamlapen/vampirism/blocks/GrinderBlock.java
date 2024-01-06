@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
@@ -16,10 +17,10 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GrinderBlock extends VampirismBlockContainer {
+    public static final MapCodec<GrinderBlock> CODEC = simpleCodec(GrinderBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
@@ -73,10 +75,15 @@ public class GrinderBlock extends VampirismBlockContainer {
         return Shapes.or(h, e4);
     }
 
-    public GrinderBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
+    public GrinderBlock(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     @NotNull

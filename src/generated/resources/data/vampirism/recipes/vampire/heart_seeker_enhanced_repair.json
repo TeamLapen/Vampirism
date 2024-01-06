@@ -1,5 +1,5 @@
 {
-  "type": "vampirism:repair_iitemwithtier",
+  "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
     "X": {
@@ -15,6 +15,5 @@
   ],
   "result": {
     "item": "vampirism:heart_seeker_enhanced"
-  },
-  "show_notification": true
+  }
 }

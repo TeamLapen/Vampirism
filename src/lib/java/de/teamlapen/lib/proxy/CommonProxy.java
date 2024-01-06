@@ -6,10 +6,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -45,11 +43,6 @@ public class CommonProxy implements IProxy {
         return "English";
     }
 
-
-    @Override
-    public @Nullable Player getPlayerEntity(NetworkEvent.@NotNull Context ctx) {
-        return ctx.getSender();
-    }
 
     @Override
     public @Nullable Level getWorldFromKey(@NotNull ResourceKey<Level> world) {

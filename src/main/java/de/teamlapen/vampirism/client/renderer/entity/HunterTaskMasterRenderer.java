@@ -5,21 +5,18 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
-import de.teamlapen.vampirism.mixin.client.VillagerModelAccessor;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
  */
-@OnlyIn(Dist.CLIENT)
 public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity, VillagerModel<HunterTaskMasterEntity>> {
     private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
     private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_task_master_overlay.png");
@@ -44,5 +41,8 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         }
     }
 
-
+    @Override
+    protected boolean shouldShowName(HunterTaskMasterEntity pEntity) {
+        return Helper.isHunter(pEntity) && super.shouldShowName(pEntity);
+    }
 }

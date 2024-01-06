@@ -42,16 +42,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "holy_water",
       "stick",
-      "planks",
-      "has_the_recipe"
+      "planks"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/crucifix"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,7 +15,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()));
+            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString()));
             return convertedCreature;
         }).orElse(null);
     }

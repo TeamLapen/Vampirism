@@ -9,7 +9,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,20 +50,20 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips) {
         tooltips.add(Component.empty());
         tooltips.add(Component.translatable("text.vampirism.oil.effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.add(getEffectDescriptionWithDash(getEffectInstance()));
+        tooltips.add(getEffectDescriptionWithDash(getEffectInstance(), level));
     }
 
-    private @NotNull Component getEffectDescriptionWithDash(@NotNull MobEffectInstance instance) {
+    private @NotNull Component getEffectDescriptionWithDash(@NotNull MobEffectInstance instance, @Nullable Level level) {
         MutableComponent component = Component.translatable(instance.getDescriptionId());
         if (instance.getAmplifier() > 0) {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + instance.getAmplifier()));
         }
 
-        if (instance.getDuration() > 20) {
-            component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1.0f));
+        if (instance.getDuration() > 20 && level != null) {
+            component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1.0f, level.tickRateManager().tickrate()));
         }
         return Component.literal("- ").append(component).withStyle(effect.getCategory().getTooltipFormatting());
     }

@@ -10,7 +10,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,7 +77,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         //Collect mixes that can be brewed with the given ingredients and capabilities
         List<ExtendedPotionMix> possibleResults = new ArrayList<>();
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.input.get() == potion && mix.reagent1.filter(i -> i.test(ingredient)).isPresent() && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.filter(i -> i.test(extraIngredient)).isPresent() && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
+            if (mix.input.get() == potion && mix.reagent1.get().test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.get().test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.canBrew(capabilities)) {
                 possibleResults.add(mix);
             }
         }
@@ -110,7 +110,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent2.filter(i -> i.test(stack)).isPresent()) return true;
+            if (mix.reagent2.get().test(stack)) return true;
 
         }
 
@@ -122,7 +122,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
-            if (mix.reagent1.filter(i -> i.test(stack)).isPresent()) return true;
+            if (mix.reagent1.get().test(stack)) return true;
         }
         return BrewingRecipeRegistry.isValidIngredient(stack);
     }

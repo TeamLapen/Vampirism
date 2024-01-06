@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:alchemical_cauldron/pure_salt"
+        "recipe": "vampirism:pure_salt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,8 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:alchemical_cauldron/pure_salt"
+      "vampirism:pure_salt"
     ]
-  },
-  "sends_telemetry_event": true
+  }
 }

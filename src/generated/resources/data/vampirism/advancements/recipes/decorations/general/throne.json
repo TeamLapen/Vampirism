@@ -44,16 +44,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_stick",
       "has_planks",
-      "has_wool",
-      "has_the_recipe"
+      "has_wool"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/throne"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

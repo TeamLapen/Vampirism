@@ -2,29 +2,26 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.ImageWidget;
-import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +54,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     }
 
     private static <T extends IFactionPlayer<T>> ItemOrdering<IAction<?>> getOrdering(T player) {
-        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()), new ArrayList<>(), () -> VampirismRegistries.ACTIONS.get().getValues().stream().filter(action -> action.matchesFaction(player.getFaction())).collect(Collectors.toList()));
+        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()), new ArrayList<>(), () -> ModRegistries.ACTIONS.stream().filter(action -> action.matchesFaction(player.getFaction())).collect(Collectors.toList()));
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<IAction<?>> ordering) {
@@ -85,14 +82,14 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     private void resetKeyBindings() {
         ModKeys.ACTION_KEYS.keySet().forEach(key -> {
             FactionPlayerHandler.getOpt(getMinecraft().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(key, null, false, false));
-            VampirismMod.dispatcher.sendToServer(new ServerboundActionBindingPacket(key, null));
+            VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(key, null));
         });
         this.keyBindingList.clearActions();
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics) {
-        super.renderBackground(graphics);
+    public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
+        super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
         graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
         graphics.blit(BACKGROUND_LOCATION, this.width - 140, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
@@ -104,11 +101,10 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     public class KeyBindingList extends ContainerObjectSelectionList<KeyBindingList.KeyBindingSetting> {
 
         public KeyBindingList(int x, int y, int pWidth, int pHeight) {
-            super(Minecraft.getInstance(), pWidth, pHeight, y, y +pHeight, 20);
+            super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
             this.setRenderBackground(false);
-//            this.setRenderTopAndBottom(false);
-            this.setLeftPos(x);
-            FactionPlayerHandler opt = FactionPlayerHandler.get(Minecraft.getInstance().player);
+            this.setX(x);
+            FactionPlayerHandler opt = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).get();
             replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), opt.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.index)).toList());
         }
 
@@ -125,7 +121,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
         @Override
         protected int getScrollbarPosition() {
-            return this.x1 - 6;
+            return this.getRight() - 6;
         }
 
         @Override
@@ -149,8 +145,8 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
         private class KeyBindingSetting extends ContainerObjectSelectionList.Entry<KeyBindingSetting> {
 
-            private static final ResourceLocation REMOVE_ICON = new ResourceLocation(REFERENCE.MODID, "textures/gui/remove.png");
-            private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+            private static final WidgetSprites REMOVE_ICON = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/remove"), new ResourceLocation(REFERENCE.MODID, "widget/remove_highlighted"));
+            private static final WidgetSprites BUTTON = new WidgetSprites(new ResourceLocation("widget/button"), new ResourceLocation("widget/button_highlighted"));
 
             private final int index;
             private final KeyMapping keyMapping;
@@ -163,15 +159,13 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
                 this.index = index;
                 this.keyMapping = keyMapping;
                 this.stringWidget = new StringWidget(0,2,80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
-                this.imageButton = new ImageButton(115,2,16,16, 128,0, 16, REMOVE_ICON, 16,32,(a) -> {
-                    switchAction(null);
-                });
+                this.imageButton = new ImageButton(115,2,16,16, REMOVE_ICON,(a) -> switchAction(null));
                 switchAction(action);
             }
 
             @Override
             public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-                if (this.imageButton.mouseClicked(pMouseX - getLeft(), pMouseY - getTop() - ((index-1) * 20), pButton)) {
+                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((index-1) * 20), pButton)) {
                     return true;
                 } else if (movingItem != null) {
                     switchAction(movingItem.get());
@@ -184,13 +178,15 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
             private void switchAction(@Nullable IAction<?> action) {
                 this.action = action;
-                VampirismMod.dispatcher.sendToServer(new ServerboundActionBindingPacket(this.index, this.action));
+                VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.index, this.action));
                 FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(this.index, this.action, false, false));
                 if (action != null) {
-                    this.imageWidget = new ImageWidget(90, 2, 16, 16, getActionIcon(action));
+                    this.imageWidget = ImageWidget.texture(16, 16, getActionIcon(action), 16, 16);
+                    this.imageWidget.setPosition(90, 2);
                     this.imageButton.visible = true;
                 } else {
-                    this.imageWidget = new ImageWidget(90, 2, 16, 16, null);
+                    this.imageWidget = ImageWidget.texture(16, 16, null,16, 16);
+                    this.imageWidget.setPosition(90, 2);
                     this.imageWidget.visible = false;
                     this.imageButton.visible = false;
                 }
@@ -212,9 +208,9 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
             }
 
             @Override
-            public void renderBack(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+            public void renderBack(@NotNull GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
                 if (movingItem != null) {
-                    pGuiGraphics.blitNineSliced(WIDGETS_LOCATION, pLeft, pTop, pWidth, pHeight + 5, 20, 4, 200, 20, 0, 46 + (pIsMouseOver ? 2 : 1) * 20);
+                    pGuiGraphics.blitSprite(BUTTON.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight+5);
                 }
             }
 

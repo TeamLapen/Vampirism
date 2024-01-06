@@ -7,9 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -72,7 +70,6 @@ public enum VampirismArmorMaterials implements ArmorMaterial {
     }
 
     @NotNull
-    @OnlyIn(Dist.CLIENT)
     public String getName() {
         return this.name;
     }

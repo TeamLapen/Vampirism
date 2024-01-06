@@ -15,8 +15,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class FeedingAdapterItem extends Item {
 
@@ -45,8 +47,8 @@ public class FeedingAdapterItem extends Item {
         ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).getInventory(), true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.BLOOD.get() ? 0 : fluidStack.getAmount();
-        VampirePlayer vampire = VampirePlayer.get((Player) player);
-        if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
+        Optional<VampirePlayer> vampire = VampirePlayer.getOpt((Player) player);
+        if (blood == 0 || vampire.map(v -> v.getLevel() == 0 || !v.getBloodStats().needsBlood()).orElse(false)) {
             player.releaseUsingItem();
             return;
         }
@@ -55,7 +57,7 @@ public class FeedingAdapterItem extends Item {
         if (blood > 0 && count == 1) {
             int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
             BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.BLOOD.get(), blood - drink));
-            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(bloodContainer));
+            vampire.ifPresent(s -> s.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(bloodContainer)));
 
             blood = blood - drink;
             if (blood > 0) {

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -17,15 +18,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +33,6 @@ import java.util.Random;
 public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     private final Random rand = new Random();
-    private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
     private final int chargeRate = 30;
     private int ticksExistedClient;
     /**
@@ -67,15 +65,6 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
 
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ForgeCapabilities.ITEM_HANDLER && (facing != Direction.DOWN)) {
-            return opt.cast();
-        }
-        return super.getCapability(capability, facing);
-    }
-
     @Override
     public int getSlotLimit(int slot) {
         return 1;
@@ -97,7 +86,6 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return slot == 0 ? internalStack : ItemStack.EMPTY;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getTickForRender() {
         return ticksExistedClient;
     }
@@ -166,7 +154,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
         if (hasStack()) {
-            compound.put("item", this.internalStack.serializeNBT());
+            compound.put("item", this.internalStack.save(new CompoundTag()));
         }
         compound.putInt("blood_stored", bloodStored);
         compound.putInt("charging_ticks", chargingTicks);
@@ -260,7 +248,6 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static void spawnChargedParticle(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Random rand) {
         Vec3 pos = Vec3.upFromBottomCenterOf(blockPos, 0.8);
         ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);

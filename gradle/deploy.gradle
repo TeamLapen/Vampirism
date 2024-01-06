@@ -86,7 +86,6 @@ publishing {
 
             artifact apiJar
             artifact sourcesJar
-            artifact deobfJar
             artifact javadocJar
 
         }
@@ -124,7 +123,7 @@ modrinth {
     versionNumber = "${project.minecraft_version}-${project.mod_version}"
     uploadFile = jar
     gameVersions = [project.minecraft_version]
-    loaders = ["forge"]
+    loaders = ["neoforge"]
     dependencies {
         optional.project "u6dRKJwZ" //jei
         optional.project "w5L2PHJU" //guide-api-village-and-pillage

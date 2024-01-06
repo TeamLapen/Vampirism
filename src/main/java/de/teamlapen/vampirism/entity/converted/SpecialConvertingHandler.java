@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -10,7 +11,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,7 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom()));
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()));
+            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString()));
             return convertedCreature;
         }).orElse(null);
     }

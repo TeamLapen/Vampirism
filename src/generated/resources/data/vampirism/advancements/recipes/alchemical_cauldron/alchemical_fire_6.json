@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:alchemical_cauldron/alchemical_fire_6"
+        "recipe": "vampirism:alchemical_fire_6"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,8 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:alchemical_cauldron/alchemical_fire_6"
+      "vampirism:alchemical_fire_6"
     ]
-  },
-  "sends_telemetry_event": true
+  }
 }

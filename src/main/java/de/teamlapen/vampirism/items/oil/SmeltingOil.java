@@ -5,10 +5,11 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
     }
 
     @Override
-    public void getDescription(ItemStack stack, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips) {
         tooltips.add(Component.translatable("oil.vampirism.smelt.desc").withStyle(ChatFormatting.GRAY));
     }
 }

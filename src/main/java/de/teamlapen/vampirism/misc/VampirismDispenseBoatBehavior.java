@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.VampirismBoatEntity;
 import de.teamlapen.vampirism.entity.VampirismChestBoatEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -34,12 +34,12 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
      */
     @NotNull
     public ItemStack execute(@NotNull BlockSource p_123375_, ItemStack p_123376_) {
-        Direction direction = p_123375_.getBlockState().getValue(DispenserBlock.FACING);
-        Level level = p_123375_.getLevel();
-        double d0 = p_123375_.x() + (double) ((float) direction.getStepX() * 1.125F);
-        double d1 = p_123375_.y() + (double) ((float) direction.getStepY() * 1.125F);
-        double d2 = p_123375_.z() + (double) ((float) direction.getStepZ() * 1.125F);
-        BlockPos blockpos = p_123375_.getPos().relative(direction);
+        Direction direction = p_123375_.state().getValue(DispenserBlock.FACING);
+        Level level = p_123375_.level();
+        double d0 = p_123375_.pos().getX() + (double) ((float) direction.getStepX() * 1.125F);
+        double d1 = p_123375_.pos().getY() + (double) ((float) direction.getStepY() * 1.125F);
+        double d2 = p_123375_.pos().getZ() + (double) ((float) direction.getStepZ() * 1.125F);
+        BlockPos blockpos = p_123375_.pos().relative(direction);
         IVampirismBoat boat = this.isChestBoat ? new VampirismChestBoatEntity(level, d0, d1, d2) : new VampirismBoatEntity(level, d0, d1, d2); // class changed
         Entity boatEntity = (Entity) boat;
         boat.setType(this.type);
@@ -62,6 +62,6 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
     }
 
     protected void playSound(@NotNull BlockSource p_82485_1_) {
-        p_82485_1_.getLevel().levelEvent(1000, p_82485_1_.getPos(), 0);
+        p_82485_1_.level().levelEvent(1000, p_82485_1_.pos(), 0);
     }
 }

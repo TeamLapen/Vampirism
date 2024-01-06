@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.settings;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;

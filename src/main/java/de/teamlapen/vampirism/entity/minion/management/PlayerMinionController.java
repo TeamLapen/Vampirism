@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -27,9 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -259,7 +258,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
             ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
-            if (!ForgeRegistries.ENTITY_TYPES.containsKey(entityTypeID)) {
+            if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeID)) {
                 LOGGER.warn("Cannot find saved minion type {}. Aborting controller load", entityTypeID);
                 this.minions = new MinionInfo[0];
                 //noinspection unchecked
@@ -268,7 +267,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             }
 
             //noinspection unchecked
-            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) ForgeRegistries.ENTITY_TYPES.getValue(entityTypeID);
+            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) BuiltInRegistries.ENTITY_TYPE.get(entityTypeID);
 
             MinionInfo i = new MinionInfo(id, d, type);
             i.deathCooldown = tag.getInt("death_timer");
@@ -468,8 +467,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private @NotNull LazyOptional<? extends ILordPlayer> getLord() {
-        return getLordPlayer().map(FactionPlayerHandler::getOpt).orElse(LazyOptional.empty());
+    private @NotNull Optional<? extends ILordPlayer> getLord() {
+        return getLordPlayer().flatMap(FactionPlayerHandler::getOpt);
     }
 
     private @NotNull Optional<Player> getLordPlayer() {

@@ -2,25 +2,25 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.world.IVampirismWorld;
-import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
+import de.teamlapen.vampirism.blockentity.*;
+import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
+import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -32,15 +32,15 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.skills.SkillManager;
-import de.teamlapen.vampirism.entity.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.entity.player.vampire.BloodVision;
 import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
+import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.misc.SettingsProvider;
@@ -55,31 +55,37 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.sit.SitHandler;
-import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.*;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Main class for Vampirism
@@ -89,50 +95,53 @@ public class VampirismMod {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static VampirismMod instance;
-    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static final IProxy proxy = FMLEnvironment.dist == Dist.CLIENT ? VampirismModClient.getProxy() : new ServerProxy();
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
-    private final @NotNull RegistryManager registryManager = new RegistryManager();
+    private final @NotNull RegistryManager registryManager;
+    private final IEventBus modBus;
 
 
-    public VampirismMod() {
+    public VampirismMod(IEventBus modEventBus) {
         instance = this;
         checkEnv();
 
-        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+        this.modBus = modEventBus;
 
-        modbus.addListener(this::setup);
-        modbus.addListener(this::enqueueIMC);
-        modbus.addListener(this::processIMC);
-        modbus.addListener(this::loadComplete);
-        modbus.addListener(this::registerCapabilities);
-        modbus.addListener(this::finalizeConfiguration);
-        modbus.addListener(VersionUpdater::catchModVersionMismatch);
+        this.registryManager = new RegistryManager(modEventBus);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientRegistryHandler::init);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            modbus.addListener(this::setupClient);
-        });
+        this.modBus.addListener(this::setup);
+        this.modBus.addListener(this::enqueueIMC);
+        this.modBus.addListener(this::processIMC);
+        this.modBus.addListener(this::loadComplete);
+        this.modBus.addListener(this::registerCapabilities);
+        this.modBus.addListener(this::finalizeConfiguration);
+        this.modBus.addListener(VersionUpdater::catchModVersionMismatch);
+        this.modBus.register(ModPacketDispatcher.class);
+        this.modBus.register(MigrationData.class);
 
-        MinecraftForge.EVENT_BUS.register(Permissions.class);
-        MinecraftForge.EVENT_BUS.register(SitHandler.class);
-        MinecraftForge.EVENT_BUS.register(MigrationData.class);
-        MinecraftForge.EVENT_BUS.register(new GeneralEventHandler());
-        MinecraftForge.EVENT_BUS.addListener(this::onCommandsRegister);
-        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
-        MinecraftForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
-        MinecraftForge.EVENT_BUS.addListener(this::onDataPackSyncEvent);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            this.modBus.register(new VampirismModClient(modEventBus, this.registryManager));
+        }
+
+        NeoForge.EVENT_BUS.register(Permissions.class);
+        NeoForge.EVENT_BUS.register(SitHandler.class);
+        NeoForge.EVENT_BUS.register(new GeneralEventHandler());
+        NeoForge.EVENT_BUS.addListener(this::onCommandsRegister);
+        NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        NeoForge.EVENT_BUS.addListener(this::onServerStarting);
+        NeoForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
+        NeoForge.EVENT_BUS.addListener(this::onServerStopped);
+        NeoForge.EVENT_BUS.addListener(this::onDataPackSyncEvent);
 
         VampirismConfig.init();
+        ShapedRecipePattern.setCraftingSize(4,4);
 
         prepareAPI();
-        RegistryManager.setupRegistries(modbus);
-        modbus.addListener(ModItems::registerOtherCreativeTabItems);
+        this.registryManager.setupRegistries();
+        this.modBus.addListener(ModItems::registerOtherCreativeTabItems);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -140,11 +149,10 @@ public class VampirismMod {
     }
 
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
-        SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
-        event.addListener(SkillTreeManager.getInstance());
         event.addListener(new BloodValuesReloadListener());
         event.addListener(new SingleJigsawReloadListener());
         event.addListener(new SundamageReloadListener(((TagManagerAccessor) ((ReloadableServerResourcesAccessor) event.getServerResources()).getTagManager()).getRegistryAccess()));
+        event.addListener(new SkillTreeReloadListener(event.getConditionContext(), event.getRegistryAccess()));
     }
 
     public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
@@ -164,20 +172,28 @@ public class VampirismMod {
     @SuppressWarnings("unchecked")
     private void enqueueIMC(final @NotNull InterModEnqueueEvent event) {
         onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
-        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) VampirePlayer.CAP, VampirePlayer.class);
-        HelperRegistry.registerPlayerEventReceivingCapability((Capability<IPlayerEventListener>) (Object) HunterPlayer.CAP, HunterPlayer.class);
-        HelperRegistry.registerSyncableEntityCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((Capability<ISyncable.ISyncableEntityCapabilityInst>) (Object) FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
+        HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
+        HelperRegistry.registerSyncableEntityCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.FACTION_PLAYER_HANDLER.get(), FactionPlayerHandler.class);
     }
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
-        event.register(IExtendedCreatureVampirism.class);
-        event.register(IFactionPlayerHandler.class);
-        event.register(IHunterPlayer.class);
-        event.register(IVampirePlayer.class);
-        event.register(IVampirismWorld.class);
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.GRINDER.get(), (o, side) -> o.getItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.BLOOD_PEDESTAL.get(), (o, side) -> o);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.SIEVE.get(), (o, side) -> o.getTank());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.POTION_TABLE.get(), new ICapabilityProvider<>() {
+            @Override
+            public @Nullable IItemHandler getCapability(PotionTableBlockEntity object, Direction context) {
+                return object.getCapability(object, context);
+            }
+        });
     }
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {
@@ -198,7 +214,7 @@ public class VampirismMod {
     }
 
     private void finalizeConfiguration(RegisterEvent event) {
-        VampirismConfig.finalizeAndRegisterConfig();
+        VampirismConfig.finalizeAndRegisterConfig(this.modBus);
     }
 
     /**
@@ -214,7 +230,9 @@ public class VampirismMod {
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
-        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> VampirismLogger::init);
+        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+            VampirismLogger.init();
+        }
     }
 
 
@@ -223,11 +241,13 @@ public class VampirismMod {
      */
     private void prepareAPI() {
 
-        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), new VampirismEntityRegistry(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API));
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> proxy::setupAPIClient);
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry(DefaultConvertingHandler::new) : new VampirismEntityRegistry(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API));
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            proxy.setupAPIClient();
+        }
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
-                .createPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, () -> VampirePlayer.CAP)
+                .createPlayableFaction(VReference.VAMPIRE_FACTION_ID, IVampirePlayer.class, () -> (AttachmentType<IVampirePlayer>)(Object) ModAttachments.VAMPIRE_PLAYER.get())
                 .color(Color.MAGENTA_DARK.getRGB())
                 .chatColor(ChatFormatting.DARK_PURPLE)
                 .name("text.vampirism.vampire")
@@ -239,14 +259,14 @@ public class VampirismMod {
                 .build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
-                .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_VAMPIRE_BIOME)
-                .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_VAMPIRE)
-                .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_VAMPIRE)
-                .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.VAMPIRE)
+                .addTag(Registries.BIOME, ModTags.Biomes.IS_VAMPIRE_BIOME)
+                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModTags.PoiTypes.IS_VAMPIRE)
+                .addTag(Registries.VILLAGER_PROFESSION, ModTags.Professions.IS_VAMPIRE)
+                .addTag(Registries.ENTITY_TYPE, ModTags.Entities.VAMPIRE)
                 .addTag(VampirismRegistries.TASK_ID, ModTags.Tasks.IS_VAMPIRE)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
-                .createPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, () -> HunterPlayer.CAP)
+                .createPlayableFaction(VReference.HUNTER_FACTION_ID, IHunterPlayer.class, () -> (AttachmentType<IHunterPlayer>)(Object) ModAttachments.HUNTER_PLAYER.get())
                 .color(Color.BLUE.getRGB())
                 .chatColor(ChatFormatting.BLUE)
                 .name("text.vampirism.hunter")
@@ -256,10 +276,10 @@ public class VampirismMod {
                 .minion(HunterMinionEntity.HunterMinionData.ID).minionData(HunterMinionEntity.HunterMinionData::new).build()
                 .build()
                 .village(HunterVillage::hunterVillage)
-                .addTag(ForgeRegistries.Keys.BIOMES, ModTags.Biomes.IS_HUNTER_BIOME)
-                .addTag(ForgeRegistries.Keys.POI_TYPES, ModTags.PoiTypes.IS_HUNTER)
-                .addTag(ForgeRegistries.Keys.VILLAGER_PROFESSIONS, ModTags.Professions.IS_HUNTER)
-                .addTag(ForgeRegistries.Keys.ENTITY_TYPES, ModTags.Entities.HUNTER)
+                .addTag(Registries.BIOME, ModTags.Biomes.IS_HUNTER_BIOME)
+                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModTags.PoiTypes.IS_HUNTER)
+                .addTag(Registries.VILLAGER_PROFESSION, ModTags.Professions.IS_HUNTER)
+                .addTag(Registries.ENTITY_TYPE, ModTags.Entities.HUNTER)
                 .addTag(VampirismRegistries.TASK_ID, ModTags.Tasks.IS_HUNTER)
                 .register();
 
@@ -267,40 +287,30 @@ public class VampirismMod {
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "blood_vision"), new BloodVision());
 
         VampirismAPI.onSetupComplete();
-        MinionData.registerDataTypes();
     }
 
     private void processIMC(final @NotNull InterModProcessEvent event) {
         finishAPI();
         onInitStep(IInitListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
-        if (inDev) {
-            Tests.runBackgroundTests();
-        }
         CrossbowArrowHandler.collectCrossbowArrows();
     }
 
     private void setup(final @NotNull FMLCommonSetupEvent event) {
-        dispatcher.registerPackets();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
-        MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
+        NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
-        MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
-        MinecraftForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
+        NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
+        NeoForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
 
         SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
 //        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
-        event.enqueueWork(ModAdvancements::registerSubPredicatesUnsafe);
 
         TelemetryCollector.execute();
-    }
-
-    private void setupClient(@NotNull FMLClientSetupEvent event) {
-        onInitStep(IInitListener.Step.CLIENT_SETUP, event);
     }
 
     private void onInitStep(IInitListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {

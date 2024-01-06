@@ -3,31 +3,30 @@
   "criteria": {
     "flower": {
       "conditions": {
-        "action": "SUCK_BLOOD"
+        "action": "suck_blood"
       },
       "trigger": "vampirism:vampire_action"
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.sucking_blood.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "vampirism:blood_bottle",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.sucking_blood"
     }

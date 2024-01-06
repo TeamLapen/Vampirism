@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_iron",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_iron"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/blood_infused_enhanced_iron_ingot"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.mixin;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 

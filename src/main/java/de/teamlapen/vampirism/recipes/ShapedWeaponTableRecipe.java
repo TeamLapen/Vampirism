@@ -1,24 +1,27 @@
 package de.teamlapen.vampirism.recipes;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.core.NonNullList;
+import de.teamlapen.vampirism.util.FactionCodec;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.IShapedRecipe;
+import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Cheaterpaul
@@ -28,24 +31,18 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     protected final static int MAX_HEIGHT = 4;
 
     private final CraftingBookCategory category;
-    private final ResourceLocation id;
     private final String group;
-    private final int recipeWidth;
-    private final int recipeHeight;
-    private final NonNullList<Ingredient> recipeItems;
+    private final ShapedRecipePattern pattern;
     private final ItemStack recipeOutput;
     private final int requiredLevel;
     @NotNull
-    private final ISkill<IHunterPlayer>[] requiredSkills;
+    private final List<ISkill<IHunterPlayer>> requiredSkills;
     private final int requiredLava;
 
-    public ShapedWeaponTableRecipe(ResourceLocation idIn, String groupIn, CraftingBookCategory category, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int requiredLevel, @NotNull ISkill<IHunterPlayer>[] requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(String groupIn, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack recipeOutputIn,int requiredLevel, @NotNull List<ISkill<IHunterPlayer>> requiredSkills, int requiredLava) {
         this.category = category;
-        this.id = idIn;
         this.group = groupIn;
-        this.recipeWidth = recipeWidthIn;
-        this.recipeHeight = recipeHeightIn;
-        this.recipeItems = recipeItemsIn;
+        this.pattern = pattern;
         this.recipeOutput = recipeOutputIn;
         this.requiredLevel = requiredLevel;
         this.requiredSkills = requiredSkills;
@@ -59,8 +56,8 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width >= this.recipeWidth && height >= this.recipeHeight;
+    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return pWidth >= this.pattern.width() && pHeight >= this.pattern.height();
     }
 
     @NotNull
@@ -68,19 +65,12 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
         return this.group;
     }
 
+    public int getWidth() {
+        return this.pattern.width();
+    }
+
     public int getHeight() {
-        return this.recipeHeight;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
-    }
-
-    @NotNull
-    public NonNullList<Ingredient> getIngredients() {
-        return this.recipeItems;
+        return this.pattern.height();
     }
 
     @Override
@@ -109,7 +99,7 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
 
     @NotNull
     @Override
-    public ISkill<IHunterPlayer>[] getRequiredSkills() {
+    public List<ISkill<IHunterPlayer>> getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -125,50 +115,9 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get();
     }
 
-    public int getWidth() {
-        return this.recipeWidth;
-    }
-
     @Override
     public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
-        for (int i = 0; i <= inv.getWidth() - this.recipeWidth; ++i) {
-            for (int j = 0; j <= inv.getHeight() - this.recipeHeight; ++j) {
-                if (this.checkMatch(inv, i, j, true)) {
-                    return true;
-                }
-
-                if (this.checkMatch(inv, i, j, false)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the region of a crafting inventory is match for the recipe.
-     */
-    private boolean checkMatch(@NotNull CraftingContainer craftingInventory, int startRow, int startColumn, boolean p_77573_4_) {
-        for (int i = 0; i < craftingInventory.getWidth(); ++i) {
-            for (int j = 0; j < craftingInventory.getHeight(); ++j) {
-                int k = i - startRow;
-                int l = j - startColumn;
-                Ingredient ingredient = Ingredient.EMPTY;
-                if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
-                    if (p_77573_4_) {
-                        ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
-                    } else {
-                        ingredient = this.recipeItems.get(k + l * this.recipeWidth);
-                    }
-                }
-
-                if (!ingredient.test(craftingInventory.getItem(i + j * craftingInventory.getWidth()))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return this.pattern.matches(inv);
     }
 
     @Override
@@ -177,65 +126,32 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     }
 
     public static class Serializer implements RecipeSerializer<ShapedWeaponTableRecipe> {
-        @NotNull
-        @Override
-        public ShapedWeaponTableRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
-            String group = GsonHelper.getAsString(json, "group", "");
-            CraftingBookCategory craftingbookcategory = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", (String)null), CraftingBookCategory.MISC);
-            Map<String, Ingredient> map = VampirismRecipeHelper.deserializeKey(GsonHelper.getAsJsonObject(json, "key"));
-            String[] astring = VampirismRecipeHelper.shrink(VampirismRecipeHelper.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern"), MAX_HEIGHT));
-            int width = astring[0].length();
-            int length = astring.length;
-            NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, width, length);
-            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-            int level = GsonHelper.getAsInt(json, "level", 1);
-            ISkill<?>[] skill = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
-            int lava = GsonHelper.getAsInt(json, "lava", 0);
 
-            //noinspection unchecked
-            return new ShapedWeaponTableRecipe(recipeId, group, craftingbookcategory, width, length, ingredients, result, level, (ISkill<IHunterPlayer>[]) skill, lava);
+        public static final Codec<ShapedWeaponTableRecipe> CODEC = RecordCodecBuilder.create(inst -> {
+            return inst.group(
+                    ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_311729_ -> p_311729_.group),
+                    CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_311732_ -> p_311732_.category),
+                    ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
+                    ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
+                    ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.requiredLevel),
+                    ExtraCodecs.strictOptionalField(FactionCodec.<IHunterPlayer>skillCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
+                    ExtraCodecs.strictOptionalField(Codec.INT, "lava", 0).forGetter(p -> p.requiredLava)
+            ).apply(inst, ShapedWeaponTableRecipe::new);
+        });
+
+        @Override
+        public @NotNull Codec<ShapedWeaponTableRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public ShapedWeaponTableRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-            int width = buffer.readVarInt();
-            int height = buffer.readVarInt();
-            String group = buffer.readUtf(32767);
-            CraftingBookCategory craftingbookcategory = buffer.readEnum(CraftingBookCategory.class);
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
-            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
-            ItemStack itemstack = buffer.readItem();
-            int level = buffer.readVarInt();
-            int lava = buffer.readVarInt();
-            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
-            if (skills.length != 0) {
-                for (int i = 0; i < skills.length; i++) {
-                    skills[i] = RegUtil.getSkill(new ResourceLocation(buffer.readUtf(32767)));
-                }
-            }
-            //noinspection unchecked
-            return new ShapedWeaponTableRecipe(recipeId, group, craftingbookcategory, width, height, ingredients, itemstack, level, (ISkill<IHunterPlayer>[]) skills, lava);
+        public @NotNull ShapedWeaponTableRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
+            return buffer.readJsonWithCodec(CODEC);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapedWeaponTableRecipe recipe) {
-            buffer.writeVarInt(recipe.recipeWidth);
-            buffer.writeVarInt(recipe.recipeHeight);
-            buffer.writeUtf(recipe.group);
-            buffer.writeEnum(recipe.category);
-            for (Ingredient ingredient : recipe.recipeItems) {
-                ingredient.toNetwork(buffer);
-            }
-            buffer.writeItem(recipe.recipeOutput);
-            buffer.writeVarInt(recipe.requiredLevel);
-            buffer.writeVarInt(recipe.requiredLava);
-            buffer.writeVarInt(recipe.requiredSkills.length);
-            if (recipe.requiredSkills.length != 0) {
-                for (ISkill<?> skill : recipe.requiredSkills) {
-                    buffer.writeUtf(RegUtil.id(skill).toString());
-                }
-            }
+            buffer.writeJsonWithCodec(CODEC, recipe);
         }
-
     }
 }

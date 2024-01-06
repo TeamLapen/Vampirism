@@ -197,7 +197,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     private void addPlayerToBossEvent(ServerPlayer player) {
         this.bossEvent.addPlayer(player);
-        VampirismMod.dispatcher.sendTo(new ClientboundBossEventSoundPacket(this.bossEvent.getId(), ModSounds.MOTHER_AMBIENT.getKey()), player);
+        player.connection.send(new ClientboundBossEventSoundPacket(this.bossEvent.getId(), ModSounds.MOTHER_AMBIENT.getKey()));
     }
 
     @Override
@@ -253,7 +253,7 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     private void endFight() {
-        this.activePlayers.forEach(p -> VampirismMod.dispatcher.sendTo(new ClientboundPlayEventPacket(2, getBlockPos(), 0), p));
+        this.activePlayers.forEach(p -> p.connection.send(new ClientboundPlayEventPacket(2, getBlockPos(), 0)));
         this.bossEvent.removeAllPlayers();
         this.bossEvent.setVisible(false);
         this.activePlayers.clear();
@@ -323,7 +323,7 @@ public class MotherBlockEntity extends BlockEntity {
         Set<LivingEntity> involvedEntities = this.involvedPlayers.stream().map(((ServerLevel) this.level)::getEntity).filter(LivingEntity.class::isInstance).filter(s -> !s.isSpectator()).map(LivingEntity.class::cast).collect(Collectors.toSet());
         for (LivingEntity livingentity : involvedEntities) {
             if (livingentity instanceof ServerPlayer serverplayer) {
-                ModAdvancements.TRIGGER_MOTHER_WIN.trigger(serverplayer);
+                ModAdvancements.TRIGGER_MOTHER_WIN.get().trigger(serverplayer);
                 serverplayer.awardStat(ModStats.mother_defeated, 1);
                 FactionPlayerHandler.getOpt(serverplayer).filter(s -> s.getCurrentFaction() != null && s.getCurrentLevel() < s.getCurrentFaction().getHighestReachableLevel()).ifPresent(handler -> {
                     handler.setFactionLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1);

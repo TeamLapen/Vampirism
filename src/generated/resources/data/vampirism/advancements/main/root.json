@@ -31,8 +31,6 @@
     "description": {
       "translate": "advancement.vampirism.desc"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
       "item": "vampirism:vampire_fang"
     },

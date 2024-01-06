@@ -3,23 +3,20 @@
   "criteria": {
     "task": {
       "conditions": {
-        "action": "vampirism:collect_blood"
+        "task": "vampirism:collect_blood"
       },
-      "trigger": "vampirism:minion_tasks"
+      "trigger": "vampirism:minion_action"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.collect_blood.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "vampirism:blood_bottle",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.collect_blood"
     }

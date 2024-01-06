@@ -1,13 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -49,14 +46,18 @@ public class FogDiffuserScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
-        this.renderGuiBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTitle(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTitle(pGuiGraphics);
     }
 
     private void renderTitle(@NotNull GuiGraphics pGuiGraphics) {
         pGuiGraphics.drawString(this.font, title, this.guiLeft + 15, this.guiTop + 5, -1);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        renderGuiBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     private void renderGuiBackground(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {

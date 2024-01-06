@@ -7,12 +7,12 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,7 +97,7 @@ class VampirismRecipeHelper {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
         for (int i = 0; i < ingredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i), true);
             if (!ingredient.isEmpty()) {
                 nonnulllist.add(ingredient);
             }
@@ -108,7 +108,7 @@ class VampirismRecipeHelper {
 
     static @NotNull FluidStack deserializeFluid(@NotNull JsonObject object) {
         String s = GsonHelper.getAsString(object, "fluid");
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s));
+        Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(s));
         if (fluid == null) throw new JsonSyntaxException("Unknown fluid '" + s + "'");
         if (object.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
@@ -133,7 +133,7 @@ class VampirismRecipeHelper {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue(), true));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -199,7 +199,7 @@ class VampirismRecipeHelper {
 
     static @NotNull Either<Ingredient, FluidStack> getFluidOrItem(@NotNull JsonObject json) {
         if (json.has("fluidItem")) {
-            return Either.left(Ingredient.fromJson(json.get("fluidItem")));
+            return Either.left(Ingredient.fromJson(json.get("fluidItem"), true));
 
         } else {
             return Either.right(deserializeFluid(json.getAsJsonObject("fluid")));

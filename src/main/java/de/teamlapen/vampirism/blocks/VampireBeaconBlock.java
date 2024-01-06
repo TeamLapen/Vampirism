@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,8 +28,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class VampireBeaconBlock extends VampirismBlockContainer implements BeaconBeamBlock {
 
+    public static final MapCodec<VampireBeaconBlock> CODEC = simpleCodec(VampireBeaconBlock::new);
+
     public VampireBeaconBlock(@NotNull Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

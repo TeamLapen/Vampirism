@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,25 +22,23 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores blood
  * Currently the only thing that can interact with the players bloodstats.
- * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
+ * Can only store blood in {@link BloodBottleItem#CAPACITY} tenth units.
  */
 public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final int AMOUNT = 9;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
-    private static final int capacity = AMOUNT * MULTIPLIER;
+    public static final int CAPACITY = AMOUNT * MULTIPLIER;
 
     public static @NotNull ItemStack getStackWithDamage(int damage) {
         ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
@@ -73,8 +70,10 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, Player player) {
-        BlockEntity t = world.getBlockEntity(pos);
-        return t != null && t.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent();
+        if (world instanceof Level level) {
+            return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) != null;
+        }
+        return false;
     }
 
     @Override
@@ -119,11 +118,6 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     }
 
 
-    @Override
-    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
-        return new BloodBottleFluidHandler(stack, capacity);
-    }
-
     @NotNull
     @Override
     public UseAnim getUseAnimation(@NotNull ItemStack stack) {
@@ -139,7 +133,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
         }
         ItemStack copy = stack.copy();
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.getOpt((Player) pLivingEntity).resolve().orElse(null);
+        VampirePlayer vampire = VampirePlayer.getOpt((Player) pLivingEntity).orElse(null);
         if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             pLivingEntity.releaseUsingItem();
             return;

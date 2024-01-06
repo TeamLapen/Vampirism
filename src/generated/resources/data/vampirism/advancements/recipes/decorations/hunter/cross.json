@@ -30,15 +30,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_planks",
-      "has_holy",
-      "has_the_recipe"
+      "has_holy"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/cross"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

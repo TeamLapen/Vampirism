@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModTasks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -17,12 +17,11 @@ public record StatRequirement(@NotNull ResourceLocation id, @NotNull ResourceLoc
     public static final Codec<StatRequirement> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
-                ResourceLocation.CODEC.fieldOf("stat").forGetter(i -> i.stat),
+                BuiltInRegistries.CUSTOM_STAT.byNameCodec().fieldOf("stat").forGetter(i -> i.stat),
                 Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
-                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(s -> s.description)
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
         ).apply(inst, (id, statId, amount, description) -> {
-            var stat = BuiltInRegistries.CUSTOM_STAT.get(statId);
-            return new StatRequirement(stat, stat, amount, description);
+            return new StatRequirement(statId, statId, amount, description);
         });
     });
 

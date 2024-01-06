@@ -30,15 +30,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_wool",
-      "has_bed",
-      "has_the_recipe"
+      "has_bed"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:item_tent"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -12,11 +12,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> implements ExtendedScreen {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private final IFactionPlayer<?> factionPlayer;
@@ -57,12 +54,11 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     @Override
     protected void init() {
         super.init();
-        this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, this.factionPlayer, this.leftPos + 8, this.topPos + 16, 145 + 10 + 5, 155, 21, this.menu::getVisibleTasks));
+        this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, this.factionPlayer, this.leftPos + 8, this.topPos + 16, 145 + 10 + 5, 155, this.menu::getVisibleTasks));
     }
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground(graphics);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.blit(TASKMASTER_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }

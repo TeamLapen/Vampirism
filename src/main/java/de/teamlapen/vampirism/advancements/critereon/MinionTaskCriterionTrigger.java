@@ -1,61 +1,45 @@
 package de.teamlapen.vampirism.advancements.critereon;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
-public class MinionTaskCriterionTrigger extends SimpleCriterionTrigger<MinionTaskCriterionTrigger.Instance> {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "minion_tasks");
+import java.util.Optional;
 
-    public static @NotNull Instance tasks(@NotNull IMinionTask<?, ?> task) {
-        return new Instance(task);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
+public class MinionTaskCriterionTrigger extends SimpleCriterionTrigger<MinionTaskCriterionTrigger.TriggerInstance> {
 
     public void trigger(@NotNull ServerPlayer player, IMinionTask<?, ?> task) {
-        this.trigger(player, instance -> instance.test(task));
+        this.trigger(player, instance -> instance.matches(task));
     }
 
-    @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        IMinionTask<?, ?> task = RegUtil.getMinionTask(new ResourceLocation(json.get("action").getAsString()));
-        if (task != null) {
-            return new Instance(task);
-        } else {
-            throw new IllegalArgumentException("Could not deserialize minion trigger");
-        }
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    static class Instance extends AbstractCriterionTriggerInstance {
-        @NotNull
-        private final IMinionTask<?, ?> task;
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull IMinionTask<?, ?> task) implements SimpleCriterionTrigger.SimpleInstance {
 
-        Instance(@NotNull IMinionTask<?, ?> task) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.task = task;
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ModRegistries.MINION_TASKS.byNameCodec().fieldOf("task").forGetter(TriggerInstance::task)
+        ).apply(inst, TriggerInstance::new));
+
+        public static @NotNull Criterion<MinionTaskCriterionTrigger.TriggerInstance> tasks(@NotNull IMinionTask<?, ?> task) {
+            return ModAdvancements.TRIGGER_MINION_ACTION.get().createCriterion(new TriggerInstance(Optional.empty(), task));
         }
 
-        @NotNull
-        @Override
-        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
-            JsonObject json = super.serializeToJson(serializer);
-            json.addProperty("action", RegUtil.id(task).toString());
-            return json;
-        }
-
-        boolean test(IMinionTask<?, ?> action) {
+        boolean matches(IMinionTask<?, ?> action) {
             return this.task == action;
         }
+
     }
 }

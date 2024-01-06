@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,7 +120,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     }
 
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
@@ -149,7 +149,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         public void onPress() {
-            VampirismMod.dispatcher.sendToServer(new ServerboundSetVampireBeaconPacket(Optional.ofNullable(VampireBeaconScreen.this.primary), Optional.of(VampireBeaconScreen.this.amplifier)));
+            VampirismMod.proxy.sendToServer(new ServerboundSetVampireBeaconPacket(Optional.ofNullable(VampireBeaconScreen.this.primary), Optional.of(VampireBeaconScreen.this.amplifier)));
             VampireBeaconScreen.this.minecraft.player.closeContainer();
         }
 

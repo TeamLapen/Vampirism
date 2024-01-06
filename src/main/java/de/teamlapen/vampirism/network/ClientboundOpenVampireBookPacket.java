@@ -1,30 +1,27 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 /**
  * open a vampire book on client
  */
-public record ClientboundOpenVampireBookPacket(String bookId) implements IMessage.IClientBoundMessage {
-    public static void handle(final @NotNull ClientboundOpenVampireBookPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleVampireBookPacket(VampireBookManager.getInstance().getBookById(msg.bookId)));
-        ctx.setPacketHandled(true);
+public record ClientboundOpenVampireBookPacket(String bookId) implements CustomPacketPayload {
+
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "open_vampire_book");
+    public static final Codec<ClientboundOpenVampireBookPacket> CODEC = Codec.STRING.xmap(ClientboundOpenVampireBookPacket::new, p -> p.bookId);
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUtf(bookId);
     }
 
-    static void encode(@NotNull ClientboundOpenVampireBookPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeUtf(msg.bookId);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
-
-    static @NotNull ClientboundOpenVampireBookPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ClientboundOpenVampireBookPacket(buf.readUtf());
-    }
-
 }

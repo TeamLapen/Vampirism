@@ -25,8 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +44,6 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
         switch (type) {
             case SPITFIRE -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));

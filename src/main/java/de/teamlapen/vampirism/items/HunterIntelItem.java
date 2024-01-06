@@ -7,8 +7,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +53,6 @@ public class HunterIntelItem extends Item {
         this.level = level;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltips, @NotNull TooltipFlag flagIn) {
         if (this.tooltip == null) {
@@ -72,7 +69,6 @@ public class HunterIntelItem extends Item {
         return level;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }

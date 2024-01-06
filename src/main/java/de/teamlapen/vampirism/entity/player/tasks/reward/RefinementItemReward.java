@@ -14,13 +14,13 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class RefinementItemReward extends ItemReward {
 
     public static final Codec<RefinementItemReward> CODEC = RecordCodecBuilder.create(inst -> {
         //noinspection RedundantCast,unchecked
-        return inst.group(ForgeRegistries.ITEMS.getCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item.get()).map(IRefinementItem::asItem)),
+        return inst.group(BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item.get()).map(IRefinementItem::asItem)),
                 IFaction.CODEC.optionalFieldOf("faction").forGetter(i -> (Optional<IFaction<?>>) (Object) Optional.ofNullable(i.faction)),
                 StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
         ).apply(inst, (reward, faction, rarity) -> {

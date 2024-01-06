@@ -3,23 +3,20 @@
   "criteria": {
     "task": {
       "conditions": {
-        "action": "vampirism:defend_area"
+        "task": "vampirism:defend_area"
       },
-      "trigger": "vampirism:minion_tasks"
+      "trigger": "vampirism:minion_action"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.defend_area.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:shield",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.defend_area"
     }

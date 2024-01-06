@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_pure_blood",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_pure_blood"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/pure_blood0"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -15,10 +15,8 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -29,7 +27,6 @@ import static net.minecraft.world.inventory.InventoryMenu.BLOCK_ATLAS;
 /**
  * Handles all block render registration including TileEntities
  */
-@OnlyIn(Dist.CLIENT)
 public class ModBlocksRender {
 
     public static final Material[] COFFIN_TEXTURES = Arrays.stream(DyeColor.values()).sorted(Comparator.comparingInt(DyeColor::getId)).map((dye) -> {

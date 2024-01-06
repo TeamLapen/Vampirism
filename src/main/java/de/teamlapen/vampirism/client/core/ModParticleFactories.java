@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.client.particle.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.particle.GenericParticle;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)

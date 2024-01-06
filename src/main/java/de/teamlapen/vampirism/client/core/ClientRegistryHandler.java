@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.client.core;
 
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
 import org.jetbrains.annotations.ApiStatus;
 
 public class ClientRegistryHandler {
 
     @ApiStatus.Internal
-    public static void init(){
-        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void init(IEventBus modbus){
 
         modbus.addListener(ClientEventHandler::onModelBakeRequest);
         modbus.addListener(ClientEventHandler::onModelBakeEvent);

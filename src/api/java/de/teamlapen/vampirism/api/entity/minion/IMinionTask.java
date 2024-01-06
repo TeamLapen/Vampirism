@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ObjectHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +13,7 @@ import java.util.function.Supplier;
 
 /**
  * Task for minion entity.
- * A task is a registry object and therefore a "Singleton" class. Use {@link ObjectHolder} to retrieve an instance of a registered task
+ * A task is a registry object and therefore a "Singleton" class. Use {@link net.neoforged.neoforge.registries.DeferredHolder} to retrieve an instance of a registered task
  * For each class there is a {@link IMinionTaskDesc} that holds the state of the task per minion during runtime and can be serialized to NBT.
  * Minions only hold their respective {@link IMinionTaskDesc} which also includes a reference to the task instance it belongs to
  */

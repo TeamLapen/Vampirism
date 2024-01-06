@@ -39,11 +39,12 @@ The following labeling scheme is used:
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://paube.de)
-- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community/Official Server/Art_
+- [lunofe](https://github.com/lunofe) _Triage/Support/Community/Official Server/Art_
 - [Piklach](https://twitter.com/Piklach) _Community/Official Server_
-- [xXvPendragonvXx](https://github.com/PendragonII) _Community/Official Server_
+
 
 ## Special Thanks to
+- PendragonII _Community/Official Server_
 - TheRebelT _Models/Textures_
 - TinkerHatWill _Textures_
 - Alis _Textures_
@@ -70,7 +71,12 @@ The following labeling scheme is used:
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki https://wiki.vampirism.dev/docs/api/intro.
-#### Setup Gradle build script
+
+
+## Setup Gradle build script
+
+<details>
+<summary>Use Vampirism in your development environment</summary>
 You should be able to include it with the following in your `build.gradle`:
 ```gradle
 repositories {
@@ -89,8 +95,8 @@ dependencies {
 
 #### Choose a version
 
-`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.16.5`)
-`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.7.12`)
+`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.20.4`)
+`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.10.0`)
 
 For a list of available Vampirism version,
 see [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or
@@ -131,7 +137,9 @@ Vampirism will work correctly then.
 Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
 
 If you want to create an addon which access all of Vampirism's classes, not just the API, checkout
-this https://github.com/TeamLapen/VampirismAddonExample and consider contacting @maxanier.
+this https://github.com/TeamLapen/VampirismAddonExample and consider contacting @Cheaterpaul.
+
+</details>
 
 ## Code Structure
 
@@ -153,6 +161,11 @@ Provides Helpers and Registries to automate stuff like EntityUpdates.
 Provides abstract classes/default implementations/interfaces to simplify things (located under de.teamlapen.lib.lib).  
 
 ## Setting up the development environment
+
+<details>
+<summary>old / outdated</summary>
+
+
 If you would like to compile your own versions or even contribute to Vampirism's development you need to set up a dev environment.
 The following example instructions will set up IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#eclipse-or-other-ides).
 
@@ -177,7 +190,9 @@ If you would like to set up Vampirism in another way or another IDE, you should 
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
 3. Vampirism requires at least Java 8 
 
-### Code Style
+</details>  
+
+## Code Style
 The code style used in this project is the IntelliJ default one.  
 For Eclipse, you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 

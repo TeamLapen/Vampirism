@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.terrablender;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.proxy.ClientProxy;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
@@ -16,11 +15,6 @@ public class MotherTrophyItem extends BlockItem {
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ClientProxy.get().getBlockEntityItemRenderer();
-            }
-        });
+        consumer.accept(ItemExtensions.MOTHER_TROPHY);
     }
 }

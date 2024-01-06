@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
@@ -14,12 +13,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,8 +31,7 @@ import java.util.Optional;
 public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/appearance.png");
-    private static final ResourceLocation RESET = new ResourceLocation(REFERENCE.MODID, "textures/gui/reset.png");
-
+    private static final WidgetSprites RESET = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/reset"), new ResourceLocation(REFERENCE.MODID, "widget/reset_highlighted"));
 
     protected final Q entity;
     protected final int xSize = 256;
@@ -57,12 +56,15 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
-        this.renderGuiBackground(graphics);
-        this.drawTitle(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
+        this.drawTitle(graphics);
         entity.getMinionData().ifPresent(d -> renderStats(graphics, d));
+    }
 
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderGuiBackground(pGuiGraphics);
     }
 
     @Override
@@ -95,28 +97,24 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }
         for (int i = 0; i < statCount; i++) {
             int finalI = i;
-            Button button = this.addRenderableWidget(new ExtendedButton(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
+            Button button = this.addRenderableWidget(new ExtendedButton(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> VampirismMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
             statButtons.add(button);
             button.visible = false;
         }
 
-        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, 0, 0, 20, RESET, 20, 40, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
+        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, RESET, pButton -> {
+            VampirismMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())) {
             @Override
-            public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-                if (this.visible) {
-                    this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
-                    if (!this.active) {
-                        graphics.setColor(0.65f, 0.65f, 0.65f, 1);
-                    }
-                    super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+            public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+                if (!this.active) {
+                    pGuiGraphics.setColor(0.65f, 0.65f, 0.65f, 1);
                 }
+                super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             }
-
         });
-        reset.setTooltip(Tooltip.create(Component.translatable("text.vampirism.minion_screen.reset_stats")));
+        reset.setTooltip(Tooltip.create(Component.translatable("text.vampirism.minion_screen.reset_stats", ModItems.OBLIVION_POTION.get().getDescription())));
         reset.active = false;
     }
 
@@ -147,7 +145,8 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private void drawTitle(@NotNull GuiGraphics graphics) {
-        graphics.drawString(this.font, this.title, this.guiLeft + 10, this.guiTop + 10, 0xFFFFFF, true);
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.drawString(this.font, this.title, this.guiLeft + 10, this.guiTop + 10, -1, true);
     }
 
     private @NotNull Optional<ItemStack> getOblivionPotion() {

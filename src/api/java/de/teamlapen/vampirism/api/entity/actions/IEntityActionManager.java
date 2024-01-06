@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.core.Registry;
 
 import java.util.List;
 
@@ -21,5 +21,5 @@ public interface IEntityActionManager {
     /**
      * or use {@code net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:entityactions"))}
      */
-    IForgeRegistry<IEntityAction> getRegistry();
+    Registry<IEntityAction> getRegistry();
 }

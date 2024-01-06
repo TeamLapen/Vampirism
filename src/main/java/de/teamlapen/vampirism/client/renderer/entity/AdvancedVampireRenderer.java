@@ -17,14 +17,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
  */
-@OnlyIn(Dist.CLIENT)
 public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
     private final ResourceLocation @NotNull [] textures;

@@ -68,18 +68,17 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_planks",
       "has_book",
       "has_fangs",
       "has_honey",
-      "has_potion",
-      "has_the_recipe"
+      "has_potion"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/vampire_rack"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

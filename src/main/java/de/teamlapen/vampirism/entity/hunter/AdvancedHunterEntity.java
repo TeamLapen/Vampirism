@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -23,7 +24,7 @@ import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
-import de.teamlapen.vampirism.util.PlayerSkinHelper;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -52,9 +53,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,9 +90,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     /**
      * Overlay player texture and if slim (true)
      */
-    @OnlyIn(Dist.CLIENT)
     @Nullable
-    private Pair<ResourceLocation, Boolean> skinDetails;
+    private Pair<ResourceLocation, PlayerModelType> skinDetails;
     /**
      * If set, the vampire book with this id should be dropped
      */
@@ -226,11 +223,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public @NotNull Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+    public @NotNull Optional<Pair<ResourceLocation, PlayerModelType>> getOverlayPlayerProperties() {
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(null, name), p -> this.skinDetails = p));
+            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(null, name), p -> this.skinDetails = p);
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);
@@ -386,7 +383,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
-            return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
         }
         return super.getProjectile(stack);
     }

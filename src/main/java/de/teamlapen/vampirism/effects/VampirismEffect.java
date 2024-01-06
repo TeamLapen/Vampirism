@@ -4,13 +4,13 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.EffectCure;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Base class for Vampirism's potions
@@ -21,8 +21,10 @@ public class VampirismEffect extends MobEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return (this == ModEffects.ARMOR_REGENERATION.get() || this == ModEffects.NEONATAL.get() || this == ModEffects.DISGUISE_AS_VAMPIRE.get()) ? Collections.emptyList() : super.getCurativeItems();
+    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
+        if (this != ModEffects.ARMOR_REGENERATION.get() && this != ModEffects.NEONATAL.get() && this != ModEffects.DISGUISE_AS_VAMPIRE.get()) {
+            super.fillEffectCures(cures, effectInstance);
+        }
     }
 
     @Override
@@ -35,7 +37,7 @@ public class VampirismEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return this == ModEffects.ARMOR_REGENERATION.get() && duration % 100 == 1;
     }
 }

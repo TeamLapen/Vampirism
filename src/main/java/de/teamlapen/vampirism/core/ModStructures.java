@@ -44,9 +44,9 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 import java.util.Map;
@@ -60,20 +60,20 @@ public class ModStructures {
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, REFERENCE.MODID);
     public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, REFERENCE.MODID);
 
-    public static final RegistryObject<StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
-    public static final RegistryObject<StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
-    public static final RegistryObject<StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
-    public static final RegistryObject<StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
 
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
-    public static final RegistryObject<StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
-    public static final RegistryObject<StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
-    public static final RegistryObject<StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
-    public static final RegistryObject<StructurePieceType> MOTHER_PIECE = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> HUNTER_CAMP_SPECIAL = STRUCTURE_PIECES.register("hunter_camp_craftingtable", () -> (StructurePieceType.ContextlessType) HunterCampPieces.SpecialBlock::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> MOTHER_PIECE = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
 
-    public static final RegistryObject<StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
-    public static final RegistryObject<StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "hunter_camp"));
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, "vampire_hut"));
@@ -136,7 +136,7 @@ public class ModStructures {
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
         var villageSet = structureSetLookup.getOrThrow(BuiltinStructureSets.VILLAGES);
         // hunter camp holder is not available in data generation see ModFeatures#createStructures
-        // context.register(HUNTER_CAMP_SET, new StructureSet(structureLookup.getOrThrow(ModFeatures.HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
+//         context.register(HUNTER_CAMP_SET, new StructureSet(structureLookup.getOrThrow(HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
         context.register(VAMPIRE_HUT_SET, new StructureSet(structureLookup.getOrThrow(VAMPIRE_HUT), new RandomSpreadStructurePlacement(32, 10, RandomSpreadType.LINEAR, 1937195837)));
         context.register(VAMPIRE_ALTAR_SET, new StructureSet(structureLookup.getOrThrow(VAMPIRE_ALTAR), new RandomSpreadStructurePlacement(32, 15, RandomSpreadType.LINEAR, 573190874)));
         context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
@@ -150,7 +150,7 @@ public class ModStructures {
 
         // it is currently not possible to create a not holder in datagen see https://github.com/MinecraftForge/MinecraftForge/issues/9629
         // this file is not generated, but added through the main source set
-        // context.register(ModFeatures.HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(new AndHolderSet<>(List.of(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), new NotHolderSet<>(context.registryLookup(Registries.BIOME).orElseThrow(),lookup.getOrThrow(ModTags.Biomes.IS_FACTION_BIOME)))), TerrainAdjustment.BEARD_THIN)));
+//        context.register(HUNTER_CAMP, new HunterCampStructure(StructuresAccessor.structure(new AndHolderSet<>(List.of(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_TENT), new NotHolderSet<>(context.registryLookup(Registries.BIOME).orElseThrow(),lookup.getOrThrow(ModTags.Biomes.IS_FACTION_BIOME)))), TerrainAdjustment.BEARD_THIN)));
         context.register(VAMPIRE_HUT, new VampireHutStructure(StructuresAccessor.structure(lookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_HUT), TerrainAdjustment.NONE)));
         context.register(HUNTER_OUTPOST_PLAINS, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_PLAINS), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(PlainsHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
         context.register(HUNTER_OUTPOST_DESERT, new JigsawStructure(new Structure.StructureSettings(lookup.getOrThrow(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_DESERT), Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22)))), GenerationStep.Decoration.SURFACE_STRUCTURES, TerrainAdjustment.BEARD_THIN), lookup1.getOrThrow(DesertHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));

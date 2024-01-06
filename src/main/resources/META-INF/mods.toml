@@ -3,6 +3,9 @@ loaderVersion = "${loader_version_range}"
 issueTrackerURL = "${mod_issue_tracker}"
 license = "${mod_license}"
 
+[[mixins]]
+config = "vampirism.mixins.json"
+
 [[mods]]
     modId="${mod_id}"
     namespace="vampirism"
@@ -41,26 +44,26 @@ license = "${mod_license}"
     logoFile="logo.png"
     updateJSONURL="https://api.modrinth.com/updates/vampirism/forge_updates.json"
     [[dependencies.${mod_id}]]
-        modId="forge"
-        mandatory=true
+        modId="neoforge"
+        type="required"
         versionRange="${forge_version_range}"
         ordering="NONE"
         side="BOTH"
     [[dependencies.${mod_id}]]
         modId="teamlapenlib"
-        mandatory=true
+        type="required"
         versionRange="[${mod_version},)"
         ordering="AFTER"
         side="BOTH"
     [[dependencies.${mod_id}]]
         modId = "guideapi-vp"
-        mandatory = false
+        type="optional"
         versionRange = "[${guideapi_version},)"
         ordering = "AFTER"
         side = "BOTH"
     [[dependencies.${mod_id}]]
         modId = "jei"
-        mandatory = false
+        type="optional"
         versionRange = "[${jei_version},)"
         ordering = "AFTER"
         side = "BOTH"
@@ -71,10 +74,10 @@ license = "${mod_license}"
     displayName="Teamlapen Library"
     authors="${mod_authors}"
     description="Required by Vampirism"
-    displayURL="https://vampirism.maxanier.de"
+    displayURL="${mod_url}"
     [[dependencies.teamlapen-lib]]
-        modId="forge"
-        mandatory=true
+        modId="neoforge"
+        type="required"
         versionRange="${forge_version_range}"
         ordering="NONE"
         side="BOTH"

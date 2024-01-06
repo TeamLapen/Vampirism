@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -15,14 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Should be implemented by all items that are supposed to be used by only a specific faction.
@@ -51,7 +46,7 @@ public interface IFactionExclusiveItem extends ItemLike {
 
     /**
      * In case a faction specific item is applied with oil, this will add the oil specific tooltip at the correct position.
-     * Otherwise, the default oil tooltip handler {@link de.teamlapen.vampirism.client.core.ClientEventHandler#onItemToolTip(net.minecraftforge.event.entity.player.ItemTooltipEvent)} would put it at the wrong position.
+     * Otherwise, the default oil tooltip handler {@link de.teamlapen.vampirism.client.core.ClientEventHandler#onItemToolTip(net.neoforged.neoforge.event.entity.player.ItemTooltipEvent)} would put it at the wrong position.
      * <p>
      * This must produce the same tooltip line as the default handler.
      */
@@ -59,7 +54,7 @@ public interface IFactionExclusiveItem extends ItemLike {
         if (!stack.hasTag()) return;
         CompoundTag tag = stack.getTag().getCompound("applied_oil");
         if (tag.contains("oil")) {
-            IOil oil = VampirismRegistries.OILS.get().getValue(new ResourceLocation(tag.getString("oil")));
+            IOil oil = VampirismRegistries.OILS.get().get(new ResourceLocation(tag.getString("oil")));
             int duration = tag.getInt("duration");
             if (oil instanceof IApplicableOil && duration > 0) {
                 ((IApplicableOil) oil).getToolTipLine(stack, ((IApplicableOil) oil), duration, flagIn).ifPresent(tooltip::add);

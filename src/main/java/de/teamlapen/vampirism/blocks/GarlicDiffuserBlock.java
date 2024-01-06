@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -31,14 +34,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class GarlicDiffuserBlock extends VampirismBlockContainer {
+    public static final MapCodec<GarlicDiffuserBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            inst.group(
+                    StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(p -> p.type),
+                    propertiesCodec()
+            ).apply(inst, GarlicDiffuserBlock::new)
+    );
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape shape = makeShape();
 
@@ -51,16 +58,19 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     private final Type type;
 
     public GarlicDiffuserBlock(Type type) {
-        super(Properties.of().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
+        this(type, Properties.of().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
+    }
+
+    public GarlicDiffuserBlock(Type type, BlockBehaviour.Properties properties) {
+        super(properties);
         this.type = type;
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(Component.translatable(getDescriptionId() + "." + type.getName()).withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable(getDescriptionId() + "." + type.getSerializedName()).withStyle(ChatFormatting.AQUA));
         }
 
         tooltip.add(Component.translatable("block.vampirism.garlic_diffuser.tooltip1").withStyle(ChatFormatting.GRAY));
@@ -86,6 +96,11 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return shape;
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull
@@ -181,8 +196,9 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     }
 
     public enum Type implements StringRepresentable {
-        NORMAL("normal"), IMPROVED("improved"), WEAK("weak");
-
+        NORMAL("normal"),
+        IMPROVED("improved"),
+        WEAK("weak");
 
         private final String name;
 
@@ -190,14 +206,10 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
             this.name = name;
         }
 
-        public @NotNull String getName() {
-            return this.getSerializedName();
-        }
-
         @NotNull
         @Override
         public String getSerializedName() {
-            return name;
+            return this.name;
         }
     }
 }

@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_diamond",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_diamond"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/garlic_diffuser_normal"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

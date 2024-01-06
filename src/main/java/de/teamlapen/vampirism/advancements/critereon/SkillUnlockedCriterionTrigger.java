@@ -1,66 +1,42 @@
 package de.teamlapen.vampirism.advancements.critereon;
 
-import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.REFERENCE;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
-public class SkillUnlockedCriterionTrigger extends SimpleCriterionTrigger<SkillUnlockedCriterionTrigger.Instance> {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "skill_unlocked");
+import java.util.Optional;
 
-    public static @NotNull Instance builder(@NotNull ISkill<?> skill) {
-        return new Instance(skill);
-    }
-
-    public static @NotNull Instance builder(@NotNull ResourceLocation id) {
-        return new Instance(id);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
+public class SkillUnlockedCriterionTrigger extends SimpleCriterionTrigger<SkillUnlockedCriterionTrigger.TriggerInstance> {
 
     public void trigger(@NotNull ServerPlayer player, @NotNull ISkill<?> skill) {
-        this.trigger(player, (instance -> instance.test(skill)));
+        this.trigger(player, (instance -> instance.matches(skill)));
     }
 
-    @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        return new Instance(new ResourceLocation(GsonHelper.getAsString(json, "skill")));
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    static class Instance extends AbstractCriterionTriggerInstance {
-        @NotNull
-        private final ResourceLocation skillId;
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull ISkill<?> skill) implements SimpleCriterionTrigger.SimpleInstance {
 
-        Instance(@NotNull ISkill<?> skill) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.skillId = RegUtil.id(skill);
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ModRegistries.SKILLS.byNameCodec().fieldOf("skill").forGetter(TriggerInstance::skill)
+        ).apply(inst, TriggerInstance::new));
+
+        public static @NotNull Criterion<SkillUnlockedCriterionTrigger.TriggerInstance> of(@NotNull ISkill<?> skill) {
+            return ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new TriggerInstance(Optional.empty(), skill));
         }
 
-        Instance(@NotNull ResourceLocation skillId) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.skillId = skillId;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
-            JsonObject jsonObject = super.serializeToJson(serializer);
-            jsonObject.addProperty("skill", skillId.toString());
-            return jsonObject;
-        }
-
-        public boolean test(@NotNull ISkill<?> skill) {
-            return this.skillId.equals(RegUtil.id(skill));
+        public boolean matches(@NotNull ISkill<?> skill) {
+            return this.skill == skill;
         }
     }
 }

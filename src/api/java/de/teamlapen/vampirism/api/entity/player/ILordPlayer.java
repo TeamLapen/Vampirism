@@ -31,5 +31,5 @@ public interface ILordPlayer {
     /**
      * If the lord titles should use female versions (if available)
      */
-    boolean useFemaleLordTitle();
+    IPlayableFaction.TitleGender titleGender();
 }

@@ -31,4 +31,9 @@ public interface IGarlicChunkHandler {
      * @param id The unique hash obtained during registration
      */
     void removeGarlicBlock(int id);
+
+    /**
+     * Clear any caches upon world unload.
+     */
+    void clearCache();
 }

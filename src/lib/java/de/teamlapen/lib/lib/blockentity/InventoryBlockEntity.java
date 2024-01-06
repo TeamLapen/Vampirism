@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -119,11 +118,6 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         }
     }
 
-    @NotNull
-    protected InvWrapper createWrapper() {
-        return new SelectorInvWrapper(this);
-    }
-
     protected boolean isFull() {
         for (ItemStack s : inventorySlots) {
             if (s.isEmpty() || s.getCount() < s.getMaxStackSize()) {
@@ -133,15 +127,15 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         return true;
     }
 
-    private class SelectorInvWrapper extends InvWrapper {
+    public static class SelectorInvWrapper extends InvWrapper {
 
-        SelectorInvWrapper(Container inv) {
+        public SelectorInvWrapper(InventoryBlockEntity inv) {
             super(inv);
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return (slot < 0 || slot >= selectors.length) ? 0 : selectors[slot].stackLimit;
+            return (slot < 0 || slot >= ((InventoryBlockEntity) this.getInv()).selectors.length) ? 0 :((InventoryBlockEntity) this.getInv()).selectors[slot].stackLimit;
         }
     }
 

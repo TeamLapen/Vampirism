@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_blood_bottle",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_blood_bottle"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/blood_bottle_to_glass"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

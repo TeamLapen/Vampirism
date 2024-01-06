@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueBuilder;
 import de.teamlapen.vampirism.data.reloadlistener.bloodvalues.BloodValueReader;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -21,8 +23,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +63,7 @@ public class ConvertiblesReloadListener {
     }
 
     private Map<EntityType<? extends PathfinderMob>, EntityEntry> load(ResourceManager manager) {
-        IForgeRegistry<EntityType<?>> entityTypes = ForgeRegistries.ENTITY_TYPES;
+        Registry<EntityType<?>> entityTypes = BuiltInRegistries.ENTITY_TYPE;
         Map<EntityType<? extends PathfinderMob>, EntityEntry> values = new HashMap<>();
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(DIRECTORY, file -> file.getPath().endsWith(PATH_SUFFIX)).entrySet()) {
             ResourceLocation resourceLocation = entry.getKey();
@@ -75,7 +75,7 @@ public class ConvertiblesReloadListener {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = GSON.fromJson(reader, JsonElement.class);
                     EntityEntry entityEntry = EntityEntry.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error);
-                    EntityType<? extends PathfinderMob> entity = (EntityType<? extends PathfinderMob>) entityTypes.getValue(entityName);
+                    EntityType<? extends PathfinderMob> entity = (EntityType<? extends PathfinderMob>) entityTypes.get(entityName);
                     values.put(entity, entityEntry);
                 } catch (Exception e) {
                     LOGGER.error("Couldn't read {} converting file from {}", resourceName, resource.sourcePackId(), e);
@@ -121,7 +121,7 @@ public class ConvertiblesReloadListener {
 
             private static final Codec<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst -> {
                 return inst.group(
-                        ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("attribute").forGetter(com.mojang.datafixers.util.Pair::getFirst),
+                        BuiltInRegistries.ATTRIBUTE.byNameCodec().fieldOf("attribute").forGetter(com.mojang.datafixers.util.Pair::getFirst),
                         FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
                         Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
                 ).apply(inst, ((attribute, floatProvider, aDouble) -> com.mojang.datafixers.util.Pair.of(attribute, com.mojang.datafixers.util.Pair.of(floatProvider, aDouble))));

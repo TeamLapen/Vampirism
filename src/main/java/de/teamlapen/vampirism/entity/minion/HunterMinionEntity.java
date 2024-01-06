@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -10,8 +11,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.client.gui.screens.HunterMinionAppearanceScreen;
-import de.teamlapen.vampirism.client.gui.screens.HunterMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -23,7 +22,6 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -45,9 +43,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -101,16 +96,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -1;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new HunterMinionAppearanceScreen(this, Minecraft.getInstance().screen)));
+        VampirismMod.proxy.displayHunterMinionAppearanceScreen(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new HunterMinionStatsScreen(this, Minecraft.getInstance().screen)));
+        VampirismMod.proxy.displayHunterMinionStatsScreen(this);
     }
 
     public void setHunterType(int type, boolean minionSkin) {

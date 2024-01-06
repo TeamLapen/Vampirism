@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.VampireBookItem;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,11 +23,12 @@ import java.util.Optional;
  */
 public class AddBookNbtFunction extends LootItemConditionalFunction {
 
+    public static final Codec<AddBookNbtFunction> CODEC = RecordCodecBuilder.create(inst -> commonFields(inst).apply(inst, AddBookNbtFunction::new));
     public static @NotNull Builder<?> builder() {
         return simpleBuilder(AddBookNbtFunction::new);
     }
 
-    public AddBookNbtFunction(LootItemCondition @NotNull [] conditions) {
+    AddBookNbtFunction(@NotNull List<LootItemCondition> conditions) {
         super(conditions);
     }
 
@@ -47,14 +49,5 @@ public class AddBookNbtFunction extends LootItemConditionalFunction {
         VampireBookManager.BookContext bookContext = id.map(VampireBookManager.getInstance()::getBookContextById).orElseGet(() -> VampireBookManager.getInstance().getRandomBook(lootContext.getRandom()));
         itemStack.setTag(VampireBookItem.createTagFromContext(bookContext));
         return itemStack;
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<AddBookNbtFunction> {
-
-        @NotNull
-        @Override
-        public AddBookNbtFunction deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext jsonDeserializationContext, @NotNull LootItemCondition[] iLootConditions) {
-            return new AddBookNbtFunction(iLootConditions);
-        }
     }
 }

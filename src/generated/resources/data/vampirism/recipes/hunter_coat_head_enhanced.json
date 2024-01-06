@@ -1,0 +1,28 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:gems/diamond"
+    },
+    "Z": {
+      "tag": "forge:crops/garlic"
+    }
+  },
+  "lava": 5,
+  "pattern": [
+    "XYYX",
+    "XZZX",
+    "XZZX",
+    "    "
+  ],
+  "result": {
+    "item": "vampirism:hunter_coat_head_enhanced"
+  },
+  "skill": [
+    "vampirism:enhanced_armor"
+  ]
+}

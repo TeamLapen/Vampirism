@@ -14,15 +14,13 @@ import org.jetbrains.annotations.NotNull;
 public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     protected final RecipeType<?> type;
-    protected final ResourceLocation id;
     protected final String group;
     protected final Ingredient ingredient;
     protected final Ingredient input;
     protected final ItemStack result;
 
-    public AbstractBrewingRecipe(RecipeType<?> type, ResourceLocation id, String group, Ingredient ingredient, Ingredient input, ItemStack result) {
+    public AbstractBrewingRecipe(RecipeType<?> type, String group, Ingredient ingredient, Ingredient input, ItemStack result) {
         this.type = type;
-        this.id = id;
         this.group = group;
         this.ingredient = ingredient;
         this.input = input;
@@ -63,12 +61,6 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
     @Override
     public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
         return this.result;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
     }
 
     @NotNull

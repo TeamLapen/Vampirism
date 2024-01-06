@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;

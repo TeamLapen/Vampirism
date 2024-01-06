@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -11,8 +12,6 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.client.gui.screens.VampireMinionAppearanceScreen;
-import de.teamlapen.vampirism.client.gui.screens.VampireMinionStatsScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -29,7 +28,6 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -51,9 +49,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -160,16 +155,14 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this.hasEffect(ModEffects.SUNSCREEN.get());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void openAppearanceScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new VampireMinionAppearanceScreen(this, Minecraft.getInstance().screen)));
+        VampirismMod.proxy.displayVampireMinionAppearanceScreen(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void openStatsScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().setScreen(new VampireMinionStatsScreen(this, Minecraft.getInstance().screen)));
+        VampirismMod.proxy.displayVampireMinionStatsaScreen(this);
     }
 
     public void setUseLordSkin(boolean useLordSkin) {

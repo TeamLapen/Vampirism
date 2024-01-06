@@ -2,7 +2,6 @@
   "required": true,
   "package": "de.teamlapen.vampirism.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "vampirism.refmap.json",
   "mixins": [
     "AbstractFurnaceBlockEntityAccessor",
     "AreaEffectCloudMixin",
@@ -10,6 +9,7 @@
     "BeaconBeamSectionyMixin",
     "BeaconBlockEntityMixin",
     "CrossbowItemMixin",
+    "EntitySubPredicateMixin",
     "EntitySubPredicateTypesAccessor",
     "IngredientAccessor",
     "ItemMixin",
@@ -32,6 +32,7 @@
     "RecipeManagerAccessor",
     "RegistriesDatapackGeneratorAccessor",
     "ReloadableServerResourcesAccessor",
+    "ResourceKeyArgumentAccessor",
     "ShapedRecipeAccessor",
     "ShapedRecipeBuilderAccessor",
     "ShapelessRecipeBuilderAccessor",
@@ -41,6 +42,7 @@
     "ThrowablePotionMixin",
     "TileEntityTypeAccessor",
     "VanillaBlockLootAccessor",
+    "VillagerHostilesSensorAccessor",
     "WalkAnimationStateAccessor"
   ],
   "client": [

@@ -1,7 +1,6 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.gradle.userdev' version '7.+'
+    id "net.neoforged.gradle.mixin" version "7.+"
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.modrinth.minotaur" version "2.4.5"
     id 'de.undercouch.download' version '3.3.0'
@@ -10,17 +9,21 @@ plugins {
 }
 
 group = mod_group_id
+version = mod_version
+
 base {
     archivesName = mod_name
-    mod_version = "1.0.0"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+
 sourceSets {
-    api
+    api {
+        compileClasspath += configurations["compileClasspath"]
+    }
     lib {
-        compileClasspath += configurations["minecraft"]
+        compileClasspath += configurations["compileClasspath"]
     }
     //noinspection GroovyAssignabilityCheck
     main {
@@ -29,6 +32,15 @@ sourceSets {
             //if you want to exclude a package do it here, but use the package as path (e.g. de/teamlapen/vampirism for de.teamlapen.vampirism)
             // if you want intellij to ignore the package, you need to add it in the settings (File -> Settings -> Build, Execution, Deployment -> Compiler -> Excludes)
             // exclude(<package>)
+            if (!include_jei.toBoolean()) {
+                exclude('de/teamlapen/vampirism/modcompat/jei')
+            }
+            if (!include_guideapi.toBoolean()) {
+                exclude('de/teamlapen/vampirism/modcompat/guide')
+            }
+            if (!include_terrablender.toBoolean()) {
+                exclude('de/teamlapen/vampirism/modcompat/terrablender')
+            }
         }
         //noinspection GroovyAssignabilityCheck
         compileClasspath += sourceSets.lib.output
@@ -43,19 +55,11 @@ sourceSets {
     }
 }
 
-
-apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
+apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/artifacts.gradle'
 apply from: 'gradle/deploy.gradle'
 apply from: 'gradle/crowdin.gradle'
-
-
-configurations {
-    apiCompile.extendsFrom(compile)
-    apiImplementation.extendsFrom(implementation)
-    apiRuntimeOnly.extendsFrom(runtimeOnly)
-}
 
 idea {
     module {
@@ -63,6 +67,7 @@ idea {
             File excludeDir = new File(projectDir, excludeDirName)
             excludeDirs.add(excludeDir)
         }
+        downloadSources = true
     }
 }
 
@@ -77,6 +82,7 @@ tasks.named('processResources', ProcessResources).configure {
             guideapi_version: guideapi_version,
             mod_url: mod_url,
             mod_issue_tracker: mod_issue_tracker,
+            pack_format_number: pack_format_number,
     ]
     inputs.properties replaceProperties
 
@@ -86,7 +92,6 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
-    includeEmptyDirs = false
     from sourceSets.main.output.classesDirs
     from sourceSets.api.output.classesDirs
     from sourceSets.lib.output.classesDirs
@@ -112,10 +117,12 @@ tasks.named('jar', Jar).configure {
                 "FMLAT"                   : "accesstransformer.cfg",
         ])
     }
-
-    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+configurations.all {
+    print(it.name + "\n")
 }

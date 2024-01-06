@@ -6,8 +6,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,8 +117,7 @@ public abstract class VampirismVillageEvent extends Event {
      * Fired when a normal villager should be converted to angry villager.
      * You can cancel this event to prevent vampirism behavior and replace the villager by yourself.
      */
-    @Cancelable
-    public static class MakeAggressive extends VampirismVillageEvent {
+    public static class MakeAggressive extends VampirismVillageEvent implements ICancellableEvent {
 
         private final @NotNull Villager oldVillager;
 

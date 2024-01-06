@@ -4,17 +4,15 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.components.CooldownButton;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,13 +77,13 @@ public class DBNOScreen extends Screen {
         if (this.enableButtonsTimer == 20) {
             dieButton.active = true;
         }
-        resurrectButton.updateState(Optional.ofNullable(this.minecraft.player).map(VampirePlayer::getOpt).flatMap(LazyOptional::resolve).filter(v -> v.getDbnoDuration() > 0).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f));
+        resurrectButton.updateState(Optional.ofNullable(this.minecraft.player).flatMap(VampirePlayer::getOpt).filter(v -> v.getDbnoDuration() > 0).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f));
     }
 
     protected void init() {
         this.enableButtonsTimer = 0;
         dieButton = this.addRenderableWidget(new ExtendedButton(this.width / 2 - 100, this.height / 4 + 72, 200, 20, Component.translatable("gui.vampirism.dbno.die"), (p_213021_1_) -> {
-            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.GIVE_UP));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.GIVE_UP));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
@@ -93,7 +91,7 @@ public class DBNOScreen extends Screen {
             if (this.minecraft.player != null) {
                 VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
             }
-            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESURRECT));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESURRECT));
             this.minecraft.setScreen(null);
         }));
         resurrectButton.updateState(1f);

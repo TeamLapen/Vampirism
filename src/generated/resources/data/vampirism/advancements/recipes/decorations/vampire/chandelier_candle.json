@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_honey",
-      "has_candelabra",
-      "has_the_recipe"
+      "has_candelabra"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/chandelier_candle"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

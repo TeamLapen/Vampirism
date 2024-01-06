@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_blood_infused_iron_ingot",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_blood_infused_iron_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:blood_infused_iron_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

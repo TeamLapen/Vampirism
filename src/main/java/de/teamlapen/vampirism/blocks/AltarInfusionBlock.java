@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -12,13 +13,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -62,8 +64,15 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d1, d2, d3, d4, e1, e2, e3, e4, f1, f2, f3, f4, g, h1, h2, h3);
     }
 
-    public AltarInfusionBlock() {
-        super(Properties.of().mapColor(MapColor.STONE).strength(5).noOcclusion());
+    public static final MapCodec<AltarInfusionBlock> CODEC = simpleCodec(AltarInfusionBlock::new);
+
+    public AltarInfusionBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull

@@ -16,23 +16,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
-import org.joml.Quaternionfc;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Render the coffin with its different colors and the lid opening animation
  */
-@OnlyIn(Dist.CLIENT)
 public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
     private static final Marker COFFIN = new MarkerManager.Log4jMarker("COFFIN");
     private final Logger LOGGER = LogManager.getLogger();
@@ -91,7 +88,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
         ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
         }
 
         matrixStack.pushPose();
@@ -106,7 +103,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
         modelData = lidModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : lidModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(renderType, false)), state, lidModel, 1, 1, 1, i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, lidModel, 1, 1, 1, i, i1, modelData, renderType);
         }
         matrixStack.popPose();
         matrixStack.popPose();
@@ -124,5 +121,11 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
             LOGGER.error(COFFIN, "Failed to check coffin head at " + pos + ".", e);
         }
         return false;
+    }
+
+    @Override
+    public @NotNull AABB getRenderBoundingBox(CoffinBlockEntity blockEntity) {
+        BlockPos worldPosition = blockEntity.getBlockPos();
+        return new AABB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
     }
 }

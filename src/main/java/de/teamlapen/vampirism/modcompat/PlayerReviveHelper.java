@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;

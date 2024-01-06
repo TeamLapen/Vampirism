@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -238,6 +239,18 @@ public class ModTags {
 
         private static @NotNull TagKey<Structure> tag(@NotNull String name) {
             return TagKey.create(Registries.STRUCTURE, new ResourceLocation(REFERENCE.MODID, name));
+        }
+
+    }
+
+    public static class SkillTrees {
+        public static final TagKey<ISkillTree> HUNTER = tag("faction/hunter");
+        public static final TagKey<ISkillTree> VAMPIRE = tag("faction/vampire");
+        public static final TagKey<ISkillTree> LEVEL = tag("type/level");
+        public static final TagKey<ISkillTree> LORD = tag("type/lord");
+
+        private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
+            return TagKey.create(VampirismRegistries.SKILL_TREE_ID, new ResourceLocation(REFERENCE.MODID, name));
         }
 
     }

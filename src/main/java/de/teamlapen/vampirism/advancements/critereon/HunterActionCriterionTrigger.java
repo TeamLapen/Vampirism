@@ -1,76 +1,60 @@
 package de.teamlapen.vampirism.advancements.critereon;
 
-import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.REFERENCE;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.core.ModAdvancements;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Collection of several hunter related triggers
  */
-public class HunterActionCriterionTrigger extends SimpleCriterionTrigger<HunterActionCriterionTrigger.Instance> {
-
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
-    private final static Logger LOGGER = LogManager.getLogger();
-
-    public static @NotNull Instance builder(@NotNull Action action) {
-        return new Instance(action);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
+public class HunterActionCriterionTrigger extends SimpleCriterionTrigger<HunterActionCriterionTrigger.TriggerInstance> {
 
     public void trigger(@NotNull ServerPlayer player, Action action) {
-        this.trigger(player, (instance) -> instance.test(action));
+        this.trigger(player, (instance) -> instance.matches(action));
     }
 
-    @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        Action action = Action.NONE;
-        if (json.has("action")) {
-            String name = json.get("action").getAsString();
-
-            try {
-                action = Action.valueOf(name.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                LOGGER.warn("Action {} does not exist", name);
-            }
-        } else {
-            LOGGER.warn("Action not specified");
-        }
-        return new Instance(action);
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    public enum Action {
-        STAKE, NONE
-    }
+    public enum Action implements StringRepresentable {
+        STAKE("stake"),
+        NONE("none");
 
-    static class Instance extends AbstractCriterionTriggerInstance {
-        @NotNull
-        private final Action action;
+        private final String name;
 
-        Instance(@NotNull Action action) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.action = action;
+        Action(String name) {
+            this.name = name;
         }
 
-        @NotNull
         @Override
-        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
-            JsonObject json = super.serializeToJson(serializer);
-            json.addProperty("action", action.name());
-            return json;
+        public @NotNull String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Action action) implements SimpleCriterionTrigger.SimpleInstance  {
+
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                StringRepresentable.fromEnum(Action::values).fieldOf("action").forGetter(TriggerInstance::action)
+        ).apply(inst, TriggerInstance::new));
+
+        public static @NotNull Criterion<HunterActionCriterionTrigger.TriggerInstance> of(@NotNull Action action) {
+            return ModAdvancements.TRIGGER_HUNTER_ACTION.get().createCriterion(new TriggerInstance(Optional.empty(), action));
         }
 
-        boolean test(Action action) {
+        boolean matches(Action action) {
             return this.action == action;
         }
     }

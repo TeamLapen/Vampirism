@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay implements IGuiOverlay {
@@ -16,13 +16,13 @@ public class BloodBarOverlay implements IGuiOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ForgeGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
         if (this.mc.player != null && Helper.isVampire(this.mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             if (this.mc.gameMode.hasExperience() && this.mc.player.isAlive()) {
                 VampirePlayer.getOpt(this.mc.player).map(VampirePlayer::getBloodStats).ifPresent(stats -> {
                     int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
-                    int top = this.mc.getWindow().getGuiScaledHeight() - ((ForgeGui) this.mc.gui).rightHeight;
-                    ((ForgeGui) this.mc.gui).rightHeight += 10;
+                    int top = this.mc.getWindow().getGuiScaledHeight() - ((ExtendedGui) this.mc.gui).rightHeight;
+                    ((ExtendedGui) this.mc.gui).rightHeight += 10;
                     int blood = stats.getBloodLevel();
                     int maxBlood = stats.getMaxBlood();
                     int blood2 = blood - 20;

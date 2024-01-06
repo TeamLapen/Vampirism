@@ -12,9 +12,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.NonNullLazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -168,7 +166,6 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
         }
 
         @Nullable
-        @OnlyIn(Dist.CLIENT)
         @Override
         public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
             return info.background;
@@ -222,8 +219,8 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
             this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(@NotNull LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
-            this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
+        public SelectorInfo(@NotNull NonNullLazy<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(itemStack -> lazyItemCollection.get().contains(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
         public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y) {

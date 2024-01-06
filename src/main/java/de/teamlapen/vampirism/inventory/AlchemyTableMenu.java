@@ -135,7 +135,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
         }
 
         public static boolean mayPlaceItem(@NotNull Level world, @NotNull ItemStack itemstack) {
-            return world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isIngredient(itemstack));
+            return world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(itemstack));
         }
 
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -157,7 +157,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return this.world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(stack));
+            return this.world.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(stack));
         }
 
         public int getMaxStackSize() {

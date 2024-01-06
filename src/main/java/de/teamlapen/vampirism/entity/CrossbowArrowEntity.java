@@ -5,9 +5,6 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,23 +13,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 
 public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
 
-    private
     @NotNull
-    ItemStack arrowStack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
+    private ItemStack arrowStack = new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get());
     private boolean ignoreHurtTimer = false;
 
     public CrossbowArrowEntity(@NotNull EntityType<? extends CrossbowArrowEntity> type, @NotNull Level world) {
-        super(type, world);
+        super(type, world, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
     }
 
     public CrossbowArrowEntity(Level level, LivingEntity entity, ItemStack stack) {
-        super(ModEntities.CROSSBOW_ARROW.get(), entity, level);
+        super(ModEntities.CROSSBOW_ARROW.get(), entity, level, stack);
         this.arrowStack = stack.copy();
         this.arrowStack.setCount(1);
     }
@@ -42,27 +37,16 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
     public CrossbowArrowEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow) {
-        this(ModEntities.CROSSBOW_ARROW.get(), worldIn);
+        super(ModEntities.CROSSBOW_ARROW.get(), x,y,z,worldIn, arrow);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);
     }
 
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.put("arrowStack", arrowStack.save(new CompoundTag()));
-    }
-
     public CrossbowArrowItem.EnumArrowType getArrowType() {
-        return arrowStack.getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) arrowStack.getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
+        return getPickupItem().getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) getPickupItem().getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
     }
 
-    @NotNull
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     public @NotNull RandomSource getRNG() {
         return this.random;
@@ -73,12 +57,6 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
      */
     public void setIgnoreHurtTimer() {
         this.ignoreHurtTimer = true;
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
 
     @Override

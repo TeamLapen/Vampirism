@@ -18,19 +18,18 @@ import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +41,6 @@ import java.util.Map;
 /**
  * Handles all key/input related stuff
  */
-@OnlyIn(Dist.CLIENT)
 public class ModKeys {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -145,13 +143,13 @@ public class ModKeys {
         if (!suckKeyDown) {
             HitResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
-            Player player = Minecraft.getInstance().player;
+            LocalPlayer player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
                 if (mouseOver instanceof EntityHitResult) {
-                    VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
+                    VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
                 } else if (mouseOver instanceof BlockHitResult) {
                     BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                    VampirismMod.dispatcher.sendToServer(new ServerboundStartFeedingPacket(pos));
+                    VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(pos));
                 } else {
                     LOGGER.warn("Unknown mouse over type while trying to feed");
                 }
@@ -162,7 +160,7 @@ public class ModKeys {
     private void endSuck() {
         if (suckKeyDown) {
             suckKeyDown = false;
-            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
         }
     }
 
@@ -173,11 +171,11 @@ public class ModKeys {
     }
 
     private void openVampirismMenu() {
-        VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
     }
 
     private void switchVision() {
-        VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
     }
 
     private void openMinionTaskMenu() {
@@ -208,7 +206,7 @@ public class ModKeys {
             if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
                 player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
             } else {
-                VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
+                VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }
         }
     }

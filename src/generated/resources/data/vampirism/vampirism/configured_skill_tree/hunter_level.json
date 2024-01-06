@@ -1,0 +1,105 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "node": "vampirism:hunter/alchemy6"
+                                    }
+                                  ],
+                                  "node": "vampirism:hunter/alchemy5"
+                                }
+                              ],
+                              "node": "vampirism:hunter/alchemy4"
+                            }
+                          ],
+                          "node": "vampirism:hunter/alchemy3"
+                        }
+                      ],
+                      "node": "vampirism:hunter/alchemy2"
+                    }
+                  ],
+                  "node": "vampirism:hunter/alchemy1"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "node": "vampirism:hunter/potion6"
+                                    }
+                                  ],
+                                  "node": "vampirism:hunter/potion5"
+                                }
+                              ],
+                              "node": "vampirism:hunter/potion4"
+                            }
+                          ],
+                          "node": "vampirism:hunter/potion3"
+                        }
+                      ],
+                      "node": "vampirism:hunter/potion2"
+                    }
+                  ],
+                  "node": "vampirism:hunter/potion1"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "node": "vampirism:hunter/weapon6"
+                                    }
+                                  ],
+                                  "node": "vampirism:hunter/weapon5"
+                                }
+                              ],
+                              "node": "vampirism:hunter/weapon4"
+                            }
+                          ],
+                          "node": "vampirism:hunter/weapon3"
+                        }
+                      ],
+                      "node": "vampirism:hunter/weapon2"
+                    }
+                  ],
+                  "node": "vampirism:hunter/weapon1"
+                }
+              ],
+              "node": "vampirism:hunter/skill4"
+            }
+          ],
+          "node": "vampirism:hunter/skill3"
+        }
+      ],
+      "node": "vampirism:hunter/skill2"
+    }
+  ],
+  "node": "vampirism:hunter/level_root",
+  "skill_tree": "vampirism:hunter/level"
+}

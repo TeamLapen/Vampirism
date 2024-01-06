@@ -2,8 +2,11 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -18,11 +21,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +44,7 @@ public class TagProvider {
         gen.addProvider(event.includeServer(), new ModDamageTypeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModTasksProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModStructuresProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModSkillTreeProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -360,7 +363,7 @@ public class TagProvider {
     public static class ModVillageProfessionProvider extends TagsProvider<VillagerProfession> {
 
         public ModVillageProfessionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-            super(output, ForgeRegistries.Keys.VILLAGER_PROFESSIONS, lookupProvider, REFERENCE.MODID, existingFileHelper);
+            super(output, Registries.VILLAGER_PROFESSION, lookupProvider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override
@@ -464,6 +467,21 @@ public class TagProvider {
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
             this.tag(ModTags.Structures.HUNTER_OUTPOST).add(ModStructures.HUNTER_OUTPOST_BADLANDS, ModStructures.HUNTER_OUTPOST_DESERT, ModStructures.HUNTER_OUTPOST_PLAINS, ModStructures.HUNTER_OUTPOST_VAMPIRE_FOREST);
+        }
+    }
+
+    public static class ModSkillTreeProvider extends TagsProvider<ISkillTree> {
+
+        protected ModSkillTreeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, VampirismRegistries.SKILL_TREE_ID, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(ModTags.SkillTrees.HUNTER).add(HunterSkills.Trees.LEVEL, HunterSkills.Trees.LORD);
+            this.tag(ModTags.SkillTrees.VAMPIRE).add(VampireSkills.Trees.LEVEL, VampireSkills.Trees.LORD);
+            this.tag(ModTags.SkillTrees.LEVEL).add(HunterSkills.Trees.LEVEL, VampireSkills.Trees.LEVEL);
+            this.tag(ModTags.SkillTrees.LORD).add(HunterSkills.Trees.LORD, VampireSkills.Trees.LORD);
         }
     }
 }

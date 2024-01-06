@@ -4,23 +4,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
-import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.entity.vampire.VampireTaskMasterEntity;
+import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
  */
-@OnlyIn(Dist.CLIENT)
 public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEntity, VillagerModel<VampireTaskMasterEntity>> {
     private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
     private final static ResourceLocation vampireOverlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
@@ -47,5 +45,8 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
         }
     }
 
-
+    @Override
+    protected boolean shouldShowName(@NotNull VampireTaskMasterEntity pEntity) {
+        return Helper.isVampire(Minecraft.getInstance().player) && super.shouldShowName(pEntity);
+    }
 }

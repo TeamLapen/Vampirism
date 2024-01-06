@@ -1,48 +1,32 @@
 package de.teamlapen.vampirism.advancements.critereon;
 
-import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.mixin.PlayerAdvancementsAccessor;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
-public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCriterionTrigger.Instance> {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
+import static net.minecraft.commands.arguments.ObjectiveCriteriaArgument.getCriteria;
 
-    private final static Logger LOGGER = LogManager.getLogger();
+public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCriterionTrigger.TriggerInstance> {
 
-    public static @NotNull Instance level(@Nullable IPlayableFaction<?> faction, int level) {
-        return new Instance(Type.LEVEL, faction, level);
-    }
-
-    public static @NotNull Instance lord(@Nullable IPlayableFaction<?> faction, int lordLevel) {
-        return new Instance(Type.LORD, faction, lordLevel);
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    /**
-     * Trigger this criterion
-     */
-    public void trigger(@NotNull ServerPlayer playerMP, IPlayableFaction<?> faction, int level, int lordLevel) {
-        this.trigger(playerMP, (instance -> instance.test(faction, level, lordLevel)));
+    public void trigger(@NotNull ServerPlayer player, IPlayableFaction<?> faction, int level, int lordLevel) {
+        this.trigger(player, instance -> instance.matches(faction, level, lordLevel));
     }
 
     public void revokeAll(ServerPlayer player) {
@@ -53,69 +37,68 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
         this.revoke(player, instance -> instance.faction == faction && instance.type == type && instance.level > newLevel);
     }
 
-    private void revoke(ServerPlayer player, Predicate<Instance> instancePredicate) {
-        PlayerAdvancements advancements = player.getAdvancements();
-        ((PlayerAdvancementsAccessor) advancements).getAdvancements().entrySet().stream().filter(entry -> !entry.getValue().isDone()).forEach(advancementProgressEntry -> {
-            if(advancementProgressEntry.getKey().getCriteria().values().stream().anyMatch(pair -> {
-                CriterionTriggerInstance trigger = pair.getTrigger();
-                return trigger != null && trigger.getCriterion().equals(FactionCriterionTrigger.ID) && instancePredicate.test(((Instance) trigger));
-            })) {
-                advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
-            }
-        });
+    private void revoke(ServerPlayer player, Predicate<TriggerInstance> instancePredicate) {
+//        PlayerAdvancements advancements = player.getAdvancements();
+//        ((PlayerAdvancementsAccessor) advancements).getAdvancements().entrySet().stream().filter(entry -> !entry.getValue().isDone()).forEach(advancementProgressEntry -> {
+//            AdvancementProgress progress = advancementProgressEntry.getValue();
+//            StreamSupport.stream(progress.getCompletedCriteria().spliterator(), false).map(progress::getCriterion).filter(s -> {
+//                s.revoke();
+//            })
+//            if(advancementProgressEntry.getValue().getCompletedCriteria()..getCriteria().values().stream().anyMatch(pair -> {
+//                CriterionTriggerInstance trigger = pair.getTrigger();
+//                return trigger != null && trigger.getCriterion().equals(FactionCriterionTrigger.ID) && instancePredicate.test(((TriggerInstance) trigger));
+//            })) {
+//                advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
+//            }
+//        });
     }
 
-    @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        IPlayableFaction<?> playableFaction = null;
-        Type type = json.has("type") ? Type.valueOf(json.get("type").getAsString()) : Type.LEVEL;
-        if (json.has("faction")) {
-            String idStr = json.get("faction").getAsString();
-            if (!"null".equals(idStr)) {
-                ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
-                IFaction<?> faction = VampirismAPI.factionRegistry().getFactionByID(id);
-                if (faction instanceof IPlayableFaction<?> playableFaction1) {
-                    playableFaction = playableFaction1;
-                } else {
-                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
-                }
-            }
-        }
-        int level = json.has("level") ? json.get("level").getAsInt() : 1;
-        return new Instance(type, playableFaction, level);
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    public enum Type {
-        LEVEL, LORD
-    }
+    public enum Type implements StringRepresentable {
+        LEVEL("level"),
+        LORD("lord");
 
-    static class Instance extends AbstractCriterionTriggerInstance {
+        private final String name;
 
-        @NotNull
-        private final Type type;
-        @Nullable
-        private final IPlayableFaction<?> faction;
-        private final int level;
-
-        Instance(@NotNull Type type, @Nullable IPlayableFaction<?> faction, int level) {
-            super(ID, ContextAwarePredicate.ANY);
-            this.type = type;
-            this.faction = faction;
-            this.level = level;
+        Type(String name) {
+            this.name = name;
         }
 
-        @NotNull
         @Override
-        public JsonObject serializeToJson(@NotNull SerializationContext serializer) {
-            JsonObject json = super.serializeToJson(serializer);
-            json.addProperty("type", type.name());
-            json.addProperty("faction", faction == null ? "null" : faction.getID().toString());
-            json.addProperty("level", level);
-            return json;
+        public @NotNull String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Type type, @Nullable IPlayableFaction<?> faction, int level) implements SimpleCriterionTrigger.SimpleInstance {
+
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> {
+            return inst.group(
+                    ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                    StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(TriggerInstance::type),
+                    IPlayableFaction.CODEC.optionalFieldOf("faction").forGetter(p -> Optional.ofNullable(p.faction())),
+                    ExtraCodecs.POSITIVE_INT.fieldOf("level").forGetter(TriggerInstance::level)
+            ).apply(inst, TriggerInstance::new);
+        });
+
+        public static Criterion<FactionCriterionTrigger.TriggerInstance> level(@Nullable IPlayableFaction<?> faction, int level) {
+            return ModAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), Type.LEVEL, faction, level));
         }
 
-        public boolean test(IPlayableFaction<?> faction, int level, int lordLevel) {
+        public static Criterion<FactionCriterionTrigger.TriggerInstance> lord(@Nullable IPlayableFaction<?> faction, int level) {
+            return ModAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), Type.LORD, faction, level));
+        }
+
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Type type, @NotNull Optional<IPlayableFaction<?>> faction, int level) {
+            this(player, type, faction.orElse(null), level);
+        }
+
+        public boolean matches(IPlayableFaction<?> faction, int level, int lordLevel) {
             if ((faction == null && this.faction == null) || Objects.equals(this.faction, faction)) {
                 if (type == Type.LEVEL) {
                     return level >= this.level;
@@ -125,6 +108,5 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
             }
             return false;
         }
-
     }
 }

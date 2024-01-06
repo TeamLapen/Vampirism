@@ -11,14 +11,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Villager Model with usable arms
  */
-@OnlyIn(Dist.CLIENT)
 public class VillagerWithArmsModel<T extends Mob> extends VillagerModel<T> implements ArmedModel {
     private static final String RIGHT_ARM = "right_arm";
     private static final String LEFT_ARM = "left_arm";

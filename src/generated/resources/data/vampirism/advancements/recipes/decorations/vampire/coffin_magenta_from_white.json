@@ -34,15 +34,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_coffin",
-      "has_dye",
-      "has_the_recipe"
+      "has_dye"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/coffin_magenta_from_white"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

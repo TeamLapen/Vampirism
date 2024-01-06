@@ -15,9 +15,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

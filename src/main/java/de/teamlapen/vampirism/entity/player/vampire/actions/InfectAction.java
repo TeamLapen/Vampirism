@@ -46,7 +46,7 @@ public class InfectAction extends DefaultVampireAction {
             player.awardStat(ModStats.infected_creatures);
             player.level().playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1, 1);
         } else {
-            player.playNotifySound(SoundEvents.NOTE_BLOCK_BANJO.get(), SoundSource.PLAYERS, 1, 1);
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_BANJO.value(), SoundSource.PLAYERS, 1, 1);
         }
         return creature != null;
     }
@@ -69,9 +69,9 @@ public class InfectAction extends DefaultVampireAction {
         if (target instanceof IBiteableEntity) {
             return Optional.of((IBiteableEntity) target);
         } else if (target instanceof PathfinderMob) {
-            return ExtendedCreature.getSafe(target).resolve();
+            return ExtendedCreature.getSafe(target);
         } else if (target instanceof Player) {
-            return VampirePlayer.getOpt((Player) target).resolve();
+            return VampirePlayer.getOpt((Player) target);
         }
         return Optional.empty();
     }

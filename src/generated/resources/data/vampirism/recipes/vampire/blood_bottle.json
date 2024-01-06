@@ -1,38 +1,28 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:not",
-          "value": {
-            "type": "vampirism:config",
-            "option": "auto_convert"
-          }
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "category": "misc",
-        "key": {
-          "X": {
-            "tag": "forge:glass"
-          },
-          "Y": {
-            "item": "minecraft:rotten_flesh"
-          }
-        },
-        "pattern": [
-          "XYX",
-          " X "
-        ],
-        "result": {
-          "count": 1,
-          "item": "vampirism:blood_bottle",
-          "nbt": "{Damage:0}"
-        },
-        "show_notification": true
+      "type": "neoforge:not",
+      "value": {
+        "type": "vampirism:config",
+        "option": "auto_convert"
       }
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "forge:glass"
+    },
+    "Y": {
+      "item": "minecraft:rotten_flesh"
+    }
+  },
+  "pattern": [
+    "XYX",
+    " X "
+  ],
+  "result": {
+    "item": "vampirism:blood_bottle"
+  }
 }

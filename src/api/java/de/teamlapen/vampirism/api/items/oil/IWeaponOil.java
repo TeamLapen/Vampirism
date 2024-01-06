@@ -10,7 +10,7 @@ public interface IWeaponOil extends IApplicableOil {
      * <br>
      * Return 0 for no damage modification
      * <br>
-     * Called in {@link net.minecraftforge.common.ForgeHooks#onLivingHurt(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float)}
+     * Called in {@link net.neoforged.neoforge.common.CommonHooks#onLivingHurt(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float)}
      *
      * @return a damage increase that is added to the amount
      */
@@ -21,7 +21,7 @@ public interface IWeaponOil extends IApplicableOil {
      * <br>
      * Return 0 for no damage modification
      * <br>
-     * called in {@link net.minecraftforge.common.ForgeHooks#onLivingDamage(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float)}
+     * called in {@link net.neoforged.neoforge.common.CommonHooks#onLivingDamage(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float)}
      *
      * @return a damage increase that is added to the amount
      */

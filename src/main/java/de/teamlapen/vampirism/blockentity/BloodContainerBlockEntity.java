@@ -13,26 +13,26 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
 /**
- * Stores blood and other liquids in a {@link FluidTank}
+ * Stores blood and other liquids in a {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank}
  * Tank is synced if the block is marked for update
  */
-public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capability.FluidHandlerBlockEntity implements FluidTankWithListener.IFluidTankListener {
+public class BloodContainerBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
     public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
+    private final FluidTankWithListener tank;
 
     public static void setBloodValue(@NotNull BlockGetter worldIn, @NotNull Random randomIn, @NotNull BlockPos blockPosIn) {
         BlockEntity blockEntity = worldIn.getBlockEntity(blockPosIn);
@@ -77,7 +77,6 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
         return tag;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         FluidStack old = tank.getFluid();
@@ -87,6 +86,11 @@ public class BloodContainerBlockEntity extends net.minecraftforge.fluids.capabil
                 setChanged();
             }
         }
+    }
+
+    @NotNull
+    public FluidTankWithListener getTank() {
+        return tank;
     }
 
     @Override

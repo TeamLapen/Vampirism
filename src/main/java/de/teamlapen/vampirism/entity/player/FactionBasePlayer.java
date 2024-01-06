@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, ISyncable.ISyncableAttachment, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
     protected final Player player;
@@ -85,20 +85,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     }
 
     @MustBeInvokedByOverriders
-    public void loadData(@NotNull CompoundTag nbt) {
-        if (this.taskManager != null) {
-            this.taskManager.readNBT(nbt);
-        } else {
-            LOGGER.debug("The player is loaded on the client side and therefore taskmaster related data is missing");
-        }
-    }
-
-    @Override
-    public final void loadUpdateFromNBT(CompoundTag nbt) {
-        loadUpdate(nbt);
-    }
-
-    @MustBeInvokedByOverriders
     @Override
     public void onDeath(DamageSource src) {
         this.getSkillHandler().damageRefinements();
@@ -106,26 +92,9 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @MustBeInvokedByOverriders
     @Override
-    public void onPlayerClone(@NotNull Player original, boolean wasDeath) {
-        original.reviveCaps();
-        copyFromPlayer(original);
-        original.invalidateCaps();
-    }
-
-    @MustBeInvokedByOverriders
-    @Override
     public void onUpdate() {
         if (!isRemote()) {
             this.taskManager.tick();
-        }
-    }
-
-    @MustBeInvokedByOverriders
-    public void saveData(@NotNull CompoundTag nbt) {
-        if (this.taskManager != null) {
-            this.taskManager.writeNBT(nbt);
-        } else {
-            LOGGER.debug("The player is saved on the client side and therefore taskmaster related data is missing");
         }
     }
 
@@ -138,23 +107,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         HelperLib.sync(this, player, all);
     }
 
-    @Override
-    public final void writeFullUpdateToNBT(CompoundTag nbt) {
-        writeFullUpdate(nbt);
-    }
-
-    /**
-     * Copy all relevant values from the given player and return an instance of the old players VampirismPlayer, so {@link FactionBasePlayer} can copy its values as well
-     */
-    protected abstract FactionBasePlayer<T> copyFromPlayer(Player old);
-
-    /**
-     * Can be overridden to load data from updates in subclasses
-     */
-    @MustBeInvokedByOverriders
-    protected void loadUpdate(CompoundTag nbt) {
-    }
-
     /**
      * Sync the capability using the given data
      *
@@ -162,13 +114,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
      */
     protected void sync(@NotNull CompoundTag data, boolean all) {
         HelperLib.sync(this, data, player, all);
-    }
-
-    /**
-     * Can be overridden to put data into updates in subclasses
-     */
-    @MustBeInvokedByOverriders
-    protected void writeFullUpdate(CompoundTag nbt) {
     }
 
     @MustBeInvokedByOverriders
@@ -189,5 +134,29 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
                 this.getSkillHandler().resetRefinements();
             }
         }
+    }
+
+    @Override
+    public void loadFromNBT(CompoundTag nbt) {
+        this.taskManager.readNBT(nbt.getCompound("task_manager"));
+    }
+
+    @Override
+    public void loadUpdateFromNBT(CompoundTag nbt) {
+
+    }
+
+    @Override
+    public CompoundTag writeFullUpdateToNBT() {
+        return new CompoundTag();
+    }
+
+    @Override
+    public CompoundTag writeToNBT() {
+        CompoundTag tag = new CompoundTag();
+        CompoundTag taskManager = new CompoundTag();
+        this.taskManager.writeNBT(taskManager);
+        tag.put("task_manager", taskManager);
+        return tag;
     }
 }

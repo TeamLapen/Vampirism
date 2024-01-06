@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -29,7 +29,7 @@ public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (!worldIn.isClientSide) {
-            entityLiving.curePotionEffects(stack);
+            entityLiving.removeEffectsCuredBy(ModItems.GARLIC_CURE);
         }
         return super.finishUsingItem(stack, worldIn, entityLiving);
     }

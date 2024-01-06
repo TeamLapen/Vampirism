@@ -11,7 +11,7 @@
 		"particle": "vampirism:block/dark_spruce_door_top",
 		"1_3": "vampirism:block/vampire_rack"
 	},
-    "render_type": "minecraft:translucent",
+    "render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"name": "bottom",

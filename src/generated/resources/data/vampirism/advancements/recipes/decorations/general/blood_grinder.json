@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_hopper",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_hopper"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/blood_grinder"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

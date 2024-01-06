@@ -26,7 +26,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class ConfigCommand extends BasicCommand {
                                 .then(Commands.literal("biome")
                                         .executes(context -> blacklistBiome(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("biome", BiomeArgument.biome()).suggests(ModSuggestionProvider.BIOMES)
-                                                .executes(context -> blacklistBiome(context.getSource().getPlayerOrException(), BiomeArgument.getBiomeId(context, "biome")))))
+                                                .executes(context -> blacklistBiome(context.getSource().getPlayerOrException(), BiomeArgument.getBiome(context, "biome").key().location()))))
                                 .then(Commands.literal("dimension")
                                         .executes(context -> blacklistDimension(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
@@ -111,7 +111,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player) {
-        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, RegUtil::id));
+        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, biome -> RegUtil.id(player.getCommandSenderWorld(), biome)));
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player, @NotNull ResourceLocation biome) {
@@ -139,7 +139,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int modifyList(@NotNull ServerPlayer player, @NotNull ResourceLocation id, ForgeConfigSpec.@NotNull ConfigValue<List<? extends String>> configList, @NotNull String blacklist, @NotNull String not_blacklist) {
+    private static int modifyList(@NotNull ServerPlayer player, @NotNull ResourceLocation id, ModConfigSpec.@NotNull ConfigValue<List<? extends String>> configList, @NotNull String blacklist, @NotNull String not_blacklist) {
         List<? extends String> list = configList.get();
         if (!list.contains(id.toString())) {
             //noinspection unchecked

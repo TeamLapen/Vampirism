@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
+import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -15,13 +14,11 @@ import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.blockentity.ModBlockEntityItemRenderer;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.entity.player.skills.ClientSkillTreeManager;
-import de.teamlapen.vampirism.entity.player.skills.SkillTree;
-import de.teamlapen.vampirism.inventory.TaskBoardMenu;
-import de.teamlapen.vampirism.inventory.VampirismMenu;
-import de.teamlapen.vampirism.network.*;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
+import de.teamlapen.vampirism.util.PlayerModelType;
+import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -29,34 +26,32 @@ import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
+import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
@@ -64,10 +59,8 @@ import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
 /**
  * Clientside Proxy
  */
-@OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
-    private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
     private VampirismHUDOverlay overlay;
     private CustomBossEventOverlay bossInfoOverlay;
     private RenderHandler renderHandler;
@@ -80,7 +73,7 @@ public class ClientProxy extends CommonProxy {
         Minecraft instance = Minecraft.getInstance();
         if (instance != null) {
             this.renderHandler = new RenderHandler(instance);
-            MinecraftForge.EVENT_BUS.register(this.renderHandler);
+            NeoForge.EVENT_BUS.register(this.renderHandler);
             ((ReloadableResourceManager) instance.getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
         }
     }
@@ -109,6 +102,31 @@ public class ClientProxy extends CommonProxy {
         openScreen(new RevertBackScreen());
     }
 
+    @Override
+    public void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
+        openScreen(new VampireMinionAppearanceScreen(entity, Minecraft.getInstance().screen));
+    }
+
+    @Override
+    public void displayVampireMinionStatsaScreen(VampireMinionEntity entity) {
+        openScreen(new VampireMinionStatsScreen(entity, Minecraft.getInstance().screen));
+    }
+
+    @Override
+    public void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {
+        openScreen(new HunterMinionAppearanceScreen(entity, Minecraft.getInstance().screen));
+    }
+
+    @Override
+    public void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
+        openScreen(new HunterMinionStatsScreen(entity, Minecraft.getInstance().screen));
+    }
+
+    @Override
+    public void obtainPlayerSkins(GameProfile profile, @NotNull Consumer<Pair<ResourceLocation, PlayerModelType>> callback) {
+        PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(profile, callback);
+    }
+
     @Nullable
     @Override
     public Player getClientPlayer() {
@@ -121,46 +139,6 @@ public class ClientProxy extends CommonProxy {
         HitResult r = Minecraft.getInstance().hitResult;
         if (r instanceof EntityHitResult) return ((EntityHitResult) r).getEntity();
         return null;
-    }
-
-    @Override
-    public float getRenderPartialTick() {
-        return Minecraft.getInstance().getFrameTime();
-    }
-
-    @Override
-    public SkillTree getSkillTree(boolean client) {
-        return client ? skillTreeManager.getSkillTree() : super.getSkillTree(false);
-    }
-
-    @Override
-    public void handleBloodValuePacket(@NotNull ClientboundBloodValuePacket msg) {
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyDataConvertibleOverlays((Map<EntityType<? extends PathfinderMob>, ResourceLocation>) (Object) msg.convertibleOverlay());
-        Map<ResourceLocation, Float> entities = msg.getValues()[0];
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
-        BloodConversionRegistry.applyNewEntitiesResources(entities);
-        BloodConversionRegistry.applyNewItemResources(msg.getValues()[1]);
-        BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2]);
-    }
-
-    @Override
-    public void handlePlayEventPacket(@NotNull ClientboundPlayEventPacket msg) {
-        if (msg.type() == 1) {
-            spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
-        }
-        else if(msg.type() == 2){
-            Minecraft.getInstance().getMusicManager().stopPlaying();
-        }
-    }
-
-    @Override
-    public void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, @NotNull List<Pair<Integer, Component>> minions) {
-        openScreen(new SelectMinionScreen(action, minions));
-    }
-
-    @Override
-    public void handleSkillTreePacket(@NotNull ClientboundSkillTreePacket msg) {
-        skillTreeManager.loadUpdate(msg);
     }
 
     @Override
@@ -177,29 +155,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleTaskPacket(@NotNull ClientboundTaskPacket msg) {
-        AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
-        if (msg.containerId() == container.containerId && container instanceof VampirismMenu) {
-            ((VampirismMenu) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
-        }
-    }
-
-    @Override
-    public void handleTaskStatusPacket(@NotNull ClientboundTaskStatusPacket msg) {
-        AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
-        if (msg.containerId() == container.containerId && container instanceof TaskBoardMenu) {
-            ((TaskBoardMenu) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
-        }
-    }
-
-    @Override
     public void handleUpdateMultiBossInfoPacket(@NotNull ClientboundUpdateMultiBossEventPacket msg) {
         this.bossInfoOverlay.read(msg);
-    }
-
-    @Override
-    public void handleVampireBookPacket(VampireBookManager.@NotNull BookInfo bookInfo) {
-        openScreen(new VampireBookScreen(bookInfo));
     }
 
     @Override
@@ -210,8 +167,6 @@ public class ClientProxy extends CommonProxy {
                 Minecraft instance = Minecraft.getInstance();
                 this.overlay = new VampirismHUDOverlay(instance);
                 registerSubscriptions();
-                //noinspection deprecation
-                ActionSelectScreen.loadActionOrder();
                 ModBlocksRender.register();
                 event.enqueueWork(() -> {
                     Sheets.addWoodType(LogBlock.DARK_SPRUCE);
@@ -221,7 +176,6 @@ public class ClientProxy extends CommonProxy {
             case LOAD_COMPLETE -> {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
                 event.enqueueWork(ModScreens::registerScreensUnsafe);
-                skillTreeManager.init();
             }
             default -> {
             }
@@ -240,11 +194,16 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @Override
+    public void sendToServer(CustomPacketPayload packetPayload) {
+        Minecraft.getInstance().getConnection().send(packetPayload);
+    }
+
     private void registerSubscriptions() {
-        MinecraftForge.EVENT_BUS.register(this.overlay);
-        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ModKeys());
+        NeoForge.EVENT_BUS.register(this.overlay);
+        NeoForge.EVENT_BUS.register(new ClientEventHandler());
+        NeoForge.EVENT_BUS.register(new ScreenEventHandler());
+        NeoForge.EVENT_BUS.register(new ModKeys());
     }
 
     @Override
@@ -259,7 +218,8 @@ public class ClientProxy extends CommonProxy {
     /**
      * copied but which much lesser particles
      */
-    private void spawnParticles(Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    @Override
+    public void spawnParticles(Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (!(world instanceof ClientLevel)) return;
         VoxelShape voxelshape = state.getShape(world, pos);
         voxelshape.forAllBoxes((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {

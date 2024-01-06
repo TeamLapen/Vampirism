@@ -8,15 +8,11 @@ import de.teamlapen.vampirism.items.PureBloodItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,7 +21,6 @@ import java.util.Optional;
 /**
  * Gui for the hunter table
  */
-@OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
     private static final ResourceLocation EMPTY_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_book");

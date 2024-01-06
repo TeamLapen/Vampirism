@@ -40,16 +40,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_honey",
       "has_iron",
-      "has_gold",
-      "has_the_recipe"
+      "has_gold"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/candelabra_candles"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

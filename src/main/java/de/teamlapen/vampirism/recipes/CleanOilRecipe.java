@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class CleanOilRecipe extends CustomRecipe {
 
-    public CleanOilRecipe(ResourceLocation id, CraftingBookCategory category) {
-        super(id, category);
+    public CleanOilRecipe(@NotNull CraftingBookCategory category) {
+        super(category);
     }
 
     @Override
-    public boolean matches(CraftingContainer inventory, Level level) {
+    public boolean matches(CraftingContainer inventory, @NotNull Level level) {
         ItemStack tool = null;
         ItemStack paper = null;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -42,7 +42,7 @@ public class CleanOilRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inventory, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(CraftingContainer inventory, @NotNull RegistryAccess registryAccess) {
         ItemStack tool = ItemStack.EMPTY;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
@@ -62,7 +62,7 @@ public class CleanOilRecipe extends CustomRecipe {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return ModRecipes.CLEAN_OIL.get();
     }
 }

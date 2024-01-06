@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -22,15 +22,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +45,7 @@ import java.util.List;
  */
 public class BloodContainerBlock extends VampirismBlockContainer implements ModDisplayItemGenerator.CreativeTabItemProvider {
     protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
+    public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FluidStack getFluidFromItemStack(@NotNull ItemStack stack) {
@@ -67,8 +70,8 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         }
     }
 
-    public BloodContainerBlock() {
-        super(Properties.of().strength(1f).isViewBlocking(UtilLib::never).noOcclusion());
+    public BloodContainerBlock(BlockBehaviour.Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -93,6 +96,11 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         output.accept(stack);
     }
 
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
 
     @NotNull
     @Override

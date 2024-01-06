@@ -18,33 +18,27 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
+import java.util.Optional;
+
 public class ClientProxy extends CommonProxy {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {
-        Capability<ISyncable.ISyncableEntityCapabilityInst> cap = HelperRegistry.getSyncableEntityCaps().get(key);
+        AttachmentType<ISyncable.ISyncableAttachment> cap = HelperRegistry.getSyncableEntityCaps().get(key);
         if (cap == null && e instanceof Player) {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
             LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
         } else {
-            LazyOptional<ISyncable.ISyncableEntityCapabilityInst> opt = e.getCapability(cap); //Lazy Optional is kinda strange
+            Optional<ISyncable.ISyncableAttachment> opt = Optional.ofNullable(e.getData(cap)); //Lazy Optional is kinda strange
             opt.ifPresent(inst -> inst.loadUpdateFromNBT(data));
-            if (!opt.isPresent()) {
+            if (opt.isEmpty()) {
                 LOGGER.warn("Target entity {} does not have capability {}", e, cap);
             }
         }
@@ -71,12 +65,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public @NotNull String getActiveLanguage() {
         return Minecraft.getInstance().getLanguageManager().getSelected().toString();
-    }
-
-    @Override
-    public @Nullable Player getPlayerEntity(NetworkEvent.@NotNull Context ctx) {
-        //Need to double-check the side for some reason
-        return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
     }
 
     @Override

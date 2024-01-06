@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.HunterMinionModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -12,21 +13,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * There are differently looking level 0 hunters.
  * Hunter as of level 1 look all the same, but have different weapons
  */
-@OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionModel<HunterMinionEntity>> {
-    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
-    private final Pair<ResourceLocation, Boolean> @NotNull [] minionSpecificTextures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] minionSpecificTextures;
 
 
     public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
@@ -46,8 +42,8 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull HunterMinionEntity entity) {
-        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
+    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull HunterMinionEntity entity) {
+        Pair<ResourceLocation, PlayerModelType> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }

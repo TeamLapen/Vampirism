@@ -9,7 +9,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
@@ -18,15 +17,15 @@ import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
 import java.util.*;
@@ -134,7 +133,7 @@ public class ClientConfigHelper {
     }
 
     public static List<IAction<?>> getDefaultActionOrder(IPlayableFaction<?> faction) {
-        return RegUtil.values(VampirismRegistries.ACTIONS).stream().filter(action -> action.matchesFaction(faction)).collect(Collectors.toList());
+        return RegUtil.values(ModRegistries.ACTIONS).stream().filter(action -> action.matchesFaction(faction)).collect(Collectors.toList());
     }
 
     /**
@@ -158,7 +157,7 @@ public class ClientConfigHelper {
      * @return a valid order for the given faction
      */
     public static List<SelectMinionTaskRadialScreen.Entry> getDefaultMinionTaskOrder(@Nullable IFaction<?> faction) {
-        return Stream.concat(RegUtil.values(VampirismRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?,?>)).filter(task -> {
+        return Stream.concat(RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?,?>)).filter(task -> {
             if (task instanceof IFactionMinionTask<?, ?> factionTask) {
                 return factionTask.getFaction() == null || factionTask.getFaction() == faction;
             } else {

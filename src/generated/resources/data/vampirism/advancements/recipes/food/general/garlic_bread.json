@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_garlic",
-      "has_bread",
-      "has_the_recipe"
+      "has_bread"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/garlic_bread"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

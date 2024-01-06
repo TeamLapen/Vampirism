@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:hunter/skill3",
-  "skills": [
-    "vampirism:hunter_disguise"
-  ]
-}

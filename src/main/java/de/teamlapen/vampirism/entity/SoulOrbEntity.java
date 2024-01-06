@@ -5,8 +5,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,20 +22,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Similar to EntityXPOrb
  */
-@OnlyIn(
-        value = Dist.CLIENT,
-        _interface = ItemSupplier.class
-)
 public class SoulOrbEntity extends Entity implements ItemSupplier {
 
     public static final EntityDataAccessor<String> TYPE_PARAMETER = SynchedEntityData.defineId(SoulOrbEntity.class, EntityDataSerializers.STRING);
@@ -60,11 +51,6 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         super(type, worldIn);
     }
 
-    @NotNull
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     public @NotNull VARIANT getVariant() {
         return VARIANT.valueOf(getEntityData().get(TYPE_PARAMETER));
@@ -132,7 +118,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (this.isEyeInFluidType(ForgeMod.WATER_TYPE.get())) {
+        if (this.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
             Vec3 vec3d = this.getDeltaMovement();
             this.setDeltaMovement(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
         } else if (!this.isNoGravity()) {

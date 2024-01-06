@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.misc;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
@@ -12,14 +11,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
 
-@Mod.EventBusSubscriber(modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
 
     public static CreativeModeTab.Builder builder(Set<ItemLike> allItems) {
@@ -47,7 +44,7 @@ public class VampirismCreativeTab {
             addWeapons();
             addArmor();
 
-            addGen(BLOOD_BOTTLE);
+            addItemGen(BLOOD_BOTTLE);
             addItem(BLOOD_INFUSED_IRON_INGOT);
             addItem(BLOOD_INFUSED_ENHANCED_IRON_INGOT);
 
@@ -98,7 +95,7 @@ public class VampirismCreativeTab {
             addItem(SOUL_ORB_VAMPIRE);
             addItem(MOTHER_CORE);
             addItem(VAMPIRE_BLOOD_BOTTLE);
-            addGen(VAMPIRE_BOOK);
+            addItemGen(VAMPIRE_BOOK);
             addItem(VAMPIRE_FANG);
             addItem(UMBRELLA);
             addItem(HUNTER_MINION_EQUIPMENT);
@@ -130,7 +127,7 @@ public class VampirismCreativeTab {
             addBlock(ALTAR_INSPIRATION);
             addBlock(ALTAR_PILLAR);
             addBlock(ALTAR_TIP);
-            addGen(BLOOD_CONTAINER);
+            addBlockGen(BLOOD_CONTAINER);
             addBlock(BLOOD_GRINDER);
             addBlock(BLOOD_PEDESTAL);
             addBlock(BLOOD_SIEVE);
@@ -315,9 +312,9 @@ public class VampirismCreativeTab {
             addItem(VAMPIRE_CLOTHING_LEGS);
             addItem(VAMPIRE_CLOTHING_BOOTS);
 
-            addGen(AMULET);
-            addGen(RING);
-            addGen(OBI_BELT);
+            addItemGen(AMULET);
+            addItemGen(RING);
+            addItemGen(OBI_BELT);
         }
 
         private void addWeapons() {
@@ -328,9 +325,9 @@ public class VampirismCreativeTab {
             addItem(HEART_STRIKER_ENHANCED);
             addItem(HEART_STRIKER_ULTIMATE);
 
-            addGen(HUNTER_AXE_NORMAL);
-            addGen(HUNTER_AXE_ENHANCED);
-            addGen(HUNTER_AXE_ULTIMATE);
+            addItemGen(HUNTER_AXE_NORMAL);
+            addItemGen(HUNTER_AXE_ENHANCED);
+            addItemGen(HUNTER_AXE_ULTIMATE);
 
             addItem(BASIC_CROSSBOW);
             addItem(BASIC_DOUBLE_CROSSBOW);

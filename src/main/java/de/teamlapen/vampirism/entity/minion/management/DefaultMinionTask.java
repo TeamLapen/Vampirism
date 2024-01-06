@@ -48,7 +48,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
 
     protected void triggerAdvancements(Player player) {
         if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_MINION_ACTION.trigger(((ServerPlayer) player), this);
+            ModAdvancements.TRIGGER_MINION_ACTION.get().trigger(((ServerPlayer) player), this);
         }
     }
 

@@ -1,0 +1,31 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "W": {
+      "tag": "forge:gems/diamond"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "lava": 5,
+  "pattern": [
+    "XWZY",
+    "XWZY",
+    "  ZY",
+    "  Z "
+  ],
+  "result": {
+    "item": "vampirism:hunter_axe_enhanced"
+  },
+  "skill": [
+    "vampirism:enhanced_weapons"
+  ]
+}

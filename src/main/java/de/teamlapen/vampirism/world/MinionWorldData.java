@@ -33,7 +33,7 @@ public class MinionWorldData extends SavedData {
 
     @NotNull
     public static MinionWorldData getData(final @NotNull MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent((data) -> MinionWorldData.load(server, data), () -> new MinionWorldData(server), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(() -> new MinionWorldData(server), (data) -> MinionWorldData.load(server, data)), ID);
     }
 
 
@@ -49,7 +49,6 @@ public class MinionWorldData extends SavedData {
     private final Object2ObjectOpenHashMap<UUID, PlayerMinionController> controllers = new Object2ObjectOpenHashMap<>();
 
     public MinionWorldData(MinecraftServer server) {
-        super();
         this.server = server;
     }
 

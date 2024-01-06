@@ -10,11 +10,11 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -67,13 +67,12 @@ public class InventoryHelper {
     }
 
     @NotNull
-    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull BlockGetter world, @NotNull BlockPos pos, @Nullable Direction side) {
+    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull Level world, @NotNull BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity()) {
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile != null) {
-                return tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side).map(capability -> ImmutablePair.of(capability, tile));
-
+                return Optional.ofNullable(world.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, tile, side)).map(s -> ImmutablePair.of(s, tile));
             }
         }
         return Optional.empty();

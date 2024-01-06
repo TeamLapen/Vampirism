@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
-import org.jetbrains.annotations.NotNull;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

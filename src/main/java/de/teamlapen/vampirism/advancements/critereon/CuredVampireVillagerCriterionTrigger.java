@@ -1,66 +1,53 @@
 package de.teamlapen.vampirism.advancements.critereon;
 
-import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.REFERENCE;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.core.ModAdvancements;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
-public class CuredVampireVillagerCriterionTrigger extends SimpleCriterionTrigger<CuredVampireVillagerCriterionTrigger.Instance> {
-    private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "cured_vampire_villager");
+import java.util.Optional;
 
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
+public class CuredVampireVillagerCriterionTrigger extends SimpleCriterionTrigger<CuredVampireVillagerCriterionTrigger.TriggerInstance> {
 
     public void trigger(@NotNull ServerPlayer player, @NotNull Entity vampire, @NotNull Villager villager) {
         LootContext lootcontext = EntityPredicate.createContext(player, vampire);
         LootContext lootcontext1 = EntityPredicate.createContext(player, villager);
-        this.trigger(player, (instance) -> instance.test(lootcontext, lootcontext1));
+        this.trigger(player, (instance) -> instance.matches(lootcontext, lootcontext1));
     }
 
-    @NotNull
     @Override
-    protected Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate entityPredicate, @NotNull DeserializationContext conditionsParser) {
-        ContextAwarePredicate vampire = EntityPredicate.fromJson(json, "vampire", conditionsParser);
-        ContextAwarePredicate villager = EntityPredicate.fromJson(json, "villager", conditionsParser);
-        return new Instance(entityPredicate, vampire, villager);
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
-    public static class Instance extends AbstractCriterionTriggerInstance {
-        public static @NotNull Instance any() {
-            return new Instance(ContextAwarePredicate.ANY, ContextAwarePredicate.ANY, ContextAwarePredicate.ANY);
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Optional<ContextAwarePredicate> vampire, @NotNull Optional<ContextAwarePredicate> villager) implements SimpleCriterionTrigger.SimpleInstance {
+
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "vampire").forGetter(TriggerInstance::vampire),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "villager").forGetter(TriggerInstance::villager)
+        ).apply(inst, TriggerInstance::new));
+
+        private TriggerInstance() {
+            this(Optional.empty(), Optional.empty(), Optional.empty());
         }
 
-        private final ContextAwarePredicate vampire;
-        private final ContextAwarePredicate villager;
-
-        public Instance(ContextAwarePredicate player, ContextAwarePredicate vampire, ContextAwarePredicate villager) {
-            super(ID, player);
-            this.vampire = vampire;
-            this.villager = villager;
+        public static @NotNull Criterion<CuredVampireVillagerCriterionTrigger.TriggerInstance> any() {
+            return ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.get().createCriterion(new TriggerInstance());
         }
 
-        @NotNull
-        @Override
-        public JsonObject serializeToJson(@NotNull SerializationContext conditions) {
-            JsonObject json = super.serializeToJson(conditions);
-            json.add("vampire", this.vampire.toJson(conditions));
-            json.add("villager", this.villager.toJson(conditions));
-            return json;
-        }
-
-        public boolean test(@NotNull LootContext vampire, @NotNull LootContext villager) {
-            if (!this.vampire.matches(vampire)) {
+        public boolean matches(@NotNull LootContext vampire, @NotNull LootContext villager) {
+            if (this.vampire.map(s -> !s.matches(vampire)).orElse(false)) {
                 return false;
             } else {
-                return this.villager.matches(villager);
+                return this.villager.map(s -> s.matches(villager)).orElse(true);
             }
         }
     }

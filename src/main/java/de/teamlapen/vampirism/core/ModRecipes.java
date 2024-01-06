@@ -1,24 +1,23 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.recipes.*;
-import de.teamlapen.vampirism.util.NBTIngredient;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -28,35 +27,35 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class ModRecipes {
-    public static @NotNull DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.Keys.RECIPE_TYPES, REFERENCE.MODID);
-    public static @NotNull DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, REFERENCE.MODID);
+    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, REFERENCE.MODID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, REFERENCE.MODID);
+    private static final DeferredRegister<Codec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, REFERENCE.MODID);
 
-    public static final RegistryObject<RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
+    public static final DeferredHolder<RecipeType<?>, RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
         public @NotNull String toString() {
             return "weapontable_crafting";
         }
     });
-    public static final RegistryObject<RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
         public @NotNull String toString() {
             return "alchemical_cauldron";
         }
     });
-    public static final RegistryObject<RecipeType<AlchemyTableRecipe>> ALCHEMICAL_TABLE_TYPE = RECIPE_TYPES.register("alchemical_table", () -> new RecipeType<>() {
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AlchemyTableRecipe>> ALCHEMICAL_TABLE_TYPE = RECIPE_TYPES.register("alchemical_table", () -> new RecipeType<>() {
         public @NotNull String toString() {
             return "alchemical_table";
         }
     });
 
-    public static final RegistryObject<RecipeSerializer<ShapedWeaponTableRecipe>> SHAPED_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<ShapelessWeaponTableRecipe>> SHAPELESS_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<ShapedRecipe>> REPAIR_IITEMWITHTIER = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<AlchemyTableRecipe>> ALCHEMICAL_TABLE = RECIPE_SERIALIZERS.register("alchemical_table", AlchemyTableRecipe.Serializer::new);
-    public static final RegistryObject<RecipeSerializer<ApplicableOilRecipe>> APPLICABLE_OIL = RECIPE_SERIALIZERS.register("applicable_oil", () -> new SimpleCraftingRecipeSerializer<>(ApplicableOilRecipe::new));
-    public static final RegistryObject<RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new SimpleCraftingRecipeSerializer<>(CleanOilRecipe::new));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedWeaponTableRecipe>> SHAPED_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shaped_crafting_weapontable", ShapedWeaponTableRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapelessWeaponTableRecipe>> SHAPELESS_CRAFTING_WEAPONTABLE = RECIPE_SERIALIZERS.register("shapeless_crafting_weapontable", ShapelessWeaponTableRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedRecipe>> REPAIR_IITEMWITHTIER = RECIPE_SERIALIZERS.register("repair_iitemwithtier", ShapedItemWithTierRepair.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = RECIPE_SERIALIZERS.register("alchemical_cauldron", AlchemicalCauldronRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlchemyTableRecipe>> ALCHEMICAL_TABLE = RECIPE_SERIALIZERS.register("alchemical_table", AlchemyTableRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ApplicableOilRecipe>> APPLICABLE_OIL = RECIPE_SERIALIZERS.register("applicable_oil", () -> new SimpleCraftingRecipeSerializer<>(ApplicableOilRecipe::new));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new SimpleCraftingRecipeSerializer<>(CleanOilRecipe::new));
 
-
-    public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
+    public static final DeferredHolder<Codec<? extends ICondition>, Codec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
     private static final Map<TagKey<Item>, Integer> liquidColorsTags = Maps.newHashMap();
@@ -78,7 +77,7 @@ public class ModRecipes {
     static void register(@NotNull IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
-        bus.addListener(ModRecipes::registerRecipeSerializers);
+        CONDITION_CODECS.register(bus);
     }
 
     public static void registerLiquidColor(Item item, int color) {
@@ -89,21 +88,14 @@ public class ModRecipes {
         liquidColorsTags.put(items, color);
     }
 
-    static void registerRecipeSerializers(@NotNull RegisterEvent event) {
-        if (event.getRegistryKey() == ForgeRegistries.Keys.RECIPE_SERIALIZERS) {
-            CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "nbt"), NBTIngredient.Serializer.INSTANCE);
-        }
-    }
-
     /**
      * gets liquid color for item
      */
-    public static int getLiquidColor(Item stack) {
-        Integer c = liquidColors.get(stack);
+    public static int getLiquidColor(ItemStack stack) {
+        Integer c = liquidColors.get(stack.getItem());
         if (c != null) return c;
         for (Map.Entry<TagKey<Item>, Integer> entry : liquidColorsTags.entrySet()) {
-            //noinspection ConstantConditions
-            if (ForgeRegistries.ITEMS.tags().getTag(entry.getKey()).contains(stack)) {
+            if(stack.is(entry.getKey())) {
                 return entry.getValue();
             }
         }

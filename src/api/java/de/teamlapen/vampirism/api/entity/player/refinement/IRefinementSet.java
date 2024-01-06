@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public interface IRefinementSet {
 
@@ -26,7 +26,7 @@ public interface IRefinementSet {
     Rarity getRarity();
 
     @NotNull
-    Set<RegistryObject<? extends IRefinement>> getRefinements();
+    Set<Supplier<? extends IRefinement>> getRefinements();
 
     /**
      * @return The accessory type this can be on, or empty if all

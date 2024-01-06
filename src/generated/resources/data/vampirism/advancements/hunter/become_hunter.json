@@ -3,8 +3,10 @@
   "criteria": {
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
@@ -15,12 +17,9 @@
     "description": {
       "translate": "advancement.vampirism.become_hunter.desc"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
       "item": "vampirism:item_garlic"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.become_hunter"
     }

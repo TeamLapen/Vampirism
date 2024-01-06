@@ -30,15 +30,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_diamond",
-      "has_obsidian",
-      "has_the_recipe"
+      "has_obsidian"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/totem_top"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

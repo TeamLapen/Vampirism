@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -19,8 +18,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,7 +72,6 @@ public class TentItem extends Item {
         this.spawner = spawner;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);

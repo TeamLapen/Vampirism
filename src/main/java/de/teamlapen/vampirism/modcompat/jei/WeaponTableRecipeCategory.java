@@ -27,7 +27,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.crafting.IShapedRecipe;
+import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

@@ -26,8 +26,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,7 +39,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (rand.nextInt(24) == 0) {

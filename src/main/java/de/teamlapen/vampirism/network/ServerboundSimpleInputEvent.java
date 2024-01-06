@@ -1,82 +1,51 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.inventory.HunterBasicMenu;
-import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
-import de.teamlapen.vampirism.inventory.RevertBackMenu;
-import de.teamlapen.vampirism.items.OblivionItem;
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import org.apache.commons.lang3.Validate;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Collection of simple input events that do not need any additional information
  */
-public record ServerboundSimpleInputEvent(Type type) implements IMessage.IServerBoundMessage {
+public record ServerboundSimpleInputEvent(Type type) implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "simple_input");
 
-    static void encode(@NotNull ServerboundSimpleInputEvent msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeEnum(msg.type);
+    public static final Codec<ServerboundSimpleInputEvent> CODEC = StringRepresentable.fromEnum(Type::values).xmap(ServerboundSimpleInputEvent::new, msg -> msg.type);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ServerboundSimpleInputEvent decode(@NotNull FriendlyByteBuf buf) {
-        Type t = buf.readEnum(Type.class);
-        return new ServerboundSimpleInputEvent(t);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
 
-    static void handle(final @NotNull ServerboundSimpleInputEvent msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ServerPlayer player = ctx.getSender();
-        Validate.notNull(player);
-        ctx.enqueueWork(() -> {
-            Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty);
-            //Try to keep this simple
-            switch (msg.type) {
-                case FINISH_SUCK_BLOOD -> VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
-                case RESET_SKILLS -> {
-                    InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
-                    factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
-                }
-                case REVERT_BACK -> {
-                    if (player.containerMenu instanceof RevertBackMenu menu) {
-                        menu.consume();
-                    }
-                    FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                        handler.leaveFaction(!player.server.isHardcore());
-                    });
-                }
-                case TOGGLE_VAMPIRE_VISION -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
-                case TRAINER_LEVELUP -> {
-                    if (player.containerMenu instanceof HunterTrainerMenu) {
-                        ((HunterTrainerMenu) player.containerMenu).onLevelupClicked();
-                    }
-                }
-                case BASIC_HUNTER_LEVELUP -> {
-                    if (player.containerMenu instanceof HunterBasicMenu) {
-                        ((HunterBasicMenu) player.containerMenu).onLevelUpClicked();
-                    }
-                }
-                case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> VampirismMod.dispatcher.sendTo(a, player));
-                case VAMPIRISM_MENU -> factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
-                case RESURRECT -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::tryResurrect);
-                case GIVE_UP -> VampirePlayer.getOpt(player).ifPresent(VampirePlayer::giveUpDBNO);
-            }
-        });
-        ctx.setPacketHandled(true);
-    }
+    public enum Type implements StringRepresentable {
+        FINISH_SUCK_BLOOD("finish_suck_blood"),
+        RESET_SKILLS("reset_skills"),
+        REVERT_BACK("revert_back"),
+        TOGGLE_VAMPIRE_VISION("toggle_vampire_vision"),
+        TRAINER_LEVELUP("trainer_levelup"),
+        BASIC_HUNTER_LEVELUP("basic_hunter_levelup"),
+        SHOW_MINION_CALL_SELECTION("show_minion_call_selection"),
+        VAMPIRISM_MENU("vampirism_menu"),
+        RESURRECT("resurrect"),
+        GIVE_UP("give_up");
 
-    public enum Type {
-        FINISH_SUCK_BLOOD, RESET_SKILLS, REVERT_BACK, TOGGLE_VAMPIRE_VISION, TRAINER_LEVELUP, BASIC_HUNTER_LEVELUP, SHOW_MINION_CALL_SELECTION, VAMPIRISM_MENU, RESURRECT, GIVE_UP
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
+        }
     }
 }

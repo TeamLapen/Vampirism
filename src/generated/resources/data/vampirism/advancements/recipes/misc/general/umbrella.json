@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "vampirism:config",
+      "option": "umbrella"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:general/umbrella"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wool": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wool"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_wool"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:general/umbrella"
+    ]
+  }
+}

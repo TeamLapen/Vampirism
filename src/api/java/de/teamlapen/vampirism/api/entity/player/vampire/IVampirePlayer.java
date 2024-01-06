@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -114,7 +115,22 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      */
     void updateMinionAttributes(boolean increasedStats);
 
-    enum BITE_TYPE {
-        SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE
+    enum BITE_TYPE implements StringRepresentable {
+        SUCK_BLOOD_CREATURE("suck_blood_creature"),
+        SUCK_BLOOD_PLAYER("suck_blood_player"),
+        SUCK_BLOOD("suck_blood"),
+        NONE("none"),
+        HUNTER_CREATURE("hunter_creature");
+
+        private final String name;
+
+        BITE_TYPE(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
+        }
     }
 }

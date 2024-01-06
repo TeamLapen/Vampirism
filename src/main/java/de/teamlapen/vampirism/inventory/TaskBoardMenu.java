@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -22,8 +21,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,10 +110,10 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
                 this.taskInstances.remove(taskInfo);
                 VampLib.proxy.createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
             }
-            case ACCEPT -> taskInfo.startTask(Minecraft.getInstance().level.getGameTime() + taskInfo.getTaskDuration());
+            case ACCEPT -> taskInfo.startTask(factionPlayer.getRepresentingPlayer().level().getGameTime() + taskInfo.getTaskDuration());
             default -> taskInfo.aboardTask();
         }
-        VampirismMod.dispatcher.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
+        VampirismMod.proxy.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
         if (this.listener != null) {
             this.listener.run();
         }
@@ -156,7 +155,6 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
     /**
      * @param completedRequirements updated completed requirements
      */
-    @OnlyIn(Dist.CLIENT)
     public void init(@NotNull Set<ITaskInstance> available, @NotNull Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
         this.taskInstances.clear();
         this.taskInstances.addAll(available);

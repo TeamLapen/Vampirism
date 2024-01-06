@@ -14,8 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,11 +41,6 @@ public class CoffinBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    @Override
-    public @NotNull AABB getRenderBoundingBox() {
-        return new AABB(worldPosition.getX() - 4, worldPosition.getY(), worldPosition.getZ() - 4, worldPosition.getX() + 4, worldPosition.getY() + 2, worldPosition.getZ() + 4);
-    }
-
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -65,7 +60,6 @@ public class CoffinBlockEntity extends BlockEntity {
         this.lidPos = compound.getFloat("lidPos");
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket packet) {
         if (hasLevel()) load(packet.getTag());

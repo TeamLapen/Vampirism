@@ -9,8 +9,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "entity": "this",
-          "level": 0
+          "level": 0,
+          "target": "this"
         }
       ],
       "entries": [
@@ -29,8 +29,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "entity": "this",
-          "level": 1
+          "level": 1,
+          "target": "this"
         }
       ],
       "entries": [
@@ -49,8 +49,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "entity": "this",
-          "level": 2
+          "level": 2,
+          "target": "this"
         }
       ],
       "entries": [
@@ -69,8 +69,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "entity": "this",
-          "level": 3
+          "level": 3,
+          "target": "this"
         }
       ],
       "entries": [
@@ -89,8 +89,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "entity": "this",
-          "level": 4
+          "level": 4,
+          "target": "this"
         }
       ],
       "entries": [

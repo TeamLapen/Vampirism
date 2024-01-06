@@ -1,5 +1,6 @@
 package de.teamlapen.lib.util;
 
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
  */
 public class Color {
 
+    public static final Codec<Color> CODEC = Codec.INT.xmap(Color::new, Color::getRGB);
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color BLUE = new Color(0, 0, 255);
     public static final Color MAGENTA = new Color(255, 0, 255);
@@ -29,7 +31,7 @@ public class Color {
     }
 
     public Color(int rgb) {
-        this(rgb, false);
+        this(rgb, rgb >> 24 != 0);
     }
 
     public Color(int rgb, boolean hasAlpha) {

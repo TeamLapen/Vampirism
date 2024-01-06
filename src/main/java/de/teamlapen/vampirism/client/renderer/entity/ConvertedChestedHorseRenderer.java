@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.ChestedHorseRenderer;

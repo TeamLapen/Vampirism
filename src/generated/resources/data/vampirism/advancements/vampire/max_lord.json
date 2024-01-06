@@ -3,15 +3,16 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "LORD",
-        "faction": "vampirism:vampire",
+        "type": "lord",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 5
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.max_lord_vampire.desc"
     },
@@ -20,7 +21,6 @@
     "icon": {
       "item": "vampirism:vampire_minion_upgrade_special"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.max_lord_vampire"
     }

@@ -13,15 +13,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Gui for the weapon table. Only draws the background and the lava status
  */
-@OnlyIn(Dist.CLIENT)
 public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> implements RecipeUpdateListener {
 
     private static final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
@@ -61,7 +58,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
             this.renderBg(graphics, partialTicks, mouseX, mouseY);
             this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
@@ -95,7 +92,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
         this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth - 18);
         this.addRenderableOnly(this.recipeBookGui);
         this.setInitialFocus(this.recipeBookGui);
-        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
+        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, RecipeBookComponent.RECIPE_BUTTON_SPRITES, (button) -> {
             this.recipeBookGui.initVisuals();
             this.recipeBookGui.toggleVisibility();
             this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth - 18);

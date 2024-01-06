@@ -9,11 +9,8 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class BasicVampireRenderer extends HumanoidMobRenderer<BasicVampireEntity, HumanoidModel<BasicVampireEntity>> {
 
     private final ResourceLocation @NotNull [] textures;

@@ -22,9 +22,10 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.network.IContainerFactory;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
-        this.hunterPlayer = HunterPlayer.get(playerInventory.player);
+        this.hunterPlayer = HunterPlayer.getOpt(playerInventory.player).orElseThrow();
         this.player = playerInventory.player;
         this.addSlot(new WeaponTableCraftingSlot(playerInventory.player, craftMatrix, craftResult, 0, 144, 46, worldPosCallable));
 
@@ -113,10 +114,9 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
         return 0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void handlePlacement(boolean shouldPlaceAll, @NotNull Recipe<?> recipe, @NotNull ServerPlayer serverPlayer) {
-        new NBTServerPlaceRecipe<>(this).recipeClicked(serverPlayer, (Recipe<CraftingContainer>) recipe, shouldPlaceAll);
+    public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
+        new NBTServerPlaceRecipe<>(this).recipeClicked(pPlayer, (RecipeHolder<? extends Recipe<CraftingContainer>>)pRecipe, pPlaceAll);
     }
 
     @NotNull
@@ -184,8 +184,8 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public boolean recipeMatches(@NotNull Recipe<? super CraftingContainer> recipeIn) {
-        return recipeIn.matches(craftMatrix, this.player.level());
+    public boolean recipeMatches(@NotNull RecipeHolder<? extends Recipe<CraftingContainer>> recipeIn) {
+        return recipeIn.value().matches(craftMatrix, this.player.level());
     }
 
     @Override
@@ -216,15 +216,15 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
 
     private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingContainer craftMatrixIn, @NotNull ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
-            Optional<IWeaponTableRecipe> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn);
+            Optional<RecipeHolder<IWeaponTableRecipe>> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn);
             this.missingLava.set(false);
             craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
-                IWeaponTableRecipe recipe = optional.get();
-                if ((craftResultIn.setRecipeUsed(worldIn, serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
+                RecipeHolder<IWeaponTableRecipe> recipe = optional.get();
+                if ((craftResultIn.setRecipeUsed(worldIn, serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.value().getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.value().getRequiredSkills())) {
                     this.worldPos.execute((world, pos) -> {
-                        if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
-                            craftResultIn.setItem(0, recipe.assemble(craftMatrixIn, world.registryAccess()));
+                        if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.value().getRequiredLavaUnits()) {
+                            craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn, world.registryAccess()));
                         } else {
                             this.missingLava.set(true);
                         }

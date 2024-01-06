@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

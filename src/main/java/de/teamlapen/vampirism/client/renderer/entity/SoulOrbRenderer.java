@@ -5,12 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 
-@OnlyIn(Dist.CLIENT)
 public class SoulOrbRenderer extends ThrownItemRenderer<SoulOrbEntity> {
 
     public SoulOrbRenderer(EntityRendererProvider.@NotNull Context context) {

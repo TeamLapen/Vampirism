@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +30,6 @@ import java.util.List;
  * @param <T> The minion entity
  * @param <M> The no rendering dummy minion model
  */
-@OnlyIn(Dist.CLIENT)
 public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, M extends PlayerBodyOverlayLayer.VisibilityPlayerModel<T>> extends RenderLayer<T, M> {
 
     public PlayerBodyOverlayLayer(@NotNull DualBipedRenderer<T, M> entityRendererIn) {

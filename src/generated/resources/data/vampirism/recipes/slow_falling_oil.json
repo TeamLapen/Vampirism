@@ -1,0 +1,27 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "item": "vampirism:oil_bottle"
+  },
+  "input": [
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:slow_falling\"}"
+    },
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:long_slow_falling\"}"
+    }
+  ],
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:slow_falling"
+    }
+  }
+}

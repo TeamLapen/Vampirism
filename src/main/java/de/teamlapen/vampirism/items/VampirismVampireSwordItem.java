@@ -49,8 +49,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,7 +74,6 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         this.trainedAttackSpeedIncrease = material.getTrainedSpeedIncrease();
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         float charged = getChargePercentage(stack);
@@ -254,7 +251,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     /**
-     * Updated during {@link net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent}
+     * Updated during {@link net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent}
      *
      * @return True if the cached value was updated
      */
@@ -357,7 +354,6 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         return 0f;
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle(@NotNull LivingEntity player, boolean mainHand) {
         Vec3 mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
@@ -366,7 +362,6 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void spawnChargingParticle(@NotNull LivingEntity player, boolean mainHand) {
         Vec3 pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getAttackAnim(1f) > 0f) return;

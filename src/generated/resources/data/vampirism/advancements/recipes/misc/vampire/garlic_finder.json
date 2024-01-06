@@ -42,16 +42,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_garlic",
       "has_bloodiron",
-      "has_redstone",
-      "has_the_recipe"
+      "has_redstone"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/garlic_finder"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

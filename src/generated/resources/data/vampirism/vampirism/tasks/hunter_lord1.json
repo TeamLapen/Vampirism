@@ -34,9 +34,7 @@
   },
   "rewards": {
     "type": "vampirism:lord_level",
-    "description": {
-      "translate": "task.vampirism.hunter_lord1.reward"
-    },
+    "description": "{\"translate\":\"task.vampirism.hunter_lord1.reward\"}",
     "targetLevel": 1
   },
   "title": {

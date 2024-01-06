@@ -1,37 +1,31 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
-import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.util.NBTIngredient;
+import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
-import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.advancements.*;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class AlchemyTableRecipeBuilder {
+public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
     public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull ItemStack stack) {
         return new AlchemyTableRecipeBuilder(stack);
@@ -45,14 +39,14 @@ public class AlchemyTableRecipeBuilder {
         return builder(oilStack.get());
     }
 
-    private final @NotNull ItemStack result;
-    private final @NotNull IOil resultOil;
-    private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
-    private String group;
-    private Ingredient ingredient;
-    private final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
-    private Ingredient input;
-    private ISkill[] skills;
+    protected final @NotNull ItemStack result;
+    protected final @NotNull IOil resultOil;
+    protected String group;
+    protected Ingredient ingredient;
+    protected final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
+    protected Ingredient input;
+    protected final List<ISkill<?>> skills = new LinkedList<>();
+    protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
     public AlchemyTableRecipeBuilder(@NotNull ItemStack result) {
         this(result, OilUtils.getOil(result));
@@ -65,7 +59,7 @@ public class AlchemyTableRecipeBuilder {
         this.resultOil = resultOil;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder group(@NotNull String group) {
+    public @NotNull AlchemyTableRecipeBuilder group(@Nullable String group) {
         this.group = group;
         return this;
     }
@@ -76,16 +70,16 @@ public class AlchemyTableRecipeBuilder {
     }
 
     public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull IOil oil) {
-        this.ingredient = new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(oil));
+        this.ingredient = NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(oil));
         return this;
     }
 
     public AlchemyTableRecipeBuilder plantOilIngredient() {
-        return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
-        return ingredient(new NBTIngredient(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).withCriterion("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {
@@ -93,95 +87,47 @@ public class AlchemyTableRecipeBuilder {
         return this;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder withCriterion(@NotNull String name, @NotNull CriterionTriggerInstance criterion) {
-        this.advancementBuilder.addCriterion(name, criterion);
+    public @NotNull AlchemyTableRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
+        this.skills.addAll(Arrays.asList(skills));
         return this;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder withSkills(@NotNull ISkill... skills) {
-        this.skills = skills;
+    @Override
+    public void save(@NotNull RecipeOutput recipeOutput, @NotNull ResourceLocation resourceLocation) {
+        Advancement.Builder advancement = recipeOutput.advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
+                .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
+                .requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(advancement::addCriterion);
+        var recipe = new AlchemyTableRecipe(Objects.requireNonNullElse(this.group,""), this.ingredient, this.input, this.result, this.skills);
+        recipeOutput.accept(resourceLocation, recipe, advancement.build(resourceLocation.withPrefix("recipes/alchemy_table/")));
+    }
+
+    @Override
+    public @NotNull AlchemyTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
+        this.criteria.put(name, criterion);
         return this;
     }
 
-    public void build(@NotNull Consumer<FinishedRecipe> consumer, @NotNull ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(), "alchemy_table/" + id.getPath());
-        this.validate(id);
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.ingredientOil, this.input, this.result, this.resultOil, this.skills != null ? this.skills : new ISkill[0], id.withPath("recipes/" + "alchemy_table" + "/" + id.getPath()), this.advancementBuilder));
+    @Override
+    public @NotNull Item getResult() {
+        return this.result.getItem();
     }
 
-    private void validate(@NotNull ResourceLocation id) {
-        if (this.ingredient == null) {
-            throw new IllegalStateException("No ingredients defined for alchemical table recipe " + id + "!");
-        } else if (this.input == null) {
-            throw new IllegalStateException("No input defined for alchemical table recipe " + id + "!");
-        }
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike p_125978_) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(p_125978_));
     }
 
-    protected static InventoryChangeTrigger.@NotNull TriggerInstance has(@NotNull ItemLike p_200403_0_) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(p_200403_0_).build());
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> p_206407_) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(p_206407_));
     }
 
-    protected static InventoryChangeTrigger.@NotNull TriggerInstance has(@NotNull TagKey<Item> p_200409_0_) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(p_200409_0_).build());
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... p_299111_) {
+        return inventoryTrigger(Arrays.stream(p_299111_).map(ItemPredicate.Builder::build).toArray(ItemPredicate[]::new));
     }
 
-    protected static InventoryChangeTrigger.@NotNull TriggerInstance inventoryTrigger(@NotNull ItemPredicate @NotNull ... p_200405_0_) {
-        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, p_200405_0_);
-    }
-
-    private record Result(@NotNull ResourceLocation id, @NotNull String group, @NotNull Ingredient ingredient, @NotNull IOil ingredientOil, @NotNull Ingredient input, @NotNull ItemStack result, @NotNull IOil resultOil, @NotNull ISkill[] skills, @NotNull ResourceLocation advancementId, @NotNull Advancement.Builder advancementBuilder) implements FinishedRecipe {
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return advancementId;
-        }
-
-        @NotNull
-        @Override
-        public ResourceLocation getId() {
-            return id;
-        }
-
-        @NotNull
-        @Override
-        public RecipeSerializer<?> getType() {
-            return ModRecipes.ALCHEMICAL_TABLE.get();
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return this.advancementBuilder.serializeToJson();
-        }
-
-        @Override
-        public void serializeRecipeData(@NotNull JsonObject json) {
-            if (!this.group.isEmpty()) {
-                json.addProperty("group", this.group);
-            }
-            json.add("result", item(this.result));
-            json.add("ingredient", this.ingredient.toJson());
-            json.add("input", this.input.toJson());
-
-            JsonArray skills = new JsonArray();
-            for (ISkill skill : this.skills) {
-                skills.add(RegUtil.id(skill).toString());
-            }
-            json.add("skill", skills);
-        }
-
-        private @NotNull JsonObject item(@NotNull ItemStack stack) {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("item", RegUtil.id(stack.getItem()).toString());
-            if (stack.getCount() > 1) {
-                obj.addProperty("count", stack.getCount());
-            }
-            if (stack.hasTag()) {
-                obj.add("nbt", new JsonParser().parse(stack.getTag().toString()).getAsJsonObject());
-            }
-            return obj;
-        }
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... p_126012_) {
+        return CriteriaTriggers.INVENTORY_CHANGED
+                .createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(p_126012_)));
     }
 }

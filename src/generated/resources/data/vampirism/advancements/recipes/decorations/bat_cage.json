@@ -30,15 +30,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_gold",
-      "has_planks",
-      "has_the_recipe"
+      "has_planks"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:bat_cage"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

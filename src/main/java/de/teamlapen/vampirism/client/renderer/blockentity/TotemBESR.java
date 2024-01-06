@@ -11,12 +11,10 @@ import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-@OnlyIn(Dist.CLIENT)
 public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
 
 
@@ -70,5 +68,8 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
         matrixStack.popPose();
     }
 
-
+    @Override
+    public @NotNull AABB getRenderBoundingBox(@NotNull TotemBlockEntity blockEntity) {
+        return INFINITE_EXTENT_AABB;
+    }
 }

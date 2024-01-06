@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.modcompat;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 

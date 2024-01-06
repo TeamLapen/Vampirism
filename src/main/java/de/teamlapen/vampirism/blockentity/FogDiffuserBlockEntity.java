@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -57,7 +58,7 @@ public class FogDiffuserBlockEntity extends BlockEntity {
     }
 
     protected AABB getArea(int range) {
-        return new AABB(this.worldPosition.offset(-range, -range, -range), this.worldPosition.offset(range, range, range));
+        return new AABB(Vec3.atLowerCornerOf(this.worldPosition.offset(-range, -range, -range)), Vec3.atLowerCornerWithOffset(this.worldPosition.offset(range, range, range), 1, 1, 1));
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, FogDiffuserBlockEntity blockEntity) {
@@ -97,14 +98,16 @@ public class FogDiffuserBlockEntity extends BlockEntity {
     }
 
     protected void updateFogArea(AABB area) {
-        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, area));
+        LevelFog.getOpt(this.level).ifPresent(fog -> fog.updateArtificialFogBoundingBox(this.worldPosition, area));
     }
 
-    public void interact(ItemStack itemInHand) {
+    public boolean interact(ItemStack itemInHand) {
         if (!this.activated && itemInHand.is(ModTags.Items.PURE_BLOOD)) {
             this.activated = true;
             itemInHand.shrink(1);
+            return true;
         }
+        return false;
     }
 
     public enum State {

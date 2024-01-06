@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
-import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
@@ -11,22 +9,17 @@ import de.teamlapen.vampirism.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
-import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import de.teamlapen.vampirism.network.task.BloodValuesTask;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
+import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,51 +30,56 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 public class RegistryManager implements IInitListener {
 
-    public RegistryManager() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+    private final IEventBus eventBus;
+
+    public RegistryManager(@NotNull IEventBus eventBus) {
+        this.eventBus = eventBus;
+        this.eventBus.register(this);
     }
 
-    public static void setupRegistries(@NotNull IEventBus modbus) {
-        ModRegistries.init(modbus);
-        ModAttributes.register(modbus);
-        ModBiomes.register(modbus);
-        ModBlocks.register(modbus);
-        ModContainer.register(modbus);
-        ModEffects.register(modbus);
-        ModEnchantments.register(modbus);
-        ModEntities.register(modbus);
-        ModFeatures.register(modbus);
-        ModStructures.register(modbus);
-        ModFluids.register(modbus);
-        ModItems.register(modbus);
-        ModLoot.register(modbus);
-        ModParticles.register(modbus);
-        ModPotions.register(modbus);
-        ModRecipes.register(modbus);
-        ModRefinements.register(modbus);
-        ModRefinementSets.register(modbus);
-        ModSounds.register(modbus);
-        ModTasks.register(modbus);
-        ModTiles.register(modbus);
-        ModAi.register(modbus);
-        ModVillage.register(modbus);
-        VampireActions.register(modbus);
-        HunterActions.register(modbus);
-        EntityActions.register(modbus);
-        MinionTasks.register(modbus);
-        LordActions.register(modbus);
-        LordSkills.register(modbus);
-        VampireSkills.register(modbus);
-        HunterSkills.register(modbus);
-        ModCommands.register(modbus);
-        ModOils.register(modbus);
+    public void setupRegistries() {
+        ModRegistries.init(eventBus);
+        ModAttributes.register(eventBus);
+        ModBiomes.register(eventBus);
+        ModBlocks.register(eventBus);
+        ModContainer.register(eventBus);
+        ModEffects.register(eventBus);
+        ModEnchantments.register(eventBus);
+        ModEntities.register(eventBus);
+        ModFeatures.register(eventBus);
+        ModStructures.register(eventBus);
+        ModFluids.register(eventBus);
+        ModItems.register(eventBus);
+        ModLoot.register(eventBus);
+        ModParticles.register(eventBus);
+        ModPotions.register(eventBus);
+        ModRecipes.register(eventBus);
+        ModRefinements.register(eventBus);
+        ModRefinementSets.register(eventBus);
+        ModSounds.register(eventBus);
+        ModTasks.register(eventBus);
+        ModTiles.register(eventBus);
+        ModAi.register(eventBus);
+        ModVillage.register(eventBus);
+        VampireActions.register(eventBus);
+        HunterActions.register(eventBus);
+        EntityActions.register(eventBus);
+        MinionTasks.register(eventBus);
+        LordActions.register(eventBus);
+        LordSkills.register(eventBus);
+        VampireSkills.register(eventBus);
+        HunterSkills.register(eventBus);
+        ModCommands.register(eventBus);
+        ModOils.register(eventBus);
+        ModAttachments.register(eventBus);
+        ModAdvancements.register(eventBus);
     }
 
     @SubscribeEvent
     public void onBuildRegistries(NewRegistryEvent event) {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onModifyEntityTypeAttributes);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterEntityTypeAttributes);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::onRegisterSpawns);
+        this.eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
+        this.eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
+        this.eventBus.addListener(ModEntities::onRegisterSpawns);
     }
 
     @Override
@@ -90,10 +88,8 @@ public class RegistryManager implements IInitListener {
             case COMMON_SETUP:
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
-                ModAdvancements.registerAdvancementTrigger();
                 event.enqueueWork(() -> {
                     ModPotions.registerPotionMixes();
-                    ModStats.registerCustomStats();
                     ModVillage.villagerTradeSetup();
                 });
                 ModTiles.registerTileExtensionsUnsafe();
@@ -116,9 +112,17 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEffects(@NotNull RegisterEvent event) {
-        if (event.getRegistryKey().equals(ForgeRegistries.Keys.MOB_EFFECTS)) {
-            //noinspection ConstantConditions,unchecked
-            ModEffects.replaceEffects((IForgeRegistry<MobEffect>) (Object) event.getForgeRegistry()); //TODO 1.19 check
+        if (event.getRegistryKey().equals(Registries.CUSTOM_STAT)) {
+            ModStats.registerCustomStats();
         }
+        if (event.getRegistryKey().equals(Registries.MOB_EFFECT)) {
+            //noinspection unchecked
+            ModEffects.replaceEffects((Registry<MobEffect>) event.getRegistry());
+        }
+    }
+
+    @SubscribeEvent
+    public void onGameConfiguration(OnGameConfigurationEvent event) {
+        event.register(new BloodValuesTask());
     }
 }

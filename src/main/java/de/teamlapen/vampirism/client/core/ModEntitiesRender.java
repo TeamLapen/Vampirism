@@ -16,12 +16,11 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +28,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Handles entity render registration
  */
-@OnlyIn(Dist.CLIENT)
 public class ModEntitiesRender {
-    private final static Logger LOGGER = LogManager.getLogger();
-
     public static final ModelLayerLocation HUNTER = new ModelLayerLocation(new ResourceLocation("vampirism:hunter"), "main");
     public static final ModelLayerLocation HUNTER_SLIM = new ModelLayerLocation(new ResourceLocation("vampirism:slim_hunter"), "main");
     public static final ModelLayerLocation COFFIN = new ModelLayerLocation(new ResourceLocation("vampirism:coffin"), "main");
@@ -142,7 +138,7 @@ public class ModEntitiesRender {
     @SuppressWarnings("unchecked")
     private static <T extends Player, Q extends EntityModel<T>, Z extends HumanoidModel<T>, I extends LivingEntity, U extends EntityModel<I>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
 
-        for (String s : event.getSkins()) {
+        for (PlayerSkin.Model s : event.getSkins()) {
             LivingEntityRenderer<T, Q> renderPlayer = event.getSkin(s);
             if (renderPlayer != null && renderPlayer.getModel() instanceof HumanoidModel) {
                 LivingEntityRenderer<T, Z> renderPlayer2 = (LivingEntityRenderer<T, Z>) renderPlayer;

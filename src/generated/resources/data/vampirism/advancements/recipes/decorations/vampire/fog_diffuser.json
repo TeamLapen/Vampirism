@@ -44,16 +44,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_diamond",
       "has_cursed_plank",
-      "has_mother_core",
-      "has_the_recipe"
+      "has_mother_core"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/fog_diffuser"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

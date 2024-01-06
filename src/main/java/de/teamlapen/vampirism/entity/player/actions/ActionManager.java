@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class ActionManager implements IActionManager {
     }
 
     @Override
-    public IForgeRegistry<IAction<?>> getRegistry() {
-        return ModRegistries.ACTIONS.get();
+    public Registry<IAction<?>> getRegistry() {
+        return ModRegistries.ACTIONS;
     }
 }

@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_pure_blood",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_pure_blood"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/vampire_cloak_white_black"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

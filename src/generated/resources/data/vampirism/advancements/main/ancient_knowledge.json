@@ -15,16 +15,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.ancient_knowledge.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "vampirism:vampire_book"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.ancient_knowledge"
     }

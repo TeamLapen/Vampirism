@@ -1,0 +1,21 @@
+{
+  "display": {
+    "Count": 1,
+    "id": "vampirism:vampire_minion_binding"
+  },
+  "faction": {
+    "id": "vampirism:vampire"
+  },
+  "name": {
+    "translate": "text.vampirism.skills.lord"
+  },
+  "unlock_predicate": {
+    "type_specific": {
+      "type": "vampirism:faction",
+      "faction": {
+        "id": "vampirism:vampire"
+      },
+      "lord_level": 1
+    }
+  }
+}

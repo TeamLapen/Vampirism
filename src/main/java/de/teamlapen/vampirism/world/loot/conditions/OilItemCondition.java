@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModLoot;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.OilUtils;
-import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -17,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OilItemCondition implements LootItemCondition {
 
+    public static final Codec<OilItemCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(ModRegistries.OILS.byNameCodec().fieldOf("oil").forGetter(condition -> condition.oil)).apply(inst, OilItemCondition::new));
     private final @NotNull IOil oil;
 
     public OilItemCondition(@NotNull IOil oil) {
@@ -33,20 +32,5 @@ public class OilItemCondition implements LootItemCondition {
     public boolean test(@NotNull LootContext lootContext) {
         ItemStack stack = lootContext.getParamOrNull(LootContextParams.TOOL);
         return stack != null && OilUtils.getAppliedOil(stack).map(oil -> oil == this.oil).orElse(false);
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<OilItemCondition> {
-
-        @Override
-        public void serialize(@NotNull JsonObject json, @NotNull OilItemCondition condition, @NotNull JsonSerializationContext context) {
-            json.addProperty("oil", RegUtil.id(condition.oil).toString());
-        }
-
-        @NotNull
-        @Override
-        public OilItemCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
-            ResourceLocation oil = new ResourceLocation(json.get("predicate").getAsJsonObject().get("oil").getAsString());
-            return new OilItemCondition(RegUtil.getOil(oil));
-        }
     }
 }

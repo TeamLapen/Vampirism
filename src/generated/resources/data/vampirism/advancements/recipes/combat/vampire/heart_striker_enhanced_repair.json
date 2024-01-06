@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_heart_striker",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_heart_striker"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/heart_striker_enhanced_repair"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

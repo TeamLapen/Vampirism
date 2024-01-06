@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +28,7 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, p_230430_2_, p_230430_3_, p_230430_4_);
         super.render(graphics, p_230430_2_, p_230430_3_, p_230430_4_);
         this.renderTooltip(graphics, p_230430_2_, p_230430_3_);
     }

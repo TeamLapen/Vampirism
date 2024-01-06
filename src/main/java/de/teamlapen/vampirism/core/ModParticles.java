@@ -7,19 +7,19 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 
 public class ModParticles {
-    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, REFERENCE.MODID);
 
-    public static final RegistryObject<ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleOptions.DESERIALIZER) {
+    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false, FlyingBloodParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override
@@ -27,7 +27,7 @@ public class ModParticles {
             return FlyingBloodParticleOptions.CODEC;
         }
     });
-    public static final RegistryObject<ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleOptions.DESERIALIZER) {
+    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false, FlyingBloodEntityParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override
@@ -35,7 +35,7 @@ public class ModParticles {
             return FlyingBloodEntityParticleOptions.CODEC;
         }
     });
-    public static final RegistryObject<ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleOptions.DESERIALIZER) {
+    public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false, GenericParticleOptions.DESERIALIZER) {
 
         @NotNull
         @Override

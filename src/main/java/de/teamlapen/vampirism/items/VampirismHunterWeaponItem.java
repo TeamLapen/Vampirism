@@ -11,13 +11,9 @@ import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +28,6 @@ public abstract class VampirismHunterWeaponItem extends VampirismSwordItem imple
         super(material, attackDamage, attackSpeed, props);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());

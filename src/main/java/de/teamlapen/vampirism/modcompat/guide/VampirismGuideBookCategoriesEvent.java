@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.neoforge.eventbus.api.Event;
 
 import java.util.List;
 

@@ -13,15 +13,17 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
-import de.teamlapen.vampirism.api.world.IVampirismWorld;
+import de.teamlapen.vampirism.api.world.IFogHandler;
+import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import static de.teamlapen.vampirism.api.VampirismCapabilities.*;
+import java.util.Optional;
+
+import static de.teamlapen.vampirism.api.VampirismAttachments.*;
 
 /**
  * Class for core api methods
@@ -122,33 +124,37 @@ public class VampirismAPI {
     /**
      * @return The respective {@link IFactionPlayerHandler}
      */
-    public static @NotNull LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
-        return player.getCapability(FACTION_HANDLER_PLAYER, null);
+    public static @NotNull Optional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
+        return Optional.ofNullable(player.getData(FACTION_PLAYER_HANDLER));
     }
 
     /**
      * @return The respective {@link IVampirePlayer}
      */
-    public static @NotNull LazyOptional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
-        return player.getCapability(VAMPIRE_PLAYER, null);
+    public static @NotNull Optional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
+        return Optional.ofNullable(player.getData(VAMPIRE_PLAYER));
     }
 
     /**
      * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
      */
-    public static @NotNull LazyOptional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
-        return player.getCapability(HUNTER_PLAYER, null);
+    public static @NotNull Optional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
+        return Optional.ofNullable(player.getData(HUNTER_PLAYER));
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
-    public static @NotNull LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
-        return creature.getCapability(EXTENDED_CREATURE, null);
+    public static @NotNull Optional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
+        return Optional.ofNullable(creature.getData(VampirismAttachments.EXTENDED_CREATURE));
     }
 
-    public static @NotNull LazyOptional<IVampirismWorld> getVampirismWorld(@NotNull Level w) {
-        return w.getCapability(WORLD);
+    public static @NotNull Optional<IGarlicChunkHandler> getGarlicHandler(@NotNull Level w) {
+        return Optional.ofNullable(w.getData(VampirismAttachments.GARLIC_HANDLER));
+    }
+
+    public static @NotNull Optional<IFogHandler> getFogHandler(@NotNull Level w) {
+        return Optional.ofNullable(w.getData(VampirismAttachments.FOG_HANDLER));
     }
 
 

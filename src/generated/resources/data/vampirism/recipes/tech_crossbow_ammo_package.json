@@ -1,0 +1,24 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "lava": 1,
+  "pattern": [
+    "ILLI",
+    "PLLP",
+    "ILLI"
+  ],
+  "result": {
+    "item": "vampirism:tech_crossbow_ammo_package"
+  }
+}

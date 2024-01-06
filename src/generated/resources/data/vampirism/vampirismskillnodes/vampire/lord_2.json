@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:vampire_lord",
-  "skills": [
-    "vampirism:vampire_minion_stats_increase"
-  ]
-}

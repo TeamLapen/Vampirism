@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_polished_dark_stone",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_polished_dark_stone"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:polished_dark_stone_wall"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

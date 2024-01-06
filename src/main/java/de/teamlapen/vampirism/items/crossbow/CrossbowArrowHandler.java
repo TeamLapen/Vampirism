@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Set;
@@ -17,7 +17,7 @@ public class CrossbowArrowHandler {
      */
     @ApiStatus.Internal
     public static void collectCrossbowArrows() {
-        crossbowArrows = ForgeRegistries.ITEMS.getValues().stream().filter(IVampirismCrossbowArrow.class::isInstance).collect(Collectors.toUnmodifiableSet());
+        crossbowArrows = BuiltInRegistries.ITEM.stream().filter(IVampirismCrossbowArrow.class::isInstance).collect(Collectors.toUnmodifiableSet());
     }
 
     /**

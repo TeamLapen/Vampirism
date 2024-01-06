@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 
 public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
 
-    public HoverList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pY1, int pItemHeight) {
-        super(pMinecraft, pWidth, pHeight, pY0, pY1, pItemHeight);
+    public HoverList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pItemHeight) {
+        super(pMinecraft, pWidth, pHeight, pY0, pItemHeight);
     }
 
     public static Builder<?> builder(int x, int y, int pWidth, int pHeight) {
@@ -41,8 +41,8 @@ public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
 
         @Override
         public HoverList<T> build() {
-            HoverList<T> simpleList = new HoverList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.y + this.pHeight, this.itemHeight);
-            simpleList.setLeftPos(this.x);
+            HoverList<T> simpleList = new HoverList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
+            simpleList.setX(this.x);
             //noinspection unchecked
             simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<T>(x.getLeft(), x.getMiddle(), x.getRight())).toList()));
             return simpleList;

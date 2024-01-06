@@ -1,11 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public interface ISkillType {
+
+    Codec<ISkillType> CODEC = ResourceLocation.CODEC.xmap(s -> VampirismAPI.skillManager().getSkillType(s), ISkillType::getRegistryName);
 
     /**
      * Creates an id for this skill type depending on the faction id.

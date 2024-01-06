@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_fang",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_fang"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/hunter_table"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

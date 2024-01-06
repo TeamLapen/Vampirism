@@ -5,12 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModTasks;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -23,9 +23,9 @@ public record EntityTypeRequirement(@NotNull ResourceLocation id, @NotNull TagKe
     public static final Codec<EntityTypeRequirement> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
-                TagKey.codec(ForgeRegistries.Keys.ENTITY_TYPES).fieldOf("entityType").forGetter(i -> i.entityType),
+                TagKey.codec(Registries.ENTITY_TYPE).fieldOf("entityType").forGetter(i -> i.entityType),
                 Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
-                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(s -> s.description)
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
         ).apply(inst, (id, type, amount, desc) -> new EntityTypeRequirement(id.orElseGet(type::location), type, amount, desc));
     });
 

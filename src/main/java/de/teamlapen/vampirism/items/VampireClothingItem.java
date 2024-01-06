@@ -7,15 +7,13 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import de.teamlapen.vampirism.client.model.armor.*;
+import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.ArmorMaterial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -23,7 +21,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
@@ -31,9 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,28 +43,15 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         super(VAMPIRE_CLOTH, type, new Properties().defaultDurability(ArmorMaterials.IRON.getDurabilityForType(type)));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                return switch (RegUtil.id(VampireClothingItem.this).getPath()) {
-                    case "vampire_clothing_crown" -> ClothingCrownModel.getAdjustedInstance(original);
-                    case "vampire_clothing_legs" -> ClothingPantsModel.getAdjustedInstance(original);
-                    case "vampire_clothing_boots" -> ClothingBootsModel.getAdjustedInstance(original);
-                    case "vampire_clothing_hat" -> VampireHatModel.getAdjustedInstance(original);
-                    default -> DummyClothingModel.getAdjustedInstance(original);
-                };
-            }
-        });
+        consumer.accept(ItemExtensions.VAMPIRE_CLOTHING);
     }
 
     @Override

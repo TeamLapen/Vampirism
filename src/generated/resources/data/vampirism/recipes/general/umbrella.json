@@ -1,37 +1,29 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "vampirism:config",
-          "option": "umbrella"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "category": "misc",
-        "key": {
-          "#": {
-            "tag": "minecraft:wool"
-          },
-          "A": {
-            "tag": "forge:rods/wooden"
-          },
-          "B": {
-            "item": "vampirism:vampire_orchid"
-          }
-        },
-        "pattern": [
-          "###",
-          "BAB",
-          " A "
-        ],
-        "result": {
-          "item": "vampirism:umbrella"
-        },
-        "show_notification": true
-      }
+      "type": "vampirism:config",
+      "option": "umbrella"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "tag": "minecraft:wool"
+    },
+    "A": {
+      "tag": "forge:rods/wooden"
+    },
+    "B": {
+      "item": "vampirism:vampire_orchid"
+    }
+  },
+  "pattern": [
+    "###",
+    "BAB",
+    " A "
+  ],
+  "result": {
+    "item": "vampirism:umbrella"
+  }
 }

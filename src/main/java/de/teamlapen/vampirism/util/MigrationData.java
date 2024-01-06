@@ -1,153 +1,132 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class MigrationData {
 
+
     @SubscribeEvent
-    public static void onMissingMappings(@NotNull MissingMappingsEvent event) {
-        event.getAllMappings(VampirismRegistries.SKILLS_ID).forEach(MigrationData::fixSkill);
-        event.getAllMappings(ForgeRegistries.Keys.POTIONS).forEach(MigrationData::fixPotions);
-        event.getAllMappings(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES).forEach(MigrationData::fixTiles);
-        event.getAllMappings(ForgeRegistries.Keys.ITEMS).forEach(MigrationData::fixItems);
-        event.getAllMappings(ForgeRegistries.Keys.BLOCKS).forEach(MigrationData::fixBlocks);
-        event.getAllMappings(ForgeRegistries.Keys.ENCHANTMENTS).forEach(MigrationData::fixEnchantments);
-        event.getAllMappings(ForgeRegistries.Keys.ENTITY_TYPES).forEach(MigrationData::fixEntityTypes);
-        event.getAllMappings(ForgeRegistries.Keys.MOB_EFFECTS).forEach(MigrationData::fixEffects);
+    public static void fix(NewRegistryEvent event) {
+        fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
+        fixSkillsHunter(new Mapping(HunterSkills.SKILLS));
+        fixPotions(new Mapping(ModPotions.POTIONS));
+        fixTiles(new Mapping(ModTiles.BLOCK_ENTITY_TYPES));
+        fixItems(new Mapping(ModItems.ITEMS));
+        fixBlocks(new Mapping(ModBlocks.BLOCKS));
+        fixEnchantments(new Mapping(ModEnchantments.ENCHANTMENTS));
+        fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
+        fixEffects(new Mapping(ModEffects.EFFECTS));
     }
 
-    public static void fixSkill(@NotNull MissingMappingsEvent.Mapping<ISkill<?>> mapping) {
-        switch (mapping.getKey().toString()) {
-            case "vampirism:creeper_avoided", "vampirism:enhanced_crossbow", "vampirism:vampire_forest_fog" -> mapping.ignore();
-            case "vampirism:bat" -> mapping.remap(VampireSkills.FLEDGLING.get());
-            case "vampirism:garlic_beacon_improved" -> mapping.remap(HunterSkills.GARLIC_DIFFUSER_IMPROVED.get());
-            case "vampirism:garlic_beacon" -> mapping.remap(HunterSkills.GARLIC_DIFFUSER.get());
-            case "vampirism:holy_water_enhanced" -> mapping.remap(HunterSkills.ENHANCED_BLESSING.get());
-            default -> {
-                if (mapping.getKey().toString().startsWith("vampirism:blood_potion_")) {
-                    mapping.ignore();
-                }
+    public record Mapping(DeferredRegister<?> register) {
+        public void remap(String id, String newId) {
+                remap(new ResourceLocation(id), new ResourceLocation(newId));
             }
+
+        public void remap(ResourceLocation id, ResourceLocation object) {
+            register.addAlias(id, object);
         }
     }
 
-    public static void fixPotions(@NotNull MissingMappingsEvent.Mapping<Potion> mapping) {
-        switch (mapping.getKey().toString()) {
-            case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> mapping.remap(ModPotions.LONG_RESISTANCE.get());
-            case "vampirism:very_strong_resistance" -> mapping.remap(ModPotions.STRONG_RESISTANCE.get());
-            case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> mapping.ignore();
-            case "vampirism:very_strong_harming" -> mapping.remap(Potions.STRONG_HARMING);
-        }
+    private static void fixSkillsVampire(@NotNull Mapping consumer) {
+        consumer.remap("vampirism:bat", "vampirism:fledgling");
+    }
+    private static void fixSkillsHunter(@NotNull Mapping consumer) {
+        consumer.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
+        consumer.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
+        consumer.remap("vampirism:holy_water_enhanced", "vampirism:enhanced_blessing");
     }
 
-    public static void fixTiles(@NotNull MissingMappingsEvent.Mapping<BlockEntityType<?>> mapping) {
-        //noinspection SwitchStatementWithTooFewBranches
-        switch (mapping.getKey().toString()) {
-            case "vampirism:garlic_beacon" -> mapping.remap(ModTiles.GARLIC_DIFFUSER.get());
-        }
+    private static void fixPotions(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:long_strong_resistance", "vampirism:long_resistance");
+        mapping.remap("vampirism:very_long_resistance", "vampirism:long_resistance");
+        mapping.remap("vampirism:very_strong_resistance", "vampirism:strong_resistance");
+        mapping.remap("vampirism:very_strong_harming", "strong_harming");
     }
 
-    public static void fixItems(@NotNull MissingMappingsEvent.Mapping<Item> mapping) {
-        switch (mapping.getKey().toString()) {
-            case "vampirism:blood_potion", "vampirism:blood_potion_table" -> mapping.ignore();
-            case "vampirism:vampire_clothing_head" -> mapping.remap(ModItems.VAMPIRE_CLOTHING_CROWN.get());
-            case "vampirism:vampire_clothing_feet" -> mapping.remap(ModItems.VAMPIRE_CLOTHING_BOOTS.get());
-            case "vampirism:garlic_beacon_core" -> mapping.remap(ModItems.GARLIC_DIFFUSER_CORE.get());
-            case "vampirism:garlic_beacon_core_improved" -> mapping.remap(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get());
-            case "vampirism:garlic_beacon_normal" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get().asItem());
-            case "vampirism:garlic_beacon_weak" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get().asItem());
-            case "vampirism:garlic_beacon_improved" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get().asItem());
-            case "vampirism:church_altar" -> mapping.remap(ModBlocks.ALTAR_CLEANSING.get().asItem());
-            case "vampirism:item_med_chair" -> mapping.remap(ModBlocks.MED_CHAIR.get().asItem());
-            case "vampirism:bloody_spruce_log" -> mapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get().asItem());
-            case "vampirism:bloody_spruce_leaves" -> mapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get().asItem());
-            case "vampirism:coffin" -> mapping.remap(ModBlocks.COFFIN_RED.get().asItem());
-            case "vampirism:holy_salt_water" -> mapping.remap(ModItems.PURE_SALT_WATER.get());
-            case "vampirism:holy_salt" -> mapping.remap(ModItems.PURE_SALT.get());
-            case "vampirism:injection_zombie_blood" -> mapping.remap(Items.APPLE);
-            case "vampirism:cure_apple" -> mapping.remap(Items.GOLDEN_APPLE);
-            case "vampirism:obsidian_armor_head_normal" -> mapping.remap(ModItems.HUNTER_COAT_HEAD_NORMAL.get());
-            case "vampirism:obsidian_armor_chest_normal" -> mapping.remap(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
-            case "vampirism:obsidian_armor_legs_normal" -> mapping.remap(ModItems.HUNTER_COAT_LEGS_NORMAL.get());
-            case "vampirism:obsidian_armor_feet_normal" -> mapping.remap(ModItems.HUNTER_COAT_FEET_NORMAL.get());
-            case "vampirism:obsidian_armor_head_enhanced" -> mapping.remap(ModItems.HUNTER_COAT_HEAD_ENHANCED.get());
-            case "vampirism:obsidian_armor_chest_enhanced" -> mapping.remap(ModItems.HUNTER_COAT_CHEST_ENHANCED.get());
-            case "vampirism:obsidian_armor_legs_enhanced" -> mapping.remap(ModItems.HUNTER_COAT_LEGS_ENHANCED.get());
-            case "vampirism:obsidian_armor_feet_enhanced" -> mapping.remap(ModItems.HUNTER_COAT_FEET_ENHANCED.get());
-            case "vampirism:obsidian_armor_head_ultimate" -> mapping.remap(ModItems.HUNTER_COAT_HEAD_ULTIMATE.get());
-            case "vampirism:obsidian_armor_chest_ultimate" -> mapping.remap(ModItems.HUNTER_COAT_CHEST_ULTIMATE.get());
-            case "vampirism:obsidian_armor_legs_ultimate" -> mapping.remap(ModItems.HUNTER_COAT_LEGS_ULTIMATE.get());
-            case "vampirism:obsidian_armor_feet_ultimate" -> mapping.remap(ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
-        }
+    private static void fixTiles(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
     }
 
-    public static void fixBlocks(@NotNull MissingMappingsEvent.Mapping<Block> mapping) {
-        switch (mapping.getKey().toString()) {
-            case "vampirism:blood_potion_table" -> mapping.remap(ModBlocks.POTION_TABLE.get());
-            case "vampirism:garlic_beacon_normal" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
-            case "vampirism:garlic_beacon_weak" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
-            case "vampirism:garlic_beacon_improved" -> mapping.remap(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
-            case "vampirism:church_altar" -> mapping.remap(ModBlocks.ALTAR_CLEANSING.get());
-            case "vampirism:vampire_spruce_leaves", "vampirism:bloody_spruce_leaves" -> mapping.remap(ModBlocks.DARK_SPRUCE_LEAVES.get());
-            case "vampirism:bloody_spruce_log" -> mapping.remap(ModBlocks.CURSED_SPRUCE_LOG.get());
-            case "vampirism:cursed_grass_block" -> mapping.remap(ModBlocks.CURSED_GRASS.get());
-            case "cursed_bark" -> mapping.ignore();
-            case "castle_block_dark_brick" -> mapping.remap(ModBlocks.DARK_STONE_BRICKS.get());
-            case "castle_block_dark_brick_bloody" -> mapping.remap(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
-            case "castle_block_dark_stone" -> mapping.remap(ModBlocks.DARK_STONE.get());
-            case "castle_block_normal_brick" -> mapping.remap(Blocks.STONE_BRICKS);
-            case "castle_slab_dark_brick" -> mapping.remap(ModBlocks.DARK_STONE_BRICK_SLAB.get());
-            case "castle_slab_dark_stone" -> mapping.remap(ModBlocks.DARK_STONE_SLAB.get());
-            case "castle_stairs_dark_brick" -> mapping.remap(ModBlocks.DARK_STONE_BRICK_STAIRS.get());
-            case "castle_stairs_dark_stone" -> mapping.remap(ModBlocks.DARK_STONE_STAIRS.get());
-            case "castle_block_dark_brick_cracked" -> mapping.remap(ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-            case "castle_block_dark_brick_wall" -> mapping.remap(ModBlocks.DARK_STONE_BRICK_WALL.get());
-            case "castle_block_purple_brick" -> mapping.remap(ModBlocks.PURPLE_STONE_BRICKS.get());
-            case "castle_slab_purple_brick" -> mapping.remap(ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
-            case "castle_stairs_purple_brick" -> mapping.remap(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
-            case "castle_block_purple_brick_wall" -> mapping.remap(ModBlocks.PURPLE_STONE_BRICK_WALL.get());
-        }
+    private static void fixItems(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:vampire_clothing_head", "vampirism:vampire_clothing_crown");
+        mapping.remap("vampirism:vampire_clothing_feet", "vampirism:vampire_clothing_boots");
+        mapping.remap("vampirism:garlic_beacon_core", "vampirism:garlic_diffuser_core");
+        mapping.remap("vampirism:garlic_beacon_core_improved", "vampirism:garlic_diffuser_core_improved");
+        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
+        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
+        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
+        mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
+        mapping.remap("vampirism:item_med_chair", "vampirism:med_chair");
+        mapping.remap("vampirism:bloody_spruce_log", "vampirism:cursed_spruce_log");
+        mapping.remap("vampirism:bloody_spruce_leaves", "vampirism:dark_spruce_leaves");
+        mapping.remap("vampirism:coffin", "vampirism:coffin_red");
+        mapping.remap("vampirism:holy_salt_water", "vampirism:pure_salt_water");
+        mapping.remap("vampirism:holy_salt", "vampirism:pure_salt");
+        mapping.remap("vampirism:injection_zombie_blood", "apple");
+        mapping.remap("vampirism:cure_apple", "golden_apple");
+        mapping.remap("vampirism:obsidian_armor_head_normal", "vampirism:hunter_coat_head_normal");
+        mapping.remap("vampirism:obsidian_armor_chest_normal", "vampirism:hunter_coat_chest_normal");
+        mapping.remap("vampirism:obsidian_armor_legs_normal", "vampirism:hunter_coat_legs_normal");
+        mapping.remap("vampirism:obsidian_armor_feet_normal", "vampirism:hunter_coat_feet_normal");
+        mapping.remap("vampirism:obsidian_armor_head_enhanced","vampirism:hunter_coat_head_enhanced" );
+        mapping.remap("vampirism:obsidian_armor_chest_enhanced", "vampirism:hunter_coat_chest_enhanced");
+        mapping.remap("vampirism:obsidian_armor_legs_enhanced","vampirism:hunter_coat_legs_enhanced" );
+        mapping.remap("vampirism:obsidian_armor_feet_enhanced","vampirism:hunter_coat_feet_enhanced" );
+        mapping.remap("vampirism:obsidian_armor_head_ultimate", "vampirism:hunter_coat_head_ultimate");
+        mapping.remap("vampirism:obsidian_armor_chest_ultimate","vampirism:hunter_coat_chest_ultimate" );
+        mapping.remap("vampirism:obsidian_armor_legs_ultimate","vampirism:hunter_coat_legs_ultimate" );
+        mapping.remap("vampirism:obsidian_armor_feet_ultimate", "vampirism:hunter_coat_feet_ultimate");
+
+
+    }
+
+    private static void fixBlocks(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:blood_potion_table","vampirism:potion_table" );
+        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:totem_top_vampirism_hunter_crafted");
+        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
+        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
+        mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
+        mapping.remap("vampirism:vampire_spruce_leaves", "vampirism:dark_spruce_leaves");
+        mapping.remap("vampirism:bloody_spruce_leaves","vampirism:dark_spruce_leaves" );
+        mapping.remap("vampirism:bloody_spruce_log", "vampirism:cursed_spruce_log");
+        mapping.remap("vampirism:cursed_grass_block", "vampirism:cursed_grass");
+        mapping.remap("castle_block_dark_brick", "vampirism:dark_stone_bricks");
+        mapping.remap("castle_block_dark_brick_bloody", "vampirism:bloody_dark_stone_bricks");
+        mapping.remap("castle_block_dark_stone", "vampirism:dark_stone");
+        mapping.remap("castle_block_normal_brick", "stone_bricks");
+        mapping.remap("castle_slab_dark_brick", "vampirism:dark_stone_brick_slab");
+        mapping.remap("castle_slab_dark_stone", "vampirism:dark_stone_slab");
+        mapping.remap("castle_stairs_dark_brick", "vampirism:dark_stone_brick_stairs");
+        mapping.remap("castle_stairs_dark_stone", "vampirism:dark_stone_stairs");
+        mapping.remap("castle_block_dark_brick_cracked","vampirism:cracked_dark_stone_bricks");
+        mapping.remap("castle_block_dark_brick_wall", "vampirism:dark_stone_brick_wall");
+        mapping.remap("castle_block_purple_brick", "vampirism:purple_stone_bricks");
+        mapping.remap("castle_slab_purple_brick", "vampirism:purple_stone_brick_slab");
+        mapping.remap("castle_stairs_purple_brick", "vampirism:purple_stone_brick_stairs");
+        mapping.remap("castle_block_purple_brick_wall", "vampirism:purple_stone_brick_wall");
+        mapping.remap("dark_spruce_pressure_place", "vampirism:dark_spruce_pressure_plate");
+        mapping.remap("cursed_spruce_pressure_place", "vampirism:cursed_spruce_pressure_plate");
     }
 
 
-    static void fixEnchantments(@NotNull MissingMappingsEvent.Mapping<Enchantment> mapping) {
-        //noinspection SwitchStatementWithTooFewBranches
-        switch (mapping.getKey().toString()) {
-            case "vampirism:crossbowinfinite" -> mapping.remap(Enchantments.INFINITY_ARROWS);
-        }
+    private static void fixEnchantments(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:crossbowinfinite", "infinity");
     }
 
-    static void fixEntityTypes(@NotNull MissingMappingsEvent.Mapping<EntityType<?>> mapping) {
-        switch (mapping.getKey().toString()) {
-            case "vampirism:vampire_hunter" -> mapping.remap(ModEntities.HUNTER.get());
-            case "vampirism:vampire_hunter_imob" -> mapping.remap(ModEntities.HUNTER_IMOB.get());
-        }
+    private static void fixEntityTypes(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:vampire_hunter", "vampirism:hunter");
+        mapping.remap("vampirism:vampire_hunter_imob", "vampirism:hunter_imob");
     }
 
-    public static void fixEffects(@NotNull MissingMappingsEvent.Mapping<MobEffect> mapping) {
-        //noinspection SwitchStatementWithTooFewBranches
-        switch (mapping.getKey().toString()) {
-            case "vampirism:thirst" -> mapping.remap(MobEffects.HUNGER);
-        }
+    private static void fixEffects(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:thirst", "hunger");
     }
 }

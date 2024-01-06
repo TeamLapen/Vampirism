@@ -13,8 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -22,7 +21,6 @@ import org.joml.Matrix4f;
 /**
  * Renders the beams for the altar of infusion
  */
-@OnlyIn(Dist.CLIENT)
 public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
 
@@ -98,5 +96,8 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
     }
 
-
+    @Override
+    public AABB getRenderBoundingBox(AltarInfusionBlockEntity blockEntity) {
+        return INFINITE_EXTENT_AABB;
+    }
 }

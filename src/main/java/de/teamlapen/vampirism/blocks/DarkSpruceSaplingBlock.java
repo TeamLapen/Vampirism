@@ -11,17 +11,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SaplingBlock;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 public class DarkSpruceSaplingBlock extends SaplingBlock {
 
-    private final AbstractTreeGrower darkTreeGrower;
-    private final AbstractTreeGrower cursedTreeGrower;
+    private final TreeGrower darkTreeGrower;
+    private final TreeGrower cursedTreeGrower;
 
-    public DarkSpruceSaplingBlock(AbstractTreeGrower darkTreeGrower, AbstractTreeGrower cursedTreeGrower, Properties pProperties) {
+    public DarkSpruceSaplingBlock(TreeGrower darkTreeGrower, TreeGrower cursedTreeGrower, Properties pProperties) {
         super(darkTreeGrower, pProperties);
         this.darkTreeGrower = darkTreeGrower;
         this.cursedTreeGrower = cursedTreeGrower;

@@ -39,27 +39,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     private final static Logger LOGGER = LogManager.getLogger(AltarInfusionBlockEntity.class);
     private static final int DURATION_TICK = 450;
-    private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
+    private final IItemHandler itemHandlerOptional;
     /**
      * Used to store a saved player UUID during read until world and player are available
      */
@@ -81,6 +76,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
+        this.itemHandlerOptional = new InvWrapper(this);
     }
 
     /**
@@ -109,15 +105,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
         return Result.OK;
 
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandlerOptional.cast();
-        }
-        return super.getCapability(cap, side);
     }
 
     /**
@@ -156,12 +143,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             return null;
         }
         return this.player;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public @NotNull AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
     }
 
     public int getRunningTick() {
@@ -205,10 +186,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
-        if (this.hasLevel()) this.load(pkt.getTag());
+        CompoundTag tag = pkt.getTag();
+        if (tag != null && this.hasLevel()) {
+            this.load(tag);
+        }
     }
 
     @Override
@@ -282,7 +265,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (phase.equals(PHASE.LEVELUP)) {
             if (!level.isClientSide) {
                 assert player.isAlive();
-                LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+                Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
                 if (handler.map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1).orElse(false)) {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
@@ -290,7 +273,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                 handler.ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
                 VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none()));
                 if (player instanceof ServerPlayer serverPlayer) {
-                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
+                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
                 this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);

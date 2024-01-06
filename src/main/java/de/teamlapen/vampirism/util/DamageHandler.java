@@ -14,8 +14,8 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.world.LevelDamage;
 import de.teamlapen.vampirism.world.ModDamageSources;
-import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -175,7 +175,7 @@ public class DamageHandler {
     }
 
     public static @NotNull Optional<DamageSource> getDamageSource(@NotNull Level world, @NotNull Function<ModDamageSources, DamageSource> sourceFunc) {
-        return VampirismWorld.getOpt(world).map(VampirismWorld::damageSources).map(sourceFunc);
+        return LevelDamage.getOpt(world).map(sourceFunc);
     }
 
     public static boolean hurtModded(@NotNull Entity entity, @NotNull Function<ModDamageSources, DamageSource> sourceFunc, float amount) {

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.core.ModTasks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
 
 public class ConsumerReward implements TaskReward, ITaskRewardInstance {
@@ -16,7 +16,7 @@ public class ConsumerReward implements TaskReward, ITaskRewardInstance {
     public static final Codec<ConsumerReward> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 FactionPlayerConsumer.CODEC.fieldOf("consumer").forGetter(i -> i.consumer),
-                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(i -> i.description)
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
         ).apply(inst, ConsumerReward::new);
     });
 

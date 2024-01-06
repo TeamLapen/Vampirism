@@ -30,17 +30,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 
-public class PotionTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
+public class PotionTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, ICapabilityProvider<PotionTableBlockEntity, Direction, IItemHandler> {
 
     /*
      * 0: Fuel
@@ -55,7 +55,6 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private static final int[] OUTPUT_SLOTS = new int[]{3, 4, 5, 0};
     private static final int[] OUTPUT_SLOTS_EXTENDED = new int[]{3, 4, 5, 6, 7, 0};
     private final BrewingCapabilities config = new BrewingCapabilities();
-    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
     @Nullable
     private UUID ownerID;
     @Nullable
@@ -120,13 +119,13 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Override
     public boolean canPlaceItem(int index, @NotNull ItemStack stack) {
         if (index == 2) {
-            return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
+            return net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
         } else {
             Item item = stack.getItem();
             if (index == 0) {
                 return item == Items.BLAZE_POWDER;
             } else {
-                return net.minecraftforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getItem(index).isEmpty();
+                return net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getItem(index).isEmpty();
             }
         }
     }
@@ -150,19 +149,9 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         this.brewingItemStacks.clear();
     }
 
-    @NotNull
     @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(@NotNull net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == ForgeCapabilities.ITEM_HANDLER) {
-            if (facing == Direction.UP) {
-                return handlers[0].cast();
-            } else if (facing == Direction.DOWN) {
-                return handlers[1].cast();
-            } else {
-                return handlers[2].cast();
-            }
-        }
-        return super.getCapability(capability, facing);
+    public @Nullable IItemHandler getCapability(PotionTableBlockEntity object, Direction context) {
+        return new SidedInvWrapper(this, context);
     }
 
     @NotNull
@@ -264,14 +253,6 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
-        for (LazyOptional<? extends IItemHandler> handler : handlers) {
-            handler.invalidate();
-        }
-    }
-
-    @Override
     public boolean stillValid(@NotNull Player player) {
         if (!hasLevel()) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
@@ -336,7 +317,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
         if (!brewed) {
             NonNullList<ItemStack> copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
-            if (net.minecraftforge.event.ForgeEventFactory.onPotionAttemptBrew(copiedBrewingItemStack)) {
+            if (net.neoforged.neoforge.event.EventHooks.onPotionAttemptBrew(copiedBrewingItemStack)) {
                 this.brewingItemStacks.set(3, copiedBrewingItemStack.get(0));
                 this.brewingItemStacks.set(4, copiedBrewingItemStack.get(1));
                 this.brewingItemStacks.set(5, copiedBrewingItemStack.get(2));
@@ -346,7 +327,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
             }
             VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, false);
             copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
-            net.minecraftforge.event.ForgeEventFactory.onPotionBrewed(brewingItemStacks);
+            net.neoforged.neoforge.event.EventHooks.onPotionBrewed(brewingItemStacks);
             this.brewingItemStacks.set(3, copiedBrewingItemStack.get(0));
             this.brewingItemStacks.set(4, copiedBrewingItemStack.get(1));
             this.brewingItemStacks.set(5, copiedBrewingItemStack.get(2));

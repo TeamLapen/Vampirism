@@ -15,8 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,13 +34,6 @@ public class TentBlockEntity extends BlockEntity {
         super(ModTiles.TENT.get(), pos, state);
         this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.ADVANCED_HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
-    }
-
-    @NotNull
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public AABB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().inflate(1, 0, 1);
     }
 
     public boolean isSpawner() {

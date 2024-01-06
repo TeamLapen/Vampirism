@@ -5,10 +5,10 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -38,9 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -212,15 +210,9 @@ public class TentBlock extends VampirismBlock {
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(OCCUPIED, false));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void initializeClient(@NotNull Consumer<IClientBlockExtensions> consumer) {
-        consumer.accept(new IClientBlockExtensions() {
-            @Override
-            public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
-                return true;
-            }
-        });
+        consumer.accept(BlockExtensions.TENT);
     }
 
 
@@ -230,8 +222,8 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(ModItems.ITEM_TENT.get());
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        return ModItems.ITEM_TENT.get().getDefaultInstance();
     }
 
     @Override
@@ -271,7 +263,7 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
-    public void playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+    public BlockState playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
@@ -292,6 +284,7 @@ public class TentBlock extends VampirismBlock {
                 }
             }
         }
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
 

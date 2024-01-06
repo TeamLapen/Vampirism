@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
@@ -45,13 +44,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -97,13 +95,6 @@ public class ModEntityEventHandler {
     private final Set<ResourceLocation> unknownZombies = new HashSet<>();
 
     private boolean warnAboutGolem = true;
-
-    @SubscribeEvent
-    public void onAttachCapabilityEntity(@NotNull AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof PathfinderMob) {
-            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((PathfinderMob) event.getObject()));
-        }
-    }
 
     @SubscribeEvent
     public void onFinalizeSpawn(@NotNull MobSpawnEvent.FinalizeSpawn event) {

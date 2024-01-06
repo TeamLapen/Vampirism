@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -41,17 +42,20 @@ import java.util.function.Supplier;
 
 public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstance, TaskList.TaskEntry, TaskList.DummyEntry> {
     protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
+    private static final WidgetSprites ACCEPT = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_accept"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_accept_highlighted"));
+    private static final WidgetSprites COMPLETE = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_complete"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_complete_highlighted"));
+    private static final WidgetSprites ABORT = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_abort"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_abort_highlighted"));
 
     protected final TaskMenu menu;
     protected final IFactionPlayer<?> factionPlayer;
     protected final Registry<Task> registry;
 
-    public TaskList(Minecraft minecraft, TaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, int itemHeight, Supplier<List<ITaskInstance>> itemSupplier) {
-        super(minecraft, width, height, y, y + height, itemHeight, itemSupplier);
+    public TaskList(Minecraft minecraft, TaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
+        super(minecraft, width, height, y, 21, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
         this.registry = factionPlayer.getRepresentingPlayer().level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
-        setLeftPos(x);
+        this.setX(x);
     }
 
     @Override
@@ -153,7 +157,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 graphics.drawString(mc.font, msg, pLeft + pWidth - width - 1, pTop + 12, color, true);
             }
 
-            if (isMouseOver(pMouseX, pMouseY)) {
+            if (isMouseOver(pMouseX, pMouseY + 3)) {
                 renderToolTips(mc, pMouseX, pMouseY);
             }
         }
@@ -192,9 +196,10 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                         MutableComponent desc;
                         int completedAmount = menu.getRequirementStatus(this.getItem(), requirement);
                         desc = switch (type) {
-                            case ITEMS -> ((Item) requirement.getStat(factionPlayer)).getDescription().plainCopy().append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer));
+                            case ITEMS -> ((Item) requirement.getStat(factionPlayer)).getDescription().plainCopy();
                             default -> requirement.description().plainCopy();
                         };
+                        desc = desc.append(" " + completedAmount + "/" + requirement.getAmount(factionPlayer));
                         if (completed || menu.isRequirementCompleted(this.getItem(), requirement)) {
                             desc.withStyle(ChatFormatting.STRIKETHROUGH);
                         }
@@ -234,6 +239,12 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             renderBg(graphics, pIndex, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
             this.children.forEach(w -> ((MovableWidget) w).setOffset(pLeft, pTop));
             this.children.forEach(a -> a.render(graphics, pMouseX, pMouseY, pPartialTick));
+            this.children.stream().filter(x -> x.isMouseOver(pMouseX, pMouseY)).findFirst().ifPresent(w -> {
+                if (w.getTooltip() != null) {
+                    minecraft.screen.setTooltipForNextRenderPass(w.getTooltip(), DefaultTooltipPositioner.INSTANCE, w.isFocused());
+                }
+            });
+
         }
 
         protected void renderBg(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
@@ -271,21 +282,17 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             @Override
             public int getX() {
-                return super.getX() + this.xOffset;
+                return super.getX() + xOffset;
             }
 
             @Override
             public int getY() {
-                return super.getY() + this.yOffset;
+                return super.getY() +yOffset;
             }
 
             @Override
             public void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
                 graphics.renderFakeItem(this.stack, this.getX(), this.getY());
-
-                if (this.isHovered) {
-                    this.setTooltip(new MultilineTooltip(createTooltip()));
-                }
             }
 
             @Override
@@ -332,6 +339,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 super(pX, pY, rewardInstance.getReward() instanceof ItemReward.Instance items ? items.reward() : PAPER);
                 this.rewardInstance = rewardInstance;
                 this.reward = Component.translatable(Util.makeDescriptionId("task", rewardInstance.getTask().location()) + ".reward");
+                this.setTooltip(new MultilineTooltip(createTooltip()));
             }
 
             @Override
@@ -367,6 +375,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 });
                 this.requirement = requirement;
                 this.instance = instance;
+                this.setTooltip(new MultilineTooltip(createTooltip()));
             }
 
             @Override
@@ -413,7 +422,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             private int yOffset;
 
             public TaskActionButton(int xPos, int yPos) {
-                super(xPos, yPos, 14, 13, 0, 0, 0, TASKMASTER_GUI_TEXTURE, 0, 0, a -> menu.pressButton(getItem()), Component.literal(""));
+                super(xPos, yPos, 14, 13, ACCEPT, a -> menu.pressButton(getItem()), Component.literal(""));
             }
 
             @Override
@@ -442,13 +451,13 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             @Override
             public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float p_renderButton_3_) {
                 TaskMenu.TaskAction action = menu.buttonAction(getItem());
-                int j = switch (action) {
-                    case ACCEPT -> 190;
-                    case COMPLETE -> 176;
-                    default -> 204;
+                WidgetSprites sprites = switch (action) {
+                    case ACCEPT -> ACCEPT;
+                    case COMPLETE -> COMPLETE;
+                    default -> ABORT;
                 };
 
-                graphics.blit(TASKMASTER_GUI_TEXTURE, this.getX(), this.getY(), (float) j, (float) (this.isHovered ? 13 : 0), this.width, this.height, 256, 256);
+                graphics.blitSprite(sprites.get(this.active, this.isHovered), this.getX(), this.getY(), this.width, this.height);
 
                 if (this.isHovered) {
                     this.setTooltip(Tooltip.create(Component.translatable(action.getTranslationKey())));

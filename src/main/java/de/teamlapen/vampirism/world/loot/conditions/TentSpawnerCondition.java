@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class TentSpawnerCondition implements LootItemCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
+    public static final Codec<TentSpawnerCondition> CODEC = Codec.unit(INSTANCE);
 
     public static @NotNull Builder builder() {
         return () -> INSTANCE;
@@ -35,20 +34,4 @@ public class TentSpawnerCondition implements LootItemCondition {
         return false;
     }
 
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<TentSpawnerCondition> {
-
-
-        @NotNull
-        @Override
-        public TentSpawnerCondition deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
-            return INSTANCE;
-        }
-
-        @Override
-        public void serialize(@NotNull JsonObject json, @NotNull TentSpawnerCondition value, @NotNull JsonSerializationContext context) {
-
-        }
-
-
-    }
 }

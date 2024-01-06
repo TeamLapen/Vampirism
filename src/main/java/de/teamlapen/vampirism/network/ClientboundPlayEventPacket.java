@@ -1,30 +1,31 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
+public record ClientboundPlayEventPacket(int type, BlockPos pos, int stateId) implements CustomPacketPayload {
 
-public record ClientboundPlayEventPacket(int type, BlockPos pos, int stateId) implements IMessage.IClientBoundMessage {
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "play_event");
+    public static final Codec<ClientboundPlayEventPacket> CODEC = RecordCodecBuilder.create(inst
+            -> inst.group(
+            Codec.INT.fieldOf("type").forGetter(ClientboundPlayEventPacket::type),
+            BlockPos.CODEC.fieldOf("pos").forGetter(ClientboundPlayEventPacket::pos),
+            Codec.INT.fieldOf("state_id").forGetter(ClientboundPlayEventPacket::stateId)
+    ).apply(inst, ClientboundPlayEventPacket::new));
 
-    static void encode(@NotNull ClientboundPlayEventPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeVarInt(msg.type);
-        buf.writeBlockPos(msg.pos);
-        buf.writeVarInt(msg.stateId);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ClientboundPlayEventPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ClientboundPlayEventPacket(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt());
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
-
-    public static void handle(final ClientboundPlayEventPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handlePlayEventPacket(msg));
-        ctx.setPacketHandled(true);
-    }
-
 }

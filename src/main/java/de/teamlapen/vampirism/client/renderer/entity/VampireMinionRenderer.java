@@ -4,20 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, PlayerBodyOverlayLayer.VisibilityPlayerModel<VampireMinionEntity>> {
 
-    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
-    private final Pair<ResourceLocation, Boolean> @NotNull [] minionSpecificTextures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] minionSpecificTextures;
 
 
     public VampireMinionRenderer(EntityRendererProvider.@NotNull Context context) {
@@ -38,8 +36,8 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull VampireMinionEntity entity) {
-        Pair<ResourceLocation, Boolean> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
+    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull VampireMinionEntity entity) {
+        Pair<ResourceLocation, PlayerModelType> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
         if (entity.shouldRenderLordSkin()) {
             return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
         }

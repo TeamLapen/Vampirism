@@ -11,14 +11,11 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the eyes over the advanced vampire custom face
  */
-@OnlyIn(Dist.CLIENT)
 public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
 
     private final ResourceLocation @NotNull [] overlays;

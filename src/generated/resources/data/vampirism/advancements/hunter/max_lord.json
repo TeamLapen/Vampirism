@@ -3,23 +3,26 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "LORD",
-        "faction": "vampirism:hunter",
+        "type": "lord",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 5
       },
       "trigger": "vampirism:faction"
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.max_lord_hunter.desc"
     },
@@ -28,7 +31,6 @@
     "icon": {
       "item": "vampirism:hunter_minion_upgrade_special"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.max_lord_hunter"
     }

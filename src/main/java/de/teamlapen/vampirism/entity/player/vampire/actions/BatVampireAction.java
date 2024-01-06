@@ -46,7 +46,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
         if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.BAT);
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.BAT);
         }
         return true;
     }
@@ -149,16 +149,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             setFlightSpeed(player, VampirismConfig.BALANCE.vaBatFlightSpeed.get().floatValue());
         } else {
             // Health modifier
-            AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
-            AttributeModifier m = armorAttributeInst.getModifier(armorModifierUUID);
-            if (m != null) {
-                armorAttributeInst.removeModifier(m);
-            }
-            AttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
-            AttributeModifier m2 = armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID);
-            if (m2 != null) {
-                armorToughnessAttributeInst.removeModifier(m2);
-            }
+            player.getAttribute(Attributes.ARMOR).removeModifier(armorModifierUUID);
+            player.getAttribute(Attributes.ARMOR_TOUGHNESS).removeModifier(armorToughnessModifierUUID);
 
             boolean spectator = player.isSpectator();
             boolean creative = player.isCreative();

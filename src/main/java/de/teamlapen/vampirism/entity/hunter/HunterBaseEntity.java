@@ -61,7 +61,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (cause.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) cause.getEntity())) && this.getEffect(ModEffects.FREEZE.get()) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) cause.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(((ServerPlayer) cause.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
 

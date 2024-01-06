@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.BatCageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class BatCageBlock extends BaseEntityBlock {
 
+    public static final MapCodec<BatCageBlock> CODEC = simpleCodec(BatCageBlock::new);
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty CONTAINS_BAT = BooleanProperty.create("contains_bat");
 
@@ -27,6 +30,11 @@ public class BatCageBlock extends BaseEntityBlock {
     public BatCageBlock(Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(CONTAINS_BAT, true));
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Nullable

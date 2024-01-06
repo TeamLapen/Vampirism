@@ -1,35 +1,36 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundUnlockSkillPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
@@ -89,15 +90,14 @@ public class SkillsScreen extends Screen {
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
         if (this.factionPlayer != null) {
-            SkillNode rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID());
-            this.tabs.add(new SkillsTabScreen(this.minecraft, this, 0, new ItemStack(ModItems.VAMPIRE_BOOK.get()), rootNode, this.factionPlayer.getSkillHandler(), Component.translatable("text.vampirism.skills.level")));
-            if (this.factionPlayer.getFaction().hasLordSkills() && FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).map(a -> a.getLordLevel() > 0).orElse(false)) {
-                rootNode = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(this.factionPlayer.getFaction().getID(), SkillType.LORD);
-                this.tabs.add(new SkillsTabScreen(this.minecraft, this, 1, new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), rootNode, this.factionPlayer.getSkillHandler(), Component.translatable("text.vampirism.skills.lord")));
+            int index = 0;
+            SkillHandler<?> skillHandler = (SkillHandler<?>) this.factionPlayer.getSkillHandler();
+            for (Holder<ISkillTree> unlockedSkillTree : skillHandler.unlockedSkillTrees()) {
+                this.tabs.add(new SkillsTabScreen(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), ((ClientSkillTreeData) skillHandler.getTreeData())));
             }
         }
 
-        if (this.tabs.size() > 0) {
+        if (!this.tabs.isEmpty()) {
             this.selectedTab = this.tabs.get(this.selectedTab == null ? 0 : this.selectedTab.getIndex());
         }
 
@@ -115,7 +115,7 @@ public class SkillsScreen extends Screen {
                 boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
 
                 resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
+                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
                     InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                     if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                         context.active = false;
@@ -134,11 +134,13 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
         this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
         this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        for(Renderable renderable : this.renderables) {
+            renderable.render(graphics, mouseX, mouseY, partialTicks);
+        }
         this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
     }
 
@@ -217,11 +219,11 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
-            return this.selectedTab.mouseScrolled(mouseX, mouseY, amount);
+            return this.selectedTab.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
     }
 
     @Override
@@ -250,10 +252,10 @@ public class SkillsScreen extends Screen {
         ISkill<?> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
         if (selected != null) {
             if (canUnlockSkill(selected)) {
-                VampirismMod.dispatcher.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));
+                VampirismMod.proxy.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));
                 playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
             } else {
-                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.get(), 0.5F);
+                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
             }
         }
     }

@@ -23,6 +23,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
@@ -73,7 +74,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
         public int get(int slot) {
             return switch (slot) {
                 case DATA_LEVELS -> VampireBeaconBlockEntity.this.levels;
-                case DATA_PRIMARY -> MobEffect.getIdFromNullable(VampireBeaconBlockEntity.this.primaryPower);
+                case DATA_PRIMARY -> BeaconMenu.encodeEffect(VampireBeaconBlockEntity.this.primaryPower);
                 case DATA_AMPLIFIER -> VampireBeaconBlockEntity.this.effectAmplifier;
                 case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded ? 1 : 0;
                 default -> 0;
@@ -203,11 +204,6 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
         }
     }
 
-    @Override
-    public AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
-    }
-
     private static Pair<Integer, Boolean> updateBase(Level pLevel, int pX, int pY, int pZ) {
         int i = 0;
         boolean upgradeFlag = true;
@@ -264,7 +260,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
 
     @Nullable
     static MobEffect getValidEffectById(int pEffectId) {
-        MobEffect mobeffect = MobEffect.byId(pEffectId);
+        MobEffect mobeffect = BeaconMenu.decodeEffect(pEffectId);
         return VALID_EFFECTS.contains(mobeffect) ? mobeffect : null;
     }
 
@@ -284,7 +280,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.putInt("Primary", MobEffect.getIdFromNullable(this.primaryPower));
+        pTag.putInt("Primary", BeaconMenu.encodeEffect(this.primaryPower));
         pTag.putInt("Levels", this.levels);
         if (this.name != null) {
             pTag.putString("CustomName", Component.Serializer.toJson(this.name));

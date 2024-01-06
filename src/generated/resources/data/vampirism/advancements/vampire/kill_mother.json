@@ -2,20 +2,20 @@
   "parent": "vampirism:vampire/become_vampire",
   "criteria": {
     "killed": {
-      "conditions": {},
       "trigger": "vampirism:mother_win"
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.vampire_kill_mother.desc"
     },
@@ -24,7 +24,6 @@
     "icon": {
       "item": "vampirism:mother_core"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.vampire_kill_mother"
     }

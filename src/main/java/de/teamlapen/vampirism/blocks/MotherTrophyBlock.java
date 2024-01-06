@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.MotherTrophyBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MotherTrophyBlock extends BaseEntityBlock {
 
+    public static final MapCodec<MotherTrophyBlock> CODEC = simpleCodec(MotherTrophyBlock::new);
     public static final int MAX = RotationSegment.getMaxSegmentIndex();
     private static final int ROTATIONS = MAX + 1;
     public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
@@ -27,6 +29,11 @@ public class MotherTrophyBlock extends BaseEntityBlock {
     public MotherTrophyBlock(Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(ROTATION, 0));
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull

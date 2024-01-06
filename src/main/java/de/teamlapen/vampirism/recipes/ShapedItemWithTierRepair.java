@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.recipes;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.mixin.ShapedRecipeAccessor;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
-        super(shaped.getId(), shaped.getGroup(), CraftingBookCategory.EQUIPMENT, shaped.getRecipeWidth(), shaped.getRecipeHeight(), shaped.getIngredients(), ((ShapedRecipeAccessor) shaped).getResult());
+        super(shaped.getGroup(), CraftingBookCategory.EQUIPMENT, ((ShapedRecipeAccessor) shaped).getPattern(), ((ShapedRecipeAccessor) shaped).getResult(), shaped.showNotification());
     }
 
     @NotNull
@@ -53,20 +54,22 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
     }
 
     public static class Serializer extends ShapedRecipe.Serializer {
-        @NotNull
+
+        public static final Codec<ShapedRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(ShapedItemWithTierRepair::new, ShapedItemWithTierRepair::new);
+
         @Override
-        public ShapedRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
-            return new ShapedItemWithTierRepair(super.fromJson(recipeId, json));
+        public @NotNull Codec<ShapedRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public ShapedRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-            return new ShapedItemWithTierRepair(super.fromNetwork(recipeId, buffer));
+        public @NotNull ShapedRecipe fromNetwork(FriendlyByteBuf p_44240_) {
+            return p_44240_.readJsonWithCodec(CODEC);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapedRecipe recipe) {
-            super.toNetwork(buffer, recipe);
+            buffer.writeJsonWithCodec(CODEC, recipe);
         }
     }
 }

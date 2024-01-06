@@ -28,11 +28,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -77,7 +77,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinements().stream().map(RegistryObject::get).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
+            set.getRefinements().stream().map(Supplier::get).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
         }
     }
 

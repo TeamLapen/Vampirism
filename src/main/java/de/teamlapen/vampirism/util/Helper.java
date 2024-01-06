@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.authlib.minecraft.MinecraftProfileTextures;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -21,7 +21,7 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
-import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -49,7 +49,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -73,7 +73,7 @@ public class Helper {
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !VampirismWorld.getOpt((Level) world).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
+                        return world instanceof Level && !LevelFog.getOpt(((Level) world)).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
                     }
                 }
             }
@@ -116,7 +116,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismAPI.getVampirismWorld((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
+        return world instanceof Level ? VampirismAPI.getGarlicHandler((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
     }
 
     @NotNull
@@ -162,9 +162,7 @@ public class Helper {
     /**
      * @return Checks if all given skills are enabled
      */
-    @SafeVarargs
-    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(@NotNull ISkillHandler<T> skillHandler, ISkill<T> @Nullable ... skills) {
-        if (skills == null) return true;
+    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(@NotNull ISkillHandler<T> skillHandler, @NotNull List<ISkill<T>> skills) {
         for (ISkill<T> skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
                 return false;
@@ -190,7 +188,7 @@ public class Helper {
     public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        return VampirismWorld.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
+        return LevelFog.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
     }
 
     public static ResourceLocation getBiomeId(@NotNull Entity e) {
@@ -235,10 +233,9 @@ public class Helper {
      */
     public static boolean attemptToGuessGenderSafe(Player p) {
         if (p instanceof ServerPlayer) { //Could extend to also support client side, but have to use proxy then
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textureMap = ((ServerPlayer) p).server.getSessionService().getTextures(p.getGameProfile(), false);
-            if (textureMap.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                MinecraftProfileTexture skinTexture = textureMap.get(MinecraftProfileTexture.Type.SKIN);
-                return "slim".equals(skinTexture.getMetadata("model"));
+            MinecraftProfileTextures textureMap = ((ServerPlayer) p).server.getSessionService().getTextures(p.getGameProfile());
+            if (textureMap.skin() != null) {
+                return "slim".equals(textureMap.skin().getMetadata("model"));
             }
         }
         return false;

@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -39,15 +41,19 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      * <br>
      * (like {@link net.minecraft.world.entity.EquipmentSlot} for other items)
      */
-    enum AccessorySlotType {
-        AMULET(0), RING(1), OBI_BELT(2);
+    enum AccessorySlotType implements StringRepresentable {
+        AMULET("amulet",0),
+        RING("ring", 1),
+        OBI_BELT("obi_belt",2);
 
+        private final String name;
         /**
          * slot index
          */
         private final int slot;
 
-        AccessorySlotType(int slot) {
+        AccessorySlotType(String name, int slot) {
+            this.name = name;
             this.slot = slot;
         }
 
@@ -56,6 +62,11 @@ public interface IRefinementItem extends IFactionExclusiveItem {
          */
         public int getSlot() {
             return slot;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
         }
     }
 }

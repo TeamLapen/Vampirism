@@ -10,9 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class SitHandler {
@@ -54,7 +54,7 @@ public class SitHandler {
     private static boolean isPlayerInRange(@NotNull Player player, BlockPos pos) {
         Vec3 playerPos = player.position();
         Vec3 blockPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-        double blockReachDistance = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue();
+        double blockReachDistance = player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue();
 
 //        if(blockReachDistance == 0) //player has to stand on top of the block
 //            return playerPos.getY() - blockPos.getY() <= 1 && playerPos.getX() - blockPos.getX() == 0 && playerPos.getZ() - blockPos.getZ() == 0;

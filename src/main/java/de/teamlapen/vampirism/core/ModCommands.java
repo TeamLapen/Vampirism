@@ -13,24 +13,24 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class ModCommands {
 
-    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, REFERENCE.MODID);
 
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", () -> ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgument.Info()));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills)));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions)));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> MINION_ID = COMMAND_ARGUMENT_TYPES.register("minion_id", () -> ArgumentTypeInfos.registerByClass(MinionArgument.class, new MinionArgument.Info()));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", () -> ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgument.Info()));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills)));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions)));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> MINION_ID = COMMAND_ARGUMENT_TYPES.register("minion_id", () -> ArgumentTypeInfos.registerByClass(MinionArgument.class, new MinionArgument.Info()));
 
     static void register(IEventBus bus) {
         COMMAND_ARGUMENT_TYPES.register(bus);
@@ -78,7 +78,6 @@ public class ModCommands {
                             .then(ResetActionsCommand.register())
                             .then(TentCommand.register())
                             .then(VampireBookCommand.register())
-                            .then(RunTestsCommand.register())
                             .then(GarlicCheckCommand.register())
                             .then(SetSwordChargedCommand.register())
                             .then(SetSwordTrainedCommand.register())

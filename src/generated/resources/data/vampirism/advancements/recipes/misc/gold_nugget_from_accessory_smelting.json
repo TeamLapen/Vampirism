@@ -34,15 +34,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_amulet",
-      "has_ring",
-      "has_the_recipe"
+      "has_ring"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:gold_nugget_from_accessory_smelting"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -3,8 +3,10 @@
   "criteria": {
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
@@ -15,12 +17,9 @@
     "description": {
       "translate": "advancement.vampirism.become_vampire.desc"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
       "item": "vampirism:vampire_fang"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.become_vampire"
     }

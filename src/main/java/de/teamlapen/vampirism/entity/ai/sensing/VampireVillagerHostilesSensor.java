@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.ai.sensing;
 
 import com.google.common.collect.Maps;
+import de.teamlapen.vampirism.mixin.VillagerHostilesSensorAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;
@@ -17,7 +18,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
 
     static {
         //Adding values will probably not work outside Dev as hasPresence is not called for some reason
-        hostiles = Maps.newHashMap(VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES);
+        hostiles = Maps.newHashMap(VillagerHostilesSensorAccessor.getACCEPTABLE_DISTANCE_FROM_HOSTILES());
         hostiles.remove(EntityType.ZOMBIE);
         hostiles.remove(EntityType.ZOMBIE_VILLAGER);
         hostiles.remove(EntityType.DROWNED);

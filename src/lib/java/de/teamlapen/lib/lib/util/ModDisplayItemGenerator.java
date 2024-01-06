@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -41,15 +41,20 @@ public abstract class ModDisplayItemGenerator implements CreativeModeTab.Display
         output.accept(item);
     }
 
-    protected void addItem(RegistryObject<? extends Item> item) {
+    protected void addItem(DeferredHolder<Item, ? extends Item> item) {
         add(item.get());
     }
 
-    protected void addBlock(RegistryObject<? extends Block> item) {
+    protected void addBlock(DeferredHolder<Block, ? extends Block> item) {
         add(item.get());
     }
 
-    protected  <T extends ItemLike & CreativeTabItemProvider> void addGen(RegistryObject<T> item) {
+    protected  <T extends Item & CreativeTabItemProvider> void addItemGen(DeferredHolder<Item, T> item) {
+        this.items.remove(item.get());
+        item.get().generateCreativeTab(this.parameters, this.output);
+    }
+
+    protected  <T extends Block & CreativeTabItemProvider> void addBlockGen(DeferredHolder<Block, T> item) {
         this.items.remove(item.get());
         item.get().generateCreativeTab(this.parameters, this.output);
     }

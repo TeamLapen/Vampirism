@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.proxy;
 
+import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
-import de.teamlapen.vampirism.entity.player.skills.SkillTree;
-import de.teamlapen.vampirism.network.*;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
+import de.teamlapen.vampirism.util.PlayerModelType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -15,10 +19,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Proxy interface
@@ -43,45 +54,12 @@ public interface IProxy extends IInitListener {
     @Nullable
     Entity getMouseOverEntity();
 
-    default float getRenderPartialTick() {
-        return 1F;
-    }
-
-    /**
-     * Only call after client_load/server started
-     *
-     * @param client Request the client version. Server ignores this
-     * @return The appropriate skill tree
-     */
-    SkillTree getSkillTree(boolean client);
-
-    default void handleBloodValuePacket(ClientboundBloodValuePacket msg) {
-    }
-
-    default void handlePlayEventPacket(ClientboundPlayEventPacket msg) {
-    }
-
-    default void handleRequestMinionSelect(ClientboundRequestMinionSelectPacket.Action action, List<Pair<Integer, Component>> minions) {
-    }
-
-    default void handleSkillTreePacket(ClientboundSkillTreePacket msg) {
-    }
-
     /**
      * Handle client side only sleep things
      */
     void handleSleepClient(Player player);
 
-    default void handleTaskPacket(ClientboundTaskPacket msg) {
-    }
-
-    default void handleTaskStatusPacket(ClientboundTaskStatusPacket msg) {
-    }
-
     default void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg) {
-    }
-
-    default void handleVampireBookPacket(VampireBookManager.BookInfo msg) {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
@@ -108,6 +86,31 @@ public interface IProxy extends IInitListener {
     }
 
     default void addBossEventSound(UUID bossEventUuid, ResourceKey<SoundEvent> sound){
+
+    }
+
+    default void sendToServer(CustomPacketPayload packetPayload) {
+
+    }
+
+    default void spawnParticles(Level world, @NotNull BlockPos pos, @NotNull BlockState state) {
+
+    }
+
+    default void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
+    }
+
+    default void displayVampireMinionStatsaScreen(VampireMinionEntity entity) {
+    }
+
+    default void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {
+    }
+
+    default void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
+
+    }
+
+    default void obtainPlayerSkins(GameProfile profile, @NotNull Consumer<Pair<ResourceLocation, PlayerModelType>> callback) {
 
     }
 }

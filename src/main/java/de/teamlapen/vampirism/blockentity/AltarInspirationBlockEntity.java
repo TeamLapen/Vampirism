@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -27,28 +28,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 /**
  * Handle blood storage and leveling
  */
-public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capability.FluidHandlerBlockEntity implements FluidTankWithListener.IFluidTankListener {
+public class AltarInspirationBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
     public static void setBloodValue(@NotNull BlockGetter worldIn, @NotNull Random randomIn, @NotNull BlockPos blockPosIn) {
         BlockEntity tileEntity = worldIn.getBlockEntity(blockPosIn);
         if (tileEntity instanceof AltarInspirationBlockEntity) {
-            tileEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
+            ((AltarInspirationBlockEntity) tileEntity).getTank().fill(new FluidStack(ModFluids.BLOOD.get(), BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
@@ -61,6 +64,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
     private int targetLevel;
     private Player ritualPlayer;
     private ModelData modelData;
+    private final FluidTankWithListener tank;
 
     public AltarInspirationBlockEntity(@NotNull BlockPos pos, BlockState state) {
         super(ModTiles.ALTAR_INSPIRATION.get(), pos, state);
@@ -74,6 +78,10 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         return modelData;
     }
 
+    public FluidTankWithListener getTank() {
+        return tank;
+    }
+
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -85,12 +93,14 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         return this.saveWithoutMetadata();
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (!hasLevel()) return;
         FluidStack old = tank.getFluid();
-        this.load(pkt.getTag());
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            this.load(tag);
+        }
         if (!old.isFluidStackIdentical(tank.getFluid())) {
             updateModelData(true);
         }
@@ -124,9 +134,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         }
         int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.level().isClientSide) {
-                p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
-            }
+            p.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
             return;
         }
         if (!p.level().isClientSide) {
@@ -134,6 +142,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         } else {
             ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
+        setChanged();
         ritualPlayer = p;
         ritualTicksLeft = RITUAL_TIME;
     }
@@ -177,7 +186,7 @@ public class AltarInspirationBlockEntity extends net.minecraftforge.fluids.capab
         }
     }
 
-    private static class InternalTank extends FluidTankWithListener {
+    public static class InternalTank extends FluidTankWithListener {
 
         private InternalTank(int capacity) {
             super(capacity, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()));

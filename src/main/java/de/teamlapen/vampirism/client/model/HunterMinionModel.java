@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class HunterMinionModel<T extends HunterMinionEntity> extends PlayerBodyOverlayLayer.VisibilityPlayerModel<T> {
 
@@ -46,7 +47,7 @@ public class HunterMinionModel<T extends HunterMinionEntity> extends PlayerBodyO
                 return HumanoidModel.ArmPose.CROSSBOW_HOLD;
             }
 
-            HumanoidModel.ArmPose forgeArmPose = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemstack).getArmPose(entity, pHand, itemstack);
+            HumanoidModel.ArmPose forgeArmPose = IClientItemExtensions.of(itemstack).getArmPose(entity, pHand, itemstack);
             if (forgeArmPose != null) return forgeArmPose;
 
             return HumanoidModel.ArmPose.ITEM;

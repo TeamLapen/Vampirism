@@ -33,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ARMOR_TOUGHNESS, 5).add(Attributes.ATTACK_DAMAGE, 6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.FLYING_SPEED, 0.3).add(ForgeMod.ENTITY_REACH.get(), 1);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ARMOR_TOUGHNESS, 5).add(Attributes.ATTACK_DAMAGE, 6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.FLYING_SPEED, 0.3).add(NeoForgeMod.ENTITY_REACH.value(), 1);
     }
 
     @Override
@@ -161,10 +161,6 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
             super(GhostEntity.this, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
         }
 
-        @Override
-        protected double getAttackReachSqr(LivingEntity pAttackTarget) {
-            return this.mob.getBbWidth() * 3.0F * this.mob.getBbWidth() * 3.0F + pAttackTarget.getBbWidth();
-        }
     }
 
     static class GhostPathNavigation extends FlyingPathNavigation {

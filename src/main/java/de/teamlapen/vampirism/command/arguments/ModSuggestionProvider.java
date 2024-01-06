@@ -6,20 +6,24 @@ import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.SuggestionProviders;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.level.biome.Biome;
 
 @SuppressWarnings("CodeBlock2Expr")
 public class ModSuggestionProvider {
     public static final SuggestionProvider<CommandSourceStack> ENTITIES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "entities"), (context, builder) -> {
-        return SharedSuggestionProvider.suggestResource(ForgeRegistries.ENTITY_TYPES.getValues().stream(), builder, ForgeRegistries.ENTITY_TYPES::getKey, (c) -> {
-            return Component.translatable(Util.makeDescriptionId("entity", ForgeRegistries.ENTITY_TYPES.getKey(c)));
+        return SharedSuggestionProvider.suggestResource(BuiltInRegistries.ENTITY_TYPE.stream(), builder, BuiltInRegistries.ENTITY_TYPE::getKey, entity -> {
+            return Component.translatable(Util.makeDescriptionId("entity", BuiltInRegistries.ENTITY_TYPE.getKey(entity)));
         });
     });
     public static final SuggestionProvider<CommandSourceStack> BIOMES = SuggestionProviders.register(new ResourceLocation(REFERENCE.MODID, "biomes"), (context, builder) -> {
-        return SharedSuggestionProvider.suggestResource(ForgeRegistries.BIOMES.getValues().stream(), builder, ForgeRegistries.BIOMES::getKey, (c) -> {
-            return Component.translatable(Util.makeDescriptionId("biome", ForgeRegistries.BIOMES.getKey(c)));
+        Registry<Biome> biomes = context.getSource().registryAccess().registryOrThrow(Registries.BIOME);
+        return SharedSuggestionProvider.suggestResource(biomes.stream(), builder, biomes::getKey, (c) -> {
+            return Component.translatable(Util.makeDescriptionId("biome", biomes.getKey(c)));
         });
     });
 }

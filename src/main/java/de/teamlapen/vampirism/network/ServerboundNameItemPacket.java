@@ -1,43 +1,25 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
-import net.minecraft.ChatFormatting;
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import org.apache.commons.lang3.Validate;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
 
+public record ServerboundNameItemPacket(String name) implements CustomPacketPayload {
 
-public record ServerboundNameItemPacket(String name) implements IMessage.IServerBoundMessage {
-    static void encode(@NotNull ServerboundNameItemPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeUtf(msg.name);
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "name_item");
+    public static final Codec<ServerboundNameItemPacket> CODEC = Codec.STRING.xmap(ServerboundNameItemPacket::new, msg -> msg.name);
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ServerboundNameItemPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ServerboundNameItemPacket(buf.readUtf(35));
-    }
-
-    static void handle(@NotNull ServerboundNameItemPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ServerPlayer player = ctx.getSender();
-        Validate.notNull(player);
-        ctx.enqueueWork(() -> {
-            if (VampirismVampireSwordItem.DO_NOT_NAME_STRING.equals(msg.name)) {
-                ItemStack stack = player.getMainHandItem();
-                if (stack.getItem() instanceof VampirismVampireSwordItem) {
-                    ((VampirismVampireSwordItem) stack.getItem()).doNotName(stack);
-                }
-            } else if (!org.apache.commons.lang3.StringUtils.isBlank(msg.name)) {
-                ItemStack stack = player.getMainHandItem();
-                stack.setHoverName(Component.literal(msg.name).withStyle(ChatFormatting.AQUA));
-            }
-        });
-        ctx.setPacketHandled(true);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
 }

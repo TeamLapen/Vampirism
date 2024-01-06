@@ -19,7 +19,7 @@ import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.IContainerFactory;
+import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

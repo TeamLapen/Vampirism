@@ -91,7 +91,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
+    public BlockState playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
         if (!world.isClientSide && player.isCreative()) {
             Part part = blockState.getValue(PART);
             if (part == Part.SUB) {
@@ -104,7 +104,7 @@ public class VampirismSplitBlock extends VampirismBlock {
             }
         }
 
-        super.playerWillDestroy(world, blockPos, blockState, player);
+        return super.playerWillDestroy(world, blockPos, blockState, player);
     }
 
     @Override

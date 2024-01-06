@@ -17,16 +17,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.jump_scare.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:skeleton_skull"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.jump_scare"
     }

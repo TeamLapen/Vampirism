@@ -1,6 +1,6 @@
 {
   "pack": {
     "description": "${mod_id} Resources",
-    "pack_format": 15
+    "pack_format": ${pack_format_number}
   }
 }

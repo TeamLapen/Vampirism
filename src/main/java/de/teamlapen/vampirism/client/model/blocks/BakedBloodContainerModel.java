@@ -16,12 +16,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.IDynamicBakedModel;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -30,7 +28,6 @@ import java.util.List;
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
  */
-@OnlyIn(Dist.CLIENT)
 public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     public static final int FLUID_LEVELS = 14;

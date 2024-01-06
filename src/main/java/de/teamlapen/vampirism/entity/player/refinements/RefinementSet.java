@@ -9,16 +9,16 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.random.WeightedEntry;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public abstract class RefinementSet implements IRefinementSet {
 
-    private final Set<RegistryObject<? extends IRefinement>> refinements;
+    private final Set<Supplier<? extends IRefinement>> refinements;
     private final Rarity rarity;
     private final int color;
     private final @NotNull WeightedEntry.Wrapper<IRefinementSet> weightedRandom;
@@ -27,7 +27,7 @@ public abstract class RefinementSet implements IRefinementSet {
     @Nullable
     private IRefinementItem.AccessorySlotType restrictedType;
 
-    public RefinementSet(Rarity rarity, int color, Set<RegistryObject<? extends IRefinement>> refinements) {
+    public RefinementSet(Rarity rarity, int color, Set<Supplier<? extends IRefinement>> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
         this.weightedRandom = WeightedEntry.wrap(this, this.rarity.weight);
@@ -35,7 +35,7 @@ public abstract class RefinementSet implements IRefinementSet {
     }
 
     @SafeVarargs
-    public RefinementSet(Rarity rarity, int color, RegistryObject<? extends IRefinement>... refinements) {
+    public RefinementSet(Rarity rarity, int color, Supplier<? extends IRefinement>... refinements) {
         this(rarity, color, UtilLib.newSortedSet(refinements));
     }
 
@@ -58,7 +58,7 @@ public abstract class RefinementSet implements IRefinementSet {
 
     @NotNull
     @Override
-    public Set<RegistryObject<? extends IRefinement>> getRefinements() {
+    public Set<Supplier<? extends IRefinement>> getRefinements() {
         return this.refinements;
     }
 
@@ -80,12 +80,12 @@ public abstract class RefinementSet implements IRefinementSet {
     }
 
     public static class VampireRefinementSet extends RefinementSet {
-        public VampireRefinementSet(Rarity rarity, int color, Set<RegistryObject<? extends IRefinement>> refinements) {
+        public VampireRefinementSet(Rarity rarity, int color, Set<Supplier<? extends IRefinement>> refinements) {
             super(rarity, color, refinements);
         }
 
         @SafeVarargs
-        public VampireRefinementSet(Rarity rarity, int color, RegistryObject<? extends IRefinement>... refinements) {
+        public VampireRefinementSet(Rarity rarity, int color, Supplier<? extends IRefinement>... refinements) {
             super(rarity, color, refinements);
         }
 

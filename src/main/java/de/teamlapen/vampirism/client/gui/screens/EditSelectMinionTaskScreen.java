@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -41,7 +41,7 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
     }
 
     private static ItemOrdering<SelectMinionTaskRadialScreen.Entry> getOrdering(FactionPlayerHandler player) {
-        return new ItemOrdering<>(ClientConfigHelper.getMinionTaskOrder(player.getCurrentFaction()), new ArrayList<>(), () -> Stream.concat(VampirismRegistries.MINION_TASKS.get().getValues().stream().filter(s -> !(s instanceof INoGlobalCommandTask)).filter(s -> {
+        return new ItemOrdering<>(ClientConfigHelper.getMinionTaskOrder(player.getCurrentFaction()), new ArrayList<>(), () -> Stream.concat(ModRegistries.MINION_TASKS.stream().filter(s -> !(s instanceof INoGlobalCommandTask)).filter(s -> {
             if (s instanceof IFactionMinionTask<?,?> factionTask) {
                 if(factionTask.getFaction() == null) {
                     return true;

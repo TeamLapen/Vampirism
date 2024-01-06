@@ -16,18 +16,18 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 
 
-public class BlockStateProvider extends net.minecraftforge.client.model.generators.BlockStateProvider {
+public class BlockStateProvider extends net.neoforged.neoforge.client.model.generators.BlockStateProvider {
 
     public BlockStateProvider(@NotNull PackOutput packOutput, @NotNull ExistingFileHelper exFileHelper) {
         super(packOutput, REFERENCE.MODID, exFileHelper);

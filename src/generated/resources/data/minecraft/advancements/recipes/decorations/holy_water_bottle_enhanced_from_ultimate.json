@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ultimate_holy_water",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ultimate_holy_water"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:holy_water_bottle_enhanced_from_ultimate"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -3,22 +3,19 @@
   "criteria": {
     "task": {
       "conditions": {
-        "action": "vampirism:collect_hunter_items"
+        "task": "vampirism:collect_hunter_items"
       },
-      "trigger": "vampirism:minion_tasks"
+      "trigger": "vampirism:minion_action"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.collect_hunter_items.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:gold_nugget"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.collect_hunter_items"
     }

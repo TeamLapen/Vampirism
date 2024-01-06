@@ -19,11 +19,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemDecorator;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -31,7 +29,6 @@ import java.util.stream.Stream;
 /**
  * Handles item render registration
  */
-@OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
 
     public static void registerItemModelPropertyUnsafe() {

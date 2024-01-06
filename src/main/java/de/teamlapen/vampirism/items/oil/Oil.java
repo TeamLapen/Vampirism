@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.items.oil.IOil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class Oil implements IOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Level level, List<Component> tooltips) {
     }
 
     @Override

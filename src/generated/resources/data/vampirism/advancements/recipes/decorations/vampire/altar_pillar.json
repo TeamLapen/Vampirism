@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_stones",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_stones"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/altar_pillar"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -1,16 +1,20 @@
 package de.teamlapen.lib.network;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.network.ISyncable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -19,63 +23,31 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 /**
  * Does Entity or Entity capability updates.
  * Entity capabilities that want to use this, have to be registered in {@link HelperRegistry}
  */
-public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessage {
+public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    public static final ResourceLocation ID = new ResourceLocation(LIBREFERENCE.MODID, "update_entity");
+    public static final Codec<ClientboundUpdateEntityPacket> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    Codec.INT.fieldOf("id").forGetter(ClientboundUpdateEntityPacket::getId),
+                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "data").forGetter(x -> Optional.ofNullable(x.getData())),
+                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "caps").forGetter(x -> Optional.ofNullable(x.getCaps())),
+                    Codec.BOOL.optionalFieldOf("itself", false).forGetter(ClientboundUpdateEntityPacket::isPlayerItself)
+            ).apply(inst, ClientboundUpdateEntityPacket::new)
+    );
 
-
-    static void encode(@NotNull ClientboundUpdateEntityPacket msg, @NotNull FriendlyByteBuf buf) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("id", msg.id);
-        if (msg.data != null) {
-            tag.put("data", msg.data);
-        }
-        if (msg.caps != null) {
-            tag.put("caps", msg.caps);
-        }
-        if (msg.playerItself) {
-            tag.putBoolean("itself", true);
-        }
-        buf.writeNbt(tag);
-    }
-
-    static @NotNull ClientboundUpdateEntityPacket decode(@NotNull FriendlyByteBuf buf) {
-        CompoundTag tag = buf.readNbt();
-        ClientboundUpdateEntityPacket pkt = new ClientboundUpdateEntityPacket();
-        pkt.id = tag.getInt("id");
-        if (tag.contains("data")) {
-            pkt.data = tag.getCompound("data");
-        }
-        if (tag.contains("caps")) {
-            pkt.caps = tag.getCompound("caps");
-        }
-        if (tag.contains("itself")) {
-            pkt.playerItself = tag.getBoolean("itself");
-        }
-        return pkt;
-    }
-
-    public static void handle(final ClientboundUpdateEntityPacket message, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> { //Execute on main thread
-            VampLib.proxy.handleUpdateEntityPacket(message);
-        });
-        ctx.setPacketHandled(true);
-    }
 
     /**
      * Create a sync packet for the given capability instance.
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap) {
-        CompoundTag data = new CompoundTag();
-        cap.writeFullUpdateToNBT(data);
-        return create(cap, data);
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableAttachment cap) {
+        return create(cap, cap.writeFullUpdateToNBT());
     }
 
     /**
@@ -84,13 +56,12 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
      * @param entity EntityLiving which implements ISyncable
      * @param caps   Have to belong to the given entity
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
+    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, ISyncable.ISyncableAttachment... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
         ClientboundUpdateEntityPacket packet = create(caps);
-        packet.data = new CompoundTag();
-        ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
+        packet.data = ((ISyncable) entity).writeFullUpdateToNBT();
         return packet;
     }
 
@@ -99,16 +70,12 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
      *
      * @param caps Have to belong to the same entity
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst @NotNull ... caps) {
-        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
-        packet.id = caps[0].getTheEntityID();
-        packet.caps = new CompoundTag();
-        for (ISyncable.ISyncableEntityCapabilityInst cap : caps) {
-            CompoundTag data = new CompoundTag();
-            cap.writeFullUpdateToNBT(data);
-            packet.caps.put(cap.getCapKey().toString(), data);
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.ISyncableAttachment @NotNull ... caps) {
+        CompoundTag capsTag = new CompoundTag();
+        for (ISyncable.ISyncableAttachment cap : caps) {
+            capsTag.put(cap.getAttachmentKey().toString(), cap.writeFullUpdateToNBT());
         }
-        return packet;
+        return new ClientboundUpdateEntityPacket(caps[0].getTheEntityID(), null, capsTag, false);
     }
 
     /**
@@ -116,12 +83,10 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
      *
      * @param data Should be loadable by the capability instance
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableEntityCapabilityInst cap, @NotNull CompoundTag data) {
-        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
-        packet.id = cap.getTheEntityID();
-        packet.caps = new CompoundTag();
-        packet.caps.put(cap.getCapKey().toString(), data);
-        return packet;
+    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableAttachment cap, @NotNull CompoundTag data) {
+        CompoundTag tag = new CompoundTag();
+        tag.put(cap.getAttachmentKey().toString(), data);
+        return new ClientboundUpdateEntityPacket(cap.getTheEntityID(), null, tag, false);
     }
 
     /**
@@ -133,11 +98,7 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
-        packet.id = entity.getId();
-        packet.data = new CompoundTag();
-        ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
-        return packet;
+        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).writeFullUpdateToNBT(), null, false);
     }
 
     /**
@@ -147,10 +108,7 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
      * @param data   Should be loadable by the entity
      */
     public static <T extends Entity & ISyncable> @NotNull ClientboundUpdateEntityPacket create(@NotNull T entity, CompoundTag data) {
-        ClientboundUpdateEntityPacket packet = new ClientboundUpdateEntityPacket();
-        packet.id = entity.getId();
-        packet.data = data;
-        return packet;
+        return new ClientboundUpdateEntityPacket(entity.getId(), data, null, false);
     }
 
     /**
@@ -160,24 +118,24 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
      */
     public static @Nullable
     ClientboundUpdateEntityPacket createJoinWorldPacket(Entity entity) {
-        final List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = new ArrayList<>();
-        Collection<Capability<ISyncable.ISyncableEntityCapabilityInst>> allCaps = null;
+        final List<ISyncable.ISyncableAttachment> capsToSync = new ArrayList<>();
+        Collection<AttachmentType<ISyncable.ISyncableAttachment>> allCaps = null;
         if (entity instanceof PathfinderMob) {
             allCaps = HelperRegistry.getSyncableEntityCaps().values();
         } else if (entity instanceof Player) {
             allCaps = HelperRegistry.getSyncablePlayerCaps().values();
 
         }
-        if (allCaps != null && allCaps.size() > 0) {
-            for (Capability<ISyncable.ISyncableEntityCapabilityInst> cap : allCaps) {
-                entity.getCapability(cap, null).ifPresent(capsToSync::add);
+        if (allCaps != null && !allCaps.isEmpty()) {
+            for (AttachmentType<ISyncable.ISyncableAttachment> cap : allCaps) {
+                Optional.ofNullable(entity.getData(cap)).ifPresent(capsToSync::add);
             }
         }
-        if (capsToSync.size() > 0) {
+        if (!capsToSync.isEmpty()) {
             if (entity instanceof ISyncable) {
-                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
+                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableAttachment[0]));
             } else {
-                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
+                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableAttachment[0]));
             }
         } else if (entity instanceof ISyncable) {
             return ClientboundUpdateEntityPacket.create(entity);
@@ -188,22 +146,25 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
     }
 
     private int id;
-    private CompoundTag data;
-    private CompoundTag caps;
+    private @Nullable CompoundTag data;
+    private @Nullable CompoundTag caps;
     private boolean playerItself = false;
 
-    /**
-     * Don't use
-     */
-    public ClientboundUpdateEntityPacket() {
-
+    private ClientboundUpdateEntityPacket(int id, Optional<CompoundTag> data, Optional<CompoundTag> caps, boolean playerItself) {
+        this(id, data.orElse(null), caps.orElse(null), playerItself);
+    }
+    private ClientboundUpdateEntityPacket(int id, @Nullable CompoundTag data, @Nullable CompoundTag caps, boolean playerItself) {
+        this.id = id;
+        this.data = data;
+        this.caps = caps;
+        this.playerItself = playerItself;
     }
 
-    public CompoundTag getCaps() {
+    public @Nullable CompoundTag getCaps() {
         return caps;
     }
 
-    public CompoundTag getData() {
+    public @Nullable CompoundTag getData() {
         return data;
     }
 
@@ -220,4 +181,13 @@ public class ClientboundUpdateEntityPacket implements IMessage.IClientBoundMessa
         return this;
     }
 
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
+    }
 }

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.core.ModTasks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -19,7 +19,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
     public static final Codec<LordLevelReward> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
-                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(i -> i.description)
+                ComponentSerialization.FLAT_CODEC.fieldOf("description").forGetter(i -> i.description)
         ).apply(inst, LordLevelReward::new);
     });
 

@@ -39,7 +39,7 @@ public class SkillArgument implements ArgumentType<ISkill<?>> {
 
     @Override
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(RegUtil.keys(ModRegistries.SKILLS), builder);
+        return SharedSuggestionProvider.suggestResource(ModRegistries.SKILLS.keySet(), builder);
     }
 
     @Override

@@ -28,7 +28,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,7 +120,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.interact_with_research_table);
                 if (Helper.isHunter(serverPlayer)) {
-                    NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
+                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
                 } else {
                     player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 }

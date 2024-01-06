@@ -10,28 +10,15 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
-import de.teamlapen.vampirism.mixin.client.LivingEntityRendererAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +29,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
@@ -53,26 +39,26 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
     private static final Logger LOGGER = LogManager.getLogger();
     /**
-     * Used to store convertible handlers after {@link FMLCommonSetupEvent}
+     * Used to store convertible handlers after {@link net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent}
      */
     @NotNull
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertibles = new HashMap<>();
     @NotNull
-    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new HashMap<>();
-    private final Map<String, ResourceLocation> convertibleIdOverlay = new HashMap<>();
+    protected final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = new HashMap<>();
+    protected final Map<String, ResourceLocation> convertibleIdOverlay = new HashMap<>();
 
     @NotNull
     private final Map<EntityType<? extends PathfinderMob>, IConvertingHandler<?>> convertiblesAPI = new ConcurrentHashMap<>();
     @NotNull
-    private final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlayAPI = new ConcurrentHashMap<>();
+    protected final Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlayAPI = new ConcurrentHashMap<>();
     /**
-     * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
+     * Stores custom extended creature constructors after {@link net.neoforged.fml.event.lifecycle.InterModEnqueueEvent}
      */
     private final Map<Class<? extends PathfinderMob>, Function<? extends PathfinderMob, IExtendedCreatureVampirism>> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private final BiFunction<IConvertingHandler.IDefaultHelper, @Nullable ResourceLocation, IConvertingHandler<?>> defaultConvertingHandlerCreator;
 
     /**
-     * denies convertible addition after {@link InterModProcessEvent}
+     * denies convertible addition after {@link net.neoforged.fml.event.lifecycle.InterModProcessEvent}
      */
     private boolean finished = false;
 
@@ -130,7 +116,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         }
         LOGGER.info("Registered {} convertibles", biteables.size());
         for (Map.Entry<ResourceLocation, Float> entry : values.entrySet()) {
-            if (!RegUtil.has(ForgeRegistries.ENTITY_TYPES, entry.getKey())) continue;
+            if (!RegUtil.has(BuiltInRegistries.ENTITY_TYPE, entry.getKey())) continue;
             int blood = Math.abs(Math.round(entry.getValue()));
             if (blood == 0) {
                 blacklist.add(entry.getKey());
@@ -190,37 +176,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Override
     public @Nullable BiteableEntry getOrCreateEntry(PathfinderMob creature) {
         return biteableEntryManager.getOrCalculate(creature);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void applyDataConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> entries) {
-        this.convertibleOverlay.clear();
-        this.convertibleOverlay.putAll(this.convertibleOverlayAPI);
-        this.convertibleOverlay.putAll(entries);
-        syncOverlays();
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public <I extends LivingEntity, U extends EntityModel<I>> void syncOverlays() {
-        this.convertibleIdOverlay.clear();
-        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        this.convertibleIdOverlay.putAll(this.convertibleOverlay.entrySet().stream().filter(s -> {
-            var texture = textureManager.getTexture(s.getValue());
-            // call twice in case of missing texture
-            texture = textureManager.getTexture(s.getValue());
-            return texture != MissingTextureAtlasSprite.getTexture();
-        }).collect(Collectors.toMap(x -> ForgeRegistries.ENTITY_TYPES.getKey(x.getKey()).toString(), Map.Entry::getValue)));
-
-        for (EntityType<? extends PathfinderMob> type: getConvertibleOverlay().keySet()) {
-            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(type);
-            if (render == null) {
-                LOGGER.error("Did not find renderer for {}", type);
-                continue;
-            }
-            if(((LivingEntityRendererAccessor) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?,?>)) {
-                render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
-            }
-        }
     }
 
     public void applyDataConvertibles(Map<EntityType<? extends PathfinderMob>, ConvertiblesReloadListener.EntityEntry> entries) {

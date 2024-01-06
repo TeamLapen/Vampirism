@@ -3,15 +3,14 @@ package de.teamlapen.vampirism.api.general;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.VReference;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -149,11 +148,11 @@ public class BloodConversionRegistry {
         return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 
-    public static @Nullable ResourceLocation id(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item);
+    public static @NotNull ResourceLocation id(Item item) {
+        return BuiltInRegistries.ITEM.getKey(item);
     }
 
-    public static @Nullable ResourceLocation id(Fluid block) {
-        return ForgeRegistries.FLUIDS.getKey(block);
+    public static @NotNull ResourceLocation id(Fluid block) {
+        return BuiltInRegistries.FLUID.getKey(block);
     }
 }

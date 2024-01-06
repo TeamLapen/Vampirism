@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_heart",
-      "has_wool",
-      "has_the_recipe"
+      "has_wool"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/vampire_clothing_legs"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

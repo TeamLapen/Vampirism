@@ -22,14 +22,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,23 +44,16 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
     //Used to provide ItemHandler compatibility
     private final @NotNull IItemHandler itemHandler;
-    private final @NotNull LazyOptional<IItemHandler> itemHandlerOptional;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
 
     public BloodGrinderBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderMenu.SELECTOR_INFOS);
-        this.itemHandler = createWrapper();
-        this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
+        this.itemHandler = new SelectorInvWrapper(this);
     }
 
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if ((side != Direction.DOWN) && cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandlerOptional.cast();
-        }
-        return super.getCapability(cap, side);
+    public @NotNull IItemHandler getItemHandler() {
+        return itemHandler;
     }
 
     @Override

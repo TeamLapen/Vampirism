@@ -1,20 +1,21 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.SieveBlockEntity;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SieveBlock extends VampirismBlockContainer {
 
+    public static final MapCodec<SieveBlock> CODEC = simpleCodec(SieveBlock::new);
     public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
     protected static final VoxelShape sieveShape = makeShape();
 
@@ -37,9 +39,14 @@ public class SieveBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d, e, f);
     }
 
-    public SieveBlock() {
-        super(Properties.of().mapColor(MapColor.WOOD).ignitedByLava().strength(2.5f).sound(SoundType.WOOD).noOcclusion());
+    public SieveBlock(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     @NotNull

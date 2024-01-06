@@ -1,33 +1,31 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.advancements.critereon.SkillUnlockedCriterionTrigger;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.mixin.ShapelessRecipeBuilderAccessor;
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
 
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
@@ -40,7 +38,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     private int lava = 1;
-    private ISkill<?>[] skills;
+    private final List<ISkill<IHunterPlayer>> skills = new LinkedList<>();
     private int level = 1;
 
     public ShapelessWeaponTableRecipeBuilder(@NotNull RecipeCategory category,@NotNull ItemLike resultIn, int countIn) {
@@ -84,16 +82,27 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public void save(@NotNull Consumer<FinishedRecipe> consumerIn, @NotNull ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancement.addCriterion("has_skill", SkillUnlockedCriterionTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
+    public void save(RecipeOutput output, ResourceLocation id) {
         this.ensureValid(id);
-        this.advancement
-                .parent(new ResourceLocation("recipes/root"))
+        Advancement.Builder advancement$builder = output.advancement()
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
                 .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(RequirementsStrategy.OR);
-        consumerIn.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapelessRecipeBuilderAccessor) this).getRecipeCategory()), this.ingredients, this.advancement, id.withPath("recipes/" +  ((ShapelessRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level));
+                .requirements(AdvancementRequirements.Strategy.OR);
+        advancement$builder.addCriterion("has_skill", ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), HunterSkills.WEAPON_TABLE.get())));
+        this.skills.forEach(skill -> {
+            advancement$builder.addCriterion("has_skill_" + RegUtil.id(skill).toString().replace(":", "_"), ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill)));
+        });
+        this.criteria.forEach(advancement$builder::addCriterion);
+        ShapelessWeaponTableRecipe shapelessrecipe = new ShapelessWeaponTableRecipe(
+                Objects.requireNonNullElse(this.group, ""),
+                RecipeBuilder.determineBookCategory(this.category),
+                this.ingredients,
+        new ItemStack(this.result, this.count),
+                level,
+                lava,
+                skills
+        );
+        output.accept(id, shapelessrecipe, advancement$builder.build(id.withPrefix("recipes/weapontable/")));
     }
 
     public @NotNull ShapelessWeaponTableRecipeBuilder lava(int amount) {
@@ -106,45 +115,14 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         return this;
     }
 
-    @NotNull
     @Override
-    public ShapelessWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull CriterionTriggerInstance criterionIn) {
-        return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
+    public @NotNull ShapelessWeaponTableRecipeBuilder unlockedBy(String p_176781_, Criterion<?> p_300897_) {
+        return (ShapelessWeaponTableRecipeBuilder) super.unlockedBy(p_176781_, p_300897_);
     }
 
-    public @NotNull ShapelessWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
-        this.skills = skills;
+    @SafeVarargs
+    public final @NotNull ShapelessWeaponTableRecipeBuilder skills(@NotNull ISkill<IHunterPlayer>... skills) {
+        this.skills.addAll(Arrays.asList(skills));
         return this;
-    }
-
-    private static class Result extends ShapelessRecipeBuilder.Result {
-        private final int lava;
-        private final ISkill<?>[] skills;
-        private final int level;
-
-        public Result(@NotNull ResourceLocation idIn, @NotNull Item resultIn, int countIn, @NotNull String groupIn, @NotNull CraftingBookCategory category,  @NotNull List<Ingredient> ingredientsIn, @NotNull Advancement.Builder advancementBuilderIn, @NotNull ResourceLocation advancementIdIn, int lavaIn, @NotNull ISkill<?>[] skillsIn, int levelIn) {
-            super(idIn, resultIn, countIn, groupIn, category, ingredientsIn, advancementBuilderIn, advancementIdIn);
-            this.lava = lavaIn;
-            this.skills = skillsIn;
-            this.level = levelIn;
-        }
-
-        @NotNull
-        @Override
-        public RecipeSerializer<?> getType() {
-            return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
-        }
-
-        @Override
-        public void serializeRecipeData(@NotNull JsonObject json) {
-            super.serializeRecipeData(json);
-            json.addProperty("lava", this.lava);
-            JsonArray skills = new JsonArray();
-            for (ISkill<?> skill : this.skills) {
-                skills.add(RegUtil.id(skill).toString());
-            }
-            json.add("skill", skills);
-            json.addProperty("level", this.level);
-        }
     }
 }
