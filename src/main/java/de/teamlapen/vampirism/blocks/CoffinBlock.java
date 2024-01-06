@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
@@ -23,10 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,6 +52,12 @@ import java.util.Map;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class CoffinBlock extends VampirismBlockContainer {
+    public static final MapCodec<CoffinBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            inst.group(
+                    DyeColor.CODEC.fieldOf("color").forGetter(b -> b.color),
+                    propertiesCodec()
+            ).apply(inst, CoffinBlock::new)
+    );
     public static final Map<DyeColor, CoffinBlock> COFFIN_BLOCKS = new HashMap<>();
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
@@ -83,7 +88,11 @@ public class CoffinBlock extends VampirismBlockContainer {
     private final DyeColor color;
 
     public CoffinBlock(DyeColor color) {
-        super(Properties.of().mapColor(MapColor.WOOD).strength(0.2f).noOcclusion().pushReaction(PushReaction.DESTROY).ignitedByLava());
+        this(color, Properties.of().mapColor(MapColor.WOOD).strength(0.2f).noOcclusion().pushReaction(PushReaction.DESTROY).ignitedByLava());
+    }
+
+    public CoffinBlock(DyeColor color, Block.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
         this.color = color;
         COFFIN_BLOCKS.put(color, this);
@@ -92,6 +101,11 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Override
     public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
         return state.getValue(HORIZONTAL_FACING);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull
@@ -132,7 +146,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void playerWillDestroy(@NotNull Level worldIn, BlockPos pos, BlockState state, @NotNull Player player) {
+    public @NotNull BlockState playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             CoffinPart part = state.getValue(PART);
@@ -146,7 +160,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             }
         }
 
-        super.playerWillDestroy(worldIn, pos, state, player);
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override

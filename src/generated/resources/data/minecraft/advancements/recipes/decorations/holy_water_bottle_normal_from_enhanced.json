@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_enhanced_holy_water",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_enhanced_holy_water"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:holy_water_bottle_normal_from_enhanced"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

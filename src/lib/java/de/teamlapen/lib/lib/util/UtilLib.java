@@ -1,19 +1,14 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,7 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -48,20 +42,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeI18n;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.I18nExtension;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -88,21 +78,6 @@ public class UtilLib {
         return worldIn.getBlockState(pos).isFaceSturdy(worldIn, pos, Direction.UP);
     }
 
-    @Deprecated
-    @OnlyIn(Dist.CLIENT)
-    public static void drawTexturedModalRect(@NotNull Matrix4f matrix, float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
-        float f = 1 / (float) texWidth;
-        float f1 = 1 / (float) texHeight;
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, x, y + height, zLevel).uv((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
-        buffer.vertex(matrix, x + width, y + height, zLevel).uv((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
-        buffer.vertex(matrix, x + width, y, zLevel).uv((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
-        buffer.vertex(matrix, x, y, zLevel).uv((float) (textureX) * f, (float) (textureY) * f1).endVertex();
-        tesselator.end();
-    }
-
     /**
      * Gets players looking spot (blocks only).
      *
@@ -125,7 +100,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof ServerPlayer) {
-            distance = player.getAttribute(ForgeMod.BLOCK_REACH.get()).getValue() - 0.5f;
+            distance = player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() - 0.5f;
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -500,13 +475,13 @@ public class UtilLib {
     }
 
     public static @Nullable String translate(String key, Object @NotNull ... format) {
-        String pattern = ForgeI18n.getPattern(key);
+        String pattern = I18nExtension.getPattern(key, () -> key);
         if (format.length == 0) {
             return pattern;
         } else {
             try {
                 pattern = replaceDeprecatedFormatter(pattern);
-                return ForgeI18n.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component component ? component.getString() : o).toArray());
+                return I18nExtension.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component component ? component.getString() : o).toArray());
             } catch (IllegalArgumentException e) {
                 LOGGER.error("Illegal format found `{}`", pattern);
                 return pattern;
@@ -715,26 +690,12 @@ public class UtilLib {
         return new AABB(bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ());
     }
 
-    /**
-     * Draws a TextComponent split over multiple lines
-     *
-     * @return The height of the rendered text
-     */
-    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphics graphics, @NotNull Component text, int textLength, int x, int y, int color) {
-        int d = 0;
-        for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
-            graphics.drawString(fontRenderer, sequence, x, y + d, color, false);
-            d += fontRenderer.lineHeight;
-        }
-        return d;
-    }
-
     @Nullable
     public static DyeColor getColorForItem(@NotNull Item item) {
         if (!item.builtInRegistryHolder().is(Tags.Items.DYES)) return null;
         Optional<DyeColor> color = Arrays.stream(DyeColor.values()).filter(dye -> item.builtInRegistryHolder().is(dye.getTag())).findFirst();
         if (color.isPresent()) return color.get();
-        LOGGER.warn("Could not determine color of {}", ForgeRegistries.ITEMS.getKey(item));
+        LOGGER.warn("Could not determine color of {}", BuiltInRegistries.ITEM.getKey(item));
         return null;
     }
 
@@ -750,7 +711,7 @@ public class UtilLib {
      */
     public static void replaceEntity(@NotNull LivingEntity old, @NotNull LivingEntity replacement) {
         Level w = old.getCommandSenderWorld();
-        MinecraftForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
+        NeoForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
         old.remove(Entity.RemovalReason.DISCARDED);
         w.addFreshEntity(replacement);
     }
@@ -770,7 +731,7 @@ public class UtilLib {
         return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
             if (!ItemStack.isSameItem(stack, searchStack)) return false;
             if (stack.getTag() != null) {
-                return stack.areShareTagsEqual(searchStack);
+                return ItemStack.isSameItemSameTags(stack, searchStack);
             }
             return true;
         });

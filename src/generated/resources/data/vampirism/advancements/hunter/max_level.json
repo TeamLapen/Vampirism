@@ -3,15 +3,16 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 14
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.max_level_hunter.desc"
     },
@@ -20,7 +21,6 @@
     "icon": {
       "item": "vampirism:item_garlic"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.max_level_hunter"
     }

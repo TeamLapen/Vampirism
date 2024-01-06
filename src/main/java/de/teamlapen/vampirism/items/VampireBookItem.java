@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
@@ -15,8 +14,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +38,6 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         if (stack.hasTag()) {
             CompoundTag compoundnbt = stack.getTag();
@@ -81,7 +77,6 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
         return super.getName(stack);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }
@@ -90,12 +85,12 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer) {
+        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
             String id = VampireBookManager.OLD_ID;
             if (stack.hasTag()) {
                 id = stack.getTag().getString("id");
             }
-            VampirismMod.dispatcher.sendTo(new ClientboundOpenVampireBookPacket(id), (ServerPlayer) playerIn);
+            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(id));
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }

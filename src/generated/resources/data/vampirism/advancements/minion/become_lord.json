@@ -3,24 +3,20 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "LORD",
-        "faction": "null",
+        "type": "lord",
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.become_lord.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:paper"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.become_lord"
     }

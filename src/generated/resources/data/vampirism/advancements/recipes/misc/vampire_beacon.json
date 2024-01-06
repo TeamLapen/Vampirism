@@ -44,16 +44,15 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_mother_core",
       "has_obsidian",
-      "has_glass",
-      "has_the_recipe"
+      "has_glass"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire_beacon"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

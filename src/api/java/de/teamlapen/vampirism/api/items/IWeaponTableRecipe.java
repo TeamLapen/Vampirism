@@ -10,6 +10,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Recipe that can be used in the hunter weapon crafting table
  */
@@ -45,5 +47,5 @@ public interface IWeaponTableRecipe extends Recipe<CraftingContainer> {
      * @return The skills that have to be unlocked to craft this. Can be empty
      */
     @NotNull
-    ISkill<IHunterPlayer>[] getRequiredSkills();
+    List<ISkill<IHunterPlayer>> getRequiredSkills();
 }

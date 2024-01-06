@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_sticks",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_sticks"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/stake"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -24,7 +23,9 @@ import de.teamlapen.vampirism.util.CodecUtil;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -41,8 +42,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -203,7 +203,7 @@ public class TaskManager implements ITaskManager {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
             Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
             selectedTasks.addAll(getUniqueTasks());
-            VampirismMod.dispatcher.sendTo(new ClientboundTaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId), player);
+            player.connection.send(new ClientboundTaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId));
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
@@ -213,7 +213,7 @@ public class TaskManager implements ITaskManager {
         if (!player.isAlive()) return;
         player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new VampirismMenu(i, inventory), Component.empty()));
         if (player.containerMenu instanceof TaskMenu) {
-            VampirismMod.dispatcher.sendTo(new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))), player);
+            player.connection.send(new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))));
         }
     }
 
@@ -382,10 +382,7 @@ public class TaskManager implements ITaskManager {
                 neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
             }
             case ENTITY_TAG -> {
-                //noinspection unchecked
-                for (EntityType<?> type : Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.tags()).getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
-                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
-                }
+                actualStat += BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().map(HolderSet.Named::unwrap).flatMap(s -> s.right().stream()).flatMap(Collection::stream).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()))).sum();
                 neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
             }
             case ITEMS -> {
@@ -525,14 +522,7 @@ public class TaskManager implements ITaskManager {
             switch (requirement.getType()) {
                 case STATS -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
                 case ENTITY -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
-                case ENTITY_TAG -> {
-                    int amount = 0;
-                    //noinspection unchecked,ConstantConditions
-                    for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.tags().getTag((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer))) {
-                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
-                    }
-                    reqStats.putIfAbsent(requirement.id(), amount);
-                }
+                case ENTITY_TAG -> reqStats.putIfAbsent(requirement.id(), BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().map(HolderSet.Named::unwrap).flatMap(s -> s.right().stream()).flatMap(Collection::stream).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()))).sum());
                 default -> {
                 }
             }

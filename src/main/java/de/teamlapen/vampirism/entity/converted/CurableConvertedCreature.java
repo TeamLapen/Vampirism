@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -39,7 +40,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,7 +148,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         PathfinderMob entity = ((PathfinderMob) this);
         if (!entity.level().isClientSide && entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
-            if (data().conversionTime <= 0 && net.minecraftforge.event.ForgeEventFactory.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
+            if (data().conversionTime <= 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
                 this.cureEntity((ServerLevel) entity.level(), entity, originalType);
             }
         }
@@ -209,7 +209,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
             var convertibles = ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getConvertibles();
             for (var entry : convertibles.entrySet()) {
                 if (entry.getValue() instanceof SpecialConvertingHandler<?,?> special && Objects.equals(special.getConvertedType(), this.getRepresentingEntity().getType())) {
-                    getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, ForgeRegistries.ENTITY_TYPES.getKey(entry.getKey()).toString()));
+                    getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entry.getKey()).toString()));
                 }
             }
         }

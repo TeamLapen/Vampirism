@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraftforge.event.ModMismatchEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.ModMismatchEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

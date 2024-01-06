@@ -7,10 +7,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public record FlyingBloodEntityParticleOptions(int entity, boolean direct) implements ParticleOptions {
@@ -51,6 +49,6 @@ public record FlyingBloodEntityParticleOptions(int entity, boolean direct) imple
     @NotNull
     @Override
     public String writeToString() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + entity + "" + direct;
     }
 }

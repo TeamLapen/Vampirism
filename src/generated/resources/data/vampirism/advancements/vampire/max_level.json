@@ -3,15 +3,16 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 14
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.max_level_vampire.desc"
     },
@@ -20,7 +21,6 @@
     "icon": {
       "item": "vampirism:vampire_fang"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.max_level_vampire"
     }

@@ -1,20 +1,19 @@
 package de.teamlapen.lib;
 
-import de.teamlapen.lib.entity.ClientEntityEventHandler;
+import de.teamlapen.lib.client.VampLibClient;
 import de.teamlapen.lib.entity.EntityEventHandler;
-import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.network.LibraryPacketDispatcher;
-import de.teamlapen.lib.proxy.ClientProxy;
 import de.teamlapen.lib.proxy.CommonProxy;
 import de.teamlapen.lib.proxy.IProxy;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.common.NeoForge;
 
 
 /**
@@ -23,14 +22,17 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(value = LIBREFERENCE.MODID)
 public class VampLib {
 
-    public static final AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
     public static boolean inDev = false;
-    public static final IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public static final IProxy proxy = FMLLoader.getDist() == Dist.CLIENT ? VampLibClient.getProxy() : new CommonProxy();
 
-    public VampLib() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+    public VampLib(IEventBus modBus) {
+        modBus.addListener(this::preInit);
+        modBus.addListener(this::enqueueIMC);
+        modBus.addListener(this::processIMC);
+        modBus.register(new LibraryPacketDispatcher());
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            modBus.register(VampLibClient.class);
+        }
     }
 
     private void checkDevEnv() {
@@ -47,12 +49,10 @@ public class VampLib {
 
     private void preInit(final FMLCommonSetupEvent event) {
         checkDevEnv();
-        dispatcher.registerPackets();
     }
 
     private void processIMC(final InterModProcessEvent event) {
         HelperRegistry.finish();
-        MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerCaps()));
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MinecraftForge.EVENT_BUS.register(new ClientEntityEventHandler()));//Could register in constructor, just keeping it here for consistency
+        NeoForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerCaps()));
     }
 }

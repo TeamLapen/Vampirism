@@ -34,11 +34,12 @@ import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
+import de.teamlapen.vampirism.world.LevelFog;
 import de.teamlapen.vampirism.world.ServerMultiBossEvent;
-import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -74,11 +75,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -145,9 +145,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private float strengthRatio;
     private int badOmenLevel;
     //client attributes
-    @OnlyIn(Dist.CLIENT)
     private long beamRenderCounter;
-    @OnlyIn(Dist.CLIENT)
     private float beamRenderScale;
     private float[] baseColors = DyeColor.WHITE.getTextureDiffuseColors();
     private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
@@ -170,7 +168,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.informEntitiesAboutCaptureStop();
         this.updateBossinfoPlayers(null);
         this.captureInfo.clear();
-        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateTemporaryArtificialFog(this.worldPosition, null));
+        LevelFog.getOpt(this.level).ifPresent(fog -> fog.updateTemporaryArtificialFog(this.worldPosition, null));
         this.setChanged();
     }
 
@@ -207,7 +205,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public float[] getBaseColors() {
         return this.baseColors;
     }
@@ -220,12 +217,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     /**
      * @return 0-100. 80 if in stage 2
      */
-    @OnlyIn(Dist.CLIENT)
     public int getCaptureProgress() {
         return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get() * 80f);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public float[] getCapturingColors() {
         return this.progressColor;
     }
@@ -252,11 +247,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
-    }
-
-    @Override
-    public @NotNull AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
     }
 
     /**
@@ -360,7 +350,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         if (this.level != null) {
             if (compound.contains("villageArea")) {
-                VampirismWorld.getOpt(this.level).ifPresent(vw -> {
+                LevelFog.getOpt(this.level).ifPresent(vw -> {
                     AABB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
                     vw.updateArtificialFogBoundingBox(this.worldPosition, this.controllingFaction == VReference.VAMPIRE_FACTION ? aabb : null);
                     if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
@@ -421,10 +411,12 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return this.badOmenLevel >= 0;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
-        if (hasLevel()) this.handleUpdateTag(pkt.getTag());
+        CompoundTag tag = pkt.getTag();
+        if (tag != null && hasLevel()) {
+            this.handleUpdateTag(tag);
+        }
     }
 
     public void ringBell(@NotNull Player playerEntity) {
@@ -484,7 +476,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             super.setChanged();
             this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
             if (!this.village.isEmpty()) {
-                VampirismWorld.getOpt(this.level).ifPresent(vw -> {
+                LevelFog.getOpt(this.level).ifPresent(vw -> {
                     vw.updateArtificialFogBoundingBox(this.worldPosition, this.controllingFaction == VReference.VAMPIRE_FACTION ? this.getVillageArea() : null);
                     if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
                         vw.updateTemporaryArtificialFog(this.worldPosition, this.getVillageArea());
@@ -521,7 +513,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     @Override
     public void setRemoved() {
         //noinspection ConstantConditions
-        VampirismWorld.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
+        LevelFog.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
         TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
         if (!unloaded) {
             // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
@@ -900,7 +892,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             return false;
         }
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
         if (event.getResult().equals(Event.Result.DENY)) {
             feedback.accept(Component.translatable(event.getMessage()), true);
             return false;
@@ -1249,7 +1241,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
 
         for (Villager villager : villagerEntities) {
-            if (ForgeRegistries.VILLAGER_PROFESSIONS.tags().getTag(ModTags.Professions.HAS_FACTION).contains(villager.getVillagerData().getProfession())) {
+            if (BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(villager.getVillagerData().getProfession()).is(ModTags.Professions.HAS_FACTION)) {
                 villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NONE));
             }
         }

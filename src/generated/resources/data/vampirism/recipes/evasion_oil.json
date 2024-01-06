@@ -1,0 +1,16 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "item": "vampirism:oil_bottle"
+  },
+  "input": {
+    "item": "minecraft:honey_bottle"
+  },
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:evasion"
+    }
+  }
+}

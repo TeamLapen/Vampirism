@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.SunscreenBeaconBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -11,12 +12,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +26,9 @@ import java.util.List;
 
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
-    public SunscreenBeaconBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion());
+    public static final MapCodec<SunscreenBeaconBlock> CODEC = simpleCodec(SunscreenBeaconBlock::new);
+    public SunscreenBeaconBlock(Block.Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -56,6 +59,11 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Override
     public float getExplosionResistance() {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_tomb",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_tomb"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/tombstone1"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

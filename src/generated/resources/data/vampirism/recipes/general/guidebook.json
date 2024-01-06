@@ -1,28 +1,21 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "neoforge:conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "guideapi_vp"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "category": "misc",
-        "ingredients": [
-          {
-            "item": "vampirism:vampire_fang"
-          },
-          {
-            "item": "minecraft:book"
-          }
-        ],
-        "result": {
-          "item": "guideapi_vp:vampirism-guidebook"
-        }
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "guideapi_vp"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "minecraft:book"
+    }
+  ],
+  "result": {
+    "item": "guideapi_vp:vampirism-guidebook"
+  }
 }

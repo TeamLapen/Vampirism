@@ -1,0 +1,24 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "item": "minecraft:string"
+    },
+    "Z": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "lava": 1,
+  "pattern": [
+    "YXXY",
+    " ZZ ",
+    " ZZ "
+  ],
+  "result": {
+    "item": "vampirism:basic_crossbow"
+  }
+}

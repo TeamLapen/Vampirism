@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -324,7 +324,7 @@ public class TotemHelper {
      * @return map containing village related data
      */
     public static @NotNull Map<Integer, Integer> getVillageStats(@NotNull Set<PoiRecord> pointOfInterests, @NotNull Level world) {
-        Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> ForgeRegistries.POI_TYPES.getResourceKey(a.get()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(a.value()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         AABB area = getAABBAroundPOIs(pointOfInterests);
         return new HashMap<>() {{
             put(1, poiTCounts.getOrDefault(net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME, 0L).intValue());

@@ -5,16 +5,12 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +63,6 @@ public class BloodStats implements IBloodStats {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public int getPrevBloodLevel() {
         return prevBloodLevel;
     }
@@ -148,8 +143,8 @@ public class BloodStats implements IBloodStats {
                 bloodSaturationLevel = nbt.getFloat("bloodSaturation");
                 bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
             }
-            if (nbt.contains("maxBlood")) {
-                maxBlood = nbt.getInt("maxBlood");
+            if (nbt.contains("max_blood")) {
+                maxBlood = nbt.getInt("max_blood");
             }
         }
     }
@@ -182,8 +177,8 @@ public class BloodStats implements IBloodStats {
     }
 
     void loadUpdate(@NotNull CompoundTag nbt) {
-        if (nbt.contains("maxBlood")) {
-            setMaxBlood(nbt.getInt("maxBlood"));
+        if (nbt.contains("max_blood")) {
+            setMaxBlood(nbt.getInt("max_blood"));
         }
         if (nbt.contains("bloodLevel")) {
             setBloodLevel(nbt.getInt("bloodLevel"));
@@ -210,7 +205,7 @@ public class BloodStats implements IBloodStats {
         nbt.putInt("bloodTimer", bloodTimer);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
         nbt.putFloat("bloodExhaustion", bloodExhaustionLevel);
-        nbt.putInt("maxBlood", maxBlood);
+        nbt.putInt("max_blood", maxBlood);
     }
 
     /**
@@ -222,7 +217,7 @@ public class BloodStats implements IBloodStats {
 
     @NotNull CompoundTag writeUpdate(@NotNull CompoundTag nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
-        nbt.putInt("maxBlood", maxBlood);
+        nbt.putInt("max_blood", maxBlood);
         return nbt;
     }
 

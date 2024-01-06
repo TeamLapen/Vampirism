@@ -17,12 +17,9 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 
-@OnlyIn(Dist.CLIENT)
 public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity> {
     public GarlicDiffuserBESR(BlockEntityRendererProvider.Context context) {
 

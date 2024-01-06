@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,18 +23,17 @@ public class LordTitles {
     private static final Component HUNTER_5 = Component.translatable("text.vampirism.lord_title.hunter.5");
     private static final Component EMPTY = Component.literal("");
 
-    public static @NotNull Component getVampireTitle(int level, boolean female) {
-        if (female) {
-            return switch (level) {
-                case 1 -> VAMPIRE_1F;
-                case 2 -> VAMPIRE_2F;
-                case 3 -> VAMPIRE_3F;
-                case 4 -> VAMPIRE_4F;
-                case 5 -> VAMPIRE_5F;
-                default -> EMPTY;
-            };
-        } else {
-            return switch (level) {
+    public static @NotNull Component getVampireTitle(int level, IPlayableFaction.TitleGender titleGender) {
+        return switch (titleGender) {
+            case FEMALE -> switch (level) {
+                    case 1 -> VAMPIRE_1F;
+                    case 2 -> VAMPIRE_2F;
+                    case 3 -> VAMPIRE_3F;
+                    case 4 -> VAMPIRE_4F;
+                    case 5 -> VAMPIRE_5F;
+                    default -> EMPTY;
+                };
+            default -> switch (level) {
                 case 1 -> VAMPIRE_1M;
                 case 2 -> VAMPIRE_2M;
                 case 3 -> VAMPIRE_3M;
@@ -41,10 +41,10 @@ public class LordTitles {
                 case 5 -> VAMPIRE_5M;
                 default -> EMPTY;
             };
-        }
+        };
     }
 
-    public static @NotNull Component getHunterTitle(int level, boolean female) {
+    public static @NotNull Component getHunterTitle(int level, IPlayableFaction.TitleGender titleGender) {
         return switch (level) {
             case 1 -> HUNTER_1;
             case 2 -> HUNTER_2;

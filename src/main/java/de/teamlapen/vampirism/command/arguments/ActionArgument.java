@@ -38,13 +38,13 @@ public class ActionArgument implements ArgumentType<IAction<?>> {
 
     @Override
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(ModRegistries.ACTIONS.get().getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(ModRegistries.ACTIONS.keySet(), builder);
     }
 
     @Override
     public @NotNull IAction<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IAction<?> action = ModRegistries.ACTIONS.get().getValue(id);
+        IAction<?> action = ModRegistries.ACTIONS.get(id);
         if (action == null) {
             throw ACTION_NOT_FOUND.create(id);
         }

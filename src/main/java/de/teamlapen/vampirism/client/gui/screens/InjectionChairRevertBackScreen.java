@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
-import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

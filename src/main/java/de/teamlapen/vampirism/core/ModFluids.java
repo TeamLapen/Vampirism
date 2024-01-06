@@ -1,29 +1,30 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.extensions.FluidExtensions;
 import de.teamlapen.vampirism.fluids.BloodFluid;
 import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public class ModFluids {
-    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, REFERENCE.MODID);
-    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, REFERENCE.MODID);
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, REFERENCE.MODID);
+    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, REFERENCE.MODID);
 
-    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new FluidType(FluidType.Properties.create()
+    public static final DeferredHolder<FluidType, FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new FluidType(FluidType.Properties.create()
             .rarity(Rarity.UNCOMMON)
             .viscosity(3000)
             .temperature(309)
@@ -35,27 +36,11 @@ public class ModFluids {
 
         @Override
         public void initializeClient(@NotNull Consumer<IClientFluidTypeExtensions> consumer) {
-            consumer.accept(new IClientFluidTypeExtensions() {
-
-                @Override
-                public @NotNull ResourceLocation getStillTexture() {
-                    return new ResourceLocation(REFERENCE.MODID, "block/blood_still");
-                }
-
-                @Override
-                public @NotNull ResourceLocation getFlowingTexture() {
-                    return new ResourceLocation(REFERENCE.MODID, "block/blood_flow");
-                }
-
-                @Override
-                public int getTintColor() {
-                    return 0xEEFF1111;
-                }
-            });
+            consumer.accept(FluidExtensions.BLOOD);
         }
     });
 
-    public static final RegistryObject<FluidType> IMPURE_BLOOD_TYPE = FLUID_TYPES.register("impure_blood", () -> new FluidType(FluidType.Properties.create()
+    public static final DeferredHolder<FluidType, FluidType> IMPURE_BLOOD_TYPE = FLUID_TYPES.register("impure_blood", () -> new FluidType(FluidType.Properties.create()
             .rarity(Rarity.UNCOMMON)
             .viscosity(3000)
             .temperature(309)
@@ -64,27 +49,11 @@ public class ModFluids {
 
         @Override
         public void initializeClient(@NotNull Consumer<IClientFluidTypeExtensions> consumer) {
-            consumer.accept(new IClientFluidTypeExtensions() {
-
-                @Override
-                public @NotNull ResourceLocation getStillTexture() {
-                    return new ResourceLocation(REFERENCE.MODID, "block/impure_blood_still");
-                }
-
-                @Override
-                public @NotNull ResourceLocation getFlowingTexture() {
-                    return new ResourceLocation(REFERENCE.MODID, "block/impure_blood_flow");
-                }
-
-                @Override
-                public int getTintColor() {
-                    return 0xEEFF1111;
-                }
-            });
+            consumer.accept(FluidExtensions.IMPURE_BLOOD);
         }
     });
-    public static final RegistryObject<Fluid> BLOOD = FLUIDS.register("blood", BloodFluid::new);
-    public static final RegistryObject<Fluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
+    public static final DeferredHolder<Fluid, BloodFluid> BLOOD = FLUIDS.register("blood", BloodFluid::new);
+    public static final DeferredHolder<Fluid, ImpureBloodFluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
 
     static void register(IEventBus bus) {
         FLUIDS.register(bus);

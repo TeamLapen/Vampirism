@@ -2,23 +2,22 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.entity.SundamageRegistry;
+import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-public record ClientboundSundamagePacket(List<ResourceKey<DimensionType>> dimensions, List<ResourceKey<Biome>> biomes, List<ResourceKey<Level>> noSunDamageLevels, List<ResourceKey<Level>> sunDamageLevels) implements IMessage.IClientBoundMessage {
+public record ClientboundSundamagePacket(List<ResourceKey<DimensionType>> dimensions, List<ResourceKey<Biome>> biomes, List<ResourceKey<Level>> noSunDamageLevels, List<ResourceKey<Level>> sunDamageLevels) implements CustomPacketPayload {
 
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "sundamage");
     public static final Codec<ClientboundSundamagePacket> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 ResourceKey.codec(Registries.DIMENSION_TYPE).listOf().fieldOf("dimensions").forGetter(ClientboundSundamagePacket::dimensions),
@@ -28,19 +27,13 @@ public record ClientboundSundamagePacket(List<ResourceKey<DimensionType>> dimens
         ).apply(inst, ClientboundSundamagePacket::new);
     });
 
-    static void encode(@NotNull ClientboundSundamagePacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeJsonWithCodec(CODEC, msg);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ClientboundSundamagePacket decode(@NotNull FriendlyByteBuf buf) {
-        return buf.readJsonWithCodec(CODEC);
-    }
-
-    public static void handle(final @NotNull ClientboundSundamagePacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyNetworkData(msg);
-        });
-        context.setPacketHandled(true);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
 }

@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_logs",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_logs"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/fire_place"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.mixin.client.HumanoidArmorLayerAccessor;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -41,21 +42,24 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
     @NotNull
     @Override
     public ResourceLocation getTextureLocation(@NotNull T entity) {
-        return currentTexture != null ? currentTexture : DefaultPlayerSkin.getDefaultSkin(); //Steve texture is used as fallback
+        return currentTexture != null ? currentTexture : DefaultPlayerSkin.getDefaultTexture(); //Steve texture is used as fallback
     }
 
     @Override
     public final void render(@NotNull T entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        Pair<ResourceLocation, Boolean> b = determineTextureAndModel(entityIn);
+        Pair<ResourceLocation, PlayerModelType> b = determineTextureAndModel(entityIn);
         this.currentTexture = b.getLeft();
-        this.model = b.getRight() ? modelB : modelA;
+        this.model = switch (b.getRight()) {
+            case SLIM -> modelB;
+            case WIDE -> modelA;
+        };
         this.renderSelected(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     /**
      * @return Sets of texture resource location and model selecting boolean (true->b, false ->a)
      */
-    protected abstract Pair<ResourceLocation, Boolean> determineTextureAndModel(T entity);
+    protected abstract Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(T entity);
 
     protected void renderSelected(@NotNull T entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
@@ -64,11 +68,11 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
     /**
      * @return Array of texture and slim status
      */
-    protected Pair<ResourceLocation, Boolean> @NotNull [] separateSlimTextures(@NotNull Stream<ResourceLocation> set) {
+    protected Pair<ResourceLocation, PlayerModelType> @NotNull [] separateSlimTextures(@NotNull Stream<ResourceLocation> set) {
         return set.map(r -> {
-            boolean b = r.getPath().endsWith("slim.png");
+            PlayerModelType b = r.getPath().endsWith("slim.png") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
             return Pair.of(r, b);
-        }).sorted(alphaNumericComparator()).toArray((IntFunction<Pair<ResourceLocation, Boolean>[]>) Pair[]::new);
+        }).sorted(alphaNumericComparator()).toArray((IntFunction<Pair<ResourceLocation, PlayerModelType>[]>) Pair[]::new);
     }
 
     /**
@@ -78,16 +82,16 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
      * @param required whether to throw an illegal state exception if none found
      * @return Array of texture and slim status
      */
-    protected Pair<ResourceLocation, Boolean> @NotNull [] gatherTextures(@NotNull String dirPath, boolean required) {
+    protected Pair<ResourceLocation, PlayerModelType> @NotNull [] gatherTextures(@NotNull String dirPath, boolean required) {
         Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.getPath().endsWith(".png")).keySet());
-        Pair<ResourceLocation, Boolean>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
+        Pair<ResourceLocation, PlayerModelType>[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");
         }
         return textures;
     }
 
-    protected Comparator<Pair<ResourceLocation, Boolean>> alphaNumericComparator() {
+    protected Comparator<Pair<ResourceLocation, PlayerModelType>> alphaNumericComparator() {
         return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.getLeft(), o2.getLeft());
     }
 
@@ -108,10 +112,16 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
 
         @Override
         public void render(@NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, @NotNull T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-            Pair<ResourceLocation, Boolean> b = determineTextureAndModel(pLivingEntity);
+            Pair<ResourceLocation, PlayerModelType> b = determineTextureAndModel(pLivingEntity);
 
-            A innerModel = b.getRight() ? pInnerModelSlim : pInnerModel;
-            A outerModel = b.getRight() ? pOuterModelSlim : pOuterModel;
+            A innerModel = switch (b.getRight()) {
+                case SLIM -> pInnerModelSlim;
+                case WIDE -> pInnerModel;
+            };
+            A outerModel = switch (b.getRight()) {
+                case SLIM -> pOuterModelSlim;
+                case WIDE -> pOuterModel;
+            };
 
             ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST, innerModel, outerModel));
             ((HumanoidArmorLayerAccessor<T, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS, innerModel, outerModel));

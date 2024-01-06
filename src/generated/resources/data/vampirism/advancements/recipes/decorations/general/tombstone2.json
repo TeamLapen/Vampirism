@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_coble",
-      "has_stone",
-      "has_the_recipe"
+      "has_stone"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/tombstone2"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

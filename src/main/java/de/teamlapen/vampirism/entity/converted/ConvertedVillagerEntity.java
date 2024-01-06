@@ -3,9 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Dynamic;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
@@ -19,10 +17,12 @@ import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.entity.villager.Trades;
-import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.TotemHelper;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -46,10 +46,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -121,7 +118,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         if (this.data().conversationStarter != null) {
             Player playerentity = world.getPlayerByUUID(this.data().conversationStarter);
             if (playerentity instanceof ServerPlayer) {
-                ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayer) playerentity, this, villager);
+                ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.get().trigger((ServerPlayer) playerentity, this, villager);
                 world.onReputationEvent(ReputationEventType.ZOMBIE_VILLAGER_CURED, playerentity, villager);
             }
         }
@@ -253,7 +250,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     /**
-     * copied from {@link Villager#makeBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModVillage#VAMPIRE_VILLAGER_HOSTILES}
+     * copied from {@link Villager#makeBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link de.teamlapen.vampirism.core.ModAi#VAMPIRE_VILLAGER_HOSTILES}
      */
     @NotNull
     @Override

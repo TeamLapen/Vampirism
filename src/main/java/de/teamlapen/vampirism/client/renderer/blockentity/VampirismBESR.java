@@ -6,15 +6,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * TESR with a few util methods
  */
-@OnlyIn(Dist.CLIENT)
 abstract class VampirismBESR<T extends BlockEntity> implements BlockEntityRenderer<T> {
 
     /**

@@ -57,7 +57,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -169,7 +169,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
                             VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
-                            data.updateEntityCaps(this.serializeCaps());
+                            data.updateEntityCaps(this.serializeAttachments());
                             int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");

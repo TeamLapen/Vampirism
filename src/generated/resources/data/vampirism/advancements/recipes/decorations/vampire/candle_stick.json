@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_iron",
-      "has_nugget",
-      "has_the_recipe"
+      "has_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/candle_stick"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

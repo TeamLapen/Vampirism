@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.client.searchtree.SearchRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,12 +26,12 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
 
         List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
         FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> list1.removeIf(recipeList -> {
-            if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
+            if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.value().getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
                 return true;
             }
             return recipeList.getRecipes().stream().anyMatch(recipe -> {
-                if (recipe instanceof IWeaponTableRecipe) {
-                    ISkill<IHunterPlayer>[] skills = ((IWeaponTableRecipe) recipe).getRequiredSkills();
+                if (recipe.value() instanceof IWeaponTableRecipe weaponTableRecipe) {
+                    @NotNull List<ISkill<IHunterPlayer>> skills = weaponTableRecipe.getRequiredSkills();
                     for (ISkill<IHunterPlayer> skill : skills) {
                         if (!player.getSkillHandler().isSkillEnabled(skill)) {
                             return true;

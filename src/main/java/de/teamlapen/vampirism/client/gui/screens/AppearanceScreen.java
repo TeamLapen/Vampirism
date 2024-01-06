@@ -1,21 +1,16 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/appearance.png");
@@ -36,14 +31,11 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
-
-        this.renderGuiBackground(graphics);
-
-        this.drawTitle(graphics);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.entity);
-
         super.render(graphics, mouseX, mouseY, partialTicks);
+        this.drawTitle(graphics);
+
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 150, this.guiTop + 30,this.guiLeft + 250, this.guiTop + 30 + 110,50, 0.0625F, mouseX, mouseY, this.entity);
+
     }
 
     @Override
@@ -57,6 +49,12 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
                 if (this.minecraft != null) this.minecraft.setScreen(this.backScreen);
             }));
         }
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        renderGuiBackground(pGuiGraphics);
     }
 
     protected void renderGuiBackground(@NotNull GuiGraphics graphics) {

@@ -3,24 +3,22 @@ package de.teamlapen.vampirism.network;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public record ClientboundTaskPacket(int containerId,
                                     Map<UUID, TaskManager.TaskWrapper> taskWrappers,
                                     Map<UUID, Set<UUID>> completableTasks,
-                                    Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements IMessage.IClientBoundMessage {
+                                    Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements CustomPacketPayload {
 
-    private static final Codec<UUID> UUID_CODEC = Codec.STRING.comapFlatMap(s -> {
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "task");
+    public static final Codec<UUID> UUID_CODEC = Codec.STRING.comapFlatMap(s -> {
         try {
             return DataResult.success(UUID.fromString(s));
         } catch (Exception e){
@@ -34,7 +32,7 @@ public record ClientboundTaskPacket(int containerId,
             return DataResult.error(() -> "Invalid List");
         }
     }, ArrayList::new).stable();
-    private static final Codec<ClientboundTaskPacket> CODEC = RecordCodecBuilder.create(func -> {
+    public static final Codec<ClientboundTaskPacket> CODEC = RecordCodecBuilder.create(func -> {
         return func.group(
                 Codec.INT.fieldOf("containerId").forGetter(ClientboundTaskPacket::containerId),
                 Codec.unboundedMap(UUID_CODEC, TaskManager.TaskWrapper.CODEC).fieldOf("taskWrappers").forGetter(ClientboundTaskPacket::taskWrappers),
@@ -43,18 +41,13 @@ public record ClientboundTaskPacket(int containerId,
         ).apply(func, ClientboundTaskPacket::new);
     });
 
-    public static void encode(@NotNull ClientboundTaskPacket msg, @NotNull FriendlyByteBuf buffer) {
-        buffer.writeJsonWithCodec(CODEC, msg);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    public static @NotNull ClientboundTaskPacket decode(@NotNull FriendlyByteBuf buffer) {
-        return buffer.readJsonWithCodec(CODEC);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
-
-    public static void handle(final ClientboundTaskPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskPacket(msg));
-        ctx.setPacketHandled(true);
-    }
-
 }

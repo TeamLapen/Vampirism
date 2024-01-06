@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:alchemical_cauldron/blood_infused_iron_ingot_from_pure_blood_0"
+        "recipe": "vampirism:blood_infused_iron_ingot_from_pure_blood_0"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,8 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:alchemical_cauldron/blood_infused_iron_ingot_from_pure_blood_0"
+      "vampirism:blood_infused_iron_ingot_from_pure_blood_0"
     ]
-  },
-  "sends_telemetry_event": true
+  }
 }

@@ -36,8 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -188,7 +186,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     /**
      * @return float between 0 and 1 representing the transition progress
      */
-    @OnlyIn(Dist.CLIENT)
     public float getEnragedProgress() {
         return enragedTransitionTime / (float) ENRAGED_TRANSITION_TIME;
     }

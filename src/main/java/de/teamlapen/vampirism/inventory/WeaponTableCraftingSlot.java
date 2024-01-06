@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,9 +64,9 @@ public class WeaponTableCraftingSlot extends Slot {
                 }
             }));
         }
-        net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
+        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(playerIn);
         NonNullList<ItemStack> remaining = playerIn.level().getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.level());
-        net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
+        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(null);
         for (int i = 0; i < remaining.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getItem(i);
             ItemStack itemstack1 = remaining.get(i);
@@ -113,9 +114,9 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IFactionPlayer<IHunterPlayer> factionPlayer, int lava) {
-        Optional<IWeaponTableRecipe> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.getCommandSenderWorld());
+        Optional<RecipeHolder<IWeaponTableRecipe>> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), this.craftMatrix, playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
-            IWeaponTableRecipe recipe = optional.get();
+            IWeaponTableRecipe recipe = optional.get().value();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
                 return recipe;
             }

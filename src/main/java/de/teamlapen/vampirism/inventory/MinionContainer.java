@@ -22,9 +22,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.UseAnim;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.IContainerFactory;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.IContainerFactory;
+import net.neoforged.neoforge.network.NetworkInitialization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -121,12 +122,10 @@ public class MinionContainer extends InventoryContainerMenu {
         return minionEntity.isAlive();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void openConfigurationScreen() {
         this.minionEntity.openAppearanceScreen();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void openStatsScreen() {
         this.minionEntity.openStatsScreen();
     }
@@ -141,16 +140,19 @@ public class MinionContainer extends InventoryContainerMenu {
 
     private void sendChanges() {
         if (taskToActivate != null && taskToActivate != previousTask) {
-            minionEntity.getMinionId().ifPresent(id ->
-                    VampirismMod.dispatcher.sendToServer(new ServerboundSelectMinionTaskPacket(id, RegUtil.id(this.taskToActivate)))
-            );
+            minionEntity.getMinionId().ifPresent(id -> VampirismMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(id, RegUtil.id(this.taskToActivate))));
         }
         if (previousTaskLocked != taskLocked) {
-            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new ServerboundToggleMinionTaskLock(id)));
+            minionEntity.getMinionId().ifPresent(id -> VampirismMod.proxy.sendToServer(new ServerboundToggleMinionTaskLock(id)));
         }
     }
 
     public static class Factory implements IContainerFactory<MinionContainer> {
+
+        @Override
+        public MinionContainer create(int p_create_1_, Inventory p_create_2_) {
+            return IContainerFactory.super.create(p_create_1_, p_create_2_);
+        }
 
         @Nullable
         @Override

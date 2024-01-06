@@ -26,8 +26,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
         if (flag) {
             LivingEntity entitylivingbase = this.mob.getTarget();
             if (entitylivingbase != null) {
-                double distance = this.mob.distanceToSqr(entitylivingbase.getX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getZ());
-                if (distance <= this.getAttackReachSqr(entitylivingbase)) {
+                if (this.mob.isWithinMeleeAttackRange(entitylivingbase)) {
                     return true;
                 }
             }

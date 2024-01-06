@@ -6,9 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +37,6 @@ public interface IProxy {
      * @return The string describing the currently active language. "English" on server side
      */
     String getActiveLanguage();
-
-    Player getPlayerEntity(NetworkEvent.Context context);
 
     /**
      * Try to obtain the world from the given key. Null if not loaded or not accessible (on client)

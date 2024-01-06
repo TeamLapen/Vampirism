@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.entity.minion;
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -22,14 +24,12 @@ import de.teamlapen.vampirism.inventory.MinionContainer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.util.PlayerSkinHelper;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -52,11 +52,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,11 +62,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityAdditionalSpawnData {
+public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityWithComplexSpawn {
     /**
      * Store the uuid of the lord. Should not be null when joining the world
      */
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final ResourceLocation ADDITIONAL_DATA = new ResourceLocation(REFERENCE.MODID, "minion_data");
     private final static Logger LOGGER = LogManager.getLogger();
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
     private final static int CONVERT_DURATION = 20;
@@ -94,7 +91,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected @Nullable T minionData;
 
     @Nullable
-    private Pair<ResourceLocation, Boolean> skinDetails;
+    private Pair<ResourceLocation, PlayerModelType> skinDetails;
     /**
      * Only valid if playerMinionController !=null
      */
@@ -264,12 +261,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.ofNullable(interactingPlayer);
     }
 
-    @NotNull
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     @Override
     public @NotNull Optional<IMinionInventory> getInventory() {
         if (this.minionData != null) {
@@ -299,10 +290,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return this.minionData == null ? Optional.empty() : Optional.of(minionId);
     }
 
-    public @NotNull Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+    public @NotNull Optional<Pair<ResourceLocation, PlayerModelType>> getOverlayPlayerProperties() {
         if (skinDetails == null) {
             this.getLordID().ifPresent(id -> {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(id, "Dummy"), p -> this.skinDetails = p));
+                VampirismMod.proxy.obtainPlayerSkins(new GameProfile(id, "Dummy"), p -> this.skinDetails = p);
             });
             skinDetails = PENDING_PROP;
         }
@@ -334,7 +325,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return getInventory().map(IMinionInventory::getInventoryHands).orElse(EMPTY_LIST);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("data_type")) {
@@ -407,11 +397,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         HelperLib.sync(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void openAppearanceScreen() {
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void openStatsScreen() {
 
     }
@@ -419,11 +407,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
-    }
-
-    @Override
-    public void readSpawnData(@NotNull FriendlyByteBuf additionalData) {
-        convertCounter = additionalData.readVarInt();
     }
 
     @Override
@@ -481,19 +464,26 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
+    public CompoundTag writeFullUpdateToNBT() {
+        CompoundTag tag = new CompoundTag();
         if (minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData();
         }
         if (minionData != null) {
-            minionData.serializeNBT(nbt);
-            nbt.putInt("minion_id", minionId);
+            minionData.serializeNBT(tag);
+            tag.putInt("minion_id", minionId);
         }
+        return tag;
     }
 
     @Override
-    public void writeSpawnData(@NotNull FriendlyByteBuf buffer) {
+    public void writeSpawnData(FriendlyByteBuf buffer) {
         buffer.writeVarInt(convertCounter);
+    }
+
+    @Override
+    public void readSpawnData(@NotNull FriendlyByteBuf additionalData) {
+        convertCounter = additionalData.readVarInt();
     }
 
     protected boolean canConsume(@NotNull ItemStack stack) {
@@ -519,7 +509,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).flatMap(p -> FactionPlayerHandler.getOpt(p).resolve()).orElse(null);
+        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).flatMap(FactionPlayerHandler::getOpt).orElse(null);
     }
 
     protected @NotNull Optional<UUID> getLordID() {
@@ -545,7 +535,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Can be called client and server side
      */
     protected void onMinionDataReceived(@NotNull T data) {
-        this.deserializeCaps(data.getEntityCaps());
+        this.deserializeAttachments(data.getEntityCaps());
     }
 
     @NotNull
@@ -553,7 +543,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }
@@ -588,7 +578,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#writeFullUpdateToNBT(CompoundTag)}
+     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link de.teamlapen.vampirism.entity.minion.MinionEntity#writeFullUpdateToNBT()}
      */
     private void checkoutMinionData() {
         if (playerMinionController != null && minionData == null) {
@@ -614,11 +604,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     /**
-     * serializes all allowed {@link net.minecraftforge.common.capabilities.Capability}s
+     * serializes all allowed {@link net.neoforged.neoforge.capabilities.EntityCapability}s
      */
     protected CompoundTag serializeMinionCaps() {
         Collection<String> allowedCapTags = getAllowedCapTags();
-        CompoundTag tag = this.serializeCaps();
+        CompoundTag tag = this.serializeAttachments();
         if (tag != null) {
             tag.getAllKeys().removeIf(s -> {
                 return !allowedCapTags.contains(s);

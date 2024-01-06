@@ -5,13 +5,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.entity.player.skills.*;
+import de.teamlapen.vampirism.data.ClientSkillTreeData;
+import de.teamlapen.vampirism.entity.player.skills.ActionSkill;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
+import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +33,8 @@ public class SkillNodeScreen {
     private final Minecraft minecraft;
     private final SkillsTabScreen tab;
     private final SkillsScreen screen;
-    private final SkillNode skillNode;
+    private final SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode;
+    private final ClientSkillTreeData treeData;
     private final SkillHandler<?> skillHandler;
     private final List<SkillNodeScreen> children = new ArrayList<>();
     @Nullable
@@ -41,21 +45,22 @@ public class SkillNodeScreen {
     private final List<FormattedCharSequence>[] descriptions;
     private final int[] width;
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillNode skillNode, @NotNull SkillHandler<?> skillHandler) {
-        this(minecraft, screen, tab, skillNode, skillHandler, null, 0, 0);
+    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, @NotNull SkillHandler<?> skillHandler) {
+        this(minecraft, screen, tab, skillNode, treeData, skillHandler, null, 0, 0);
     }
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillNode skillNode, @NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
+    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, @NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
         this.minecraft = minecraft;
         this.tab = tab;
         this.screen = screen;
         this.skillNode = skillNode;
+        this.treeData = treeData;
         this.skillHandler = skillHandler;
         this.parent = parent;
         this.x = x;
         this.y = y;
-        int w = SkillTree.getTreeWidth(skillNode);
-        int childrenCount = this.skillNode.getChildren().size();
+        int w = this.treeData.getNodeWidth(skillNode);
+        int childrenCount = this.skillNode.children().size();
         if (childrenCount > 0) {
 
             int pos = x;
@@ -64,27 +69,27 @@ public class SkillNodeScreen {
                 pos -= w / 2 - 13;
             }
 
-            for (int i = 0; i < skillNode.getChildren().size(); i++) {
-                SkillNode current = skillNode.getChildren().get(i);
-                this.children.add(new SkillNodeScreen(minecraft, screen, tab, current, skillHandler, this, pos, y + 60));
-                pos += SkillTree.getTreeWidth(current) / 2 + 30;
-                if (skillNode.getChildren().size() >= i + 2) {
-                    SkillNode next = skillNode.getChildren().get(i + 1);
-                    pos += SkillTree.getTreeWidth(next) / 2;
+            for (int i = 0; i < skillNode.childrenCount(); i++) {
+                SkillTreeConfiguration.SkillTreeNodeConfiguration current = skillNode.children().get(i);
+                this.children.add(new SkillNodeScreen(minecraft, screen, tab, current, this.treeData, skillHandler, this, pos, y + 60));
+                pos += this.treeData.getNodeWidth(current) / 2 + 30;
+                if (skillNode.children().size() >= i + 2) {
+                    SkillTreeConfiguration.SkillTreeNodeConfiguration next = skillNode.children().get(i + 1);
+                    pos += this.treeData.getNodeWidth(next) / 2;
                 }
 
             }
         }
 
-        this.titles = new FormattedCharSequence[skillNode.getElements().length];
+        this.titles = new FormattedCharSequence[skillNode.elementCount()];
         //noinspection unchecked
-        this.descriptions = new List[skillNode.getElements().length];
-        this.width = new int[skillNode.getElements().length];
+        this.descriptions = new List[skillNode.elementCount()];
+        this.width = new int[skillNode.elementCount()];
         int l = 29 + 27;
-        for (int i = 0; i < skillNode.getElements().length; i++) {
-            this.titles[i] = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(skillNode.getElements()[i].getName(), 163));
+        for (int i = 0; i < skillNode.elementCount(); i++) {
+            this.titles[i] = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(skillNode.elements().get(i).value().getName(), 163));
             int size = Math.max(l + minecraft.font.width(titles[i]), 120);
-            this.descriptions[i] = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(Optional.ofNullable(skillNode.getElements()[i].getDescription()).orElse(Component.empty()).copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)), size - 30));
+            this.descriptions[i] = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(Optional.ofNullable(skillNode.elements().get(i).value().getDescription()).orElse(Component.empty()).copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)), size - 30));
             this.width[i] = size;
         }
     }
@@ -94,26 +99,26 @@ public class SkillNodeScreen {
     }
 
     private SkillNodeState getState() {
-        if (Arrays.stream(this.skillNode.getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
+        if (this.skillNode.elements().stream().anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.UNLOCKED;
-        } else if (this.skillHandler.isSkillNodeLocked(this.skillNode)) {
+        } else if (this.skillHandler.isSkillNodeLocked(this.skillNode.node().value())) {
             return SkillNodeState.LOCKED;
-        } else if (this.skillNode.getParent() == null || Arrays.stream(this.skillNode.getParent().getElements()).anyMatch(this.skillHandler::isSkillEnabled)) {
+        } else if (this.skillNode.isRoot() || this.treeData.getParent(this.skillNode).stream().flatMap(s -> s.value().elements().stream()).anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.AVAILABLE;
         } else {
-            return this.skillNode.isHidden() ? SkillNodeState.HIDDEN : SkillNodeState.VISIBLE;
+            return SkillNodeState.VISIBLE;
         }
     }
 
-    private Collection<ISkill<?>> getLockingSkills(@NotNull SkillNode node) {
-        return Arrays.stream(node.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node2 -> Arrays.stream(node2.getElements())).filter(skillHandler::isSkillEnabled).collect(Collectors.toList());
+    private List<ISkill<?>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
+        return node.node().value().lockingNodes().stream().flatMap(x -> x.value().elements().stream()).map(Holder::value).collect(Collectors.toList());
     }
 
     public List<SkillNodeScreen> getChildren() {
         return children;
     }
 
-    public SkillNode getSkillNode() {
+    public SkillTreeConfiguration.SkillTreeNodeConfiguration getSkillNode() {
         return skillNode;
     }
 
@@ -129,13 +134,13 @@ public class SkillNodeScreen {
 
         int x = i + getNodeStart();
         //draw skill background
-        if (this.skillNode.getElements().length > 1) {
+        if (this.skillNode.elementCount() > 1) {
             graphics.blitWithBorder(WIDGETS_LOCATION, x, this.y + j, 200, 0, width, 26, 26, 26, 3);
         }
 
         //draw skills
-        for (int i1 = 0; i1 < this.skillNode.getElements().length; i1++) {
-            if (state == SkillNodeState.LOCKED || !skillHandler.isSkillEnabled(this.skillNode.getElements()[i1])) {
+        for (int i1 = 0; i1 < this.skillNode.elementCount(); i1++) {
+            if (state == SkillNodeState.LOCKED || !skillHandler.isSkillEnabled(this.skillNode.elements().get(i1))) {
                 graphics.setColor(0.5f, 0.5f, 0.5f, 1);
             } else {
                 graphics.setColor(1, 1, 1, 1);
@@ -145,7 +150,7 @@ public class SkillNodeScreen {
 
             graphics.setColor(1, 1, 1, 1);
             RenderSystem.enableBlend();
-            graphics.blit(getSkillIconLocation(this.skillNode.getElements()[i1]), x + 5, this.y + j + 5, 0, 0, 16, 16, 16, 16);
+            graphics.blit(getSkillIconLocation(this.skillNode.elements().get(i1).value()), x + 5, this.y + j + 5, 0, 0, 16, 16, 16, 16);
 
             x += 26 + 10;
         }
@@ -199,13 +204,13 @@ public class SkillNodeScreen {
     }
 
     private int getNodeWidth(){
-        return 26 * this.skillNode.getElements().length + (this.skillNode.getElements().length - 1) * 10;
+        return 26 * this.skillNode.elementCount() + (this.skillNode.elementCount() - 1) * 10;
     }
 
     public void drawHover(@NotNull GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
-        ISkill<?>[] elements = this.skillNode.getElements();
+        Holder<ISkill<?>>[] elements = this.skillNode.elements().toArray(Holder[]::new);
         scrollX -= getNodeWidth() / 2f;
 
         //check if a node is hovered
@@ -218,7 +223,7 @@ public class SkillNodeScreen {
         }
 
         if (hoveredSkillIndex != -1) {
-            ISkill<?> hoveredSkill = elements[hoveredSkillIndex];
+            Holder<ISkill<?>> hoveredSkill = elements[hoveredSkillIndex];
             int x = getNodeStart() + (26 + 10) * hoveredSkillIndex;
 
             Collection<ISkill<?>> lockingSkills = this.getLockingSkills(this.skillNode);
@@ -276,7 +281,7 @@ public class SkillNodeScreen {
 
             //draw skill point cost
             if (!this.skillNode.isRoot()) {
-                int cost = hoveredSkill.getSkillPointCost();
+                int cost = hoveredSkill.value().getSkillPointCost();
                 int costWidth = this.minecraft.font.width(String.valueOf(cost));
                 int costHeight = this.minecraft.font.lineHeight;
                 graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3);
@@ -287,7 +292,7 @@ public class SkillNodeScreen {
             graphics.setColor(1f, 1f, 1f, 1);
             graphics.blit(WIDGETS_LOCATION, scrollX + x, scrollY + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
             RenderSystem.enableBlend();
-            graphics.blit(getSkillIconLocation(hoveredSkill), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
+            graphics.blit(getSkillIconLocation(hoveredSkill.value()), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
         }
     }
 
@@ -299,12 +304,12 @@ public class SkillNodeScreen {
      */
     private List<FormattedCharSequence> getSkillDescription(int skill) {
         List<FormattedCharSequence> description = this.descriptions[skill];
-        ISkillHandler.Result result = skillHandler.canSkillBeEnabled((ISkill) this.skillNode.getElements()[skill]);
+        ISkillHandler.Result result = skillHandler.canSkillBeEnabled((ISkill)this.skillNode.elements().get(skill).value());
 
         List<? extends ISkill<?>> lockingSkills = null;
         ChatFormatting lockingColor = ChatFormatting.BLACK;
-        if (this.skillNode.getLockingNodes().length != 0) {
-            lockingSkills = skillHandler.getLockingSkills(this.skillNode);
+        if (!this.skillNode.node().value().lockingNodes().isEmpty()) {
+            lockingSkills = getLockingSkills(this.skillNode);
             lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? ChatFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skillHandler::isSkillEnabled) ? ChatFormatting.DARK_RED : ChatFormatting.YELLOW;
         }
         if (lockingSkills != null) {
@@ -342,9 +347,9 @@ public class SkillNodeScreen {
     public ISkill getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
         if (!isMouseOver(mouseX, mouseY, scrollX, scrollY)) return null;
         int nodeWidth = getNodeWidth();
-        for (int i = 0; i < this.skillNode.getElements().length; i++) {
+        for (int i = 0; i < this.skillNode.elementCount(); i++) {
             if (isMouseOverSkill(i, mouseX, mouseY, (int) (scrollX - nodeWidth/2f), scrollY)) {
-                return this.skillNode.getElements()[i];
+                return this.skillNode.elements().get(i).value();
             }
         }
         return null;

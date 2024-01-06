@@ -32,15 +32,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_heart",
-      "has_gold",
-      "has_the_recipe"
+      "has_gold"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/vampire_clothing_crown"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

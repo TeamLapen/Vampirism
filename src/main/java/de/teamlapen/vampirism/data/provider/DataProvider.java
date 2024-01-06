@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.mixin.RegistriesDatapackGeneratorAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -35,12 +35,12 @@ public class DataProvider {
         TagProvider.register(generator, event, packOutput, lookupProviderFuture, existingFileHelper);
         generator.addProvider(event.includeServer(), LootTablesProvider.getProvider(packOutput));
         generator.addProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProviderFuture, existingFileHelper));
-        generator.addProvider(event.includeServer(), new RecipesProvider(packOutput));
-        generator.addProvider(event.includeServer(), new ModSkillNodeProvider(packOutput));
+        generator.addProvider(event.includeServer(), new RecipesProvider(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeClient(), new BlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelGenerator(packOutput, existingFileHelper));
         generator.addProvider(event.includeServer(), new SingleJigsawPiecesProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new ConvertiblesProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SundamageProvider(packOutput, REFERENCE.MODID));
+        generator.addProvider(event.includeServer(), new SkillTreeProvider(packOutput, lookupProviderFuture));
     }
 }

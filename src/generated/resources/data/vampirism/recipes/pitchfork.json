@@ -1,0 +1,22 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "lava": 1,
+  "pattern": [
+    "X X",
+    "YYY",
+    " Y ",
+    " Y "
+  ],
+  "result": {
+    "item": "vampirism:pitchfork"
+  }
+}

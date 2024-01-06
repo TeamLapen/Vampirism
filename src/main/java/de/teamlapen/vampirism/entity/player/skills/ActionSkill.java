@@ -1,13 +1,15 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillType;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -19,32 +21,46 @@ import java.util.function.Supplier;
  */
 public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
     private final Supplier<? extends IAction<T>> action;
-    private final ISkillType type;
 
-    public ActionSkill(Supplier<? extends IAction<T>> action) {
-        this(action, 2);
+    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree) {
+        this(action, skillTree, 2);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost) {
-        this(action, skillPointCost, false);
+    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree) {
+        this(action, skillTree, 2);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, boolean customDescription) {
-        this(action, 2, customDescription);
+    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost) {
+        this(action, skillTree, skillPointCost, false);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, int skillPointCost, boolean customDescription) {
-        this(action, SkillType.LEVEL, skillPointCost, customDescription);
+    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost) {
+        this(action, skillTree, skillPointCost, false);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, boolean customDescription) {
+        this(action, skillTree,2, customDescription);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, boolean customDescription) {
+        this(action, skillTree,2, customDescription);
     }
 
     /**
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(Supplier<? extends IAction<T>> action, ISkillType type, int skillPointCost, boolean customDescription) {
-        super(skillPointCost, customDescription);
+    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
+        this(action, Either.left(skillTree), skillPointCost, customDescription);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
+        this(action, Either.right(skillTree), skillPointCost, customDescription);
+    }
+
+    public ActionSkill(Supplier<? extends IAction<T>> action, Either<ResourceKey<ISkillTree>,TagKey<ISkillTree>> skillTree, int skillPointCost, boolean customDescription) {
+        super(skillTree, skillPointCost, customDescription);
         this.action = action;
-        this.type = type;
         if (!customDescription) {
             this.setDescription(() -> Component.translatable("text.vampirism.skill.unlocks_action"));
         }
@@ -76,8 +92,4 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
         list.add(action.get());
     }
 
-    @Override
-    public ISkillType getType() {
-        return this.type;
-    }
 }

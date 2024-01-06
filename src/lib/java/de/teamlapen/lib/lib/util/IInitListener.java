@@ -1,8 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
 
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
+import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
 
 /**
  * Simple interface which provides ClientSetup, CommonSetup and LoadComplete.

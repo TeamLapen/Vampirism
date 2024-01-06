@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -43,7 +43,7 @@ public class CustomBossEventOverlay implements IGuiOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {

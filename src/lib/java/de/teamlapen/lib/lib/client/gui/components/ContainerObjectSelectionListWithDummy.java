@@ -14,28 +14,27 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     private final Supplier<List<Z>> itemSupplier;
     private @Nullable DummyEntry dummyItem;
 
-    public ContainerObjectSelectionListWithDummy(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, Supplier<List<Z>> itemSupplier) {
-        super(minecraft, width, height, y0, y1, itemHeight);
+    public ContainerObjectSelectionListWithDummy(Minecraft minecraft, int width, int height, int y0, int itemHeight, Supplier<List<Z>> itemSupplier) {
+        super(minecraft, width, height, y0, itemHeight);
         this.itemSupplier = itemSupplier;
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    protected void renderBackground(@NotNull GuiGraphics graphics) {
+    public void renderWidget(GuiGraphics graphics, int p_283242_, int p_282891_, float p_283683_) {
         int color = 0xFFFFFFFF;
-        graphics.hLine(this.x0 - 1, this.x1 - 6, this.y0 - 1, color);
-        graphics.hLine(this.x0 - 1, this.x1 - 6, this.y1, color);
-        graphics.vLine(this.x0 - 1, this.y0 - 1, this.y1 + 1, color);
-        graphics.vLine(this.x1 - 6, this.y0 - 1, this.y1 + 1, color);
-        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y1, 0xFF000000, 0xFF000000);
+        graphics.hLine(this.getX() - 1, this.getRight() - 6, this.getY() - 1, color);
+        graphics.hLine(this.getX()  - 1, this.getRight() - 6, this.getBottom(), color);
+        graphics.vLine(this.getX()  - 1, this.getY() - 1, this.getBottom() + 1, color);
+        graphics.vLine(this.getRight() - 6, this.getY() - 1, this.getBottom() + 1, color);
+        graphics.fillGradient(this.getX() , this.getY(), this.getRight() - 6, this.getBottom(), 0xFF000000, 0xFF000000);
+        super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
     }
 
     @Override
     protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
-        graphics.fillGradient(this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
+        graphics.fillGradient(this.getX() , this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
+        graphics.fillGradient(this.getX() , this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
     }
 
     @Override
@@ -55,7 +54,7 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
 
     @Override
     protected int getScrollbarPosition() {
-        return this.x1 - 5;
+        return this.getRight() - 5;
     }
 
     @Override

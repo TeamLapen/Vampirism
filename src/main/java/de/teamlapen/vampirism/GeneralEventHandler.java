@@ -1,39 +1,35 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
+import de.teamlapen.vampirism.world.LevelFog;
+import de.teamlapen.vampirism.world.LevelGarlic;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * Handles all events used in central parts of the mod
@@ -41,11 +37,6 @@ import java.util.Map;
 public class GeneralEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger();
-
-    @SubscribeEvent
-    public void onAttachCapabilityWorld(@NotNull AttachCapabilitiesEvent<Level> event) {
-        event.addCapability(REFERENCE.WORLD_CAP_KEY, VampirismWorld.createNewCapability(event.getObject()));
-    }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
@@ -74,22 +65,6 @@ public class GeneralEventHandler {
 //            event.getPlayer().sendStatusMessage(new StringTextComponent("You are playing an alpha version of Vampirism for 1.16, some things might not work yet. Please report any issues except for:").mergeStyle(TextFormatting.RED), false);
 //        }
 
-        if (player instanceof ServerPlayer serverPlayer) {
-            VampirismMod.dispatcher.sendTo(new ClientboundSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), serverPlayer);
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
-        bloodValues[0] = BloodConversionRegistry.getEntityConversions();
-        bloodValues[1] = BloodConversionRegistry.getItemConversions();
-        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
-        Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = VampirismAPI.entityRegistry().getConvertibleOverlay();
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues, (Map<EntityType<?>, ResourceLocation>) (Object) convertibleOverlay), serverPlayer);
-        }
-        FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
-
         if (player instanceof ServerPlayer && !Permissions.isSetupCorrectly(((ServerPlayer) player))) {
             player.sendSystemMessage(Component.literal("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.GENERAL_CHECK.getNodeName() + "' to suppress this warning)."));
         }
@@ -106,7 +81,9 @@ public class GeneralEventHandler {
     @SubscribeEvent
     public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
-            VampirismWorld.getOpt(level).ifPresent(VampirismWorld::clearCaches);
+            Optional.ofNullable(level.getData(ModAttachments.LEVEL_FOG)).ifPresent(LevelFog::clearCache);
+            LevelFog.getOpt(level).ifPresent(LevelFog::clearCache);
+            LevelGarlic.getOpt(level).ifPresent(LevelGarlic::clearCache);
         }
     }
 
@@ -115,6 +92,16 @@ public class GeneralEventHandler {
         int missing = ModLootTables.checkAndResetInsertedAll();
         if (missing > 0) {
             LOGGER.warn("LootTables Failed to inject {} loottables", missing);
+        }
+    }
+
+    @SubscribeEvent
+    public void onDatapackSync(OnDatapackSyncEvent event) {
+        ClientboundSkillTreePacket skillTrees = ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations());
+        if (event.getPlayer() != null) {
+            event.getPlayer().connection.send(skillTrees);
+        } else {
+            event.getPlayerList().getPlayers().forEach(p -> p.connection.send(skillTrees));
         }
     }
 }

@@ -17,7 +17,6 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.regicide.desc"
     },
@@ -26,7 +25,6 @@
     "icon": {
       "item": "vampirism:pure_blood_0"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.regicide"
     }

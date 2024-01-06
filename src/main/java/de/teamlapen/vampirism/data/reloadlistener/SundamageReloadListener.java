@@ -23,7 +23,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.registries.holdersets.OrHolderSet;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

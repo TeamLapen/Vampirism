@@ -14,22 +14,17 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SieveBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
 
-    private final @NotNull LazyOptional<IFluidHandler> cap;
     private final @NotNull FluidTankWithListener tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
@@ -39,16 +34,10 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         super(ModTiles.SIEVE.get(), pos, state);
         tank = new FilteringFluidTank(2 * FluidType.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
-        cap = LazyOptional.of(() -> tank);
     }
 
-    @Override
-    @NotNull
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if ((facing != Direction.DOWN) && capability == ForgeCapabilities.FLUID_HANDLER) {
-            return cap.cast();
-        }
-        return super.getCapability(capability, facing);
+    public @NotNull FluidTankWithListener getTank() {
+        return tank;
     }
 
     @Override
@@ -77,15 +66,16 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
         cooldownPull = tag.getInt("cooldown_pull");
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
-        boolean old = active;
-        active = pkt.getTag().getBoolean("active");
-        if (active != old && level != null) {
-            this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            boolean old = active;
+            active = tag.getBoolean("active");
+            if (active != old && level != null) {
+                this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            }
         }
-
     }
 
     @Override

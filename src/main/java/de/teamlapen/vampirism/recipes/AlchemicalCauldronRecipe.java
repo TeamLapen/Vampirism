@@ -2,14 +2,18 @@ package de.teamlapen.vampirism.recipes;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -18,23 +22,24 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
-    private static final ISkill<?>[] EMPTY_SKILLS = {};
     private final Either<Ingredient, FluidStack> fluid;
     @NotNull
-    private final ISkill<?>[] skills;
+    private final List<ISkill<?>> skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(@NotNull ResourceLocation idIn, @NotNull String groupIn, CookingBookCategory category, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull ISkill<?>[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
-        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), idIn, groupIn, category, ingredientIn, resultIn, exp, cookTimeIn);
+    public AlchemicalCauldronRecipe(@NotNull String groupIn, CookingBookCategory category, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull List<ISkill<?>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+        super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), groupIn, category, ingredientIn, resultIn, exp, cookTimeIn);
         this.fluid = fluidIn;
         this.skills = skillsIn;
         this.reqLevel = reqLevelIn;
@@ -61,7 +66,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     }
 
     @NotNull
-    public ISkill<?>[] getRequiredSkills() {
+    public List<ISkill<?>> getRequiredSkills() {
         return skills;
     }
 
@@ -84,78 +89,35 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return match && fluidMatch.get();
     }
 
-    @Override
-    public @NotNull String toString() {
-        return "AlchemicalCauldronRecipe{" +
-                "cookingTime=" + cookingTime +
-                ", skills=" + Arrays.toString(skills) +
-                ", output=" + result +
-                ", ingredient=" + ingredient +
-                ", reqLevel=" + reqLevel +
-                ", experience=" + experience +
-                ", fluid=" + fluid +
-                '}';
-    }
-
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
-        @NotNull
+
+        public static final Codec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.create(inst -> {
+            return inst.group(
+                    ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
+                    CookingBookCategory.CODEC.fieldOf("category").orElse(CookingBookCategory.MISC).forGetter(p_300828_ -> p_300828_.category),
+                    Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
+                    Codec.either(Ingredient.CODEC_NONEMPTY, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
+                    net.neoforged.neoforge.common.crafting.CraftingHelper.smeltingResultCodec().fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
+                    ExtraCodecs.strictOptionalField(ModRegistries.SKILLS.byNameCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.skills),
+                    ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.reqLevel),
+                    ExtraCodecs.strictOptionalField(Codec.INT, "cookTime", 200).forGetter(p -> p.cookingTime),
+                    ExtraCodecs.strictOptionalField(Codec.FLOAT, "experience", 0.2F).forGetter(p -> p.experience)
+            ).apply(inst, AlchemicalCauldronRecipe::new);
+        });
+
         @Override
-        public AlchemicalCauldronRecipe fromJson(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
-            String group = GsonHelper.getAsString(json, "group", "");
-            CookingBookCategory category = CookingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", (String)null), CookingBookCategory.MISC);
-            Ingredient ingredients = Ingredient.fromJson(GsonHelper.isArrayNode(json, "ingredient") ? GsonHelper.getAsJsonArray(json, "ingredient") : GsonHelper.getAsJsonObject(json, "ingredient"));
-            int level = GsonHelper.getAsInt(json, "level", 1);
-            ISkill<?>[] skills = VampirismRecipeHelper.deserializeSkills(GsonHelper.getAsJsonArray(json, "skill", null));
-            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-            Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
-            int cookTime = GsonHelper.getAsInt(json, "cookTime", 200);
-            float exp = GsonHelper.getAsFloat(json, "experience", 0.2F);
-            return new AlchemicalCauldronRecipe(recipeId, group, category, ingredients, fluid, result, skills, level, cookTime, exp);
+        public @NotNull Codec<AlchemicalCauldronRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public AlchemicalCauldronRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-            String group = buffer.readUtf(32767);
-            CookingBookCategory cookingbookcategory = buffer.readEnum(CookingBookCategory.class);
-            ItemStack result = buffer.readItem();
-            Ingredient ingredient = Ingredient.fromNetwork(buffer);
-            Either<Ingredient, FluidStack> fluid;
-            if (buffer.readBoolean()) {
-                fluid = Either.left(Ingredient.fromNetwork(buffer));
-            } else {
-                fluid = Either.right(FluidStack.readFromPacket(buffer));
-            }
-            float exp = buffer.readFloat();
-            int cookingtime = buffer.readVarInt();
-            int level = buffer.readVarInt();
-            ISkill<?>[] skills = new ISkill[buffer.readVarInt()];
-            for (int i = 0; i < skills.length; i++) {
-                skills[i] = RegUtil.getSkill(buffer.readResourceLocation());
-            }
-            return new AlchemicalCauldronRecipe(recipeId, group, cookingbookcategory, ingredient, fluid, result, skills, level, cookingtime, exp);
+        public @NotNull AlchemicalCauldronRecipe fromNetwork(FriendlyByteBuf buffer) {
+            return buffer.readJsonWithCodec(CODEC);
         }
 
         @Override
         public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemicalCauldronRecipe recipe) {
-            buffer.writeUtf(recipe.group);
-            buffer.writeEnum(recipe.category());
-            buffer.writeItem(recipe.result);
-            recipe.ingredient.toNetwork(buffer);
-            if (recipe.fluid.left().isPresent()) {
-                buffer.writeBoolean(true);
-                recipe.fluid.left().get().toNetwork(buffer);
-            } else {
-                assert recipe.fluid.right().isPresent();
-                buffer.writeBoolean(false);
-                recipe.fluid.right().get().writeToPacket(buffer);
-            }
-            buffer.writeFloat(recipe.experience);
-            buffer.writeVarInt(recipe.cookingTime);
-            buffer.writeVarInt(recipe.reqLevel);
-            buffer.writeVarInt(recipe.skills.length);
-            for (ISkill<?> skill : recipe.skills) {
-                buffer.writeResourceLocation(RegUtil.id(skill));
-            }
+            buffer.writeJsonWithCodec(CODEC, recipe);
         }
 
     }

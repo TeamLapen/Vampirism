@@ -25,15 +25,15 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class WeaponTableBlock extends VampirismHorizontalBlock {
     public static final int MAX_LAVA = 5;
@@ -88,7 +88,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             boolean flag = false;
             ItemStack heldItem = player.getItemInHand(hand);
             if (fluid < MAX_LAVA) {
-                LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
+                Optional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
                 flag = opt.map(fluidHandler -> {
                     FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
@@ -110,7 +110,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
             if (!flag) {
 
                 if (canUse(player) && player instanceof ServerPlayer) {
-                    NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
+                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
                 } else {
                     player.displayClientMessage(Component.translatable("You have not learned how to use this"), true);
                 }

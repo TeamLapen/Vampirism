@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_obi_belt",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_obi_belt"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:leather_from_obi_belt"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

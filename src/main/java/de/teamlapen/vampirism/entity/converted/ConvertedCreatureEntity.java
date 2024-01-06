@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.mixin.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -29,7 +30,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -238,7 +238,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         }
         if (!nbt.contains("source_entity")) {
             getSourceEntityDataParamOpt().ifPresent(p -> {
-                getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, ForgeRegistries.ENTITY_TYPES.getKey(old.getType()).toString()));
+                getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString()));
             });
         }
     }
@@ -302,8 +302,10 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
-        writeOldEntityToNBT(nbt);
+    public CompoundTag writeFullUpdateToNBT() {
+        CompoundTag tag = new CompoundTag();
+        writeOldEntityToNBT(tag);
+        return tag;
     }
 
     /**

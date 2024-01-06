@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "guideapi_vp"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fang": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:vampire_fang"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:general/guidebook"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_fang"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:general/guidebook"
+    ]
+  }
+}

@@ -7,36 +7,39 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.misc.VampirismLogger;
-import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -44,72 +47,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
+public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final Capability<IFactionPlayerHandler> CAP = VampirismCapabilities.FACTION_HANDLER_PLAYER;
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "faction_player_handler");
 
-    /**
-     * Must check Entity#isAlive before
-     * <br>
-     * Always prefer using #getOpt
-     */
-    @Deprecated
     public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
-        return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
+        return player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get());
     }
 
-    /**
-     * Return a LazyOptional, but print a warning message if not present.
-     */
-    public static @NotNull LazyOptional<FactionPlayerHandler> getOpt(@NotNull Player player) {
-        LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
-        if (!opt.isPresent()) {
-            LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
-        }
-        return opt;
+    public static @NotNull Optional<FactionPlayerHandler> getOpt(@NotNull Player player) {
+        return Optional.of(player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get()));
     }
 
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
     public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player) {
-        LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
-        if (!opt.isPresent()) {
-            LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
-        }
-        return opt.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
-    }
-
-
-    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
-        return new ICapabilitySerializable<CompoundTag>() {
-
-            final FactionPlayerHandler inst = new FactionPlayerHandler(player);
-            final LazyOptional<IFactionPlayerHandler> opt = LazyOptional.of(() -> inst);
-
-            @Override
-            public void deserializeNBT(@NotNull CompoundTag nbt) {
-                inst.loadNBTData(nbt);
-            }
-
-            @NotNull
-            @Override
-            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
-
-                return CAP.orEmpty(capability, opt);
-            }
-
-            @Override
-            public @NotNull CompoundTag serializeNBT() {
-                CompoundTag tag = new CompoundTag();
-                inst.saveNBTData(tag);
-                return tag;
-            }
-        };
+        return getOpt(player).flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
     }
 
     private final Player player;
@@ -118,14 +78,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private @Nullable IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
-    /**
-     * If true, use female version of lord titles
-     * CAREFUL: Can be null before initialized
-     */
-    @Nullable
-    private Boolean titleGender = null;
+    @NotNull
+    private IPlayableFaction.TitleGender titleGender = IPlayableFaction.TitleGender.UNKNOWN;
 
-    private FactionPlayerHandler(Player player) {
+    public FactionPlayerHandler(Player player) {
         this.player = player;
     }
 
@@ -143,19 +99,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentFaction == null || currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false);
     }
 
-    /**
-     * Make sure the player caps are valid (call #reviveCaps if dead)
-     */
-    public void copyFrom(@NotNull Player old) {
-        FactionPlayerHandler oldP = get(old);
-        currentFaction = oldP.currentFaction;
-        currentLevel = oldP.currentLevel;
-        currentLordLevel = oldP.currentLordLevel;
-        this.boundActions.putAll(oldP.boundActions);
-        this.titleGender = oldP.titleGender;
-        this.updateCache();
-        notifyFaction(oldP.currentFaction, oldP.currentLevel);
-    }
 
     /**
      * @param id ATM 1-3
@@ -167,8 +110,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public @NotNull ResourceLocation getCapKey() {
-        return REFERENCE.FACTION_PLAYER_HANDLER_KEY;
+    public @NotNull ResourceLocation getAttachmentKey() {
+        return SERIALIZER_ID;
     }
 
     @Nullable
@@ -212,13 +155,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     @Override
     public Component getLordTitle() {
-        return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender != null && titleGender);
+        return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender);
     }
 
-    @Override
-    public boolean useFemaleLordTitle() {
-        return this.titleGender != null && this.titleGender;
-    }
 
     public int getMaxMinions() {
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
@@ -228,6 +167,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public IPlayableFaction.TitleGender titleGender() {
+        return this.titleGender;
     }
 
     @Override
@@ -270,7 +214,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
         if (nbt.contains("title_gender")) {
-            this.titleGender = nbt.getBoolean("title_gender");
+            this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
         }
         this.loadBoundActions(nbt);
         updateCache();
@@ -280,22 +224,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
-            IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).resolve().map(FactionPlayerHandler::getCurrentFaction).orElse(null);
+            IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).map(FactionPlayerHandler::getCurrentFaction).orElse(null);
             if (this.currentFaction == null || otherFaction == null) {
                 return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
             }
             return !this.currentFaction.equals(otherFaction);
         }
         return true;
-    }
-
-    /**
-     * Must be called on player login
-     */
-    public void onPlayerLoggedIn() {
-        if (this.titleGender == null) {
-            this.titleGender = Helper.attemptToGuessGenderSafe(player);
-        }
     }
 
     /**
@@ -366,7 +301,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (currentLordLevel != newLordLevel) {
             this.setLordLevel(newLordLevel, false);
         }
-        this.updateSkillTypes();
+        this.checkSkillTreeLocks();
         updateCache();
         notifyFaction(old, oldLevel);
         if (this.player instanceof ServerPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
@@ -384,12 +319,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayer serverPlayer) {
             if (old != faction) {
-                ModAdvancements.TRIGGER_FACTION.revokeAll(serverPlayer);
-                ModAdvancements.revoke(ModAdvancements.TRIGGER_MOTHER_WIN, serverPlayer);
+                ModAdvancements.TRIGGER_FACTION.get().revokeAll(serverPlayer);
+                ModAdvancements.revoke(ModAdvancements.TRIGGER_MOTHER_WIN.get(), serverPlayer);
             } else if (oldLevel > level) {
-                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
+                ModAdvancements.TRIGGER_FACTION.get().revokeLevel(serverPlayer, faction, FactionCriterionTrigger.Type.LEVEL, level);
             }
-            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
+            ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         return true;
 
@@ -406,24 +341,23 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     public boolean setTitleGender(boolean female) {
-        if (titleGender == null || female != this.titleGender) {
-            this.titleGender = female;
+        this.titleGender = female ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE;
             player.refreshDisplayName();
             if (!player.level().isClientSide()) {
                 sync(true);
             }
-        }
-        this.titleGender = female;
         return true;
     }
 
     @Override
-    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
+    public CompoundTag writeFullUpdateToNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
-        nbt.putBoolean("title_gender", titleGender != null && titleGender);
+        nbt.putString("title_gender", titleGender.name());
         this.writeBoundActions(nbt);
+        return nbt;
     }
 
     @Override
@@ -459,28 +393,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
-    private void loadNBTData(@NotNull CompoundTag nbt) {
-        if (nbt.contains("faction")) {
-            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
-            if (currentFaction == null) {
-                LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
-            } else {
-                currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
-                currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
-                this.updateSkillTypes();
-                updateCache();
-                notifyFaction(null, 0);
-            }
+    private void checkSkillTreeLocks() {
+        if (this.player.level() instanceof ServerLevel level) {
+            Registry<ISkillTree> registryAccess = this.player.level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_TREE_ID);
+            getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+                factionPlayer.getSkillHandler().updateUnlockedSkillTrees(registryAccess.holders().filter(s -> s.value().unlockPredicate().matches(level, null, this.player)).collect(Collectors.toList()));
+            });
         }
-        if (nbt.contains("title_gender")) {
-            this.titleGender = nbt.getBoolean("title_gender");
-        }
-        loadBoundActions(nbt);
-        updateCache();
-    }
-
-    private void updateSkillTypes() {
-        this.getCurrentFactionPlayer().ifPresent(a -> a.getSkillHandler().enableRootSkills());
     }
 
     /**
@@ -500,19 +419,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
-    private void saveNBTData(@NotNull CompoundTag nbt) {
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (currentFaction != null) {
-            nbt.putString("faction", currentFaction.getID().toString());
-            nbt.putInt("level", currentLevel);
-            nbt.putInt("lord_level", currentLordLevel);
-        }
-        if (titleGender != null) nbt.putBoolean("title_gender", titleGender);
-
-        writeBoundActions(nbt);
-        //Don't forget to also add things to copyFrom !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    }
-
     private boolean setLordLevel(int level, boolean sync) {
         int oldLevel = this.currentLordLevel;
         if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
@@ -527,9 +433,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.getCurrentFactionPlayer().ifPresent(player -> {
             player.getSkillHandler().addSkillPoints((int) ((level - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
         });
-        if (this.currentLordLevel > 0) {
-            this.updateSkillTypes();
-        }
+        this.checkSkillTreeLocks();
         this.updateCache();
         MinionWorldData.getData(player.level()).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());
@@ -546,9 +450,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         if (player instanceof ServerPlayer serverPlayer) {
             if (currentLordLevel < oldLevel){
-                ModAdvancements.TRIGGER_FACTION.revokeLevel(serverPlayer, currentFaction, FactionCriterionTrigger.Type.LORD, currentLordLevel);
+                ModAdvancements.TRIGGER_FACTION.get().revokeLevel(serverPlayer, currentFaction, FactionCriterionTrigger.Type.LORD, currentLordLevel);
             }
-            ModAdvancements.TRIGGER_FACTION.trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
+            ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
         if (sync) sync(false);
         return true;
@@ -573,5 +477,69 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());
         }
         nbt.put("bound_actions", bounds);
+    }
+
+    @Override
+    public CompoundTag writeToNBT() {
+        CompoundTag nbt = new CompoundTag();
+        if (currentFaction != null) {
+            nbt.putString("faction", currentFaction.getID().toString());
+            nbt.putInt("level", currentLevel);
+            nbt.putInt("lord_level", currentLordLevel);
+        }
+        nbt.putString("title_gender", titleGender.name());
+
+        writeBoundActions(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void loadFromNBT(CompoundTag nbt) {
+        if (nbt.contains("faction")) {
+            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
+            if (currentFaction == null) {
+                LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
+            } else {
+                currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
+                currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
+                this.checkSkillTreeLocks();
+                updateCache();
+                notifyFaction(null, 0);
+            }
+        }
+        if (nbt.contains("title_gender")) {
+            this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
+        }
+        loadBoundActions(nbt);
+        updateCache();
+    }
+
+    public static class Serializer implements IAttachmentSerializer<CompoundTag, FactionPlayerHandler> {
+
+        @Override
+        public FactionPlayerHandler read(IAttachmentHolder holder, CompoundTag tag) {
+            if (holder instanceof Player player) {
+                FactionPlayerHandler handler = new FactionPlayerHandler(player);
+                handler.loadFromNBT(tag);
+                return handler;
+            }
+            throw new IllegalStateException("Cannot deserialize FactionPlayerHandler for non player entity");
+        }
+
+        @Override
+        public CompoundTag write(FactionPlayerHandler attachment) {
+            return attachment.writeToNBT();
+        }
+    }
+
+    public static class Factory implements Function<IAttachmentHolder, FactionPlayerHandler> {
+
+        @Override
+        public FactionPlayerHandler apply(IAttachmentHolder holder) {
+            if (holder instanceof Player player) {
+                return new FactionPlayerHandler(player);
+            }
+            throw new IllegalArgumentException("Cannot create faction player handler attachment for holder " + holder.getClass() + ". Expected Player");
+        }
     }
 }

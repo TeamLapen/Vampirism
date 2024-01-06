@@ -36,7 +36,7 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, @NotNull BlockState pState, boolean pIsClient) {
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, @NotNull BlockState pState) {
         return pLevel.getBlockState(pPos.below()).isAir();
     }
 

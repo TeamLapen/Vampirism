@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -22,11 +21,9 @@ import java.util.function.Supplier;
  */
 public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
 
-    private final Map<Attribute, LazyOptional<AttributeModifier>> attributeModifierMap = new HashMap<>();
+    private final Map<Attribute, AttributeHolder> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)
     private final int skillPointCost;
-    private int renderRow;
-    private int renderColumn;
     private Component name;
 
     public DefaultSkill() {
@@ -47,15 +44,6 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         return this;
     }
 
-    @Override
-    public int getRenderColumn() {
-        return renderColumn;
-    }
-
-    @Override
-    public int getRenderRow() {
-        return renderRow;
-    }
 
     @Deprecated
     @Override
@@ -88,20 +76,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, double amount, AttributeModifier.@NotNull Operation operation) {
-        final AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
-        this.attributeModifierMap.put(attribute, LazyOptional.of(() -> attributemodifier));
+        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), () -> amount, operation));
         return this;
     }
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, LazyOptional.of(() -> new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amountSupplier.get(), operation)));
+        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), amountSupplier, operation));
         return this;
-    }
-
-    @Override
-    public void setRenderPos(int row, int column) {
-        this.renderRow = row;
-        this.renderColumn = column;
     }
 
     @Override
@@ -129,13 +110,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void applyAttributesModifiersToEntity(@NotNull Player player) {
-        for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Attribute, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
             if (instance != null) {
-                AttributeModifier attributemodifier = entry.getValue().orElseThrow(IllegalStateException::new);
-                instance.removeModifier(attributemodifier);
-                instance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
+                instance.removeModifier(entry.getValue().uuid);
+                instance.addPermanentModifier(entry.getValue().create());
             }
         }
     }
@@ -152,11 +132,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void removeAttributesModifiersFromEntity(@NotNull Player player) {
-        for (Map.Entry<Attribute, LazyOptional<AttributeModifier>> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Attribute, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
             if (attribute != null) {
-                attribute.removeModifier(entry.getValue().orElseThrow(IllegalStateException::new));
+                attribute.removeModifier(entry.getValue().uuid);
             }
         }
     }
@@ -169,5 +149,23 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     @Override
     public int getSkillPointCost() {
         return this.skillPointCost;
+    }
+
+    protected class AttributeHolder {
+        public final Attribute attribute;
+        public final @NotNull UUID uuid;
+        public final @NotNull Supplier<Double> amountSupplier;
+        public final AttributeModifier.@NotNull Operation operation;
+
+        private AttributeHolder(Attribute attribute, @NotNull UUID uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+            this.attribute = attribute;
+            this.uuid = uuid;
+            this.amountSupplier = amountSupplier;
+            this.operation = operation;
+        }
+
+        public AttributeModifier create() {
+            return new AttributeModifier(uuid, DefaultSkill.this.getRegistryName().toString(), amountSupplier.get(), operation);
+        }
     }
 }

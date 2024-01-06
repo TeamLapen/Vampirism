@@ -17,12 +17,8 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance implemen
 
     public VampireNightVisionEffectInstance() {
         super(MobEffects.NIGHT_VISION, -1, 0, false, false, false);
-        setCurativeItems(new ArrayList<>());
+        getCures().clear();
         ((EffectInstanceWithSource) this).setSource(VampirismNightVisionPotion.ID);
-    }
-
-    @Override
-    public void applyEffect(@NotNull LivingEntity entityIn) {
     }
 
     @Override

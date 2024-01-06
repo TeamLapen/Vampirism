@@ -1,18 +1,10 @@
 package de.teamlapen.vampirism.api.util;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ItemOrdering<T> {
     private final List<T> ordering;

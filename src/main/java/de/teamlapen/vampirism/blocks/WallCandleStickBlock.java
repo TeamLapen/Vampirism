@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.core.BlockPos;
@@ -31,6 +33,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class WallCandleStickBlock extends CandleStickBlock {
+    public static final MapCodec<WallCandleStickBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            candleStickParts(inst).apply(inst, WallCandleStickBlock::new)
+    );
     private static final Map<Direction, Iterable<Vec3>> PARTICLE_OFFSET = new EnumMap<>(Direction.class) {{
         put(Direction.NORTH, ImmutableList.of(new Vec3(0.5D, 0.86D, 0.75)));
         put(Direction.WEST, ImmutableList.of(new Vec3(0.75, 0.86D, 0.5D)));
@@ -51,6 +56,9 @@ public class WallCandleStickBlock extends CandleStickBlock {
     }};
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
+    private WallCandleStickBlock(Block emptyBlock, Item candle, Properties pProperties) {
+        this(() -> emptyBlock, () -> candle, pProperties);
+    }
 
     public WallCandleStickBlock(@Nullable Supplier<? extends Block> emptyBlock, @NotNull Supplier<Item> candle, Properties pProperties) {
         super(emptyBlock, candle, pProperties);
@@ -120,8 +128,13 @@ public class WallCandleStickBlock extends CandleStickBlock {
 
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return ModItems.CANDLE_STICK.get().getDefaultInstance();
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends AbstractCandleBlock> codec() {
+        return CODEC;
     }
 
     @Override

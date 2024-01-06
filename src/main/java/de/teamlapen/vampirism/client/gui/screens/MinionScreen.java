@@ -8,21 +8,21 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.LockIconButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-@OnlyIn(Dist.CLIENT)
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
+    private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/settings"), new ResourceLocation(REFERENCE.MODID, "widget/settings_highlighted"));
+    private static final WidgetSprites STATS_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/skill_points"), new ResourceLocation(REFERENCE.MODID, "widget/skill_points_highlighted"));
     private final int extraSlots;
     private SimpleList<?> taskList;
     private Button taskButton;
@@ -45,7 +45,6 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
 
@@ -54,15 +53,15 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     @Override
     protected void init() {
         super.init();
-        this.appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 21, 18, 18, 238, 0, 18, GUI_TEXTURE, this::onConfigurePressed));
+        this.appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 21, 18, 18, APPEARANCE_SPRITES, this::onConfigurePressed));
         this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
-        this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, 220, 0, 18, GUI_TEXTURE, this::onStatsPressed));
+        this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, STATS_SPRITES, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
         List<Component> taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toList();
 
         this.taskList = this.addRenderableWidget(SimpleList.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).componentsWithClick(taskNames, this::selectTask).build());
-        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), button -> taskList.isVisible = !taskList.isVisible));
-        this.taskList.isVisible = false;
+        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), button -> taskList.visible = !taskList.visible));
+        this.taskList.visible = false;
     }
 
     @Override
@@ -115,7 +114,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     private void selectTask(int id) {
-        this.taskList.isVisible = false;
+        this.taskList.visible = false;
         this.menu.setTaskToActivate(id);
         this.taskButton.setMessage(getActiveTaskName());
     }

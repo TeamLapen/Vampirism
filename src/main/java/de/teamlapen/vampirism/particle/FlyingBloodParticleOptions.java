@@ -7,11 +7,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture, float scale) implements ParticleOptions {
@@ -54,7 +54,6 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
         this(maxAge, direct, targetX, targetY, targetZ, texture, 1f);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getMaxAge() {
         return maxAge;
     }
@@ -79,6 +78,6 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
     @NotNull
     @Override
     public String writeToString() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + maxAge + " " + texture;
     }
 }

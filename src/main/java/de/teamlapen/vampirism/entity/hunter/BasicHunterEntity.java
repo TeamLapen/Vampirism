@@ -174,7 +174,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         if (fph.getCurrentFaction() == this.getFaction()) {
                             boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
                             HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
-                            data.updateEntityCaps(this.serializeCaps());
+                            data.updateEntityCaps(this.serializeAttachments());
+                            CompoundTag compoundTag = saveWithoutId(new CompoundTag());
                             int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                             if (id < 0) {
                                 LOGGER.error("Failed to get minion slot");
@@ -494,7 +495,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
-            return net.minecraftforge.common.ForgeHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
         }
         return super.getProjectile(stack);
     }

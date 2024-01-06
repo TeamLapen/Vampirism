@@ -26,7 +26,7 @@
       "conditions": [
         {
           "condition": "vampirism:with_stake",
-          "entity": "killer_player"
+          "target": "killer_player"
         },
         {
           "chance": 0.5,
@@ -56,7 +56,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": "vampirism:vampire",
+              "faction": {
+                "id": "vampirism:vampire"
+              },
               "function": "vampirism:add_refinement_set"
             }
           ],
@@ -66,7 +68,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": "vampirism:vampire",
+              "faction": {
+                "id": "vampirism:vampire"
+              },
               "function": "vampirism:add_refinement_set"
             }
           ],
@@ -76,7 +80,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": "vampirism:vampire",
+              "faction": {
+                "id": "vampirism:vampire"
+              },
               "function": "vampirism:add_refinement_set"
             }
           ],

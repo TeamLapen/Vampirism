@@ -19,16 +19,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.vampire_forest.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:oak_log"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.vampire_forest"
     }

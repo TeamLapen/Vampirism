@@ -1,18 +1,13 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.model.armor.CloakModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.Model;
+import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -30,16 +25,12 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
         this.model = model;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-                            public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                                return CloakModel.getAdjustedCloak(original, livingEntity);
-                            }
-                        }
-        );
+        consumer.accept(ItemExtensions.VAMPIRE_CLOAK);
     }
+
+
 
 
     @Override

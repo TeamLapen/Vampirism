@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -17,7 +19,6 @@ public interface ISkill<T extends IFactionPlayer<T>> {
     /**
      * The description for this skill. Can be null
      */
-    @OnlyIn(Dist.CLIENT)
     Component getDescription();
 
     /**
@@ -29,12 +30,6 @@ public interface ISkill<T extends IFactionPlayer<T>> {
     default Component getName() {
         return Component.translatable(getTranslationKey());
     }
-
-    @OnlyIn(Dist.CLIENT)
-    int getRenderColumn();
-
-    @OnlyIn(Dist.CLIENT)
-    int getRenderRow();
 
     /**
      * Use {@link ISkill#getName()}
@@ -56,20 +51,11 @@ public interface ISkill<T extends IFactionPlayer<T>> {
      */
     void onEnable(T player);
 
-    /**
-     * Save this. It's required for rendering
-     */
-    void setRenderPos(int row, int column);
-
-    /**
-     * @return The {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType} of this skill
-     */
-    default ISkillType getType() {
-        return SkillType.LEVEL;
-    }
-
     @Range(from = 0, to = 9)
     default int getSkillPointCost() {
         return 1;
     }
+
+    Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();
+
 }

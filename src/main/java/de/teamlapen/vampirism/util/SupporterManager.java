@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.settings.Supporter;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +31,7 @@ public class SupporterManager {
         if (supporters[1].length > 0) {
             return supporters[1][rnd.nextInt(supporters[1].length)];
         }
-        return new Supporter(REFERENCE.HUNTER_PLAYER_KEY, "none", "none", null, new HashMap<>());
+        return new Supporter(HunterPlayer.SERIALIZER_ID, "none", "none", null, new HashMap<>());
     }
 
     /**
@@ -40,7 +41,7 @@ public class SupporterManager {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }
-        return new Supporter(REFERENCE.VAMPIRE_PLAYER_KEY, "none", "none",  null, new HashMap<>());
+        return new Supporter(VampirePlayer.SERIALIZER_ID, "none", "none",  null, new HashMap<>());
     }
 
 
@@ -52,8 +53,8 @@ public class SupporterManager {
         VampirismAPI.settings().getSupportersAsync().thenAccept(optional -> {
             optional.ifPresentOrElse(supporters -> {
                 var supporter = new Supporter[2][];
-                supporter[0] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.VAMPIRE_PLAYER_KEY)).toArray(Supporter[]::new);
-                supporter[1] = supporters.stream().filter(s -> s.faction().equals(REFERENCE.HUNTER_PLAYER_KEY)).toArray(Supporter[]::new);
+                supporter[0] = supporters.stream().filter(s -> s.faction().equals(VampirePlayer.SERIALIZER_ID)).toArray(Supporter[]::new);
+                supporter[1] = supporters.stream().filter(s -> s.faction().equals(HunterPlayer.SERIALIZER_ID)).toArray(Supporter[]::new);
                 SupporterManager.supporters = supporter;
                 LOGGER.trace("Supporters {}", getDebugString());
             }, () -> LOGGER.warn("Failed to retrieve supporters"));

@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.util.QualifiedVersion;
+import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 /**
  * Class to store constants and stuff
  */
 public class REFERENCE {
     // Vampirism
-    public static final String MODID = "vampirism";
+    public static final String MODID = VReference.MODID;
     public static final String NAME = "Vampirism";
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final QualifiedVersion VERSION = new QualifiedVersion(ModList.get().getModContainerById(MODID).map(s -> s.getModInfo().getVersion().toString()).orElse("1.0.0"));
@@ -38,10 +39,4 @@ public class REFERENCE {
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final String SETTINGS_API = "https://api.vampirism.dev/api/v1";
 
-    // fixed values
-    public static final ResourceLocation FACTION_PLAYER_HANDLER_KEY = new ResourceLocation(MODID, "ifactionplayerhandler");
-    public static final ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "vampire");
-    public static final ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "hunter");
-    public static final ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
-    public static final ResourceLocation WORLD_CAP_KEY = new ResourceLocation(MODID, "world");
 }

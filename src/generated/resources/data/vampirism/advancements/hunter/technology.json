@@ -27,25 +27,24 @@
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.technology.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "vampirism:basic_tech_crossbow",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.technology"
     }

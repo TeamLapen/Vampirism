@@ -2,13 +2,14 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Fluid related helper methods
@@ -31,8 +32,8 @@ public class FluidLib {
     }
 
 
-    public static @NotNull LazyOptional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
-        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null);
+    public static @NotNull Optional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
+        return Optional.ofNullable(stack.getCapability(Capabilities.FluidHandler.ITEM, null));
     }
 
     public static int getFluidAmount(@NotNull IFluidHandler handler, @Nullable Fluid f) {

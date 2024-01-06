@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +23,7 @@ public class ServerMultiBossEvent extends MultiBossEvent {
 
     public void addPlayer(ServerPlayer player) {
         if (this.players.add(player) && this.visible) {
-            VampirismMod.dispatcher.sendTo(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.ADD, this), player);
+            player.connection.send(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.ADD, this));
         }
     }
 
@@ -47,14 +46,14 @@ public class ServerMultiBossEvent extends MultiBossEvent {
             this.visible = visible;
 
             for (ServerPlayer player : this.players) {
-                VampirismMod.dispatcher.sendTo(new ClientboundUpdateMultiBossEventPacket(visible ? ClientboundUpdateMultiBossEventPacket.OperationType.ADD : ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this), player);
+                player.connection.send(new ClientboundUpdateMultiBossEventPacket(visible ? ClientboundUpdateMultiBossEventPacket.OperationType.ADD : ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this));
             }
         }
     }
 
     public void removePlayer(ServerPlayer player) {
         if (this.players.remove(player) && this.visible) {
-            VampirismMod.dispatcher.sendTo(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this), player);
+            player.connection.send(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this));
         }
     }
 
@@ -93,7 +92,7 @@ public class ServerMultiBossEvent extends MultiBossEvent {
             ClientboundUpdateMultiBossEventPacket packet = new ClientboundUpdateMultiBossEventPacket(operation, this);
 
             for (ServerPlayer player : this.players) {
-                VampirismMod.dispatcher.sendTo(packet, player);
+                player.connection.send(packet);
             }
         }
     }

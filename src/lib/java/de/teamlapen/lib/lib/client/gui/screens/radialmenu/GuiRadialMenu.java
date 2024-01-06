@@ -31,6 +31,7 @@ package de.teamlapen.lib.lib.client.gui.screens.radialmenu;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,10 +43,10 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.MovementInputUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -304,18 +305,33 @@ public abstract class GuiRadialMenu<T> extends Screen {
     protected void processInputEvent(MovementInputUpdateEvent event) {
         Options settings = Minecraft.getInstance().options;
         Input eInput = event.getInput();
-        eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
-        eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
-        eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
-        eInput.right = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
+        eInput.up = isKeyDown0(settings.keyUp);
+        eInput.down = isKeyDown0(settings.keyDown);
+        eInput.left = isKeyDown0(settings.keyLeft);
+        eInput.right = isKeyDown0(settings.keyRight);
 
         eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
         eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
-        eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
-        eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
+        eInput.jumping = isKeyDown0(settings.keyJump);
+        eInput.shiftKeyDown = isKeyDown0(settings.keyShift);
         if (Minecraft.getInstance().player.isMovingSlowly()) {
             eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
             eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
         }
+    }
+
+    private static boolean isKeyDown0(KeyMapping keybind)
+    {
+        if (keybind.isUnbound())
+            return false;
+
+        return switch (keybind.getKey().getType())
+        {
+            case KEYSYM ->
+                    InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
+            case MOUSE ->
+                    GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
+            default -> false;
+        };
     }
 }

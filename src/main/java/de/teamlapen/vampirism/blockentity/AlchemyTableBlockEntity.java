@@ -170,7 +170,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.isInput(blockEntity.items.get(4)) && (recipe.isIngredient(blockEntity.items.get(0)) || recipe.isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.getResultItem(level.registryAccess())).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
+            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.get(0)) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem(level.registryAccess())).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 
@@ -252,19 +252,19 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean hasRecipe(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(input) && recipe.isIngredient(ingredient));
+        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient));
     }
 
     public boolean isValidIngredient(@NotNull Level level, @NotNull ItemStack stack) {
-        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isIngredient(stack));
+        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(stack));
     }
 
     public boolean isValidInput(@NotNull Level level, @NotNull ItemStack stack) {
-        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.isInput(stack));
+        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(stack));
     }
 
     public @NotNull ItemStack getOutput(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+        return level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.value().getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 
     @Override

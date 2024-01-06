@@ -10,13 +10,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
 
-@OnlyIn(Dist.CLIENT)
 public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> {
     private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_basic.png");
 
@@ -37,7 +34,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
         addRenderableWidget(buttonLevelup = new ExtendedButton(this.leftPos + i, j + 50, wid, 20, name, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.BASIC_HUNTER_LEVELUP));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.BASIC_HUNTER_LEVELUP));
             this.onClose();
         }));
         buttonLevelup.active = false;
@@ -45,7 +42,7 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
 

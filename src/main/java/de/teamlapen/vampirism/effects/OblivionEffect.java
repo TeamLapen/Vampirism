@@ -2,28 +2,28 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
+import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
-import de.teamlapen.vampirism.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.misc.VampirismLogger;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.EffectCure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class OblivionEffect extends VampirismEffect implements EffectWithNoCounter {
 
@@ -34,8 +34,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
     }
 
     @Override
-    public @NotNull List<ItemStack> getCurativeItems() {
-        return Collections.emptyList();
+    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
     }
 
     @Override
@@ -45,12 +44,11 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null, Optional.empty()));
                 FactionPlayerHandler.getOpt(((Player) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                    Optional<SkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
+                    Optional<ISkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {
-                        //noinspection rawtypes
-                        for (ISkill element : nodeOPT.get().getElements()) {
-                            //noinspection unchecked
-                            skillHandler.disableSkill(element);
+                        for (Holder<ISkill<?>> element : nodeOPT.get().elements()) {
+                            //noinspection unchecked,rawtypes
+                            skillHandler.disableSkill((ISkill)element.value());
                         }
                     } else {
                         entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
@@ -65,7 +63,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % getTickDuration(amplifier) == 0;
     }
 

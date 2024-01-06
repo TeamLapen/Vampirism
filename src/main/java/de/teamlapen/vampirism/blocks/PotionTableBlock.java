@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -12,22 +13,23 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTableBlock extends VampirismBlockContainer {
+    public static final MapCodec<PotionTableBlock> CODEC = simpleCodec(PotionTableBlock::new);
     protected static final VoxelShape shape = makeShape();
 
     private static @NotNull VoxelShape makeShape() {
@@ -38,8 +40,13 @@ public class PotionTableBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d);
     }
 
-    public PotionTableBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(1f).noOcclusion());
+    public PotionTableBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull
@@ -77,7 +84,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
             BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity) {
                 if (((PotionTableBlockEntity) tile).canOpen(player)) {
-                    NetworkHooks.openScreen((ServerPlayer) player, (PotionTableBlockEntity) tile, buffer -> buffer.writeBoolean(((PotionTableBlockEntity) tile).isExtended()));
+                    player.openMenu((PotionTableBlockEntity) tile, buffer -> buffer.writeBoolean(((PotionTableBlockEntity) tile).isExtended()));
                     player.awardStat(ModStats.interact_with_potion_table);
                 }
             }

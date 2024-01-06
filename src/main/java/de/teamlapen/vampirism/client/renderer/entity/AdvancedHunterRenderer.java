@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -16,8 +17,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
     private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID + ":textures/entity/hunter_cloak.png");
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
-    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
 
 
     public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
@@ -48,8 +49,8 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
     }
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull AdvancedHunterEntity entity) {
-        if (this.textures.length == 0) return Pair.of(texture, false);
+    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull AdvancedHunterEntity entity) {
+        if (this.textures.length == 0) return Pair.of(texture, PlayerModelType.WIDE);
         return this.textures[entity.getBodyTexture() % this.textures.length];
     }
 

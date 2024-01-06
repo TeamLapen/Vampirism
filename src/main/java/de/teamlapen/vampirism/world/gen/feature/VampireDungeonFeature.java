@@ -8,10 +8,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -122,7 +122,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
 
                         if (j3 == 1) {
                             this.safeSetBlock(worldgenlevel, blockpos3, StructurePiece.reorient(worldgenlevel, blockpos3, Blocks.CHEST.defaultBlockState()), predicate);
-                            RandomizableContainerBlockEntity.setLootTable(worldgenlevel, randomsource, blockpos3, ModLootTables.CHEST_VAMPIRE_DUNGEON);
+                            RandomizableContainer.setBlockEntityLootTable(worldgenlevel, randomsource, blockpos3, ModLootTables.CHEST_VAMPIRE_DUNGEON);
                             break;
                         }
                     }

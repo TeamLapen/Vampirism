@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +34,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ import java.util.Arrays;
 public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity {
 
     public static boolean spawnPredicateVampireFog(@NotNull LevelAccessor world, @NotNull BlockPos blockPos) {
-        return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && VampirismWorld.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) || (world instanceof Level && LevelFog.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
@@ -163,7 +163,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
     @Override
     public void setHomeArea(@NotNull BlockPos pos, int r) {
-        this.setHome(new AABB(pos.offset(-r, -r, -r), pos.offset(r, r, r)));
+        this.setHome(new AABB(Vec3.atLowerCornerOf(pos.offset(-r, -r, -r)), Vec3.atLowerCornerWithOffset(pos.offset(r, r, r), 1,1,1)));
     }
 
     @Override

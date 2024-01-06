@@ -3,15 +3,12 @@ package de.teamlapen.lib.lib.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 /**
  * Adds additional methods to vanilla Gui
  */
-@OnlyIn(Dist.CLIENT)
 public class ExtendedGui {
 
     /**

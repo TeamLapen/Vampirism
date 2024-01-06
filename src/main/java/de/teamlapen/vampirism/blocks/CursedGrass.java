@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -32,10 +33,10 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.PlantType;
+import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -43,9 +44,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock, HolyWaterEffectConsumer {
+    public static final MapCodec<CursedGrass> CODEC = simpleCodec(CursedGrass::new);
 
     public CursedGrass(@NotNull Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends SpreadingSnowyDirtBlock> codec() {
+        return CODEC;
     }
 
     /**
@@ -78,7 +85,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     @Override
-    public boolean isValidBonemealTarget(@NotNull LevelReader level, @NotNull BlockPos pPos, @NotNull BlockState pState, boolean pIsClient) {
+    public boolean isValidBonemealTarget(@NotNull LevelReader level, @NotNull BlockPos pPos, @NotNull BlockState pState) {
         return true;
     }
     @Override
@@ -94,7 +101,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     @Override
     public void performBonemeal(@NotNull ServerLevel level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
         BlockPos blockpos = pos.above();
-        BlockState blockstate = Blocks.GRASS.defaultBlockState();
+        BlockState blockstate = Blocks.SHORT_GRASS.defaultBlockState();
         Optional<Holder.Reference<PlacedFeature>> optional = level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE).getHolder(VegetationPlacements.GRASS_BONEMEAL);
 
 

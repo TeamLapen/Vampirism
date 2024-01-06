@@ -18,8 +18,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.NonNullSupplier;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.common.util.NonNullSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -160,7 +160,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer<T>> @NotNull IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
+    public <T extends IFactionPlayer<T>> @NotNull IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism] Parameters for faction cannot be null");
         }
@@ -265,12 +265,12 @@ public class FactionRegistry implements IFactionRegistry {
 
     public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends FactionBuilder<T> implements IPlayableFactionBuilder<T> {
 
-        protected final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
+        protected final NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier;
         protected int highestLevel = 1;
         protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
         protected LordPlayerBuilder<T> lord = new LordPlayerBuilder<>(this);
 
-        public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<Capability<T>> playerCapabilitySupplier) {
+        public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
             this.playerCapabilitySupplier = playerCapabilitySupplier;
         }
@@ -345,7 +345,7 @@ public class FactionRegistry implements IFactionRegistry {
 
         protected final PlayableFactionBuilder<T> factionBuilder;
         protected int maxLevel = 0;
-        protected BiFunction<Integer, Boolean, Component> lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
+        protected BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
         protected boolean lordSkillsEnabled;
         protected List<MinionBuilder<T>> minions = new ArrayList<>();
 
@@ -360,7 +360,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
 
         @Override
-        public @NotNull LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, Boolean, Component> lordTitleFunction) {
+        public @NotNull LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,8 +58,4 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * Called every tick
      */
     void tick();
-
-    void loadData(CompoundTag tag);
-
-    void saveData(CompoundTag tag);
 }

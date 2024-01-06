@@ -1,0 +1,27 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "item": "vampirism:oil_bottle"
+  },
+  "input": [
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:healing\"}"
+    },
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:strong_healing\"}"
+    }
+  ],
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:healing"
+    }
+  }
+}

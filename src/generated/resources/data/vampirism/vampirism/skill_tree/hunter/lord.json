@@ -1,0 +1,21 @@
+{
+  "display": {
+    "Count": 1,
+    "id": "vampirism:hunter_minion_equipment"
+  },
+  "faction": {
+    "id": "vampirism:hunter"
+  },
+  "name": {
+    "translate": "text.vampirism.skills.lord"
+  },
+  "unlock_predicate": {
+    "type_specific": {
+      "type": "vampirism:faction",
+      "faction": {
+        "id": "vampirism:hunter"
+      },
+      "lord_level": 1
+    }
+  }
+}

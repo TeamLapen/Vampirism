@@ -57,7 +57,7 @@ public class SkillCommand extends BasicCommand {
         IFactionPlayer<?> factionPlayer = playerHandler.getCurrentFactionPlayer().orElseThrow(NO_FACTION::create);
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         for (ISkill<?> skill : RegUtil.values(ModRegistries.SKILLS)) {
-            if (skill.getType().isUnlocked(playerHandler) && !skill.getFaction().map(f -> f != factionPlayer.getFaction()).orElse(false)) {
+            if (!skill.getFaction().map(f -> f != factionPlayer.getFaction()).orElse(false)) {
                 skillHandler.enableSkill((ISkill) skill);
             }
         }

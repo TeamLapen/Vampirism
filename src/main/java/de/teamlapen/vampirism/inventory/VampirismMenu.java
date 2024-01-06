@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +123,6 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
         return this.taskWrapper.values().stream().flatMap(t -> t.getTaskInstances().stream().filter(ITaskInstance::isAccepted)).collect(Collectors.toList());
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void init(@NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @NotNull Map<UUID, Set<UUID>> completableTasks, @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
         this.taskWrapper = taskWrapper;
         this.completedRequirements = completedRequirements;
@@ -156,7 +155,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     @Override
     public void pressButton(@NotNull ITaskInstance taskInfo) {
-        VampirismMod.dispatcher.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
+        VampirismMod.proxy.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), buttonAction(taskInfo)));
         this.taskWrapper.get(taskInfo.getTaskBoard()).removeTask(taskInfo, true);
         if (this.listener != null) {
             this.listener.run();

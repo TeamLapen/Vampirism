@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -36,6 +34,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -50,7 +49,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
@@ -64,21 +62,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.SleepFinishedTimeEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -106,7 +101,7 @@ public class ModPlayerEventHandler {
         //if the blockstate does not have a POI, but another blockstate of the specific block e.g. the bed, search for the blockstate in a 3x3x3 radius
         //or the other way around
         ImmutableList<BlockState> validStates = block.getStateDefinition().getPossibleStates();
-        if (validStates.size() > 1 && RegUtil.values(ForgeRegistries.POI_TYPES).stream().flatMap(poiType -> poiType.matchingStates().stream()).anyMatch(validStates::contains)) {
+        if (validStates.size() > 1 && RegUtil.values(BuiltInRegistries.POINT_OF_INTEREST_TYPE).stream().flatMap(poiType -> poiType.matchingStates().stream()).anyMatch(validStates::contains)) {
             for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
                 for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
                     for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
@@ -164,20 +159,6 @@ public class ModPlayerEventHandler {
     public void onTryMount(@NotNull EntityMountEvent event) {
         if (event.getEntity() instanceof Player && VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
             event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public void onAttachCapability(@NotNull AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player) {
-            try {
-                event.addCapability(REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.createNewCapability((Player) event.getObject()));
-                event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((Player) event.getObject()));
-                event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((Player) event.getObject()));
-            } catch (Exception e) {
-                LOGGER.error("Failed to attach capabilities to player. Player: {}", event.getObject());
-                Throwables.propagate(e);
-            }
         }
     }
 
@@ -352,15 +333,6 @@ public class ModPlayerEventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onPlayerClone(PlayerEvent.@NotNull Clone event) {
-        if (!event.getEntity().getCommandSenderWorld().isClientSide) {
-            event.getOriginal().reviveCaps();
-            FactionPlayerHandler.get(event.getEntity()).copyFrom(event.getOriginal());
-            event.getOriginal().invalidateCaps();
-        }
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent.@NotNull RightClickBlock event) {
 
@@ -379,7 +351,7 @@ public class ModPlayerEventHandler {
                     if (glassBottle && state.hasBlockEntity()) {
                         BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
                         if (entity != null) {
-                            convert = entity.getCapability(ForgeCapabilities.FLUID_HANDLER, event.getFace()).map(fluidHandler -> {
+                            convert = Optional.ofNullable(event.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, event.getPos(), state, entity, event.getFace())).map(fluidHandler -> {
                                 boolean flag = false;
                                 FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.BLOOD.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
                                 if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
@@ -487,7 +459,7 @@ public class ModPlayerEventHandler {
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionExclusiveItem factionItem) {
             if (!player.isAlive()) return false;
-            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
             IFaction<?> usingFaction = factionItem.getExclusiveFaction(stack);
             if (usingFaction != null && !handler.map(h -> h.isInFaction(usingFaction)).orElse(false)) {
                 if (message) {
@@ -503,7 +475,7 @@ public class ModPlayerEventHandler {
                     }
                     return false;
                 } else if (requiredSkill != null) {
-                    IFactionPlayer<?> factionPlayer = handler.resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+                    IFactionPlayer<?> factionPlayer = handler.flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
                     if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                         if (message) {
                             player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_skill"), true);

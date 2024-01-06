@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +31,9 @@ import java.util.function.Supplier;
 
 public class StandingCandleStickBlock extends CandleStickBlock {
 
+    public static final MapCodec<StandingCandleStickBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            candleStickParts(inst).apply(inst, StandingCandleStickBlock::new)
+    );
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     private static final ImmutableList<Vec3> PARTICLE_OFFSET = ImmutableList.of(new Vec3(0.5D, 0.8D, 0.5D));
@@ -36,15 +41,20 @@ public class StandingCandleStickBlock extends CandleStickBlock {
     private static final VoxelShape SHAPE = makeShape();
     private static final VoxelShape SHAPE_WITH_CANDLE = makeShapeWithCandle();
 
+    private StandingCandleStickBlock(Block emptyBlock, Item candle, Properties pProperties) {
+        this(() -> emptyBlock, () -> candle, pProperties);
+    }
+
     public StandingCandleStickBlock(@Nullable Supplier<? extends Block> emptyBlock, @NotNull Supplier<Item> candle, Properties pProperties) {
         super(emptyBlock, candle, pProperties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, false));
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return ModItems.CANDLE_STICK.get().getDefaultInstance();
     }
+
     @Override
     public boolean canSurvive(@NotNull BlockState pState, @NotNull LevelReader pLevel, @NotNull BlockPos pPos) {
         return pLevel.getBlockState(pPos.below()).isSolid();
@@ -79,6 +89,11 @@ public class StandingCandleStickBlock extends CandleStickBlock {
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return isEmpty() ? SHAPE : SHAPE_WITH_CANDLE;
+    }
+
+    @Override
+    protected MapCodec<? extends AbstractCandleBlock> codec() {
+        return null;
     }
 
     @Override

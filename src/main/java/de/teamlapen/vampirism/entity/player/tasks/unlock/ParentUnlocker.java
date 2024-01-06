@@ -20,7 +20,7 @@ public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
 
     @Override
     public @NotNull Component getDescription() {
-        return Component.translatable("text.vampirism.task.require_parent", this.parent.get().getTitle());
+        return Component.translatable("text.vampirism.task.require_parent", this.parent.value().getTitle());
     }
 
     @Override

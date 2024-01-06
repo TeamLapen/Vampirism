@@ -7,7 +7,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 
 public class LordCommand extends BasicCommand {
@@ -38,29 +38,16 @@ public class LordCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, int level, @NotNull Collection<ServerPlayer> players) throws CommandSyntaxException {
+    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, final int level, @NotNull Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction<?> faction = handler.getCurrentFaction();
-            if (faction == null) {
-                throw NO_FACTION.create();
-            }
-            int maxLevel = faction.getHighestReachableLevel();
-            if (handler.getCurrentLevel() < maxLevel) {
-                if (!handler.setFactionLevel(faction, maxLevel)) {
-                    throw LEVEL_UP_FAILED.create();
-                }
-            }
-            level = Math.min(level, faction.getHighestLordLevel());
-
-            if (handler.setLordLevel(level)) {
-                int finalLevel = level;
-                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), faction.getName(), finalLevel), true);
-            } else {
-                throw LORD_FAILED.create();
-            }
-
-
+            Optional<FactionPlayerHandler> opt = FactionPlayerHandler.getOpt(player);
+            opt.map(FactionPlayerHandler::getCurrentFaction).orElseThrow(NO_FACTION::create);
+            opt.filter(handler -> {
+                int maxLevel = handler.getCurrentFaction().getHighestReachableLevel();
+                return handler.getCurrentLevel() == maxLevel && handler.setFactionLevel(handler.getCurrentFaction(), maxLevel);
+            }).orElseThrow(LEVEL_UP_FAILED::create);
+            opt.filter(handler -> handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))).orElseThrow(LORD_FAILED::create);
+            opt.ifPresent(s -> context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), s.getCurrentFaction().getName(), s.getLordLevel()), true));
         }
         return 0;
     }

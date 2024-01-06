@@ -86,8 +86,7 @@ public class MinionCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static <T extends MinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
-        FactionPlayerHandler fph = FactionPlayerHandler.get(p);
-        if (fph.getMaxMinions() > 0) {
+        FactionPlayerHandler fph = FactionPlayerHandler.getOpt(p).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             if (controller.hasFreeMinionSlot()) {
 
@@ -106,24 +105,16 @@ public class MinionCommand extends BasicCommand {
                 throw fail.create("No free slot");
             }
 
-        } else {
-            throw fail.create("Can't have minions");
-        }
-
         return 0;
     }
 
     @SuppressWarnings("SameReturnValue")
     private static int recall(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler fph = FactionPlayerHandler.get(player);
-        if (fph.getMaxMinions() > 0) {
-            PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
-            Collection<Integer> ids = controller.recallMinions(true);
-            for (Integer id : ids) {
-                controller.createMinionEntityAtPlayer(id, player);
-            }
-        } else {
-            throw fail.create("Can't have minions");
+        FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.getOpt(player).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
+        PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(factionPlayerHandler);
+        Collection<Integer> ids = controller.recallMinions(true);
+        for (Integer id : ids) {
+            controller.createMinionEntityAtPlayer(id, player);
         }
 
         return 0;
@@ -132,18 +123,12 @@ public class MinionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler fph = FactionPlayerHandler.get(player);
-        if (fph.getMaxMinions() > 0) {
+        FactionPlayerHandler fph = FactionPlayerHandler.getOpt(player).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.getUnclaimedMinions();
             for (Integer id : ids) {
                 controller.createMinionEntityAtPlayer(id, player);
             }
-
-        } else {
-            throw fail.create("Can't have minions");
-        }
-
         return 0;
     }
 

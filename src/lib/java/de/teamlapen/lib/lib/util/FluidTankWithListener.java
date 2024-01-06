@@ -1,13 +1,13 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
 /**
- * normal {@link FluidTank} with the ability do disable the draining out of this tank and adding a listener for notifications if the content of the tank changes
+ * normal {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank} with the ability do disable the draining out of this tank and adding a listener for notifications if the content of the tank changes
  */
 public class FluidTankWithListener extends FluidTank {
 

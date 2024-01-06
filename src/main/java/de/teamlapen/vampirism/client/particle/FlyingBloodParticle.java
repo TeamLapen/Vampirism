@@ -8,8 +8,8 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author maxanier
  */
-@OnlyIn(Dist.CLIENT)
 public class FlyingBloodParticle extends TextureSheetParticle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;

@@ -8,17 +8,14 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the vampire overlay for converted creatures
  */
-@OnlyIn(Dist.CLIENT)
 public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends EntityModel<T>> extends RenderLayer<T, U> {
 
     private final boolean checkIfRender;
@@ -36,7 +33,7 @@ public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends Entit
         if(!entity.isInvisible()) {
             String sourceId = null;
             if (ConvertedCreatureRenderer.renderOverlay) {
-                sourceId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
+                sourceId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
             } else if(!checkIfRender && entity instanceof IConvertedCreature<?> converted) {
                 sourceId = converted.getSourceEntityId();
             }

@@ -30,15 +30,14 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_glass",
-      "has_glass_pane",
-      "has_the_recipe"
+      "has_glass_pane"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/injection_0"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

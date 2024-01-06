@@ -19,9 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.Optional;
 /**
  * Gui for the Hunter Trainer interaction
  */
-@OnlyIn(Dist.CLIENT)
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_trainer.png");
     private static final ResourceLocation EMPTY_INGOT = new ResourceLocation("item/empty_slot_ingot");
@@ -102,10 +99,10 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
         Component name = Component.translatable("text.vampirism.level_up");
         int buttonWidth = this.font.width(name) + 10;
         this.addRenderableWidget(this.buttonLevelup = new ExtendedButton(this.leftPos + imageWidth - buttonWidth - 6, this.topPos + 45, buttonWidth, 20, name, (context) -> {
-            VampirismMod.dispatcher.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TRAINER_LEVELUP));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TRAINER_LEVELUP));
             Player player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getCommandSenderWorld(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
+            player.playSound(SoundEvents.NOTE_BLOCK_HARP.value(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
             this.onClose();
         }));
         this.buttonLevelup.active = false;

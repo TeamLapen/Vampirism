@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.Maps;
+import com.mojang.datafixers.Products;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +27,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,12 +39,19 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;
     public static final ToIntFunction<BlockState> LIGHT_EMISSION = (state) -> state.getValue(LIT) ? 6 : 0;
 
+    protected static <T extends CandleStickBlock> Products.P3<RecordCodecBuilder.Mu<T>, Block, Item, Properties> candleStickParts(RecordCodecBuilder.Instance<T> instance) {
+        return instance.group(
+                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("empty_block").forGetter(i -> i.emptyBlock.get()),
+                BuiltInRegistries.ITEM.byNameCodec().fieldOf("candle").forGetter(i -> i.candle.get()),
+                propertiesCodec()
+        );
+    }
 
     private final Map<ResourceLocation, Supplier<Block>> fullHolderByContent = Maps.newHashMap();
     @Nullable
-    private final Supplier<? extends Block> emptyBlock;
+    protected final Supplier<? extends Block> emptyBlock;
     @NotNull
-    private final Supplier<Item> candle;
+    protected final Supplier<Item> candle;
 
     protected CandleStickBlock(@Nullable Supplier<? extends Block> emptyBlock, @NotNull Supplier<Item> candle, Properties pProperties) {
         super(pProperties);
@@ -62,7 +71,7 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
         ItemStack stack = pPlayer.getItemInHand(pHand);
         Item item = stack.getItem();
         if (isEmpty()) {
-            Block orDefault = this.fullHolderByContent.getOrDefault(ForgeRegistries.ITEMS.getKey(item), () -> Blocks.AIR).get();
+            Block orDefault = this.fullHolderByContent.getOrDefault(BuiltInRegistries.ITEM.getKey(item), () -> Blocks.AIR).get();
             if (orDefault != Blocks.AIR) {
                 pLevel.setBlock(pPos, getFilledState(pState, orDefault), 3);
                 if (!pPlayer.getAbilities().instabuild) {

@@ -1,34 +1,36 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.TaskManager;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public record ServerboundTaskActionPacket(UUID task, UUID entityId,
-                                          TaskMenu.TaskAction action) implements IMessage.IServerBoundMessage {
+                                          TaskMenu.TaskAction action) implements CustomPacketPayload {
 
-    static void encode(@NotNull ServerboundTaskActionPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeUUID(msg.task);
-        buf.writeUUID(msg.entityId);
-        buf.writeVarInt(msg.action.ordinal());
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "task_action");
+    public static final Codec<ServerboundTaskActionPacket> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    ClientboundTaskPacket.UUID_CODEC.fieldOf("task").forGetter(ServerboundTaskActionPacket::task),
+                    ClientboundTaskPacket.UUID_CODEC.fieldOf("entityId").forGetter(ServerboundTaskActionPacket::entityId),
+                    StringRepresentable.fromEnum(TaskMenu.TaskAction::values).fieldOf("action").forGetter(ServerboundTaskActionPacket::action)
+            ).apply(inst, ServerboundTaskActionPacket::new));
+
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ServerboundTaskActionPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ServerboundTaskActionPacket(buf.readUUID(), buf.readUUID(), TaskMenu.TaskAction.values()[buf.readVarInt()]);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
-
-    public static void handle(final @NotNull ServerboundTaskActionPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(ctx.getSender()).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg)));
-        ctx.setPacketHandled(true);
-    }
-
 }

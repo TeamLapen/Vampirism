@@ -4,15 +4,10 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * Fluid handler capability for blood bottles.
  * Only allows storing fluid amounts that are a multiple of {@link VReference#FOOD_TO_FLUID_BLOOD}
  */
-public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityProvider {
+public class BloodBottleFluidHandler implements IFluidHandlerItem {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
 
@@ -31,7 +26,6 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return amt - amt % MULTIPLIER;
     }
 
-    private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
     private final int capacity;
     @NotNull
     protected ItemStack container;
@@ -85,13 +79,6 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     public int getBlood(@NotNull ItemStack stack) {
         return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return ForgeCapabilities.FLUID_HANDLER_ITEM.orEmpty(cap, holder);
-
     }
 
     @NotNull

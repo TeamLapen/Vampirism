@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class LevelCommand extends BasicCommand {
 
@@ -37,20 +38,23 @@ public class LevelCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, @NotNull IPlayableFaction<?> faction, int level, @NotNull Collection<ServerPlayer> players) {
+    private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, @NotNull IPlayableFaction<?> faction, final int level, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            if (level == 0 && !handler.canLeaveFaction()) {
-                context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
+            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+            handler.ifPresent(h -> {
+
+            if (level == 0 && !h.canLeaveFaction()) {
+                context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", h.getCurrentFaction().getName()));
             } else {
-                level = Math.min(level, faction.getHighestReachableLevel());
-                if (handler.setFactionAndLevel(faction, level)) {
-                    int finalLevel = level;
+                int finalLevel = Math.min(level, faction.getHighestReachableLevel());
+                if (h.setFactionAndLevel(faction, finalLevel)) {
                     context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.level.successful", player.getName(), faction.getName(), finalLevel), true);
                 } else {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
                 }
             }
+
+            });
         }
         return 0;
     }
@@ -58,8 +62,7 @@ public class LevelCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int leaveFaction(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.setFactionAndLevel(null, 0);
+            FactionPlayerHandler.getOpt(player).ifPresent(s -> s.setFactionAndLevel(null, 0));
         }
         return 0;
     }

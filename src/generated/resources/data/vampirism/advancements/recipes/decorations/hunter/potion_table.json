@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_glass_bottle",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_glass_bottle"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/potion_table"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -10,11 +10,8 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithArmsModel<Villager>> {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.server.PlayerAdvancements;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,5 +12,5 @@ import java.util.Map;
 public interface PlayerAdvancementsAccessor {
 
     @Accessor("progress")
-    Map<Advancement, AdvancementProgress> getAdvancements();
+    Map<AdvancementHolder, AdvancementProgress> getAdvancements();
 }

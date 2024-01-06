@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class FogDiffuserBlock extends VampirismBlockContainer {
-
+    public static final MapCodec<FogDiffuserBlock> CODEC = simpleCodec(FogDiffuserBlock::new);
     private static final VoxelShape shape = makeShape();
 
     private static @NotNull VoxelShape makeShape() {
@@ -42,12 +44,18 @@ public class FogDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         ItemStack itemInHand = pPlayer.getItemInHand(pHand);
         getBlockEntity(pLevel, pPos).ifPresent(blockEntity -> {
             pPlayer.awardStat(ModStats.interact_with_fog_diffuser);
-            blockEntity.interact(itemInHand);
-            VampirismMod.proxy.displayFogDiffuserScreen(blockEntity, getName());
+            if(!blockEntity.interact(itemInHand)) {
+                VampirismMod.proxy.displayFogDiffuserScreen(blockEntity, getName());
+            }
         });
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
     }
@@ -81,7 +89,7 @@ public class FogDiffuserBlock extends VampirismBlockContainer {
     @Override
     public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
         super.onRemove(state, worldIn, pos, newState, isMoving);
-        VampirismWorld.getOpt(worldIn).ifPresent(vampirismWorld -> vampirismWorld.updateTemporaryArtificialFog(pos, null));
+        LevelFog.getOpt(worldIn).ifPresent(levelFog -> levelFog.updateArtificialFogBoundingBox(pos, null));
     }
 
     @Nullable

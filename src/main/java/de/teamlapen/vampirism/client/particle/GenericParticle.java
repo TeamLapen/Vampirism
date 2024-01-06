@@ -8,12 +8,11 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class GenericParticle extends TextureSheetParticle {
 
     private GenericParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double speedX, double speedY, double speedZ, @NotNull ResourceLocation texture, int maxAge, int color, float speedModifier) {

@@ -19,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ApplicableOilRecipe extends CustomRecipe {
 
-    public ApplicableOilRecipe(@NotNull ResourceLocation id, CraftingBookCategory category) {
-        super(id, category);
+    public ApplicableOilRecipe(@NotNull CraftingBookCategory category) {
+        super(category);
     }
 
     @Override

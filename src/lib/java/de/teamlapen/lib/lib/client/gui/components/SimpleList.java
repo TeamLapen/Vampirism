@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,16 +17,15 @@ import java.util.function.Consumer;
 
 public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSelectionList<T> {
 
-    public SimpleList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pY1, int pItemHeight) {
-        super(pMinecraft, pWidth, pHeight, pY0, pY1, pItemHeight);
+    public SimpleList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pItemHeight) {
+        super(pMinecraft, pWidth, pHeight, pY0, pItemHeight);
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
     }
 
     @Override
     protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y0 + 4, -16777216, 0);
-        graphics.fillGradient(this.x0, this.y1 - 4, this.x1 - 6, this.y1, 0, -16777216);
+        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom() + 4, -16777216, 0);
+        graphics.fillGradient(this.getX(), this.getY() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
     }
 
     @Override
@@ -34,8 +34,9 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     }
 
     @Override
-    protected void renderBackground(@NotNull GuiGraphics graphics) {
-        graphics.fillGradient(this.x0, this.y0, this.x1 - 6, this.y1, -1072689136, -804253680);
+    public void renderWidget(GuiGraphics guiGraphics, int p_283242_, int p_282891_, float p_283683_) {
+        guiGraphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom(), -1072689136, -804253680);
+        super.renderWidget(guiGraphics, p_283242_, p_282891_, p_283683_);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
 
     @Override
     protected int getScrollbarPosition() {
-        return this.x1 - 6;
+        return this.getRight() - 6;
     }
 
     @Override
@@ -110,8 +111,8 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         }
 
         public SimpleList<T> build() {
-            SimpleList<T> simpleList = new SimpleList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.y + this.pHeight, this.itemHeight);
-            simpleList.setLeftPos(this.x);
+            SimpleList<T> simpleList = new SimpleList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
+            simpleList.setX(this.x);
             //noinspection unchecked
             simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<T>(x.getKey(), x.getValue())).toList()));
             return simpleList;
@@ -119,7 +120,7 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     }
 
     public static class Entry<T extends Entry<T>> extends ObjectSelectionList.Entry<T> {
-        protected static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
+        protected static final WidgetSprites SPRITES = new WidgetSprites(new ResourceLocation("widget/button"), new ResourceLocation("widget/button_disabled"), new ResourceLocation("widget/button_highlighted"));
 
         private final Component component;
         private final Runnable onClick;
@@ -142,22 +143,11 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
             RenderSystem.enableDepthTest();
             PoseStack pose = graphics.pose();
             pose.pushPose();
-            if (pIsMouseOver) {
-                pose.translate(0, 0, 1);
-            }
-            graphics.blitNineSliced(WIDGETS_LOCATION, pLeft, pTop, pWidth, pHeight + 5, 20, 4, 200, 20, 0, this.getTextureY(pIsMouseOver));
+            pose.translate(0, 0, pIsMouseOver ? 2 : 1);
+            graphics.blitSprite(SPRITES.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight + 5);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             graphics.drawCenteredString(minecraft.font, this.component, pLeft + pWidth / 2, pTop + 5, 0xFFFFFF);
             pose.popPose();
-        }
-
-        public int getTextureY(boolean isMouseOver) {
-            int i = 1;
-            if (isMouseOver) {
-                i = 2;
-            }
-
-            return 46 + i * 20;
         }
 
         @Override

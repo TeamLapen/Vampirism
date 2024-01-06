@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -36,8 +36,7 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted before an action fires. Use this to modify the cooldown or duration of action, or to prevent the action from activating.
      */
-    @Cancelable
-    public static class ActionActivatedEvent extends ActionEvent {
+    public static class ActionActivatedEvent extends ActionEvent implements ICancellableEvent {
 
         private int cooldown;
         private int duration;

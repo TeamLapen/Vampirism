@@ -3,21 +3,22 @@
   "criteria": {
     "flower": {
       "conditions": {
-        "action": "STAKE"
+        "action": "stake"
       },
       "trigger": "vampirism:hunter_action"
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.stake.desc"
     },
@@ -27,7 +28,6 @@
       "item": "vampirism:stake",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.stake"
     }

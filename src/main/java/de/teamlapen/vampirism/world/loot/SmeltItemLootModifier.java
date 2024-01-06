@@ -16,8 +16,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collector;
@@ -50,7 +50,7 @@ public class SmeltItemLootModifier extends LootModifier {
 
     private ObjectArrayList<ItemStack> trySmelting(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull ServerLevel level) {
         RecipeManager recipeManager = level.getRecipeManager();
-        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).map(recipe -> recipe.getResultItem(level.registryAccess())).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
+        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).map(recipe -> recipe.value().getResultItem(level.registryAccess())).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
             left.addAll(right);
             return left;
         }));

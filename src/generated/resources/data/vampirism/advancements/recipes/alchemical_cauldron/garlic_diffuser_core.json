@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:alchemical_cauldron/garlic_diffuser_core"
+        "recipe": "vampirism:garlic_diffuser_core"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,8 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:alchemical_cauldron/garlic_diffuser_core"
+      "vampirism:garlic_diffuser_core"
     ]
-  },
-  "sends_telemetry_event": true
+  }
 }

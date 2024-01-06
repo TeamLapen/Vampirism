@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.util.ThreadSafeLibAPI;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,24 +20,24 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HelperRegistry {
 
-    private static @NotNull Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCaps = new ConcurrentHashMap<>();
-    private static @NotNull Map<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCaps = new ConcurrentHashMap<>();
-    private static @NotNull Set<Capability<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
-    private static Capability<IPlayerEventListener>[] playerEventListenerCapsFinal;
+    private static @NotNull Map<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncablePlayerCaps = new ConcurrentHashMap<>();
+    private static @NotNull Map<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncableEntityCaps = new ConcurrentHashMap<>();
+    private static @NotNull Set<AttachmentType<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
+    private static AttachmentType<IPlayerEventListener>[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.player.Player}
      */
-    private static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncablePlayerCapsFinal;
+    private static ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncablePlayerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.Mob}
      */
-    private static ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> syncableEntityCapsFinal;
+    private static ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncableEntityCapsFinal;
 
     /**
      * Return all player capabilities that should receive events
      * FOR INTERNAL USAGE ONLY
      */
-    static @NotNull Capability<IPlayerEventListener>[] getEventListenerCaps() {
+    static @NotNull AttachmentType<IPlayerEventListener>[] getEventListenerCaps() {
         return playerEventListenerCapsFinal;
     }
 
@@ -46,7 +46,7 @@ public class HelperRegistry {
      * FOR INTERNAL USAGE ONLY
      */
     @ApiStatus.Internal
-    public static @NotNull ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> getSyncablePlayerCaps() {
+    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> getSyncablePlayerCaps() {
         return syncablePlayerCapsFinal;
     }
 
@@ -55,49 +55,46 @@ public class HelperRegistry {
      * FOR INTERNAL USAGE ONLY
      */
     @ApiStatus.Internal
-    public static @NotNull ImmutableMap<ResourceLocation, Capability<ISyncable.ISyncableEntityCapabilityInst>> getSyncableEntityCaps() {
+    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> getSyncableEntityCaps() {
         return syncableEntityCapsFinal;
     }
 
     /**
-     * Register an entity {@link Capability} which instances should be synced on world join
+     * Register an entity {@link net.neoforged.neoforge.capabilities.EntityCapability} which instances should be synced on world join
      * Only works for entities extending {@link net.minecraft.world.entity.PathfinderMob}
      *
-     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the entity with the given capability
-     * @param key Unique key for the capability. Preferably the key the cap was registered with.
-     *            Has to be called before post init.
+     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(net.neoforged.neoforge.capabilities.EntityCapability)} is called on the entity with the given capability
      */
     @ThreadSafeLibAPI
-    public static void registerSyncableEntityCapability(Capability<ISyncable.ISyncableEntityCapabilityInst> capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
+    public static void registerSyncableEntityCapability(AttachmentType<ISyncable.ISyncableAttachment> capability, Class<? extends ISyncable.ISyncableAttachment> clz) {
         if (syncableEntityCaps == Collections.EMPTY_MAP) {
             throw new IllegalStateException("Cannot register syncable entity capability " + clz + "("+ capability + ") after the InterModEnqueueEvent");
         }
-        syncableEntityCaps.put(key, capability);
+        syncableEntityCaps.put(NeoForgeRegistries.ATTACHMENT_TYPES.getKey(capability), capability);
     }
 
     /**
-     * Register a player {@link Capability} which instances should be synced on world join
+     * Register a player {@link net.neoforged.neoforge.capabilities.EntityCapability} which instances should be synced on world join
      *
-     * @param key Unique key for the capability. Preferably the key the cap was registered with.
-     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
+     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(net.neoforged.neoforge.capabilities.EntityCapability)} is called on the player with the given capability
      *            Has to be called before post init.
      */
     @ThreadSafeLibAPI
-    public static void registerSyncablePlayerCapability(Capability<ISyncable.ISyncableEntityCapabilityInst> capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
+    public static void registerSyncablePlayerCapability(AttachmentType<ISyncable.ISyncableAttachment> capability, Class<? extends ISyncable.ISyncableAttachment> clz) {
         if (syncablePlayerCaps == Collections.EMPTY_MAP) {
             throw new IllegalStateException("Cannot register syncable property " + clz + "("+ capability + ") after the InterModEnqueueEvent");
         }
-        syncablePlayerCaps.put(key, capability);
+        syncablePlayerCaps.put(NeoForgeRegistries.ATTACHMENT_TYPES.getKey(capability), capability);
     }
 
     /**
-     * Key of a {@link Capability} which implementation implements {@link IPlayerEventListener} and which instances should receive the events.
+     * Key of a {@link net.neoforged.neoforge.capabilities.EntityCapability} which implementation implements {@link IPlayerEventListener} and which instances should receive the events.
      * Has to be called before post init.
      *
-     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(Capability, Direction)} is called on the player with the given capability
+     * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(net.neoforged.neoforge.capabilities.EntityCapability)} is called on the player with the given capability
      */
     @ThreadSafeLibAPI
-    public static void registerPlayerEventReceivingCapability(Capability<IPlayerEventListener> capability, Class<? extends IPlayerEventListener> clz) {
+    public static void registerPlayerEventReceivingCapability(AttachmentType<IPlayerEventListener> capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps ==  Collections.EMPTY_SET) {
             throw new IllegalStateException("Cannot register PlayerEventReceiver ("+ capability + ") after the InterModEnqueueEvent");
         } else {
@@ -115,7 +112,7 @@ public class HelperRegistry {
         syncablePlayerCapsFinal = ImmutableMap.copyOf(syncablePlayerCaps);
         syncablePlayerCaps = Collections.emptyMap();
         //noinspection unchecked
-        playerEventListenerCapsFinal = playerEventListenerCaps.toArray((Capability<IPlayerEventListener>[]) new Capability[0]);
+        playerEventListenerCapsFinal = playerEventListenerCaps.toArray(AttachmentType[]::new);
         playerEventListenerCaps = Collections.emptySet();
     }
 }

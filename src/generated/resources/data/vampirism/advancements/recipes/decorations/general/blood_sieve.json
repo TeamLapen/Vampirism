@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_cauldron",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_cauldron"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/blood_sieve"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

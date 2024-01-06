@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
@@ -11,27 +12,30 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
  */
 public class AltarInspirationBlock extends VampirismBlockContainer {
+    public static final MapCodec<AltarInspirationBlock> CODEC = simpleCodec(AltarInspirationBlock::new);
     protected static final VoxelShape altarShape = makeShape();
 
     private static @NotNull VoxelShape makeShape() {
@@ -45,8 +49,13 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         return shape;
     }
 
-    public AltarInspirationBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(2f, 3f).noOcclusion());
+    public AltarInspirationBlock(Block.Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull
@@ -72,7 +81,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
-            LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
+            Optional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
                 AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
                 if (!player.isShiftKeyDown() && tileEntity != null) {

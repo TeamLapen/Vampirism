@@ -58,7 +58,7 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
     private static RadialMenu<IAction<?>> getRadialMenu(List<IAction<?>> actions) {
         List<IRadialMenuSlot<IAction<?>>> parts = actions.stream().map(a -> (IRadialMenuSlot<IAction<?>>)new RadialMenuSlot<IAction<?>>(a.getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
-            VampirismMod.dispatcher.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(parts.get(i).primarySlotIcon()), Minecraft.getInstance().hitResult));
+            VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(parts.get(i).primarySlotIcon()), Minecraft.getInstance().hitResult));
         }, parts , SelectActionRadialScreen::drawActionPart,0);
     }
 

@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 
 public class ActionDurationOverlay implements IGuiOverlay {
@@ -18,7 +18,7 @@ public class ActionDurationOverlay implements IGuiOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ForgeGui gui, @NotNull GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
+    public void render(ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
         if (VampirismAPI.factionRegistry().getFaction(this.mc.player) != null) {
             VampirismAPI.getFactionPlayerHandler(this.mc.player).ifPresent(playerHandler -> {
                 playerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {

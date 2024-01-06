@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_polished_dark_stone",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_polished_dark_stone"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:dark_stone_tiles_from_polished_dark_stone_stonecutting"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

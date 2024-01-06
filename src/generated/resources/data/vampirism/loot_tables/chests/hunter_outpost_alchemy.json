@@ -8,8 +8,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:set_oil",
-              "random": true
+              "function": "vampirism:set_oil"
             }
           ],
           "name": "vampirism:oil_bottle",
@@ -20,7 +19,7 @@
           "functions": [
             {
               "function": "vampirism:set_oil",
-              "id": "vampirism:vampire_blood"
+              "oil": "vampirism:vampire_blood"
             }
           ],
           "name": "vampirism:oil_bottle",

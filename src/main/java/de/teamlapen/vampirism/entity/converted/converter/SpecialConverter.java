@@ -9,10 +9,10 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.SpecialConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> implements Converter {
 
     public static final Codec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
             ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
     ).apply(instance, SpecialConverter::new));
 

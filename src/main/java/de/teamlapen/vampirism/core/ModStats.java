@@ -61,13 +61,13 @@ public class ModStats {
     public static final ResourceLocation items_filled_on_blood_pedestal = add("items_filled_on_blood_pedestal");
 
     static void registerCustomStats() {
-        ModRegistries.ACTIONS.get().getEntries().forEach(entry -> {
-            ResourceLocation location = entry.getKey().location();
-            ACTION_USED_STATS.put(entry.getKey(), add(location.withPrefix("action_used_")));
+        ModRegistries.ACTIONS.holders().forEach(entry -> {
+            ResourceLocation location = entry.key().location();
+            ACTION_USED_STATS.put(entry.key(), add(location.withPrefix("action_used_")));
         });
-        ModRegistries.ACTIONS.get().getEntries().stream().filter(s -> s.getValue() instanceof ILastingAction<?>).forEach(entry -> {
-            ResourceLocation location = entry.getKey().location();
-            ACTION_TIME_STATS.put(entry.getKey(), add(location.withPrefix("action_time_"), StatFormatter.TIME));
+        ModRegistries.ACTIONS.holders().filter(s -> s.value() instanceof ILastingAction<?>).forEach(entry -> {
+            ResourceLocation location = entry.key().location();
+            ACTION_TIME_STATS.put(entry.key(), add(location.withPrefix("action_time_"), StatFormatter.TIME));
         });
         ALL_STATS.forEach(ModStats::register);
     }

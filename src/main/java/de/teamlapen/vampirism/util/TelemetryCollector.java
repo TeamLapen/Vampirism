@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.versions.mcp.MCPVersion;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.internal.versions.neoform.NeoFormVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +27,7 @@ public class TelemetryCollector {
 
     public static void execute() {
         // TODO use server telemetry when available
-        if (DistExecutor.unsafeRunForDist(() -> () -> true, () -> () -> true) && VampirismConfig.COMMON.collectStats.get()) {
+        if (VampirismConfig.COMMON.collectStats.get()) {
             send();
         }
     }
@@ -41,7 +40,7 @@ public class TelemetryCollector {
 
             Map<String, String> params = new HashMap<>();
             params.put("mod_version", REFERENCE.VERSION.toString());
-            params.put("mc_version", MCPVersion.getMCVersion());
+            params.put("mc_version", NeoFormVersion.getMCVersion());
             params.put("mod_count", Integer.toString(ModList.get().size()));
             params.put("side", (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server"));
 

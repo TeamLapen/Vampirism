@@ -6,12 +6,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.event.TickEvent;
 
 /**
  * Provides several event related methods, which should be called by a dedicated EventHandler.
- * You can register a {@link Capability}, which instances implement this interface, in {@link de.teamlapen.lib.HelperRegistry} to let the library call this.
+ * You can register a {@link net.neoforged.neoforge.capabilities.EntityCapability}, which instances implement this interface, in {@link de.teamlapen.lib.HelperRegistry} to let the library call this.
  */
 public interface IPlayerEventListener {
 
@@ -36,8 +35,6 @@ public interface IPlayerEventListener {
     }
 
     void onJoinWorld();
-
-    void onPlayerClone(Player original, boolean wasDeath);
 
     void onPlayerLoggedIn();
 

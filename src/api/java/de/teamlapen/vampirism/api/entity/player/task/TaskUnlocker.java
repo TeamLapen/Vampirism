@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public interface TaskUnlocker {
 
-    Codec<TaskUnlocker> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_UNLOCKER.get().getCodec()).dispatch(TaskUnlocker::codec, Function.identity());
+    Codec<TaskUnlocker> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_UNLOCKER.get().byNameCodec()).dispatch(TaskUnlocker::codec, Function.identity());
 
     Component getDescription();
 

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_heart_seeker",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_heart_seeker"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/heart_seeker_normal_repair"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

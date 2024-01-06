@@ -5,29 +5,25 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 
 /**
  * There are differently looking level 0 hunters.
  * Hunter as of level 1 look all the same, but have different weapons
  */
-@OnlyIn(Dist.CLIENT)
 public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, BasicHunterModel<BasicHunterEntity>> {
 
     private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
-    private final Pair<ResourceLocation, Boolean> @NotNull [] textures;
+    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
 
     public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
@@ -38,7 +34,7 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
 
     @Override
-    protected Pair<ResourceLocation, Boolean> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
+    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
         return textures[entity.getEntityTextureType() % textures.length];
     }
 }

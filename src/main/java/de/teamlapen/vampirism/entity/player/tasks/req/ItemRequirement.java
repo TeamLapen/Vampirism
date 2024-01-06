@@ -3,14 +3,13 @@ package de.teamlapen.vampirism.entity.player.tasks.req;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModTasks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public record ItemRequirement(@NotNull ResourceLocation id, @NotNull ItemStack s
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(i -> java.util.Optional.of(i.id)),
                 ItemStack.CODEC.fieldOf("item").forGetter(i -> i.stack),
-                ExtraCodecs.COMPONENT.fieldOf("description").forGetter(i -> i.description)
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
         ).apply(inst, (id, item, desc) -> new ItemRequirement(id.orElseGet(() -> RegUtil.id(item.getItem())), item, desc));
     });
 

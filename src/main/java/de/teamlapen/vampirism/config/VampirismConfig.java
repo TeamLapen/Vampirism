@@ -8,13 +8,13 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.IConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,25 +45,25 @@ public class VampirismConfig {
     public static final Common COMMON;
 
     public static final @NotNull BalanceConfig BALANCE;
-    private static final ForgeConfigSpec clientSpec;
-    private static final ForgeConfigSpec serverSpec;
-    private static final ForgeConfigSpec commonSpec;
+    private static final ModConfigSpec clientSpec;
+    private static final ModConfigSpec serverSpec;
+    private static final ModConfigSpec commonSpec;
     private static @Nullable BalanceBuilder balanceBuilder;
 
     static {
-        final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        final Pair<Client, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Client::new);
         clientSpec = specPair.getRight();
         CLIENT = specPair.getLeft();
     }
 
     static {
-        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
+        final Pair<Server, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Server::new);
         serverSpec = specPair.getRight();
         SERVER = specPair.getLeft();
     }
 
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
         commonSpec = specPair.getRight();
         COMMON = specPair.getLeft();
     }
@@ -90,19 +90,19 @@ public class VampirismConfig {
         balanceBuilder.addBalanceModifier(key, modifier);
     }
 
-    public static void finalizeAndRegisterConfig() {
+    public static void finalizeAndRegisterConfig(IEventBus modBus) {
         if (balanceBuilder == null) return;
         /*
         Build balance configuration
          */
-        final Pair<BalanceConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure((builder) -> {
+        final Pair<BalanceConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure((builder) -> {
             builder.comment("A ton of options which allow you to balance the mod to your desire");
             builder.push("balance");
             balanceBuilder.build(BALANCE, builder);
             builder.pop();
             return BALANCE;
         });
-        ForgeConfigSpec balanceSpec = specPair.getRight();
+        ModConfigSpec balanceSpec = specPair.getRight();
         if (VampirismMod.inDev) {
             balanceBuilder.checkFields(BALANCE);
         }
@@ -113,7 +113,7 @@ public class VampirismConfig {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, balanceSpec, "vampirism-balance.toml");
-        FMLJavaModLoadingContext.get().getModEventBus().register(VampirismConfig.class);
+        modBus.register(VampirismConfig.class);
     }
 
     @SubscribeEvent
@@ -140,41 +140,41 @@ public class VampirismConfig {
      */
     public static class Server {
 
-        public final ForgeConfigSpec.BooleanValue enforceRenderForestFog;
-        public final ForgeConfigSpec.BooleanValue unlockAllSkills;
-        public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactions;
-        public final ForgeConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
-        public final ForgeConfigSpec.IntValue sunscreenBeaconDistance;
-        public final ForgeConfigSpec.BooleanValue sunscreenBeaconMineable;
-        public final ForgeConfigSpec.BooleanValue autoCalculateEntityBlood;
-        public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
-        public final ForgeConfigSpec.BooleanValue factionColorInChat;
-        public final ForgeConfigSpec.BooleanValue lordPrefixInChat;
-        public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
-        public final ForgeConfigSpec.BooleanValue infectCreaturesSanguinare;
-        public final ForgeConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
-        public final ForgeConfigSpec.BooleanValue allowVillageDestroyBlocks;
-        public final ForgeConfigSpec.BooleanValue usePermissions;
+        public final ModConfigSpec.BooleanValue enforceRenderForestFog;
+        public final ModConfigSpec.BooleanValue unlockAllSkills;
+        public final ModConfigSpec.BooleanValue pvpOnlyBetweenFactions;
+        public final ModConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
+        public final ModConfigSpec.IntValue sunscreenBeaconDistance;
+        public final ModConfigSpec.BooleanValue sunscreenBeaconMineable;
+        public final ModConfigSpec.BooleanValue autoCalculateEntityBlood;
+        public final ModConfigSpec.BooleanValue playerCanTurnPlayer;
+        public final ModConfigSpec.BooleanValue factionColorInChat;
+        public final ModConfigSpec.BooleanValue lordPrefixInChat;
+        public final ModConfigSpec.EnumValue<IMobOptions> entityIMob;
+        public final ModConfigSpec.BooleanValue infectCreaturesSanguinare;
+        public final ModConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
+        public final ModConfigSpec.BooleanValue allowVillageDestroyBlocks;
+        public final ModConfigSpec.BooleanValue usePermissions;
 
-        public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> batDimensionBlacklist;
-
-
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
-
-        public final ForgeConfigSpec.BooleanValue disableFangInfection;
-        public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
-        public final ForgeConfigSpec.BooleanValue disableVillageGuards;
-
-        public final ForgeConfigSpec.BooleanValue oldVampireBiomeGen;
-
-        public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
+        public final ModConfigSpec.BooleanValue sundamageUnknownDimension;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
+        public final ModConfigSpec.ConfigValue<List<? extends String>> batDimensionBlacklist;
 
 
-        Server(ForgeConfigSpec.@NotNull Builder builder) {
+        public final ModConfigSpec.ConfigValue<List<? extends String>> blacklistedBloodEntity;
+
+        public final ModConfigSpec.BooleanValue disableFangInfection;
+        public final ModConfigSpec.BooleanValue disableMobBiteInfection;
+        public final ModConfigSpec.BooleanValue disableVillageGuards;
+
+        public final ModConfigSpec.BooleanValue oldVampireBiomeGen;
+
+        public final ModConfigSpec.BooleanValue infoAboutGuideAPI;
+
+
+        Server(ModConfigSpec.@NotNull Builder builder) {
             builder.comment("Server configuration settings")
                     .push("server");
 
@@ -235,23 +235,23 @@ public class VampirismConfig {
      */
     public static class Client {
 
-        public final ForgeConfigSpec.IntValue overrideGuiSkillButtonX;
-        public final ForgeConfigSpec.IntValue overrideGuiSkillButtonY;
-        public final ForgeConfigSpec.IntValue guiLevelOffsetX;
-        public final ForgeConfigSpec.IntValue guiLevelOffsetY;
-        public final ForgeConfigSpec.BooleanValue guiSkillButton;
-        public final ForgeConfigSpec.BooleanValue renderAdvancedMobPlayerFaces;
-        public final ForgeConfigSpec.BooleanValue renderVampireEyes;
-        public final ForgeConfigSpec.BooleanValue renderVampireForestFog;
-        public final ForgeConfigSpec.BooleanValue renderScreenOverlay;
-        public final ForgeConfigSpec.BooleanValue disableFovChange;
-        public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
-        public final ForgeConfigSpec.BooleanValue disableHudActionCooldownRendering;
-        public final ForgeConfigSpec.BooleanValue disableHudActionDurationRendering;
-        public final ForgeConfigSpec.ConfigValue<String> actionOrder;
-        public final ForgeConfigSpec.ConfigValue<String> minionTaskOrder;
+        public final ModConfigSpec.IntValue overrideGuiSkillButtonX;
+        public final ModConfigSpec.IntValue overrideGuiSkillButtonY;
+        public final ModConfigSpec.IntValue guiLevelOffsetX;
+        public final ModConfigSpec.IntValue guiLevelOffsetY;
+        public final ModConfigSpec.BooleanValue guiSkillButton;
+        public final ModConfigSpec.BooleanValue renderAdvancedMobPlayerFaces;
+        public final ModConfigSpec.BooleanValue renderVampireEyes;
+        public final ModConfigSpec.BooleanValue renderVampireForestFog;
+        public final ModConfigSpec.BooleanValue renderScreenOverlay;
+        public final ModConfigSpec.BooleanValue disableFovChange;
+        public final ModConfigSpec.BooleanValue disableBloodVisionRendering;
+        public final ModConfigSpec.BooleanValue disableHudActionCooldownRendering;
+        public final ModConfigSpec.BooleanValue disableHudActionDurationRendering;
+        public final ModConfigSpec.ConfigValue<String> actionOrder;
+        public final ModConfigSpec.ConfigValue<String> minionTaskOrder;
 
-        Client(ForgeConfigSpec.@NotNull Builder builder) {
+        Client(ModConfigSpec.@NotNull Builder builder) {
             builder.comment("Client configuration settings")
                     .push("client");
 
@@ -296,29 +296,29 @@ public class VampirismConfig {
      */
     public static class Common {
 
-        public final ForgeConfigSpec.BooleanValue collectStats;
-        public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
-        public final ForgeConfigSpec.BooleanValue optifineBloodvisionWarning;
+        public final ModConfigSpec.BooleanValue collectStats;
+        public final ModConfigSpec.ConfigValue<String> integrationsNotifier;
+        public final ModConfigSpec.BooleanValue optifineBloodvisionWarning;
 
         //Common server
-        public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
-        public final ForgeConfigSpec.BooleanValue umbrella;
-        public final ForgeConfigSpec.BooleanValue enableFactionLogging;
+        public final ModConfigSpec.BooleanValue autoConvertGlassBottles;
+        public final ModConfigSpec.BooleanValue umbrella;
+        public final ModConfigSpec.BooleanValue enableFactionLogging;
 
         //World
-        public final ForgeConfigSpec.BooleanValue addVampireForestToOverworld;
-        public final ForgeConfigSpec.IntValue vampireForestWeight_terrablender;
-        public final ForgeConfigSpec.BooleanValue enableHunterTentGeneration;
-        public final ForgeConfigSpec.BooleanValue useVanillaCampfire;
+        public final ModConfigSpec.BooleanValue addVampireForestToOverworld;
+        public final ModConfigSpec.IntValue vampireForestWeight_terrablender;
+        public final ModConfigSpec.BooleanValue enableHunterTentGeneration;
+        public final ModConfigSpec.BooleanValue useVanillaCampfire;
 
         //World village
-        public final ForgeConfigSpec.IntValue villageTotemWeight;
-        public final ForgeConfigSpec.BooleanValue villageReplaceTemples;
-        public final ForgeConfigSpec.DoubleValue villageTotemFactionChance;
-        public final ForgeConfigSpec.IntValue villageHunterTrainerWeight;
+        public final ModConfigSpec.IntValue villageTotemWeight;
+        public final ModConfigSpec.BooleanValue villageReplaceTemples;
+        public final ModConfigSpec.DoubleValue villageTotemFactionChance;
+        public final ModConfigSpec.IntValue villageHunterTrainerWeight;
 
 
-        Common(ForgeConfigSpec.@NotNull Builder builder) {
+        Common(ModConfigSpec.@NotNull Builder builder) {
             builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
                     .push("common");
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);

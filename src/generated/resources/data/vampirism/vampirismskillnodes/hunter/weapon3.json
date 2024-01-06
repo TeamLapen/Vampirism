@@ -1,7 +1,0 @@
-{
-  "parent": "vampirism:hunter/weapon2",
-  "skills": [
-    "vampirism:hunter_attack_speed_advanced",
-    "vampirism:enhanced_weapons"
-  ]
-}

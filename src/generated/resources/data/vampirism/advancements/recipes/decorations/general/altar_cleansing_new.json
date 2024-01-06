@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_book",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_book"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/altar_cleansing_new"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

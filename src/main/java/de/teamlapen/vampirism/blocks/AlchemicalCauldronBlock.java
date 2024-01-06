@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
@@ -19,20 +20,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
+    public static final MapCodec<AlchemicalCauldronBlock> CODEC = simpleCodec(AlchemicalCauldronBlock::new);
+
     /**
      * 0: No liquid,
      * 1: Liquid,
@@ -48,12 +49,11 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         return Shapes.or(a, b, c);
     }
 
-    public AlchemicalCauldronBlock() {
-        super(Block.Properties.of().mapColor(MapColor.METAL).strength(4f).noOcclusion());
+    public AlchemicalCauldronBlock(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LIQUID, 0).setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource rng) {
         super.animateTick(state, world, pos, rng);
@@ -101,5 +101,10 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
             playerEntity.openMenu((MenuProvider) tile);
             playerEntity.awardStat(ModStats.interact_alchemical_cauldron);
         }
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends AbstractFurnaceBlock> codec() {
+        return CODEC;
     }
 }

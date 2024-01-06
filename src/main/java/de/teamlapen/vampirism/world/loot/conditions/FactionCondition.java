@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModLoot;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,32 +15,57 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FactionCondition implements LootItemCondition {
 
-    private final @NotNull Type type;
-    private final IFaction<?> faction;
-    private final int minLevel;
-    private final int maxLevel;
+    public static final Codec<FactionCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(s -> s.type),
+            ExtraCodecs.strictOptionalField(IFaction.CODEC, "faction").forGetter(a -> a.faction),
+            ExtraCodecs.strictOptionalField(Codec.INT, "min_level").forGetter(a -> a.minLevel),
+            ExtraCodecs.strictOptionalField(Codec.INT, "max_level").forGetter(a -> a.maxLevel)
+    ).apply(inst, FactionCondition::new));
 
-    public FactionCondition(IFaction<?> faction, int minLevel, int maxLevel) {
-        this.type = Type.FACTION;
+    private final @NotNull Type type;
+    private final Optional<IFaction<?>> faction;
+    private final Optional<Integer> minLevel;
+    private final Optional<Integer> maxLevel;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private FactionCondition(@NotNull Type type, Optional<IFaction<?>> faction, Optional<Integer> minLevel, Optional<Integer> maxLevel) {
+        this.type = type;
         this.faction = faction;
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
     }
 
+    public FactionCondition(@NotNull IFaction<?> faction, int minLevel, int maxLevel) {
+        this.type = Type.FACTION;
+        this.faction = Optional.of(faction);
+        this.minLevel = Optional.of(minLevel);
+        this.maxLevel = Optional.of(maxLevel);
+    }
+
     public FactionCondition(int minLevel, int maxLevel) {
         this.type = Type.ANY_FACTION;
-        this.faction = null;
-        this.minLevel = minLevel;
-        this.maxLevel = maxLevel;
+        this.faction = Optional.empty();
+        this.minLevel = Optional.of(minLevel);
+        this.maxLevel = Optional.of(maxLevel);
+    }
+
+    public FactionCondition(int minLevel) {
+        this.type = Type.ANY_FACTION;
+        this.faction = Optional.empty();
+        this.minLevel = Optional.of(minLevel);
+        this.maxLevel = Optional.empty();
     }
 
     public FactionCondition() {
-        this.type = Type.ANY_FACTION;
-        this.faction = null;
-        this.minLevel = 0;
-        this.maxLevel = -1;
+        this.type = Type.NO_FACTION;
+        this.faction = Optional.empty();
+        this.minLevel = Optional.empty();
+        this.maxLevel = Optional.empty();
     }
 
     @Override
@@ -52,64 +77,30 @@ public class FactionCondition implements LootItemCondition {
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (entity instanceof Player player) {
-            switch (this.type) {
-                case FACTION -> {
-                    if (this.faction == null) return false;
-                    return VampirismAPI.getFactionPlayerHandler(player).filter(a -> a.isInFaction(this.faction)).filter(a -> a.getCurrentLevel() >= this.minLevel && (this.maxLevel == -1 || a.getCurrentLevel() <= this.maxLevel)).isPresent();
-                }
-                case NO_FACTION -> {
-                    return VampirismAPI.getFactionPlayerHandler(player).filter(p -> p.getCurrentFactionPlayer().isEmpty()).isPresent();
-                }
-                case ANY_FACTION -> {
-                    return VampirismAPI.getFactionPlayerHandler(player).filter(a -> a.getCurrentLevel() >= this.minLevel && (this.maxLevel == -1 || a.getCurrentLevel() <= this.maxLevel)).isPresent();
-                }
-            }
+            return VampirismAPI.getFactionPlayerHandler(player).map(handler -> switch (this.type) {
+                case NO_FACTION -> handler.getCurrentFactionPlayer().isEmpty();
+                case ANY_FACTION -> !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
+                case FACTION ->
+                        handler.isInFaction(this.faction.orElseThrow()) && !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
+            }).orElse(false);
         }
         return false;
     }
 
-    public enum Type {
-        NO_FACTION, ANY_FACTION, FACTION
-    }
+    public enum Type implements StringRepresentable {
+        NO_FACTION("no_faction"),
+        ANY_FACTION("any_faction"),
+        FACTION("faction");
 
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<FactionCondition> {
+        private final String name;
 
-        @Override
-        public void serialize(@NotNull JsonObject json, @NotNull FactionCondition condition, @NotNull JsonSerializationContext context) {
-            json.addProperty("type", condition.type.name());
-            switch (condition.type) {
-                case FACTION:
-                    json.addProperty("faction", condition.faction.getID().toString());
-                case ANY_FACTION :
-                    json.addProperty("min_level", condition.minLevel);
-                    if (condition.maxLevel != -1) json.addProperty("max_level", condition.maxLevel);
-                    break;
-            }
+        Type(String name) {
+            this.name = name;
         }
 
-        @NotNull
         @Override
-        public FactionCondition deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext context) {
-            JsonObject json = jsonObject.get("predicate").getAsJsonObject();
-            Type type = Type.valueOf(json.get("type").getAsString());
-            switch (type) {
-                case NO_FACTION -> {
-                    return new FactionCondition();
-                }
-                case ANY_FACTION -> {
-                    int minLevel = json.has("min_level") ? json.get("min_level").getAsInt() : 0;
-                    int maxLevel = json.has("max_level") ? json.get("max_level").getAsInt() : -1;
-                    return new FactionCondition(minLevel, maxLevel);
-                }
-                case FACTION -> {
-                    ResourceLocation factionId = new ResourceLocation(json.get("faction").getAsString());
-                    IFaction<?> faction = VampirismAPI.factionRegistry().getFactionByID(factionId);
-                    int minLevel = json.has("min_level") ? json.get("min_level").getAsInt() : 0;
-                    int maxLevel = json.has("max_level") ? json.get("max_level").getAsInt() : -1;
-                    return new FactionCondition(faction, minLevel, maxLevel);
-                }
-            }
-            return null;
+        public @NotNull String getSerializedName() {
+            return this.name;
         }
     }
 }

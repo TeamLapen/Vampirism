@@ -9,14 +9,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Model for Basic Vampire Hunter
  */
-@OnlyIn(Dist.CLIENT)
 public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<T> {
 
     public static @NotNull LayerDefinition createBodyLayer() {
@@ -60,7 +58,7 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
                 return HumanoidModel.ArmPose.CROSSBOW_HOLD;
             }
 
-            HumanoidModel.ArmPose forgeArmPose = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(itemstack).getArmPose(entity, pHand, itemstack);
+            HumanoidModel.ArmPose forgeArmPose = IClientItemExtensions.of(itemstack).getArmPose(entity, pHand, itemstack);
             if (forgeArmPose != null) return forgeArmPose;
 
             return HumanoidModel.ArmPose.ITEM;

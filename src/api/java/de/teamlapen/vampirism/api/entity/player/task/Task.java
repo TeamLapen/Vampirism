@@ -5,11 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +20,9 @@ public class Task {
         return inst.group(
                 TaskRequirement.CODEC.fieldOf("requirements").forGetter(i -> i.requirements),
                 TaskReward.CODEC.fieldOf("rewards").forGetter(i -> i.rewards),
-                TaskUnlocker.CODEC.listOf().optionalFieldOf("unlocker").forGetter(i -> Optional.of(List.of(i.unlocker))),
-                ExtraCodecs.COMPONENT.optionalFieldOf("description").forGetter(i -> Optional.ofNullable(i.description)),
-                ExtraCodecs.COMPONENT.fieldOf("title").forGetter(i -> i.title)
+                TaskUnlocker.CODEC.listOf().optionalFieldOf("unlocker").forGetter(i -> Optional.of(Arrays.asList(i.unlocker))),
+                ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(i -> Optional.ofNullable(i.description)),
+                ComponentSerialization.CODEC.fieldOf("title").forGetter(i -> i.title)
         ).apply(inst, Task::new);
     });
     public static final Codec<Holder<Task>> HOLDER_CODEC = RegistryFileCodec.create(VampirismRegistries.TASK_ID, CODEC);

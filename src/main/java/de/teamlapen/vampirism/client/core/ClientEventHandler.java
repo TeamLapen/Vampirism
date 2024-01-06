@@ -9,8 +9,10 @@ import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.network.ServerboundRequestSkillTreePacket;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -19,7 +21,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.effect.MobEffect;
@@ -30,18 +34,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ComputeFovModifierEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.resource.PathPackResources;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -90,9 +91,6 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if(modelLoc.getPath().contains("fluid")){
-                    LOGGER.info(modelLoc);
-                }
                 if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.BLOOD_CONTAINER.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
@@ -218,10 +216,23 @@ public class ClientEventHandler {
     public static void registerPackRepository(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             event.addRepositorySource(s -> {
-                s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, id -> {
-                    return new PathPackResources(id, false, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID));
+                s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, new Pack.ResourcesSupplier() {
+                    @Override
+                    public @NotNull PackResources openPrimary(@NotNull String pId) {
+                        return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID), false);
+                    }
+
+                    @Override
+                    public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
+                        return openPrimary(pId);
+                    }
                 }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
             });
         }
+    }
+
+    @SubscribeEvent
+    public void onJoined(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientSkillTreeData.reset();
     }
 }

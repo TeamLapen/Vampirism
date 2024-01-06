@@ -38,7 +38,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oy = player.getY();
         double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
-            player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1, 1);
+            player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 1, 1);
             return false;
         }
         BlockPos pos = null;
@@ -62,7 +62,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos == null) {
             player.setPos(ox, oy, oz);
-            player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1, 1);
+            player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 1, 1);
             return false;
         }
         if (player instanceof ServerPlayer playerMp) {

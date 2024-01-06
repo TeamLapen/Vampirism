@@ -4,12 +4,6 @@ tasks.register('apiJar', Jar) {
     archiveClassifier = 'api'
 }
 
-tasks.register('deobfJar', Jar) {
-    description = 'Creates a JAR containing the non-obfuscated compiled code.'
-    from sourceSets.main.output
-    archiveClassifier = 'deobf'
-}
-
 tasks.register('sourcesJar', Jar) {
     from sourceSets.main.allJava
     from sourceSets.api.allJava
@@ -31,6 +25,5 @@ javadoc {
 artifacts {
     archives sourcesJar
     archives apiJar
-    archives deobfJar
     archives javadocJar
 }

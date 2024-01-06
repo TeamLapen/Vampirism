@@ -11,14 +11,11 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ModelBiped with a cloak
  */
-@OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
     private static final String CLOAK = "cloak";
     protected final @NotNull ModelPart bipedCloak;

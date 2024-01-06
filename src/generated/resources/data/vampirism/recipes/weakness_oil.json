@@ -1,0 +1,27 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "item": "vampirism:oil_bottle"
+  },
+  "input": [
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:weakness\"}"
+    },
+    {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:long_weakness\"}"
+    }
+  ],
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:weakness"
+    }
+  }
+}

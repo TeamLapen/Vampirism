@@ -1,11 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Collection;
 
 /**
  * Handles the players skills
@@ -58,6 +62,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
 
     boolean isSkillEnabled(ISkill<?> skill);
 
+    boolean isSkillEnabled(Holder<ISkill<?>> skill);
+
     /**
      * remove all equipped refinements
      */
@@ -68,19 +74,11 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      */
     void resetSkills();
 
-    /**
-     * Enables the root skill for the given skill type
-     *
-     * @param type the skill type for which the root skill should be enabled
-     */
-    void enableRootSkill(ISkillType type);
-
-    /**
-     * Enables all root skills that are available for the player
-     */
-    void enableRootSkills();
-
     void reset();
+
+    void updateUnlockedSkillTrees(Collection<Holder<ISkillTree>> skillTrees);
+
+    Collection<Holder<ISkillTree>> unlockedSkillTrees();
 
     enum Result {
         /**

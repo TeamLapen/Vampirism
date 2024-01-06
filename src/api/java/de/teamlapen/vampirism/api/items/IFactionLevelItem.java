@@ -1,26 +1,22 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Item's implementing this can only be used by players that match the requirements.
@@ -28,7 +24,6 @@ import java.util.List;
  */
 public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFactionExclusiveItem {
 
-    @OnlyIn(Dist.CLIENT)
     @Deprecated(since = "1.9", forRemoval = true)
     default void addFactionLevelToolTip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         addFactionToolTips(stack, worldIn, tooltip, flagIn, player);
@@ -36,7 +31,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
 
     @Override
     default void addFactionToolTips(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
-        LazyOptional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : LazyOptional.empty();
+        Optional<IFactionPlayerHandler> playerHandler = player != null && player.isAlive() ? VampirismAPI.getFactionPlayerHandler(player) : Optional.empty();
 
         IFactionExclusiveItem.super.addFactionToolTips(stack, worldIn, tooltip, flagIn, player);
 

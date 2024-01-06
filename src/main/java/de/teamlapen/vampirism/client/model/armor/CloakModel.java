@@ -13,13 +13,12 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.client.renderer.entity.LivingEntityRenderer.isEntityUpsideDown;
 
-@OnlyIn(Dist.CLIENT)
 public class CloakModel extends VampirismArmorModel {
 
     private static final String CLOAK_BACK = "cloak_back";

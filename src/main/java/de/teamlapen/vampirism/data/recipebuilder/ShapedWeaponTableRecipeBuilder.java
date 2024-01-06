@@ -1,32 +1,33 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.advancements.critereon.SkillUnlockedCriterionTrigger;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.ShapedRecipeBuilderAccessor;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
@@ -39,16 +40,18 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return new ShapedWeaponTableRecipeBuilder(category, item, count, null);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @NotNull JsonObject nbt) {
-        return new ShapedWeaponTableRecipeBuilder(category, item, count, nbt);
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @NotNull Consumer<ItemStack> nbt) {
+        ItemStack itemStack = new ItemStack(item, count);
+        nbt.accept(itemStack);
+        return new ShapedWeaponTableRecipeBuilder(category, item, count, itemStack.getTag());
     }
 
-    private final @Nullable JsonObject extraNbt;
+    private final @Nullable CompoundTag extraNbt;
     private int lava = 1;
-    private ISkill<?>[] skills;
+    private final List<ISkill<IHunterPlayer>> skills = new LinkedList<>();
     private int level = 1;
 
-    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @Nullable JsonObject extraNbt) {
+    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @Nullable CompoundTag extraNbt) {
         super(category, item, count);
         this.extraNbt = extraNbt;
     }
@@ -99,62 +102,26 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public void save(@NotNull Consumer<FinishedRecipe> consumer, @NotNull ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
-        this.advancement.addCriterion("has_skill", SkillUnlockedCriterionTrigger.builder(this.skills != null && this.skills.length >= 1 ? this.skills[0] : HunterSkills.WEAPON_TABLE.get()));
-        this.ensureValid(id);
-        this.advancement
-                .parent(new ResourceLocation("recipes/root"))
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
-                .requirements(RequirementsStrategy.OR);
-        consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, determineBookCategory(((ShapedRecipeBuilderAccessor) this).getRecipeCategory()), this.rows, this.key, this.advancement, id.withPath("recipes/" + ((ShapedRecipeBuilderAccessor) this).getRecipeCategory().getFolderName() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt, ((ShapedRecipeBuilderAccessor) this).getShowNotification()));
+    public void save(RecipeOutput output, @NotNull ResourceLocation recipeId) {
+        ShapedRecipePattern shapedRecipePattern = this.ensureValid(recipeId);
+        Advancement.Builder advancement = output.advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
+                .rewards(AdvancementRewards.Builder.recipe(recipeId))
+                .requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(advancement::addCriterion);
+        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), shapedRecipePattern, new ItemStack(result, count, extraNbt), level, skills, lava);
+        output.accept(recipeId, recipe, advancement.build(recipeId.withPrefix("recipes/weapontable/")));
     }
 
-    @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull CriterionTriggerInstance criterionIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterionIn);
+    public @NotNull ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
+        return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterion);
     }
 
-    public @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull ISkill<?>... skills) {
-        this.skills = skills;
+    @SafeVarargs
+    public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull ISkill<IHunterPlayer>... skills) {
+        this.skills.addAll(Arrays.asList(skills));
         return this;
     }
 
-    private static class Result extends ShapedRecipeBuilder.Result {
-        private final int lava;
-        private final ISkill<?>[] skills;
-        private final int level;
-        private final @Nullable JsonObject extraNbt;
-
-        public Result(@NotNull ResourceLocation id, @NotNull Item item, int count, @NotNull String group, CraftingBookCategory category, @NotNull List<String> pattern, @NotNull Map<Character, Ingredient> ingredients, @NotNull Advancement.Builder advancementBuilder, @NotNull ResourceLocation advancementId, int lava, @NotNull ISkill<?>[] skills, int level, @Nullable JsonObject extraNbt, boolean showNotification) {
-            super(id, item, count, group, category, pattern, ingredients, advancementBuilder, advancementId, showNotification);
-            this.lava = lava;
-            this.skills = skills;
-            this.level = level;
-            this.extraNbt = extraNbt;
-        }
-
-        @NotNull
-        @Override
-        public RecipeSerializer<?> getType() {
-            return ModRecipes.SHAPED_CRAFTING_WEAPONTABLE.get();
-        }
-
-        @Override
-        public void serializeRecipeData(@NotNull JsonObject jsonObject) {
-            super.serializeRecipeData(jsonObject);
-            jsonObject.addProperty("lava", this.lava);
-            JsonArray skills = new JsonArray();
-            for (ISkill<?> skill : this.skills) {
-                skills.add(RegUtil.id(skill).toString());
-            }
-            jsonObject.add("skill", skills);
-            jsonObject.addProperty("level", this.level);
-            if (extraNbt != null) {
-                jsonObject.get("result").getAsJsonObject().add("nbt", extraNbt);
-            }
-        }
-    }
 }

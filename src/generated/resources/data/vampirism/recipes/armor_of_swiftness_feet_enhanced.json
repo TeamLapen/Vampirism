@@ -1,0 +1,27 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "forge:leather"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "lava": 3,
+  "pattern": [
+    "XZZX",
+    "XYYX",
+    "XXXX"
+  ],
+  "result": {
+    "item": "vampirism:armor_of_swiftness_feet_enhanced"
+  },
+  "skill": [
+    "vampirism:enhanced_armor"
+  ]
+}

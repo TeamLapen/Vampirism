@@ -1,0 +1,13 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "category": "misc",
+  "cookTime": 300,
+  "experience": 0.3,
+  "fluid": {
+    "item": "vampirism:pure_blood_4"
+  },
+  "ingredient": {
+    "item": "minecraft:iron_block"
+  },
+  "result": "vampirism:blood_infused_enhanced_iron_block"
+}

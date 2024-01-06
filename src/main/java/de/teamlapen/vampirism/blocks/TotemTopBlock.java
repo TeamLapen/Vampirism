@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModStats;
@@ -43,6 +46,13 @@ import java.util.List;
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
 public class TotemTopBlock extends BaseEntityBlock {
+    public static final MapCodec<TotemTopBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            inst.group(
+                    Codec.BOOL.fieldOf("crafted").forGetter(TotemTopBlock::isCrafted),
+                    ResourceLocation.CODEC.fieldOf("faction").forGetter(inst2 -> inst2.faction),
+                    propertiesCodec()
+            ).apply(inst, TotemTopBlock::new)
+    );
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
     private static final VoxelShape shape = makeShape();
 
@@ -59,11 +69,15 @@ public class TotemTopBlock extends BaseEntityBlock {
     public final ResourceLocation faction;
     private final boolean crafted;
 
+    public TotemTopBlock(boolean crafted, ResourceLocation faction) {
+        this(crafted, faction, Properties.of().mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    }
+
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(boolean crafted, ResourceLocation faction) {
-        super(Properties.of().mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    public TotemTopBlock(boolean crafted, ResourceLocation faction, Block.Properties properties) {
+        super(properties);
         this.faction = faction;
         this.crafted = crafted;
         blocks.add(this);
@@ -72,6 +86,11 @@ public class TotemTopBlock extends BaseEntityBlock {
     @Override
     public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
         return false;
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @NotNull

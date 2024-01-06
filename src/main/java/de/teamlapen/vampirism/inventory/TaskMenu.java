@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,34 +70,41 @@ public interface TaskMenu {
         return getRegistry().getOrThrow(key);
     }
 
-    enum TaskAction {
+    enum TaskAction implements StringRepresentable {
         /**
          * The task can be completed
          */
-        COMPLETE("gui.vampirism.taskmaster.complete_task"),
+        COMPLETE("complete", "gui.vampirism.taskmaster.complete_task"),
         /**
          * The task can be accepted
          */
-        ACCEPT("gui.vampirism.taskmaster.accept_task"),
+        ACCEPT("accept", "gui.vampirism.taskmaster.accept_task"),
         /**
          * The task can be aborted
          */
-        ABORT("gui.vampirism.taskmaster.abort_task"),
+        ABORT("abort","gui.vampirism.taskmaster.abort_task"),
         /**
          * The task can only be removed
          */
-        REMOVE("gui.vampirism.taskmaster.remove_task");
+        REMOVE("remove","gui.vampirism.taskmaster.remove_task");
 
+        private final String name;
         @NotNull
         private final String translationKey;
 
-        TaskAction(@NotNull String translationKey) {
+        TaskAction(@NotNull String name, @NotNull String translationKey) {
+            this.name = name;
             this.translationKey = translationKey;
         }
 
         @NotNull
         public String getTranslationKey() {
             return translationKey;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
         }
     }
 }

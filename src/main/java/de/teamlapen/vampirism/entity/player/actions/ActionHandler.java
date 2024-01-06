@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

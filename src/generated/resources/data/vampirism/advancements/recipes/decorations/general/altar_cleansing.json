@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_vampire_book",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_vampire_book"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:general/altar_cleansing"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

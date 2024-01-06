@@ -73,7 +73,7 @@ public abstract class BadOmenEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int p_295329_, int p_295167_) {
         return true;
     }
 }

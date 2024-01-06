@@ -41,7 +41,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player && attacker.isAlive()) {
-            @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getOpt((Player) attacker).resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+            @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getOpt((Player) attacker).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
             if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                 ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                 if (skillHandler.isSkillEnabled(HunterSkills.STAKE2.get())) {
@@ -76,7 +76,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
                     DamageHandler.hurtModded(target, sources -> sources.stake(attacker), 10000F);
                     if (attacker instanceof ServerPlayer player) {
                         player.awardStat(ModStats.killed_with_stake);
-                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger(player, HunterActionCriterionTrigger.Action.STAKE);
+                        ModAdvancements.TRIGGER_HUNTER_ACTION.get().trigger(player, HunterActionCriterionTrigger.Action.STAKE);
 
                     }
                     target.getCommandSenderWorld().playSound(null, target.getX(), target.getY()+0.5*target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);

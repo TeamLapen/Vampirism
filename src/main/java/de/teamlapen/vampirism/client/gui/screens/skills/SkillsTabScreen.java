@@ -1,22 +1,20 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
-import de.teamlapen.vampirism.entity.player.skills.SkillNode;
-import de.teamlapen.vampirism.entity.player.skills.SkillTree;
+import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Holder;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,10 +35,11 @@ public class SkillsTabScreen {
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 47;
     private final Minecraft minecraft;
     private final SkillsScreen screen;
+    private final Holder<ISkillTree> skillTree;
     private final ISkillHandler<?> skillHandler;
     private final ItemStack icon;
     private final Component title;
-    private final Map<SkillNode, SkillNodeScreen> nodes = new HashMap<>();
+    private final Map<SkillTreeConfiguration.SkillTreeNodeConfiguration, SkillNodeScreen> nodes = new HashMap<>();
     private final AdvancementTabType position;
     private final SkillNodeScreen root;
     private final int treeWidth;
@@ -55,19 +54,23 @@ public class SkillsTabScreen {
     private float zoom = 1;
     private final int index;
     private float fade;
+    private final ClientSkillTreeData treeData;
 
 
-    public SkillsTabScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, int index, @NotNull ItemStack icon, @NotNull SkillNode rootNode, @NotNull ISkillHandler<?> skillHandler, @NotNull Component title) {
+    public SkillsTabScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, int index, Holder<ISkillTree> skillTree, @NotNull ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
         this.minecraft = minecraft;
         this.screen = screen;
+        this.skillTree = skillTree;
         this.skillHandler = skillHandler;
+        ISkillTree tree = skillTree.value();
         this.index = index;
-        this.icon = icon;
-        this.title = title;
+        this.icon = tree.display();
+        this.title = tree.name();
         this.position = AdvancementTabType.LEFT;
-        this.root = new SkillNodeScreen(minecraft, screen, this, rootNode, ((SkillHandler<?>) skillHandler));
-        this.treeWidth = SkillTree.getTreeWidth(rootNode);
-        this.treeHeight = SkillTree.getTreeHeight(rootNode);
+        this.treeData = skillTreeData;
+        this.treeWidth = this.treeData.getTreeWidth(skillTree);
+        this.treeHeight = this.treeData.getTreeHeight(skillTree);
+        this.root = new SkillNodeScreen(minecraft, screen, this, this.treeData.root(skillTree), this.treeData, ((SkillHandler<?>) skillHandler));
         this.background = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/backgrounds/level.png");
         addNode(this.root);
 
@@ -221,10 +224,10 @@ public class SkillsTabScreen {
         return this.skillHandler.getLeftSkillPoints();
     }
 
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         double scrollXP = this.scrollX * this.zoom;
         double scrollYP = this.scrollY * this.zoom;
-        this.zoom = (float) (this.zoom + (amount / 25));
+        this.zoom = (float) (this.zoom + ((pScrollX + pScrollY) / 25));
         float heightZoom = this.zoom;
         float widthZoom = this.zoom;
         if (this.zoom * (this.treeHeight) < (SCREEN_HEIGHT)) {

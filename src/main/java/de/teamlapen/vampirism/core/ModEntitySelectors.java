@@ -53,11 +53,11 @@ public class ModEntitySelectors {
         EntitySelectorOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();
             MinMaxBounds.Ints bound = MinMaxBounds.Ints.fromReader(reader);
-            if ((bound.getMin() == null || bound.getMin() >= 0) && (bound.getMax() == null || bound.getMax() >= 0)) {
+            if ((bound.min().isEmpty() || bound.min().get() >= 0) && (bound.max().isEmpty() || bound.max().get() >= 0)) {
                 parser.addPredicate(input -> {
                     if (input instanceof Player) {
                         int level = FactionPlayerHandler.getOpt((Player) input).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
-                        return (bound.getMin() == null || bound.getMin() <= level) && (bound.getMax() == null || bound.getMax() >= level);
+                        return (bound.min().isEmpty() || bound.min().get() <= level) && (bound.max().isEmpty() || bound.max().get() >= level);
                     }
                     return false;
                 });

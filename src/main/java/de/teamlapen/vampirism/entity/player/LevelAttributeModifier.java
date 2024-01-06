@@ -86,10 +86,7 @@ public class LevelAttributeModifier {
      * @param uuid UUID of modifier to remove
      */
     private static void rmMod(@NotNull AttributeInstance att, @NotNull UUID uuid) {
-        AttributeModifier m = att.getModifier(uuid);
-        if (m != null) {
-            att.removeModifier(m);
-        }
+        att.removeModifier(uuid);
     }
 
     /**

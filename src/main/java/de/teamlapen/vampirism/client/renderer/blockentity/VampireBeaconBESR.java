@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,5 +52,10 @@ public class VampireBeaconBESR extends VampirismBESR<VampireBeaconBlockEntity> {
     @Override
     public boolean shouldRender(VampireBeaconBlockEntity pBlockEntity, Vec3 pCameraPos) {
         return Vec3.atCenterOf(pBlockEntity.getBlockPos()).multiply(1.0D, 0.0D, 1.0D).closerThan(pCameraPos.multiply(1.0D, 0.0D, 1.0D), this.getViewDistance());
+    }
+
+    @Override
+    public @NotNull AABB getRenderBoundingBox(@NotNull VampireBeaconBlockEntity blockEntity) {
+        return INFINITE_EXTENT_AABB;
     }
 }

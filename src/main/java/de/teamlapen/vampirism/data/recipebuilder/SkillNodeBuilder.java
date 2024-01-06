@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class SkillNodeBuilder {
 
@@ -45,12 +44,12 @@ public class SkillNodeBuilder {
         this.lockingSkillNodes = new ResourceLocation[0];
     }
 
-    public @NotNull ResourceLocation build(@NotNull Consumer<FinishedSkillNode> consumer, @NotNull ResourceLocation id) {
+    public @NotNull ResourceLocation build(@NotNull SkillNodeOutput output, @NotNull ResourceLocation id) {
         if (faction != null) {
             id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
         this.validate(id);
-        consumer.accept(new Result(id, this.parent, this.skills, this.lockingSkillNodes));
+        output.accept(id, new Result(id, this.parent, this.skills, this.lockingSkillNodes));
         return id;
     }
 

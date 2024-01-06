@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
@@ -28,7 +28,6 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -40,70 +39,31 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.neoforged.neoforge.event.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
  * Main class for hunter players
  */
 public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IHunterPlayer {
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "hunter_player");
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
-    public static final Capability<IHunterPlayer> CAP = VampirismCapabilities.HUNTER_PLAYER;
-
-    /**
-     * Don't call before the construction event of the player entity is finished
-     * Must check Entity#isAlive before
-     * <br>
-     * Always prefer calling #getOpt instead
-     */
-    @Deprecated
     public static @NotNull HunterPlayer get(@NotNull Player player) {
-        return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
+        return player.getData(ModAttachments.HUNTER_PLAYER);
     }
 
-    /**
-     * Return a LazyOptional, but print a warning message if not present.
-     */
-    public static @NotNull LazyOptional<HunterPlayer> getOpt(@NotNull Player player) {
-        LazyOptional<HunterPlayer> opt = player.getCapability(CAP, null).cast();
-        if (!opt.isPresent()) {
-            LOGGER.warn("Cannot get Hunter player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
-        }
-        return opt;
-    }
-
-    public static @NotNull ICapabilityProvider createNewCapability(final Player player) {
-        return new ICapabilitySerializable<CompoundTag>() {
-
-            final HunterPlayer inst = new HunterPlayer(player);
-            final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
-
-            @Override
-            public void deserializeNBT(@NotNull CompoundTag nbt) {
-                inst.loadData(nbt);
-            }
-
-            @NotNull
-            @Override
-            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
-                return CAP.orEmpty(capability, opt);
-            }
-
-            @Override
-            public @NotNull CompoundTag serializeNBT() {
-                CompoundTag tag = new CompoundTag();
-                inst.saveData(tag);
-                return tag;
-            }
-        };
+    public static @NotNull Optional<HunterPlayer> getOpt(@NotNull Player player) {
+        return Optional.ofNullable(player.getData(ModAttachments.HUNTER_PLAYER));
     }
 
     private final @NotNull ActionHandler<IHunterPlayer> actionHandler;
@@ -131,8 +91,8 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public @NotNull ResourceLocation getCapKey() {
-        return REFERENCE.HUNTER_PLAYER_KEY;
+    public @NotNull ResourceLocation getAttachmentKey() {
+        return SERIALIZER_ID;
     }
 
     @Override
@@ -183,12 +143,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE.get());
     }
 
-    public void loadData(@NotNull CompoundTag compound) {
-        super.loadData(compound);
-        actionHandler.loadFromNbt(compound);
-        skillHandler.loadFromNbt(compound);
-    }
-
     @Override
     public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
 
@@ -199,7 +153,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         super.onDeath(src);
         actionHandler.deactivateAllActions();
         if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE.get()) != null) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger(((ServerPlayer) src.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(((ServerPlayer) src.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
 
@@ -247,11 +201,15 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
-                    actionHandler.writeUpdateForClient(syncPacket);
+                    CompoundTag tag = new CompoundTag();
+                    actionHandler.writeUpdateForClient(tag);
+                    syncPacket.put("action_handler", tag);
                 }
                 if (skillHandler.isDirty()) {
                     sync = true;
-                    skillHandler.writeUpdateForClient(syncPacket);
+                    CompoundTag tag = new CompoundTag();
+                    skillHandler.writeUpdateForClient(tag);
+                    syncPacket.put("skill_handler", tag);
                 }
                 if (sync) {
                     sync(syncPacket, syncToAll);
@@ -283,33 +241,42 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     }
 
-    public void saveData(@NotNull CompoundTag compound) {
-        super.saveData(compound);
-        actionHandler.saveToNbt(compound);
-        skillHandler.saveToNbt(compound);
+    @Override
+    public void loadUpdateFromNBT(CompoundTag nbt) {
+        super.loadUpdateFromNBT(nbt);
+        actionHandler.readUpdateFromServer(nbt.getCompound("action_handler"));
+        skillHandler.readUpdateFromServer(nbt.getCompound("skill_handler"));
     }
 
     @Override
-    protected @NotNull FactionBasePlayer<IHunterPlayer> copyFromPlayer(@NotNull Player old) {
-        HunterPlayer oldHunter = get(old);
-        CompoundTag nbt = new CompoundTag();
-        oldHunter.saveData(nbt);
-        this.loadData(nbt);
-        return oldHunter;
+    public void loadFromNBT(CompoundTag nbt) {
+        super.loadFromNBT(nbt);
+        actionHandler.readUpdateFromServer(nbt.getCompound("action_handler"));
+        skillHandler.readUpdateFromServer(nbt.getCompound("skill_handler"));
     }
 
     @Override
-    protected void loadUpdate(@NotNull CompoundTag nbt) {
-        super.loadUpdate(nbt);
-        actionHandler.readUpdateFromServer(nbt);
-        skillHandler.readUpdateFromServer(nbt);
+    public CompoundTag writeFullUpdateToNBT() {
+        var tag = super.writeFullUpdateToNBT();
+        CompoundTag actionHandler = new CompoundTag();
+        CompoundTag skillHandler = new CompoundTag();
+        this.actionHandler.writeUpdateForClient(actionHandler);
+        this.skillHandler.writeUpdateForClient(skillHandler);
+        tag.put("action_handler", actionHandler);
+        tag.put("skill_handler", skillHandler);
+        return tag;
     }
 
     @Override
-    protected void writeFullUpdate(@NotNull CompoundTag nbt) {
-        super.writeFullUpdate(nbt);
-        actionHandler.writeUpdateForClient(nbt);
-        skillHandler.writeUpdateForClient(nbt);
+    public CompoundTag writeToNBT() {
+        var tag = super.writeFullUpdateToNBT();
+        CompoundTag actionHandler = new CompoundTag();
+        CompoundTag skillHandler = new CompoundTag();
+        this.actionHandler.writeUpdateForClient(actionHandler);
+        this.skillHandler.writeUpdateForClient(skillHandler);
+        tag.put("action_handler", actionHandler);
+        tag.put("skill_handler", skillHandler);
+        return tag;
     }
 
     @Override
@@ -318,5 +285,34 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
             (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
             HelperLib.sync(minion);
         }));
+    }
+
+    public static class Serializer implements IAttachmentSerializer<CompoundTag, HunterPlayer> {
+
+        @Override
+        public HunterPlayer read(IAttachmentHolder holder, CompoundTag tag) {
+            if(holder instanceof Player player) {
+                var hunter = new HunterPlayer(player);
+                hunter.loadFromNBT(tag);
+                return hunter;
+            }
+            throw new IllegalArgumentException("Expected Player, got " + holder.getClass().getSimpleName());
+        }
+
+        @Override
+        public CompoundTag write(HunterPlayer attachment) {
+            return attachment.writeToNBT();
+        }
+    }
+
+    public static class Factory implements Function<IAttachmentHolder, HunterPlayer> {
+
+        @Override
+        public HunterPlayer apply(IAttachmentHolder holder) {
+            if (holder instanceof Player player) {
+                return new HunterPlayer(player);
+            }
+            throw new IllegalArgumentException("Cannot create hunter player attachment for holder " + holder.getClass() + ". Expected Player");
+        }
     }
 }

@@ -7,10 +7,12 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<T> {
 
-    Codec<IPlayableFaction<?>> PLAYABLE_CODEC = RecordCodecBuilder.create(ins -> ins.group(ResourceLocation.CODEC.fieldOf("id").forGetter(IPlayableFaction::getID)).apply(ins, (id) -> (IPlayableFaction<?>) VampirismAPI.factionRegistry().getFactionByID(id)));
+    Codec<IPlayableFaction<?>> CODEC = RecordCodecBuilder.create(ins -> ins.group(ResourceLocation.CODEC.fieldOf("id").forGetter(IPlayableFaction::getID)).apply(ins, (id) -> (IPlayableFaction<?>) VampirismAPI.factionRegistry().getFactionByID(id)));
 
     Class<T> getFactionPlayerInterface();
 
@@ -38,12 +40,12 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      * @return A text component representing the title of the player at the given lord level. empty if level==0
      */
     @NotNull
-    Component getLordTitle(int level, boolean female);
+    Component getLordTitle(int level, TitleGender female);
 
     /**
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    LazyOptional<T> getPlayerCapability(Player player);
+    Optional<T> getPlayerCapability(Player player);
 
     /**
      * @return If this faction is allowed to have accessories
@@ -62,4 +64,20 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      */
     boolean hasLordSkills();
 
+    enum TitleGender implements StringRepresentable {
+        UNKNOWN("unknown"),
+        MALE("unknown"),
+        FEMALE("unknown");
+
+        private final String name;
+
+        TitleGender(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
+        }
+    }
 }

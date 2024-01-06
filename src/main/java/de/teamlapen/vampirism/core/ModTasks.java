@@ -25,9 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("unused")
 public class ModTasks {
@@ -36,24 +36,24 @@ public class ModTasks {
     public static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = DeferredRegister.create(VampirismRegistries.TASK_REQUIREMENT_ID, REFERENCE.MODID);
     public static final DeferredRegister<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DeferredRegister.create(VampirismRegistries.TASK_REWARD_INSTANCE_ID, REFERENCE.MODID);
 
-    public static final RegistryObject<Codec<? extends TaskUnlocker>> LORD_LEVEL_UNLOCKER = TASK_UNLOCKER.register("lord_level", () -> LordLvlUnlocker.CODEC);
-    public static final RegistryObject<Codec<? extends TaskUnlocker>> LEVEL_UNLOCKER = TASK_UNLOCKER.register("level", () -> LvlUnlocker.CODEC);
-    public static final RegistryObject<Codec<? extends TaskUnlocker>> PARENT_UNLOCKER = TASK_UNLOCKER.register("parent", () -> ParentUnlocker.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskUnlocker>,Codec<? extends TaskUnlocker>> LORD_LEVEL_UNLOCKER = TASK_UNLOCKER.register("lord_level", () -> LordLvlUnlocker.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskUnlocker>,Codec<? extends TaskUnlocker>> LEVEL_UNLOCKER = TASK_UNLOCKER.register("level", () -> LvlUnlocker.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskUnlocker>,Codec<? extends TaskUnlocker>> PARENT_UNLOCKER = TASK_UNLOCKER.register("parent", () -> ParentUnlocker.CODEC);
 
-    public static final RegistryObject<Codec<ItemReward>> ITEM_REWARD = TASK_REWARDS.register("item", () -> ItemReward.CODEC);
-    public static final RegistryObject<Codec<LordLevelReward>> LORD_LEVEL_REWARD = TASK_REWARDS.register("lord_level", () -> LordLevelReward.CODEC);
-    public static final RegistryObject<Codec<RefinementItemReward>> REFINEMENT_REWARD = TASK_REWARDS.register("refinement", () -> RefinementItemReward.CODEC);
-    public static final RegistryObject<Codec<ConsumerReward>> CONSUMER = TASK_REWARDS.register("consumer", () -> ConsumerReward.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskReward>,Codec<ItemReward>> ITEM_REWARD = TASK_REWARDS.register("item", () -> ItemReward.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskReward>,Codec<LordLevelReward>> LORD_LEVEL_REWARD = TASK_REWARDS.register("lord_level", () -> LordLevelReward.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskReward>,Codec<RefinementItemReward>> REFINEMENT_REWARD = TASK_REWARDS.register("refinement", () -> RefinementItemReward.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskReward>,Codec<ConsumerReward>> CONSUMER = TASK_REWARDS.register("consumer", () -> ConsumerReward.CODEC);
 
-    public static final RegistryObject<Codec<ItemReward.Instance>> ITEM_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("item", () -> ItemReward.Instance.CODEC);
-    public static final RegistryObject<Codec<LordLevelReward>> LORD_LEVEL_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("lord_level", () -> LordLevelReward.CODEC);
-    public static final RegistryObject<Codec<ConsumerReward>> CONSUMER_INSTANCE = TASK_REWARD_INSTANCES.register("consumer", () -> ConsumerReward.CODEC);
+    public static final DeferredHolder<Codec<? extends ITaskRewardInstance>,Codec<ItemReward.Instance>> ITEM_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("item", () -> ItemReward.Instance.CODEC);
+    public static final DeferredHolder<Codec<? extends ITaskRewardInstance>,Codec<LordLevelReward>> LORD_LEVEL_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("lord_level", () -> LordLevelReward.CODEC);
+    public static final DeferredHolder<Codec<? extends ITaskRewardInstance>,Codec<ConsumerReward>> CONSUMER_INSTANCE = TASK_REWARD_INSTANCES.register("consumer", () -> ConsumerReward.CODEC);
 
-    public static final RegistryObject<Codec<? extends TaskRequirement.Requirement<?>>> BOOLEAN_REQUIREMENT = TASK_REQUIREMENTS.register("boolean", () -> BooleanRequirement.CODEC);
-    public static final RegistryObject<Codec<? extends TaskRequirement.Requirement<?>>> ENTITY_REQUIREMENT = TASK_REQUIREMENTS.register("entity", () -> EntityRequirement.CODEC);
-    public static final RegistryObject<Codec<? extends TaskRequirement.Requirement<?>>> ENTITY_TYPE_REQUIREMENT = TASK_REQUIREMENTS.register("entity_type", () -> EntityTypeRequirement.CODEC);
-    public static final RegistryObject<Codec<? extends TaskRequirement.Requirement<?>>> ITEM_REQUIREMENT = TASK_REQUIREMENTS.register("item", () -> ItemRequirement.CODEC);
-    public static final RegistryObject<Codec<? extends TaskRequirement.Requirement<?>>> STAT_REQUIREMENT = TASK_REQUIREMENTS.register("stat", () -> StatRequirement.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskRequirement.Requirement<?>>,Codec<? extends TaskRequirement.Requirement<?>>> BOOLEAN_REQUIREMENT = TASK_REQUIREMENTS.register("boolean", () -> BooleanRequirement.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskRequirement.Requirement<?>>,Codec<? extends TaskRequirement.Requirement<?>>> ENTITY_REQUIREMENT = TASK_REQUIREMENTS.register("entity", () -> EntityRequirement.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskRequirement.Requirement<?>>,Codec<? extends TaskRequirement.Requirement<?>>> ENTITY_TYPE_REQUIREMENT = TASK_REQUIREMENTS.register("entity_type", () -> EntityTypeRequirement.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskRequirement.Requirement<?>>,Codec<? extends TaskRequirement.Requirement<?>>> ITEM_REQUIREMENT = TASK_REQUIREMENTS.register("item", () -> ItemRequirement.CODEC);
+    public static final DeferredHolder<Codec<? extends TaskRequirement.Requirement<?>>,Codec<? extends TaskRequirement.Requirement<?>>> STAT_REQUIREMENT = TASK_REQUIREMENTS.register("stat", () -> StatRequirement.CODEC);
 
     //vampire
     //  lord tasks

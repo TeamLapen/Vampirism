@@ -1,41 +1,27 @@
 package de.teamlapen.lib.network;
 
-import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.network.ISyncable;
+import com.mojang.serialization.Codec;
+import de.teamlapen.lib.LIBREFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 /**
- * Request an update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
+ * Request an update packet for the players {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableAttachment} (e.g. on World join)
  */
-public class ServerboundRequestPlayerUpdatePacket implements IMessage.IServerBoundMessage {
+public class ServerboundRequestPlayerUpdatePacket implements CustomPacketPayload {
 
-    @SuppressWarnings("EmptyMethod")
-    static void encode(ServerboundRequestPlayerUpdatePacket msg, FriendlyByteBuf buf) {
+    public static final ResourceLocation ID = new ResourceLocation(LIBREFERENCE.MODID, "request_player_update");
+    public static final Codec<ServerboundRequestPlayerUpdatePacket> CODEC = Codec.unit(ServerboundRequestPlayerUpdatePacket::new);
 
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ServerboundRequestPlayerUpdatePacket decode(FriendlyByteBuf buf) {
-        return new ServerboundRequestPlayerUpdatePacket();
-    }
-
-
-    public static void handle(final ServerboundRequestPlayerUpdatePacket pkt, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> { //Execute on main thread
-            ServerPlayer player = ctx.getSender();
-            if (player != null) {
-                ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(player);
-                if (update != null) {
-                    update.markAsPlayerItself();
-                    VampLib.dispatcher.sendTo(update, player);
-                }
-            }
-        });
-        ctx.setPacketHandled(true);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
 }

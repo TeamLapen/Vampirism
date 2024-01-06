@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.world.VampirismWorld;
+import de.teamlapen.vampirism.world.LevelGarlic;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -27,10 +27,10 @@ public class GarlicCheckCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int garlicCheck(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof Player) {
-            commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.garliccheck.strength", VampirismAPI.getVampirismWorld(asPlayer.getCommandSenderWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.blockPosition()))).orElse(EnumStrength.NONE)), true);
+            commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.garliccheck.strength", VampirismAPI.getGarlicHandler(asPlayer.getCommandSenderWorld()).map(w -> w.getStrengthAtChunk(new ChunkPos(asPlayer.blockPosition()))).orElse(EnumStrength.NONE)), true);
         }
         if (print) {
-            VampirismWorld.getOpt(asPlayer.getCommandSenderWorld()).ifPresent(vw -> vw.printDebug(commandSource));
+            LevelGarlic.getOpt(asPlayer.getCommandSenderWorld()).ifPresent(vw -> vw.printDebug(commandSource));
         }
         return 0;
     }

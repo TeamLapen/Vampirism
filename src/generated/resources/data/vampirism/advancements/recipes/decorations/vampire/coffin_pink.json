@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_wool",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_wool"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:vampire/coffin_pink"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

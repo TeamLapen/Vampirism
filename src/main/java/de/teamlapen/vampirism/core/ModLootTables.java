@@ -11,8 +11,8 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -73,15 +73,17 @@ public class ModLootTables {
     @SubscribeEvent
     public static void onLootLoad(@NotNull LootTableLoadEvent event) {
         String prefix = "minecraft:chests/";
-        String name = event.getName().toString();
-        if (name.startsWith(prefix)) {
-            String file = name.substring(name.indexOf(prefix) + prefix.length());
-            if (INJECTION_TABLES.containsKey(file)) {
-                try {
-                    ((LootTableAccessor) event.getTable()).getPools().add(getInjectPool(file));
-                    injected++;
-                } catch (NullPointerException e) {
-                    LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
+        if (event.getName() != null) {
+            String name = event.getName().toString();
+            if (name.startsWith(prefix)) {
+                String file = name.substring(name.indexOf(prefix) + prefix.length());
+                if (INJECTION_TABLES.containsKey(file)) {
+                    try {
+                        ((LootTableAccessor) event.getTable()).getPools().add(getInjectPool(file));
+                        injected++;
+                    } catch (NullPointerException e) {
+                        LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
+                    }
                 }
             }
         }

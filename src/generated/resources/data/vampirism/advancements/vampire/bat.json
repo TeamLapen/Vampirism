@@ -3,30 +3,29 @@
   "criteria": {
     "action": {
       "conditions": {
-        "action": "BAT"
+        "action": "bat"
       },
       "trigger": "vampirism:vampire_action"
     },
     "main": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:vampire",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:vampire"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.bat.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "minecraft:feather"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.bat"
     }

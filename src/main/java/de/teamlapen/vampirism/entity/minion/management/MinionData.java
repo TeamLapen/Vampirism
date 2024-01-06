@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -16,12 +15,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
@@ -29,22 +30,6 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
 
     public final static int MAX_NAME_LENGTH = 15;
     protected final static Logger LOGGER = LogManager.getLogger();
-    private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
-
-    /**
-     * @deprecated use {@link de.teamlapen.vampirism.api.entity.factions.IMinionBuilder} from  {@link de.teamlapen.vampirism.api.entity.factions.ILordPlayerBuilder} instead
-     */
-    @Deprecated(forRemoval = true)
-    public static void registerDataType(ResourceLocation id, Supplier<? extends MinionData> supplier) {
-        constructors.put(id, supplier);
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void registerDataTypes() {
-        constructors.forEach((id, supplier) -> {
-            ((FactionRegistry) VampirismAPI.factionRegistry()).addMinionData(id, supplier);
-        });
-    }
 
     @NotNull
     public static MinionData fromNBT(@NotNull CompoundTag nbt) {

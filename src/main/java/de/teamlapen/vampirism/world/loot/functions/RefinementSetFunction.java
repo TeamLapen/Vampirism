@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.RefinementItem;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -18,8 +15,14 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
+    public static final Codec<RefinementSetFunction> CODEC = RecordCodecBuilder.create(inst ->
+            commonFields(inst).and(IFaction.CODEC.fieldOf("faction").forGetter(l -> l.faction))
+                    .apply(inst, RefinementSetFunction::new)
+            );
     public static @NotNull Builder<?> builder(IFaction<?> faction) {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
     }
@@ -31,7 +34,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     @Nullable
     public final IFaction<?> faction;
 
-    public RefinementSetFunction(@NotNull LootItemCondition @NotNull [] conditionsIn, @Nullable IFaction<?> faction) {
+    public RefinementSetFunction(@NotNull List<LootItemCondition> conditionsIn, @Nullable IFaction<?> faction) {
         super(conditionsIn);
         this.faction = faction;
     }
@@ -54,28 +57,4 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
         return stack;
     }
 
-    public static class Serializer extends LootItemConditionalFunction.Serializer<RefinementSetFunction> {
-
-        @NotNull
-        @Override
-        public RefinementSetFunction deserialize(@NotNull JsonObject json, @NotNull JsonDeserializationContext context, @NotNull LootItemCondition[] conditionsIn) {
-            IFaction<?> faction = null;
-            if (json.has("faction")) {
-                String string = json.get("faction").getAsString();
-                faction = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(json.get("faction").getAsString()));
-                if (faction == null) {
-                    throw new IllegalStateException("Faction " + string + " does not exist");
-                }
-            }
-            return new RefinementSetFunction(conditionsIn, faction);
-        }
-
-        @Override
-        public void serialize(@NotNull JsonObject json, @NotNull RefinementSetFunction function, @NotNull JsonSerializationContext context) {
-            super.serialize(json, function, context);
-            if (function.faction != null) {
-                json.addProperty("faction", function.faction.getID().toString());
-            }
-        }
-    }
 }

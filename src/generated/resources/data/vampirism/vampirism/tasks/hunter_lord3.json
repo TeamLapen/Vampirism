@@ -25,12 +25,7 @@
   },
   "rewards": {
     "type": "vampirism:lord_level",
-    "description": {
-      "translate": "task_reward.vampirism.lord_level_reward",
-      "with": [
-        "3"
-      ]
-    },
+    "description": "{\"translate\":\"task_reward.vampirism.lord_level_reward\",\"with\":[3]}",
     "targetLevel": 3
   },
   "title": {

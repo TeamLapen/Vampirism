@@ -223,7 +223,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
+    public BlockState playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
         if (!world.isClientSide && player.isCreative()) {
             EnumPart part = blockState.getValue(PART);
             if (part == EnumPart.TOP) {
@@ -236,7 +236,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             }
         }
 
-        super.playerWillDestroy(world, blockPos, blockState, player);
+        return super.playerWillDestroy(world, blockPos, blockState, player);
     }
 
     @Override

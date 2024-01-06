@@ -11,7 +11,7 @@ repositories {
         //Local repo for custom forge builds.
         //Is not required to exist
         name = "LocalForge"
-        url = "../../MinecraftForge/repo/"
+        url = "../../NeoForge/repo/"
     }
     maven {
         name = "Maxanier"
@@ -24,93 +24,74 @@ repositories {
         }
     }
 
+    maven {
+        name = "Forge"
+        url = "https://maven.minecraftforge.net"
+    }
+
     mavenCentral()
     mavenLocal()
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation "net.neoforged:neoforge:${forge_version}"
 
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
     if (include_jei.toBoolean()) {
-        compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}") //API for compile
-        compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge-api:${project.jei_version}") //API for compile
-        runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${project.jei_version}") //Full for runtime
+        compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}" //API for compile
+        compileOnly "mezz.jei:jei-${jei_mc_version}-forge-api:${project.jei_version}" //API for compile
+        runtimeOnly "mezz.jei:jei-${jei_mc_version}-forge:${project.jei_version}" //Full for runtime
     }
 
     if (include_guideapi.toBoolean()) {
-        compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
-        runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
+        compileOnly "de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}"
+        runtimeOnly "de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}"
     }
 
     if (include_terrablender.toBoolean()) {
-        compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
-        runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${project.terrablender_version}")
+        compileOnly "com.github.glitchfiend:TerraBlender-neoforge:${project.terrablender_version}"
+        runtimeOnly "com.github.glitchfiend:TerraBlender-neoforge:${project.terrablender_version}"
     }
 
     if (include_jade.toBoolean()) {
-        runtimeOnly fg.deobf("curse.maven:jade-324717:" + project.jade_version)
+        runtimeOnly "curse.maven:jade-324717:" + project.jade_version
     }
 }
 
-minecraft {
-    mappings channel: project.mappings_channel, version: mappings_version
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    copyIdeResources = true
+minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    runs {
-        configureEach {
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.logging.markers', 'REGISTRIES'
-            jvmArg '-ea:de.teamlapen...'
+runs {
+    configureEach {
+        systemProperty 'forge.logging.console.level', 'debug'
 
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                    source sourceSets.api
-                    source sourceSets.lib
-                }
-            }
-        }
-
-        client {
-            taskName 'runClient1'
-            workingDirectory project.file('run/client1').canonicalPath
-            property 'vampirism_target', 'dev_client'
-        }
-        client2 {
-            parent runs.client
-            taskName 'runClient2'
-            arg '--username=Dev2'
-        }
-        // the same as runClient1 but with JBR only arguments
-        clientJBR {
-            parent runs.client
-            taskName 'runClientJBR'
-            jvmArg "-XX:+AllowEnhancedClassRedefinition"
-        }
-        server {
-            workingDirectory project.file('run/server').canonicalPath
-            property 'vampirism_target', 'dev_server'
-        }
-        data {
-            property 'vampirism_target', 'dev_data'
-            workingDirectory project.file('run/data').canonicalPath
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'),  '--existing', file('src/main/resources/')
-        }
+        modSources = [project.sourceSets.api, project.sourceSets.lib, project.sourceSets.main]
+    }
+    client {
+        systemProperty 'vampirism_target', 'dev'
+        jvmArgument '-XX:+AllowEnhancedClassRedefinition'
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
     }
 
+    server {
+        systemProperty 'vampirism_target', 'dev'
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
+
+    gameTestServer {
+        systemProperty 'vampirism_target', 'dev'
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    data {
+        systemProperty 'vampirism_target', 'dev_data'
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
 }
 
-// https://github.com/SpongePowered/Mixin/wiki/Mixins-on-Minecraft-Forge
-mixin {
-    add sourceSets.main, "vampirism.refmap.json"
-    config 'vampirism.mixins.json'
-
-    debug.verbose = true
-    debug.export = true
+subsystems {
+    parchment {
+        minecraftVersion = project.parchment_minecraft_version
+        mappingsVersion = project.parchment_mappings_version
+    }
 }

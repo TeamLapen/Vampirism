@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_garlic_diffuser",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_garlic_diffuser"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/garlic_diffuser_improved"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

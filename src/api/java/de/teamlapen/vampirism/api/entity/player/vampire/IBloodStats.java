@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Blood stats similar to FoodStats for vampire players
@@ -22,7 +20,6 @@ public interface IBloodStats {
      */
     int getMaxBlood();
 
-    @OnlyIn(Dist.CLIENT)
     int getPrevBloodLevel();
 
     /**

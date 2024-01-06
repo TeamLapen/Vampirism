@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -18,7 +19,7 @@ import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
-import de.teamlapen.vampirism.util.PlayerSkinHelper;
+import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -48,9 +49,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,9 +91,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     /**
      * Overlay player texture and if slim (true)
      */
-    @OnlyIn(Dist.CLIENT)
     @Nullable
-    private Pair<ResourceLocation, Boolean> skinDetails;
+    private Pair<ResourceLocation, PlayerModelType> skinDetails;
     /**
      * If set, the vampire book with this id should be dropped
      */
@@ -229,11 +228,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public @NotNull Optional<Pair<ResourceLocation, Boolean>> getOverlayPlayerProperties() {
+    public @NotNull Optional<Pair<ResourceLocation, PlayerModelType>> getOverlayPlayerProperties() {
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(new GameProfile(null, name), p -> this.skinDetails = p));
+            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(null, name), p -> this.skinDetails = p);
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);

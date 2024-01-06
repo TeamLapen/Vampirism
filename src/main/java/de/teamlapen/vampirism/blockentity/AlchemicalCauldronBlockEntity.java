@@ -28,17 +28,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -108,11 +111,9 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         return Component.translatable("tile.vampirism.alchemical_cauldron.display", ownerName, Component.translatable("tile.vampirism.alchemical_cauldron"));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
-
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> ModRecipes.getLiquidColor(liquidItem.getItem()));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> ModRecipes.getLiquidColor(liquidItem));
     }
 
     public @NotNull Component getOwnerName() {
@@ -160,11 +161,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         super.load(compound);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         CompoundTag nbt = pkt.getTag();
-        if (hasLevel()) {
+        if (nbt != null && hasLevel()) {
             handleUpdateTag(nbt);
         }
     }
@@ -224,10 +224,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
         ItemStack itemstackFuel = blockEntity.items.get(3);
         if (blockEntity.isBurning() || !itemstackFuel.isEmpty() && !blockEntity.items.get(0).isEmpty() && !blockEntity.items.get(1).isEmpty()) {
-            AlchemicalCauldronRecipe cauldronRecipe = null;
-            Optional<? extends AbstractCookingRecipe> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity, level);
-            if (irecipe.isPresent() && irecipe.get() instanceof AlchemicalCauldronRecipe recipe) {
-                cauldronRecipe = recipe;
+            RecipeHolder<AlchemicalCauldronRecipe> cauldronRecipe = null;
+            Optional<RecipeHolder<AlchemicalCauldronRecipe>> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity, level);
+            if (irecipe.isPresent()) {
+                cauldronRecipe = irecipe.get();
             } else {
                 if (!warnedRecipeType) {
                     LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod", ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
@@ -235,7 +235,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 }
             }
 
-            if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+            if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe.value())) {
                 blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time
                 blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
                 if (blockEntity.isBurning()) {
@@ -252,7 +252,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 }
             }
 
-            if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe)) {
+            if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).canBurn_vampirism(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe.value())) {
                 blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
                 if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
                     blockEntity.dataAccess.set(2, 0);
@@ -311,11 +311,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
      */
-    private void finishCooking(RegistryAccess access, @Nullable AlchemicalCauldronRecipe recipe) {
-        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).canBurn_vampirism(access, recipe, items, getMaxStackSize()) && canPlayerCook(recipe)) {
+    private void finishCooking(RegistryAccess access, @Nullable RecipeHolder<AlchemicalCauldronRecipe> recipe) {
+        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).canBurn_vampirism(access, recipe, items, getMaxStackSize()) && canPlayerCook(recipe.value())) {
             ItemStack itemstackfluid = this.items.get(0);
             ItemStack itemstackingredient = this.items.get(1);
-            ItemStack itemstack1result = recipe.getResultItem(access);
+            ItemStack itemstack1result = recipe.value().getResultItem(access);
             ItemStack itemstackoutput = this.items.get(2);
             if (itemstackoutput.isEmpty()) {
                 this.items.set(2, itemstack1result.copy());
@@ -327,7 +327,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 this.setRecipeUsed(recipe);
             }
 
-            Either<Ingredient, FluidStack> fluid = recipe.getFluid();
+            Either<Ingredient, FluidStack> fluid = recipe.value().getFluid();
             fluid.ifLeft(ingredient -> itemstackfluid.shrink(1));
             fluid.ifRight(fluidStack -> this.items.set(0, FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
                 FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);

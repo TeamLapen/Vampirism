@@ -2,7 +2,8 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.util.OptifineHandler;
@@ -44,24 +45,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.event.TickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
+import java.util.Optional;
+
 /**
  * Handles general Overlay thingies TODO change batmode color
  */
-@OnlyIn(Dist.CLIENT)
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
@@ -111,7 +110,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.getOpt(mc.player).resolve().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.getOpt(mc.player).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {
@@ -151,9 +150,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
                 if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
                     VampirePlayer.getOpt(mc.player).ifPresent(player -> {
-                        LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
+                        Optional<? extends IBiteableEntity> biteableOpt = Optional.empty();
                         if (entity instanceof IBiteableEntity) {
-                            biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
+                            biteableOpt = Optional.of((IBiteableEntity) entity);
                         } else if (entity instanceof PathfinderMob && entity.isAlive()) {
                             biteableOpt = ExtendedCreature.getSafe(entity);
                         } else if (entity instanceof Player) {
@@ -188,7 +187,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {
-                        tile.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(handler -> {
+                        Optional.ofNullable(Minecraft.getInstance().level.getCapability(Capabilities.FluidHandler.BLOCK, ((BlockHitResult) p).getBlockPos(), block, tile, null)).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
                                 renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);

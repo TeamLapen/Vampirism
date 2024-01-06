@@ -1,36 +1,32 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+public record ServerboundActionBindingPacket(int actionBindingId, @Nullable IAction<?> action) implements CustomPacketPayload {
 
-public record ServerboundActionBindingPacket(int actionBindingId, @Nullable IAction<?> action) implements IMessage.IServerBoundMessage {
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "action_binding");
+    public static final Codec<ServerboundActionBindingPacket> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            Codec.INT.fieldOf("action_binding_id").forGetter(ServerboundActionBindingPacket::actionBindingId),
+            ModRegistries.ACTIONS.byNameCodec().optionalFieldOf("action", null).forGetter(ServerboundActionBindingPacket::action)
+    ).apply(inst, ServerboundActionBindingPacket::new));
 
-    static void encode(final @NotNull ServerboundActionBindingPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeVarInt(msg.actionBindingId);
-        buf.writeBoolean(msg.action != null);
-        if (msg.action != null) {
-            buf.writeResourceLocation(RegUtil.id(msg.action));
-        }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static @NotNull ServerboundActionBindingPacket decode(@NotNull FriendlyByteBuf buf) {
-        return new ServerboundActionBindingPacket(buf.readVarInt(), buf.readBoolean() ? RegUtil.getAction(buf.readResourceLocation()) : null);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
     }
-
-    public static void handle(final @NotNull ServerboundActionBindingPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> {
-            FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(msg.actionBindingId, msg.action, false, false));
-        });
-        ctx.setPacketHandled(true);
-    }
-
 }

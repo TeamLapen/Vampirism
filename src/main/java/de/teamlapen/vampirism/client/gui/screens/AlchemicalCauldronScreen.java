@@ -8,12 +8,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 
-@OnlyIn(Dist.CLIENT)
 public class AlchemicalCauldronScreen extends AbstractContainerScreen<AlchemicalCauldronMenu> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemical_cauldron.png");
 
@@ -23,7 +20,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
@@ -35,10 +32,10 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
         int j = (this.height - this.imageHeight) / 2;
         graphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-        int k = menu.getLitProgress();
+        int k = (int)menu.getLitProgress();
         if (k > 0) graphics.blit(BACKGROUND, i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
 
-        int l = menu.getBurnProgress();
+        int l = (int)menu.getBurnProgress();
         graphics.blit(BACKGROUND, i + 79, j + 34, 176, 14, l + 1, 16);
         l = (int) (l / 24F * 30F);
         graphics.blit(BACKGROUND, i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);

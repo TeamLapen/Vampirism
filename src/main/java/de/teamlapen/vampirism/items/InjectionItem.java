@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;

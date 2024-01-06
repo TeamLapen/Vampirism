@@ -18,8 +18,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,7 +94,6 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
         setFueledTime(compound.getInt("fueled"));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
         if (hasLevel()) {
@@ -215,7 +214,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getVampirismWorld(getLevel()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
+        id = VampirismAPI.getGarlicHandler(getLevel()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
         registered = i != 0;
 
     }
@@ -238,7 +237,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     private void unregister() {
         if (registered && hasLevel()) {
-            VampirismAPI.getVampirismWorld(getLevel()).ifPresent(vw -> vw.removeGarlicBlock(id));
+            VampirismAPI.getGarlicHandler(getLevel()).ifPresent(vw -> vw.removeGarlicBlock(id));
             registered = false;
         }
     }

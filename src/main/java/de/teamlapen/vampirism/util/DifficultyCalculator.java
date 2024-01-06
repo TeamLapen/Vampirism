@@ -7,14 +7,14 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Calculates a (local) difficulity based on the player faction levels
@@ -35,7 +35,7 @@ public class DifficultyCalculator {
         int sum = 0;
         for (Player p : playerList) {
             if (!p.isAlive()) continue;
-            LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
+            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
             int pLevel = handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0);
             if (pLevel == 0) {
                 min = 0;

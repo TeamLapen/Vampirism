@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crossbow_arrow_normal": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vampirism:crossbow_arrow_normal"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_garlic": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:crops/garlic"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:crossbow_arrow_vampire_killer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_garlic",
+      "has_crossbow_arrow_normal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:crossbow_arrow_vampire_killer"
+    ]
+  }
+}

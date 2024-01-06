@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_arrow",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_arrow"
     ]
   ],
   "rewards": {
     "recipes": [
       "vampirism:hunter/crossbow_arrow_from_vanilla"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

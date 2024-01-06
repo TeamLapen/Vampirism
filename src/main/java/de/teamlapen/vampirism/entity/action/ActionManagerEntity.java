@@ -1,23 +1,23 @@
 package de.teamlapen.vampirism.entity.action;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.core.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ActionManagerEntity implements IEntityActionManager {
 
     @Override
     public @NotNull List<IEntityAction> getAllEntityActions() {
-        return Lists.newArrayList(getRegistry().getValues());
+        return getRegistry().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ActionManagerEntity implements IEntityActionManager {
     }
 
     @Override
-    public IForgeRegistry<IEntityAction> getRegistry() {
-        return ModRegistries.ENTITY_ACTIONS.get();
+    public Registry<IEntityAction> getRegistry() {
+        return ModRegistries.ENTITY_ACTIONS;
     }
 }

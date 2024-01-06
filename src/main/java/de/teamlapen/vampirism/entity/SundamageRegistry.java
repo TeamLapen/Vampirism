@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.network.ClientboundSundamagePacket;
@@ -12,6 +11,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -77,11 +78,15 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     public void updateClients() {
-        VampirismMod.dispatcher.sendToAll(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)));
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        ClientboundSundamagePacket clientboundSundamagePacket = new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels));
+        server.getPlayerList().getPlayers().forEach(s -> s.connection.send(clientboundSundamagePacket));
     }
 
     public void updateClient(@NotNull ServerPlayer player) {
-        VampirismMod.dispatcher.sendTo(new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels)), player);
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        ClientboundSundamagePacket clientboundSundamagePacket = new ClientboundSundamagePacket(new ArrayList<>(this.noSunDamageDimensions), new ArrayList<>(this.noSunDamageBiomes), new ArrayList<>(this.noSunDamageLevels), new ArrayList<>(this.sunDamageLevels));
+        server.getPlayerList().getPlayers().forEach(s -> s.connection.send(clientboundSundamagePacket));
     }
 
     public void applyData(Settings settings) {

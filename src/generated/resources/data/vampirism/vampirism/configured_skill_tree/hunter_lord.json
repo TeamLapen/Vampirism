@@ -1,0 +1,23 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "node": "vampirism:hunter/lord_6"
+        }
+      ],
+      "node": "vampirism:hunter/lord_2"
+    },
+    {
+      "node": "vampirism:hunter/lord_3"
+    },
+    {
+      "node": "vampirism:hunter/lord_4"
+    },
+    {
+      "node": "vampirism:hunter/lord_5"
+    }
+  ],
+  "node": "vampirism:hunter/lord_root",
+  "skill_tree": "vampirism:hunter/lord"
+}

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:alchemical_cauldron/purified_garlic"
+        "recipe": "vampirism:purified_garlic"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,8 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:alchemical_cauldron/purified_garlic"
+      "vampirism:purified_garlic"
     ]
-  },
-  "sends_telemetry_event": true
+  }
 }

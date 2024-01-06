@@ -1,25 +1,25 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.VampirismMod;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.*;
 
 
-public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements IMessage.IClientBoundMessage {
+public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements CustomPacketPayload {
 
     /**
      * Create a minion selection request that can be sent to the client (player).
@@ -30,10 +30,10 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @return Empty if no minions are available
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
-        return FactionPlayerHandler.getOpt(player).resolve().flatMap(fp -> {
+        return FactionPlayerHandler.getOpt(player).flatMap(fp -> {
             PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
             Collection<Integer> ids = controller.getCallableMinions();
-            if (ids.size() > 0) {
+            if (!ids.isEmpty()) {
                 List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
                 ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
                 return Optional.of(new ClientboundRequestMinionSelectPacket(action, minions));
@@ -44,33 +44,36 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
         });
     }
 
-    public static void handle(final @NotNull ClientboundRequestMinionSelectPacket msg, @NotNull Supplier<NetworkEvent.Context> contextSupplier) {
-        final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleRequestMinionSelect(msg.action, msg.minions));
-        ctx.setPacketHandled(true);
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "request_minion_select");
+    public static final Codec<ClientboundRequestMinionSelectPacket> CODEC = RecordCodecBuilder.create(inst
+            -> inst.group(
+                    StringRepresentable.fromEnum(Action::values).fieldOf("action").forGetter(ClientboundRequestMinionSelectPacket::action),
+                    Codec.pair(Codec.INT, ComponentSerialization.CODEC).listOf().fieldOf("minions").forGetter(ClientboundRequestMinionSelectPacket::minions)
+    ).apply(inst, ClientboundRequestMinionSelectPacket::new));
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
-    static void encode(@NotNull ClientboundRequestMinionSelectPacket msg, @NotNull FriendlyByteBuf buf) {
-        buf.writeVarInt(msg.action.ordinal());
-        buf.writeVarInt(msg.minions.size());
-        for (Pair<Integer, Component> minion : msg.minions) {
-            buf.writeVarInt(minion.getLeft());
-            buf.writeComponent(minion.getRight());
+    @Override
+    public @NotNull ResourceLocation id() {
+        return ID;
+    }
+
+
+    public enum Action implements StringRepresentable {
+        CALL("call");
+
+        private final String name;
+
+        Action(String name) {
+            this.name = name;
         }
 
-    }
-
-    static @NotNull ClientboundRequestMinionSelectPacket decode(@NotNull FriendlyByteBuf buf) {
-        Action a = Action.values()[buf.readVarInt()];
-        int count = buf.readVarInt();
-        List<Pair<Integer, Component>> minions = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            minions.add(Pair.of(buf.readVarInt(), buf.readComponent()));
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
         }
-        return new ClientboundRequestMinionSelectPacket(a, minions);
-    }
-
-    public enum Action {
-        CALL
     }
 }

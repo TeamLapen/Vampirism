@@ -5,12 +5,12 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismCapabilities;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.world.ModDamageSources;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -29,53 +28,29 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
  * Extended entity property which every {@link PathfinderMob} has
  */
-public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
+public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtendedCreatureVampirism {
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "extended_creature");
 
     private final static String KEY_BLOOD = "bloodLevel";
-    private final static String KEY_MAX_BLOOD = "maxBlood";
+    private final static String KEY_MAX_BLOOD = "max_blood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-    public static final Capability<IExtendedCreatureVampirism> CAP = VampirismCapabilities.EXTENDED_CREATURE;
 
-    public static @NotNull LazyOptional<IExtendedCreatureVampirism> getSafe(@NotNull Entity mob) {
-        return mob.getCapability(CAP);
-    }
-
-    static <Q extends PathfinderMob> @NotNull ICapabilityProvider createNewCapability(final Q creature) {
-        return new ICapabilitySerializable<CompoundTag>() {
-
-            final @Nullable Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
-            final IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
-            final LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
-
-
-            @Override
-            public void deserializeNBT(CompoundTag nbt) {
-                inst.loadData(nbt);
-            }
-
-            @NotNull
-            @Override
-            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
-                return CAP.orEmpty(capability, opt);
-            }
-
-            @Override
-            public @NotNull CompoundTag serializeNBT() {
-                CompoundTag tag = new CompoundTag();
-                inst.saveData(tag);
-                return tag;
-            }
-        };
+    public static @NotNull Optional<ExtendedCreature> getSafe(@NotNull Entity mob) {
+        if (mob instanceof PathfinderMob pathfinderMob) {
+            return Optional.of(pathfinderMob.getData(ModAttachments.EXTENDED_CREATURE));
+        }
+        return Optional.empty();
     }
 
     private final PathfinderMob entity;
@@ -147,8 +122,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public @NotNull ResourceLocation getCapKey() {
-        return REFERENCE.EXTENDED_CREATURE_KEY;
+    public @NotNull ResourceLocation getAttachmentKey() {
+        return SERIALIZER_ID;
     }
 
     @Override
@@ -314,15 +289,18 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
+
     @Override
-    public void writeFullUpdateToNBT(@NotNull CompoundTag nbt) {
-        nbt.putInt(KEY_BLOOD, getBlood());
-        nbt.putInt(KEY_MAX_BLOOD, getBlood());
-        nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
+    public CompoundTag writeToNBT() {
+        var nbt = new CompoundTag();
+        nbt.putInt(KEY_BLOOD, blood);
+        nbt.putInt(KEY_MAX_BLOOD, maxBlood);
+        nbt.putBoolean(POISONOUS_BLOOD, poisonousBlood);
+        return nbt;
     }
 
     @Override
-    public void loadData(@NotNull CompoundTag compound) {
+    public void loadFromNBT(CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -335,11 +313,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void saveData(@NotNull CompoundTag compound) {
-        compound.putInt(KEY_BLOOD, blood);
-        compound.putInt(KEY_MAX_BLOOD, maxBlood);
-        compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
+    public CompoundTag writeFullUpdateToNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt(KEY_BLOOD, getBlood());
+        nbt.putInt(KEY_MAX_BLOOD, getBlood());
+        nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
+        return nbt;
     }
+
 
     public void sync() {
         HelperLib.sync(this, getEntity(), false);
@@ -350,5 +331,32 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     }
 
+    public static class Serializer implements IAttachmentSerializer<CompoundTag, ExtendedCreature> {
 
+        @Override
+        public ExtendedCreature read(IAttachmentHolder holder, CompoundTag tag) {
+            if (holder instanceof PathfinderMob mob) {
+                var creature = new ExtendedCreature(mob);
+                creature.loadFromNBT(tag);
+                return creature;
+            }
+            throw new IllegalArgumentException("Expected PathfinderMob, got " + holder.getClass().getSimpleName());
+        }
+
+        @Override
+        public CompoundTag write(ExtendedCreature attachment) {
+            return attachment.writeToNBT();
+        }
+    }
+
+    public static class Factory implements Function<IAttachmentHolder, ExtendedCreature> {
+
+        @Override
+        public ExtendedCreature apply(IAttachmentHolder holder) {
+            if (holder instanceof PathfinderMob mob) {
+                return new ExtendedCreature(mob);
+            }
+            throw new IllegalArgumentException("Cannot create extended creature handler attachment for holder " + holder.getClass() + ". Expected PathfinderMob");
+        }
+    }
 }

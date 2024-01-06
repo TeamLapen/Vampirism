@@ -3,8 +3,10 @@
   "criteria": {
     "faction": {
       "conditions": {
-        "type": "LEVEL",
-        "faction": "vampirism:hunter",
+        "type": "level",
+        "faction": {
+          "id": "vampirism:hunter"
+        },
         "level": 1
       },
       "trigger": "vampirism:faction"
@@ -25,16 +27,13 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancement.vampirism.betrayal.desc"
     },
-    "frame": "task",
     "hidden": true,
     "icon": {
       "item": "vampirism:human_heart"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancement.vampirism.betrayal"
     }

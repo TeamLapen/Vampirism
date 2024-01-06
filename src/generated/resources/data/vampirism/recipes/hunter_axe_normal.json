@@ -1,0 +1,25 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "lava": 5,
+  "pattern": [
+    "XXZY",
+    "XXZY",
+    "  ZY",
+    "  Z "
+  ],
+  "result": {
+    "item": "vampirism:hunter_axe_normal"
+  }
+}

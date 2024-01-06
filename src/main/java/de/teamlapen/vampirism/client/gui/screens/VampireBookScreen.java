@@ -112,18 +112,24 @@ public class VampireBookScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double movement) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
 
-        if (movement < 0) {
+        if (pScrollY < 0) {
             nextPage();
-        } else if (movement > 0) {
+        } else if (pScrollY > 0) {
+            prevPage();
+        }
+        if (pScrollX < 0) {
+            nextPage();
+        } else if (pScrollX > 0) {
             prevPage();
         }
 
 
-        return movement != 0 || super.mouseScrolled(p_mouseScrolled_1_, p_mouseScrolled_3_, movement);
+        return (pScrollX != 0 || pScrollY != 0) || super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
 
     }
+
 
     public void nextPage() {
         if (pageNumber != content.size() - 1 && !content.isEmpty()) {
