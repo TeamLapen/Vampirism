@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTags;
@@ -21,10 +20,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -38,6 +34,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Converted creature class.
@@ -54,11 +53,12 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     private boolean entityChanged = false;
-    public T entityCreature;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public Optional<T> entityCreature;
     private boolean canDespawn = false;
     private final Data<T> convertibleData = new Data<>();
 
-    public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
+    public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity<?>> type, Level world) {
         super(type, world, false);
         this.enableImobConversion();
         this.xpReward = 2;
@@ -94,9 +94,8 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public void aiStep() {
-        if (!nil()) {
-            aiStepC((EntityType<T>) this.entityCreature.getType());
-        }
+        //noinspection unchecked
+        this.entityCreature.ifPresent(creature -> aiStepC((EntityType<T>) creature.getType()));
         super.aiStep();
     }
 
@@ -113,7 +112,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public @NotNull Component getName() {
-        return this.getNameC(this.entityCreature.getType()::getDescription);
+        return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getName);
     }
 
     @Override
@@ -146,7 +145,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public void tick() {
-        if (!level().isClientSide && this.entityCreature == null) {
+        if (!level().isClientSide && this.entityCreature.isEmpty()) {
             LOGGER.debug("Setting dead, since creature is null");
             this.discard();
         }
@@ -156,17 +155,16 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
-        if (this.entityCreature == null) {
-            return CurableConvertedCreature.super.cureEntity(world, entity, newType);
-        }
-        this.entityCreature.revive();
-        return this.entityCreature;
+        return this.entityCreature.map(creature -> {
+            creature.revive();
+            return creature;
+        }).orElseGet(() -> CurableConvertedCreature.super.cureEntity(world, entity, newType));
     }
 
     @Override
     public void baseTick() {
         super.baseTick();
-        if (!nil()) {
+        this.entityCreature.ifPresent(entityCreature -> {
             entityCreature.copyPosition(this);
             entityCreature.zo = this.zo;
             entityCreature.yo = this.yo;
@@ -189,7 +187,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;
-        }
+        });
         if (entityChanged) {
             this.updateEntityAttributes();
             entityChanged = false;
@@ -207,7 +205,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
 
-    public T getOldCreature() {
+    public Optional<T> getOldCreature() {
         return this.entityCreature;
     }
 
@@ -226,7 +224,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         if (nbt.contains("entity_old")) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level()).orElse(null));
-            if (nil()) {
+            if (entityCreature.isEmpty()) {
                 LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
             }
         } else {
@@ -240,22 +238,20 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         }
         if (!nbt.contains("source_entity")) {
             getSourceEntityDataParamOpt().ifPresent(p -> {
-                this.getRepresentingEntity().getEntityData().set(p, ForgeRegistries.ENTITY_TYPES.getKey(getOldCreature().getType()).toString());
+                getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, ForgeRegistries.ENTITY_TYPES.getKey(old.getType()).toString()));
             });
         }
     }
 
     @Override
     public void playAmbientSound() {
-        if (!nil()) {
-            this.entityCreature.playAmbientSound();
-        }
+        this.entityCreature.ifPresent(Mob::playAmbientSound);
     }
 
     @Override
     public void refreshDimensions() {
         super.refreshDimensions();
-        this.eyeHeight = this.entityCreature == null ? 0.5f : this.entityCreature.getEyeHeight();
+        this.eyeHeight = this.entityCreature.map(Entity::getEyeHeight).orElse(0.5f);
     }
 
     @Override
@@ -274,19 +270,15 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
      * Set the old creature (the one before conversion)
      */
     public void setEntityCreature(@Nullable T creature) {
-        if ((creature == null && this.entityCreature != null)) {
-            entityChanged = true;
-            this.entityCreature = null;
-        } else if (creature != null) {
-            if (!creature.equals(this.entityCreature)) {
-                this.entityCreature = creature;
-                entityChanged = true;
-                this.dimensions = creature.dimensions;
-            }
+        T old = this.entityCreature.orElse(null);
+        if (!Objects.equals(old, creature)) {
+            this.entityCreature = Optional.ofNullable(creature);
+            this.entityChanged = true;
+            this.dimensions = this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f,0.5f));
         }
-        if (this.entityCreature != null && getConvertedHandler() == null) {
+        if (this.entityCreature.isPresent() && getConvertedHandler() == null) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);
-            this.entityCreature = null;
+            this.entityCreature = Optional.empty();
         }
     }
 
@@ -319,13 +311,12 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
      */
     @Nullable
     protected IConvertingHandler<?> getConvertedHandler() {
-        if (nil()) return null;
-        BiteableEntry biteableEntry = VampirismAPI.entityRegistry().getEntry(entityCreature);
-        if (biteableEntry == null) {
-            LOGGER.warn("Cannot find biteable entry for {}", entityCreature);
-            return null;
+        if (entityCreature.isEmpty()) return null;
+        IConvertingHandler<?> handler = this.entityCreature.map(s -> VampirismAPI.entityRegistry().getEntry(s)).map(s -> s.convertingHandler).orElse(null);
+        if (handler == null) {
+            LOGGER.warn("No converting handler found for {}", entityCreature.get());
         }
-        return biteableEntry.convertingHandler;
+        return handler;
     }
 
     @Override
@@ -336,14 +327,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @NotNull
     @Override
     protected ResourceLocation getDefaultLootTable() {
-        if (entityCreature != null) {
-            return entityCreature.getLootTable();
-        }
-        return super.getDefaultLootTable();
-    }
-
-    protected boolean nil() {
-        return entityCreature == null;
+        return this.entityCreature.map(Mob::getLootTable).orElseGet(super::getDefaultLootTable);
     }
 
     protected void updateEntityAttributes() {
@@ -357,19 +341,18 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
      * Write the old entity to nbt
      */
     private void writeOldEntityToNBT(@NotNull CompoundTag nbt) {
-        if (!nil()) {
+        this.entityCreature.ifPresent(creature -> {
             try {
                 CompoundTag entity = new CompoundTag();
-                entityCreature.revive();
-                entityCreature.save(entity);
-                entityCreature.discard();
+                creature.revive();
+                creature.save(entity);
+                creature.discard();
                 nbt.put("entity_old", entity);
             } catch (Exception e) {
-                LOGGER.error(String.format("Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature), e);
+                LOGGER.error(String.format("Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", creature), e);
                 this.setEntityCreature(null);
             }
-        }
-
+        });
     }
 
     @Override
@@ -382,10 +365,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return CurableConvertedCreature.super.calculateFireDamage(amount);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static class IMob extends ConvertedCreatureEntity implements net.minecraft.world.entity.monster.Enemy {
+    public static class IMob<T extends PathfinderMob> extends ConvertedCreatureEntity<T> implements net.minecraft.world.entity.monster.Enemy {
 
-        public IMob(EntityType<? extends ConvertedCreatureEntity> type, Level world) {
+        public IMob(EntityType<? extends IMob<?>> type, Level world) {
             super(type, world);
         }
     }
