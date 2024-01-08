@@ -22,6 +22,7 @@ whitelist.json
 
 # Other
 /run/
+/runs/
 Thumbs.db
 .directory
 ### Eclipse template
