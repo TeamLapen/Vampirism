@@ -10,8 +10,10 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAi;
+import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -38,6 +40,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
@@ -68,6 +72,10 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         SENSOR_TYPES = Lists.newArrayList(Villager.SENSOR_TYPES);
         SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
         SENSOR_TYPES.add(ModAi.VAMPIRE_VILLAGER_HOSTILES.get());
+    }
+
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+        return VampirismVillagerEntity.createAttributes().add(ModAttributes.SUNDAMAGE.get());
     }
 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
