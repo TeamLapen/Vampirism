@@ -81,8 +81,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
-    private int conversionTime;
-    private @Nullable UUID conversationStarter;
     private final Data<Villager> convertedData = new Data<>();
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, Level worldIn) {
@@ -120,8 +118,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
         Villager villager = CurableConvertedCreature.super.cureEntity(world, entity, newType);
-        if (this.conversationStarter != null) {
-            Player playerentity = world.getPlayerByUUID(this.conversationStarter);
+        if (this.data().conversationStarter != null) {
+            Player playerentity = world.getPlayerByUUID(this.data().conversationStarter);
             if (playerentity instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_CURED_VAMPIRE_VILLAGER.trigger((ServerPlayer) playerentity, this, villager);
                 world.onReputationEvent(ReputationEventType.ZOMBIE_VILLAGER_CURED, playerentity, villager);
