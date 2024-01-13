@@ -229,15 +229,10 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         this.dirty = true;
     }
 
-    public @NotNull List<ISkill<T>> getLockingSkills(@NotNull ISkillTree.INodeHolder nodeIn) {
-        //noinspection unchecked
-        return (List<ISkill<T>>) (Object) nodeIn.value().lockingNodes().stream().flatMap(s -> s.value().elements().stream().map(Holder::value)).toList();
-    }
-
     @Override
     public ISkill<T> @Nullable [] getParentSkills(@NotNull ISkill<T> skill) {
         Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> nodeForSkill = this.treeData.getNodeForSkill(this.unlockedTrees, skill);
-        return nodeForSkill.flatMap(x -> this.treeData.getParent(x)).stream().flatMap(x -> x.value().elements().stream()).map(x -> x.value()).toArray(ISkill[]::new);
+        return nodeForSkill.flatMap(x -> this.treeData.getParent(x)).stream().flatMap(x -> x.value().skills().stream()).map(x -> x.value()).toArray(ISkill[]::new);
     }
 
     public T getPlayer() {
@@ -279,7 +274,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
-        return nodeIn.lockingNodes().stream().flatMap(s -> s.value().elements().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
+        return nodeIn.lockingNodes().stream().flatMap(s -> s.value().skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
     }
 
     public void loadFromNbt(@NotNull CompoundTag nbt) {

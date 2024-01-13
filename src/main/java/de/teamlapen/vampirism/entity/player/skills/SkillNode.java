@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * A node for the skill tree. Can contain multiple skills which only can be activated exclusively to each other.
  */
-public record SkillNode( @NotNull List<Holder<ISkill<?>>> elements, @NotNull List<Holder<ISkillNode>> lockingNodes) implements ISkillNode {
+public record SkillNode(@NotNull List<Holder<ISkill<?>>> skills, @NotNull List<Holder<ISkillNode>> lockingNodes) implements ISkillNode {
 
     public static final Codec<ISkillNode> CODEC = ExtraCodecs.lazyInitializedCodec(() ->RecordCodecBuilder.create(inst ->
             inst.group(
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().fieldOf("skills").forGetter(ISkillNode::elements)
+                    ModRegistries.SKILLS.holderByNameCodec().listOf().fieldOf("skills").forGetter(ISkillNode::skills)
             ).apply(inst, SkillNode::new)
     ));
 
@@ -36,7 +36,7 @@ public record SkillNode( @NotNull List<Holder<ISkill<?>>> elements, @NotNull Lis
 
     @Override
     public boolean containsSkill(ISkill<?> skill) {
-        return elements.stream().map(Holder::value).anyMatch(s -> s == skill);
+        return skills.stream().map(Holder::value).anyMatch(s -> s == skill);
     }
 
 }

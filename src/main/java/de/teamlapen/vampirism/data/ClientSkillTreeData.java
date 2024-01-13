@@ -140,7 +140,7 @@ public class ClientSkillTreeData implements ISkillTreeData {
 
     public int getNodeWidth(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
         ISkillNode value = node.node().value();
-        int count = value.elements().size();
+        int count = value.skills().size();
         int max = count * 26 + ((count - 1) * 10);
 
         int children = !node.children().isEmpty() ? (node.children().size() - 1) * 30 : 0;
