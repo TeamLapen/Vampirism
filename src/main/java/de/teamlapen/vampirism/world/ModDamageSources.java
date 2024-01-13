@@ -27,6 +27,7 @@ public class ModDamageSources {
     private final DamageSource holyWater;
     private final DamageSource noBlood;
     private final DamageSource mother;
+    private final DamageSource bleeding;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.registryOrThrow(Registries.DAMAGE_TYPE);
@@ -36,6 +37,7 @@ public class ModDamageSources {
         this.holyWater = init(ModDamageTypes.HOLY_WATER);
         this.noBlood = init(ModDamageTypes.NO_BLOOD);
         this.mother = init(ModDamageTypes.MOTHER);
+        this.bleeding = init(ModDamageTypes.BLEEDING);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -80,6 +82,10 @@ public class ModDamageSources {
 
     public PlayerAttackDamageSourceBypassArmor getPlayerAttackWithBypassArmor(@NotNull Player attacker) {
         return new PlayerAttackDamageSourceBypassArmor(this.damageTypes.getHolderOrThrow(DamageTypes.PLAYER_ATTACK), attacker);
+    }
+
+    public DamageSource bleeding() {
+        return this.bleeding;
     }
 
 }

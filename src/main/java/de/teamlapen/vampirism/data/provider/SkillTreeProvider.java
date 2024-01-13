@@ -54,7 +54,9 @@ public class SkillTreeProvider extends de.teamlapen.vampirism.data.provider.pare
                                                         new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON3),
                                                                 new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON4),
                                                                         new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON5),
-                                                                                new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON6))
+                                                                                new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON6),
+                                                                                        new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.WEAPON7))
+                                                                                )
                                                                         )
                                                                 )
                                                         )

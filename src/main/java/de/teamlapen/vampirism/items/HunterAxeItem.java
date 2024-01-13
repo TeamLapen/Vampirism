@@ -21,9 +21,9 @@ import java.util.List;
 
 public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
-    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE, BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
+    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.5f, 6.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE, BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.3f, 8.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
 
     private final TIER tier;
 
@@ -91,7 +91,8 @@ public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, Mod
 
     private float getVampireMult() {
         return switch (tier) {
-            case ULTIMATE, ENHANCED -> 1.3F;
+            case ULTIMATE -> 1.4F;
+            case ENHANCED -> 1.3F;
             default -> 1.2F;
         };
     }

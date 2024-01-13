@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;

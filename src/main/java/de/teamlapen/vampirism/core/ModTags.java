@@ -111,6 +111,8 @@ public class ModTags {
         public static final TagKey<Item> VAMPIRE_CLOTHING = tag("armors/vampire_clothing");
         public static final TagKey<Item> VAMPIRE_CLOAK = tag("armors/vampire_clothing/cloak");
 
+        public static final TagKey<Item> HUNTER_ARMOR = tag("armors/hunter_armor");
+
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

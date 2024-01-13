@@ -1,5 +1,6 @@
 {
   "skills": [
-    "vampirism:enhanced_armor"
+    "vampirism:faster_reload",
+    "vampirism:faster_cooldown"
   ]
 }

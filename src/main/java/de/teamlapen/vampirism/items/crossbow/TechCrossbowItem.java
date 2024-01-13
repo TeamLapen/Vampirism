@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.core.component.DataComponents;
@@ -25,18 +27,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class TechCrossbowItem extends VampirismCrossbowItem {
 
-    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier) {
-        super(properties, arrowVelocity, chargeTime, itemTier);
+    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, Supplier<ISkill<IHunterPlayer>> requiredSkill) {
+        super(properties, arrowVelocity, chargeTime, itemTier, requiredSkill);
     }
 
-    @Nullable
-    @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.TECH_WEAPONS.get();
-    }
 
     @Nonnull
     @Override
@@ -48,7 +46,8 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
         super.onShoot(shooter, crossbow);
         if (shooter instanceof Player player) {
-            player.getCooldowns().addCooldown(this, 10);
+            boolean faster = HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.FASTER_COOLDOWN);
+            player.getCooldowns().addCooldown(this, faster ? 5 : 10);
         }
     }
 
