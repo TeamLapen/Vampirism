@@ -6,13 +6,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * A node for the skill tree.<br>
+ * Can contain multiple skills.<br>
+ */
 public interface ISkillNode {
 
+    /**
+     * @return The skills contained in this node
+     */
     @NotNull
-    List<Holder<ISkill<?>>> elements();
+    List<Holder<ISkill<?>>> skills();
 
+    /**
+     * Nodes that are mutually exclusive to this node. Each node must define this.
+     */
     @NotNull
     List<Holder<ISkillNode>> lockingNodes();
 
+    /**
+     * checks if a skill is contained in this node
+     */
     boolean containsSkill(ISkill<?> skill);
 }

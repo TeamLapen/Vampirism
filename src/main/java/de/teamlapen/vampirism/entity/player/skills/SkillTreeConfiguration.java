@@ -82,11 +82,11 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         }
 
         public int elementCount() {
-            return node.value().elements().size();
+            return node.value().skills().size();
         }
 
         public List<Holder<ISkill<?>>> elements() {
-            return node.value().elements();
+            return node.value().skills();
         }
 
         public int childrenCount() {

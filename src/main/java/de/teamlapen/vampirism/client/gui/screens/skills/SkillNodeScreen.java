@@ -103,7 +103,7 @@ public class SkillNodeScreen {
             return SkillNodeState.UNLOCKED;
         } else if (this.skillHandler.isSkillNodeLocked(this.skillNode.node().value())) {
             return SkillNodeState.LOCKED;
-        } else if (this.skillNode.isRoot() || this.treeData.getParent(this.skillNode).stream().flatMap(s -> s.value().elements().stream()).anyMatch(this.skillHandler::isSkillEnabled)) {
+        } else if (this.skillNode.isRoot() || this.treeData.getParent(this.skillNode).stream().flatMap(s -> s.value().skills().stream()).anyMatch(this.skillHandler::isSkillEnabled)) {
             return SkillNodeState.AVAILABLE;
         } else {
             return SkillNodeState.VISIBLE;
@@ -111,7 +111,7 @@ public class SkillNodeScreen {
     }
 
     private List<ISkill<?>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
-        return node.node().value().lockingNodes().stream().flatMap(x -> x.value().elements().stream()).map(Holder::value).collect(Collectors.toList());
+        return node.node().value().lockingNodes().stream().flatMap(x -> x.value().skills().stream()).map(Holder::value).collect(Collectors.toList());
     }
 
     public List<SkillNodeScreen> getChildren() {
