@@ -2,14 +2,19 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.util.NonNullSupplier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -87,5 +92,18 @@ public interface IFactionRegistry {
     <T extends IFactionPlayer<T>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier);
 
     @Nullable
-    Supplier< ? extends IMinionData> getMinion(ResourceLocation minionId);
+    IMinionEntry<?,?> getMinion(ResourceLocation minionId);
+
+    @NotNull Collection<IMinionEntry<?, ?>> getMinions();
+
+    interface IMinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData> {
+        ResourceLocation id();
+        Supplier<Z> data();
+
+        Supplier<EntityType<? extends IMinionEntity>> type();
+
+        IPlayableFaction<T> faction();
+
+        List<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<Z,?>> commandArguments();
+    }
 }

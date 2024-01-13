@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -34,7 +35,7 @@ public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
     @NotNull
     public static MinionData fromNBT(@NotNull CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
-        return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(Supplier::get).map(s-> {
+        return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(IFactionRegistry.IMinionEntry::data).map(Supplier::get).map(s-> {
             ((MinionData)s).deserializeNBT(nbt);
             return (MinionData)s;
         }).orElse(new MinionData());

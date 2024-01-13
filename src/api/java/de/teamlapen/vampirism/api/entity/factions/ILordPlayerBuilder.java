@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
 
@@ -35,7 +37,7 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
      */
     ILordPlayerBuilder<T> enableLordSkills();
 
-    IMinionBuilder<T> minion(ResourceLocation minionId);
+    <Z extends IMinionData> IMinionBuilder<T,Z> minion(ResourceLocation minionId, Supplier<Z> data);
 
     IPlayableFactionBuilder<T> build();
 }

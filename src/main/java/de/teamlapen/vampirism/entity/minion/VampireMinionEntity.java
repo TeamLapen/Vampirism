@@ -425,5 +425,13 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         protected ResourceLocation getDataType() {
             return ID;
         }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public void setUseLordSkin(boolean useLordSkin) {
+            this.useLordSkin = useLordSkin;
+        }
     }
 }

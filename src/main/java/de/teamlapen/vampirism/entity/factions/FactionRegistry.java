@@ -1,14 +1,18 @@
 package de.teamlapen.vampirism.entity.factions;
 
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -16,6 +20,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -23,7 +28,6 @@ import net.neoforged.neoforge.common.util.NonNullSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +40,10 @@ public class FactionRegistry implements IFactionRegistry {
     private static final Logger LOGGER = LogManager.getLogger();
     private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
     private @Nullable List<Faction<?>> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
-    private @Nullable List<Pair<ResourceLocation, Supplier<? extends IMinionData>>> tempMinions = Collections.synchronizedList(new ArrayList<>());
+    private @Nullable List<Pair<ResourceLocation, MinionEntry<?,?>>> tempMinions = Collections.synchronizedList(new ArrayList<>());
     private Faction<?>[] allFactions;
     private PlayableFaction<?>[] playableFactions;
-    private Map<ResourceLocation, Supplier<? extends IMinionData>> minions = new HashMap<>();
+    private final Map<ResourceLocation, IMinionEntry<?,?>> minions = new HashMap<>();
 
     /**
      * Finishes registrations during InterModProcessEvent
@@ -168,23 +172,25 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @ThreadSafeAPI
-    private void addMinion(ResourceLocation minionId, Supplier<? extends IMinionData> data) {
+    private void addMinion(ResourceLocation minionId, MinionEntry<?, ?> data) {
         Objects.requireNonNull(this.tempMinions, () -> String.format("[Vampirism]You have to register minions %s during InterModEnqueueEvent", minionId));
         this.tempMinions.add(Pair.of(minionId, data));
     }
 
-    @ApiStatus.Internal
-    @Deprecated(forRemoval = true)
-    public void addMinionData(@NotNull ResourceLocation minionId, @NotNull Supplier<? extends IMinionData> data) {
-        if (this.minions.containsKey(minionId)) {
-            throw new IllegalArgumentException(String.format("Minion %s already registered", minionId));
-        }
-        this.minions.put(minionId, data);
+    @Override
+    public @Nullable IMinionEntry<?,?> getMinion(ResourceLocation minionId) {
+        return this.minions.get(minionId);
     }
 
     @Override
-    public @Nullable Supplier<? extends IMinionData> getMinion(ResourceLocation minionId) {
-        return this.minions.get(minionId);
+    public @NotNull Collection<IMinionEntry<?,?>> getMinions() {
+        return Collections.unmodifiableCollection(this.minions.values());
+    }
+
+    public record MinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData>(PlayableFaction<T> faction, ResourceLocation id, Supplier<Z> data, Supplier<EntityType<? extends IMinionEntity>> type, List<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<Z,?>> commandArguments) implements IMinionEntry<T,Z> {
+        public MinionEntry(PlayableFaction<T> faction, LordPlayerBuilder.MinionBuilder<T, Z> builder) {
+            this(faction, builder.minionId, builder.data, builder.commandBuilder.type, builder.commandBuilder.commandArguments);
+        }
     }
 
     public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
@@ -336,7 +342,7 @@ public class FactionRegistry implements IFactionRegistry {
         public @NotNull IPlayableFaction<T> register() {
             PlayableFaction<T> faction = new PlayableFaction<>(this);
             addFaction(faction);
-            this.lord.minions.forEach(builder -> addMinion(builder.minionId, builder.data));
+            this.lord.minions.forEach(builder -> addMinion(builder.minionId, new MinionEntry<>(faction, builder)));
             return faction;
         }
     }
@@ -347,7 +353,7 @@ public class FactionRegistry implements IFactionRegistry {
         protected int maxLevel = 0;
         protected BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
         protected boolean lordSkillsEnabled;
-        protected List<MinionBuilder<T>> minions = new ArrayList<>();
+        protected List<MinionBuilder<T,?>> minions = new ArrayList<>();
 
         public LordPlayerBuilder(PlayableFactionBuilder<T> factionBuilder) {
             this.factionBuilder = factionBuilder;
@@ -371,40 +377,73 @@ public class FactionRegistry implements IFactionRegistry {
             return this;
         }
 
-        public ILordPlayerBuilder<T> registerMinion(@NotNull MinionBuilder<T> builder) {
+        public ILordPlayerBuilder<T> registerMinion(@NotNull MinionBuilder<T,?> builder) {
             this.minions.add(builder);
             return this;
         }
 
         @Override
-        public IMinionBuilder<T> minion(ResourceLocation minionId) {
-            return new MinionBuilder<>(this, minionId);
+        public <Z extends IMinionData> IMinionBuilder<T, Z> minion(ResourceLocation minionId, Supplier<Z> data) {
+            return new MinionBuilder<>(this, minionId, data);
         }
 
         public IPlayableFactionBuilder<T> build() {
             return this.factionBuilder;
         }
 
-        public static class MinionBuilder<T extends IFactionPlayer<T>> implements IMinionBuilder<T>{
+        public static class MinionBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionBuilder<T,Z>{
 
             protected final LordPlayerBuilder<T> builder;
             protected final ResourceLocation minionId;
-            protected Supplier<IMinionData> data;
+            protected final Supplier<Z> data;
+            protected MinionCommandBuilder<T,Z> commandBuilder;
 
-            public MinionBuilder(LordPlayerBuilder<T> builder, ResourceLocation minionId) {
+            public MinionBuilder(LordPlayerBuilder<T> builder, ResourceLocation minionId, @NotNull Supplier<Z> data) {
                 this.builder = builder;
                 this.minionId = minionId;
+                this.data = data;
             }
 
             @Override
-            public MinionBuilder<T> minionData(@NotNull Supplier<IMinionData> data) {
-                this.data = data;
-                return this;
+            public MinionCommandBuilder<T,Z> commandBuilder(@NotNull Supplier<EntityType<? extends IMinionEntity>> type) {
+
+                return new MinionCommandBuilder<>(this, type);
             }
 
             @Override
             public ILordPlayerBuilder<T> build() {
                 return builder.registerMinion(this);
+            }
+
+            private IMinionBuilder<T, Z> registerCommand(MinionCommandBuilder<T, Z> commandBuilder) {
+                this.commandBuilder = commandBuilder;
+                return this;
+            }
+
+            public static class MinionCommandBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionCommandBuilder<T,Z>{
+
+                protected final MinionBuilder<T,Z> minionBuilder;
+                protected final Supplier<EntityType<? extends IMinionEntity>> type;
+                protected final List<ICommandEntry<Z,?>> commandArguments = new ArrayList<>();
+
+                public MinionCommandBuilder(MinionBuilder<T,Z> minionBuilder, @NotNull Supplier<EntityType<? extends IMinionEntity>> type) {
+                    this.minionBuilder = minionBuilder;
+                    this.type = type;
+                }
+
+                @Override
+                public <L> IMinionCommandBuilder<T, Z> with(@NotNull String name, L defaultValue, @NotNull ArgumentType<L> type, BiConsumer<Z, L> setter, BiFunction<CommandContext<CommandSourceStack>, String, L> getter) {
+                    this.commandArguments.add(new CommandEntry<>(name, defaultValue, type, setter, getter));
+                    return this;
+                }
+
+                @Override
+                public IMinionBuilder<T, Z> build() {
+                    return this.minionBuilder.registerCommand(this);
+                }
+
+                public record CommandEntry<Z extends IMinionData,T>(String name, T defaultValue, ArgumentType<T> type, BiConsumer<Z,T> setter, BiFunction<CommandContext<CommandSourceStack>, String, T> getter) implements ICommandEntry<Z,T> {
+                }
             }
         }
     }
