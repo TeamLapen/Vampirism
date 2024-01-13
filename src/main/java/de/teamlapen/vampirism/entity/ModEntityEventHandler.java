@@ -8,14 +8,19 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.items.HunterAxeItem;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
@@ -32,6 +37,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -42,9 +48,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -293,6 +297,14 @@ public class ModEntityEventHandler {
                     event.setAmount(event.getAmount() + ((IWeaponOil) oil).onDamage(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntity(), player));
                 }
             });
+            if (Helper.isHunter(player) && Helper.isVampire(event.getEntity())) {
+                Item item = stack.getItem();
+                if (item instanceof HunterAxeItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.AXE2)) {
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.BLEEDING.get(), 20, 0, false, false, true));
+                } else if (item == ModItems.STAKE.get() && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.STAKE2)) {
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.BLEEDING.get(), 40, 0, false, false, true));
+                }
+            }
         }
         if (event.getSource().is(ModTags.DamageTypes.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
             for (ItemStack armorStack : event.getEntity().getArmorSlots()) {

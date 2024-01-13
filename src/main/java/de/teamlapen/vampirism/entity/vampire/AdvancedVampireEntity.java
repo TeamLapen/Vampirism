@@ -233,7 +233,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();
-            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(Util.NIL_UUID, name),p -> this.skinDetails = p);
+            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(Util.NIL_UUID, name), p -> this.skinDetails = p);
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);

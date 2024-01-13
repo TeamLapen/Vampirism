@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.nbt.CompoundTag;
@@ -24,18 +25,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class TechCrossbowItem extends VampirismCrossbowItem {
 
-    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier) {
-        super(properties, arrowVelocity, chargeTime, itemTier);
+    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, Supplier<ISkill<IHunterPlayer>> requiredSkill) {
+        super(properties, arrowVelocity, chargeTime, itemTier, requiredSkill);
     }
 
-    @Nullable
-    @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.TECH_WEAPONS.get();
-    }
 
     @Nonnull
     @Override
@@ -57,7 +54,8 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
             if(performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
                 setCharged(itemstack, false);
             } else {
-                p_77659_2_.getCooldowns().addCooldown(this, 10); // add cooldown if projectiles left
+                boolean faster = HunterPlayer.get(p_77659_2_).getSkillHandler().isSkillEnabled(HunterSkills.FASTER_COOLDOWN);
+                p_77659_2_.getCooldowns().addCooldown(this, faster ? 5 : 10); // add cooldown if projectiles left
             }
             return InteractionResultHolder.consume(itemstack);
         } else if (!p_77659_2_.getProjectile(itemstack).isEmpty()) {

@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,8 +49,8 @@ import static net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound
 
 public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvider, Nameable {
     private static final int MAX_LEVELS = 3;
-    public static final MobEffect[][] BEACON_EFFECTS = new MobEffect[][] {{MobEffects.MOVEMENT_SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION}};
-    public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 1}};
+    public static final MobEffect[][] BEACON_EFFECTS = new MobEffect[][] {{MobEffects.MOVEMENT_SPEED}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION, MobEffects.SATURATION}};
+    public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 0}};
     public static final Set<MobEffect> NO_AMPLIFIER_EFFECTS = Set.of(MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING);
     private static final Set<MobEffect> VALID_EFFECTS = Arrays.stream(BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
     public static final int DATA_LEVELS = 0;
@@ -206,7 +207,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
 
     private static Pair<Integer, Boolean> updateBase(Level pLevel, int pX, int pY, int pZ) {
         int i = 0;
-        boolean upgradeFlag = true;
+        Optional<Boolean> upgradeFlag = Optional.empty();
 
         for(int j = 1; j <= MAX_LEVELS; i = j++) {
             int k = pY - j;
@@ -215,7 +216,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             }
 
             boolean flag = true;
-            boolean upgradeFlagLevel = upgradeFlag;
+            boolean upgradeFlagLevel = upgradeFlag.orElse(true);
 
             for(int l = pX - j; l <= pX + j && flag; ++l) {
                 for(int i1 = pZ - j; i1 <= pZ + j; ++i1) {
@@ -232,10 +233,10 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             if (!flag) {
                 break;
             }
-            upgradeFlag = upgradeFlag && upgradeFlagLevel;
+            upgradeFlag = Optional.of(upgradeFlag.orElse(true) && upgradeFlagLevel);
         }
 
-        return Pair.of(i, upgradeFlag);
+        return Pair.of(i, upgradeFlag.orElse(false));
     }
 
     @Override

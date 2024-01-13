@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
@@ -38,18 +39,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public abstract class VampirismCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
     protected final Tier itemTier;
+    private final Supplier<ISkill<IHunterPlayer>> requiredSkill;
     protected final float arrowVelocity;
     protected final int chargeTime;
 
-    public VampirismCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier) {
+    public VampirismCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, @NotNull Supplier<@Nullable ISkill<IHunterPlayer>> requiredSkill) {
         super(properties);
         this.arrowVelocity = arrowVelocity;
         this.chargeTime = chargeTime;
         this.itemTier = itemTier;
+        this.requiredSkill = requiredSkill;
+    }
+
+    @Override
+    public @Nullable ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
+        return this.requiredSkill.get();
     }
 
     @Override

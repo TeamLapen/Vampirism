@@ -19,22 +19,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class DoubleCrossbowItem extends VampirismCrossbowItem {
 
-    public DoubleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier) {
-        super(properties, arrowVelocity, chargeTime, itemTier);
+    public DoubleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, Supplier<ISkill<IHunterPlayer>> requiredSkill) {
+        super(properties, arrowVelocity, chargeTime, itemTier, requiredSkill);
     }
 
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
         return (stack -> stack.getItem() instanceof IVampirismCrossbowArrow<?>);
-    }
-
-    @Nullable
-    @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.DOUBLE_CROSSBOW.get();
     }
 
     /**

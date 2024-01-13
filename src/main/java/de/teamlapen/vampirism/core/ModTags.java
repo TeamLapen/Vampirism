@@ -78,7 +78,9 @@ public class ModTags {
         public static final TagKey<Item> APPLICABLE_OIL_SWORD = tag("applicable_oil/sword");
         public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");
         public static final TagKey<Item> APPLICABLE_OIL_ARMOR = tag("applicable_oil/armor");
-        public static final TagKey<Item> HUNTER_COAT = tag("armo/hunter_coat");
+        public static final TagKey<Item> HUNTER_COAT = tag("armor/hunter_coat");
+        public static final TagKey<Item> SWIFTNESS_ARMOR = tag("armor/swiftness");
+        public static final TagKey<Item> HUNTER_ARMOR = tag("armor/hunter");
         public static final TagKey<Item> DARK_STONE = tag("dark_stone");
         public static final TagKey<Item> DARK_STONE_BRICKS = tag("dark_stone_bricks");
         public static final TagKey<Item> POLISHED_DARK_STONE = tag("polished_dark_brick");

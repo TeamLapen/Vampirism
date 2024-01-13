@@ -36,6 +36,7 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ModConfigSpec.BooleanValue skeletonIgnoreVampire;
     public final ModConfigSpec.BooleanValue creeperIgnoreVampire;
+    public final ModConfigSpec.DoubleValue bleedingEffectDamage;
 
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
@@ -85,7 +86,6 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue hpStrengthType;
 
     public final ModConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
-    public final ModConfigSpec.DoubleValue hsMajorAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ModConfigSpec.BooleanValue hsInstantKill1FromBehind;
     public final ModConfigSpec.DoubleValue hsInstantKill1MaxHealth;
@@ -254,6 +254,7 @@ public class BalanceConfig {
         skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 2 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 2D, 1D, 20D);
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
+        bleedingEffectDamage = builder.comment("How much damage the bleeding effect should do per damaging tick").defineInRange("bleedingEffectDamage", 0.1, 0, Double.MAX_VALUE);
 
         //Entity actions
         builder.category("entityActions", "ea");
@@ -300,9 +301,8 @@ public class BalanceConfig {
 
         //Hunter skills
         builder.category("hunterSkills", "hs");
-        hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.2, 0, 3);
-        hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
-        hsSmallAttackDamageModifier = builder.comment("Increase damage - Added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10);
+        hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.3, 0, 3);
+        hsSmallAttackDamageModifier = builder.comment("Increase damage - Added to base damage").defineInRange("smallAttackDamageModifier", 0.1d, 0, 10);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);

@@ -25,9 +25,9 @@ import java.util.Map;
 
 public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL,2, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED,2, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
-    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE,2, 2031, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
+    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL,2, 250, 3.5f, 6.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED,2, 1561, 3.4f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE,2, 2031, 3.3f, 8.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
 
     private final TIER tier;
 
@@ -41,6 +41,11 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override
@@ -97,7 +102,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
 
     private float getVampireMult() {
         return switch (tier) {
-            case ULTIMATE -> 1.3F;
+            case ULTIMATE -> 1.4F;
             case ENHANCED -> 1.3F;
             default -> 1.2F;
         };
