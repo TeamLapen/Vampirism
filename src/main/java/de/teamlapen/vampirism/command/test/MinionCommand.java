@@ -4,12 +4,20 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
+import de.teamlapen.vampirism.api.entity.factions.IMinionBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFactionBuilder;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.entity.minion.IMinionData;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -24,16 +32,23 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 
 public class MinionCommand extends BasicCommand {
@@ -42,20 +57,7 @@ public class MinionCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("minion")
                 .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
-                .then(Commands.literal("spawnNew")
-                        .then(Commands.literal("vampire").executes(context -> spawnNewVampireMinion(context.getSource(), "Minion", -1, false))
-                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, false))
-                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicVampire.TYPES)).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), false))
-                                                .then(Commands.argument("use_lord_skin", BoolArgumentType.bool()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), BoolArgumentType.getBool(context, "use_lord_skin")))))))
-                        .then(Commands.literal("hunter").executes(context -> spawnNewHunterMinion(context.getSource(), "Minion", -1, 0, false))
-                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, 0, false))
-                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicHunter.TYPES)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), 0, false))
-                                                .then(Commands.argument("hat", IntegerArgumentType.integer(-1, 3)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), IntegerArgumentType.getInteger(context, "hat"), false))
-                                                        .then(Commands.argument("use_lord_skin", BoolArgumentType.bool()).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), IntegerArgumentType.getInteger(context, "hat"), BoolArgumentType.getBool(context, "use_lord_skin")))))
-                                        )
-                                )
-                        )
-                )
+                .then(registerNew())
                 .then(Commands.literal("recall")
                         .executes(context -> recall(context.getSource(), context.getSource().getPlayerOrException()))
                         .then(Commands.argument("target", EntityArgument.player())
@@ -70,28 +72,52 @@ public class MinionCommand extends BasicCommand {
                                 .executes(context -> purge(context.getSource(), EntityArgument.getPlayer(context, "target")))));
     }
 
-
-    private static int spawnNewVampireMinion(@NotNull CommandSourceStack ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
-        boolean hasIncreasedStats = VampirePlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
-        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin, hasIncreasedStats);
-        return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.VAMPIRE_MINION.get());
+    @SuppressWarnings("unchecked")
+    public static ArgumentBuilder<CommandSourceStack, ?> registerNew() {
+        LiteralArgumentBuilder<CommandSourceStack> spawnNew = Commands.literal("spawnNew");
+        Collection<IFactionRegistry.IMinionEntry<?,?>> minions = VampirismAPI.factionRegistry().getMinions();
+        for (IFactionRegistry.IMinionEntry<?,?> minion : minions) {
+            if (minion.type() == null){
+                continue;
+            }
+            ArgumentBuilder<CommandSourceStack, ?> currentCommand = null;
+            List<? extends IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?>> iCommandEntries = minion.commandArguments();
+            for (int i = iCommandEntries.size() - 1; i >= 0; i--) {
+                IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?> iCommandEntry = iCommandEntries.get(i);
+                int finalI = i;
+                var builder  = Commands.argument(iCommandEntry.name(), iCommandEntry.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), minion.faction(), (Supplier<MinionData>) minion.data(), minion.type(),  (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(0, finalI+1), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(finalI+1, iCommandEntries.size())));
+                if (currentCommand != null) {
+                    builder.then(currentCommand);
+                }
+                currentCommand = builder;
+            }
+            spawnNew.then(Commands.literal(minion.faction().getID().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), minion.faction(), (Supplier<MinionData>)minion.data(), minion.type(),List.of(), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries)).then(currentCommand));
+        }
+        return spawnNew;
     }
 
-    private static int spawnNewHunterMinion(@NotNull CommandSourceStack ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
-        boolean hasIncreasedStats = HunterPlayer.getOpt(ctx.getPlayerOrException()).map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
-        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin, hasIncreasedStats);
-        return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.HUNTER_MINION.get());
+    @SuppressWarnings("unchecked")
+    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
+        T t = data.get();
+        for (IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : contextProvider) {
+            ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
+        }
+        for (IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : defaultProvider) {
+            ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.defaultValue());
+        }
+        t.setHealth(t.getMaxHealth());
+        return spawnNewMinion(ctx, faction, t, type.get());
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <T extends MinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends MinionEntity<T>> type) throws CommandSyntaxException {
+    private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = FactionPlayerHandler.getOpt(p).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             if (controller.hasFreeMinionSlot()) {
 
                 if (fph.getCurrentFaction() == faction) {
-                    int id = controller.createNewMinionSlot(data, type);
+                    @SuppressWarnings("unchecked") int id = controller.createNewMinionSlot((MinionData) data, (EntityType<? extends MinionEntity<?>>) type);
                     if (id < 0) {
                         throw fail.create("Failed to get new minion slot");
                     }

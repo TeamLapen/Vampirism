@@ -443,5 +443,17 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         protected ResourceLocation getDataType() {
             return ID;
         }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public void setUseLordSkin(boolean useLordSkin) {
+            this.useLordSkin = useLordSkin;
+        }
+
+        public void setHat(int hat) {
+            this.hat = hat;
+        }
     }
 }
