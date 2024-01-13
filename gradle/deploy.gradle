@@ -1,39 +1,3 @@
-
-curseforge {
-    if (project.hasProperty("CURSEFORGE_API")) {
-        apiKey = project.CURSEFORGE_API
-    } else {
-        apiKey = "DUMMY"
-    }
-    project {
-        id = "233029"
-
-        changelog = findProperty("CHANGELOG") ?:""
-        if (project.type == "beta") {
-            releaseType = 'beta'
-            //changelog = new File("resources/changelog/${project.version}.txt").text
-        } else if (project.type == "release") {
-            releaseType = 'release'
-        } else {
-            releaseType = 'alpha'
-            changelog = !(findProperty("CHANGELOG") ?: "").toString().isEmpty() ? getProperty("CHANGELOG") : "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
-        }
-        addGameVersion project.minecraft_version
-
-        mainArtifact(jar) {
-            displayName = "Vampirism-${project.minecraft_version}-${project.mod_version}"
-        }
-
-        relations {
-            optionalDependency 'jei'
-            optionalDependency 'guide-api-village-and-pillage'
-        }
-
-    }
-
-
-}
-
 apply plugin: 'maven-publish'
 tasks.withType(GenerateModuleMetadata) {
     enabled = false
@@ -105,32 +69,6 @@ publishing {
     }
 }
 
-
-// Make sure it runs after build!
-modrinth {
-    changelog = findProperty("CHANGELOG") ?:""
-    if (project.type == "beta") {
-        versionType = 'beta'
-    } else if (project.type == "release") {
-        versionType = 'release'
-    } else {
-        versionType = 'alpha'
-        changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
-    }
-    token = findProperty("MODRINTH_API") ?: "DUMMY"
-    projectId = 'jVZ0F1wn'
-    versionName = "Vampirism-${project.minecraft_version}-${project.mod_version}"
-    versionNumber = "${project.minecraft_version}-${project.mod_version}"
-    uploadFile = jar
-    gameVersions = [project.minecraft_version]
-    loaders = ["neoforge"]
-    dependencies {
-        optional.project "u6dRKJwZ" //jei
-        optional.project "w5L2PHJU" //guide-api-village-and-pillage
-    }
-}
-
-
 tasks.register('checkIfPublicVersion') {
     doFirst {
         if (project.classification != "public") {
@@ -139,6 +77,34 @@ tasks.register('checkIfPublicVersion') {
     }
 }
 
-tasks.curseforge.dependsOn(checkIfPublicVersion)
-tasks.modrinth.dependsOn(checkIfPublicVersion)
-tasks.publish.dependsOn(checkIfPublicVersion)
+tasks.register('publishAll') {
+    dependsOn('build')
+    dependsOn('checkIfPublicVersion')
+    dependsOn('publish')
+    dependsOn('publishMods')
+}
+
+tasks.publishMods.dependsOn(checkIfPublicVersion)
+
+publishMods {
+    type = project.type == "beta" ? BETA: project.type == "release" ? STABLE : ALPHA
+    changelog = !(findProperty("CHANGELOG") ?: "").toString().isEmpty() ? getProperty("CHANGELOG") : type != ALPHA ? "" : "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed browse the latest commits."
+    file = jar.archiveFile
+    modLoaders.add("neoforge")
+    version = "${project.minecraft_version}-${project.mod_version}"
+    displayName = "Vampirism-${project.minecraft_version}-${project.mod_version}"
+    dryRun = !(project.hasProperty("MODRINTH_API") && project.hasProperty("CURSEFORGE_API"))
+
+    modrinth {
+        accessToken = findProperty("MODRINTH_API") ?: "DUMMY"
+        projectId = project.modrinth_id
+        minecraftVersions.add(project.minecraft_version)
+    }
+
+    curseforge {
+        accessToken = findProperty("CURSEFORGE_API") ?: "DUMMY"
+        projectId = project.curseforge_id
+        minecraftVersions.add(project.minecraft_version)
+        projectSlug = project.curseforge_slug
+    }
+}
