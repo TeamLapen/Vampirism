@@ -54,7 +54,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     private boolean entityChanged = false;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public Optional<T> entityCreature;
+    public Optional<T> entityCreature = Optional.empty();
     private boolean canDespawn = false;
     private final Data<T> convertibleData = new Data<>();
 
