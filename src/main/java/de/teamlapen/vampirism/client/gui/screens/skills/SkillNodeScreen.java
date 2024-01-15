@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.client.gui.screens.skills;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
@@ -15,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -111,7 +114,8 @@ public class SkillNodeScreen {
     }
 
     private List<ISkill<?>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
-        return node.node().value().lockingNodes().stream().flatMap(x -> x.value().skills().stream()).map(Holder::value).collect(Collectors.toList());
+        Registry<ISkillNode> nodes = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).map(Holder::value).collect(Collectors.toList());
     }
 
     public List<SkillNodeScreen> getChildren() {

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -18,6 +19,7 @@ import de.teamlapen.vampirism.data.ISkillTreeData;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -274,7 +276,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
-        return nodeIn.lockingNodes().stream().flatMap(s -> s.value().skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
+        Registry<ISkillNode> nodes = player.getRepresentingPlayer().level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
     }
 
     public void loadFromNbt(@NotNull CompoundTag nbt) {
