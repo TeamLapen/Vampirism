@@ -73,6 +73,7 @@ public class RegistryManager implements IInitListener {
         ModOils.register(eventBus);
         ModAttachments.register(eventBus);
         ModAdvancements.register(eventBus);
+        ModStats.register(eventBus);
     }
 
     @SubscribeEvent
@@ -94,6 +95,7 @@ public class RegistryManager implements IInitListener {
                 });
                 ModTiles.registerTileExtensionsUnsafe();
                 event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
+                event.enqueueWork(ModStats::registerCustomStats);
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);
@@ -112,9 +114,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEffects(@NotNull RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.CUSTOM_STAT)) {
-            ModStats.registerCustomStats();
-        }
         if (event.getRegistryKey().equals(Registries.MOB_EFFECT)) {
             //noinspection unchecked
             ModEffects.replaceEffects((Registry<MobEffect>) event.getRegistry());

@@ -148,7 +148,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             dirty = true;
             //noinspection ConstantValue
             if (this.player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
-                serverPlayer.awardStat(ModStats.skills_unlocked);
+                serverPlayer.awardStat(ModStats.skills_unlocked.get());
                 ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().trigger(serverPlayer, skill);
             }
         }

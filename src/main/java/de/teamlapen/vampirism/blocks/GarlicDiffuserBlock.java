@@ -148,7 +148,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
-        player.awardStat(ModStats.interact_with_garlic_diffuser);
+        player.awardStat(ModStats.interact_with_garlic_diffuser.get());
         if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
             if (!world.isClientSide) {
                 GarlicDiffuserBlockEntity t = getTile(world, pos);

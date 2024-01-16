@@ -52,7 +52,7 @@ public class FogDiffuserBlock extends VampirismBlockContainer {
     public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         ItemStack itemInHand = pPlayer.getItemInHand(pHand);
         getBlockEntity(pLevel, pPos).ifPresent(blockEntity -> {
-            pPlayer.awardStat(ModStats.interact_with_fog_diffuser);
+            pPlayer.awardStat(ModStats.interact_with_fog_diffuser.get());
             if(!blockEntity.interact(itemInHand)) {
                 VampirismMod.proxy.displayFogDiffuserScreen(blockEntity, getName());
             }

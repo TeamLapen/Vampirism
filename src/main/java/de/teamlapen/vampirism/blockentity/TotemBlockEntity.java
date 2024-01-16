@@ -834,11 +834,11 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                     if (!attackWin) {
                         player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel - 1, 0), false, false, true));
                     }
-                    player.awardStat(ModStats.win_village_capture);
+                    player.awardStat(ModStats.win_village_capture.get());
                     if (attackWin) {
-                        player.awardStat(ModStats.capture_village);
+                        player.awardStat(ModStats.capture_village.get());
                     } else {
-                        player.awardStat(ModStats.defend_village);
+                        player.awardStat(ModStats.defend_village.get());
                     }
                 }
             }
