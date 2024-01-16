@@ -55,7 +55,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                         VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
-                        ((Player) entityLivingBaseIn).awardStat(ModStats.skills_reset);
+                        ((Player) entityLivingBaseIn).awardStat(ModStats.skills_reset.get());
                     }
                 });
             }

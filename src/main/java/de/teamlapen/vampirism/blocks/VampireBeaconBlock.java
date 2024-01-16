@@ -60,7 +60,7 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
     public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pPlayer instanceof ServerPlayer serverPlayer) {
-                serverPlayer.awardStat(ModStats.interact_with_ancient_beacon);
+                serverPlayer.awardStat(ModStats.interact_with_ancient_beacon.get());
                 if (Helper.isHunter(serverPlayer)) {
                     if (pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockentity) {
                         pPlayer.openMenu(blockentity);

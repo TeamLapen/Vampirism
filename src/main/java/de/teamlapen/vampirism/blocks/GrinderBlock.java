@@ -131,7 +131,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        player.awardStat(ModStats.interact_with_blood_grinder);
+        player.awardStat(ModStats.interact_with_blood_grinder.get());
         player.openMenu(world.getBlockEntity(pos) instanceof BloodGrinderBlockEntity ? (BloodGrinderBlockEntity) world.getBlockEntity(pos) : null);
         return InteractionResult.SUCCESS;
     }

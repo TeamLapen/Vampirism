@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.SupporterManager;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -227,7 +228,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (skinDetails == null) {
             String name = getTextureName();
             if (name == null) return Optional.empty();
-            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(null, name), p -> this.skinDetails = p);
+            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(Util.NIL_UUID, name), p -> this.skinDetails = p);
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);

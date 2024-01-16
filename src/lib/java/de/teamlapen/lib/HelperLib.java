@@ -94,12 +94,13 @@ public class HelperLib {
     public static void sync(ISyncable.@NotNull ISyncableAttachment cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap, data);
-            if (entity instanceof ServerPlayer player && !all) {
+            if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
                     player.connection.send(m);
                 }
-            } else {
+            }
+            if (all) {
                 sendToAll(entity, m);
             }
         }

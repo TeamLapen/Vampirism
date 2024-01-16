@@ -84,7 +84,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void acceptTask(UUID taskBoardId, @NotNull UUID taskInstance) {
-        this.player.awardStat(ModStats.tasks_accepted);
+        this.player.awardStat(ModStats.tasks_accepted.get());
         ITaskInstance ins = this.taskWrapperMap.get(taskBoardId).acceptTask(taskInstance, this.player.level().getGameTime() + getTaskTimeConfig() * 1200L);
         this.updateStats(ins);
     }
@@ -138,7 +138,7 @@ public class TaskManager implements ITaskManager {
         }
         this.removeRequirements(ins);
         this.applyRewards(ins);
-        this.player.awardStat(ModStats.tasks_completed);
+        this.player.awardStat(ModStats.tasks_completed.get());
     }
 
     /**

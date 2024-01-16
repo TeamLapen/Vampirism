@@ -20,8 +20,11 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.Collection;
 
 import static de.teamlapen.vampirism.api.VampirismRegistries.*;
 
@@ -94,6 +97,10 @@ public class ModRegistries {
         event.dataPackRegistry(TASK_ID, Task.CODEC, Task.CODEC);
         event.dataPackRegistry(SKILL_TREE_ID, SkillTree.CODEC, SkillTree.CODEC);
         event.dataPackRegistry(SKILL_NODE_ID, SkillNode.CODEC, SkillNode.CODEC);
+    }
+
+    public static Collection<DeferredHolder<IAction<?>, ? extends IAction<?>>> allActions() {
+        return DEFERRED_ACTIONS.getEntries();
     }
 
 }
