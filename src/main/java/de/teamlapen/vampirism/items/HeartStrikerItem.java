@@ -19,9 +19,9 @@ import java.util.List;
 
 public class HeartStrikerItem extends VampirismVampireSwordItem implements IItemWithTier {
 
-    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL,2, 500, -4.1f, 5.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1.25f);
-    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,2, 1750, -4.0f, 7.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.3f);
-    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,2, 2500, -3.9f, 9.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.35f);
+    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL,2, 500, -4.1f, 2.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1.25f);
+    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,2, 1750, -4.0f, 4.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.3f);
+    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,2, 2500, -3.9f, 6.0F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.35f);
 
     private final @NotNull TIER tier;
 
