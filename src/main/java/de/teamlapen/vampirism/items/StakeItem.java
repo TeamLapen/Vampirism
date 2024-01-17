@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
-public class StakeItem extends VampirismSwordItem implements IVampireFinisher, IFactionExclusiveItem {
+public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
     public static boolean canKillInstant(@NotNull LivingEntity target, LivingEntity attacker) {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
@@ -68,12 +68,6 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
         super(Tiers.WOOD, 1, -1, new Properties());
     }
 
-    @Nullable
-    @Override
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.HUNTER_FACTION;
-    }
-
     @Override
     public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         if (!attacker.getCommandSenderWorld().isClientSide) {
@@ -92,11 +86,5 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher, I
         }
 
         return super.hurtEnemy(stack, target, attacker);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 }
