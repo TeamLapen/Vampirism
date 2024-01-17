@@ -134,6 +134,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void disableSkill(@NotNull ISkill<T> skill) {
         if (enabledSkills.remove(skill)) {
             skill.onDisable(player);
+            ModStats.skillForgotten(this.player.getRepresentingPlayer(), skill);
             dirty = true;
         }
 
@@ -146,6 +147,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             skill.onEnable(player);
             enabledSkills.add(skill);
             dirty = true;
+            ModStats.skillUnlocked(this.player.getRepresentingPlayer(), skill);
             //noinspection ConstantValue
             if (this.player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
                 serverPlayer.awardStat(ModStats.skills_unlocked.get());

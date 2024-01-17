@@ -95,7 +95,6 @@ public class RegistryManager implements IInitListener {
                 });
                 ModTiles.registerTileExtensionsUnsafe();
                 event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
-                event.enqueueWork(ModStats::registerCustomStats);
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);

@@ -47,6 +47,7 @@
   ],
   "client": [
     "client.AgeableModelAccessor",
+    "client.StatsScreenAccessor",
     "client.BossHealthOverlayAccessor",
     "client.BossOverlayGuiAccessor",
     "client.HumanoidArmorLayerAccessor",
