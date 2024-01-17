@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class VampirePlayerSpecialAttributes {
     public boolean disguised = false;
-    public @Nullable IFaction<?> disguisedAs = null;
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;

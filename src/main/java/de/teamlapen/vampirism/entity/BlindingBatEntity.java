@@ -51,7 +51,7 @@ public class BlindingBatEntity extends Bat {
     }
 
     private final TargetingConditions nonVampirePredicatePlayer = TargetingConditions.forCombat().selector(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
-    private final TargetingConditions nonVampirePredicate = TargetingConditions.forCombat().selector(e -> !Helper.isVampire(e));
+    private final TargetingConditions nonVampirePredicate = TargetingConditions.forCombat().selector(e -> !Helper.appearsAsVampire(e, this));
     private boolean restrictLiveSpan;
     private boolean targeting;
     private boolean targetingMob = false;
