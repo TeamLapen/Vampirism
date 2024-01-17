@@ -198,7 +198,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     return InteractionResult.CONSUME;
                 }
             }
-            player.awardStat(ModStats.interact_with_coffin.get());
+            player.awardStat(ModStats.INTERACT_WITH_COFFIN.get());
             if (player.isShiftKeyDown() && !state.getValue(BedBlock.OCCUPIED)) {
                 worldIn.setBlock(pos, state.setValue(CLOSED, !state.getValue(CLOSED)), 3);
                 BlockPos otherPos = getOtherPos(pos, state);

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.SpawnHelper;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.*;
@@ -324,7 +323,7 @@ public class MotherBlockEntity extends BlockEntity {
         for (LivingEntity livingentity : involvedEntities) {
             if (livingentity instanceof ServerPlayer serverplayer) {
                 ModAdvancements.TRIGGER_MOTHER_WIN.get().trigger(serverplayer);
-                serverplayer.awardStat(ModStats.mother_defeated.get(), 1);
+                serverplayer.awardStat(ModStats.MOTHER_DEFEATED.get(), 1);
                 FactionPlayerHandler.getOpt(serverplayer).filter(s -> s.getCurrentFaction() != null && s.getCurrentLevel() < s.getCurrentFaction().getHighestReachableLevel()).ifPresent(handler -> {
                     handler.setFactionLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1);
                 });

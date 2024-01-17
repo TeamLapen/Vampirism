@@ -1481,5 +1481,7 @@
   "__comment": "stat types",
   "stat_type.vampirism.action_used": "Action Activated",
   "stat_type.vampirism.action_time": "Action Active",
-  "stat_type.vampirism.action_cooldown_time": "Action On Cooldown"
+  "stat_type.vampirism.action_cooldown_time": "Action On Cooldown",
+  "stat_type.vampirism.skill_unlocked": "Skill Unlocked",
+  "stat_type.vampirism.skill_forgotten": "Skill Forgotten"
 }

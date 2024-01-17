@@ -134,23 +134,21 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void disableSkill(@NotNull ISkill<T> skill) {
         if (enabledSkills.remove(skill)) {
             skill.onDisable(player);
-            ModStats.skillForgotten(this.player.getRepresentingPlayer(), skill);
             dirty = true;
         }
-
-
     }
 
     @Override
-    public void enableSkill(@NotNull ISkill<T> skill) {
+    public void enableSkill(@NotNull ISkill<T> skill, boolean fromLoading) {
         if (!enabledSkills.contains(skill)) {
             skill.onEnable(player);
             enabledSkills.add(skill);
+            if (!fromLoading) {
+                this.player.getRepresentingPlayer().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill));
+            }
             dirty = true;
-            ModStats.skillUnlocked(this.player.getRepresentingPlayer(), skill);
             //noinspection ConstantValue
             if (this.player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
-                serverPlayer.awardStat(ModStats.skills_unlocked.get());
                 ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().trigger(serverPlayer, skill);
             }
         }
@@ -183,7 +181,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public void updateUnlockedSkillTrees(Collection<Holder<ISkillTree>> skillTrees) {
-        List<Holder<ISkillTree>> removedTrees = this.unlockedTrees.stream().filter(x -> !skillTrees.contains(x)).collect(Collectors.toList());
+        List<Holder<ISkillTree>> removedTrees = this.unlockedTrees.stream().filter(x -> !skillTrees.contains(x)).toList();
         removedTrees.forEach(this::lockSkillTree);
         skillTrees.stream().filter(x -> !this.unlockedTrees.contains(x)).forEach(this::unlockSkillTree);
         this.dirty = true;
@@ -192,7 +190,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private void unlockSkillTree(Holder<ISkillTree> tree) {
         this.unlockedTrees.add(tree);
         SkillTreeConfiguration.SkillTreeNodeConfiguration root = this.treeData.root(tree);
-        root.elements().forEach(x -> enableSkill((ISkill<T>) x.value()));
+        root.elements().forEach(x -> enableSkill((ISkill<T>) x.value(), true));
         this.dirty = true;
     }
 
@@ -229,6 +227,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void reset() {
         disableAllSkills();
         resetRefinements();
+        this.unlockedTrees.clear();
         this.maxSkillpoints = 0;
         this.dirty = true;
     }
@@ -291,7 +290,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                     LOGGER.warn("Skill {} does not exist anymore", id);
                     continue;
                 }
-                enableSkill(skill);
+                enableSkill(skill, true);
 
             }
         }
@@ -354,7 +353,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 if (old.contains(skill)) {
                     old.remove(skill);
                 } else {
-                    enableSkill(skill);
+                    enableSkill(skill, true);
                 }
 
 

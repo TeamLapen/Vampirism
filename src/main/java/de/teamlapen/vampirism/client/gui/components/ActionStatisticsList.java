@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.gui.components;
 
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.mixin.client.StatsScreenAccessor;
@@ -18,11 +20,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
-import net.minecraft.stats.StatsCounter;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.neoforged.fml.common.Mod;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -32,28 +32,42 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsList.ActionRow> {
+public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsList.SkillRow> {
+    protected final List<StatType<ISkill<?>>> skillColumns;
     protected final List<StatType<IAction<?>>> actionColumns;
     private final ResourceLocation[] iconSprites = new ResourceLocation[] {
+            new ResourceLocation( REFERENCE.MODID, "statistics/skills_unlocked"),
+            new ResourceLocation( REFERENCE.MODID, "statistics/skills_forgotten"),
             new ResourceLocation( "statistics/item_used"),
             new ResourceLocation(REFERENCE.MODID, "statistics/time"),
-            new ResourceLocation(REFERENCE.MODID, "statistics/cooldown")
+            null
+    };
+    private final ItemStack[] itemSprites = new ItemStack[] {
+            null,
+            null,
+            null,
+            null,
+            Items.RED_BED.getDefaultInstance()
     };
     protected int headerPressed = -1;
     private final StatsScreenAccessor screen;
     private final Font font;
-    protected final Comparator<ActionRow> itemStatSorter = new ActionRowComparator();
+    protected final Comparator<SkillRow> itemStatSorter = new ActionRowComparator();
     @Nullable
     protected StatType<?> sortColumn;
     protected int sortOrder;
 
     public ActionStatisticsList(Minecraft minecraft, StatsScreen screen, int width, int height) {
         super(minecraft, width, height, 32, 20);
+        this.skillColumns = List.of(ModStats.SKILL_UNLOCKED.get(), ModStats.SKILL_FORGOTTEN.get());
         this.actionColumns = List.of(ModStats.ACTION_USED.get(), ModStats.ACTION_TIME.get(), ModStats.ACTION_COOLDOWN_TIME.get());
         this.font = screen.font;
         this.screen = (StatsScreenAccessor) screen;
         this.setRenderHeader(true, 20);
-        ModRegistries.ACTIONS.stream().filter(x -> actionColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x))).sum() > 0).collect(Collectors.toSet()).forEach(x -> addEntry(new ActionRow(x)));
+        Set<ISkill<?>> skills = new HashSet<>();
+        skills.addAll(ModRegistries.SKILLS.stream().filter(x -> skillColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x))).sum() > 0).collect(Collectors.toSet()));
+        skills.addAll(ModRegistries.ACTIONS.stream().filter(x -> actionColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x))).sum() > 0).map(IAction::asSkill).toList());
+        skills.forEach(s -> addEntry(new SkillRow(s)));
     }
 
     @Override
@@ -64,6 +78,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         for (int i = 0; i < this.iconSprites.length; i++) {
             ResourceLocation loc = this.headerPressed == i ? StatsScreen.SLOT_SPRITE : StatsScreen.HEADER_SPRITE;
             screen.invokeBlitSlotIcon(pGuiGraphics, pX + screen.invokeGetColumnX(i) - 18, pY + 1, loc);
+
         }
 
         if (this.sortColumn != null) {
@@ -74,7 +89,15 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
 
         for(int k = 0; k < this.iconSprites.length; ++k) {
             int l = this.headerPressed == k ? 1 : 0;
-            screen.invokeBlitSlotIcon(pGuiGraphics, pX + screen.invokeGetColumnX(k) - 18 + l, pY + 1 + l, this.iconSprites[k]);
+            ResourceLocation iconSprite = this.iconSprites[k];
+            if (iconSprite != null) {
+                screen.invokeBlitSlotIcon(pGuiGraphics, pX + screen.invokeGetColumnX(k) - 18 + l, pY + 1 + l, this.iconSprites[k]);
+            } else {
+                ItemStack itemSprite = this.itemSprites[k];
+                if (itemSprite != null) {
+                    pGuiGraphics.renderFakeItem(itemSprite, pX + screen.invokeGetColumnX(k) - 18 + l, pY + 1 + l);
+                }
+            }
         }
     }
 
@@ -110,24 +133,30 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
     }
 
     private StatType<?> getColumn(int pIndex) {
-        return this.actionColumns.get(pIndex);
+        return pIndex < this.skillColumns.size() ? this.skillColumns.get(pIndex) : this.actionColumns.get(pIndex - this.skillColumns.size());
     }
 
     private int getColumnIndex(StatType<?> pStatType) {
-        return this.actionColumns.indexOf(pStatType);
+        int i = this.skillColumns.indexOf(pStatType);
+        if (i >= 0) {
+            return i;
+        } else {
+            int j = this.actionColumns.indexOf(pStatType);
+            return j >= 0 ? j + this.skillColumns.size() : -1;
+        }
     }
 
     @Override
     protected void renderDecorations(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
         if (pMouseY >= this.getY() && pMouseY <= this.getBottom()) {
-            ActionRow statsscreen$itemstatisticslist$itemrow = this.getHovered();
+            SkillRow statsscreen$itemstatisticslist$itemrow = this.getHovered();
             int i = (this.width - this.getRowWidth()) / 2;
             if (statsscreen$itemstatisticslist$itemrow != null) {
                 if (pMouseX < i + 40 || pMouseX > i + 40 + 20) {
                     return;
                 }
 
-                IAction<?> item = statsscreen$itemstatisticslist$itemrow.getAction();
+                ISkill<?> item = statsscreen$itemstatisticslist$itemrow.getSkill();
                 pGuiGraphics.renderTooltip(this.font, this.getString(item), pMouseX, pMouseY);
             } else {
                 Component component = null;
@@ -148,7 +177,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         }
     }
 
-    protected Component getString(IAction<?> pItem) {
+    protected Component getString(ISkill<?> pItem) {
         return pItem.getName();
     }
 
@@ -166,43 +195,69 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         this.children().sort(this.itemStatSorter);
     }
 
-    public class ActionRow extends ObjectSelectionList.Entry<ActionRow> {
+    public class SkillRow extends ObjectSelectionList.Entry<SkillRow> {
 
         static final ResourceLocation SLOT_SPRITE = new ResourceLocation("container/slot");
-        private final IAction<?> action;
+        private final ISkill<?> skill;
 
-        public ActionRow(IAction<?> action) {
-            this.action = action;
+        public SkillRow(ISkill<?> action) {
+            this.skill = action;
         }
 
-        public IAction<?> getAction() {
-            return action;
+        public ISkill<?> getSkill() {
+            return skill;
         }
 
         @SuppressWarnings("NullableProblems")
         @Override
         public Component getNarration() {
-            return Component.translatable("narrator.select", this.action.getName());
+            return Component.translatable("narrator.select", this.skill.getName());
         }
 
         @Override
         public void render(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
-            ResourceLocation id = RegUtil.id(action);
-            ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
             pGuiGraphics.setColor(1,1,1,1);
             pGuiGraphics.blitSprite(SLOT_SPRITE,pLeft+40+1, pTop+1 ,0,18,18);
-            pGuiGraphics.blit(texture, pLeft+40+1+1, pTop+1+1, 0, 0, 0, 16, 16, 16, 16);
+            renderSkill(pGuiGraphics, pTop, pLeft);
 
-            for(int i = 0; i < ActionStatisticsList.this.actionColumns.size(); ++i) {
-                Stat<IAction<?>> stat;
-                if (this.action instanceof IAction<?>) {
-                    stat = ActionStatisticsList.this.actionColumns.get(i).get(this.action);
+            for(int i = 0; i < skillColumns.size(); ++i) {
+                Stat<ISkill<?>> stat;
+                if (getSkill() instanceof ISkill<?>) {
+                    stat = skillColumns.get(i).get(this.getSkill());
                 } else {
                     stat = null;
                 }
 
                 this.renderStat(pGuiGraphics, stat, pLeft + screen.invokeGetColumnX(i), pTop, pIndex % 2 == 0);
             }
+
+            for(int j = 0; j < actionColumns.size(); ++j) {
+                Stat<IAction<?>> stat;
+                if (this.skill instanceof IActionSkill<?> actionSkill) {
+                    StatType<IAction<?>> stats = actionColumns.get(j);
+                    IAction<?> action = actionSkill.getAction();
+                    if (stats != ModStats.ACTION_TIME.get() || action instanceof ILastingAction<?>) {
+                        stat = actionColumns.get(j).get(actionSkill.getAction());
+                    } else {
+                        stat = null;
+                    }
+                } else {
+                    stat = null;
+                }
+                this.renderStat(pGuiGraphics, stat, pLeft + screen.invokeGetColumnX(j + skillColumns.size()), pTop, pIndex % 2 == 0);
+            }
+        }
+
+        public void renderSkill(GuiGraphics pGuiGraphics, int pTop, int pLeft) {
+            ResourceLocation texture;
+            if (skill instanceof IActionSkill<?> actionSkill) {
+                ResourceLocation id = RegUtil.id(actionSkill.getAction());
+                texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+            } else {
+                ResourceLocation id = RegUtil.id(skill);
+                texture = new ResourceLocation(id.getNamespace(), "textures/skills/" + id.getPath() + ".png");
+            }
+            pGuiGraphics.blit(texture,pLeft+40+1+1, pTop+1+1, 0, 0, 0, 16, 16, 16, 16);
         }
 
         protected void renderStat(GuiGraphics pGuiGraphics, @Nullable Stat<?> pStat, int pX, int pY, boolean pEvenRow) {
@@ -211,17 +266,21 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         }
     }
 
-    public class ActionRowComparator implements Comparator<ActionRow> {
-        public int compare(ActionRow pRow1, ActionRow pRow2) {
-            IAction<?> item = pRow1.getAction();
-            IAction<?> item1 = pRow2.getAction();
+    public class ActionRowComparator implements Comparator<SkillRow> {
+        public int compare(SkillRow pRow1, SkillRow pRow2) {
+            ISkill<?> item = pRow1.getSkill();
+            ISkill<?> item1 = pRow2.getSkill();
             int i;
             int j;
             if (ActionStatisticsList.this.sortColumn == null) {
                 i = 0;
                 j = 0;
-            } else {
+            } else if (actionColumns.contains(sortColumn)) {
                 StatType<IAction<?>> stattype1 = (StatType<IAction<?>>) ActionStatisticsList.this.sortColumn;
+                i = item instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.getAction()) : -1;
+                j = item1 instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.getAction()) : -1;
+            } else {
+                StatType<ISkill<?>> stattype1 = (StatType<ISkill<?>>) ActionStatisticsList.this.sortColumn;
                 i = screen.getStats().getValue(stattype1, item);
                 j = screen.getStats().getValue(stattype1, item1);
             }
@@ -229,8 +288,8 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
             return i == j ? ActionStatisticsList.this.sortOrder * Integer.compare(getId(item), getId(item1)) : ActionStatisticsList.this.sortOrder * Integer.compare(i, j);
         }
 
-        private int getId(IAction<?> action) {
-            return ModRegistries.ACTIONS.getId(action);
+        private int getId(ISkill<?> action) {
+            return ModRegistries.SKILLS.getId(action);
         }
     }
 }
