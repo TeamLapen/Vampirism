@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
+import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
@@ -47,7 +48,7 @@ public class ModRegistries {
     static final DeferredRegister<ISkillTree> DEFERRED_SKILL_TREES = DeferredRegister.create(SKILL_TREE_ID, SKILL_TREE_ID.location().getNamespace());
 
 
-    public static final Registry<ISkill<?>> SKILLS = DEFERRED_SKILLS.makeRegistry(builder -> {});
+    public static final Registry<ISkill<?>> SKILLS = DEFERRED_SKILLS.makeRegistry(builder -> builder.callback(new SkillCallbacks()));
     public static final Registry<IAction<?>> ACTIONS = DEFERRED_ACTIONS.makeRegistry(builder -> {});
     public static final Registry<IEntityAction> ENTITY_ACTIONS = DEFERRED_ENTITY_ACTIONS.makeRegistry(builder -> {});
     public static final Registry<IMinionTask<?, ?>> MINION_TASKS = DEFERRED_MINION_TASKS.makeRegistry(builder -> {});

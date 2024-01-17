@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -78,6 +80,11 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
             }
             ins = insM.getHiddenEffect();
         }
+    }
+
+    @Override
+    public ISkill<T> asSkill() {
+        return SkillCallbacks.<T>getActionSkillMap().get(this);
     }
 
     @Override

@@ -269,7 +269,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public CompoundTag writeToNBT() {
-        var tag = super.writeFullUpdateToNBT();
+        var tag = super.writeToNBT();
         CompoundTag actionHandler = new CompoundTag();
         CompoundTag skillHandler = new CompoundTag();
         this.actionHandler.writeUpdateForClient(actionHandler);
