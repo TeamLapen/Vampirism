@@ -233,7 +233,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (e instanceof LivingEntity) {
             if (e.distanceTo(player) <= player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
-                player.awardStat(ModStats.amount_bitten.get());
+                player.awardStat(ModStats.AMOUNT_BITTEN.get());
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
                         player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
@@ -327,7 +327,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (event.useRemaining() && remainingBlood > 0) {
             handleSpareBlood(remainingBlood);
         }
-        this.player.awardStat(ModStats.blood_drunk.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
+        this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
     }
 
     /**
@@ -1014,7 +1014,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.sync(true);
             int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION.get());
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
-            this.player.awardStat(ModStats.resurrected.get());
+            this.player.awardStat(ModStats.RESURRECTED.get());
             if (this.player instanceof ServerPlayer serverPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.RESURRECT);
             }

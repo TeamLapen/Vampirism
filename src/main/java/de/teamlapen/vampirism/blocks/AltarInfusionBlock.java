@@ -122,7 +122,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
                 case INVMISSING -> player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_missing_times"), true);
                 case OK -> {
                     if (heldItem.isEmpty()) {
-                        player.awardStat(ModStats.altar_of_infusion_rituals_performed.get());
+                        player.awardStat(ModStats.ALTAR_OF_INFUSION_RITUALS_PERFORMED.get());
                         te.startRitual(player);
                         return InteractionResult.SUCCESS;
                     }
@@ -135,7 +135,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
             }
         }
         player.openMenu(te);
-        player.awardStat(ModStats.interact_with_altar_of_infusion.get());
+        player.awardStat(ModStats.INTERACT_WITH_ALTAR_OF_INFUSION.get());
         return InteractionResult.SUCCESS;
     }
 

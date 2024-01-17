@@ -85,7 +85,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             if (opt.isPresent()) {
                 AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
                 if (!player.isShiftKeyDown() && tileEntity != null) {
-                    player.awardStat(ModStats.interact_with_altar_inspiration.get());
+                    player.awardStat(ModStats.INTERACT_WITH_ALTAR_INSPIRATION.get());
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getDirection());
                 }
                 return InteractionResult.SUCCESS;
@@ -93,7 +93,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         } else {
             BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             if (tileEntity instanceof AltarInspirationBlockEntity altar) {
-                player.awardStat(ModStats.altar_of_inspiration_rituals_performed.get());
+                player.awardStat(ModStats.ALTAR_OF_INSPIRATION_RITUALS_PERFORMED.get());
                 altar.startRitual(player);
             }
         }

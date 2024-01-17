@@ -118,7 +118,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.awardStat(ModStats.interact_with_research_table.get());
+                serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());
                 if (Helper.isHunter(serverPlayer)) {
                     player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
                 } else {

@@ -80,7 +80,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (player.isAlive()) {
             ItemStack stack = player.getItemInHand(hand);
-            player.awardStat(ModStats.interact_with_injection_chair.get());
+            player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
             if (handleInjections(player, world, stack, pos)) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {

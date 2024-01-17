@@ -33,38 +33,35 @@ public class ModStats {
     public static final DeferredHolder<StatType<?>, CustomStatType<IAction<?>>> ACTION_TIME = STAT_TYPES.register("action_time", () -> new CustomStatType<>(ModRegistries.ACTIONS, Component.translatable("stat_type." + REFERENCE.MODID + ".action_time"), StatFormatter.TIME));
     public static final DeferredHolder<StatType<?>, CustomStatType<IAction<?>>> ACTION_COOLDOWN_TIME = STAT_TYPES.register("action_cooldown", () -> new CustomStatType<>(ModRegistries.ACTIONS, Component.translatable("stat_type." + REFERENCE.MODID + ".action_cooldown_time"), StatFormatter.TIME));
 
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> weapon_table = add("weapon_table");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_alchemical_cauldron = add("interact_alchemical_cauldron");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_alchemy_table = add("interact_with_alchemy_table");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_altar_of_infusion = add("interact_with_altar_of_infusion");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_altar_inspiration = add("interact_with_altar_inspiration");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_blood_grinder = add("interact_with_blood_grinder");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_garlic_diffuser = add("interact_with_garlic_diffuser");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_fog_diffuser = add("interact_with_fog_diffuser");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_research_table = add("interact_with_research_table");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_ancient_beacon = add("interact_with_ancient_beacon");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_totem = add("interact_with_totem");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_potion_table = add("interact_with_potion_table");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_injection_chair = add("interact_with_injection_chair");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_coffin = add("interact_with_coffin");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> interact_with_throne = add("interact_with_throne");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> capture_village = add("capture_village");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> defend_village = add("defend_village");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> win_village_capture = add("win_village_capture");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> infected_creatures = add("infected_creatures");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> mother_defeated = add("mother_defeated");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> killed_with_stake = add("killed_with_stake");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> resurrected = add("resurrected");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> actions_used = add("actions_used");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> skills_unlocked = add("skills_unlocked");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> skills_reset = add("skills_reset");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> tasks_accepted = add("tasks_accepted");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> tasks_completed = add("tasks_completed");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> blood_drunk = add("blood_drunk", BUCKED_FORMATTER);
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> amount_bitten = add("amount_bitten");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> altar_of_inspiration_rituals_performed = add("altar_of_inspiration_rituals_performed");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> altar_of_infusion_rituals_performed = add("altar_of_infusion_rituals_performed");
-    public static final DeferredHolder<ResourceLocation, ResourceLocation> items_filled_on_blood_pedestal = add("items_filled_on_blood_pedestal");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> WEAPON_TABLE = add("weapon_table");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_ALCHEMICAL_CAULDRON = add("interact_alchemical_cauldron");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_ALCHEMY_TABLE = add("interact_with_alchemy_table");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_ALTAR_OF_INFUSION = add("interact_with_altar_of_infusion");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_ALTAR_INSPIRATION = add("interact_with_altar_inspiration");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_BLOOD_GRINDER = add("interact_with_blood_grinder");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_GARLIC_DIFFUSER = add("interact_with_garlic_diffuser");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_FOG_DIFFUSER = add("interact_with_fog_diffuser");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_RESEARCH_TABLE = add("interact_with_research_table");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_ANCIENT_BEACON = add("interact_with_ancient_beacon");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_TOTEM = add("interact_with_totem");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_POTION_TABLE = add("interact_with_potion_table");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_INJECTION_CHAIR = add("interact_with_injection_chair");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_COFFIN = add("interact_with_coffin");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INTERACT_WITH_THRONE = add("interact_with_throne");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> CAPTURE_VILLAGE = add("capture_village");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> DEFEND_VILLAGE = add("defend_village");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> WIN_VILLAGE_CAPTURE = add("win_village_capture");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> INFECTED_CREATURES = add("infected_creatures");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> MOTHER_DEFEATED = add("mother_defeated");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> KILLED_WITH_STAKE = add("killed_with_stake");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> RESURRECTED = add("resurrected");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> TASKS_ACCEPTED = add("tasks_accepted");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> TASKS_COMPLETED = add("tasks_completed");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> BLOOD_DRUNK = add("blood_drunk", BUCKED_FORMATTER);
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> AMOUNT_BITTEN = add("amount_bitten");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> ALTAR_OF_INSPIRATION_RITUALS_PERFORMED = add("altar_of_inspiration_rituals_performed");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> ALTAR_OF_INFUSION_RITUALS_PERFORMED = add("altar_of_infusion_rituals_performed");
+    public static final DeferredHolder<ResourceLocation, ResourceLocation> ITEMS_FILLED_ON_BLOOD_PEDESTAL = add("items_filled_on_blood_pedestal");
 
     private static DeferredHolder<ResourceLocation, ResourceLocation> add(String name) {
         return add(name, StatFormatter.DEFAULT);
@@ -81,27 +78,6 @@ public class ModStats {
     public static void register(IEventBus eventBus) {
         CUSTOM_STAT.register(eventBus);
         STAT_TYPES.register(eventBus);
-    }
-
-    public static void skillUnlocked(Player player, ISkill<?> skill) {
-        player.awardStat(SKILL_UNLOCKED.get().get(skill));
-    }
-
-    public static void skillForgotten(Player player, ISkill<?> skill) {
-        player.awardStat(SKILL_FORGOTTEN.get().get(skill));
-    }
-
-    public static void updateActionTime(Player player, ILastingAction<?> action) {
-        player.awardStat(ACTION_TIME.get().get(action));
-    }
-
-    public static void updateActionCooldownTime(Player player, IAction<?> action) {
-        player.awardStat(ACTION_COOLDOWN_TIME.get().get(action));
-    }
-
-    public static void actionUsed(Player player, IAction<?> action) {
-        player.awardStat(actions_used.get());
-        player.awardStat(ACTION_USED.get().get(action));
     }
 
     @ApiStatus.Internal

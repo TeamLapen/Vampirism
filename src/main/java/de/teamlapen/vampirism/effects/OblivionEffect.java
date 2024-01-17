@@ -40,7 +40,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
     @Override
     public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
-            if (entityLivingBaseIn instanceof Player) {
+            if (entityLivingBaseIn instanceof Player player) {
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null, Optional.empty()));
                 FactionPlayerHandler.getOpt(((Player) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
@@ -49,13 +49,13 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
                         for (Holder<ISkill<?>> element : nodeOPT.get().skills()) {
                             //noinspection unchecked,rawtypes
                             skillHandler.disableSkill((ISkill)element.value());
+                            player.awardStat(ModStats.SKILL_FORGOTTEN.get().get(element.value()));
                         }
                     } else {
                         entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                         VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
-                        ((Player) entityLivingBaseIn).awardStat(ModStats.skills_reset.get());
                     }
                 });
             }
