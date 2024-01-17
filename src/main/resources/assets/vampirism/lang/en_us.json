@@ -118,6 +118,7 @@
   "text.vampirism.fog_diffuser.idle": "Inactive",
   "text.vampirism.fog_diffuser.active": "Running",
   "text.vampirism.container.not_enough_blood": "Not enough blood",
+  "text.vampirism.actions": "Actions",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",
@@ -1476,5 +1477,9 @@
   "subtitles.vampirism.remains.death": "Remains dies",
   "subtitles.vampirism.remains.hurt": "Remains hurts",
   "__comment": "entity tags",
-  "entity_tag.vampirism.vampire": "Vampires"
+  "entity_tag.vampirism.vampire": "Vampires",
+  "__comment": "stat types",
+  "stat_type.vampirism.action_used": "Action Activated",
+  "stat_type.vampirism.action_time": "Action Active",
+  "stat_type.vampirism.action_cooldown_time": "Action On Cooldown"
 }

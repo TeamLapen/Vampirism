@@ -327,6 +327,7 @@ public class VampirismMod {
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
 //        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
+        event.enqueueWork(ModStats::registerFormatter);
 
         TelemetryCollector.execute();
     }

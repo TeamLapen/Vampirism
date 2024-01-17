@@ -325,7 +325,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
                 if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.onActivated(player, context)) {
-                    ModStats.updateActionUsed(player.getRepresentingPlayer(), action);
+                    ModStats.actionUsed(player.getRepresentingPlayer(), action);
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
                     int cooldown = activationEvent.getCooldown();
@@ -405,6 +405,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = cooldownTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int value = entry.getIntValue();
+            ModStats.updateActionCooldownTime(player.getRepresentingPlayer(), RegUtil.getAction(entry.getKey()));
             if (value <= 1) { //<= Just in case we have missed something
                 expectedCooldownTimes.removeInt(entry);
                 it.remove();
