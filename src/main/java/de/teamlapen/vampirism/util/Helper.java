@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -18,6 +19,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
@@ -157,6 +159,22 @@ public class Helper {
 
     public static boolean isVampire(Player entity) {
         return VReference.VAMPIRE_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
+    }
+
+    public static boolean appearsAsVampire(Entity entity, Entity viewer) {
+        if (entity instanceof Player player) {
+            return appearsAsVampire(player, viewer);
+        } else {
+            return isVampire(entity);
+        }
+    }
+
+    public static boolean appearsAsVampire(Player player, Entity viewer) {
+        return VReference.VAMPIRE_FACTION == viewedFaction(player, viewer);
+    }
+
+    public static IPlayableFaction<?> viewedFaction(Player player, Entity viewer) {
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFaction(viewer))).orElse(null);
     }
 
     /**

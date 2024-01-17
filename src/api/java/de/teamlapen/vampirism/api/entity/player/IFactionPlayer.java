@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player;
 
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
@@ -39,7 +36,12 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * @return The faction the player is disguised as.
      */
     @Nullable
-    IFaction<?> getDisguisedAs();
+    @Deprecated(forRemoval = true)
+    default IFaction<?> getDisguisedAs() {
+        return getDisguise().getViewedFaction(null);
+    }
+
+    IDisguise getDisguise();
 
     /**
      * @return the faction this faction player belongs to
@@ -87,7 +89,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     ITaskManager getTaskManager();
 
     /**
-     * You can also use {@link IFactionPlayer#getDisguisedAs()} to get the faction the player looks like
+     * You can also use {@link de.teamlapen.vampirism.api.entity.player.IFactionPlayer#getDisguise()} to get the faction the player looks like
      *
      * @return If the player is disguised.
      */

@@ -87,7 +87,7 @@ public class ModEntityEventHandler {
             @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                ((NearestTargetGoalModifier) target).ignoreVampires();
+                ((NearestTargetGoalModifier) target).ignoreVampires(e);
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
@@ -145,7 +145,7 @@ public class ModEntityEventHandler {
             //Creeper AI changes for AvoidedByCreepers Skill
             if (VampirismConfig.BALANCE.creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Creeper) {
-                    ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, Helper::isVampire));
+                    ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, (target)-> Helper.appearsAsVampire(target, event.getEntity())));
                     //noinspection unchecked
                     makeVampireFriendly("creeper", (Creeper) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 1, type -> type == EntityType.CREEPER);
 

@@ -24,8 +24,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     protected void activate(@NotNull IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().disguised = true;
-        ((VampirePlayer) player).getSpecialAttributes().disguisedAs = null;
+        player.getDisguise().disguiseAs(null);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().disguised = false;
+        player.getDisguise().unDisguise();
     }
 
     @Override

@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import com.google.common.base.Predicate;
+import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +60,7 @@ public class FactionPredicate implements Predicate<LivingEntity> {
         }
         if (player && input instanceof Player && input.isAlive()) {
             return FactionPlayerHandler.getCurrentFactionPlayer((Player) input).map(fp -> {
-                        IFaction<?> f = (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
+                        IFaction<?> f = fp.getDisguise().getViewedFaction(thisFaction, ignoreDisguise);
                         return (f != null || (thisFaction.isHostileTowardsNeutral() && neutralPlayer)) && !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
                     }
             ).orElse(neutralPlayer);
