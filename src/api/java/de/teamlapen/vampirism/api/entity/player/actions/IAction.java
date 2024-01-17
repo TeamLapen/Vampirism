@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillLike;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +16,7 @@ import java.util.Optional;
 /**
  * Interface for player actions
  */
-public interface IAction<T extends IFactionPlayer<T>> {
+public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
     /**
      * Checks if the player can use this action
      *
@@ -78,6 +80,8 @@ public interface IAction<T extends IFactionPlayer<T>> {
     default boolean showHudCooldown(Player player) {
         return false;
     }
+
+    ISkill<T> asSkill();
 
     enum PERM {
         /**

@@ -35,7 +35,11 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      */
-    void enableSkill(ISkill<T> skill);
+    default void enableSkill(ISkill<T> skill) {
+        enableSkill(skill, false);
+    }
+
+    void enableSkill(ISkill<T> skill, boolean fromLoading);
 
     /**
      * Equip the refinement set from the given stack to the appropriate slot

@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Skill that can be unlocked
  */
-public interface ISkill<T extends IFactionPlayer<T>> {
+public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
     /**
      * The description for this skill. Can be null
      */
@@ -58,4 +58,8 @@ public interface ISkill<T extends IFactionPlayer<T>> {
 
     Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();
 
+    @Override
+    default ISkill<T> asSkill() {
+        return this;
+    }
 }

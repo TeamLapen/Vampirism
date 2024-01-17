@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
 /**
  * Simple skill that unlocks one action
  */
-public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> {
+public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> implements IActionSkill<T> {
     private final Supplier<? extends IAction<T>> action;
 
     public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree) {
@@ -68,6 +69,10 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
 
     public ResourceLocation getActionID() {
         return RegUtil.id(action.get());
+    }
+
+    public IAction<T> getAction() {
+        return action.get();
     }
 
     @NotNull
