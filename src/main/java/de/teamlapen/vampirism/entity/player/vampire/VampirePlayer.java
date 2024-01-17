@@ -1162,8 +1162,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
         bloodStats.writeUpdate(nbt);
-        actionHandler.writeUpdateForClient(nbt);
-        skillHandler.writeUpdateForClient(nbt);
+        CompoundTag actionHandler = new CompoundTag();
+        CompoundTag skillHandler = new CompoundTag();
+        this.actionHandler.writeUpdateForClient(actionHandler);
+        this.skillHandler.writeUpdateForClient(skillHandler);
+        nbt.put("action_handler", actionHandler);
+        nbt.put("skill_handler", skillHandler);
         nbt.put(KEY_VISION, this.vision.createTag());
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
