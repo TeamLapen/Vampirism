@@ -80,7 +80,7 @@ public class BiteableEntryManager {
         if (calculatedEntries.containsKey(creature.getType())) {
             return calculatedEntries.get(creature.getType());
         }
-        return BuiltInRegistries.ENTITY_TYPE.createIntrusiveHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD);
+        return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD);
     }
 
     /**

@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.*;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -382,6 +383,8 @@ public class TagProvider {
             this.tag(ModTags.DamageTypes.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS);
             this.tag(ModTags.DamageTypes.REMAINS_INVULNERABLE).add(DamageTypes.IN_WALL, DamageTypes.DROWN);
             this.tag(ModTags.DamageTypes.MOTHER_RESISTANT_TO).add(DamageTypes.ON_FIRE, DamageTypes.IN_FIRE, ModDamageTypes.HOLY_WATER, DamageTypes.FREEZE, DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC);
+            this.tag(ModTags.DamageTypes.VAMPIRE_IMMORTAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.DROWN, DamageTypes.ON_FIRE, DamageTypes.CRAMMING, DamageTypes.FALL, DamageTypes.FLY_INTO_WALL, DamageTypes.MAGIC, DamageTypes.MAGIC, DamageTypes.WITHER, DamageTypes.FALLING_ANVIL, DamageTypes.FALLING_BLOCK, DamageTypes.DRAGON_BREATH, DamageTypes.SWEET_BERRY_BUSH, DamageTypes.TRIDENT, DamageTypes.ARROW, DamageTypes.FIREWORKS, DamageTypes.FIREBALL, DamageTypes.WITHER_SKULL, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION, DamageTypes.THROWN, DamageTypes.INDIRECT_MAGIC, ModDamageTypes.VAMPIRE_ON_FIRE, DamageTypes.STING, DamageTypes.FALLING_STALACTITE, DamageTypes.STALAGMITE, DamageTypes.FREEZE)
+                    .addOptional(new ResourceLocation("mekanism", "radiation"));
         }
     }
 

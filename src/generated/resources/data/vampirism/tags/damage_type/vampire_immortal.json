@@ -1,0 +1,36 @@
+{
+  "values": [
+    "minecraft:player_attack",
+    "minecraft:mob_attack",
+    "minecraft:drown",
+    "minecraft:on_fire",
+    "minecraft:cramming",
+    "minecraft:fall",
+    "minecraft:fly_into_wall",
+    "minecraft:magic",
+    "minecraft:magic",
+    "minecraft:wither",
+    "minecraft:falling_anvil",
+    "minecraft:falling_block",
+    "minecraft:dragon_breath",
+    "minecraft:sweet_berry_bush",
+    "minecraft:trident",
+    "minecraft:arrow",
+    "minecraft:fireworks",
+    "minecraft:fireball",
+    "minecraft:wither_skull",
+    "minecraft:explosion",
+    "minecraft:player_explosion",
+    "minecraft:thrown",
+    "minecraft:indirect_magic",
+    "vampirism:vampire_on_fire",
+    "minecraft:sting",
+    "minecraft:falling_stalactite",
+    "minecraft:stalagmite",
+    "minecraft:freeze",
+    {
+      "id": "mekanism:radiation",
+      "required": false
+    }
+  ]
+}

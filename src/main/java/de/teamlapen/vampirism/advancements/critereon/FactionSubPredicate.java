@@ -70,9 +70,9 @@ public class FactionSubPredicate implements EntitySubPredicate {
     public boolean matches(@NotNull Entity pEntity, @NotNull ServerLevel pLevel, @Nullable Vec3 p_218830_) {
         if (pEntity instanceof Player player) {
             FactionPlayerHandler fph = FactionPlayerHandler.get(player);
-            return faction == null || fph.getCurrentFaction() == faction
-                    && level.isEmpty() || fph.getCurrentLevel() >= level.get()
-                    && lordLevel.isEmpty() || fph.getLordLevel() >= lordLevel.get();
+            return (faction == null || fph.getCurrentFaction() == faction)
+                    && (level.isEmpty() || fph.getCurrentLevel() >= level.get())
+                    && (lordLevel.isEmpty() || fph.getLordLevel() >= lordLevel.get());
         }
         return false;
     }

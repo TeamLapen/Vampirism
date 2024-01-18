@@ -270,7 +270,7 @@ public class Helper {
      */
     public static boolean canKillVampires(@NotNull DamageSource source) {
         if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            if (VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
+            if (source.is(ModTags.DamageTypes.VAMPIRE_IMMORTAL) || VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
