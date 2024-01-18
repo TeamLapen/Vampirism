@@ -104,4 +104,4 @@ jobs:
     - name: Publish
       uses: gradle/gradle-build-action@v2.7.0
       with:
-        arguments: publishAll -PMAVEN_URL=${{ secrets.MAVEN_URL }} -PMAVEN_USER=${{ secrets.MAVEN_USER }} -PMAVEN_TOKEN=${{ secrets.MAVEN_TOKEN }} -PCURSEFORGE_API=${{ secrets.CURSEFORGE_API }} -PMODRINTH_API=${{ secrets.MODRINTH_API }} -PCHANGELOG=${{ github.event.inputs.changelog }} -P${{ needs.determine-environment.outputs.version }}
+        arguments: publishAll -Pmaxanier_maven_url=${{ secrets.MAVEN_URL }} -Pmaxanier_maven_alias=${{ secrets.MAVEN_USER }} -Pmaxanier_maven_token=${{ secrets.MAVEN_TOKEN }} -PCURSEFORGE_API=${{ secrets.CURSEFORGE_API }} -PMODRINTH_API=${{ secrets.MODRINTH_API }} -PCHANGELOG=${{ github.event.inputs.changelog }} -P${{ needs.determine-environment.outputs.version }}
