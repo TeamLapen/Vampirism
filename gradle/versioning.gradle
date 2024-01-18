@@ -38,6 +38,6 @@ def writeVersion() {
 
 static def getDate() {
     def date = new Date()
-    def formattedDate = date.format('YYYYMMdd-HHmm')
+    def formattedDate = date.format('YYMMdd-HHmm')
     return formattedDate
 }
