@@ -1,43 +1,5 @@
-tasks.register('downloadCrowdin') {
-    ext {
-        output = file('build/crowdin_raw.zip')
-        update = file('build/crowdin.json')
-        id = 'vampirism'
-    }
-    outputs.upToDateWhen { false }
-    onlyIf {
-        project.hasProperty('VAMPIRISM_CROWDIN_KEY') && !project.gradle.startParameter.isOffline()
-    }
+tasks.register('crowdinBranch') {
     doLast {
-        download {
-            src "https://api.crowdin.com/api/project/${id}/export?key=${project.VAMPIRISM_CROWDIN_KEY}&export_translated_only&json"
-            dest update
-            overwrite true
-        }
-        if (!update.text.contains('success')) {
-            throw new RuntimeException("Crowdin export failed, see ${update} for more info")
-        }
-        download {
-            src "https://api.crowdin.com/api/project/${id}/download/all.zip?key=${project.VAMPIRISM_CROWDIN_KEY}"
-            dest output
-            overwrite true
-        }
-    }
-}
-
-tasks.register('crowdin', Copy) {
-    dependsOn downloadCrowdin
-    onlyIf {
-        !downloadCrowdin.state.skipped
-    }
-    destinationDir = file('build/translations')
-    from(zipTree(downloadCrowdin.output)) {
-        filter { String line ->
-            line.indexOf("\"\"") != -1 ? null : line //Filter empty translations
-        }
-        filteringCharset = 'UTF-8'
-        exclude { it.isDirectory() }
-        rename { it.toLowerCase() }//Minecraft needs it lowercase.
-        exclude '**/*.lang' //Pre-1.13 format
+        print("${project.main_version}.${project.major_version}")
     }
 }

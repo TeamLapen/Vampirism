@@ -1,0 +1,48 @@
+name: Upload lang keys to Crowdin
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '1.[0-9]+'
+      - '1.[0-9]+.[0-9]+'
+    paths:
+      - 'src/main/resources/assets/vampirism/lang/en_us.json'
+      - 'src/main/resources/assets/vampirismguide/lang/en_us.json'
+
+jobs:
+  upload-translations:
+    environment: Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'gradle'
+      - name: Determine Crowdin branch
+        id: get_crowdin_branch
+        run: |
+          version=$(./gradlew crowdinBranch -q)
+          if [[ $version =~ ^1\.[0-9]+$ ]]; then
+            echo "Crowdin branch: $version"
+            echo "crowdin_branch=$version" >> $GITHUB_OUTPUT
+          else
+            echo "Invalid version: $version"
+            exit 1
+          fi
+      - name: Upload translation keys
+        uses: crowdin/github-action@v1
+        with:
+          crowdin_branch_name: ${{ steps.get_crowdin_branch.outputs.crowdin_branch }}
+        env:
+          CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}
+      - name: Install Crowdin CLI
+        run: npm i -g @crowdin/cli
+      - name: Pre-translate
+        run: crowdin pre-translate -b ${{ steps.get_crowdin_branch.outputs.crowdin_branch }} --translate-with-perfect-match-only --translate-untranslated-only --method=tm
+        env:
+          CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}

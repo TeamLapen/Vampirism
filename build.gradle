@@ -86,10 +86,7 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
-    dependsOn 'crowdin'
-
     includeEmptyDirs = false
-
     from sourceSets.main.output.classesDirs
     from sourceSets.api.output.classesDirs
     from sourceSets.lib.output.classesDirs

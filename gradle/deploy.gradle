@@ -8,6 +8,7 @@ curseforge {
     project {
         id = "233029"
 
+        changelog = findProperty("CHANGELOG") ?:""
         if (project.type == "beta") {
             releaseType = 'beta'
             //changelog = new File("resources/changelog/${project.version}.txt").text
@@ -15,7 +16,7 @@ curseforge {
             releaseType = 'release'
         } else {
             releaseType = 'alpha'
-            changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
+            changelog = !(findProperty("CHANGELOG") ?: "").toString().isEmpty() ? getProperty("CHANGELOG") : "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
         }
         addGameVersion project.minecraft_version
 
@@ -108,9 +109,9 @@ publishing {
 
 // Make sure it runs after build!
 modrinth {
+    changelog = findProperty("CHANGELOG") ?:""
     if (project.type == "beta") {
         versionType = 'beta'
-        //changelog = new File("resources/changelog/${project.version}.txt").text
     } else if (project.type == "release") {
         versionType = 'release'
     } else {

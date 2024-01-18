@@ -1,0 +1,19 @@
+project_id: "113663"
+api_token_env: CROWDIN_KEY
+base_path: "."
+base_url: "https://api.crowdin.com"
+
+preserve_hierarchy: true
+
+files: [
+  {
+    source: "src/main/resources/assets/vampirism/lang/en_us.json",
+    translation: "src/main/resources/assets/vampirism/lang/%locale_with_underscore%.json",
+    dest: "main_translations.json",
+  },
+  {
+    source: "src/main/resources/assets/vampirismguide/lang/en_us.json",
+    translation: "src/main/resources/assets/vampirismguide/lang/%locale_with_underscore%.json",
+    dest: "guide.json",
+  }
+]
