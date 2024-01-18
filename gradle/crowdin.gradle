@@ -1,5 +1,5 @@
 tasks.register('crowdinBranch') {
     doLast {
-        print("${project.main_version}.${project.major_version}")
+        print("Crowdin branch: ${project.main_version}.${project.major_version}")
     }
 }
