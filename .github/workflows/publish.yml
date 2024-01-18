@@ -72,8 +72,14 @@ jobs:
       id: get_crowdin_branch
       run: |
         output=$(./gradlew crowdinBranch)
-        version=$(echo $output | awk -F ': ' '{print $2}')
-        echo "crowdin_branch=$version" >> $GITHUB_OUTPUT
+        version=$(echo "$output" | grep -oP 'Crowdin branch: \K\d+\.\d+')
+        if [[ $version =~ ^1\.[0-9]+$ ]]; then
+          echo "Crowdin branch: $version"
+          echo "crowdin_branch=$version" >> $GITHUB_OUTPUT
+        else
+          echo "Invalid version: $version"
+          exit 1
+        fi
 
   publish:
     runs-on: ubuntu-latest
