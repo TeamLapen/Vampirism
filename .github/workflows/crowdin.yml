@@ -26,7 +26,8 @@ jobs:
       - name: Determine Crowdin branch
         id: get_crowdin_branch
         run: |
-          version=$(./gradlew crowdinBranch -q)
+          output=$(./gradlew crowdinBranch)
+          version=$(echo "$output" | grep -oP 'Crowdin branch: \K\d+\.\d+')
           if [[ $version =~ ^1\.[0-9]+$ ]]; then
             echo "Crowdin branch: $version"
             echo "crowdin_branch=$version" >> $GITHUB_OUTPUT
