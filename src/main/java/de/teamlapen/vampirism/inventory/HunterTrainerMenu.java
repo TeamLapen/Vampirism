@@ -65,11 +65,10 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
 
     @Override
     protected @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
-        return ItemCombinerMenuSlotDefinition.create()
+        return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
                 .withSlot(0, 27, 26, stack -> this.lvlRequirement.filter(req -> req.ironQuantity() > 0).isPresent() && stack.is(Items.IRON_INGOT))
                 .withSlot(1, 57, 26, stack -> this.lvlRequirement.filter(req -> req.goldQuantity() > 0).isPresent() && stack.is(Items.GOLD_INGOT))
                 .withSlot(2, 86, 26, stack -> this.lvlRequirement.map(req -> req.tableRequirement().resultIntelItem().get()).filter(stack::is).isPresent())
-                .withResultSlot(0, 0, 0)
                 .build();
     }
 
