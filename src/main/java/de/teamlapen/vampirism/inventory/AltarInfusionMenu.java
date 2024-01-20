@@ -87,11 +87,10 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
     }
 
     public static ItemCombinerMenuSlotDefinition createInputSlotDefinition() {
-        return ItemCombinerMenuSlotDefinition.create()
+        return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
                 .withSlot(0, 44, 34, stack -> stack.is(ModTags.Items.PURE_BLOOD))
                 .withSlot(1, 80, 34, stack -> stack.is(ModItems.HUMAN_HEART.get()))
                 .withSlot(2, 116, 34, stack -> stack.is(ModItems.VAMPIRE_BOOK.get()))
-                .withResultSlot(0, 0, 0)
                 .build();
     }
 }
