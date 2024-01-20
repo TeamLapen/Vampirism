@@ -175,7 +175,6 @@ public class ClientProxy extends CommonProxy {
             }
             case LOAD_COMPLETE -> {
                 event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
-                event.enqueueWork(ModScreens::registerScreensUnsafe);
             }
             default -> {
             }
