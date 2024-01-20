@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.entity.villager.Trades;
+import de.teamlapen.vampirism.mixin.VillagerAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
@@ -66,7 +67,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.STRING);
 
     static {
-        SENSOR_TYPES = Lists.newArrayList(Villager.SENSOR_TYPES);
+        SENSOR_TYPES = Lists.newArrayList(VillagerAccessor.getSensorTypes());
         SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
         SENSOR_TYPES.add(ModAi.VAMPIRE_VILLAGER_HOSTILES.get());
     }
@@ -255,7 +256,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @NotNull
     @Override
     protected Brain<?> makeBrain(@NotNull Dynamic<?> dynamicIn) {
-        Brain<Villager> brain = Brain.provider(MEMORY_TYPES, SENSOR_TYPES).makeBrain(dynamicIn);
+        Brain<Villager> brain = Brain.provider(VillagerAccessor.getMemoryTypes(), SENSOR_TYPES).makeBrain(dynamicIn);
         this.registerBrainGoals(brain);
         return brain;
     }

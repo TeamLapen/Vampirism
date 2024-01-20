@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
+import de.teamlapen.vampirism.mixin.AbstractContainerScreenAccessor;
 import de.teamlapen.vampirism.network.ServerboundDeleteRefinementPacket;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -116,7 +117,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
-            if (this.isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
+            if (((AbstractContainerScreenAccessor) this).isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
                 this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
             }
         }
@@ -174,7 +175,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 }, Component.empty()) {
                     @Override
                     public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-                        if(!refinementList.get(slot.index).isEmpty() && VampirismContainerScreen.this.draggingItem.isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
+                        if(!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) VampirismContainerScreen.this).getDraggingItem().isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
                             super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
                         }
                     }

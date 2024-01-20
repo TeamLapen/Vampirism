@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.mixin.ProcessorRuleAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule;
@@ -35,11 +36,11 @@ public class RandomBlockStateRule extends ProcessorRule {
     @SuppressWarnings("CodeBlock2Expr")
     public static final Codec<RandomBlockStateRule> CODEC = RecordCodecBuilder.create((instance) -> {
         return instance.group(RuleTest.CODEC.fieldOf("input_predicate").forGetter((getter) -> {
-            return getter.inputPredicate;
+            return ((ProcessorRuleAccessor) getter).getInputPredicate();
         }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {
             return entry.locPredicate;
         }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
-            return Pair.of(entry.outputState, entry.blockEntityModifier);
+            return Pair.of(((ProcessorRuleAccessor) entry).getOutputState(), entry.blockEntityModifier);
         }), PAIR_CODEC.listOf().fieldOf("states").forGetter(entry -> {
             return Lists.newArrayList(entry.states);
         })).apply(instance, RandomBlockStateRule::new);
@@ -62,7 +63,7 @@ public class RandomBlockStateRule extends ProcessorRule {
             int type = RNG.nextInt(states.size());
             return states.get(type);
         } else {
-            return Pair.of(this.outputState, this.blockEntityModifier);
+            return Pair.of(((ProcessorRuleAccessor) this).getOutputState(), this.blockEntityModifier);
         }
     }
 }

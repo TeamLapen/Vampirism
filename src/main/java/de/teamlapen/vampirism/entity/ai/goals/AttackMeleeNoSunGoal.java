@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
+import de.teamlapen.vampirism.mixin.MeleeAttackGoalAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +38,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
 
             if (avoidSun) {
 
-                Path path = this.path;
+                Path path = ((MeleeAttackGoalAccessor) this).getPath();
                 if (mob.getCommandSenderWorld().canSeeSkyFromBelowWater(new BlockPos(Mth.floor(this.mob.getX()), (int) (this.mob.getBoundingBox().minY + 0.5D), Mth.floor(this.mob.getZ())))) {
                     return false;
                 }

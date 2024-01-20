@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.mixin.EntityAccessor;
 import de.teamlapen.vampirism.mixin.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -251,7 +252,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void refreshDimensions() {
         super.refreshDimensions();
-        this.eyeHeight = this.entityCreature.map(Entity::getEyeHeight).orElse(0.5f);
+        ((EntityAccessor) this).setEyeHeight(this.entityCreature.map(Entity::getEyeHeight).orElse(0.5f));
     }
 
     @Override

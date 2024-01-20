@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.mixin.OrePlacementAccessor;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import net.minecraft.core.HolderGetter;
@@ -42,8 +43,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
 import java.util.OptionalInt;
-
-import static net.minecraft.data.worldgen.placement.OrePlacements.commonOrePlacement;
 
 public class VampirismFeatures {
 
@@ -109,8 +108,8 @@ public class VampirismFeatures {
         context.register(WATER_LAKE_PLACED, new PlacedFeature(placedFeatures.getOrThrow(WATER_LAKE), List.of(RarityFilter.onAverageOnceEvery(200), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
         context.register(VAMPIRE_TREES_PLACED, new PlacedFeature(placedFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(10, 0.1f, 1))));
         context.register(FOREST_GRASS_PLACED, new PlacedFeature(placedFeatures.getOrThrow(VegetationFeatures.PATCH_GRASS), VegetationPlacements.worldSurfaceSquaredWithCount(2)));
-        context.register(ORE_DARK_STONE_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_DARK_STONE), commonOrePlacement(30, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
-        context.register(ORE_CURSED_DIRT_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_CURSED_DIRT), commonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
+        context.register(ORE_DARK_STONE_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_DARK_STONE), OrePlacementAccessor.commonOrePlacement(30, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
+        context.register(ORE_CURSED_DIRT_PLACED, new PlacedFeature(placedFeatures.getOrThrow(ORE_CURSED_DIRT), OrePlacementAccessor.commonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
     }
 
     public static void createBiomeModifier(BootstapContext<BiomeModifier> context) {

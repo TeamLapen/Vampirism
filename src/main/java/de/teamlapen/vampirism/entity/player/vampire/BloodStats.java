@@ -82,8 +82,8 @@ public class BloodStats implements IBloodStats {
         FoodData foodStats = player.getFoodData();
         foodStats.setFoodLevel(10);
         Difficulty enumDifficulty = player.getCommandSenderWorld().getDifficulty();
-        float exhaustion = foodStats.exhaustionLevel;
-        foodStats.exhaustionLevel = 0;
+        float exhaustion = foodStats.getExhaustionLevel();
+        foodStats.setExhaustion(0);
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         float bloodExhaustionGate = player.getCommandSenderWorld().getBiome(player.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME) ? 6f : 4f;
