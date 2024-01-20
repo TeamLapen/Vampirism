@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,11 +27,11 @@ public abstract class MixinMobEffectInstance implements EffectInstanceWithSource
     }
 
     @Shadow
-    int duration;
+    private int duration;
     @Shadow
     @Nullable
     private MobEffectInstance hiddenEffect;
-    @Shadow @Final private MobEffect effect;
+    @Unique
     private @Nullable ResourceLocation source;
 
     @Override
@@ -59,13 +60,6 @@ public abstract class MixinMobEffectInstance implements EffectInstanceWithSource
     public void removeEffect() {
         this.duration = 1;
     }
-
-    /*@Inject(method = "isNoCounter", at = @At("HEAD"), cancellable = true) //TODO 1.19 readd
-    private void isNoCounter(CallbackInfoReturnable<Boolean> cir) {
-        if (this.effect instanceof EffectWithNoCounter) {
-            cir.setReturnValue(true);
-        }
-    }*/
 
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(@NotNull MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {

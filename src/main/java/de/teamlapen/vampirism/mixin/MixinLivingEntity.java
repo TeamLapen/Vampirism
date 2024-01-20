@@ -24,7 +24,7 @@ public abstract class MixinLivingEntity extends Entity {
     @Shadow
     public abstract boolean addEffect(MobEffectInstance effectInstanceIn);
 
-    @Inject(method = "checkTotemDeathProtection", at = @At("RETURN"))
+    @Inject(method = "checkTotemDeathProtection", at = @At(value = "RETURN", ordinal = 1))
     private void handleTotemOfUndying(DamageSource damageSourceIn, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
             this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 800, 5));

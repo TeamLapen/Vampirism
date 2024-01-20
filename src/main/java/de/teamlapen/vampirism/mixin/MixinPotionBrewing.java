@@ -8,6 +8,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -32,6 +33,7 @@ public class MixinPotionBrewing {
         }
     }
 
+    @Unique
     private static boolean shouldBlockBrewing_vampirism(@NotNull ItemStack input, ItemStack reagent) {
         return VampirismPotion.isHunterPotion(input, true).map(Potion::getEffects).flatMap(effects -> effects.stream().map(MobEffectInstance::getEffect).filter(MobEffect::isBeneficial).findAny()).isPresent();
 

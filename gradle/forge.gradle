@@ -70,6 +70,7 @@ runs {
         systemProperty 'vampirism_target', 'dev'
         jvmArgument '-XX:+AllowEnhancedClassRedefinition'
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'mixin.debug.export', 'true'
     }
 
     server {

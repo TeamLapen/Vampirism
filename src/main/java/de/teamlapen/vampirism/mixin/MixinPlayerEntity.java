@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -13,8 +14,8 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.function.Predicate;
@@ -22,35 +23,37 @@ import java.util.function.Predicate;
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
 
+    @Unique
     private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();
 
     private MixinPlayerEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
+    @Unique
     @Override
     public VampirismPlayerAttributes getVampAtts() {
         return vampirismPlayerAttributes;
     }
 
-    @ModifyVariable(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "STORE", ordinal = 0), ordinal = 1)
-    public float vampireSlayerEnchantment(float damage, Entity target) {
-        return damage + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
+    @ModifyExpressionValue(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageBonus(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/MobType;)F"))
+    private float addVampireSlayerDamageBonus(float damageBonus, Entity target) {
+        return damageBonus + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }
 
-    @Redirect(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getSupportedHeldProjectiles()Ljava/util/function/Predicate;"))
-    private Predicate<ItemStack> getSupportedHeldProjectilesWithItemStack(ProjectileWeaponItem instance, ItemStack stack) {
-        if (instance instanceof IVampirismCrossbow crossbow) {
-            return crossbow.getSupportedProjectiles(stack);
+    @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getSupportedHeldProjectiles()Ljava/util/function/Predicate;"))
+    private Predicate<ItemStack> getSupport(Predicate<ItemStack> original, ItemStack shootable) {
+        if (shootable.getItem() instanceof IVampirismCrossbow crossbow) {
+            return crossbow.getSupportedProjectiles(shootable);
         }
-        return instance.getSupportedHeldProjectiles();
+        return original;
     }
 
-    @Redirect(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getAllSupportedProjectiles()Ljava/util/function/Predicate;"))
-    private Predicate<ItemStack> getAllSupportedProjectilesWithItemStack(ProjectileWeaponItem instance, ItemStack stack) {
-        if (instance instanceof IVampirismCrossbow crossbow) {
-            return crossbow.getSupportedProjectiles(stack);
+    @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getAllSupportedProjectiles()Ljava/util/function/Predicate;"))
+    private Predicate<ItemStack> getAllSupport(Predicate<ItemStack> original, ItemStack shootable) {
+        if (shootable.getItem() instanceof IVampirismCrossbow crossbow) {
+            return crossbow.getSupportedProjectiles(shootable);
         }
-        return instance.getSupportedHeldProjectiles();
+        return original;
     }
 }

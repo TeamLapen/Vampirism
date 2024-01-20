@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
@@ -24,14 +25,14 @@ public abstract class MixinJigsawPlacer {
     private MixinJigsawPlacer() {
     }
 
-    @Redirect(method = "tryPlacingChildren", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))
-    private @NotNull Object inject(@NotNull Iterator<StructurePoolElement> iterator) {
-        while (iterator.hasNext()) {
-            StructurePoolElement piece = iterator.next();
+    @ModifyReceiver(method = "tryPlacingChildren", at =@At(value = "INVOKE", target = "Ljava/util/Iterator;hasNext()Z", ordinal = 1))
+    private Iterator inj(Iterator instance) {
+        while (instance.hasNext()) {
+            StructurePoolElement piece = (StructurePoolElement) instance.next();
             if (!MixinHooks.checkStructures(this.pieces, piece)) {
-                return piece;
+                return instance;
             }
         }
-        return EmptyPoolElement.INSTANCE;
+        return instance;
     }
 }
