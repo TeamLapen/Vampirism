@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.mixin.StructuresAccessor;
+import de.teamlapen.vampirism.mixin.accessor.StructuresAccessor;
 import de.teamlapen.vampirism.world.gen.structure.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structure.huntercamp.HunterCampStructure;

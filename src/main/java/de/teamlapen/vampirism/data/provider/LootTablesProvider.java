@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.data.provider;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.mixin.VanillaBlockLootAccessor;
+import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
 import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;

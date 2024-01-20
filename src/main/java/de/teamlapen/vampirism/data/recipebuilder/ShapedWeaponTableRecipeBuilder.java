@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.recipebuilder;
 
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.mixin.ShapedRecipeBuilderAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ShapedRecipeBuilderAccessor;
 import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;

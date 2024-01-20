@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.items.StakeItem;
+import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
@@ -297,7 +298,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
         if (addTempPoison) {
-            mc.player.activeEffects.remove(MobEffects.POISON);
+            ((LivingEntityAccessor) mc.player).getActiveEffects().remove(MobEffects.POISON);
         }
 
 
@@ -308,13 +309,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !mc.player.activeEffects.containsKey(MobEffects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !((LivingEntityAccessor) mc.player).getActiveEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
                 addedTempPoison = new MobEffectInstance(MobEffects.POISON, 100);
             }
-            mc.player.activeEffects.put(MobEffects.POISON, addedTempPoison);
+            ((LivingEntityAccessor) mc.player).getActiveEffects().put(MobEffects.POISON, addedTempPoison);
         }
 
     }

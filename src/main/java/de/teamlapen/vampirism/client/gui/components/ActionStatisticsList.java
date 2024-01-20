@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.mixin.client.StatsScreenAccessor;
+import de.teamlapen.vampirism.mixin.client.accessor.StatsScreenAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -20,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -76,26 +75,26 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
             this.headerPressed = -1;
         }
         for (int i = 0; i < this.iconSprites.length; i++) {
-            ResourceLocation loc = this.headerPressed == i ? StatsScreen.SLOT_SPRITE : StatsScreen.HEADER_SPRITE;
-            screen.invokeBlitSlotIcon(pGuiGraphics, pX + screen.invokeGetColumnX(i) - 18, pY + 1, loc);
+            ResourceLocation loc = this.headerPressed == i ? StatsScreenAccessor.getSLOT_SPRITE() : StatsScreenAccessor.getHEADER_SPRITE();
+            screen.invoke_blitSlotIcon(pGuiGraphics, pX + screen.invoke_getColumnX(i) - 18, pY + 1, loc);
 
         }
 
         if (this.sortColumn != null) {
-            int j = screen.invokeGetColumnX(this.getColumnIndex(this.sortColumn)) - 36;
-            ResourceLocation resourcelocation1 = this.sortOrder == 1 ? StatsScreen.SORT_UP_SPRITE : StatsScreen.SORT_DOWN_SPRITE;
-            screen.invokeBlitSlotIcon(pGuiGraphics, pX + j, pY + 1, resourcelocation1);
+            int j = screen.invoke_getColumnX(this.getColumnIndex(this.sortColumn)) - 36;
+            ResourceLocation resourcelocation1 = this.sortOrder == 1 ? StatsScreenAccessor.getSORT_UP_SPRITE() : StatsScreenAccessor.getSORT_DOWN_SPRITE();
+            screen.invoke_blitSlotIcon(pGuiGraphics, pX + j, pY + 1, resourcelocation1);
         }
 
         for(int k = 0; k < this.iconSprites.length; ++k) {
             int l = this.headerPressed == k ? 1 : 0;
             ResourceLocation iconSprite = this.iconSprites[k];
             if (iconSprite != null) {
-                screen.invokeBlitSlotIcon(pGuiGraphics, pX + screen.invokeGetColumnX(k) - 18 + l, pY + 1 + l, this.iconSprites[k]);
+                screen.invoke_blitSlotIcon(pGuiGraphics, pX + screen.invoke_getColumnX(k) - 18 + l, pY + 1 + l, this.iconSprites[k]);
             } else {
                 ItemStack itemSprite = this.itemSprites[k];
                 if (itemSprite != null) {
-                    pGuiGraphics.renderFakeItem(itemSprite, pX + screen.invokeGetColumnX(k) - 18 + l, pY + 1 + l);
+                    pGuiGraphics.renderFakeItem(itemSprite, pX + screen.invoke_getColumnX(k) - 18 + l, pY + 1 + l);
                 }
             }
         }
@@ -116,7 +115,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         this.headerPressed = -1;
 
         for(int i = 0; i < this.iconSprites.length; ++i) {
-            int j = p_97036_ - screen.invokeGetColumnX(i);
+            int j = p_97036_ - screen.invoke_getColumnX(i);
             if (j >= -36 && j <= 0) {
                 this.headerPressed = i;
                 break;
@@ -163,7 +162,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 int j = pMouseX - i;
 
                 for(int k = 0; k < this.iconSprites.length; ++k) {
-                    int l = screen.invokeGetColumnX(k);
+                    int l = screen.invoke_getColumnX(k);
                     if (j >= l - 18 && j <= l) {
                         component = this.getColumn(k).getDisplayName();
                         break;
@@ -228,7 +227,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                     stat = null;
                 }
 
-                this.renderStat(pGuiGraphics, stat, pLeft + screen.invokeGetColumnX(i), pTop, pIndex % 2 == 0);
+                this.renderStat(pGuiGraphics, stat, pLeft + screen.invoke_getColumnX(i), pTop, pIndex % 2 == 0);
             }
 
             for(int j = 0; j < actionColumns.size(); ++j) {
@@ -244,7 +243,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 } else {
                     stat = null;
                 }
-                this.renderStat(pGuiGraphics, stat, pLeft + screen.invokeGetColumnX(j + skillColumns.size()), pTop, pIndex % 2 == 0);
+                this.renderStat(pGuiGraphics, stat, pLeft + screen.invoke_getColumnX(j + skillColumns.size()), pTop, pIndex % 2 == 0);
             }
         }
 

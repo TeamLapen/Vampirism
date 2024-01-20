@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
+import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
+import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -83,7 +85,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
      * @return If the player can levelup with the given tileInventory
      */
     public boolean canLevelup() {
-        return this.lvlRequirement.map(req -> req.ironQuantity() <= this.inputSlots.countItem(Items.IRON_INGOT) && req.goldQuantity() <= this.inputSlots.countItem(Items.GOLD_INGOT) && this.inputSlots.countItem(req.tableRequirement().resultIntelItem().get()) >= 1).orElse(false);
+        return this.lvlRequirement.map(req -> req.ironQuantity() <= getInputSlots().countItem(Items.IRON_INGOT) && req.goldQuantity() <= getInputSlots().countItem(Items.GOLD_INGOT) && getInputSlots().countItem(req.tableRequirement().resultIntelItem().get()) >= 1).orElse(false);
     }
 
     public Optional<HunterLeveling.HunterTrainerRequirement> getRequirement() {
@@ -98,11 +100,15 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
         if (canLevelup()) {
             this.lvlRequirement.ifPresent(req -> {
                 FactionPlayerHandler.get(this.player).setFactionLevel(VReference.HUNTER_FACTION, req.targetLevel());
-                InventoryHelper.removeItems(this.inputSlots, req.ironQuantity(), req.goldQuantity(), 1);
+                InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
             });
         }
+    }
+
+    private Container getInputSlots() {
+        return ((ItemCombinerMenuAccessor) this).getInputSlots();
     }
 
 

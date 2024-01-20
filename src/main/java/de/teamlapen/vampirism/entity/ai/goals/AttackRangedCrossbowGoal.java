@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.ai.goals;
 
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.mixin.CrossbowItemMixin;
+import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;

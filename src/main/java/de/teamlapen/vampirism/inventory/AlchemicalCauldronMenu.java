@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.mixin.accessor.AbstractContainerMenuAccessor;
+import de.teamlapen.vampirism.mixin.accessor.AbstractFurnaceMenuAccessor;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,12 +78,12 @@ public class AlchemicalCauldronMenu extends AbstractFurnaceMenu {
 
     private void setSlots(@NotNull Inventory playerInv) {
         this.slots.clear();
-        this.lastSlots.clear();
+        ((AbstractContainerMenuAccessor) this).getLastSlots().clear();
         //Keep order
-        this.addSlot(new Slot(container, 0, 44, 17));
-        this.addSlot(new Slot(container, 1, 68, 17));
-        this.addSlot(new FurnaceResultSlot(playerInv.player, container, 2, 116, 35));
-        this.addSlot(new FurnaceFuelSlot(this, container, 3, 56, 53));
+        this.addSlot(new Slot(((AbstractFurnaceMenuAccessor) this).getContainer(), 0, 44, 17));
+        this.addSlot(new Slot(((AbstractFurnaceMenuAccessor)this).getContainer(), 1, 68, 17));
+        this.addSlot(new FurnaceResultSlot(playerInv.player, ((AbstractFurnaceMenuAccessor)this).getContainer(), 2, 116, 35));
+        this.addSlot(new FurnaceFuelSlot(this, ((AbstractFurnaceMenuAccessor)this).getContainer(), 3, 56, 53));
 
         int i;
         for (i = 0; i < 3; ++i) {

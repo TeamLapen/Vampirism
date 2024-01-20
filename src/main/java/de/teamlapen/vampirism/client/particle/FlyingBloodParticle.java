@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
+import de.teamlapen.vampirism.mixin.client.accessor.ParticleEngineAccessor;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,7 +47,7 @@ public class FlyingBloodParticle extends TextureSheetParticle {
             this.zd = (this.level.random.nextDouble() / 10 - 0.05) + wayZ / lifetime;
         }
 
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(particleId));
+        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(particleId));
         this.scale(scale);
         this.hasPhysics = false;
     }

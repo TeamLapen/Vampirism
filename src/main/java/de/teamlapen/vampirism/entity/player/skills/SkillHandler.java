@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.data.ISkillTreeData;
+import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -485,7 +486,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                         if (!this.player.isRemote() && x.getAttribute() != null) {
                             AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(x);
-                            attributeInstance.removeModifier(t);
+                            ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
                             double value = t.getAmount() - x.getModifierValue();
                             if (value != 0) {
                                 attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.getId(), value));

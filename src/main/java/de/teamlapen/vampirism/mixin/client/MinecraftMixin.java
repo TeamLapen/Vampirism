@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.mixin.client;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.mixin.client.accessor.BossHealthOverlayAccessor;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

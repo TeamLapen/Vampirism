@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
-import de.teamlapen.vampirism.mixin.AbstractContainerScreenAccessor;
+import de.teamlapen.vampirism.mixin.accessor.AbstractContainerScreenAccessor;
 import de.teamlapen.vampirism.network.ServerboundDeleteRefinementPacket;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -117,7 +117,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
-            if (((AbstractContainerScreenAccessor) this).isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
+            if (((AbstractContainerScreenAccessor) this).invoke_isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
                 this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
             }
         }

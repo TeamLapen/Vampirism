@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.mixin.BlockFamiliesAccessor;
+import de.teamlapen.vampirism.mixin.accessor.BlockFamiliesAccessor;
 import net.minecraft.data.BlockFamily;
 
 @SuppressWarnings("unused")

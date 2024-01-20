@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.mixin.MultiNoiseBiomeSourceParameterListPresetAccessor;
+import de.teamlapen.vampirism.mixin.accessor.MultiNoiseBiomeSourceParameterListPresetAccessor;
 import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;

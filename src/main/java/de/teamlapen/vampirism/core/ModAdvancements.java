@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
-import de.teamlapen.vampirism.mixin.PlayerAdvancementsAccessor;
+import de.teamlapen.vampirism.mixin.accessor.PlayerAdvancementsAccessor;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;

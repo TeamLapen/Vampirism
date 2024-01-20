@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
+import de.teamlapen.vampirism.mixin.client.accessor.ParticleEngineAccessor;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -27,7 +28,7 @@ public class GenericParticle extends TextureSheetParticle {
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.alpha = (color >> 24 & 255) / 255.0F;
         }
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(texture));
+        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(texture));
     }
 
     @NotNull

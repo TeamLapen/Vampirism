@@ -38,7 +38,8 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
-import de.teamlapen.vampirism.mixin.ArmorItemAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ArmorItemAccessor;
+import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
@@ -1072,14 +1073,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
                 if (modArmor != null && targetArmor != modArmor.getAmount()) {
-                    armorAtt.removeModifier(modArmor);
+                    ((AttributeInstanceAccessor) armorAtt).invoke_removeModifier(modArmor);
                     modArmor = null;
                 }
                 if (targetArmor != 0 && modArmor == null) {
                     armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor", targetArmor, AttributeModifier.Operation.ADDITION));
                 }
                 if (modToughness != null && targetToughness != modToughness.getAmount()) {
-                    toughnessAtt.removeModifier(modToughness);
+                    ((AttributeInstanceAccessor) toughnessAtt).invoke_removeModifier(modToughness);
                     modToughness = null;
                 }
                 if (targetToughness != 0 && modToughness == null) {

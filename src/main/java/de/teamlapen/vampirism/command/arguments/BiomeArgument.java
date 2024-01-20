@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.arguments;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import de.teamlapen.vampirism.mixin.ResourceKeyArgumentAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ResourceKeyArgumentAccessor;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.core.Holder;

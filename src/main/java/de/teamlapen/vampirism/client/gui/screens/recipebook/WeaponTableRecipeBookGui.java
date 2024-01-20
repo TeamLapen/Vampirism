@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.mixin.client.RecipeBookComponentAccessor;
+import de.teamlapen.vampirism.mixin.client.accessor.RecipeBookComponentAccessor;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -22,8 +22,8 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
 
     @Override
     public void updateCollections(boolean forceFirstPage) { //nearly copied from super method. Only added additional filter using faction player
-        List<RecipeCollection> recipeLists = this.book.getCollection(this.selectedTab.getCategory());
-        recipeLists.forEach((p_193944_1_) -> p_193944_1_.canCraft(((RecipeBookComponentAccessor) this).getStackedContents(), this.menu.getGridWidth(), this.menu.getGridHeight(), this.book));
+        List<RecipeCollection> recipeLists = ((RecipeBookComponentAccessor) this).getBook().getCollection(((RecipeBookComponentAccessor) this).getSelectedTab().getCategory());
+        recipeLists.forEach((p_193944_1_) -> p_193944_1_.canCraft(((RecipeBookComponentAccessor) this).getStackedContents(), this.menu.getGridWidth(), this.menu.getGridHeight(), ((RecipeBookComponentAccessor) this).getBook()));
 
         List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
         FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> list1.removeIf(recipeList -> {
@@ -45,12 +45,12 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
         }));
         list1.removeIf((recipeList) -> !recipeList.hasKnownRecipes());
         list1.removeIf((p_193953_0_) -> !p_193953_0_.hasFitting());
-        String s = this.searchBox.getValue();
+        String s = ((RecipeBookComponentAccessor) this).getSearchBox().getValue();
         if (!s.isEmpty()) {
             ObjectSet<RecipeCollection> objectset = new ObjectLinkedOpenHashSet<>(this.minecraft.getSearchTree(SearchRegistry.RECIPE_COLLECTIONS).search(s.toLowerCase(Locale.ROOT)));
             list1.removeIf((p_193947_1_) -> !objectset.contains(p_193947_1_));
         }
-        if (this.book.isFiltering(this.menu)) {
+        if (((RecipeBookComponentAccessor) this).getBook().isFiltering(this.menu)) {
             list1.removeIf((p_193958_0_) -> !p_193958_0_.hasCraftable());
         }
         ((RecipeBookComponentAccessor) this).getRecipeBookPage().updateCollections(list1, forceFirstPage);

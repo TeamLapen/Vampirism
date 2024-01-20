@@ -9,8 +9,10 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.items.PureBloodItem;
+import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -66,7 +68,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
     @Override
     protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
         this.tableRequirement.ifPresent(req -> {
-            InventoryHelper.removeItems(this.inputSlots, req.bookQuantity(), req.vampireFangQuantity(), req.pureBloodQuantity(), req.vampireBookQuantity());
+            InventoryHelper.removeItems(getInputSlots(), req.bookQuantity(), req.vampireFangQuantity(), req.pureBloodQuantity(), req.vampireBookQuantity());
         });
     }
 
@@ -85,14 +87,18 @@ public class HunterTableMenu extends ItemCombinerMenu {
     }
 
     private boolean isRequirementFulfilled(HunterLeveling.HunterTableRequirement req) {
-        return this.inputSlots.countItem(Items.BOOK) >= 1
-                && this.inputSlots.countItem(ModItems.VAMPIRE_FANG.get()) >= req.vampireFangQuantity()
+        return getInputSlots().countItem(Items.BOOK) >= 1
+                && getInputSlots().countItem(ModItems.VAMPIRE_FANG.get()) >= req.vampireFangQuantity()
                 && countPureBlood(req) >= req.pureBloodQuantity()
-                && this.inputSlots.countItem(ModItems.VAMPIRE_BOOK.get()) >= req.vampireBookQuantity();
+                && getInputSlots().countItem(ModItems.VAMPIRE_BOOK.get()) >= req.vampireBookQuantity();
+    }
+
+    private Container getInputSlots() {
+        return ((ItemCombinerMenuAccessor) this).getInputSlots();
     }
 
     private int countPureBlood(HunterLeveling.HunterTableRequirement req) {
-        return IntStream.range(req.pureBloodLevel(), 5).mapToObj(PureBloodItem::getBloodItemForLevel).mapToInt(this.inputSlots::countItem).sum();
+        return IntStream.range(req.pureBloodLevel(), 5).mapToObj(PureBloodItem::getBloodItemForLevel).mapToInt(getInputSlots()::countItem).sum();
     }
 
     public boolean doesTableFulfillRequirement(HunterLeveling.HunterTableRequirement req) {

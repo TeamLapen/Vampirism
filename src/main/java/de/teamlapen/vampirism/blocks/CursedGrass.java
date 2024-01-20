@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
 import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
-import de.teamlapen.vampirism.mixin.SpreadingSnowyDirtBlockAccessor;
+import de.teamlapen.vampirism.mixin.accessor.SpreadingSnowyDirtBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

@@ -18,7 +18,7 @@ import de.teamlapen.vampirism.entity.player.tasks.TaskUtil;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.items.BlessableItem;
-import de.teamlapen.vampirism.mixin.RecipeManagerAccessor;
+import de.teamlapen.vampirism.mixin.accessor.RecipeManagerAccessor;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -119,8 +119,8 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
-        registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).getByType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
+        registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor) recipeManager).invoke_byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
+        registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).invoke_byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(world.registryAccess()));
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));

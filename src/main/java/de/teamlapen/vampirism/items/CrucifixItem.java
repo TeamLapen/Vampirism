@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -191,7 +192,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
                 }
                 //Unfortunately, Vanilla converts y-collision with ground into forward movement later on (in #move)
                 //Therefore, we check for collision here and remove any y component if entity would collide with ground
-                Vec3 collisionDelta = nearbyEntity.collide(newDelta);
+                Vec3 collisionDelta = ((EntityAccessor) nearbyEntity).invoke_collide(newDelta);
                 if (collisionDelta.y != newDelta.y && newDelta.y < 0) {
                     newDelta = newDelta.multiply(1, 0, 1);
                 }

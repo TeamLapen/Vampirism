@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.mixin.OrePlacementAccessor;
+import de.teamlapen.vampirism.mixin.accessor.OrePlacementAccessor;
 import de.teamlapen.vampirism.world.gen.feature.treedecorators.TrunkCursedVineDecorator;
 import de.teamlapen.vampirism.world.gen.modifier.ExtendedAddSpawnsBiomeModifier;
 import net.minecraft.core.HolderGetter;

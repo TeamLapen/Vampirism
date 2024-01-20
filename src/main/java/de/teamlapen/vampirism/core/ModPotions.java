@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.effects.VampirismPotion.HunterPotion;
+import de.teamlapen.vampirism.mixin.accessor.PotionBrewingAccessor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -126,7 +127,7 @@ public class ModPotions {
         master(RESISTANCE, () -> Ingredient.of(Items.GOLDEN_APPLE), 20, 10);
         durable(RESISTANCE, LONG_RESISTANCE);
         strong(RESISTANCE, STRONG_RESISTANCE);
-        PotionBrewing.addMix(Potions.WATER, ModItems.ITEM_GARLIC.get(), GARLIC.get());
+        PotionBrewingAccessor.addMix(Potions.WATER, ModItems.ITEM_GARLIC.get(), GARLIC.get());
     }
 
     private static void durable(Supplier<? extends Potion> in, Supplier<? extends Potion> out) {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
-import de.teamlapen.vampirism.mixin.MeleeAttackGoalAccessor;
+import de.teamlapen.vampirism.mixin.accessor.GroundPathNavigationAccessor;
+import de.teamlapen.vampirism.mixin.accessor.MeleeAttackGoalAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,7 +34,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
             }
             boolean avoidSun = false;
             if (mob.getNavigation() instanceof GroundPathNavigation) {
-                avoidSun = ((GroundPathNavigation) mob.getNavigation()).avoidSun;
+                avoidSun = ((GroundPathNavigationAccessor) mob.getNavigation()).getAvoidSun();
             }
 
             if (avoidSun) {

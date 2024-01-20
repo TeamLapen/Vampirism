@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.mixin.client.HumanoidArmorLayerAccessor;
+import de.teamlapen.vampirism.mixin.client.accessor.HumanoidArmorLayerAccessor;
 import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.TextureComparator;
 import net.minecraft.client.Minecraft;

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.mixin.ProcessorRuleAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ProcessorRuleAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule;
@@ -38,9 +38,9 @@ public class RandomBlockStateRule extends ProcessorRule {
         return instance.group(RuleTest.CODEC.fieldOf("input_predicate").forGetter((getter) -> {
             return ((ProcessorRuleAccessor) getter).getInputPredicate();
         }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {
-            return entry.locPredicate;
+            return ((ProcessorRuleAccessor) entry).getLocPredicate();
         }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
-            return Pair.of(((ProcessorRuleAccessor) entry).getOutputState(), entry.blockEntityModifier);
+            return Pair.of(((ProcessorRuleAccessor) entry).getOutputState(), ((ProcessorRuleAccessor) entry).getBlockEntityModifier());
         }), PAIR_CODEC.listOf().fieldOf("states").forGetter(entry -> {
             return Lists.newArrayList(entry.states);
         })).apply(instance, RandomBlockStateRule::new);
@@ -63,7 +63,7 @@ public class RandomBlockStateRule extends ProcessorRule {
             int type = RNG.nextInt(states.size());
             return states.get(type);
         } else {
-            return Pair.of(((ProcessorRuleAccessor) this).getOutputState(), this.blockEntityModifier);
+            return Pair.of(((ProcessorRuleAccessor) this).getOutputState(), ((ProcessorRuleAccessor) this).getBlockEntityModifier());
         }
     }
 }

@@ -18,6 +18,8 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
+import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
+import de.teamlapen.vampirism.mixin.accessor.NearestAttackableTargetGoalAccessor;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -70,9 +72,9 @@ public class ModEntityEventHandler {
 
     public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
-        for (WrappedGoal t : e.targetSelector.availableGoals) {
+        for (WrappedGoal t : ((GoalSelectorAccessor) e.targetSelector).getAvailableGoals()) {
             Goal g = t.getGoal();
-            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoal<?>) g).targetType)) {
+            if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoalAccessor<?>) g).getTargetType())) {
                 target = g;
                 break;
             }
@@ -171,8 +173,8 @@ public class ModEntityEventHandler {
 
                 Goal mobTarget = null;
 
-                for (WrappedGoal t : ((IronGolem) event.getEntity()).targetSelector.availableGoals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && Mob.class.equals(((NearestAttackableTargetGoal<?>) t.getGoal()).targetType)) {
+                for (WrappedGoal t : ((GoalSelectorAccessor) ((IronGolem) event.getEntity()).targetSelector).getAvailableGoals()) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && Mob.class.equals(((NearestAttackableTargetGoalAccessor<?>) t.getGoal()).getTargetType())) {
                         mobTarget = t.getGoal();
                         break;
                     }

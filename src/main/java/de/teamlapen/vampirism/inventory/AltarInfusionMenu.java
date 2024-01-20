@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
+import de.teamlapen.vampirism.mixin.accessor.AbstractContainerMenuAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,15 +34,15 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
 
     public AltarInfusionMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable);
-        this.inputSlots = inventory;
+        ((ItemCombinerMenuAccessor) this).setInputSlots(inventory);
         this.init(playerInventory);
         this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0) + 1);
     }
 
     protected void init(@NotNull Inventory playerInventory) {
         this.slots.clear();
-        this.remoteSlots.clear();
-        this.lastSlots.clear();
+        ((AbstractContainerMenuAccessor) this).getRemoteSlots().clear();
+        ((AbstractContainerMenuAccessor) this).getLastSlots().clear();
         this.createInputSlots(createInputSlotDefinitions());
         this.createInventorySlots(playerInventory);
     }

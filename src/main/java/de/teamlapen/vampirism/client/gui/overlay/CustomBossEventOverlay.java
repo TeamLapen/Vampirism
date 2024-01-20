@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.mixin.client.BossOverlayGuiAccessor;
+import de.teamlapen.vampirism.mixin.client.accessor.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.client.Minecraft;

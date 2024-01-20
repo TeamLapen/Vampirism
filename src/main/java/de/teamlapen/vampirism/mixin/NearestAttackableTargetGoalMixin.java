@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
+import de.teamlapen.vampirism.mixin.accessor.TargetConditionAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;

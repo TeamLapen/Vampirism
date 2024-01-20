@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.items.CrucifixItem;
+import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.client.Minecraft;
@@ -110,9 +111,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
-                    event.getCamera().move(0.2, -0.2, 0);
+                    ((CameraAccessor) event.getCamera()).invoke_move(0.2, -0.2, 0);
                 } else {
-                    event.getCamera().move(0, -0.2, 0);
+                    ((CameraAccessor) event.getCamera()).invoke_move(0, -0.2, 0);
                 }
             });
         }

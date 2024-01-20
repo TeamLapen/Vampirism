@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.ai.sensing;
 
 import com.google.common.collect.Maps;
-import de.teamlapen.vampirism.mixin.VillagerHostilesSensorAccessor;
+import de.teamlapen.vampirism.mixin.accessor.VillagerHostilesSensorAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.sensing.VillagerHostilesSensor;

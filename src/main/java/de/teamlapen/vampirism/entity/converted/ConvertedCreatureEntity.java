@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.mixin.EntityAccessor;
-import de.teamlapen.vampirism.mixin.WalkAnimationStateAccessor;
+import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
+import de.teamlapen.vampirism.mixin.accessor.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -275,7 +275,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         if (!Objects.equals(old, creature)) {
             this.entityCreature = Optional.ofNullable(creature);
             this.entityChanged = true;
-            this.dimensions = this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f,0.5f));
+            ((EntityAccessor) this).setDimensions(this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f,0.5f)));
         }
         if (this.entityCreature.isPresent() && getConvertedHandler() == null) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);

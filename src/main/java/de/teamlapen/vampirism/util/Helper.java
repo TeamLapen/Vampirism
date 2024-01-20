@@ -20,7 +20,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
-import de.teamlapen.vampirism.mixin.LivingEntityAccessor;
+import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -221,7 +221,7 @@ public class Helper {
     }
 
     public static int getExperiencePoints(@NotNull LivingEntity entity, Player player) {
-        return ((LivingEntityAccessor) entity).invokeGetExperiencePoints_vampirism(); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
+        return ((LivingEntityAccessor) entity).invoke_getExperiencePoints_vampirism(); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
     /**

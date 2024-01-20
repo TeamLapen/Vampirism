@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.mixin.ObjectiveCriteriaAccessor;
+import de.teamlapen.vampirism.mixin.accessor.ObjectiveCriteriaAccessor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.jetbrains.annotations.NotNull;

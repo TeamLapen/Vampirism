@@ -70,7 +70,7 @@ public class BasicAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntityDimensions(radius * 2.0F, getBbHeight(), dimensions.fixed);
+        this.dimensions = new EntityDimensions(radius * 2.0F, getBbHeight(), this.dimensions.fixed);
         this.setPos(d0, d1, d2);
 
         if (!this.level().isClientSide) {
@@ -112,7 +112,7 @@ public class BasicAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntityDimensions(getRadius() * 2, height, dimensions.fixed);
+        this.dimensions = new EntityDimensions(getRadius() * 2, height, this.dimensions.fixed);
         this.setPos(d0, d1, d2);
 
         if (!this.level().isClientSide) {
