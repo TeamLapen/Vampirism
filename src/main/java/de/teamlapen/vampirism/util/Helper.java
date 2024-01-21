@@ -153,7 +153,7 @@ public class Helper {
         return VReference.HUNTER_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
     }
 
-    public static boolean isHunter(Player entity) {
+    public static boolean isHunter(@NotNull Player entity) {
         return VReference.HUNTER_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
     }
 

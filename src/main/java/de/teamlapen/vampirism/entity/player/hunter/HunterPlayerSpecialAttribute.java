@@ -21,7 +21,6 @@ public class HunterPlayerSpecialAttribute {
     private boolean disguised = false;
     private int disguiseTicks = 0;
 
-    private double vampireDistanceRel = 0;
     /**
      * Set while blessing an item.
      */
@@ -37,24 +36,12 @@ public class HunterPlayerSpecialAttribute {
         return disguiseTicks > DisguiseHunterAction.FADE_TICKS ? 1F : disguiseTicks / (float) DisguiseHunterAction.FADE_TICKS;
     }
 
-    public float getVampireNearbyProgress() {
-        return (float) vampireDistanceRel;
-    }
-
     public void increaseDisguiseTicks() {
         disguiseTicks++;
     }
 
     public boolean isDisguised() {
         return disguised;
-    }
-
-    public boolean isVampireNearby() {
-        return vampireDistanceRel > 0;
-    }
-
-    public void nearbyVampire(double distanceRel) {
-        vampireDistanceRel = distanceRel;
     }
 
     public void resetDisguise() {
