@@ -29,7 +29,6 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = POTIONS.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new MobEffectInstance(MobEffects.SLOW_FALLING, 48000)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_LUCK = POTIONS.register("long_luck", () -> new HunterPotion("luck", new MobEffectInstance(MobEffects.LUCK, 60000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAKNESS = POTIONS.register("very_long_weakness", () -> new HunterPotion("weakness", new MobEffectInstance(MobEffects.WEAKNESS, 48000)));
-    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_STRENGTH = POTIONS.register("very_strong_strength", () -> new HunterPotion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 2)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_STRENGTH = POTIONS.register("very_long_strength", () -> new HunterPotion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 96000)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_STRENGTH = POTIONS.register("long_strong_strength", () -> new HunterPotion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 4800, 1)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_REGENERATION = POTIONS.register("very_strong_regeneration", () -> new HunterPotion("regeneration", new MobEffectInstance(MobEffects.REGENERATION, 450, 2)));
@@ -81,9 +80,7 @@ public class ModPotions {
         veryDurable(() -> Potions.LUCK, LONG_LUCK);
         veryDurable(() -> Potions.LONG_SLOW_FALLING, VERY_LONG_SLOW_FALLING);
         veryDurable(() -> Potions.LONG_WEAKNESS, VERY_LONG_WEAKNESS);
-        veryStrong(() -> Potions.STRONG_STRENGTH, VERY_STRONG_STRENGTH);
         veryDurable(() -> Potions.LONG_STRENGTH, VERY_LONG_STRENGTH);
-        veryDurable(VERY_STRONG_STRENGTH, LONG_STRONG_STRENGTH);
         veryStrong(VERY_LONG_STRENGTH, LONG_STRONG_STRENGTH);
         veryDurable(() -> Potions.LONG_REGENERATION, VERY_LONG_REGENERATION);
         veryStrong(() -> Potions.STRONG_REGENERATION, VERY_STRONG_REGENERATION);
