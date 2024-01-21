@@ -287,8 +287,8 @@ public class BalanceConfig {
         haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
         haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
         haAwarenessEnabled = builder.define("awarenessEnabled", true);
-        haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
-        haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 1, 1, Integer.MAX_VALUE);
+        haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", 300, 1, Integer.MAX_VALUE);
+        haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 900, 1, Integer.MAX_VALUE);
         haAwarenessRadius = builder.comment("Radius in which vampires should be detected").defineInRange("awarenessRadius", 25, 0, 50);
         haPotionResistanceEnabled = builder.define("potionResistanceEnabled", true);
         haPotionResistanceDuration = builder.comment("In ticks").defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
