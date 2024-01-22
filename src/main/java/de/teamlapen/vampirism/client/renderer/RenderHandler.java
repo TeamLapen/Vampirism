@@ -222,22 +222,6 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, PlayerModel<Player>> event) {
-        LivingEntity entity = event.getEntity();
-        if (entity instanceof Player && VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().isDisguised()) {
-            double dist = this.mc.player == null ? 0 : entity.distanceToSqr(this.mc.player);
-            if (dist > 64) {
-                event.setCanceled(true);
-            } else if (dist > 16) {
-                IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat;
-                if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
-                    event.setCanceled(true);
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onRenderFirstPersonHand(@NotNull RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && player.isUsingItem() && player.getUseItemRemainingTicks() > 0 && event.getHand() == player.getUsedItemHand()) {

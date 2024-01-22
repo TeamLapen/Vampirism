@@ -53,10 +53,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ThrowablePotionItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.GameType;
@@ -524,6 +521,13 @@ public class ModPlayerEventHandler {
         if (event.getEntity() instanceof ServerPlayer player) {
             GarlicLevel.get(event.getLevel()).updatePlayer(player);
             FogLevel.get(event.getLevel()).updatePlayer(player);
+        }
+    }
+
+    @SubscribeEvent
+    public void onBreakSpeedEvent(PlayerEvent.BreakSpeed event) {
+        if (Helper.isHunter(event.getEntity()) && event.getEntity().getUseItem().is(i -> i.value() instanceof DiggerItem) && HunterPlayer.get(event.getEntity()).getSkillHandler().isSkillEnabled(HunterSkills.EFFICIENT_TOOLING)) {
+            event.setNewSpeed(event.getOriginalSpeed() * 1.1f);
         }
     }
 }

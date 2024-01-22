@@ -87,7 +87,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public void breakDisguise() {
-        actionHandler.deactivateAction(HunterActions.DISGUISE_HUNTER.get());
     }
 
     @Override

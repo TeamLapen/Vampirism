@@ -23,7 +23,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
-        return !player.getActionHandler().isActionActive(HunterActions.DISGUISE_HUNTER.get());
+        return true;
     }
 
     @Override

@@ -15,7 +15,6 @@ public class HunterActions {
     public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.Keys.ACTION, REFERENCE.MODID);
 
     public static final DeferredHolder<IAction<?>, AwarenessHunterAction> AWARENESS_HUNTER = ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
-    public static final DeferredHolder<IAction<?>, DisguiseHunterAction> DISGUISE_HUNTER = ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);
     public static final DeferredHolder<IAction<?>, PotionResistanceHunterAction> POTION_RESISTANCE_HUNTER = ACTIONS.register("potion_resistance_hunter", PotionResistanceHunterAction::new);
 
     @ApiStatus.Internal

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.player.hunter;
 
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.entity.player.hunter.actions.DisguiseHunterAction;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +17,6 @@ public class HunterPlayerSpecialAttribute {
      */
     @Nullable
     public IItemWithTier.TIER fullHunterCoat;
-    private boolean disguised = false;
-    private int disguiseTicks = 0;
 
     /**
      * Set while blessing an item.
@@ -27,25 +24,4 @@ public class HunterPlayerSpecialAttribute {
     @Nullable
     public ISoundReference blessingSoundReference;
 
-    public void activateDisguise() {
-        disguised = true;
-        disguiseTicks = 1;
-    }
-
-    public float getDisguiseProgress() {
-        return disguiseTicks > DisguiseHunterAction.FADE_TICKS ? 1F : disguiseTicks / (float) DisguiseHunterAction.FADE_TICKS;
-    }
-
-    public void increaseDisguiseTicks() {
-        disguiseTicks++;
-    }
-
-    public boolean isDisguised() {
-        return disguised;
-    }
-
-    public void resetDisguise() {
-        disguiseTicks = 0;
-        disguised = false;
-    }
 }

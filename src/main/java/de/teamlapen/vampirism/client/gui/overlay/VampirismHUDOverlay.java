@@ -114,8 +114,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
         @Nullable IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
-        } else if (player instanceof HunterPlayer) {
-            handleScreenColorHunter((HunterPlayer) player);
         } else {
             screenPercentage = 0;
             screenBottomPercentage = 0;
@@ -317,16 +315,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             ((LivingEntityAccessor) mc.player).getActiveEffects().put(MobEffects.POISON, addedTempPoison);
         }
 
-    }
-
-    private void handleScreenColorHunter(@NotNull HunterPlayer hunter) {
-        if (hunter.getSpecialAttributes().isDisguised()) {
-            screenPercentage = (int) (100 * hunter.getSpecialAttributes().getDisguiseProgress());
-            screenColor = 0xff111111;
-            fullScreen = false;
-        } else {
-            screenPercentage = (int) Math.max(0F, (screenPercentage / 20F) * 10F); //Fade out any (previously applied) screen overlay until we hit 0
-        }
     }
 
     private void handleScreenColorVampire(@NotNull VampirePlayer vampire) {

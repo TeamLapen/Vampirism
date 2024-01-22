@@ -217,15 +217,6 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityVisibilityCheck(LivingEvent.@NotNull LivingVisibilityEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
-                event.modifyVisibility((VampirismPlayerAttributes.get((Player) event.getEntity()).getHuntSpecial().fullHunterCoat != null ? 0.5 : 1) * VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onEyeHeightSet(EntityEvent.@NotNull Size event) {
         if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
             event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);

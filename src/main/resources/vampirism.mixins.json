@@ -6,6 +6,7 @@
     "AreaEffectCloudMixin",
     "EntitySubPredicateMixin",
     "ItemMixin",
+    "ItemStackMixin",
     "MixinBellBlock",
     "MixinEntity",
     "MixinEntityPredicate",

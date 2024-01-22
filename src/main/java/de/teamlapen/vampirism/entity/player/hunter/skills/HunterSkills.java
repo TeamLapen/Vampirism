@@ -50,7 +50,6 @@ public class HunterSkills {
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<>(HunterActions.DISGUISE_HUNTER, Trees.LEVEL, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> STAKE1 = SKILLS.register("stake1", () -> new VampirismSkill.SimpleHunterSkill(2, false)
             .setDescription(() -> {
@@ -82,6 +81,7 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> EFFICIENT_TOOLING = SKILLS.register("efficient_tooling", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -126,8 +126,8 @@ public class HunterSkills {
 
         public static void createSkillNodes(BootstapContext<ISkillNode> context) {
             context.register(LEVEL_ROOT, new SkillNode(HunterSkills.LEVEL_ROOT));
-            context.register(SKILL2, new SkillNode(STAKE1));
-            context.register(SKILL3, new SkillNode(HUNTER_DISGUISE));
+            context.register(SKILL2, new SkillNode(EFFICIENT_TOOLING));
+            context.register(SKILL3, new SkillNode(STAKE1));
             context.register(SKILL4, new SkillNode(WEAPON_TABLE));
 
             context.register(ALCHEMY1, new SkillNode(BASIC_ALCHEMY));
