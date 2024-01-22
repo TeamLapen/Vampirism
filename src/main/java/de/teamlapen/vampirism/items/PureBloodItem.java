@@ -48,7 +48,7 @@ public class PureBloodItem extends Item {
     private final int level;
 
     public PureBloodItem(int level) {
-        super(new Properties());
+        super(new Properties().stacksTo(16));
         this.level = level;
     }
 
