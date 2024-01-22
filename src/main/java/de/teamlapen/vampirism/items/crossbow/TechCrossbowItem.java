@@ -23,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -46,7 +45,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
         super.onShoot(shooter, crossbow);
         if (shooter instanceof Player player) {
-            boolean faster = HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.FASTER_COOLDOWN);
+            boolean faster = HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE);
             player.getCooldowns().addCooldown(this, faster ? 5 : 10);
         }
     }

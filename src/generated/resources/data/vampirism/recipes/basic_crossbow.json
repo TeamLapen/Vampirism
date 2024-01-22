@@ -21,5 +21,8 @@
   "result": {
     "count": 1,
     "id": "vampirism:basic_crossbow"
-  }
+  },
+  "skill": [
+    "vampirism:weapon_table"
+  ]
 }

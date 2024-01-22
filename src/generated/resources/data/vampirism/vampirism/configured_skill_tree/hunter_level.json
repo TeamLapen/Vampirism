@@ -73,11 +73,6 @@
                                 {
                                   "children": [
                                     {
-                                      "children": [
-                                        {
-                                          "node": "vampirism:hunter/weapon7"
-                                        }
-                                      ],
                                       "node": "vampirism:hunter/weapon6"
                                     }
                                   ],

@@ -35,7 +35,6 @@ import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import de.teamlapen.vampirism.world.fog.FogLevel;
 import de.teamlapen.vampirism.world.garlic.GarlicLevel;
-import de.teamlapen.vampirism.world.garlic.GarlicServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -257,7 +256,7 @@ public class ModPlayerEventHandler {
             if (!checkItemUsePerm(event.getItem(), player)) {
                 event.setCanceled(true);
             }
-            if (event.getItem().getItem() instanceof VampirismCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.FASTER_RELOAD)) {
+            if (event.getItem().getItem() instanceof VampirismCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE)) {
                 event.setDuration((int)(event.getDuration() * 0.5f));
             }
         }
