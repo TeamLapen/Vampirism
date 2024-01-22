@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.client.gui.screens.*;
+import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
+import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModContainer;
 import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
@@ -28,6 +30,8 @@ public class ModScreens {
         event.register(ModContainer.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
         event.register(ModContainer.VAMPIRE_BEACON.get(), VampireBeaconScreen::new);
         event.register(ModContainer.REVERT_BACK.get(), InjectionChairRevertBackScreen::new);
+        event.register(ModContainer.GARLIC_DIFFUSER.get(), GarlicDiffuserScreen::new);
+        event.register(ModContainer.FOG_DIFFUSER.get(), FogDiffuserScreen::new);
     }
 
     static void registerScreenOverlays(@NotNull RegisterGuiOverlaysEvent event) {

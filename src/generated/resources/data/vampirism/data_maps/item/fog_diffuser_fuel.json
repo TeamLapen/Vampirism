@@ -1,0 +1,19 @@
+{
+  "values": {
+    "vampirism:pure_blood_0": {
+      "burn_duration": 288000
+    },
+    "vampirism:pure_blood_1": {
+      "burn_duration": 432000
+    },
+    "vampirism:pure_blood_2": {
+      "burn_duration": 864000
+    },
+    "vampirism:pure_blood_3": {
+      "burn_duration": 1296000
+    },
+    "vampirism:pure_blood_4": {
+      "burn_duration": 1728000
+    }
+  }
+}

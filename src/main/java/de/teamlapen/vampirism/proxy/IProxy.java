@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.proxy;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
-import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
+import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
@@ -35,12 +35,6 @@ import java.util.function.Consumer;
  * Proxy interface
  */
 public interface IProxy extends IInitListener {
-
-    default void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
-    }
-
-    default void displayFogDiffuserScreen(FogDiffuserBlockEntity tile, Component title) {
-    }
 
     default void displayNameSwordScreen(ItemStack stack) {
     }

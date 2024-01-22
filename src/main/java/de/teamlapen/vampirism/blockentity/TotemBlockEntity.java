@@ -34,7 +34,7 @@ import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
-import de.teamlapen.vampirism.world.LevelFog;
+import de.teamlapen.vampirism.world.fog.FogLevel;
 import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -168,7 +168,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.informEntitiesAboutCaptureStop();
         this.updateBossinfoPlayers(null);
         this.captureInfo.clear();
-        LevelFog.getOpt(this.level).ifPresent(fog -> fog.updateTemporaryArtificialFog(this.worldPosition, null));
+        FogLevel.getOpt(this.level).ifPresent(fog -> fog.updateTemporaryArtificialFog(this.worldPosition, null));
         this.setChanged();
     }
 
@@ -350,7 +350,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         if (this.level != null) {
             if (compound.contains("villageArea")) {
-                LevelFog.getOpt(this.level).ifPresent(vw -> {
+                FogLevel.getOpt(this.level).ifPresent(vw -> {
                     AABB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
                     vw.updateArtificialFogBoundingBox(this.worldPosition, this.controllingFaction == VReference.VAMPIRE_FACTION ? aabb : null);
                     if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
@@ -476,7 +476,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             super.setChanged();
             this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
             if (!this.village.isEmpty()) {
-                LevelFog.getOpt(this.level).ifPresent(vw -> {
+                FogLevel.getOpt(this.level).ifPresent(vw -> {
                     vw.updateArtificialFogBoundingBox(this.worldPosition, this.controllingFaction == VReference.VAMPIRE_FACTION ? this.getVillageArea() : null);
                     if (this.isRaidTriggeredByBadOmen() && this.capturingFaction == VReference.VAMPIRE_FACTION) {
                         vw.updateTemporaryArtificialFog(this.worldPosition, this.getVillageArea());
@@ -513,7 +513,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     @Override
     public void setRemoved() {
         //noinspection ConstantConditions
-        LevelFog.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
+        FogLevel.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
         TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
         if (!unloaded) {
             // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).

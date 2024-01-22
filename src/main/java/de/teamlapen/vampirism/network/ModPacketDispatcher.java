@@ -3,6 +3,12 @@ package de.teamlapen.vampirism.network;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.ClientPayloadHandler;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundAddFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundRemoveFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundUpdateFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundAddGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundRemoveGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundUpdateGarlicEmitterPacket;
 import de.teamlapen.vampirism.server.ServerPayloadHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,6 +35,12 @@ public class ModPacketDispatcher {
         registrar.common(ClientboundSundamagePacket.ID, jsonReader(ClientboundSundamagePacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context)));
         registrar.play(ClientboundBossEventSoundPacket.ID, jsonReader(ClientboundBossEventSoundPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context)));
         registrar.play(ClientboundSkillTreePacket.ID, jsonReader(ClientboundSkillTreePacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleSkillTreePacket(msg, context)));
+        registrar.play(ClientboundUpdateGarlicEmitterPacket.ID, jsonReader(ClientboundUpdateGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundAddGarlicEmitterPacket.ID, jsonReader(ClientboundAddGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundRemoveGarlicEmitterPacket.ID, jsonReader(ClientboundRemoveGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundUpdateFogEmitterPacket.ID, jsonReader(ClientboundUpdateFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context)));
+        registrar.play(ClientboundAddFogEmitterPacket.ID, jsonReader(ClientboundAddFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context)));
+        registrar.play(ClientboundRemoveFogEmitterPacket.ID, jsonReader(ClientboundRemoveFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context)));
 
         registrar.common(ServerboundSelectMinionTaskPacket.ID, jsonReader(ServerboundSelectMinionTaskPacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleSelectMinionTaskPacket));
         registrar.common(ServerboundAppearancePacket.ID, jsonReader(ServerboundAppearancePacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleAppearancePacket));
@@ -45,6 +57,8 @@ public class ModPacketDispatcher {
         registrar.common(ServerboundSelectAmmoTypePacket.ID, jsonReader(ServerboundSelectAmmoTypePacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleSelectAmmoTypePacket));
         registrar.common(ServerboundSetVampireBeaconPacket.ID, jsonReader(ServerboundSetVampireBeaconPacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleSetVampireBeaconPacket));
         registrar.play(ServerboundRequestSkillTreePacket.ID, ServerboundRequestSkillTreePacket::new, handler -> handler.server(ServerPayloadHandler.getInstance()::handleRequestSkillTreePacket));
+
+        registrar.play(PlayerOwnedBlockEntityLockPacket.ID, jsonReader(PlayerOwnedBlockEntityLockPacket.CODEC), handler -> handler.client(ClientPayloadHandler::handlePlayerOwnedBlockEntityLockPacket).server(ServerPayloadHandler.getInstance()::handlePlayerOwnedBlockEntityLockPacket));
 
     }
 

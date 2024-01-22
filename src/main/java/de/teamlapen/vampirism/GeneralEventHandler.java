@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.world.LevelFog;
-import de.teamlapen.vampirism.world.LevelGarlic;
+import de.teamlapen.vampirism.world.fog.FogLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -80,9 +80,9 @@ public class GeneralEventHandler {
     @SubscribeEvent
     public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
-            Optional.ofNullable(level.getData(ModAttachments.LEVEL_FOG)).ifPresent(LevelFog::clearCache);
-            LevelFog.getOpt(level).ifPresent(LevelFog::clearCache);
-            LevelGarlic.getOpt(level).ifPresent(LevelGarlic::clearCache);
+            Optional.ofNullable(level.getData(ModAttachments.LEVEL_FOG)).ifPresent(FogLevel::clearCache);
+            FogLevel.getOpt(level).ifPresent(FogLevel::clearCache);
+            GarlicLevel.getOpt(level).ifPresent(GarlicLevel::clearCache);
         }
     }
 

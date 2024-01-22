@@ -9,10 +9,23 @@ import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
+import de.teamlapen.vampirism.inventory.diffuser.PlayerOwnedMenu;
 import de.teamlapen.vampirism.network.*;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundAddFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundRemoveFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundUpdateFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundAddGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundRemoveGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundUpdateGarlicEmitterPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.fog.FogLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -78,5 +91,37 @@ public class ClientPayloadHandler {
 
     public static void handleSkillTreePacket(ClientboundSkillTreePacket msg, IPayloadContext context) {
         context.workHandler().execute(() -> ClientSkillTreeData.init(msg.skillTrees()));
+    }
+
+    public static void handlePlayerOwnedBlockEntityLockPacket(PlayerOwnedBlockEntityLockPacket msg, PlayPayloadContext context) {
+        context.player().ifPresent(player -> {
+            if (player.containerMenu instanceof PlayerOwnedMenu menu && player.containerMenu.containerId == msg.menuId()) {
+                menu.setLockStatus(msg.lockData().getLockStatus());
+            }
+        });
+    }
+
+    public static void handleRemoveGarlicEmitterPacket(ClientboundRemoveGarlicEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.removeGarlicBlock(msg.emitterId())));
+    }
+
+    public static void handleAddGarlicEmitterPacket(ClientboundAddGarlicEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.registerGarlicBlock(msg.emitter().strength(), msg.emitter().pos())));
+    }
+
+    public static void handleUpdateGarlicEmitterPacket(ClientboundUpdateGarlicEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.fill(msg.emitters())));
+    }
+
+    public static void handleUpdateFogEmitterPacket(ClientboundUpdateFogEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.fill(msg.emitters(), msg.emittersTmp())));
+    }
+
+    public static void handleAddFogEmitterPacket(ClientboundAddFogEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.add(msg.emitter())));
+    }
+
+    public static void handleRemoveFogEmitterPacket(ClientboundRemoveFogEmitterPacket msg, PlayPayloadContext context) {
+        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.remove(msg.position(), msg.tmp())));
     }
 }

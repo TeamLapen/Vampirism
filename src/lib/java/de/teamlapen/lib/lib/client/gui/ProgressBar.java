@@ -6,6 +6,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
-    private static final ResourceLocation WIDGETS = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/widgets.png");
+    private static final WidgetSprites SPRITES = new WidgetSprites(new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar"), new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_inactive"), new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_highlighted"));
+    private static final ResourceLocation PROGRESS = new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_progress");
     private float progress = 0;
     private int color = 0xFFFFFF;
 
@@ -27,14 +29,15 @@ public class ProgressBar extends AbstractWidget {
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        int i = this.getTextureY();
-        graphics.blitWithBorder(WIDGETS, this.getX(), this.getY(), 0, i, this.width, 20, 200, 20, 3);
+        graphics.setColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
+        graphics.blitSprite(SPRITES.get(this.active, progress > 0), this.getX(), this.getY(), this.width, 20);
 
         graphics.setColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
-        if (this.active) {
-            graphics.blit(WIDGETS, this.getX() + 3, this.getY() + 3, 0, 32, (int) ((progress) * (this.width - 6)), 14);
+        if (progress > 0) {
+            graphics.blitSprite(PROGRESS, this.getX() + 3, this.getY() + 3, (int) ((progress) * (this.width - 6)), 14);
         }
         int j = getFGColor();
+        graphics.setColor(1,1,1,1);
         graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
         setTooltip(Tooltip.create(Component.literal(((int) (progress * 100f)) + "%")));

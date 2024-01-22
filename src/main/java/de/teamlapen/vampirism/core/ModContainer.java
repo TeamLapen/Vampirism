@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.*;
+import de.teamlapen.vampirism.inventory.diffuser.FogDiffuserMenu;
+import de.teamlapen.vampirism.inventory.diffuser.GarlicDiffuserMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,6 +31,8 @@ public class ModContainer {
     public static final DeferredHolder<MenuType<?>, MenuType<AlchemyTableMenu>> ALCHEMICAL_TABLE = MENUS.register("alchemical_table", () -> create(AlchemyTableMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<VampireBeaconMenu>> VAMPIRE_BEACON = MENUS.register("vampire_beacon", () -> create(VampireBeaconMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<RevertBackMenu>> REVERT_BACK = MENUS.register("revert_back", () -> create(RevertBackMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<GarlicDiffuserMenu>> GARLIC_DIFFUSER = MENUS.register("garlic_diffuser", () -> create(new GarlicDiffuserMenu.Factory()));
+    public static final DeferredHolder<MenuType<?>, MenuType<FogDiffuserMenu>> FOG_DIFFUSER = MENUS.register("fog_diffuser", () -> create(new FogDiffuserMenu.Factory()));
 
     private static <T extends AbstractContainerMenu> MenuType<T> create(MenuType.MenuSupplier<T> supplier) {
         return new MenuType<>(supplier, FeatureFlags.DEFAULT_FLAGS);

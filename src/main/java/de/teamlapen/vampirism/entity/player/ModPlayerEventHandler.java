@@ -33,6 +33,9 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
+import de.teamlapen.vampirism.world.fog.FogLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -67,6 +70,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
@@ -513,6 +517,14 @@ public class ModPlayerEventHandler {
     public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
         if (event.getNewGameMode() == GameType.SPECTATOR) {
             FactionPlayerHandler.getCurrentFactionPlayer(event.getEntity()).ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions());
+        }
+    }
+
+    @SubscribeEvent
+    public void joinLevelEvent(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            GarlicLevel.get(event.getLevel()).updatePlayer(player);
+            FogLevel.get(event.getLevel()).updatePlayer(player);
         }
     }
 }

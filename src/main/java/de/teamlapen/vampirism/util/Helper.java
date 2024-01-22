@@ -19,11 +19,10 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
-import de.teamlapen.vampirism.world.LevelFog;
+import de.teamlapen.vampirism.world.fog.FogLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -75,7 +74,7 @@ public class Helper {
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !LevelFog.getOpt(((Level) world)).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
+                        return world instanceof Level && !FogLevel.getOpt(((Level) world)).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
                     }
                 }
             }
@@ -206,7 +205,7 @@ public class Helper {
     public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        return LevelFog.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
+        return FogLevel.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
     }
 
     public static ResourceLocation getBiomeId(@NotNull Entity e) {

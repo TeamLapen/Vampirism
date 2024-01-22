@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.proxy;
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
-import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
+import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
@@ -80,16 +80,6 @@ public class ClientProxy extends CommonProxy {
 
     public void clearBossBarOverlay() {
         this.bossInfoOverlay.clear();
-    }
-
-    @Override
-    public void displayGarlicBeaconScreen(GarlicDiffuserBlockEntity tile, Component title) {
-        openScreen(new GarlicDiffuserScreen(tile, title));
-    }
-
-    @Override
-    public void displayFogDiffuserScreen(FogDiffuserBlockEntity tile, Component title) {
-        openScreen(new FogDiffuserScreen(tile, title));
     }
 
     @Override
