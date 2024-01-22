@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,17 +15,18 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
-public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity> {
+public class GarlicDiffuserBESR extends VampirismBESR<de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity> {
     public GarlicDiffuserBESR(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(@NotNull GarlicDiffuserBlockEntity tileEntityIn, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(@NotNull de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity tileEntityIn, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (Minecraft.getInstance().getCameraEntity() instanceof LivingEntity living && Streams.stream(living.getHandSlots()).map(ItemStack::getItem).anyMatch(i -> i == ModItems.GARLIC_FINDER.get()) && tileEntityIn.isInRange(living.blockPosition())) {
             long totalWorldTime = tileEntityIn.getLevel() != null ? tileEntityIn.getLevel().getGameTime() : 0;
             float scale = (float) Mth.clamp(Math.sqrt(tileEntityIn.getBlockPos().distSqr(living.blockPosition())) / 16, 1, 3);
@@ -48,7 +48,7 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
     }
 
     @Override
-    public boolean shouldRenderOffScreen(@NotNull GarlicDiffuserBlockEntity te) {
+    public boolean shouldRenderOffScreen(@NotNull de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity te) {
         return true;
     }
 

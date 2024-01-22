@@ -2,6 +2,12 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.ClientPayloadHandler;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundAddFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundRemoveFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.fog.ClientboundUpdateFogEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundAddGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundRemoveGarlicEmitterPacket;
+import de.teamlapen.vampirism.network.packet.garlic.ClientboundUpdateGarlicEmitterPacket;
 import de.teamlapen.vampirism.server.ServerPayloadHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -27,6 +33,12 @@ public class ModPacketDispatcher {
         registrar.commonToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
         registrar.playToClient(ClientboundBossEventSoundPacket.TYPE, ClientboundBossEventSoundPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context));
         registrar.playToClient(ClientboundSkillTreePacket.TYPE, ClientboundSkillTreePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSkillTreePacket(msg, context));
+        registrar.play(ClientboundUpdateGarlicEmitterPacket.ID, jsonReader(ClientboundUpdateGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundAddGarlicEmitterPacket.ID, jsonReader(ClientboundAddGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundRemoveGarlicEmitterPacket.ID, jsonReader(ClientboundRemoveGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveGarlicEmitterPacket(msg, context)));
+        registrar.play(ClientboundUpdateFogEmitterPacket.ID, jsonReader(ClientboundUpdateFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context)));
+        registrar.play(ClientboundAddFogEmitterPacket.ID, jsonReader(ClientboundAddFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context)));
+        registrar.play(ClientboundRemoveFogEmitterPacket.ID, jsonReader(ClientboundRemoveFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context)));
 
         registrar.playToServer(ServerboundSelectMinionTaskPacket.TYPE, ServerboundSelectMinionTaskPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSelectMinionTaskPacket(msg, context));
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleAppearancePacket(msg, context));
@@ -43,6 +55,8 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSelectAmmoTypePacket(msg, context));
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSetVampireBeaconPacket(msg, context));
         registrar.playToServer(ServerboundRequestSkillTreePacket.TYPE, ServerboundRequestSkillTreePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleRequestSkillTreePacket(msg, context));
+
+        registrar.play(PlayerOwnedBlockEntityLockPacket.ID, jsonReader(PlayerOwnedBlockEntityLockPacket.CODEC), handler -> handler.client(ClientPayloadHandler::handlePlayerOwnedBlockEntityLockPacket).server(ServerPayloadHandler.getInstance()::handlePlayerOwnedBlockEntityLockPacket));
 
     }
 

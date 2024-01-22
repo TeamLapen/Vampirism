@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.api.datamaps.*;
+import de.teamlapen.vampirism.datamaps.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
@@ -41,6 +43,8 @@ public class DataMapsProvider extends DataMapProvider {
         gatherEntityBlood(builder(ModDataMaps.ENTITY_BLOOD_MAP));
         gatherEntityConverter(builder(ModDataMaps.ENTITY_CONVERTER_MAP));
         gatherLiquidColors(builder(ModDataMaps.LIQUID_COLOR_MAP));
+        gatherGarlicDiffuserFuel(builder(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP));
+        gatherFogDiffuserFuel(builder(ModDataMaps.FOG_DIFFUSER_FUEL_MAP));
     }
 
     private void gatherLiquidColors(Builder<Integer, Item> builder) {
@@ -52,6 +56,18 @@ public class DataMapsProvider extends DataMapProvider {
         builder.add(ModItems.PURE_BLOOD_3, 0x7e0e0e, false);
         builder.add(ModItems.PURE_BLOOD_4, 0x8e0000, false);
         builder.add(ModTags.Items.GARLIC, 0xBBBBBB, false);
+    }
+
+    private void gatherFogDiffuserFuel(Builder<IFogDiffuserFuel, Item> builder) {
+        builder.add(ModItems.PURE_BLOOD_0, new FogDiffuserFuel(288000), false);
+        builder.add(ModItems.PURE_BLOOD_1, new FogDiffuserFuel(432000), false);
+        builder.add(ModItems.PURE_BLOOD_2, new FogDiffuserFuel(864000), false);
+        builder.add(ModItems.PURE_BLOOD_3, new FogDiffuserFuel(1296000), false);
+        builder.add(ModItems.PURE_BLOOD_4, new FogDiffuserFuel(1728000), false);
+    }
+
+    private void gatherGarlicDiffuserFuel(Builder<IGarlicDiffuserFuel, Item> builder) {
+        builder.add(ModItems.PURIFIED_GARLIC, new GarlicDiffuserFuel(108000), false);
     }
 
     protected void gatherCompostables(Builder<Compostable, Item> compostables) {

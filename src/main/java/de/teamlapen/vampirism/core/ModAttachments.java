@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampireBat;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.LevelDamage;
-import de.teamlapen.vampirism.world.LevelFog;
-import de.teamlapen.vampirism.world.LevelGarlic;
+import de.teamlapen.vampirism.world.fog.FogLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import net.minecraft.world.entity.ambient.Bat;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -21,8 +21,8 @@ public class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, REFERENCE.MODID);
 
     // Level Attachments
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelFog>> LEVEL_FOG = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.FOG_HANDLER.getPath(), () -> AttachmentType.builder(LevelFog::new).build());
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelGarlic>> LEVEL_GARLIC = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.GARLIC_HANDLER.getPath(), () -> AttachmentType.builder(LevelGarlic::new).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<FogLevel>> LEVEL_FOG = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.FOG_HANDLER.getPath(), () -> AttachmentType.builder(new FogLevel.Factory()).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<GarlicLevel>> LEVEL_GARLIC = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.GARLIC_HANDLER.getPath(), () -> AttachmentType.builder(new GarlicLevel.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelDamage>> LEVEL_DAMAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DAMAGE_HANDLER.getPath(), () -> AttachmentType.builder(new LevelDamage.Factory()).build());
 
     // Entity Attachments

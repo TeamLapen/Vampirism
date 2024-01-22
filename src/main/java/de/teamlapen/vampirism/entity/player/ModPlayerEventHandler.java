@@ -33,6 +33,9 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
+import de.teamlapen.vampirism.world.fog.FogLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicLevel;
+import de.teamlapen.vampirism.world.garlic.GarlicServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -68,6 +71,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
@@ -521,5 +525,13 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
         FactionPlayerHandler.get(event.getEntity()).checkSkillTreeLocks();
+    }
+
+    @SubscribeEvent
+    public void joinLevelEvent(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            GarlicLevel.get(event.getLevel()).updatePlayer(player);
+            FogLevel.get(event.getLevel()).updatePlayer(player);
+        }
     }
 }

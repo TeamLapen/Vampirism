@@ -21,6 +21,15 @@ public enum EnumStrength implements StringRepresentable {
         return NONE;
     }
 
+    public static EnumStrength byName(String name) {
+        for (EnumStrength s : values()) {
+            if (s.name.equals(name)) {
+                return s;
+            }
+        }
+        return NONE;
+    }
+
     private final String name;
     final int strength;
 
