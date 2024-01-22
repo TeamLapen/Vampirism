@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -54,7 +53,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
             if(performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
                 setCharged(itemstack, false);
             } else {
-                boolean faster = HunterPlayer.get(p_77659_2_).getSkillHandler().isSkillEnabled(HunterSkills.FASTER_COOLDOWN);
+                boolean faster = HunterPlayer.get(p_77659_2_).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE);
                 p_77659_2_.getCooldowns().addCooldown(this, faster ? 5 : 10); // add cooldown if projectiles left
             }
             return InteractionResultHolder.consume(itemstack);

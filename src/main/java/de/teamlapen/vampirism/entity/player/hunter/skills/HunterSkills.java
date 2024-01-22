@@ -78,10 +78,8 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.HunterLordSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARMOR_SPEED = SKILLS.register("armor_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.register("armor_jump", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> FASTER_RELOAD = SKILLS.register("faster_reload", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> FASTER_COOLDOWN = SKILLS.register("faster_cooldown", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.register("crossbow_technique", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BASIC_CROSSBOW = SKILLS.register("basic_crossbow", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
 
@@ -114,7 +112,6 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> WEAPON4 = node("weapon4");
         public static final ResourceKey<ISkillNode> WEAPON5 = node("weapon5");
         public static final ResourceKey<ISkillNode> WEAPON6 = node("weapon6");
-        public static final ResourceKey<ISkillNode> WEAPON7 = node("weapon7");
 
         public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
         public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
@@ -149,11 +146,10 @@ public class HunterSkills {
 
             context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_SPEED, HUNTER_ATTACK_DAMAGE));
             context.register(WEAPON2, new SkillNode(ARMOR_SPEED, ARMOR_JUMP));
-            context.register(WEAPON3, new SkillNode(BASIC_CROSSBOW));
-            context.register(WEAPON4, new SkillNode(FASTER_RELOAD, FASTER_COOLDOWN));
-            context.register(WEAPON5, new SkillNode(DOUBLE_IT));
-            context.register(WEAPON6, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON7, new SkillNode(STAKE2, AXE2));
+            context.register(WEAPON3, new SkillNode(CROSSBOW_TECHNIQUE, DOUBLE_IT));
+            context.register(WEAPON4, new SkillNode(MASTER_CRAFTSMANSHIP));
+            context.register(WEAPON5, new SkillNode(STAKE2));
+            context.register(WEAPON6, new SkillNode(AXE2));
 
             context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));

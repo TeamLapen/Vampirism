@@ -20,5 +20,8 @@
   ],
   "result": {
     "item": "vampirism:basic_crossbow"
-  }
+  },
+  "skill": [
+    "vampirism:weapon_table"
+  ]
 }
