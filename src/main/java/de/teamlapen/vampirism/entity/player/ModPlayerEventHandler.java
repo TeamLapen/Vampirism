@@ -343,6 +343,12 @@ public class ModPlayerEventHandler {
                 event.setAmount(event.getAmount() * 2);
             }
         }
+
+        // reduce damage dor vampires
+        if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
+            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
+            event.setAmount(event.getAmount() * (1-mod));
+        }
     }
 
     @SubscribeEvent
