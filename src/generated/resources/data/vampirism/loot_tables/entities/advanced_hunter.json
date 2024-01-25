@@ -85,9 +85,9 @@
       "bonus_rolls": 0.0,
       "conditions": [
         {
-          "chance": 0.05,
+          "chance": 0.1,
           "condition": "minecraft:random_chance_with_looting",
-          "looting_multiplier": 0.01
+          "looting_multiplier": 0.015
         }
       ],
       "entries": [

@@ -88,7 +88,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).setWeight(3).apply(SetNbtFunction.setTag(splash)))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setWeight(1).apply(SetNbtFunction.setTag(splash)))
                             .add(LootItem.lootTableItem(ModItems.PURE_SALT_WATER.get()).setWeight(4).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1))).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
-                    .withPool(LootPool.lootPool().when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.05f, 0.01f)).setRolls(ConstantValue.exactly(1))
+                    .withPool(LootPool.lootPool().when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1f, 0.015f)).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(AddBookNbtFunction.builder())));
             this.add(ModEntities.ADVANCED_HUNTER.get(), advanced_hunter);
             this.add(ModEntities.ADVANCED_HUNTER_IMOB.get(), advanced_hunter);
@@ -96,7 +96,7 @@ public class LootTablesProvider {
                     .withPool(LootPool.lootPool().when(LootItemKilledByPlayerCondition.killedByPlayer()).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(1))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(1).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.5f, 1.0f))).apply(LootingEnchantFunction.lootingMultiplier(ConstantValue.exactly(1f)))))
-                    .withPool(LootPool.lootPool().when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1f, 0.01f)).setRolls(ConstantValue.exactly(1))
+                    .withPool(LootPool.lootPool().when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1f, 0.015f)).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(AddBookNbtFunction.builder())))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.05f, 0.01f))
                             .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(VReference.VAMPIRE_FACTION)))
