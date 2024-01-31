@@ -63,7 +63,8 @@
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerAccessor",
     "accessor.VillagerHostilesSensorAccessor",
-    "accessor.WalkAnimationStateAccessor"
+    "accessor.WalkAnimationStateAccessor",
+    "client.accessor.MobEffectAccessor"
   ],
   "client": [
     "client.HumanoidArmorLayerMixin",

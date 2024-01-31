@@ -53,10 +53,10 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class RecipesProvider extends VanillaRecipeProvider {
+public class RecipesProvider extends RecipeProvider {
 
     public RecipesProvider(@NotNull PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+        super(packOutput);
     }
 
     @Override

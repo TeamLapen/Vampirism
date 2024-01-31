@@ -96,9 +96,6 @@ public class RegistryManager implements IInitListener {
                 ModTiles.registerTileExtensionsUnsafe();
                 event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
             case LOAD_COMPLETE:
-                if (ModEffects.checkNightVision()) {
-                    event.enqueueWork(ModEffects::fixNightVisionEffectTypesUnsafe);
-                }
                 ModRecipes.registerDefaultLiquidColors();
                 break;
             default:
@@ -109,14 +106,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
         ModRegistries.registerDatapackRegistries(event);
-    }
-
-    @SubscribeEvent
-    public void onRegisterEffects(@NotNull RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.MOB_EFFECT)) {
-            //noinspection unchecked
-            ModEffects.replaceEffects((Registry<MobEffect>) event.getRegistry());
-        }
     }
 
     @SubscribeEvent

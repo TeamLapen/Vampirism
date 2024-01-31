@@ -64,4 +64,5 @@ public class VReference {
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;
+    public static final ResourceLocation PERMANENT_INVISIBLE_MOB_EFFECT = new ResourceLocation(MODID, "permanent");
 }

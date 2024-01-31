@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.client.extensions.EffectExtensions;
 import de.teamlapen.vampirism.effects.*;
+import de.teamlapen.vampirism.mixin.client.accessor.MobEffectAccessor;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -61,56 +63,8 @@ public class ModEffects {
             .addAttributeModifier(Attributes.ARMOR, "45ebd53a-14fa-4ede-b4e7-412e075a8b5f", -0.2, AttributeModifier.Operation.MULTIPLY_TOTAL)
     );
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static MobEffect modded_night_vision;  //Substituted version
-    private static MobEffect vanilla_night_vision; //Vanilla night vision instance
-
-
     static void register(IEventBus bus) {
         EFFECTS.register(bus);
-    }
-
-    static void replaceEffects(@NotNull Registry<MobEffect> registry) {
-        vanilla_night_vision = MobEffects.NIGHT_VISION;
-        modded_night_vision = new VampirismNightVisionPotion();
-        Registry.register(registry, registry.getKey(vanilla_night_vision), modded_night_vision);
-    }
-
-    static void fixNightVisionEffectTypesUnsafe() {
-        /*We have to fix the vanilla night vision potion types as they are created using the vanilla night vision potion before it can be replaced
-        There are two options:
-        1) Substitute the potion types too
-            Less hacky
-            If the vanilla duration or other things change it is less likely to be noticed (in development)
-            Issue with JEI/Bug
-            Annoying Forge warning
-        2) Update the potion object in these potion types using reflection
-
-        Using 2) for now
-        */
-        LOGGER.info("Fixing vanilla night vision potion types");
-        try {
-            for (MobEffectInstance effect : Potions.NIGHT_VISION.getEffects()) {
-                if (effect.getEffect().equals(vanilla_night_vision)) { //If still referring to vanilla potion replace
-                    ObfuscationReflectionHelper.setPrivateValue(MobEffectInstance.class, effect, modded_night_vision, SRGNAMES.EffectInstance_effect);
-                }
-            }
-            for (MobEffectInstance effect : Potions.LONG_NIGHT_VISION.getEffects()) {
-                if (effect.getEffect().equals(vanilla_night_vision)) {
-                    ObfuscationReflectionHelper.setPrivateValue(MobEffectInstance.class, effect, modded_night_vision, SRGNAMES.EffectInstance_effect);
-                }
-            }
-        } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-            LOGGER.error("Unable to modify vanilla night vision types. Potion tileInventory and more might not work", e);
-        }
-    }
-
-    static boolean checkNightVision() {
-        if (!(MobEffects.NIGHT_VISION instanceof VampirismNightVisionPotion)) {
-            LOGGER.warn("Vampirism was not able to register it's night vision potion");
-            return false;
-        }
-        return true;
     }
 
 }
