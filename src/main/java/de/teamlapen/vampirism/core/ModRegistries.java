@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.datamaps.FluidBloodConversion;
+import de.teamlapen.vampirism.api.datamaps.ItemBlood;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -19,11 +22,15 @@ import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.datamaps.DataMapType;
+import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 import java.util.Collection;
 
@@ -60,6 +67,8 @@ public class ModRegistries {
     public static final Registry<Codec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = DEFERRED_TASK_REQUIREMENTS.makeRegistry(builder -> {});
     public static final Registry<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DEFERRED_TASK_REWARD_INSTANCES.makeRegistry(builder -> {});
     public static final Registry<Codec<? extends Converter>> ENTIITY_CONVERTER = DEFERRED_ENTITY_CONVERTER.makeRegistry(builder -> {});
+    public static final DataMapType<Item, ItemBlood> ITEM_BLOOD = DataMapType.builder(VampirismRegistries.ITEM_BLOOD_VALUE_ID, Registries.ITEM, ItemBlood.CODEC).synced(ItemBlood.NETWORK_CODEC, true).build();
+    public static final DataMapType<Fluid, FluidBloodConversion> FLUID_BLOOD_CONVERSION = DataMapType.builder(VampirismRegistries.FLUID_BLOOD_CONVERSION_ID, Registries.FLUID, FluidBloodConversion.CODEC).synced(FluidBloodConversion.NETWORK_CODEC, true).build();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(Registries.BIOME, ModBiomes::createBiomes)
@@ -94,10 +103,15 @@ public class ModRegistries {
         DEFERRED_SKILL_TREES.register(bus);
     }
 
-    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+    static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(TASK_ID, Task.CODEC, Task.CODEC);
         event.dataPackRegistry(SKILL_TREE_ID, SkillTree.CODEC, SkillTree.CODEC);
         event.dataPackRegistry(SKILL_NODE_ID, SkillNode.CODEC, SkillNode.CODEC);
+    }
+
+    static void registerDataMaps(RegisterDataMapTypesEvent event) {
+        event.register(ITEM_BLOOD);
+        event.register(FLUID_BLOOD_CONVERSION);
     }
 
     public static Collection<DeferredHolder<IAction<?>, ? extends IAction<?>>> allActions() {

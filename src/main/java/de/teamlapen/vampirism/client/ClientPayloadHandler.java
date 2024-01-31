@@ -38,8 +38,6 @@ public class ClientPayloadHandler {
             Map<ResourceLocation, Float> entities = msg.getValues()[0];
             ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
             BloodConversionRegistry.applyNewEntitiesResources(entities);
-            BloodConversionRegistry.applyNewItemResources(msg.getValues()[1]);
-            BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2]);
         });
         context.replyHandler().send(new ServerboundBloodValuesCompletedPacket());
     }

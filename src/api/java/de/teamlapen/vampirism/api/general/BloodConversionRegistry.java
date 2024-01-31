@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.api.general;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.datamaps.FluidBloodConversion;
+import de.teamlapen.vampirism.api.datamaps.ItemBlood;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -13,109 +16,53 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * Store blood conversion factors.
- * Item -> impure blood.
- * Liquids -> blood
- */
 public class BloodConversionRegistry {
-
-    /**
-     * stores conversion rate from items to impure blood
-     */
-    @NotNull
-    private static final Map<ResourceLocation, Float> items = Maps.newHashMap();
-
-    /**
-     * stores conversion rate from fluids to blood
-     */
-    @NotNull
-    private static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
 
     @NotNull
     private static final Map<ResourceLocation, Float> entities = Maps.newHashMap();
 
-    /**
-     * stores conversion rate from not listed items to impure blood
-     */
-    @NotNull
-    private static final Map<ResourceLocation, Float> items_calculated = Maps.newHashMap();
-    /**
-     * stores items with no conversion rate
-     */
-    @NotNull
-    private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
-
-    public static void applyNewFluidResources(@NotNull Map<ResourceLocation, Float> values) {
-        fluids.clear();
-        fluids.putAll(values);
-    }
+    private static final ItemBlood EMPTY = new ItemBlood(0);
+    private static final Map<Item, ItemBlood> CALCULATED = new HashMap<>();
 
     public static void applyNewEntitiesResources(@NotNull Map<ResourceLocation, Float> values) {
         entities.clear();
         entities.putAll(values);
     }
 
-    public static void applyNewItemResources(@NotNull Map<ResourceLocation, Float> values) {
-        items.clear();
-        for (Map.Entry<ResourceLocation, Float> value : values.entrySet()) {
-            if (value.getValue() != 0) {
-                items.put(value.getKey(), value.getValue());
-            } else {
-                items_blacklist.add(value.getKey());
-            }
-        }
-    }
-
-    public static @NotNull Map<ResourceLocation, Float> getItemConversions() {
-        return Collections.unmodifiableMap(items);
-    }
-
     public static @NotNull Map<ResourceLocation, Float> getEntityConversions() {
         return Collections.unmodifiableMap(entities);
     }
 
-    public static @NotNull Map<ResourceLocation, Float> getFluidConversions() {
-        return Collections.unmodifiableMap(fluids);
-    }
-
-    public static @NotNull Map<ResourceLocation, Float> getItemConversionCalculated() {
-        return Collections.unmodifiableMap(items_calculated);
-    }
-
     /**
-     * Get the amount of impure blood the given item is worth.
-     *
-     * @param item ItemStack
-     * @return Impure blood amount in mB or 0
+     * @deprecated use {@link #getItemBlood(net.minecraft.world.item.ItemStack)}
      */
+    @Deprecated
     public static int getImpureBloodValue(@NotNull Item item) {
-        if (items.containsKey(id(item)) || items_calculated.containsKey(id(item))) {
-            return (items.containsKey(id(item)) ? items.get(id(item)) : items_calculated.get(id(item))).intValue();
-        }
-        return 0;
+        return getItemBlood(new ItemStack(item)).blood();
     }
 
     public static boolean canBeConverted(@NotNull ItemStack stack) {
-        ResourceLocation id = id(stack.getItem());
-        if (items.containsKey(id) || items_calculated.containsKey(id)) {
-            return true;
-        } else if (items_blacklist.contains(id)) {
-            return false;
-        } else {
-            if (stack.isEdible() && stack.getFoodProperties(null).isMeat()) {
-                int value = Mth.clamp((id != null && id.getPath().contains("cooked")) ? 0 : stack.getFoodProperties(null).getNutrition() / 2, 0, 5);
-                if (value > 0) {
-                    items_calculated.put(id, (float) (value * 100));
-                    return true;
-                }
-            }
-            items_blacklist.add(id);
-            return false;
+        return getItemBlood(stack).blood() > 0;
+    }
+
+    public static ItemBlood getItemBlood(ItemStack stack) {
+        ItemBlood data = stack.getItemHolder().getData(VampirismRegistries.ITEM_BLOOD_VALUES.get());
+        if (data == null) {
+            data = CALCULATED.get(stack.getItem());
         }
+        if (data == null) {
+            FoodProperties food = stack.getFoodProperties(null);
+            if (food != null && food.isMeat() && !id(stack.getItem()).getPath().contains("cooked")) {
+                data = new ItemBlood(food.getNutrition() * 10);
+            } else {
+                data = EMPTY;
+            }
+            CALCULATED.put(stack.getItem(), data);
+        }
+        return data;
     }
 
     /**
@@ -125,14 +72,19 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static float getBloodValue(@NotNull FluidStack fluid) {
-        if (fluids.containsKey(id(fluid.getFluid()))) {
-            return fluids.get(id(fluid.getFluid()));
+        FluidBloodConversion fluidConversion = getFluidConversion(fluid.getFluid());
+        if (fluidConversion != null) {
+            return fluidConversion.conversionRate();
         }
-        return 0f;
+        return 0;
     }
 
-    public static boolean existsBloodValue(@NotNull Fluid fluid) {
-        return fluids.containsKey(id(fluid));
+    public static FluidBloodConversion getFluidConversion(Fluid fluid) {
+        return fluid.builtInRegistryHolder().getData(VampirismRegistries.FLUID_BLOOD_CONVERSION.get());
+    }
+
+    public static boolean hasConversion(@NotNull Fluid fluid) {
+        return getFluidConversion(fluid) != null;
     }
 
     /**

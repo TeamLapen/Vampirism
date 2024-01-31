@@ -1,0 +1,40 @@
+{
+  "values": {
+    "minecraft:beef": {
+      "blood": 200
+    },
+    "minecraft:chicken": {
+      "blood": 0
+    },
+    "minecraft:cooked_chicken": {
+      "blood": 0
+    },
+    "minecraft:cooked_mutton": {
+      "blood": 0
+    },
+    "minecraft:cooked_porkchop": {
+      "blood": 0
+    },
+    "minecraft:cooked_rabbit": {
+      "blood": 0
+    },
+    "minecraft:mutton": {
+      "blood": 100
+    },
+    "minecraft:porkchop": {
+      "blood": 100
+    },
+    "minecraft:rabbit": {
+      "blood": 100
+    },
+    "minecraft:rotten_flesh": {
+      "blood": 0
+    },
+    "vampirism:human_heart": {
+      "blood": 200
+    },
+    "vampirism:weak_human_heart": {
+      "blood": 100
+    }
+  }
+}

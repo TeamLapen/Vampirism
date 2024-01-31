@@ -2,22 +2,28 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.datamaps.ItemBlood;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.BloodGrinderMenu;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +36,10 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
@@ -149,22 +158,45 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 final int slot = i;
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
-                int blood = BloodConversionRegistry.getImpureBloodValue(stack.getItem());
-                if (blood > 0) {
-                    FluidStack fluid = new FluidStack(ModFluids.IMPURE_BLOOD.get(), blood);
+                ItemBlood data = getItemBlood(stack);
+                if (data.blood() > 0) {
+                    FluidStack fluid = new FluidStack(ModFluids.IMPURE_BLOOD.get(), data.blood());
                     FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
-                        if (filled >= 0.9f * blood) {
+                        if (filled >= 0.9f * data.blood()) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
                             this.level.playSound(null, this.getBlockPos(), ModSounds.GRINDER.get(), SoundSource.BLOCKS, 0.5f, 0.7f);
                             this.cooldownProcess = Mth.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });
-
                 }
             }
         }
+    }
+
+    private static final ItemBlood EMPTY = new ItemBlood(0);
+    private static final Map<Item, ItemBlood> CALCULATED = new HashMap<>();
+
+    public static ItemBlood getItemBlood(ItemStack stack) {
+        ItemBlood data = stack.getItemHolder().getData(ModRegistries.ITEM_BLOOD);
+        if (data == null) {
+            data = CALCULATED.get(stack.getItem());
+        }
+        if (data == null) {
+            FoodProperties food = stack.getFoodProperties(null);
+            if (food != null && food.isMeat() && !RegUtil.id(stack.getItem()).getPath().contains("cooked")) {
+                data = new ItemBlood(food.getNutrition() * 10);
+            } else {
+                data = EMPTY;
+            }
+            CALCULATED.put(stack.getItem(), data);
+        }
+        return data;
+    }
+
+    public static boolean hasBlood(ItemStack stack) {
+        return getItemBlood(stack).blood() > 0;
     }
 
 }

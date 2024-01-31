@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,15 +14,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class SieveBlockEntity extends BlockEntity implements FluidTankWithListener.IFluidTankListener {
 
@@ -73,6 +74,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
             boolean old = active;
             active = tag.getBoolean("active");
             if (active != old && level != null) {
+                this.requestModelDataUpdate();
                 this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
         }
@@ -80,7 +82,10 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     @Override
     public void onTankContentChanged() {
-        this.setActive(true, getBlockState());
+        this.setActive(!tank.isEmpty(), getBlockState());
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     @Override
@@ -136,7 +141,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
         @Override
         public int fill(@NotNull FluidStack resource, @NotNull FluidAction action) {
-            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid())) {
+            if (!BloodConversionRegistry.hasConversion(resource.getFluid())) {
                 return 0;
             }
             FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);

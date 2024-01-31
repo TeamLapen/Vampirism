@@ -22,10 +22,8 @@ public class BloodValuesTask implements ICustomConfigurationTask {
     @Override
     public void run(Consumer<CustomPacketPayload> sender) {
 
-        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
+        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 1);
         bloodValues[0] = BloodConversionRegistry.getEntityConversions();
-        bloodValues[1] = BloodConversionRegistry.getItemConversions();
-        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
         Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = VampirismAPI.entityRegistry().getConvertibleOverlay();
 
         sender.accept(new ClientboundBloodValuePacket(bloodValues, (Map<EntityType<?>, ResourceLocation>) (Object) convertibleOverlay));

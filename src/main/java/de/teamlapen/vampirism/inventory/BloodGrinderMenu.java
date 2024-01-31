@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import de.teamlapen.vampirism.core.ModContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class BloodGrinderMenu extends InventoryContainerMenu {
-    private static final Predicate<ItemStack> canProcess = BloodConversionRegistry::canBeConverted;
+    private static final Predicate<ItemStack> canProcess = BloodGrinderBlockEntity::hasBlood;
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
     @SuppressWarnings("DeprecatedIsStillUsed")

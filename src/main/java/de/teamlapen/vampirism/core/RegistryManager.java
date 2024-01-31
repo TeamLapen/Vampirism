@@ -20,6 +20,7 @@ import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -111,5 +112,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onGameConfiguration(OnGameConfigurationEvent event) {
         event.register(new BloodValuesTask());
+    }
+
+    @SubscribeEvent
+    public void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
+        ModRegistries.registerDataMaps(event);
     }
 }
