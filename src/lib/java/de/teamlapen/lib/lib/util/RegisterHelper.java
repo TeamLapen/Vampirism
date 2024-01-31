@@ -1,15 +1,9 @@
 package de.teamlapen.lib.lib.util;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.*;
 
 public class RegisterHelper {
-
-    public static <T extends ItemLike> T compostable(T item, float chance) {
-        ComposterBlock.COMPOSTABLES.put(item, chance);
-        return item;
-    }
 
     public static <T extends Block> T flammable(T block, int encouragement, int flammability) {
         FireBlock fireblock = (FireBlock) Blocks.FIRE;

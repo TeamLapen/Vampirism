@@ -69,7 +69,7 @@ public class ModBlocks {
     public static final DeferredHolder<Block, TotemTopBlock> TOTEM_TOP_CRAFTED = registerWithItem("totem_top_crafted", () -> new TotemTopBlock(true, new ResourceLocation("none")));
     public static final DeferredHolder<Block, TotemTopBlock> TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED = BLOCKS.register("totem_top_vampirism_vampire_crafted", () -> new TotemTopBlock(true, VampirePlayer.SERIALIZER_ID));
     public static final DeferredHolder<Block, TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = BLOCKS.register("totem_top_vampirism_hunter_crafted", () -> new TotemTopBlock(true, HunterPlayer.SERIALIZER_ID));
-    public static final DeferredHolder<Block, VampirismFlowerBlock> VAMPIRE_ORCHID = registerWithItem("vampire_orchid", () -> compostable(new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID), 0.65f));
+    public static final DeferredHolder<Block, VampirismFlowerBlock> VAMPIRE_ORCHID = registerWithItem("vampire_orchid", () -> new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
     public static final DeferredHolder<Block, FlowerPotBlock> POTTED_VAMPIRE_ORCHID = BLOCKS.register("potted_vampire_orchid", () -> potted(new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, VAMPIRE_ORCHID, Block.Properties.of().noCollission().isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).instabreak()), VAMPIRE_ORCHID.getId()));
     public static final DeferredHolder<Block, WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final DeferredHolder<Block, PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", () -> new PotionTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1f).noOcclusion()));

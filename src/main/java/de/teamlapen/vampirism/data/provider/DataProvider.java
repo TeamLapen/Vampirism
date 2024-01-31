@@ -42,5 +42,6 @@ public class DataProvider {
         generator.addProvider(event.includeServer(), new ConvertiblesProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SundamageProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SkillTreeProvider(packOutput, lookupProviderFuture));
+        generator.addProvider(event.includeServer(), new DataMapsProvider(packOutput, lookupProviderFuture));
     }
 }
