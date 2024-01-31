@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -54,7 +55,8 @@ import java.util.function.Predicate;
  * Main class for hunter players
  */
 public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IHunterPlayer {
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "hunter_player");
+    private static final String NBT_KEY = "hunter_player";
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
 
     private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
 
@@ -91,7 +93,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public @NotNull ResourceLocation getAttachmentKey() {
+    public @NotNull ResourceLocation getAttachedKey() {
         return SERIALIZER_ID;
     }
 
@@ -131,11 +133,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     @NotNull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
         return ((IVampirismPlayer) player).getVampAtts().getHuntSpecial();
-    }
-
-    @Override
-    public int getTheEntityID() {
-        return player.getId();
     }
 
     @Override
@@ -198,18 +195,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 boolean sync = false;
                 boolean syncToAll = false;
                 CompoundTag syncPacket = new CompoundTag();
-                if (actionHandler.updateActions()) {
+                if (this.actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
-                    CompoundTag tag = new CompoundTag();
-                    actionHandler.writeUpdateForClient(tag);
-                    syncPacket.put("action_handler", tag);
+                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
                 }
-                if (skillHandler.isDirty()) {
+                if (this.skillHandler.isDirty()) {
                     sync = true;
-                    CompoundTag tag = new CompoundTag();
-                    skillHandler.writeUpdateForClient(tag);
-                    syncPacket.put("skill_handler", tag);
+                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
                 }
                 if (sync) {
                     sync(syncPacket, syncToAll);
@@ -242,40 +235,32 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
-        super.loadUpdateFromNBT(nbt);
-        actionHandler.readUpdateFromServer(nbt.getCompound("action_handler"));
-        skillHandler.readUpdateFromServer(nbt.getCompound("skill_handler"));
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        super.deserializeUpdateNBT(nbt);
+        this.actionHandler.deserializeUpdateNBT(nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeUpdateNBT(nbt.getCompound(this.skillHandler.nbtKey()));
     }
 
     @Override
-    public void loadFromNBT(CompoundTag nbt) {
-        super.loadFromNBT(nbt);
-        actionHandler.readUpdateFromServer(nbt.getCompound("action_handler"));
-        skillHandler.readUpdateFromServer(nbt.getCompound("skill_handler"));
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
+        super.deserializeNBT(nbt);
+        this.actionHandler.deserializeUpdateNBT(nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeUpdateNBT(nbt.getCompound(this.skillHandler.nbtKey()));
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
-        var tag = super.writeFullUpdateToNBT();
-        CompoundTag actionHandler = new CompoundTag();
-        CompoundTag skillHandler = new CompoundTag();
-        this.actionHandler.writeUpdateForClient(actionHandler);
-        this.skillHandler.writeUpdateForClient(skillHandler);
-        tag.put("action_handler", actionHandler);
-        tag.put("skill_handler", skillHandler);
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        var tag = super.serializeUpdateNBT();
+        tag.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
+        tag.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
         return tag;
     }
 
     @Override
-    public CompoundTag writeToNBT() {
-        var tag = super.writeToNBT();
-        CompoundTag actionHandler = new CompoundTag();
-        CompoundTag skillHandler = new CompoundTag();
-        this.actionHandler.writeUpdateForClient(actionHandler);
-        this.skillHandler.writeUpdateForClient(skillHandler);
-        tag.put("action_handler", actionHandler);
-        tag.put("skill_handler", skillHandler);
+    public @NotNull CompoundTag serializeNBT() {
+        CompoundTag tag = super.serializeNBT();
+        tag.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT());
+        tag.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT());
         return tag;
     }
 
@@ -287,13 +272,18 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         }));
     }
 
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
+    }
+
     public static class Serializer implements IAttachmentSerializer<CompoundTag, HunterPlayer> {
 
         @Override
         public HunterPlayer read(IAttachmentHolder holder, CompoundTag tag) {
             if(holder instanceof Player player) {
                 var hunter = new HunterPlayer(player);
-                hunter.loadFromNBT(tag);
+                hunter.deserializeNBT(tag);
                 return hunter;
             }
             throw new IllegalArgumentException("Expected Player, got " + holder.getClass().getSimpleName());
@@ -301,7 +291,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
         @Override
         public CompoundTag write(HunterPlayer attachment) {
-            return attachment.writeToNBT();
+            return attachment.serializeNBT();
         }
     }
 

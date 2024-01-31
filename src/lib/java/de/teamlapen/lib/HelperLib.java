@@ -1,6 +1,7 @@
 package de.teamlapen.lib;
 
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -46,7 +47,7 @@ public class HelperLib {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(ISyncable.@NotNull ISyncableAttachment cap, @NotNull Entity entity, boolean all) {
+    public static void sync(@NotNull IAttachedSyncable cap, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap);
             if (entity instanceof ServerPlayer player) {
@@ -63,7 +64,7 @@ public class HelperLib {
     }
 
     public static void sync(Object object, Entity entity, boolean all) {
-        if (!entity.level().isClientSide() && object instanceof ISyncable.ISyncableAttachment cap) {
+        if (!entity.level().isClientSide() && object instanceof IAttachedSyncable cap) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
@@ -91,7 +92,7 @@ public class HelperLib {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(ISyncable.@NotNull ISyncableAttachment cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
+    public static void sync(@NotNull IAttachedSyncable cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap, data);
             if (entity instanceof ServerPlayer player) {

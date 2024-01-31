@@ -2,7 +2,7 @@ package de.teamlapen.lib.entity;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;

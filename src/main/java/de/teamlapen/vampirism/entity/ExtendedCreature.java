@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -39,8 +40,9 @@ import java.util.function.Function;
 /**
  * Extended entity property which every {@link PathfinderMob} has
  */
-public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtendedCreatureVampirism {
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "extended_creature");
+public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism {
+    private static final String NBT_KEY = "extended_creature";
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
 
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "max_blood";
@@ -87,6 +89,11 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
     }
 
     @Override
+    public Entity asEntity() {
+        return this.entity;
+    }
+
+    @Override
     public boolean canBeBitten(IVampire biter) {
         return getBlood() > 0;
     }
@@ -122,7 +129,7 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
     }
 
     @Override
-    public @NotNull ResourceLocation getAttachmentKey() {
+    public @NotNull ResourceLocation getAttachedKey() {
         return SERIALIZER_ID;
     }
 
@@ -145,17 +152,12 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
     }
 
     @Override
-    public int getTheEntityID() {
-        return entity.getId();
-    }
-
-    @Override
     public boolean hasPoisonousBlood() {
         return poisonousBlood;
     }
 
     @Override
-    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -289,9 +291,8 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
         return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
-
     @Override
-    public CompoundTag writeToNBT() {
+    public @NotNull CompoundTag serializeNBT() {
         var nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, blood);
         nbt.putInt(KEY_MAX_BLOOD, maxBlood);
@@ -300,7 +301,12 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
     }
 
     @Override
-    public void loadFromNBT(CompoundTag compound) {
+    public String nbtKey() {
+        return NBT_KEY;
+    }
+
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -313,7 +319,7 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
@@ -337,7 +343,7 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
         public ExtendedCreature read(IAttachmentHolder holder, CompoundTag tag) {
             if (holder instanceof PathfinderMob mob) {
                 var creature = new ExtendedCreature(mob);
-                creature.loadFromNBT(tag);
+                creature.deserializeNBT(tag);
                 return creature;
             }
             throw new IllegalArgumentException("Expected PathfinderMob, got " + holder.getClass().getSimpleName());
@@ -345,7 +351,7 @@ public class ExtendedCreature implements ISyncable.ISyncableAttachment, IExtende
 
         @Override
         public CompoundTag write(ExtendedCreature attachment) {
-            return attachment.writeToNBT();
+            return attachment.serializeNBT();
         }
     }
 

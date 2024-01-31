@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.minion;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -66,6 +67,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Store the uuid of the lord. Should not be null when joining the world
      */
+    private static final String NBT_KEY = "minion_data";
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final ResourceLocation ADDITIONAL_DATA = new ResourceLocation(REFERENCE.MODID, "minion_data");
     private final static Logger LOGGER = LogManager.getLogger();
@@ -131,6 +133,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         nbt.putInt("minion_id", minionId);
         nbt.putInt("minion_token", token);
 //        }
+    }
+
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
     }
 
     @Override
@@ -326,8 +333,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
-        if (nbt.contains("data_type")) {
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        if (nbt.contains("data_type", Tag.TAG_STRING)) {
             try {
                 @SuppressWarnings("unchecked")
                 T data = (T) MinionData.fromNBT(nbt);
@@ -464,7 +471,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT() {
         CompoundTag tag = new CompoundTag();
         if (minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData();
@@ -578,7 +585,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link de.teamlapen.vampirism.entity.minion.MinionEntity#writeFullUpdateToNBT()}
+     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link de.teamlapen.vampirism.entity.minion.MinionEntity#serializeUpdateNBT()}
      */
     private void checkoutMinionData() {
         if (playerMinionController != null && minionData == null) {

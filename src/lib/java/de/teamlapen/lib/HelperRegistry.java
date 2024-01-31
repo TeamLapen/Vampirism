@@ -2,7 +2,7 @@ package de.teamlapen.lib;
 
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.util.ThreadSafeLibAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -20,18 +20,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HelperRegistry {
 
-    private static @NotNull Map<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncablePlayerCaps = new ConcurrentHashMap<>();
-    private static @NotNull Map<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncableEntityCaps = new ConcurrentHashMap<>();
+    private static @NotNull Map<ResourceLocation, AttachmentType<IAttachedSyncable>> syncablePlayerCaps = new ConcurrentHashMap<>();
+    private static @NotNull Map<ResourceLocation, AttachmentType<IAttachedSyncable>> syncableEntityCaps = new ConcurrentHashMap<>();
     private static @NotNull Set<AttachmentType<IPlayerEventListener>> playerEventListenerCaps = ConcurrentHashMap.newKeySet();
     private static AttachmentType<IPlayerEventListener>[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.player.Player}
      */
-    private static ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncablePlayerCapsFinal;
+    private static ImmutableMap<ResourceLocation, AttachmentType<IAttachedSyncable>> syncablePlayerCapsFinal;
     /**
      * Stores syncable capabilities for {@link net.minecraft.world.entity.Mob}
      */
-    private static ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> syncableEntityCapsFinal;
+    private static ImmutableMap<ResourceLocation, AttachmentType<IAttachedSyncable>> syncableEntityCapsFinal;
 
     /**
      * Return all player capabilities that should receive events
@@ -46,7 +46,7 @@ public class HelperRegistry {
      * FOR INTERNAL USAGE ONLY
      */
     @ApiStatus.Internal
-    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> getSyncablePlayerCaps() {
+    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<IAttachedSyncable>> getSyncablePlayerCaps() {
         return syncablePlayerCapsFinal;
     }
 
@@ -55,7 +55,7 @@ public class HelperRegistry {
      * FOR INTERNAL USAGE ONLY
      */
     @ApiStatus.Internal
-    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<ISyncable.ISyncableAttachment>> getSyncableEntityCaps() {
+    public static @NotNull ImmutableMap<ResourceLocation, AttachmentType<IAttachedSyncable>> getSyncableEntityCaps() {
         return syncableEntityCapsFinal;
     }
 
@@ -66,7 +66,7 @@ public class HelperRegistry {
      * @param clz Class of the object returned, when {@link net.minecraft.world.entity.player.Player#getCapability(net.neoforged.neoforge.capabilities.EntityCapability)} is called on the entity with the given capability
      */
     @ThreadSafeLibAPI
-    public static void registerSyncableEntityCapability(AttachmentType<ISyncable.ISyncableAttachment> capability, Class<? extends ISyncable.ISyncableAttachment> clz) {
+    public static void registerSyncableEntityCapability(AttachmentType<IAttachedSyncable> capability, Class<? extends IAttachedSyncable> clz) {
         if (syncableEntityCaps == Collections.EMPTY_MAP) {
             throw new IllegalStateException("Cannot register syncable entity capability " + clz + "("+ capability + ") after the InterModEnqueueEvent");
         }
@@ -80,7 +80,7 @@ public class HelperRegistry {
      *            Has to be called before post init.
      */
     @ThreadSafeLibAPI
-    public static void registerSyncablePlayerCapability(AttachmentType<ISyncable.ISyncableAttachment> capability, Class<? extends ISyncable.ISyncableAttachment> clz) {
+    public static void registerSyncablePlayerCapability(AttachmentType<IAttachedSyncable> capability, Class<? extends IAttachedSyncable> clz) {
         if (syncablePlayerCaps == Collections.EMPTY_MAP) {
             throw new IllegalStateException("Cannot register syncable property " + clz + "("+ capability + ") after the InterModEnqueueEvent");
         }

@@ -4,6 +4,8 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.lib.lib.storage.ISavable;
+import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -51,7 +53,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TaskManager implements ITaskManager {
+public class TaskManager implements ITaskManager, ISavable {
+    private static final String NBT_KEY = "task_manager";
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
 
     @NotNull
@@ -217,7 +220,8 @@ public class TaskManager implements ITaskManager {
         }
     }
 
-    public void readNBT(@NotNull CompoundTag compoundNBT) {
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag compoundNBT) {
         if (compoundNBT.contains("taskWrapper")) {
             ListTag infos = compoundNBT.getList("taskWrapper", 10);
             for (int i = 0; i < infos.size(); i++) {
@@ -263,8 +267,6 @@ public class TaskManager implements ITaskManager {
         });
     }
 
-    // general ---------------------------------------------------------------------------------------------------------
-
     @Override
     public void resetTaskLists() {
         this.taskWrapperMap.values().forEach(TaskWrapper::reset);
@@ -309,9 +311,9 @@ public class TaskManager implements ITaskManager {
         return this.completedTasks.contains(task);
     }
 
-    // task methods ----------------------------------------------------------------------------------------------------
-
-    public void writeNBT(@NotNull CompoundTag compoundNBT) {
+    @Override
+    public @NotNull CompoundTag serializeNBT() {
+        CompoundTag compoundNBT = new CompoundTag();
         //completed tasks
         if (!this.completedTasks.isEmpty()) {
             CompoundTag tasksNBT = new CompoundTag();
@@ -330,6 +332,7 @@ public class TaskManager implements ITaskManager {
             });
             compoundNBT.put("taskWrapper", infos);
         }
+        return compoundNBT;
     }
 
     /**
@@ -527,6 +530,11 @@ public class TaskManager implements ITaskManager {
                 }
             }
         }
+    }
+
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
     }
 
     public static class TaskWrapper {

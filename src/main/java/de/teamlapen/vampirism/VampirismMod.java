@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.OptifineHandler;
@@ -176,10 +176,10 @@ public class VampirismMod {
         onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
         HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
-        HelperRegistry.registerSyncableEntityCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<ISyncable.ISyncableAttachment>) (Object) ModAttachments.FACTION_PLAYER_HANDLER.get(), FactionPlayerHandler.class);
+        HelperRegistry.registerSyncableEntityCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
+        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.FACTION_PLAYER_HANDLER.get(), FactionPlayerHandler.class);
     }
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {

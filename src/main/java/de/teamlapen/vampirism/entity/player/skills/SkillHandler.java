@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -24,6 +25,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -41,7 +43,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<T> {
+public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<T>, ISyncableSaveData {
+    private static final String NBT_KEY = "skill_handler";
     private final static Logger LOGGER = LogManager.getLogger(SkillHandler.class);
     private final ArrayList<ISkill<T>> enabledSkills = new ArrayList<>();
     private final T player;
@@ -282,7 +285,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
     }
 
-    public void loadFromNbt(@NotNull CompoundTag nbt) {
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 //noinspection unchecked
@@ -339,8 +343,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         }
     }
 
-    public void readUpdateFromServer(@NotNull CompoundTag nbt) {
-        if (nbt.contains("skills")) {
+    @Override
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
             //noinspection unchecked
             List<ISkill<T>> old = (List<ISkill<T>>) enabledSkills.clone();
@@ -364,7 +369,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-        if (nbt.contains("refinement_items")) {
+        if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
             ListTag refinements = nbt.getList("refinement_items", 10);
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
@@ -378,10 +383,10 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 }
             }
         }
-        if (nbt.contains("skill_points")) {
+        if (nbt.contains("skill_points", Tag.TAG_INT)) {
             this.maxSkillpoints = nbt.getInt("skill_points");
         }
-        if (nbt.contains("unlocked_trees")) {
+        if (nbt.contains("unlocked_trees", Tag.TAG_LIST)) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
             unlockedTrees.stream().map(s -> (StringTag)s).forEach(tag -> {
@@ -399,7 +404,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         disableAllSkills();
     }
 
-    public void saveToNbt(@NotNull CompoundTag nbt) {
+    @Override
+    public @NotNull CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(RegUtil.id(skill).toString(), true);
@@ -422,9 +429,12 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().getRepresentingPlayer().level(), tree.value()).toString()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
+        return nbt;
     }
 
-    public void writeUpdateForClient(@NotNull CompoundTag nbt) {
+    @Override
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
             skills.putBoolean(RegUtil.id(skill).toString(), true);
@@ -448,6 +458,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         }
         nbt.put("unlocked_trees", unlockedTrees);
         dirty = false;
+        return nbt;
     }
 
     private void applyRefinementItem(@NotNull ItemStack stack, int slot) {
@@ -498,5 +509,10 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 }
             }
         }
+    }
+
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
     }
 }

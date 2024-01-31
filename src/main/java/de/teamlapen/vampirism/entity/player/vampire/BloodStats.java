@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
+import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Handles VP's blood stats. Very similar to {@link FoodData}
  */
-public class BloodStats implements IBloodStats {
+public class BloodStats implements IBloodStats, ISyncableSaveData {
+    private static final String NBT_KEY = "blood_stats";
     private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
     private final Player player;
     private int maxBlood = 20;
@@ -132,10 +135,8 @@ public class BloodStats implements IBloodStats {
         return false;
     }
 
-    /**
-     * Reads nbt written by either {@link #writeNBTBlood(CompoundTag)} or {@link #writeNBT(CompoundTag)}
-     */
-    public void readNBT(@NotNull CompoundTag nbt) {
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
             bloodLevel = nbt.getInt("bloodLevel");
             if (nbt.contains("bloodTimer")) {
@@ -176,11 +177,12 @@ public class BloodStats implements IBloodStats {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
-    void loadUpdate(@NotNull CompoundTag nbt) {
-        if (nbt.contains("max_blood")) {
+    @Override
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        if (nbt.contains("max_blood", Tag.TAG_INT)) {
             setMaxBlood(nbt.getInt("max_blood"));
         }
-        if (nbt.contains("bloodLevel")) {
+        if (nbt.contains("bloodLevel", Tag.TAG_INT)) {
             setBloodLevel(nbt.getInt("bloodLevel"));
         }
     }
@@ -197,15 +199,15 @@ public class BloodStats implements IBloodStats {
         return false;
     }
 
-    /**
-     * Write all relevant data to nbt
-     */
-    void writeNBT(@NotNull CompoundTag nbt) {
+    @Override
+    public @NotNull CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         writeNBTBlood(nbt);
         nbt.putInt("bloodTimer", bloodTimer);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
         nbt.putFloat("bloodExhaustion", bloodExhaustionLevel);
         nbt.putInt("max_blood", maxBlood);
+        return nbt;
     }
 
     /**
@@ -215,11 +217,16 @@ public class BloodStats implements IBloodStats {
         nbt.putInt("bloodLevel", bloodLevel);
     }
 
-    @NotNull CompoundTag writeUpdate(@NotNull CompoundTag nbt) {
+    @Override
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("max_blood", maxBlood);
         return nbt;
     }
 
-
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
+    }
 }

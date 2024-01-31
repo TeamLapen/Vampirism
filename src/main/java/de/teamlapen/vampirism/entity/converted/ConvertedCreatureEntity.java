@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.mixin.accessor.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -45,6 +46,7 @@ import java.util.Optional;
  */
 public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBaseEntity implements CurableConvertedCreature<T, ConvertedCreatureEntity<T>>, ISyncable {
 
+    private static final String NBT_KEY = "converted";
     private static final Logger LOGGER = LogManager.getLogger();
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.STRING);
@@ -63,6 +65,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         super(type, world, false);
         this.enableImobConversion();
         this.xpReward = 2;
+    }
+
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
     }
 
     @Override
@@ -211,8 +218,8 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
-        if (nbt.contains("entity_old")) {
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        if (nbt.contains("entity_old", Tag.TAG_COMPOUND)) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
         }
@@ -303,7 +310,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT() {
         CompoundTag tag = new CompoundTag();
         writeOldEntityToNBT(tag);
         return tag;

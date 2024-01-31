@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.REFERENCE;
@@ -99,7 +100,8 @@ import java.util.function.Predicate;
  * Main class for Vampire Players.
  */
 public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "vampire_player");
+    private static final String NBT_KEY = "vampire_player";
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     private final static int FEED_TIMER = 20;
@@ -392,7 +394,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public @NotNull ResourceLocation getAttachmentKey() {
+    public @NotNull ResourceLocation getAttachedKey() {
         return SERIALIZER_ID;
     }
 
@@ -534,19 +536,20 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void loadFromNBT(CompoundTag nbt) {
-        super.loadFromNBT(nbt);
-        bloodStats.readNBT(nbt);
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
+        super.deserializeNBT(nbt);
+        this.bloodStats.deserializeNBT(nbt.getCompound(this.bloodStats.nbtKey()));
+        this.actionHandler.deserializeNBT(nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeNBT(nbt.getCompound(this.skillHandler.nbtKey()));
+        this.vision.deserializeNBT(nbt.getCompound(KEY_VISION));
+        if (nbt.getBoolean(KEY_WAS_DBNO)) {
+            this.wasDBNO = true;
+        }
+
         VampirePlayerSpecialAttributes a = getSpecialAttributes();
         a.eyeType = nbt.getInt(KEY_EYE);
         a.fangType = nbt.getInt(KEY_FANGS);
         a.glowingEyes = nbt.getBoolean(KEY_GLOWING_EYES);
-        actionHandler.loadFromNbt(nbt);
-        skillHandler.loadFromNbt(nbt);
-        if (nbt.getBoolean(KEY_WAS_DBNO)) wasDBNO = true;
-        if (nbt.contains(KEY_VISION, CompoundTag.TAG_COMPOUND)) { //Must be after loading skillHandler due to night vision skill being automatically activated
-            this.vision.readTag(nbt.getCompound(KEY_VISION));
-        }
     }
 
     @Override
@@ -576,7 +579,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         int amt = this.getBloodStats().getBloodLevel();
         int sucked = (int) Math.ceil((amt * perc));
         bloodStats.removeBlood(sucked, true);
-        sync(this.bloodStats.writeUpdate(new CompoundTag()), true);
+        syncProperty(this.bloodStats, true);
         return sucked;
     }
 
@@ -590,7 +593,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             int amt = this.getBloodStats().getBloodLevel();
             int sucked = (int) Math.ceil((amt * percentage));
             bloodStats.removeBlood(sucked, true);
-            sync(this.bloodStats.writeUpdate(new CompoundTag()), true);
+            syncProperty(this.bloodStats, true);
             return sucked;
         }
     }
@@ -837,15 +840,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
-                    CompoundTag tag = new CompoundTag();
-                    actionHandler.writeUpdateForClient(tag);
-                    syncPacket.put("action_handler", tag);
+                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
                 }
                 if (skillHandler.isDirty()) {
                     sync = true;
-                    CompoundTag tag = new CompoundTag();
-                    skillHandler.writeUpdateForClient(tag);
-                    syncPacket.put("skill_handler", tag);
+                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
                 }
 
                 if (sync) {
@@ -911,7 +910,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (getLevel() > 0 && !isDBNO()) {
                 player.level().getProfiler().push("vampirism_bloodupdate");
                 if (!player.level().isClientSide && this.bloodStats.onUpdate()) {
-                    sync(this.bloodStats.writeUpdate(new CompoundTag()), false);
+                    syncProperty(this.bloodStats, false);
                 }
                 player.level().getProfiler().pop();
             }
@@ -925,17 +924,16 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         this.forceNaturalArmorUpdate = true;
     }
 
-
     @Override
-    public CompoundTag writeToNBT() {
-        var nbt =  super.writeToNBT();
-        bloodStats.writeNBT(nbt);
+    public @NotNull CompoundTag serializeNBT() {
+        var nbt =  super.serializeNBT();
+        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeNBT());
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-        actionHandler.saveToNbt(nbt);
-        skillHandler.saveToNbt(nbt);
-        nbt.put(KEY_VISION, this.vision.createTag());
+        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT());
+        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT());
+        nbt.put(this.vision.nbtKey(), this.vision.serializeNBT());
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
         return nbt;
     }
@@ -1103,8 +1101,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
-        super.loadUpdateFromNBT(nbt);
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+        super.deserializeUpdateNBT(nbt);
         if (nbt.contains(KEY_EYE)) {
             setEyeType(nbt.getInt(KEY_EYE));
         }
@@ -1147,29 +1145,25 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         }
 
-        bloodStats.loadUpdate(nbt);
-        actionHandler.readUpdateFromServer(nbt.getCompound("action_handler"));
-        skillHandler.readUpdateFromServer(nbt.getCompound("skill_handler"));
-        if (nbt.contains(KEY_VISION, CompoundTag.TAG_COMPOUND)) {
-            this.vision.readTag(nbt.getCompound(KEY_VISION));
+        this.bloodStats.deserializeUpdateNBT(nbt.getCompound(this.bloodStats.nbtKey()));
+        this.actionHandler.deserializeUpdateNBT(nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeUpdateNBT(nbt.getCompound(this.skillHandler.nbtKey()));
+        if (nbt.contains(this.vision.nbtKey(), CompoundTag.TAG_COMPOUND)) {
+            this.vision.deserializeNBT(nbt.getCompound(this.vision.nbtKey()));
         }
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
-        var nbt = super.writeFullUpdateToNBT();
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        var nbt = super.serializeUpdateNBT();
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        bloodStats.writeUpdate(nbt);
-        CompoundTag actionHandler = new CompoundTag();
-        CompoundTag skillHandler = new CompoundTag();
-        this.actionHandler.writeUpdateForClient(actionHandler);
-        this.skillHandler.writeUpdateForClient(skillHandler);
-        nbt.put("action_handler", actionHandler);
-        nbt.put("skill_handler", skillHandler);
-        nbt.put(KEY_VISION, this.vision.createTag());
+        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT());
+        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
+        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
+        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT());
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
         return nbt;
@@ -1226,8 +1220,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     if (blood > 0) {
                         drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(blockState, pos));
 
-                        CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
-                        sync(updatePacket, true);
+                        syncProperty(this.bloodStats, true);
                     }
                 });
 
@@ -1266,7 +1259,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         if (blood > 0) {
             drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
-            CompoundTag updatePacket = bloodStats.writeUpdate(new CompoundTag());
+            CompoundTag updatePacket = new CompoundTag();
+            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT());
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);
             if (player instanceof ServerPlayer) {
@@ -1410,7 +1404,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }));
     }
 
-    private class VisionStatus {
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
+    }
+
+    private class VisionStatus implements ISyncableSaveData {
+        private static final String KEY_VISION = "vision";
         private final SortedSet<IVampireVision> unlockedVisions = new TreeSet<>(Comparator.comparing(o -> VampirismAPI.vampireVisionRegistry().getVisionId(o)));
         private ResourceLocation visionId;
         private IVampireVision vision;
@@ -1485,12 +1485,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
             if (!isRemote() && player.isAddedToWorld()) {
                 CompoundTag tag = new CompoundTag();
-                tag.put(KEY_VISION, createTag());
+                tag.put(KEY_VISION, serializeUpdateNBT());
                 VampirePlayer.this.sync(tag, false);
             }
         }
 
-        private @NotNull CompoundTag createTag() {
+        @Override
+        public @NotNull CompoundTag serializeNBT() {
             CompoundTag tag = new CompoundTag();
             if (this.visionId == null) {
                 tag.putBoolean("hasVision", false);
@@ -1501,7 +1502,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             return tag;
         }
 
-        private void readTag(@NotNull CompoundTag tag) {
+        @Override
+        public void deserializeNBT(@NotNull CompoundTag tag) {
             if (tag.getBoolean("hasVision")) {
                 if (tag.contains("vision")) {
                     // legacy support for integer ids
@@ -1529,6 +1531,20 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         }
 
+        @Override
+        public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+            deserializeNBT(nbt);
+        }
+
+        @Override
+        public @NotNull CompoundTag serializeUpdateNBT() {
+            return serializeNBT();
+        }
+
+        @Override
+        public String nbtKey() {
+            return KEY_VISION;
+        }
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, VampirePlayer> {
@@ -1537,7 +1553,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         public VampirePlayer read(IAttachmentHolder holder, CompoundTag tag) {
             if (holder instanceof Player player) {
                 var vampire = new VampirePlayer(player);
-                vampire.loadFromNBT(tag);
+                vampire.deserializeNBT(tag);
                 return vampire;
             }
             throw new IllegalArgumentException("Holder is not a player");
@@ -1545,7 +1561,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
         @Override
         public CompoundTag write(VampirePlayer attachment) {
-            return attachment.writeToNBT();
+            return attachment.serializeNBT();
         }
     }
 

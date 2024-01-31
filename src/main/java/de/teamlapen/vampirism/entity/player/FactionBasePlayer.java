@@ -2,13 +2,15 @@ package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachment;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
@@ -21,9 +23,10 @@ import org.jetbrains.annotations.Nullable;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, ISyncable.ISyncableAttachment, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, IAttachment, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
+
     protected final Player player;
     /**
      * {@code @NotNull} on server, otherwise {@code null}
@@ -39,6 +42,10 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         }
     }
 
+    @Override
+    public Player asEntity() {
+        return this.player;
+    }
 
     @Override
     public int getLevel() {
@@ -68,20 +75,15 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return taskManager;
     }
 
-    @Override
-    public int getTheEntityID() {
-        return player.getId();
-    }
-
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isRemote() {
-        if (player.getCommandSenderWorld() == null) {
+        if (player.level() == null) {
             LOGGER.error("Trying to check if remote, but world is not set yet", new Throwable("World not loaded").fillInStackTrace());
             return false;
         }
-        return player.getCommandSenderWorld().isClientSide;
+        return player.level().isClientSide;
     }
 
     @MustBeInvokedByOverriders
@@ -116,6 +118,12 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         HelperLib.sync(this, data, player, all);
     }
 
+    protected void syncProperty(@NotNull ISyncable object, boolean all) {
+        CompoundTag tag = new CompoundTag();
+        tag.put(object.nbtKey(), object.serializeUpdateNBT());
+        HelperLib.sync(tag, player, all);
+    }
+
     @MustBeInvokedByOverriders
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
@@ -136,27 +144,29 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         }
     }
 
+    @MustBeInvokedByOverriders
     @Override
-    public void loadFromNBT(CompoundTag nbt) {
-        this.taskManager.readNBT(nbt.getCompound("task_manager"));
-    }
-
-    @Override
-    public void loadUpdateFromNBT(CompoundTag nbt) {
-
-    }
-
-    @Override
-    public CompoundTag writeFullUpdateToNBT() {
-        return new CompoundTag();
-    }
-
-    @Override
-    public CompoundTag writeToNBT() {
+    public @NotNull CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        CompoundTag taskManager = new CompoundTag();
-        this.taskManager.writeNBT(taskManager);
-        tag.put("task_manager", taskManager);
+        tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT());
         return tag;
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
+        this.taskManager.deserializeNBT(nbt.getCompound(this.taskManager.nbtKey()));
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        return new CompoundTag();
     }
 }

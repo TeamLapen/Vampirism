@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Request an update packet for the players {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableAttachment} (e.g. on World join)
+ * Request an update packet for the players {@link de.teamlapen.lib.lib.storage.IAttachedSyncable} (e.g. on World join)
  */
 public class ServerboundRequestPlayerUpdatePacket implements CustomPacketPayload {
 

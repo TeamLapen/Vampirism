@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
@@ -31,11 +32,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -53,9 +56,10 @@ import java.util.stream.Collectors;
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFactionPlayerHandler {
+public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, "faction_player_handler");
+    private static final String NBT_KEY = "faction_player_handler";
+    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
 
     public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
         return player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get());
@@ -86,6 +90,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
+    public Player asEntity() {
+        return player;
+    }
+
+    @Override
     public boolean canJoin(IPlayableFaction<?> faction) {
         Event.Result res = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
         if (res == Event.Result.DEFAULT) {
@@ -110,7 +119,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
-    public @NotNull ResourceLocation getAttachmentKey() {
+    public @NotNull ResourceLocation getAttachedKey() {
         return SERIALIZER_ID;
     }
 
@@ -175,11 +184,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
-    public int getTheEntityID() {
-        return player.getId();
-    }
-
-    @Override
     public boolean isInFaction(@Nullable IFaction<?> f) {
         return Objects.equals(currentFaction, f);
     }
@@ -192,28 +196,30 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
-    public void loadUpdateFromNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
         IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
-        String f = nbt.getString("faction");
-        if ("null".equals(f)) {
-            currentFaction = null;
-            currentLevel = 0;
-            currentLordLevel = 0;
-        } else {
-            currentFaction = getFactionFromKey(new ResourceLocation(f));
-            if (currentFaction == null) {
-                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
+        if (nbt.contains("faction", Tag.TAG_STRING)) {
+            String f = nbt.getString("faction");
+            if ("null".equals(f)) {
+                currentFaction = null;
                 currentLevel = 0;
+                currentLordLevel = 0;
             } else {
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
+                currentFaction = getFactionFromKey(new ResourceLocation(f));
+                if (currentFaction == null) {
+                    LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
+                    currentLevel = 0;
+                } else {
+                    currentLevel = nbt.getInt("level");
+                    currentLordLevel = nbt.getInt("lord_level");
+                }
+            }
+            if (old != currentFaction || oldLevel != currentLevel) {
+                VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
             }
         }
-        if (old != currentFaction || oldLevel != currentLevel) {
-            VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
-        }
-        if (nbt.contains("title_gender")) {
+        if (nbt.contains("title_gender", Tag.TAG_STRING)) {
             this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
         }
         this.loadBoundActions(nbt);
@@ -350,7 +356,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
-    public CompoundTag writeFullUpdateToNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
@@ -479,8 +485,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
         nbt.put("bound_actions", bounds);
     }
 
+
+
     @Override
-    public CompoundTag writeToNBT() {
+    public @NotNull CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getID().toString());
@@ -494,7 +502,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
     }
 
     @Override
-    public void loadFromNBT(CompoundTag nbt) {
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -514,13 +522,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
         updateCache();
     }
 
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
+    }
+
     public static class Serializer implements IAttachmentSerializer<CompoundTag, FactionPlayerHandler> {
 
         @Override
         public FactionPlayerHandler read(IAttachmentHolder holder, CompoundTag tag) {
             if (holder instanceof Player player) {
                 FactionPlayerHandler handler = new FactionPlayerHandler(player);
-                handler.loadFromNBT(tag);
+                handler.deserializeNBT(tag);
                 return handler;
             }
             throw new IllegalStateException("Cannot deserialize FactionPlayerHandler for non player entity");
@@ -528,7 +541,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableAttachment, IFac
 
         @Override
         public CompoundTag write(FactionPlayerHandler attachment) {
-            return attachment.writeToNBT();
+            return attachment.serializeNBT();
         }
     }
 

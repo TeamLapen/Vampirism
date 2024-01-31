@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.actions;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -16,6 +17,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -34,7 +36,8 @@ import java.util.*;
  * <p>
  * Probably not the fastest or cleanest approach, but I did not find the perfect solution yet.
  */
-public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandler<T> {
+public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandler<T>, ISyncableSaveData {
+    private static final String NBT_KEY = "action_handler";
     private final static Logger LOGGER = LogManager.getLogger(ActionHandler.class);
 
 
@@ -154,10 +157,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         return unlockedActions.contains(action);
     }
 
-    /**
-     * Should only be called by the corresponding Capability instance
-     **/
-    public void loadFromNbt(@NotNull CompoundTag nbt) {
+    @Override
+    public void deserializeNBT(@NotNull CompoundTag nbt) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
@@ -190,7 +191,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * <p>
      * Attention: nbt is modified in the process
      **/
-    public void readUpdateFromServer(@NotNull CompoundTag nbt) {
+    @Override
+    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
         /*
          * This happens client side
          * We want to:
@@ -203,7 +205,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
          * Any locally active action is removed from the NBT so after the iteration only actions that are not locally active should be present in the map. Therefore, any remaining actions are activated.
          *
          */
-        if (nbt.contains("actions_active")) {
+        if (nbt.contains("actions_active", Tag.TAG_COMPOUND)) {
             CompoundTag active = nbt.getCompound("actions_active");
             List<ResourceLocation> toRemove = new ArrayList<>();
             for (Object2IntMap.Entry<ResourceLocation> client_active : activeTimers.object2IntEntrySet()) {
@@ -234,15 +236,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
         }
 
-        if (nbt.contains("actions_cooldown")) {
+        if (nbt.contains("actions_cooldown", Tag.TAG_COMPOUND)) {
             cooldownTimers.clear();
             loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
         }
-        if (nbt.contains("actions_cooldown_expected")) {
+        if (nbt.contains("actions_cooldown_expected", Tag.TAG_COMPOUND)) {
             expectedCooldownTimes.clear();
             loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
         }
-        if (nbt.contains("actions_duration_expected")) {
+        if (nbt.contains("actions_duration_expected", Tag.TAG_COMPOUND)) {
             expectedDurations.clear();
             loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
         }
@@ -283,16 +285,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         dirty = true;
 
     }
-    /**
-     * Saves action timings to nbt
-     * Should only be called by the corresponding Capability instance
-     */
-    public void saveToNbt(@NotNull CompoundTag nbt) {
 
-        nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
-        nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
-        nbt.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
-        nbt.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
+    @Override
+    public @NotNull CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
+        tag.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
+        tag.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
+        tag.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
+        return tag;
     }
 
     /**
@@ -457,15 +458,9 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         return false;
     }
 
-    /**
-     * Writes an update for the client.
-     * Should only be called by the corresponding Capability instance
-     */
-    public void writeUpdateForClient(@NotNull CompoundTag nbt) {
-        nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
-        nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
-        nbt.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
-        nbt.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
+    @Override
+    public @NotNull CompoundTag serializeUpdateNBT() {
+        return serializeNBT();
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {
@@ -492,6 +487,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             nbt.putInt(entry.getKey().toString(), entry.getIntValue());
         }
         return nbt;
+    }
+
+    @Override
+    public String nbtKey() {
+        return NBT_KEY;
     }
 
     /**

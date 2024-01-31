@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.server;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -261,13 +261,11 @@ public class ServerPayloadHandler {
                 ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
                 if (result == ISkillHandler.Result.OK) {
                     skillHandler.enableSkill(skill);
-                    if (factionPlayer instanceof ISyncable.ISyncableAttachment && skillHandler instanceof SkillHandler) {
+                    if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
                         //does this cause problems with addons?
                         CompoundTag sync = new CompoundTag();
-                        CompoundTag tag = new CompoundTag();
-                        ((SkillHandler<?>) skillHandler).writeUpdateForClient(tag);
-                        sync.put("skill_handler", tag);
-                        HelperLib.sync((ISyncable.ISyncableAttachment) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                        sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT());
+                        HelperLib.sync((IAttachedSyncable) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                     }
 
                 } else {

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -36,8 +36,8 @@ public class OblivionItem extends Item {
             }
             boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
             player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
-            if (factionPlayer instanceof ISyncable.ISyncableAttachment) {
-                HelperLib.sync((ISyncable.ISyncableAttachment) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
+            if (factionPlayer instanceof IAttachedSyncable) {
+                HelperLib.sync((IAttachedSyncable) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
             }
         });
 

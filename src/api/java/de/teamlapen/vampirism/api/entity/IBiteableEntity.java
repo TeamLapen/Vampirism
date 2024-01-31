@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.extensions.IEntity;
 
 /**
  * Implement this in any EntityLivingBase if you want to something special regarding bites.
  * Vampirism will call this instead of the normal I
  */
-public interface IBiteableEntity {
+public interface IBiteableEntity extends IEntity {
 
 
     /**

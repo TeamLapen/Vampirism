@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import java.util.Optional;
  * Handles factions and levels for the player
  * Attached to all players as capability
  */
-public interface IFactionPlayerHandler extends ILordPlayer {
+public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
 
     /**
      * Players can only join a faction if they are in no other.
@@ -64,7 +65,9 @@ public interface IFactionPlayerHandler extends ILordPlayer {
 
     /**
      * @return The player represented by this handler
+     * @deprecated use {@link de.teamlapen.vampirism.api.extensions.IPlayer#asEntity()}
      */
+    @Deprecated
     @NotNull
     Player getPlayer();
 

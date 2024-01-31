@@ -7,8 +7,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
+import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +24,7 @@ import java.util.function.Predicate;
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending FactionPlayerBase instead of implementing this
  */
-public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity {
+public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity, IPlayer {
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -66,7 +68,13 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      */
     Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
+    @ApiStatus.Obsolete
     Player getRepresentingPlayer();
+
+    @Override
+    default Player asEntity() {
+        return getRepresentingPlayer();
+    }
 
     /**
      * null on client & @NotNull on server

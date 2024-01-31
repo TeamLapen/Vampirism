@@ -4,7 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.LIBREFERENCE;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -46,8 +47,8 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
     /**
      * Create a sync packet for the given capability instance.
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableAttachment cap) {
-        return create(cap, cap.writeFullUpdateToNBT());
+    public static @NotNull ClientboundUpdateEntityPacket create(@NotNull IAttachedSyncable cap) {
+        return create(cap, cap.serializeUpdateNBT());
     }
 
     /**
@@ -56,12 +57,12 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      * @param entity EntityLiving which implements ISyncable
      * @param caps   Have to belong to the given entity
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, ISyncable.ISyncableAttachment... caps) {
+    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, IAttachedSyncable... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
         ClientboundUpdateEntityPacket packet = create(caps);
-        packet.data = ((ISyncable) entity).writeFullUpdateToNBT();
+        packet.data = ((ISyncable) entity).serializeUpdateNBT();
         return packet;
     }
 
@@ -70,12 +71,12 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      *
      * @param caps Have to belong to the same entity
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.ISyncableAttachment @NotNull ... caps) {
+    public static @NotNull ClientboundUpdateEntityPacket create(IAttachedSyncable @NotNull ... caps) {
         CompoundTag capsTag = new CompoundTag();
-        for (ISyncable.ISyncableAttachment cap : caps) {
-            capsTag.put(cap.getAttachmentKey().toString(), cap.writeFullUpdateToNBT());
+        for (IAttachedSyncable cap : caps) {
+            capsTag.put(cap.getAttachedKey().toString(), cap.serializeUpdateNBT());
         }
-        return new ClientboundUpdateEntityPacket(caps[0].getTheEntityID(), null, capsTag, false);
+        return new ClientboundUpdateEntityPacket(caps[0].asEntity().getId(), null, capsTag, false);
     }
 
     /**
@@ -83,10 +84,10 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      *
      * @param data Should be loadable by the capability instance
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(ISyncable.@NotNull ISyncableAttachment cap, @NotNull CompoundTag data) {
+    public static @NotNull ClientboundUpdateEntityPacket create(@NotNull IAttachedSyncable cap, @NotNull CompoundTag data) {
         CompoundTag tag = new CompoundTag();
-        tag.put(cap.getAttachmentKey().toString(), data);
-        return new ClientboundUpdateEntityPacket(cap.getTheEntityID(), null, tag, false);
+        tag.put(cap.getAttachedKey().toString(), data);
+        return new ClientboundUpdateEntityPacket(cap.asEntity().getId(), null, tag, false);
     }
 
     /**
@@ -98,7 +99,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).writeFullUpdateToNBT(), null, false);
+        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).serializeUpdateNBT(), null, false);
     }
 
     /**
@@ -118,8 +119,8 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      */
     public static @Nullable
     ClientboundUpdateEntityPacket createJoinWorldPacket(Entity entity) {
-        final List<ISyncable.ISyncableAttachment> capsToSync = new ArrayList<>();
-        Collection<AttachmentType<ISyncable.ISyncableAttachment>> allCaps = null;
+        final List<IAttachedSyncable> capsToSync = new ArrayList<>();
+        Collection<AttachmentType<IAttachedSyncable>> allCaps = null;
         if (entity instanceof PathfinderMob) {
             allCaps = HelperRegistry.getSyncableEntityCaps().values();
         } else if (entity instanceof Player) {
@@ -127,15 +128,15 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
 
         }
         if (allCaps != null && !allCaps.isEmpty()) {
-            for (AttachmentType<ISyncable.ISyncableAttachment> cap : allCaps) {
+            for (AttachmentType<IAttachedSyncable> cap : allCaps) {
                 Optional.ofNullable(entity.getData(cap)).ifPresent(capsToSync::add);
             }
         }
         if (!capsToSync.isEmpty()) {
             if (entity instanceof ISyncable) {
-                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new ISyncable.ISyncableAttachment[0]));
+                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new IAttachedSyncable[0]));
             } else {
-                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableAttachment[0]));
+                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new IAttachedSyncable[0]));
             }
         } else if (entity instanceof ISyncable) {
             return ClientboundUpdateEntityPacket.create(entity);

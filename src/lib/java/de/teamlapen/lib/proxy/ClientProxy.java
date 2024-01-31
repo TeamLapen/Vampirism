@@ -2,7 +2,8 @@ package de.teamlapen.lib.proxy;
 
 
 import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.SoundReference;
@@ -29,15 +30,15 @@ public class ClientProxy extends CommonProxy {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {
-        AttachmentType<ISyncable.ISyncableAttachment> cap = HelperRegistry.getSyncableEntityCaps().get(key);
+        AttachmentType<IAttachedSyncable> cap = HelperRegistry.getSyncableEntityCaps().get(key);
         if (cap == null && e instanceof Player) {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
             LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
         } else {
-            Optional<ISyncable.ISyncableAttachment> opt = Optional.ofNullable(e.getData(cap)); //Lazy Optional is kinda strange
-            opt.ifPresent(inst -> inst.loadUpdateFromNBT(data));
+            Optional<IAttachedSyncable> opt = Optional.ofNullable(e.getData(cap)); //Lazy Optional is kinda strange
+            opt.ifPresent(inst -> inst.deserializeUpdateNBT(data));
             if (opt.isEmpty()) {
                 LOGGER.warn("Target entity {} does not have capability {}", e, cap);
             }
@@ -99,7 +100,7 @@ public class ClientProxy extends CommonProxy {
                     ISyncable syncable;
                     try {
                         syncable = (ISyncable) e;
-                        syncable.loadUpdateFromNBT(msg.getData());
+                        syncable.deserializeUpdateNBT(msg.getData());
 
                     } catch (ClassCastException ex) {
                         LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
