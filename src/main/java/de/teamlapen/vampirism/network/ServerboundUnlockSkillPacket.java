@@ -51,7 +51,7 @@ public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements 
                             //does this cause problems with addons?
                             CompoundTag sync = new CompoundTag();
                             ((SkillHandler<?>) skillHandler).writeUpdateForClient(sync);
-                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), true);
                         }
 
                     } else {
