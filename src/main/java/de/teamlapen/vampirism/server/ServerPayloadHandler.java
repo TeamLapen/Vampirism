@@ -269,7 +269,7 @@ public class ServerPayloadHandler {
                         //does this cause problems with addons?
                         CompoundTag sync = new CompoundTag();
                         sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT());
-                        HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), false);
+                        HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
                     }
 
                 } else {
