@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
@@ -17,6 +18,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -64,6 +66,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
+        this.setItemSlot(EquipmentSlot.HEAD, ModItems.HUNTER_HAT_HEAD_0.get().getDefaultInstance());
         return data;
     }
 
