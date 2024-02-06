@@ -97,6 +97,8 @@ public class TagProvider {
                     .add(ModBlocks.CANDELABRA.get())
                     .add(ModBlocks.CANDELABRA_WALL.get())
                     .add(ModBlocks.ALCHEMY_TABLE.get())
+                    .add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get())
+                    .add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get())
                     .addTag(ModTags.Blocks.CASTLE_BLOCK)
                     .addTag(ModTags.Blocks.CASTLE_SLAPS)
                     .addTag(ModTags.Blocks.CASTLE_STAIRS)
@@ -147,6 +149,8 @@ public class TagProvider {
                     .add(ModBlocks.CANDELABRA.get())
                     .add(ModBlocks.CANDELABRA_WALL.get())
                     .add(ModBlocks.ALCHEMY_TABLE.get())
+                    .add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get())
+                    .add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get())
             ;
             tag(BlockTags.NEEDS_DIAMOND_TOOL)
                     .add(ModBlocks.TOTEM_BASE.get())

@@ -7,6 +7,8 @@
     "vampirism:alchemical_cauldron",
     "vampirism:candelabra",
     "vampirism:candelabra_wall",
-    "vampirism:alchemy_table"
+    "vampirism:alchemy_table",
+    "vampirism:blood_infused_iron_block",
+    "vampirism:blood_infused_enhanced_iron_block"
   ]
 }
