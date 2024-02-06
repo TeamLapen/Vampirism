@@ -22,7 +22,6 @@ import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
@@ -30,7 +29,6 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.entity.action.ActionManagerEntity;
-import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
@@ -60,6 +58,7 @@ import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.world.BloodConversionRegistry;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
@@ -151,7 +150,6 @@ public class VampirismMod {
     }
 
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
-        event.addListener(new BloodValuesReloadListener());
         event.addListener(new SingleJigsawReloadListener());
         event.addListener(new SundamageReloadListener(((TagManagerAccessor) ((ReloadableServerResourcesAccessor) event.getServerResources()).getTagManager()).getRegistryAccess()));
         event.addListener(new SkillTreeReloadListener(event.getConditionContext(), event.getRegistryAccess()));
@@ -224,7 +222,6 @@ public class VampirismMod {
      */
     private void finishAPI() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
@@ -243,7 +240,7 @@ public class VampirismMod {
      */
     private void prepareAPI() {
 
-        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry(DefaultConvertingHandler::new) : new VampirismEntityRegistry(DefaultConvertingHandler::new), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API));
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry() : new VampirismEntityRegistry(), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API), new BloodConversionRegistry());
         if (FMLEnvironment.dist == Dist.CLIENT) {
             proxy.setupAPIClient();
         }

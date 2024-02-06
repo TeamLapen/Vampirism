@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.BiteableEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -73,10 +72,10 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
         // We need to call getEntry and not getOrCreateEntry because the values can not be calculated until after the entity constructor has finished
-        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
-        if (entry != null && entry.blood > 0) {
-            maxBlood = entry.blood;
-            canBecomeVampire = entry.convertible;
+        IEntityBloodEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
+        if (entry != null && entry.blood() > 0) {
+            maxBlood = entry.blood();
+            canBecomeVampire = entry.canBeConverted();
         } else {
             if (entry == null) {
                 markForBloodCalculation = true;
@@ -273,13 +272,9 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
             }
         }
         if (markForBloodCalculation) {
-            if (VampirismEntityRegistry.biteableEntryManager.init()) {
-                BiteableEntry entry = VampirismEntityRegistry.biteableEntryManager.calculate(entity);
-                if (entry != null) {
-                    setMaxBlood(entry.blood);
-                }
-                markForBloodCalculation = false;
-            }
+            IEntityBloodEntry entry = VampirismAPI.entityRegistry().getOrCreateEntry(entity);
+            setMaxBlood(entry.blood());
+            markForBloodCalculation = false;
         }
         if (this.remainingBarkTicks > 0) {
             --this.remainingBarkTicks;
@@ -329,11 +324,11 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
 
 
     public void sync() {
-        HelperLib.sync(this, getEntity(), false);
+        HelperLib.sync(this, getEntity(), true);
     }
 
     private void sync(@NotNull CompoundTag data) {
-        HelperLib.sync(this, data, getEntity(), false);
+        HelperLib.sync(this, data, getEntity(), true);
 
     }
 

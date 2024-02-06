@@ -26,28 +26,11 @@ public class VampirismClientEntityRegistry extends VampirismEntityRegistry {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public VampirismClientEntityRegistry(BiFunction<IConvertingHandler.IDefaultHelper, @Nullable ResourceLocation, IConvertingHandler<?>> creator) {
-        super(creator);
-    }
-
-    public void applyDataConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> entries) {
-        this.convertibleOverlay.clear();
-        this.convertibleOverlay.putAll(this.convertibleOverlayAPI);
-        this.convertibleOverlay.putAll(entries);
-        syncOverlays();
+    public VampirismClientEntityRegistry() {
     }
 
     public <I extends LivingEntity, U extends EntityModel<I>> void syncOverlays() {
-        this.convertibleIdOverlay.clear();
-        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        this.convertibleIdOverlay.putAll(this.convertibleOverlay.entrySet().stream().filter(s -> {
-            var texture = textureManager.getTexture(s.getValue());
-            // call twice in case of missing texture
-            texture = textureManager.getTexture(s.getValue());
-            return texture != MissingTextureAtlasSprite.getTexture();
-        }).collect(Collectors.toMap(x -> BuiltInRegistries.ENTITY_TYPE.getKey(x.getKey()).toString(), Map.Entry::getValue)));
-
-        for (EntityType<? extends PathfinderMob> type: getConvertibleOverlay().keySet()) {
+        for (EntityType<?> type: getConvertibleOverlay().keySet()) {
             LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);

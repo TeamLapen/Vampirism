@@ -1,102 +1,80 @@
 package de.teamlapen.vampirism.api.entity;
 
-import de.teamlapen.vampirism.api.ThreadSafeAPI;
+import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
-import java.util.function.Function;
 
 /**
- * Registration of blood values and converting handler for {@link PathfinderMob}'s
- * Adding entries is only possible during init.
+ * Registry for entity blood values and converting handler
+ * <br>
+ * <br>
+ * {@link de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry} can be optioned here as well as converting handler and overlay texture
+ * <br>
+ * <br>
+ * Values are loaded using the following <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
+ * - {@link VampirismRegistries#ENTITY_BLOOD_VALUES}<br>
  */
 public interface IVampirismEntityRegistry {
 
     /**
-     * Register a {@link EntityType} which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
-     * Requires a blood value to be registered for that creature
+     * Create a converted creature from the given entity.
      *
-     * @param overlay_loc Location of the overlay texture file
-     * @deprecated use data driven system
+     * @apiNote This will not replace the entity in the world. It will only create a new instance of the converted creature.
+     * @implSpec This will copy all relevant data from the original entity to the converted entity using {@link  de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler#createFrom(net.minecraft.world.entity.PathfinderMob)}
+     * @param entity the entity to convert
+     * @return the converted creature or null if the entity cannot be converted
      */
-    @Deprecated
-    @ThreadSafeAPI
-    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc);
-
-    /**
-     * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
-     * Requires a blood value to be registered for that creature
-     *
-     * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
-     * @param overlay_loc Location of the overlay texture file
-     *
-     * @deprecated use data driven system
-     */
-    @Deprecated
-    @ThreadSafeAPI
-    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
-
-    /**
-     * Register a {@link EntityType} which can be converted
-     * Requires a blood value to be registered for that creature
-     *
-     * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
-     * @param handler     Handles the conversion
-     * @deprecated use data driven system
-     */
-    @Deprecated
-    @ThreadSafeAPI
-    void addConvertible(EntityType<? extends PathfinderMob> type, ResourceLocation overlay_loc, IConvertingHandler<?> handler);
-
-    /**
-     * Registers a custom {@link IExtendedCreatureVampirism} for an entity class
-     *
-     * @param clazz       The entity class that should use the given constructor
-     * @param constructor A 'constructor' that can be used to create the {@link IExtendedCreatureVampirism} object from the entity's object
-     * @param <T>         The base class type
-     */
-    @ThreadSafeAPI
-    <T extends PathfinderMob> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
-
     @Nullable
     IConvertedCreature<?> convert(PathfinderMob entity);
 
     /**
-     * @return A map mapping the overlay resource location string to e convertible entity's class
+     * @return A mapping from source entity types (not the converted one), to {@link ResourceLocation} of the overlay texture
+     */
+    @Unmodifiable
+    @NotNull
+    Map<EntityType<?>, ResourceLocation> getConvertibleOverlay();
+
+    /**
+     * Get a specific overlay texture for an entity
+     *
+     * @param originalEntity the string values of the original entity's registry name
+     * @return the overlay texture or {@code null} if there is none
+     */
+    @Nullable
+    ResourceLocation getConvertibleOverlay(String originalEntity);
+
+    /**
+     * Get the {@link IEntityBloodEntry} for the given creature.
+     *
+     * @return the explicit entry or a calculated entry if one exists.
+     */
+    @Nullable
+    IEntityBloodEntry getEntry(PathfinderMob creature);
+
+    /**
+     * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry} for the given creature.<br>
+     * <br>
+     * Should no explicit entry exist or one already been calculated, a new entry will be created.<br>
+     * <br>
+     * New entries are only calculated for entities that fit the requirement to have blood or are not explicitly excluded.<br>
+     * Explicitly excluded entities are:<br>
+     * - vampires<br>
+     * - monster<br>
+     * - water creatures<br>
+     * - no animals<br>
+     * - entities added to the config values of Server#blacklistedBloodEntity<br>
+     * <br>
+     * @implNote The blood value of entities without an explicit entry is calculated based on the entity's size and the entity's type.
+     * @return a new or existing entry
      */
     @NotNull
-    Map<EntityType<? extends PathfinderMob>, ResourceLocation> getConvertibleOverlay();
-
-    /**
-     * directly return the overlay texture for the given entity
-     * @param sourceEntity the string values of the source entity's registry name
-     */
-    @Nullable
-    ResourceLocation getConvertibleOverlay(String sourceEntity);
-
-    /**
-     * @return The custom constructor registered for the given entity's class. Can be null if none is registered
-     */
-    @Nullable <T extends PathfinderMob> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
-
-    /**
-     * @return the existing bitable entry or null if there is none, or they are not yet initialized
-     */
-    @Nullable
-    BiteableEntry getEntry(PathfinderMob creature);
-
-    /**
-     * Checks if there exists a bitable entry for the given creature. {@see #getEntry(PathfinderMob)}.
-     * If not it tries to automatically calculate a blood value depending on size if applicable and not disabled
-     *
-     * @return a biteable entry or null if the entity is blacklisted, or they are not yet initialized
-     */
-    @Nullable
-    BiteableEntry getOrCreateEntry(PathfinderMob creature);
+    IEntityBloodEntry getOrCreateEntry(PathfinderMob creature);
 }

@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.datamaps.FluidBloodConversion;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -141,13 +139,14 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
         @Override
         public int fill(@NotNull FluidStack resource, @NotNull FluidAction action) {
-            if (!BloodConversionRegistry.hasConversion(resource.getFluid())) {
+            IBloodConversionRegistry registry = VampirismAPI.bloodConversionRegistry();
+            if (!registry.hasConversion(resource.getFluid())) {
                 return 0;
             }
-            FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);
+            FluidStack converted = registry.getBloodFromFluid(resource);
             int filled = super.fill(converted, action);
             if (action.execute()) SieveBlockEntity.this.cooldownPull = 10;
-            return (int) (filled / BloodConversionRegistry.getBloodValue(resource));
+            return (int) (filled / registry.getFluidConversion(resource.getFluid()).conversionRate());
         }
     }
 }

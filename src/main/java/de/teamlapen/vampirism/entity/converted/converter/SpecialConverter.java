@@ -6,11 +6,12 @@ import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.entity.converted.SpecialConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
@@ -22,36 +23,31 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
 
     public static final Codec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
-            ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+            ExtraCodecs.strictOptionalField(ConverterEntry.ConvertingAttributeModifier.CODEC, "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, SpecialConverter::new));
 
     private final EntityType<Z> convertedType;
-    private final ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier helper;
+    private final ConverterEntry.ConvertingAttributeModifier helper;
 
-    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "unchecked"})
-    private SpecialConverter(EntityType<?> convertedType, Optional<ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier> helper) {
+    @SuppressWarnings({"unchecked"})
+    private SpecialConverter(EntityType<?> convertedType, ConverterEntry.ConvertingAttributeModifier helper) {
         this.convertedType = (EntityType<Z>) convertedType;
-        this.helper = helper.orElse(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT);
+        this.helper = helper;
     }
 
-    public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType, ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier helper) {
+    public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType, ConverterEntry.ConvertingAttributeModifier helper) {
         this.convertedType = convertedType.get();
         this.helper = helper;
     }
 
     public SpecialConverter(Supplier<? extends EntityType<Z>> convertedType) {
         this.convertedType = convertedType.get();
-        this.helper = null;
-    }
-
-    @Override
-    public IConvertingHandler<?> createHandler() {
-        return new SpecialConvertingHandler<>(() -> this.convertedType, null, new VampirismEntityRegistry.DatapackHelper(this.helper));
+        this.helper = ConverterEntry.ConvertingAttributeModifier.DEFAULT;
     }
 
     @Override
     public IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture) {
-        return new SpecialConvertingHandler<>(() -> this.convertedType, texture, new VampirismEntityRegistry.DatapackHelper(this.helper));
+        return new SpecialConvertingHandler<>(() -> this.convertedType, texture, new VampirismEntityRegistry.DefaultHelper(this.helper));
     }
 
     @Override

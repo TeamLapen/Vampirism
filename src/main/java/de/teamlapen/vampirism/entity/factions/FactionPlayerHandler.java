@@ -132,7 +132,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @NotNull
     @Override
     public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
+        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player);
     }
 
     @Override

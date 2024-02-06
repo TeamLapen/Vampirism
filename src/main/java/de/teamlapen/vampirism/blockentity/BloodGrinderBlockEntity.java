@@ -2,8 +2,9 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.datamaps.ItemBlood;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.datamaps.ItemBlood;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -14,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySelector;
@@ -34,12 +34,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class BloodGrinderBlockEntity extends InventoryBlockEntity {
 
@@ -158,7 +156,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 final int slot = i;
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
-                ItemBlood data = getItemBlood(stack);
+                IItemBlood data = VampirismAPI.bloodConversionRegistry().getItemBlood(stack);
                 if (data.blood() > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.IMPURE_BLOOD.get(), data.blood());
                     FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
@@ -174,29 +172,4 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
             }
         }
     }
-
-    private static final ItemBlood EMPTY = new ItemBlood(0);
-    private static final Map<Item, ItemBlood> CALCULATED = new HashMap<>();
-
-    public static ItemBlood getItemBlood(ItemStack stack) {
-        ItemBlood data = stack.getItemHolder().getData(ModRegistries.ITEM_BLOOD);
-        if (data == null) {
-            data = CALCULATED.get(stack.getItem());
-        }
-        if (data == null) {
-            FoodProperties food = stack.getFoodProperties(null);
-            if (food != null && food.isMeat() && !RegUtil.id(stack.getItem()).getPath().contains("cooked")) {
-                data = new ItemBlood(food.getNutrition() * 10);
-            } else {
-                data = EMPTY;
-            }
-            CALCULATED.put(stack.getItem(), data);
-        }
-        return data;
-    }
-
-    public static boolean hasBlood(ItemStack stack) {
-        return getItemBlood(stack).blood() > 0;
-    }
-
 }

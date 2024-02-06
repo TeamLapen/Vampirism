@@ -17,36 +17,33 @@ public class ActionCooldownOverlay implements IGuiOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
-        if (VampirismAPI.factionRegistry().getFaction(this.mc.player) != null) {
-            VampirismAPI.getFactionPlayerHandler(this.mc.player).ifPresent(playerHandler -> {
-                playerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-                    IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
+    public void render(@NotNull ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
+        if (this.mc.player != null) {
+            VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+                IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
 
+                int y = this.mc.getWindow().getGuiScaledHeight() - 27;
+                int x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
 
-                    int y = this.mc.getWindow().getGuiScaledHeight() - 27;
-                    int x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
-
-                    if (!VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
-                        //noinspection rawtypes
-                        for (IAction action : factionPlayer.getActionHandler().getUnlockedActions()) {
-                            if (!(action.showHudCooldown(this.mc.player))) continue;
-                            // noinspection unchecked
-                            if (!actionHandler.isActionOnCooldown(action)) continue;
-                            ResourceLocation id = RegUtil.id(action);
-                            ResourceLocation loc = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
-                            //noinspection unchecked
-                            int perc = (int) ((1 + actionHandler.getPercentageForAction(action)) * 16);
-                            //render gray transparent background for remaining cooldown
-                            graphics.fillGradient(x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
-                            //render action icon transparent
-                            graphics.setColor(1, 1, 1, 0.5f);
-                            graphics.blit(loc, x, y, 0, 0, 0, 16, 16, 16, 16);
-                            graphics.setColor(1, 1, 1, 1);
-                            x -= 17;
-                        }
+                if (!VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+                    //noinspection rawtypes
+                    for (IAction action : factionPlayer.getActionHandler().getUnlockedActions()) {
+                        if (!(action.showHudCooldown(this.mc.player))) continue;
+                        // noinspection unchecked
+                        if (!actionHandler.isActionOnCooldown(action)) continue;
+                        ResourceLocation id = RegUtil.id(action);
+                        ResourceLocation loc = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+                        //noinspection unchecked
+                        int perc = (int) ((1 + actionHandler.getPercentageForAction(action)) * 16);
+                        //render gray transparent background for remaining cooldown
+                        graphics.fillGradient(x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
+                        //render action icon transparent
+                        graphics.setColor(1, 1, 1, 0.5f);
+                        graphics.blit(loc, x, y, 0, 0, 0, 16, 16, 16, 16);
+                        graphics.setColor(1, 1, 1, 1);
+                        x -= 17;
                     }
-                });
+                }
             });
         }
     }

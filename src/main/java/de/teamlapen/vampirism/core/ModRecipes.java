@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.datamaps.EntityExistsCondition;
 import de.teamlapen.vampirism.recipes.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -56,6 +57,7 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new SimpleCraftingRecipeSerializer<>(CleanOilRecipe::new));
 
     public static final DeferredHolder<Codec<? extends ICondition>, Codec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
+    public static final DeferredHolder<Codec<? extends ICondition>, Codec<EntityExistsCondition>> ENTITY_EXISTS_CONDITION = CONDITION_CODECS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
     private static final Map<TagKey<Item>, Integer> liquidColorsTags = Maps.newHashMap();

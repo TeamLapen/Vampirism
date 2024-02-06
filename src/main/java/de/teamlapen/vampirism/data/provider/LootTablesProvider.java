@@ -110,6 +110,7 @@ public class LootTablesProvider {
             this.add(ModEntities.CONVERTED_SHEEP.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_COW.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_HORSE.get(), LootTable.lootTable());
+            this.add(ModEntities.CONVERTED_CAMEL.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_DONKEY.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_MULE.get(), LootTable.lootTable());
             this.add(ModEntities.CONVERTED_FOX.get(), LootTable.lootTable());

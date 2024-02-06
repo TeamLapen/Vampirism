@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
-import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.LevelFog;

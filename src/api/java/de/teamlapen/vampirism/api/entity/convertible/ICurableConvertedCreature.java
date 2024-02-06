@@ -74,7 +74,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         if (!entity.isSilent()) {
             world.levelEvent(null, 1027, entity.blockPosition(), 0);
         }
-        VampirismAPI.getExtendedCreatureVampirism(newEntity).ifPresent(creature -> creature.setBlood(1));
+        VampirismAPI.extendedCreatureVampirism(newEntity).setBlood(1);
         net.neoforged.neoforge.event.EventHooks.onLivingConvert(entity, newEntity);
         return newEntity;
     }

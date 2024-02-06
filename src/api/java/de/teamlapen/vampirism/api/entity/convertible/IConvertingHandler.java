@@ -22,6 +22,7 @@ public interface IConvertingHandler<T extends PathfinderMob> {
     IConvertedCreature<T> createFrom(T entity);
 
     default void updateEntityAttributes(PathfinderMob creature) {
+
     }
 
     /**
@@ -29,40 +30,6 @@ public interface IConvertingHandler<T extends PathfinderMob> {
      */
     interface IDefaultHelper {
 
-        /**
-         * use {@link #getAttributeModifier()} instead
-         */
-        @Deprecated(forRemoval = true)
-        default double getConvertedDMG(EntityType<? extends PathfinderMob> entity) {
-            return 0;
-        }
-
-        /**
-         * use {@link #getAttributeModifier()} instead
-         */
-        @Deprecated(forRemoval = true)
-        default double getConvertedKnockbackResistance(EntityType<? extends PathfinderMob> entity) {
-            return 0;
-        }
-
-        /**
-         * use {@link #getAttributeModifier()} instead
-         */
-        @Deprecated(forRemoval = true)
-        default double getConvertedMaxHealth(EntityType<? extends PathfinderMob> entity) {
-            return 0;
-        }
-
-        /**
-         * use {@link #getAttributeModifier()} instead
-         */
-        @Deprecated(forRemoval = true)
-        default double getConvertedSpeed(EntityType<? extends PathfinderMob> entity) {
-            return 0;
-        }
-
-        default Map<Attribute, com.mojang.datafixers.util.Pair<FloatProvider,Double>> getAttributeModifier() {
-            return Collections.emptyMap();
-        }
+        Map<Attribute, com.mojang.datafixers.util.Pair<FloatProvider,Double>> getAttributeModifier();
     }
 }

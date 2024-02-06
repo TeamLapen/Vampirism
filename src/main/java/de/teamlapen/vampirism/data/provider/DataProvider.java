@@ -39,7 +39,6 @@ public class DataProvider {
         generator.addProvider(event.includeClient(), new BlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelGenerator(packOutput, existingFileHelper));
         generator.addProvider(event.includeServer(), new SingleJigsawPiecesProvider(packOutput, REFERENCE.MODID));
-        generator.addProvider(event.includeServer(), new ConvertiblesProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SundamageProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SkillTreeProvider(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new DataMapsProvider(packOutput, lookupProviderFuture));

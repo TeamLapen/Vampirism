@@ -3,44 +3,25 @@ package de.teamlapen.vampirism.client;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
-import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class ClientPayloadHandler {
-
-    public static void handleBloodValues(ClientboundBloodValuePacket msg, ConfigurationPayloadContext context) {
-        context.workHandler().execute(() ->
-        {
-            ((VampirismClientEntityRegistry) VampirismAPI.entityRegistry()).applyDataConvertibleOverlays((Map<EntityType<? extends PathfinderMob>, ResourceLocation>) (Object) msg.convertibleOverlay());
-            Map<ResourceLocation, Float> entities = msg.getValues()[0];
-            ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entities);
-            BloodConversionRegistry.applyNewEntitiesResources(entities);
-        });
-        context.replyHandler().send(new ServerboundBloodValuesCompletedPacket());
-    }
 
     public static void handleBossEventSound(ClientboundBossEventSoundPacket msg, PlayPayloadContext context) {
         context.workHandler().execute(() -> VampirismMod.proxy.addBossEventSound(msg.bossEventUuid(), msg.sound()));

@@ -1,7 +1,0 @@
-{
-  "handler": {
-    "type": "vampirism:special",
-    "converted_type": "vampirism:converted_cow"
-  },
-  "overlay": "vampirism:textures/entity/vanilla/cow_overlay.png"
-}

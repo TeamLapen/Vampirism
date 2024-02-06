@@ -25,12 +25,14 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -59,6 +61,7 @@ import java.util.Optional;
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final String VAMPIRISM_2D_PACK_ID = "vampirism2dtextures";
+    private static final String BUILTIN_COMPAT = "modcompat";
 
 
     static void onModelBakeRequest(ModelEvent.RegisterAdditional event){
@@ -228,6 +231,19 @@ public class ClientEventHandler {
                     }
                 }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
             });
+        }
+        if (event.getPackType() == PackType.SERVER_DATA) {
+            event.addRepositorySource(s -> s.accept(Pack.create(BUILTIN_COMPAT, Component.literal("Vampirism builtin mod compatibility data"), true,  new Pack.ResourcesSupplier() {
+                @Override
+                public @NotNull PackResources openPrimary(@NotNull String pId) {
+                    return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + BUILTIN_COMPAT), true);
+                }
+
+                @Override
+                public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
+                    return openPrimary(pId);
+                }
+            }, new Pack.Info(Component.literal("Vampirism builtin mod compatibility data"), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of(), true), Pack.Position.TOP, true, PackSource.DEFAULT)));
         }
     }
 

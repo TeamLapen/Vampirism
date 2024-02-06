@@ -116,7 +116,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismAPI.getGarlicHandler((Level) world).map(vw -> vw.getStrengthAtChunk(new ChunkPos(pos))).orElse(EnumStrength.NONE) : EnumStrength.NONE;
+        return world instanceof Level ? VampirismAPI.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)): EnumStrength.NONE;
     }
 
     @NotNull

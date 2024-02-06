@@ -9,17 +9,12 @@ import de.teamlapen.vampirism.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.network.task.BloodValuesTask;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.effect.MobEffect;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
 import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -107,11 +102,6 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
         ModRegistries.registerDatapackRegistries(event);
-    }
-
-    @SubscribeEvent
-    public void onGameConfiguration(OnGameConfigurationEvent event) {
-        event.register(new BloodValuesTask());
     }
 
     @SubscribeEvent

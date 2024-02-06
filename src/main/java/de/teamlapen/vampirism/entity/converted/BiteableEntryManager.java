@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.api.entity.BiteableEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.datamaps.ConvertibleEntityBloodEntry;
+import de.teamlapen.vampirism.datamaps.EmptyEntityBloodEntry;
+import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -18,9 +20,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -38,22 +40,7 @@ public class BiteableEntryManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @NotNull
-    private final Map<ResourceLocation, BiteableEntry> biteableEntries = Maps.newHashMap();
-    @NotNull
-    private final Map<ResourceLocation, BiteableEntry> calculated = Maps.newHashMap();
-    @NotNull
-    private final Set<ResourceLocation> blacklist = Sets.newHashSet();
-
-    private boolean initialized = false;
-
-    /**
-     * see {@link #addCalculated(ResourceLocation, int)}
-     */
-    public void addCalculated(@NotNull Map<ResourceLocation, Integer> map) {
-        for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
-            addCalculated(e.getKey(), e.getValue());
-        }
-    }
+    private final Map<EntityType<?>, IEntityBloodEntry> calculatedEntries = new HashMap<>();
 
     /**
      * Calculate the blood value for the given creature
@@ -61,17 +48,13 @@ public class BiteableEntryManager {
      *
      * @return The created entry or null
      */
-    @Nullable
-    public BiteableEntry calculate(@NotNull PathfinderMob creature) {
-        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return null;
+    @NotNull
+    public IEntityBloodEntry calculate(@NotNull PathfinderMob creature) {
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return EmptyEntityBloodEntry.INSTANCE;
         EntityType<?> type = creature.getType();
-        @Nullable
         ResourceLocation id = RegUtil.id(type);
-        if (id == null) return null;
-        if (blacklist.contains(id)) return null;
         if (isEntityBlacklisted(creature)) {
-            blacklist.add(id);
-            return null;
+            return EmptyEntityBloodEntry.INSTANCE;
         }
         AABB bb = creature.getBoundingBox();
         double v = bb.maxX - bb.minX;
@@ -91,10 +74,9 @@ public class BiteableEntryManager {
         }
         LOGGER.debug("Calculated size {} and blood value {} for entity {}", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
-            blacklist.add(id);
-            return null;
+            return EmptyEntityBloodEntry.INSTANCE;
         } else {
-            return addCalculated(id, blood);
+            return new EntityBloodEntry(blood);
         }
     }
 
@@ -105,9 +87,11 @@ public class BiteableEntryManager {
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @Nullable
-    public BiteableEntry get(@NotNull PathfinderMob creature) {
-        if (!initialized) return null;
-        return get(EntityType.getKey(creature.getType()));
+    public IEntityBloodEntry get(@NotNull PathfinderMob creature) {
+        if (calculatedEntries.containsKey(creature.getType())) {
+            return calculatedEntries.get(creature.getType());
+        }
+        return creature.getType().builtInRegistryHolder().getData(ModRegistries.ENTITY_BLOOD);
     }
 
     /**
@@ -116,50 +100,14 @@ public class BiteableEntryManager {
      * @param creature for which a {@link BiteableEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
-    @Nullable
-    public BiteableEntry getOrCalculate(@NotNull PathfinderMob creature) {
-        if (!initialized) return null;
-        BiteableEntry entry = get(EntityType.getKey(creature.getType()));
+    @NotNull
+    public IEntityBloodEntry getOrCalculate(@NotNull PathfinderMob creature) {
+        IEntityBloodEntry entry = get(creature);
         if (entry == null) {
             entry = calculate(creature);
+            calculatedEntries.put(creature.getType(), entry);
         }
         return entry;
-    }
-
-    private BiteableEntry get(ResourceLocation id) {
-        if (isConfigBlackListed(id)) return null;
-        if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
-        return calculated.get(id);
-    }
-
-    /**
-     * Get all calculated values
-     *
-     * @return map of entities, which are not present in data folder, to calculated blood values
-     */
-    public @NotNull Map<ResourceLocation, Integer> getValuesToSave() {
-        Map<ResourceLocation, Integer> map = Maps.newHashMap();
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : calculated.entrySet()) {
-            if (!biteableEntries.containsKey(entry.getKey())) {
-                map.put(entry.getKey(), entry.getValue().blood);
-            }
-        }
-        return map;
-    }
-
-    public boolean init() {
-        return initialized;
-    }
-
-    /**
-     * Adds a calculated value.
-     *
-     * @return The created entry
-     */
-    private BiteableEntry addCalculated(ResourceLocation id, int blood) {
-        BiteableEntry existing = calculated.containsKey(id) ? calculated.get(id).modifyBloodValue(blood) : new BiteableEntry(blood);
-        calculated.put(id, existing);
-        return existing;
     }
 
     /**
@@ -188,13 +136,5 @@ public class BiteableEntryManager {
         }
         if (type.is(ModTags.Entities.VAMPIRE)) return true;
         return isConfigBlackListed(RegUtil.id(type));
-    }
-
-    void setNewBiteables(@NotNull Map<ResourceLocation, BiteableEntry> biteableEntries, @NotNull Set<ResourceLocation> blacklist) {
-        this.biteableEntries.clear();
-        this.blacklist.clear();
-        this.biteableEntries.putAll(biteableEntries);
-        this.blacklist.addAll(blacklist);
-        initialized = true;
     }
 }

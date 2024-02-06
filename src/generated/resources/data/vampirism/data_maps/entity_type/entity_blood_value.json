@@ -1,0 +1,173 @@
+{
+  "values": {
+    "minecraft:allay": {},
+    "minecraft:axolotl": {},
+    "minecraft:bee": {},
+    "minecraft:camel": {
+      "blood": 15,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_camel"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/camel_overlay.png"
+      }
+    },
+    "minecraft:cat": {
+      "blood": 3,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/cat_overlay.png"
+      }
+    },
+    "minecraft:chicken": {},
+    "minecraft:cow": {
+      "blood": 10,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_cow"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/cow_overlay.png"
+      }
+    },
+    "minecraft:donkey": {
+      "blood": 13,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_donkey"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+      }
+    },
+    "minecraft:fox": {
+      "blood": 4,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_fox"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/fox_overlay.png"
+      }
+    },
+    "minecraft:frog": {},
+    "minecraft:goat": {
+      "blood": 7,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_goat"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/goat_overlay.png"
+      }
+    },
+    "minecraft:horse": {
+      "blood": 13,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_horse"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+      }
+    },
+    "minecraft:llama": {
+      "blood": 10,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/llama_overlay.png"
+      }
+    },
+    "minecraft:mooshroom": {
+      "blood": 10
+    },
+    "minecraft:mule": {
+      "blood": 13,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_mule"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+      }
+    },
+    "minecraft:ocelot": {
+      "blood": 4
+    },
+    "minecraft:panda": {
+      "blood": 13,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/panda_overlay.png"
+      }
+    },
+    "minecraft:parrot": {},
+    "minecraft:pig": {
+      "blood": 5,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/pig_overlay.png"
+      }
+    },
+    "minecraft:polar_bear": {
+      "blood": 10,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/polarbear_overlay.png"
+      }
+    },
+    "minecraft:rabbit": {
+      "blood": 2,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:default"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/rabbit_overlay.png"
+      }
+    },
+    "minecraft:sheep": {
+      "blood": 5,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:converted_sheep"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/sheep_overlay.png"
+      }
+    },
+    "minecraft:skeleton_horse": {},
+    "minecraft:sniffer": {
+      "blood": 20
+    },
+    "minecraft:trader_llama": {
+      "blood": 10
+    },
+    "minecraft:turtle": {
+      "blood": 5
+    },
+    "minecraft:villager": {
+      "blood": 15,
+      "convertible": {
+        "handler": {
+          "type": "vampirism:special",
+          "converted_type": "vampirism:villager_converted"
+        },
+        "overlay": "vampirism:textures/entity/vanilla/villager_overlay.png"
+      }
+    },
+    "minecraft:wolf": {
+      "blood": 5
+    }
+  }
+}

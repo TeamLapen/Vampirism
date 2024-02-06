@@ -27,18 +27,15 @@ import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.items.OblivionItem;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
 import de.teamlapen.vampirism.network.*;
-import de.teamlapen.vampirism.network.task.BloodValuesTask;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.apache.logging.log4j.LogManager;
@@ -296,7 +293,4 @@ public class ServerPayloadHandler {
         context.replyHandler().send(ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations()));
     }
 
-    public void handleBloodValuesCompletedPacket(CustomPacketPayload packetPayload, ConfigurationPayloadContext configurationPayloadContext) {
-        configurationPayloadContext.taskCompletedHandler().onTaskCompleted(BloodValuesTask.TYPE);
-    }
 }

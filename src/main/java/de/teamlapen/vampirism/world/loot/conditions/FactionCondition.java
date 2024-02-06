@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
@@ -77,12 +78,13 @@ public class FactionCondition implements LootItemCondition {
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (entity instanceof Player player) {
-            return VampirismAPI.getFactionPlayerHandler(player).map(handler -> switch (this.type) {
+            IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(player);
+            return  switch (this.type) {
                 case NO_FACTION -> handler.getCurrentFactionPlayer().isEmpty();
                 case ANY_FACTION -> !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
                 case FACTION ->
                         handler.isInFaction(this.faction.orElseThrow()) && !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
-            }).orElse(false);
+            };
         }
         return false;
     }

@@ -1,10 +1,7 @@
 {
   "values": {
     "vampirism:impure_blood": {
-      "replace": true,
-      "value": {
-        "conversionRate": 0.75
-      }
+      "conversionRate": 0.75
     }
   }
 }

@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
+import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.world.IFogHandler;
@@ -42,6 +43,7 @@ public class VampirismAPI {
     private static IEntityActionManager entityActionManager;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
     private static ISettingsProvider settings;
+    private static IBloodConversionRegistry bloodConversionRegistry;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -59,23 +61,14 @@ public class VampirismAPI {
         return vampireVisionRegistry;
     }
 
-    /**
-     * @return The faction registry
-     */
     public static IFactionRegistry factionRegistry() {
         return factionRegistry;
     }
 
-    /**
-     * @return The sun-damage registry
-     */
     public static ISundamageRegistry sundamageRegistry() {
         return sundamageRegistry;
     }
 
-    /**
-     * @return The vampirism entity registry
-     */
     public static IVampirismEntityRegistry entityRegistry() {
         return entityRegistry;
     }
@@ -89,6 +82,10 @@ public class VampirismAPI {
         return settings;
     }
 
+    public static IBloodConversionRegistry bloodConversionRegistry() {
+        return bloodConversionRegistry;
+    }
+
     /**
      * Set up the API registries
      * FOR INTERNAL USAGE ONLY
@@ -97,7 +94,7 @@ public class VampirismAPI {
      */
     @ApiStatus.Internal
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn, IBloodConversionRegistry bloodConversionRegistryIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
@@ -108,11 +105,11 @@ public class VampirismAPI {
         entityActionManager = entityActionManagerIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
         settings = settingsIn;
+        bloodConversionRegistry = bloodConversionRegistryIn;
         INIT = true;
     }
 
     /**
-     * FOR FUTURE INTERNAL USE ONLY
      * Called once Vampirism has finished preparing the API, and it is ready to use.
      */
     @SuppressWarnings("EmptyMethod")
@@ -122,40 +119,110 @@ public class VampirismAPI {
     }
 
     /**
-     * @return The respective {@link IFactionPlayerHandler}
+     * Get the {@link IFactionPlayerHandler} attachment for the given player
+     *
+     * @param player the player for which the attachment should be returned
+     * @return the faction player handler for the given player
      */
-    public static @NotNull Optional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
-        return Optional.ofNullable(player.getData(FACTION_PLAYER_HANDLER));
+    public static @NotNull IFactionPlayerHandler factionPlayerHandler(@NotNull Player player) {
+        return player.getData(FACTION_PLAYER_HANDLER);
     }
 
     /**
-     * @return The respective {@link IVampirePlayer}
+     * Get the {@link IVampirePlayer} attachment for the given player
+     *
+     * @param player the player for which the attachment should be returned
+     * @return the vampire player for the given player
      */
-    public static @NotNull Optional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
-        return Optional.ofNullable(player.getData(VAMPIRE_PLAYER));
+    public static @NotNull IVampirePlayer vampirePlayer(@NotNull Player player) {
+        return player.getData(VAMPIRE_PLAYER);
     }
 
     /**
-     * @return The respective {@link de.teamlapen.vampirism.api.entity.hunter.IHunter}
+     * Get the {@link IHunterPlayer} attachment for the given player
+     *
+     * @param player the player for which the attachment should be returned
+     * @return the hunter player for the given player
      */
-    public static @NotNull Optional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
-        return Optional.ofNullable(player.getData(HUNTER_PLAYER));
+    public static @NotNull IHunterPlayer hunterPlayer(@NotNull Player player) {
+        return player.getData(HUNTER_PLAYER);
     }
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
+     *
+     * @param creature the creature for which the attachment should be returned
+     * @return the extended creature vampirism for the given creature
      */
+    public static @NotNull IExtendedCreatureVampirism extendedCreatureVampirism(@NotNull PathfinderMob creature) {
+        return creature.getData(VampirismAttachments.EXTENDED_CREATURE);
+    }
+
+    /**
+     * Get the {@link IGarlicChunkHandler} attachment for the given world
+     *
+     * @param w the world for which the attachment should be returned
+     * @return the garlic chunk handler for the given world
+     */
+    public static @NotNull IGarlicChunkHandler garlicHandler(@NotNull Level w) {
+        return w.getData(VampirismAttachments.GARLIC_HANDLER);
+    }
+
+    /**
+     * Get the {@link IFogHandler} attachment for the given world
+     *
+     * @param w the world for which the attachment should be returned
+     * @return the fog handler for the given world
+     */
+    public static @NotNull IFogHandler fogHandler(@NotNull Level w) {
+        return w.getData(VampirismAttachments.FOG_HANDLER);
+    }
+
+    /**
+     * @deprecated Use {@link #factionPlayerHandler(Player)}
+     */
+    @Deprecated
+    public static @NotNull Optional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
+        return Optional.of(player.getData(FACTION_PLAYER_HANDLER));
+    }
+
+    /**
+     * @deprecated Use {@link #vampirePlayer(Player)}
+     */
+    @Deprecated
+    public static @NotNull Optional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
+        return Optional.of(player.getData(VAMPIRE_PLAYER));
+    }
+
+    /**
+     * @deprecated Use {@link #hunterPlayer(Player)}
+     */
+    @Deprecated
+    public static @NotNull Optional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
+        return Optional.of(player.getData(HUNTER_PLAYER));
+    }
+
+    /**
+     * @deprecated Use {@link #extendedCreatureVampirism(PathfinderMob)}
+     */
+    @Deprecated
     public static @NotNull Optional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
-        return Optional.ofNullable(creature.getData(VampirismAttachments.EXTENDED_CREATURE));
+        return Optional.of(creature.getData(VampirismAttachments.EXTENDED_CREATURE));
     }
 
+    /**
+     * @deprecated Use {@link #garlicHandler(Level)}
+     */
+    @Deprecated
     public static @NotNull Optional<IGarlicChunkHandler> getGarlicHandler(@NotNull Level w) {
-        return Optional.ofNullable(w.getData(VampirismAttachments.GARLIC_HANDLER));
+        return Optional.of(w.getData(VampirismAttachments.GARLIC_HANDLER));
     }
 
+    /**
+     * @deprecated Use {@link #fogHandler(Level)}
+     */
+    @Deprecated
     public static @NotNull Optional<IFogHandler> getFogHandler(@NotNull Level w) {
-        return Optional.ofNullable(w.getData(VampirismAttachments.FOG_HANDLER));
+        return Optional.of(w.getData(VampirismAttachments.FOG_HANDLER));
     }
-
-
 }

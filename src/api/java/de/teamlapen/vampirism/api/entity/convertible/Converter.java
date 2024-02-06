@@ -12,12 +12,7 @@ public interface Converter {
 
     Codec<Converter> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.ENTITY_CONVERTER.get().byNameCodec()).dispatch(Converter::codec, Function.identity());
 
-    @Deprecated
-    IConvertingHandler<?> createHandler();
-
-    default IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture){
-        return createHandler();
-    }
+    IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture);
 
     Codec<? extends Converter> codec();
 }

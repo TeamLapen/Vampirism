@@ -49,7 +49,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @Override
     public int getLevel() {
-        return VampirismAPI.getFactionPlayerHandler(player).map(handler -> handler.getCurrentLevel(getFaction())).orElse(0);
+        return VampirismAPI.factionPlayerHandler(player).getCurrentLevel(getFaction());
     }
 
     /**

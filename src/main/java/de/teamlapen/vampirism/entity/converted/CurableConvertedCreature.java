@@ -205,13 +205,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
         if (compound.contains("source_entity", Tag.TAG_STRING)) {
             getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, compound.getString("source_entity")));
-        } else {
-            var convertibles = ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getConvertibles();
-            for (var entry : convertibles.entrySet()) {
-                if (entry.getValue() instanceof SpecialConvertingHandler<?,?> special && Objects.equals(special.getConvertedType(), this.getRepresentingEntity().getType())) {
-                    getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entry.getKey()).toString()));
-                }
-            }
         }
     }
 

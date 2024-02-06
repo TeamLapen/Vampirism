@@ -1,7 +1,0 @@
-{
-  "handler": {
-    "type": "vampirism:special",
-    "converted_type": "vampirism:converted_fox"
-  },
-  "overlay": "vampirism:textures/entity/vanilla/fox_overlay.png"
-}

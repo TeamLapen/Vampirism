@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +37,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
      * @param helper If null a default one will be used
      */
     public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable ResourceLocation overlayTexture) {
-        this.helper = Objects.requireNonNullElse(helper, new VampirismEntityRegistry.DatapackHelper(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT));
+        this.helper = Objects.requireNonNullElse(helper, new VampirismEntityRegistry.DefaultHelper(ConverterEntry.ConvertingAttributeModifier.DEFAULT));
         this.overlayTexture = overlayTexture;
     }
 
@@ -71,22 +70,15 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
         converted.yHeadRot = entity.yHeadRot;
     }
 
-    @SuppressWarnings({"unchecked", "DataFlowIssue", "removal"})
+    @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
     public void updateEntityAttributes(PathfinderMob creature) {
         try {
-            creature.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends PathfinderMob>) creature.getType()));
-            creature.getAttribute(Attributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends PathfinderMob>) creature.getType()));
-            creature.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends PathfinderMob>) creature.getType()));
-            creature.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends PathfinderMob>) creature.getType()));
-
             helper.getAttributeModifier().forEach(((attribute, valueProvider) -> {
                 AttributeSupplier supplier = DefaultAttributes.getSupplier((EntityType<? extends PathfinderMob>) creature.getType());
-                double baseValue = valueProvider.getSecond();
                 if (supplier.hasAttribute(attribute)) {
-                    baseValue = supplier.getBaseValue(attribute);
+                    creature.getAttribute(attribute).setBaseValue(supplier.getBaseValue(attribute) * valueProvider.getFirst().sample(creature.getRandom()));
                 }
-                creature.getAttribute(attribute).setBaseValue(baseValue * valueProvider.getFirst().sample(creature.getRandom()));
             }));
         } catch (NullPointerException ex) {
             LOGGER.error("Failed to update entity attributes for {} {}", creature, ex);

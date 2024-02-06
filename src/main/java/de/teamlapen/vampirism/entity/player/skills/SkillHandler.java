@@ -79,7 +79,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> node = unlockedTrees.stream().flatMap(x -> Optional.ofNullable(treeData.getNodeForSkill(unlockedTrees, skill)).stream()).findFirst().orElse(null);
+        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> node = unlockedTrees.stream().flatMap(x -> treeData.getNodeForSkill(unlockedTrees, skill).stream()).findFirst();
         if (node.isPresent()) {
             if (isSkillNodeLocked(node.get().node().value())) {
                 return Result.LOCKED_BY_OTHER_NODE;
@@ -199,7 +199,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
-        this.enabledSkills.stream().filter(x -> x.allowedSkillTrees().map(l -> tree.is(l), l -> tree.is(l))).forEach(this::disableSkill);
+        for (ISkill<T> enabledSkill : this.enabledSkills) {
+            if (enabledSkill.allowedSkillTrees().map(tree::is, tree::is)) {
+                this.disableSkill(enabledSkill);
+            }
+        }
         this.unlockedTrees.remove(tree);
         this.dirty = true;
     }

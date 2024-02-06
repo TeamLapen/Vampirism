@@ -5,10 +5,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
+import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -16,28 +17,27 @@ import java.util.Optional;
 public class DefaultConverter implements Converter {
 
     public static final Codec<DefaultConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper").forGetter(i -> Optional.ofNullable(i.helper))
+            ExtraCodecs.strictOptionalField(ConverterEntry.ConvertingAttributeModifier.CODEC, "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, DefaultConverter::new));
 
-    protected final ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier helper;
+    protected final ConverterEntry.ConvertingAttributeModifier helper;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public DefaultConverter(Optional<ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier> helper) {
-        this.helper = helper.orElse(ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT);
+    public DefaultConverter(Optional<ConverterEntry.ConvertingAttributeModifier> helper) {
+        this.helper = helper.orElse(ConverterEntry.ConvertingAttributeModifier.DEFAULT);
     }
 
     public DefaultConverter() {
-        this.helper = ConvertiblesReloadListener.EntityEntry.ConvertingAttributeModifier.DEFAULT;
+        this.helper = ConverterEntry.ConvertingAttributeModifier.DEFAULT;
     }
 
-    @Override
-    public IConvertingHandler<?> createHandler() {
-        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DatapackHelper(this.helper), null);
+    private DefaultConverter(ConverterEntry.ConvertingAttributeModifier entry) {
+        this.helper = entry;
     }
 
     @Override
     public IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture) {
-        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DatapackHelper(this.helper), texture);
+        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DefaultHelper(this.helper), texture);
     }
 
     @Override

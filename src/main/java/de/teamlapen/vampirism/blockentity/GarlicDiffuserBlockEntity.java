@@ -214,7 +214,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
                 chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
             }
         }
-        id = VampirismAPI.getGarlicHandler(getLevel()).map(vw -> vw.registerGarlicBlock(strength, chunks)).orElse(0);
+        id = VampirismAPI.garlicHandler(getLevel()).registerGarlicBlock(strength, chunks);
         registered = i != 0;
 
     }
@@ -237,7 +237,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     private void unregister() {
         if (registered && hasLevel()) {
-            VampirismAPI.getGarlicHandler(getLevel()).ifPresent(vw -> vw.removeGarlicBlock(id));
+            VampirismAPI.garlicHandler(getLevel()).removeGarlicBlock(id);
             registered = false;
         }
     }

@@ -1,0 +1,121 @@
+{
+  "values": {
+    "grimoireofgaia:weresheep": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "grimoireofgaia:weresheep"
+        }
+      ]
+    },
+    "grimoireofgaia:creeper_girl": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "grimoireofgaia:creeper_girl"
+        }
+      ]
+    },
+    "grimoireofgaia:ender_girl": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "grimoireofgaia:ender_girl"
+        }
+      ]
+    },
+    "grimoireofgaia:holstaurus": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "grimoireofgaia:holstaurus"
+        }
+      ]
+    },
+    "grimoireofgaia:trader": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "grimoireofgaia:trader"
+        }
+      ]
+    },
+    "iceandfire:snowvillager": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "iceandfire:snowvillager"
+        }
+      ]
+    },
+    "iceandfire:dragon_skull": {
+      "blood": 0,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "iceandfire:dragon_skull"
+        }
+      ]
+    },
+    "iceandfire:mob_skull": {
+      "blood": 0,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "iceandfire:mob_skull"
+        }
+      ]
+    },
+    "minecolonies:citizen": {
+      "blood": 15,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "minecolonies:citizen"
+        }
+      ]
+    },
+    "twilightforest:bighorn_sheep": {
+      "blood": 5,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "twilightforest:bighorn_sheep"
+        }
+      ]
+    },
+    "twilightforest:wild_boar": {
+      "blood": 5,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "twilightforest:wild_boar"
+        }
+      ]
+    },
+    "twilightforest:deer": {
+      "blood": 5,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "twilightforest:deer"
+        }
+      ]
+    },
+    "twilightforest:bunny": {
+      "blood": 5,
+      "neoforge:conditions": [
+        {
+          "type": "vampirism:entity_exists",
+          "entity_type": "twilightforest:bunny"
+        }
+      ]
+    }
+  }
+}

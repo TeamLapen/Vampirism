@@ -21,7 +21,6 @@ public class ModPacketDispatcher {
     @SuppressWarnings("Convert2MethodRef")
     public static void registerPackets(IPayloadRegistrar registrar) {
         registrar.play(ClientboundOpenVampireBookPacket.ID, jsonReader(ClientboundOpenVampireBookPacket.CODEC), handler -> handler.client((p, l) -> ClientPayloadHandler.handleVampireBookPacket(p, l)));
-        registrar.configuration(ClientboundBloodValuePacket.ID, jsonReader(ClientboundBloodValuePacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleBloodValues(msg, context)));
         registrar.play(ClientboundPlayEventPacket.ID, jsonReader(ClientboundPlayEventPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handlePlayEventPacket(msg, context)));
         registrar.play(ClientboundRequestMinionSelectPacket.ID, jsonReader(ClientboundRequestMinionSelectPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRequestMinionSelectPacket(msg, context)));
         registrar.play(ClientboundTaskStatusPacket.ID, jsonReader(ClientboundTaskStatusPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleTaskStatusPacket(msg, context)));
@@ -46,7 +45,6 @@ public class ModPacketDispatcher {
         registrar.common(ServerboundSelectAmmoTypePacket.ID, jsonReader(ServerboundSelectAmmoTypePacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleSelectAmmoTypePacket));
         registrar.common(ServerboundSetVampireBeaconPacket.ID, jsonReader(ServerboundSetVampireBeaconPacket.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleSetVampireBeaconPacket));
         registrar.play(ServerboundRequestSkillTreePacket.ID, ServerboundRequestSkillTreePacket::new, handler -> handler.server(ServerPayloadHandler.getInstance()::handleRequestSkillTreePacket));
-        registrar.configuration(ServerboundBloodValuesCompletedPacket.ID, ServerboundBloodValuesCompletedPacket::new, handler -> handler.server(ServerPayloadHandler.getInstance()::handleBloodValuesCompletedPacket));
 
     }
 
