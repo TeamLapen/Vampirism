@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.recipes;
 
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +57,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<AlchemyTableRecipe> {
-
+        private static final Codec<Ingredient> INGREDIENT_CODEC = Codec.either(NBTIngredient.CODEC_NONEMPTY, Ingredient.CODEC_NONEMPTY).xmap(either -> either.map(l -> l, r -> r), x -> x instanceof NBTIngredient nbt ? Either.left(nbt) : Either.right(x));
         public static final Codec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
                 Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),

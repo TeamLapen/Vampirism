@@ -70,16 +70,16 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     }
 
     public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull IOil oil) {
-        this.ingredient = NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(oil));
+        this.ingredient = NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(oil));
         return this;
     }
 
     public AlchemyTableRecipeBuilder plantOilIngredient() {
-        return ingredient(NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
-        return ingredient(NBTIngredient.of(ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {

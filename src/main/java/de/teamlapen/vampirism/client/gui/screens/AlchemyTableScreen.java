@@ -28,7 +28,6 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        this.renderBackground(graphics, p_230430_2_, p_230430_3_, p_230430_4_);
         super.render(graphics, p_230430_2_, p_230430_3_, p_230430_4_);
         this.renderTooltip(graphics, p_230430_2_, p_230430_3_);
     }
@@ -53,6 +52,7 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
                 int color = this.menu.getColor();
                 graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
                 graphics.blit(BREWING_STAND_LOCATION, i + 104, j + 36, 176, 13, (int) (j1 * 32), 32);
+                graphics.setColor(1,1,1,1);
             }
         }
 
