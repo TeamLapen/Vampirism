@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ import java.util.stream.Collectors;
 
 public class JEIPotionMix {
     public static @NotNull Collection<JEIPotionMix> createFromMix(@NotNull ExtendedPotionMix mix) {
-        List<ItemStack> in1 = mix.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        List<ItemStack> in2 = mix.reagent2.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        List<ItemStack> in1 = Arrays.stream(mix.reagent1.get().getItems()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        List<ItemStack> in2 = Arrays.stream(mix.reagent2.get().getItems()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<JEIPotionMix> recipes = new ArrayList<>(3);
         recipes.add(build(mix, Items.POTION, mix.input.get(), mix.output.get(), in1, in2));
         if (mix.output.get().getEffects().stream().noneMatch(s -> s.getEffect().getCategory() != MobEffectCategory.HARMFUL)) {

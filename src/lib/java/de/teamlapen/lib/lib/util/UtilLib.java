@@ -2,6 +2,8 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -18,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -805,5 +808,14 @@ public class UtilLib {
             return Direction.DOWN;
         }
         return null;
+    }
+
+    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphics graphics, @NotNull Component text, int textLength, int x, int y, int color) {
+        int d = 0;
+        for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
+            graphics.drawString(fontRenderer, sequence, x, y + d, color, false);
+            d += fontRenderer.lineHeight;
+        }
+        return d;
     }
 }

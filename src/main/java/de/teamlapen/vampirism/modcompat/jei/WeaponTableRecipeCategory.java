@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexSorting;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -27,6 +28,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +38,7 @@ import java.util.List;
 /**
  * Recipe category for {@link IWeaponTableRecipe}
  */
-public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRecipe> {
+public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<IWeaponTableRecipe>> {
 
     private final static ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
@@ -53,7 +55,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(@NotNull IWeaponTableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        IWeaponTableRecipe recipe = holder.value();
 
         int x = 2;
         int y = 80;
@@ -74,8 +77,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
-        ISkill<?>[] requiredSkills = recipe.getRequiredSkills();
-        if (requiredSkills.length > 0) {
+        List<ISkill<IHunterPlayer>> requiredSkills = recipe.getRequiredSkills();
+        if (!requiredSkills.isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
@@ -100,7 +103,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public @NotNull RecipeType<IWeaponTableRecipe> getRecipeType() {
+    public @NotNull RecipeType<RecipeHolder<IWeaponTableRecipe>> getRecipeType() {
         return VampirismJEIPlugin.WEAPON_TABLE;
     }
 
@@ -111,7 +114,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, IWeaponTableRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IWeaponTableRecipe> holder, IFocusGroup focuses) {
+        IWeaponTableRecipe recipe = holder.value();
         if (recipe instanceof ShapelessWeaponTableRecipe) {
             builder.setShapeless();
         }

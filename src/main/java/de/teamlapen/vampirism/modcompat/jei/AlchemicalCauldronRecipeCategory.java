@@ -24,10 +24,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 
-public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
+public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemicalCauldronRecipe>> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
@@ -54,7 +55,8 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(@NotNull AlchemicalCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        AlchemicalCauldronRecipe recipe = holder.value();
         this.flame.draw(graphics, 19, 27);
         this.arrow.draw(graphics, 41, 25);
         this.bubbles.draw(graphics, 104, 19);
@@ -66,7 +68,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
             graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
-        if (recipe.getRequiredSkills().length > 0) {
+        if (!recipe.getRequiredSkills().isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.alchemical_cauldron.skill", " ");
 
             for (ISkill<?> s : recipe.getRequiredSkills()) {
@@ -90,7 +92,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public @NotNull RecipeType<AlchemicalCauldronRecipe> getRecipeType() {
+    public @NotNull RecipeType<RecipeHolder<AlchemicalCauldronRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
 
@@ -101,7 +103,8 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull AlchemicalCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IFocusGroup focuses) {
+        AlchemicalCauldronRecipe recipe = holder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).addIngredients(recipe.getFluid().map(in -> in, fl -> Ingredient.of(fl.getFluid().getBucket())));
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(RecipeUtil.getResultItem(recipe));

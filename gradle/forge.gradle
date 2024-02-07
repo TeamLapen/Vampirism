@@ -39,8 +39,8 @@ dependencies {
     //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
     if (include_jei.toBoolean()) {
         compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}" //API for compile
-        compileOnly "mezz.jei:jei-${jei_mc_version}-forge-api:${project.jei_version}" //API for compile
-        runtimeOnly "mezz.jei:jei-${jei_mc_version}-forge:${project.jei_version}" //Full for runtime
+        compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${project.jei_version}" //API for compile
+        runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${project.jei_version}" //Full for runtime
     }
 
     if (include_guideapi.toBoolean()) {

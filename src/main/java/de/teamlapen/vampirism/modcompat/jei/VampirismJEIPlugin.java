@@ -37,6 +37,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -45,7 +46,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -57,18 +58,24 @@ import java.util.stream.Collectors;
 @JeiPlugin
 //Currently, core mod is required for this to not crash the game Forge https://github.com/MinecraftForge/MinecraftForge/pull/6254
 public class VampirismJEIPlugin implements IModPlugin {
-    public static final RecipeType<IWeaponTableRecipe> WEAPON_TABLE = RecipeType.create("vampirism", "hunter_weapon", IWeaponTableRecipe.class);
-    public static final RecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON = RecipeType.create("vampirism", "alchemical_cauldron", AlchemicalCauldronRecipe.class);
+    public static final RecipeType<RecipeHolder<IWeaponTableRecipe>> WEAPON_TABLE = createFromModded(ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
+    public static final RecipeType<RecipeHolder<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = createFromModded(ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
     public static final RecipeType<Task> TASK = RecipeType.create("vampirism", "task", Task.class);
     public static final RecipeType<BlessableItem.Recipe> BLESSING = RecipeType.create("vampirism", "blessing", BlessableItem.Recipe.class);
     public static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
-    public static final RecipeType<AlchemyTableRecipe> ALCHEMY_TABLE = RecipeType.create("vampirism", "alchemy_table", AlchemyTableRecipe.class);
+    public static final RecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @NotNull
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
+    }
+
+    public static <R extends Recipe<?>> RecipeType<RecipeHolder<R>> createFromModded(DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<R>> vanillaRecipeType) {
+        @SuppressWarnings({"unchecked", "RedundantCast"})
+        Class<? extends RecipeHolder<R>> holderClass = (Class<? extends RecipeHolder<R>>) (Object) RecipeHolder.class;
+        return new RecipeType<>(vanillaRecipeType.getId(), holderClass);
     }
 
 
@@ -119,12 +126,12 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         ClientLevel world = Minecraft.getInstance().level;
         RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(ALCHEMICAL_CAULDRON, ((RecipeManagerAccessor) recipeManager).invoke_byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).values().stream().toList());
-        registration.addRecipes(WEAPON_TABLE, ((RecipeManagerAccessor) recipeManager).invoke_byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).values().stream().toList());
+        registration.addRecipes(ALCHEMICAL_CAULDRON, recipeManager.getAllRecipesFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()));
+        registration.addRecipes(WEAPON_TABLE, recipeManager.getAllRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()));
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(world.registryAccess()));
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));
-        registration.addRecipes(ALCHEMY_TABLE, recipeManager.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).values().stream().toList());
+        registration.addRecipes(ALCHEMY_TABLE, recipeManager.getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()));
         registration.addRecipes(RecipeTypes.CRAFTING, getApplicableOilRecipes());
         registration.addRecipes(BLESSING, BlessableItem.getBlessableRecipes());
         registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes(world.registryAccess()));
@@ -177,22 +184,22 @@ public class VampirismJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    private @NotNull List<CraftingRecipe> getApplicableOilRecipes() {
+    private @NotNull List<RecipeHolder<CraftingRecipe>> getApplicableOilRecipes() {
         return RegUtil.values(ModRegistries.OILS).stream()
                 .filter(IApplicableOil.class::isInstance)
                 .map(IApplicableOil.class::cast)
-                .flatMap(oil -> ForgeRegistries.ITEMS.getValues().stream()
+                .flatMap(oil -> BuiltInRegistries.ITEM.stream()
                         .map(Item::getDefaultInstance)
                         .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item) == VReference.HUNTER_FACTION))
                         .filter(oil::canBeApplied)
-                        .map(stack -> new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil)))))).collect(Collectors.toList());
+                        .map(stack -> new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, (RegUtil.id(oil).toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, OilUtils.setAppliedOil(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilUtils.createOilItem(oil))))))).toList();
     }
 
-    private @NotNull List<CraftingRecipe> getCleanOilRecipes(RegistryAccess registryAccess) {
+    private @NotNull List<RecipeHolder<CraftingRecipe>> getCleanOilRecipes(RegistryAccess registryAccess) {
         return getApplicableOilRecipes().stream().map(recipe -> {
-            ItemStack item = recipe.getResultItem(registryAccess);
+            ItemStack item = recipe.value().getResultItem(registryAccess);
             IApplicableOil oil = OilUtils.getAppliedOil(item).get();
-            return new ShapelessRecipe(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil).toString() + "_from_" + RegUtil.id(item.getItem()).toString()).replace(':', '_')), "", CraftingBookCategory.EQUIPMENT, OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item)));
+            return new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')),new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, OilUtils.removeAppliedOil(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
         }).collect(Collectors.toList());
     }
 }

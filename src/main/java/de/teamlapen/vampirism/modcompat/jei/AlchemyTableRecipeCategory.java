@@ -25,11 +25,13 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.List;
 
-public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableRecipe> {
+public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemyTableRecipe>> {
 
     private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
 
@@ -50,7 +52,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public @NotNull RecipeType<AlchemyTableRecipe> getRecipeType() {
+    public @NotNull RecipeType<RecipeHolder<AlchemyTableRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
@@ -73,7 +75,8 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull AlchemyTableRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemyTableRecipe> holder, @NotNull IFocusGroup focuses) {
+        AlchemyTableRecipe recipe = holder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).addIngredients(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 44, 4).addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.INPUT, 68, 4).addIngredients(recipe.getIngredient());
@@ -83,7 +86,8 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
     }
 
     @Override
-    public void draw(@NotNull AlchemyTableRecipe recipe, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        AlchemyTableRecipe recipe = holder.value();
         this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
@@ -96,11 +100,11 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<AlchemyTableR
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
 
-        ISkill[] requiredSkills = recipe.getRequiredSkills();
-        if (requiredSkills.length > 0) {
+        List<ISkill<?>> requiredSkills = recipe.getRequiredSkills();
+        if (!requiredSkills.isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.hunter_weapon_table.skill", " ");
 
-            for (ISkill skill : recipe.getRequiredSkills()) {
+            for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");
 
             }
