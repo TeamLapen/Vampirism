@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -11,6 +14,8 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPointProvider;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
@@ -22,18 +27,17 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -52,8 +56,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
     private final Set<IRefinement> activeRefinements = new HashSet<>();
     private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
+    private final ISkillPointProvider skillPoints = new SkillPoints();
     public LinkedHashSet<Holder<ISkillTree>> unlockedTrees = new LinkedHashSet<>();
-    private int maxSkillpoints;
     private boolean dirty = false;
     private final ISkillTreeData treeData;
 
@@ -214,29 +218,16 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public int getLeftSkillPoints() {
-        int level = player.getLevel();
-        int remainingSkillPoints = this.maxSkillpoints - enabledSkills.stream().mapToInt(ISkill::getSkillPointCost).sum();
-        if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
-            return Math.max(remainingSkillPoints, 1);
+        if (this.skillPoints.ignoreSkillPointLimit(this.player)) {
+            return Integer.MAX_VALUE;
         }
-        return remainingSkillPoints;
-    }
-
-    @Override
-    public int getMaxSkillPoints() {
-        return this.maxSkillpoints;
-    }
-
-    public void addSkillPoints(int points) {
-        this.maxSkillpoints = Math.max(0, this.maxSkillpoints + points);
-        this.dirty = true;
+        return Math.max(0, this.skillPoints.getSkillPoints(this.player) - this.enabledSkills.stream().mapToInt(ISkill::getSkillPointCost).sum());
     }
 
     public void reset() {
         disableAllSkills();
         resetRefinements();
         this.unlockedTrees.clear();
-        this.maxSkillpoints = 0;
         this.dirty = true;
     }
 
@@ -335,9 +326,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 }
             }
         }
-        if (nbt.contains("skill_points")) {
-            this.maxSkillpoints = nbt.getInt("skill_points");
-        }
         if (nbt.contains("unlocked_trees")) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
@@ -387,9 +375,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 }
             }
         }
-        if (nbt.contains("skill_points", Tag.TAG_INT)) {
-            this.maxSkillpoints = nbt.getInt("skill_points");
-        }
         if (nbt.contains("unlocked_trees", Tag.TAG_LIST)) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
@@ -427,7 +412,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
         nbt.put("refinement_items", refinements);
-        nbt.putInt("skill_points", this.maxSkillpoints);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().getRepresentingPlayer().level(), tree.value()).toString()));
@@ -455,7 +439,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
         nbt.put("refinement_items", refinementItems);
-        nbt.putInt("skill_points", this.maxSkillpoints);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().getRepresentingPlayer().level(), tree.value()).toString()));
@@ -518,5 +501,23 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     @Override
     public String nbtKey() {
         return NBT_KEY;
+    }
+
+    public static class SkillPoints implements ISkillPointProvider {
+        private final Map<ResourceLocation, ISkillPointProvider> provider;
+
+        public SkillPoints() {
+            this.provider = SkillPointProviders.MODIFIERS_VIEW;
+        }
+
+        @Override
+        public int getSkillPoints(IFactionPlayer<?> factionPlayer) {
+            return this.provider.values().stream().mapToInt(x -> Math.max(0, x.getSkillPoints(factionPlayer))).sum();
+        }
+
+        @Override
+        public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer) {
+            return this.provider.values().stream().anyMatch(l -> l.ignoreSkillPointLimit(factionPlayer));
+        }
     }
 }

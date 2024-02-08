@@ -436,9 +436,6 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         }
 
         this.currentLordLevel = level;
-        this.getCurrentFactionPlayer().ifPresent(player -> {
-            player.getSkillHandler().addSkillPoints((int) ((level - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
-        });
         this.checkSkillTreeLocks();
         this.updateCache();
         MinionWorldData.getData(player.level()).ifPresent(data -> {

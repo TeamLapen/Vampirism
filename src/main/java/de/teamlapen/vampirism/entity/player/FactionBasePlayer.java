@@ -128,9 +128,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
-            if (newLevel > 0) {
-                this.getSkillHandler().addSkillPoints((int) ((newLevel - oldLevel) * VampirismConfig.BALANCE.skillPointsPerLevel.get()));
-            } else {
+            if (newLevel <= 0) {
                 this.getSkillHandler().reset();
                 this.getActionHandler().resetTimers();
                 this.sync(true);

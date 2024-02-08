@@ -56,10 +56,6 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      */
     int getLeftSkillPoints();
 
-    int getMaxSkillPoints();
-
-    void addSkillPoints(int points);
-
     ISkill<T>[] getParentSkills(ISkill<T> skill);
 
     boolean isRefinementEquipped(IRefinement refinement);

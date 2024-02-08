@@ -173,7 +173,13 @@ public class SkillsScreen extends Screen {
             }
         }
         if (this.selectedTab != null) {
-            Component remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(this.selectedTab.getRemainingPoints()));
+            int remainingPoints1 = this.selectedTab.getRemainingPoints();
+            Component remainingPoints;
+            if (remainingPoints1 == Integer.MAX_VALUE) {
+                remainingPoints = Component.translatable("text.vampirism.skills.points_left", "\u221E");
+            } else {
+                remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(remainingPoints1));
+            }
             graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752, false);
         }
         graphics.drawString(this.font, TITLE, x + 8, y + 6, 4210752, false);

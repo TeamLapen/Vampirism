@@ -70,6 +70,7 @@ public class RegistryManager implements IInitListener {
         ModAttachments.register(eventBus);
         ModAdvancements.register(eventBus);
         ModStats.register(eventBus);
+        ModSkills.init();
     }
 
     @SubscribeEvent
