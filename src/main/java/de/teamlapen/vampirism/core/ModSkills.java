@@ -15,9 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModSkills {
 
-    public static final ISkillPointProvider LEVELING = SkillPointProviders.register(new ResourceLocation(REFERENCE.MODID, "leveling"), factionPlayer -> (int)(factionPlayer.getLevel() * VampirismConfig.BALANCE.skillPointsPerLevel.get()));
+    public static final ISkillPointProvider LEVELING = SkillPointProviders.register(new ResourceLocation(REFERENCE.MODID, "leveling"), factionPlayer -> (int)(Math.max(0, factionPlayer.getLevel() -1) * VampirismConfig.BALANCE.skillPointsPerLevel.get()));
 
-    public static final ISkillPointProvider LORD_LEVELING = SkillPointProviders.register(new ResourceLocation(REFERENCE.MODID, "lord_leveling"), factionPlayer -> (int) (FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
+    public static final ISkillPointProvider LORD_LEVELING = SkillPointProviders.register(new ResourceLocation(REFERENCE.MODID, "lord_leveling"), factionPlayer -> (int) (Math.max(0, FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel()-1) * VampirismConfig.BALANCE.skillPointsPerLordLevel.get()));
 
     public static final ISkillPointProvider CONFIG_UNLOCK_ALL = SkillPointProviders.register(new ResourceLocation(REFERENCE.MODID, "config_unlock_all"), new ISkillPointProvider() {
 

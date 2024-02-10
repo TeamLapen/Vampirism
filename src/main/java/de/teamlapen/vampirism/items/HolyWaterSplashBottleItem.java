@@ -71,8 +71,8 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         UtilLib.forEachBlockPos(impactArea, pos -> {
             BlockState state = level.getBlockState(pos);
             Block block = state.getBlock();
-            if (block instanceof HolyWaterEffectConsumer) {
-                ((HolyWaterEffectConsumer) block).onHolyWaterEffect(level, state, pos, stack, getVampirismTier());
+            if (block instanceof HolyWaterEffectConsumer consumer) {
+                consumer.onHolyWaterEffect(level, state, pos, stack, getVampirismTier());
             }
         });
     }
