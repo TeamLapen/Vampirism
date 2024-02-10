@@ -5,7 +5,9 @@ import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAction<T> {
-    private Component name;
+    private String translationId;
 
     public void addEffectInstance(@NotNull T player, @NotNull MobEffectInstance instance) {
         ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
@@ -43,15 +45,13 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
 
     }
 
-    @Override
-    public @NotNull Component getName() {
-        return name == null ? name = Component.translatable(getTranslationKey()) : name;
-    }
-
     @Deprecated
     @Override
     public @NotNull String getTranslationKey() {
-        return "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
+        if (this.translationId == null) {
+            this.translationId = Util.makeDescriptionId("action", VampirismRegistries.ACTIONS.get().getKey(this));
+        }
+        return this.translationId;
     }
 
     /**

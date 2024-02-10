@@ -27,7 +27,7 @@ public interface IFactionEntity extends IEntity {
     LivingEntity getRepresentingEntity();
 
     @Override
-    default Entity asEntity() {
+    default @NotNull Entity asEntity() {
         return getRepresentingEntity();
     }
 }

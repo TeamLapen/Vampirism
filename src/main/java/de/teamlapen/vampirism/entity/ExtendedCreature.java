@@ -88,7 +88,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public Entity asEntity() {
+    public @NotNull Entity asEntity() {
         return this.entity;
     }
 

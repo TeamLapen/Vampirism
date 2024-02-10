@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -24,7 +26,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     private final Map<Attribute, AttributeHolder> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)
     private final int skillPointCost;
-    private Component name;
+    private String translationId;
 
     public DefaultSkill() {
         this(1);
@@ -34,21 +36,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         this.skillPointCost = skillPointCost;
     }
 
-    @Override
-    public Component getName() {
-        return name == null ? name = Component.translatable(getTranslationKey()) : name;
-    }
-
-    public @NotNull DefaultSkill<T> setName(Component name) {
-        this.name = name;
-        return this;
-    }
-
-
     @Deprecated
     @Override
     public String getTranslationKey() {
-        return "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath();
+        if (this.translationId == null) {
+            this.translationId = Util.makeDescriptionId("skill", VampirismRegistries.SKILLS.get().getKey(this));
+        }
+        return translationId;
     }
 
     @Override

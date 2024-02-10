@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillLike;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      * @return the faction, which players can use this action
      */
     @NotNull
-    Optional<IPlayableFaction<?>> getFaction();
+    Optional<IPlayableFaction<?>> getFaction(); //TODO might be a good idea to have a more useful return type, that allow more that all or one faction
 
     /**
      * @param faction The faction to test
@@ -47,14 +48,10 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
         return getFaction().map(f -> f == faction).orElse(true);
     }
 
-    default Component getName() {
+    default MutableComponent getName() {
         return Component.translatable(getTranslationKey());
     }
 
-    /**
-     * Use {@link IAction#getName()}
-     */
-    @Deprecated
     String getTranslationKey();
 
     /**

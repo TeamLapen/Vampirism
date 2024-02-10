@@ -90,7 +90,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public Player asEntity() {
+    public @NotNull Player asEntity() {
         return player;
     }
 

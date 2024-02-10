@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -82,7 +83,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     @Override
-    public Component getName() {
+    public MutableComponent getName() {
         return action.get().getName();
     }
 

@@ -5,36 +5,36 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Optional;
 
 /**
- * Skill that can be unlocked
+ * Skill that tha unlocks abilities for a player.
  */
 public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
     /**
-     * The description for this skill. Can be null
+     * The description for this skill or null if there is no description.
      */
+    @Nullable
     Component getDescription();
 
     /**
+     * A skill can be either
      * @return The faction this skill belongs to
      */
     @NotNull
     Optional<IPlayableFaction<?>> getFaction();
 
-    default Component getName() {
+    default MutableComponent getName() {
         return Component.translatable(getTranslationKey());
     }
 
-    /**
-     * Use {@link ISkill#getName()}
-     */
-    @Deprecated
     String getTranslationKey();
 
     /**
@@ -51,11 +51,20 @@ public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      */
     void onEnable(T player);
 
+    /**
+     * Unlocking skills costs a certain amount of skill points.
+     *
+     * @return The cost of the skill
+     */
     @Range(from = 0, to = 9)
     default int getSkillPointCost() {
         return 1;
     }
 
+    /**
+     * Skill can only be added to skill trees defined by the return value.
+     * @return A key of the allowed skilltree or a tag of skilltrees
+     */
     Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();
 
     @Override

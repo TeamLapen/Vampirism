@@ -43,7 +43,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     }
 
     @Override
-    public Player asEntity() {
+    public @NotNull Player asEntity() {
         return this.player;
     }
 

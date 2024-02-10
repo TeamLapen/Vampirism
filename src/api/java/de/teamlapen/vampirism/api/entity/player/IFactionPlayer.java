@@ -68,11 +68,14 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      */
     Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
+    /**
+     * @deprecated use {@link #asEntity()} instead
+     */
     @ApiStatus.Obsolete
     Player getRepresentingPlayer();
 
     @Override
-    default Player asEntity() {
+    default @NotNull Player asEntity() {
         return getRepresentingPlayer();
     }
 
