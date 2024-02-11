@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Flying blood particle for rituals.
  * Follows an entity
@@ -31,7 +33,7 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
     public FlyingBloodEntityParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, @NotNull Entity entity, boolean direct) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
 
-        Validate.notNull(entity);
+        Objects.requireNonNull(entity);
         this.entity = entity;
         this.rCol = 0.95F;
         this.bCol = this.gCol = 0.05F;

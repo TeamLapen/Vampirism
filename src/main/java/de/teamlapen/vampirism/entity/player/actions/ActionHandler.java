@@ -298,7 +298,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     /**
      * After server receives action toggle packet this is called.
-     * Actions can be cancelled, have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
+     * Actions can be canceled, have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
      * @param action  Action being toggled
      * @param context Context holding Block/Entity the player was looking at when activating if any
      *
@@ -313,7 +313,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         } else if (cooldownTimers.containsKey(id)) {
             return IAction.PERM.COOLDOWN;
         } else {
-            if (this.player.getRepresentingPlayer().isSpectator()) return IAction.PERM.DISALLOWED;
+            if (this.player.asEntity().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
 
@@ -326,7 +326,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
                 if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.onActivated(player, context)) {
-                    player.getRepresentingPlayer().awardStat(ModStats.ACTION_USED.get().get(action));
+                    player.asEntity().awardStat(ModStats.ACTION_USED.get().get(action));
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
                     int cooldown = activationEvent.getCooldown();
@@ -406,7 +406,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = cooldownTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int value = entry.getIntValue();
-            player.getRepresentingPlayer().awardStat(ModStats.ACTION_COOLDOWN_TIME.get().get(RegUtil.getAction(entry.getKey())));
+            player.asEntity().awardStat(ModStats.ACTION_COOLDOWN_TIME.get().get(RegUtil.getAction(entry.getKey())));
             if (value <= 1) { //<= Just in case we have missed something
                 expectedCooldownTimes.removeInt(entry);
                 it.remove();
@@ -425,21 +425,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             } else {
                 @SuppressWarnings("unchecked")
                 ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-                /*
-                 * If the event result is DENY, the lasting action will always be deactivated next tick and won't call {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#onUpdate(de.teamlapen.vampirism.api.entity.player.IFactionPlayer)}.
-                 * If the event result is ALLOW, the lasting action will call onUpdate, but the return value will be ignored.
-                 * If its the default, there will be no change, onUpdate will be called and deactivated if it should.
-                 */
                 ActionEvent.ActionUpdateEvent event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
-                boolean shouldDeactivate = event.shouldOverrideDeactivation();
-                switch (event.getResult()) {
-                    case DEFAULT -> shouldDeactivate = action.onUpdate(player);
-                    case ALLOW -> action.onUpdate(player);
-                }
-                if (shouldDeactivate) {
+                if ((!event.shouldSkipActionUpdate() && action.onUpdate(player)) || event.shouldDeactivation()) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
-                    player.getRepresentingPlayer().awardStat(ModStats.ACTION_TIME.get().get(action));
+                    player.asEntity().awardStat(ModStats.ACTION_TIME.get().get(action));
                     entry.setValue(newtimer);
                 }
             }
@@ -464,7 +454,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {
-        if (player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer) {
+        if (player.asEntity() instanceof ServerPlayer serverPlayer) {
             return Permissions.ACTION.isAllowed(serverPlayer, action);
         }
         return true;

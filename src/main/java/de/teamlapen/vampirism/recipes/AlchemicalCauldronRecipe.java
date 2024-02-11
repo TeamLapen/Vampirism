@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.recipes;
 
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,12 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -26,7 +21,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -91,19 +85,18 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
 
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
 
-        public static final Codec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.create(inst -> {
-            return inst.group(
-                    ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
-                    CookingBookCategory.CODEC.fieldOf("category").orElse(CookingBookCategory.MISC).forGetter(p_300828_ -> p_300828_.category),
-                    Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
-                    Codec.either(Ingredient.CODEC_NONEMPTY, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
-                    net.neoforged.neoforge.common.crafting.CraftingHelper.smeltingResultCodec().fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
-                    ExtraCodecs.strictOptionalField(ModRegistries.SKILLS.byNameCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.skills),
-                    ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.reqLevel),
-                    ExtraCodecs.strictOptionalField(Codec.INT, "cookTime", 200).forGetter(p -> p.cookingTime),
-                    ExtraCodecs.strictOptionalField(Codec.FLOAT, "experience", 0.2F).forGetter(p -> p.experience)
-            ).apply(inst, AlchemicalCauldronRecipe::new);
-        });
+        public static final Codec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.create(inst ->
+                inst.group(
+                        ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
+                        CookingBookCategory.CODEC.fieldOf("category").orElse(CookingBookCategory.MISC).forGetter(p_300828_ -> p_300828_.category),
+                        Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
+                        Codec.either(Ingredient.CODEC_NONEMPTY, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
+                        net.neoforged.neoforge.common.crafting.CraftingHelper.smeltingResultCodec().fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
+                        ExtraCodecs.strictOptionalField(ModRegistries.SKILLS.byNameCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.skills),
+                        ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.reqLevel),
+                        ExtraCodecs.strictOptionalField(Codec.INT, "cookTime", 200).forGetter(p -> p.cookingTime),
+                        ExtraCodecs.strictOptionalField(Codec.FLOAT, "experience", 0.2F).forGetter(p -> p.experience)
+                ).apply(inst, AlchemicalCauldronRecipe::new));
 
         @Override
         public @NotNull Codec<AlchemicalCauldronRecipe> codec() {

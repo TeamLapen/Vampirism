@@ -87,7 +87,6 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
         return action.get().getName();
     }
 
-    @Deprecated
     @Override
     public String getTranslationKey() {
         return action.get().getTranslationKey();

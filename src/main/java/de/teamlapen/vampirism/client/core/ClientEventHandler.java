@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.network.ServerboundRequestSkillTreePacket;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -40,7 +39,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -174,7 +172,6 @@ public class ClientEventHandler {
 
     /**
      * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil 
-     * @param event
      */
     @SubscribeEvent
     public void onItemToolTip(@NotNull ItemTooltipEvent event) {
@@ -218,19 +215,17 @@ public class ClientEventHandler {
 
     public static void registerPackRepository(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-            event.addRepositorySource(s -> {
-                s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, new Pack.ResourcesSupplier() {
-                    @Override
-                    public @NotNull PackResources openPrimary(@NotNull String pId) {
-                        return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID), false);
-                    }
+            event.addRepositorySource(s -> s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, new Pack.ResourcesSupplier() {
+                @Override
+                public @NotNull PackResources openPrimary(@NotNull String pId) {
+                    return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID), false);
+                }
 
-                    @Override
-                    public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
-                        return openPrimary(pId);
-                    }
-                }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN));
-            });
+                @Override
+                public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
+                    return openPrimary(pId);
+                }
+            }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN)));
         }
         if (event.getPackType() == PackType.SERVER_DATA) {
             event.addRepositorySource(s -> s.accept(Pack.create(BUILTIN_COMPAT, Component.literal("Vampirism builtin mod compatibility data"), true,  new Pack.ResourcesSupplier() {

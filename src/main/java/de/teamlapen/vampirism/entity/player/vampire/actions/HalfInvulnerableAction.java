@@ -49,7 +49,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
+        if (!vampire.isRemote() && vampire.asEntity().tickCount % 20 == 0) {
             applyEffect(vampire);
         }
         return false;

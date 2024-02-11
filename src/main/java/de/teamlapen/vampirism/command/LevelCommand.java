@@ -40,9 +40,7 @@ public class LevelCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, @NotNull IPlayableFaction<?> faction, final int level, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
-            handler.ifPresent(h -> {
-
+            FactionPlayerHandler h = FactionPlayerHandler.get(player);
             if (level == 0 && !h.canLeaveFaction()) {
                 context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", h.getCurrentFaction().getName()));
             } else {
@@ -53,8 +51,6 @@ public class LevelCommand extends BasicCommand {
                     context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
                 }
             }
-
-            });
         }
         return 0;
     }
@@ -62,7 +58,7 @@ public class LevelCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int leaveFaction(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(s -> s.setFactionAndLevel(null, 0));
+            FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
         }
         return 0;
     }

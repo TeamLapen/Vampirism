@@ -29,8 +29,7 @@ public class VampirismDispenseBoatBehavior extends DefaultDispenseItemBehavior {
     }
 
     /**
-     * from {@link net.minecraft.core.dispenser.BoatDispenseItemBehavior#execute(net.minecraft.core.BlockSource, net.minecraft.world.item.ItemStack)}
-     * TODO 1.20 recheck
+     * from {@link net.minecraft.core.dispenser.BoatDispenseItemBehavior#execute(net.minecraft.core.dispenser.BlockSource, net.minecraft.world.item.ItemStack)}
      */
     @NotNull
     public ItemStack execute(@NotNull BlockSource p_123375_, ItemStack p_123376_) {

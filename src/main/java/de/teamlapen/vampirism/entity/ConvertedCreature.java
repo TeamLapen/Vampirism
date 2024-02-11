@@ -10,8 +10,8 @@ public interface ConvertedCreature<T extends PathfinderMob> extends IConvertedCr
 
 
     default void tickC() {
-        if (this.getRepresentingEntity().level().isClientSide && this.getRepresentingEntity().level().getDifficulty() == Difficulty.PEACEFUL) {
-            this.getRepresentingEntity().discard();
+        if (this.asEntity().level().isClientSide && this.asEntity().level().getDifficulty() == Difficulty.PEACEFUL) {
+            this.asEntity().discard();
         }
     }
 

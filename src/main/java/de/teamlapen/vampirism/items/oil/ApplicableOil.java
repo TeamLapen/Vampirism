@@ -47,9 +47,9 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
             float perc = duration / (float) maxDuration;
             ChatFormatting status = perc > 0.5 ? ChatFormatting.GREEN : perc > 0.25 ? ChatFormatting.GOLD : ChatFormatting.RED;
             if (flag.isAdvanced()) {
-                component.append(" ").append(Component.translatable("%s/%s", duration, maxDuration).withStyle(status));
+                component.append(" ").append(Component.literal(toString().formatted("%s/%s", duration, maxDuration)).withStyle(status));
             } else {
-                component.append(" ").append(Component.translatable("Status").withStyle(status));
+                component.append(" ").append(Component.translatable("text.vampirism.status").withStyle(status));
             }
         }
         return Optional.of(component);

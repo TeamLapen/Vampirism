@@ -98,7 +98,7 @@ public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<
     }
 
     @Override
-    public @NotNull Component getName() {
+    public @NotNull Component getTypeName() {
         return this.getNameC(EntityType.FOX::getDescription);
     }
 

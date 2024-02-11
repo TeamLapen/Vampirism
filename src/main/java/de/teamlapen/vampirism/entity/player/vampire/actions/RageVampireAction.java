@@ -60,7 +60,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 20 == 0) {
+        if (!vampire.isRemote() && vampire.asEntity().tickCount % 20 == 0) {
             applyEffects(vampire);
         }
 

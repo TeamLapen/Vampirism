@@ -19,7 +19,7 @@ public class DarkProjectileEntityAction<T extends PathfinderMob & IEntityActionU
 
     @Override
     public boolean activate(@NotNull T entity) {
-        LivingEntity shooter = entity.getRepresentingEntity();
+        LivingEntity shooter = entity.asEntity();
 
         Vec3 vec3dd = entity.getTarget() != null ? new Vec3(entity.getTarget().getX() - entity.getX(), entity.getTarget().getY() - entity.getY(), entity.getTarget().getZ() - entity.getZ()) : Vec3.ZERO;
         vec3dd.normalize();

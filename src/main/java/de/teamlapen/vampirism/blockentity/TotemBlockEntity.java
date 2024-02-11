@@ -894,7 +894,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
         NeoForge.EVENT_BUS.post(event);
         if (event.getResult().equals(Event.Result.DENY)) {
-            feedback.accept(Component.translatable(event.getMessage()), true);
+            if (event.getMessage() != null) {
+                feedback.accept(Component.translatable(event.getMessage()), true);
+            }
             return false;
         }
         return true;
@@ -977,7 +979,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private float getStrength(@NotNull LivingEntity entity) {
         if (entity instanceof Player player) {
-            return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentLevelRelative).orElse(0f);
+            return FactionPlayerHandler.get(player).getCurrentLevelRelative();
         }
         if (entity instanceof ConvertedVillagerEntity) {
             return 0.5f;

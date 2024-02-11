@@ -195,15 +195,15 @@ public class SkillsTabScreen {
 
     private int getX(){
         int centerX = (SCREEN_WIDTH / 2);
-        centerX += scrollX;
-        centerX /= this.zoom;
+        centerX += (int) scrollX;
+        centerX /= (int) this.zoom;
         return centerX;
     }
 
     private int getY() {
         int centerY = 20;
-        centerY += scrollY;
-        centerY /= this.zoom;
+        centerY += (int) scrollY;
+        centerY /= (int) this.zoom;
         return centerY;
     }
 

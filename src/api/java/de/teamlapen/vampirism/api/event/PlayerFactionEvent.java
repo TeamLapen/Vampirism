@@ -31,7 +31,7 @@ public class PlayerFactionEvent extends Event {
     }
 
     /**
-     * You can use {@link IFactionPlayerHandler#getPlayer()} to get the actual EntityPlayer
+     * You can use {@link de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler#asEntity()} to get the actual EntityPlayer
      *
      * @return The faction handler representing the current player
      */
@@ -123,18 +123,18 @@ public class PlayerFactionEvent extends Event {
     /**
      * Posted to check if a player can join a faction.
      * <p>
-     * {@code DENY} disallows
+     * {@link  Behavior#DENY} disallows
      * <p>
-     * {@code DEFAULT} default check (if the current faction is null)
+     * {@link Behavior#ONLY_WHEN_NO_FACTION} default check (if the current faction is null)
      * <p>
-     * {@code ALLOW} allows joining even if in another faction (not recommend)
+     * {@link  Behavior#ALLOW} allows joining even if in another faction (not recommend)
      * <p>
-     * The player is not notified if not DEFAULT, so you should consider doing so.
+     * The player is not notified if not {@link Behavior#ONLY_WHEN_NO_FACTION}, so you should consider doing so.
      */
-    @HasResult
     public static class CanJoinFaction extends PlayerFactionEvent {
 
         private final IPlayableFaction<?> toJoin;
+        private Behavior behavior = Behavior.ONLY_WHEN_NO_FACTION;
 
         public CanJoinFaction(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> toJoin) {
             super(player, currentFaction);
@@ -146,6 +146,20 @@ public class PlayerFactionEvent extends Event {
          */
         public IPlayableFaction<?> getFactionToJoin() {
             return toJoin;
+        }
+
+        public Behavior getBehavior() {
+            return behavior;
+        }
+
+        public void setBehavior(Behavior behavior) {
+            this.behavior = behavior;
+        }
+
+        public enum Behavior {
+            ONLY_WHEN_NO_FACTION,
+            ALLOW,
+            DENY
         }
 
     }

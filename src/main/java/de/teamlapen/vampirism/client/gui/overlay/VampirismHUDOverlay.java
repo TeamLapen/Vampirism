@@ -111,7 +111,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.getOpt(mc.player).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {
@@ -150,16 +150,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (!entity.isInvisible()) {
                 VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
                 if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
-                    VampirePlayer.getOpt(mc.player).ifPresent(player -> {
+                    VampirePlayer vampire = VampirePlayer.get(mc.player);
                         Optional<? extends IBiteableEntity> biteableOpt = Optional.empty();
                         if (entity instanceof IBiteableEntity) {
                             biteableOpt = Optional.of((IBiteableEntity) entity);
                         } else if (entity instanceof PathfinderMob && entity.isAlive()) {
                             biteableOpt = ExtendedCreature.getSafe(entity);
                         } else if (entity instanceof Player) {
-                            biteableOpt = VampirePlayer.getOpt((Player) entity);
+                            biteableOpt = Optional.of(VampirePlayer.get((Player) entity));
                         }
-                        biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
+                        biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(vampire)).ifPresent(biteable -> {
                             int color = 0xFF0000;
                             if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
                                 color = 0x099022;
@@ -167,7 +167,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                             renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                             event.setCanceled(true);
                         });
-                    });
 
                 }
                 if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
@@ -185,7 +184,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
             if (ModBlocks.BLOOD_CONTAINER.get() == block.getBlock()) {
-                if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::wantsBlood).orElse(false)) {
+                if (VampirePlayer.get(mc.player).wantsBlood()) {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {
                         Optional.ofNullable(Minecraft.getInstance().level.getCapability(Capabilities.FluidHandler.BLOCK, ((BlockHitResult) p).getBlockPos(), block, tile, null)).ifPresent(handler -> {
@@ -202,7 +201,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         Options gamesettings = this.mc.options;
         if (gamesettings.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
 
-            float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
+            float progress = VampirePlayer.get(mc.player).getFeedProgress();
             if (progress > 0) {
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 if (progress <= 1.0F) {

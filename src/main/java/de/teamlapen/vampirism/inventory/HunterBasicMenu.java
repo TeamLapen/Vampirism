@@ -36,7 +36,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
 
     public HunterBasicMenu(int id, @NotNull Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
         super(ModContainer.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
-        player = HunterPlayer.getOpt(playerInventory.player).orElseThrow();
+        player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;
     }
@@ -63,9 +63,10 @@ public class HunterBasicMenu extends InventoryContainerMenu {
         int target = player.getLevel() + 1;
         HunterLeveling.getBasicHunterRequirement(target).ifPresent(req -> {
             inventory.removeItem(0, req.vampireBloodAmount());
-            FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).ifPresent(h -> h.setFactionLevel(VReference.HUNTER_FACTION, target));
-            player.getRepresentingPlayer().displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
-            player.getRepresentingPlayer().closeContainer();
+            Player player1 = player.asEntity();
+            FactionPlayerHandler.get(player1).setFactionLevel(VReference.HUNTER_FACTION, target);
+            player1.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
+            player1.closeContainer();
         });
 
 

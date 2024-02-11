@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.modcompat;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +22,7 @@ public class IMCHandler {
             Object value = msg.messageSupplier().get();
             if (value instanceof ResourceLocation) {
                 LOGGER.info("Received no sundamage biome {} from {}", value, msg.senderModId());
-                sundamageRegistry.addNoSundamageBiomes((ResourceLocation) value);
+                sundamageRegistry.addNoSundamageBiomes(ResourceKey.create(Registries.BIOME, (ResourceLocation) value));
             } else {
                 LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.senderModId());
             }

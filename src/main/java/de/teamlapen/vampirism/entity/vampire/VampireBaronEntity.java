@@ -299,9 +299,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     public int suggestEntityLevel(@NotNull Difficulty d) {
-        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+        int avg = Math.round(((d.avgPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int max = Math.round(((d.maxPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int min = Math.round(((d.minPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
 
         return switch (random.nextInt(7)) {
             case 0 -> min;
@@ -363,7 +363,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     private boolean isLowerLevel(LivingEntity player) {
         if (player instanceof Player) {
-            int playerLevel = FactionPlayerHandler.getOpt((Player) player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+            int playerLevel = FactionPlayerHandler.get((Player) player).getCurrentLevel();
             return (playerLevel - 8) / 2F - VampireBaronEntity.this.getEntityLevel() <= 0;
         }
         return false;

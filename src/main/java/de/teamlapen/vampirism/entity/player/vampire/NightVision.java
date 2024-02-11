@@ -22,28 +22,28 @@ public class NightVision implements IVampireVision {
     @Override
     public void onActivated(@NotNull IVampirePlayer player) {
         if (player.isRemote()) {
-            player.getRepresentingPlayer().addEffect(new VampireNightVisionEffectInstance());
+            player.asEntity().addEffect(new VampireNightVisionEffectInstance());
         }
     }
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer player) {
-        MobEffectInstance nightVision = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
+        MobEffectInstance nightVision = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
         if (nightVision instanceof VampireNightVisionEffectInstance) {
-            player.getRepresentingPlayer().removeEffect(nightVision.getEffect());
+            player.asEntity().removeEffect(nightVision.getEffect());
         }
     }
 
     @Override
     public void tick(@NotNull IVampirePlayer player) {
-        if (player.getRepresentingPlayer().tickCount % 50 == 8) {
-            MobEffectInstance effect = player.getRepresentingPlayer().getEffect(MobEffects.NIGHT_VISION);
+        if (player.asEntity().tickCount % 50 == 8) {
+            MobEffectInstance effect = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
             if (!(effect instanceof VampireNightVisionEffectInstance)) {
-                player.getRepresentingPlayer().removeEffectNoUpdate(MobEffects.NIGHT_VISION);
+                player.asEntity().removeEffectNoUpdate(MobEffects.NIGHT_VISION);
                 effect = null;
             }
             if (effect == null) {
-                player.getRepresentingPlayer().addEffect(new VampireNightVisionEffectInstance());
+                player.asEntity().addEffect(new VampireNightVisionEffectInstance());
 
             }
         }

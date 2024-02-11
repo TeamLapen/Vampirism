@@ -62,9 +62,7 @@ public class DiagonalCursedBarkBlock extends CursedBarkBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return DIRECTION_MAP.entrySet().stream().filter(entry -> state.getValue(entry.getKey())).anyMatch(e -> {
-            return level.getBlockState(pos.relative(e.getValue().getKey()).relative(e.getValue().getValue())).getBlock() instanceof CursedSpruceBlock;
-        });
+        return DIRECTION_MAP.entrySet().stream().filter(entry -> state.getValue(entry.getKey())).anyMatch(e -> level.getBlockState(pos.relative(e.getValue().getKey()).relative(e.getValue().getValue())).getBlock() instanceof CursedSpruceBlock);
     }
 
     @Override

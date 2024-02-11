@@ -47,8 +47,8 @@ public class FeedingAdapterItem extends Item {
         ItemStack bloodContainer = BloodHelper.getBloodContainerInInventory(((Player) player).getInventory(), true, false);
         FluidStack fluidStack = BloodContainerBlock.getFluidFromItemStack(bloodContainer);
         int blood = fluidStack.isEmpty() || fluidStack.getFluid() != ModFluids.BLOOD.get() ? 0 : fluidStack.getAmount();
-        Optional<VampirePlayer> vampire = VampirePlayer.getOpt((Player) player);
-        if (blood == 0 || vampire.map(v -> v.getLevel() == 0 || !v.getBloodStats().needsBlood()).orElse(false)) {
+        VampirePlayer vampire = VampirePlayer.get((Player) player);
+        if (blood == 0 || vampire.getLevel() == 0 || !vampire.getBloodStats().needsBlood()) {
             player.releaseUsingItem();
             return;
         }
@@ -57,7 +57,7 @@ public class FeedingAdapterItem extends Item {
         if (blood > 0 && count == 1) {
             int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
             BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.BLOOD.get(), blood - drink));
-            vampire.ifPresent(s -> s.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(bloodContainer)));
+            vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(bloodContainer));
 
             blood = blood - drink;
             if (blood > 0) {
@@ -70,16 +70,14 @@ public class FeedingAdapterItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        VampirePlayer vampire = VampirePlayer.get(playerIn);
+        if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
 
-            if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.getInventory(), true, false).isEmpty()) {
-                playerIn.startUsingItem(handIn);
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-            }
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        }).orElse(new InteractionResultHolder<>(InteractionResult.PASS, stack));
+        if (vampire.getBloodStats().needsBlood() && !BloodHelper.getBloodContainerInInventory(playerIn.getInventory(), true, false).isEmpty()) {
+            playerIn.startUsingItem(handIn);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        }
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
-
 }

@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -213,7 +212,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
         }
 
         this.sync();
-        entity.setLastHurtByMob(biter.getRepresentingEntity());
+        entity.setLastHurtByMob(biter.asEntity());
 
         // If entity is a child only give 1/3 blood
         if (entity instanceof AgeableMob) {
@@ -228,7 +227,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
+            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
         }
 
         return amt;

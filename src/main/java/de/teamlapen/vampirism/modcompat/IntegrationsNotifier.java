@@ -31,7 +31,7 @@ public class IntegrationsNotifier {
                     installedMods.add(s);
                 }
             }
-            if (installedMods.size() > 0) {
+            if (!installedMods.isEmpty()) {
                 if (!checkAndUpdateAlreadyNotified(installedMods)) {
                     return installedMods;
                 }
@@ -55,7 +55,7 @@ public class IntegrationsNotifier {
         String[] previous = saved.split(":");
         List<String> missing = new ArrayList<>(mods);
         missing.removeAll(Arrays.asList(previous));
-        if (missing.size() == 0) {
+        if (missing.isEmpty()) {
             return true;
         }
         Collections.addAll(missing, previous);

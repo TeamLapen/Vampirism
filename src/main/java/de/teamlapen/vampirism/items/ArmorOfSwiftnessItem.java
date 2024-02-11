@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements IItemWithTier, DyeableLeatherItem {
+public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier, DyeableLeatherItem {
 
     public static final SwiftnessArmorMaterial NORMAL = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_normal", TIER.NORMAL, 15, ArmorMaterial.createReduction(1, 3,2, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.035f);
     public static final SwiftnessArmorMaterial ENHANCED = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_enhanced", TIER.ENHANCED, 20, ArmorMaterial.createReduction(2, 6,5, 2), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.075f);
@@ -64,9 +65,9 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements II
     }
 
     @Override
-    public void onArmorTick(ItemStack itemStack, Level world, @NotNull Player player) {
-        super.onArmorTick(itemStack, world, player);
-        if (player.tickCount % 45 == 3) {
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+        if (pEntity.tickCount % 45 == 3 && pSlotId >= 36 && pSlotId <= 39 && pEntity instanceof Player player) {
             if (this.getType() == Type.CHESTPLATE) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
@@ -87,7 +88,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmorItem implements II
             }
         }
     }
-
 
     /**
      * Applied if complete armor is worn

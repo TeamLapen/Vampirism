@@ -187,8 +187,8 @@ public class BaronModel extends AgeableListModel<VampireBaronEntity> implements 
         this.head.y = 0.0F;
 
 
-        this.armRight.xRot += Mth.sin(ageInTicks * 0.067F) * 0.06F - 0.03;
-        this.armLeft.xRot -= Mth.sin(ageInTicks * 0.067F) * 0.06F + 0.03;
+        this.armRight.xRot += (float) (Mth.sin(ageInTicks * 0.067F) * 0.06F - 0.03);
+        this.armLeft.xRot -= (float) (Mth.sin(ageInTicks * 0.067F) * 0.06F + 0.03);
 
 
         this.headOverlay.copyFrom(this.head);

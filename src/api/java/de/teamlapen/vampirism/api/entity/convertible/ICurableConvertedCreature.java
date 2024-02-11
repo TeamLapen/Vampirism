@@ -95,7 +95,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
 
     @Override
     default @Nullable String getSourceEntityId() {
-        return getSourceEntityDataParamOpt().map(s -> this.getRepresentingEntity().getEntityData().get(s)).orElse(null);
+        return getSourceEntityDataParamOpt().map(s -> this.asEntity().getEntityData().get(s)).orElse(null);
     }
 
     /**

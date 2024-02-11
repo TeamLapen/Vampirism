@@ -27,11 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-/**
- * Container for the hunter table.
- * Handles inventory setup  and "crafting"
- */
 public class HunterTableMenu extends ItemCombinerMenu {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<HunterLeveling.HunterTableRequirement> tableRequirement;
 
 

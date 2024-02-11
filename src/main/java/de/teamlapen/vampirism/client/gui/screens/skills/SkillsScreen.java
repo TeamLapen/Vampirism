@@ -109,27 +109,25 @@ public class SkillsScreen extends Screen {
         this.addRenderableWidget(new ExtendedButton(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (context) -> {
             this.minecraft.setScreen(null);
         }));
-        FactionPlayerHandler.getOpt(minecraft.player).ifPresent(fph -> {
-            fph.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+        FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
 
-                boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
+            boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
 
-                resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
-                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
-                    InventoryHelper.removeItemFromInventory(factionPlayer.getRepresentingPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
-                    if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
-                        context.active = false;
-                    }
-                }));
-                if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
-                    resetSkills.active = false;
-                    resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription())));
-                } else {
-                    resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription())));
+            resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
+                VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
+                InventoryHelper.removeItemFromInventory(factionPlayer.asEntity().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
+                if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
+                    context.active = false;
                 }
-            });
-
+            }));
+            if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 0) && !test) {
+                resetSkills.active = false;
+                resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_consume", ModItems.OBLIVION_POTION.get().getDescription())));
+            } else {
+                resetSkills.setTooltip(Tooltip.create(Component.translatable("text.vampirism.skills.reset_req", ModItems.OBLIVION_POTION.get().getDescription())));
+            }
         });
+
     }
 
     @Override
@@ -176,7 +174,7 @@ public class SkillsScreen extends Screen {
             int remainingPoints1 = this.selectedTab.getRemainingPoints();
             Component remainingPoints;
             if (remainingPoints1 == Integer.MAX_VALUE) {
-                remainingPoints = Component.translatable("text.vampirism.skills.points_left", "\u221E");
+                remainingPoints = Component.translatable("text.vampirism.skills.points_left", "∞");
             } else {
                 remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(remainingPoints1));
             }

@@ -64,7 +64,7 @@ public class DamageHandler {
 
     private static void affectVampireGarlic(@NotNull IVampire vampire, @NotNull EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
-        LivingEntity entity = vampire.getRepresentingEntity();
+        LivingEntity entity = vampire.asEntity();
         entity.addEffect(new MobEffectInstance(ModEffects.GARLIC.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
@@ -143,11 +143,10 @@ public class DamageHandler {
                 hurtModded(entity, ModDamageSources::holyWater, (float) amount);
             }
         }
-        if (vampire && entity instanceof Player) {
-            VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getActionHandler).ifPresent(actionHandler -> {
-                actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
-                actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY.get());
-            });
+        if (vampire && entity instanceof Player player) {
+            IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get(player).getActionHandler();
+            actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE.get());
+            actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY.get());
         } else if (vampire && entity instanceof IEntityActionUser) {
             IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
             if (h.isActionActive(EntityActions.ENTITY_INVISIBLE.get())) {

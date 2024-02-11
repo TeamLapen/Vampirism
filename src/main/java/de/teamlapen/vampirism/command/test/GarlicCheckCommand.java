@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.LevelGarlic;
 import net.minecraft.commands.CommandSourceStack;

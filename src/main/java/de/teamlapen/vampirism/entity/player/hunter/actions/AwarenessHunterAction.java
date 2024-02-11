@@ -58,7 +58,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public boolean onUpdate(@NotNull IHunterPlayer player) {
-        if (player.getRepresentingEntity().getCommandSenderWorld().isClientSide() && player.getRepresentingEntity().tickCount % 8 == 0) {
+        if (player.asEntity().getCommandSenderWorld().isClientSide() && player.asEntity().tickCount % 8 == 0) {
             double dist = nearbyVampire(player);
             double p = 0;
             if (dist != Double.MAX_VALUE) {
@@ -74,12 +74,13 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
         return true;
     }
 
-    private double nearbyVampire(@NotNull IHunterPlayer player) {
+    private double nearbyVampire(@NotNull IHunterPlayer hunter) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        LivingEntity closestVampire = player.getRepresentingEntity().getCommandSenderWorld().getNearestEntity(LivingEntity.class, vampirePredicate, null, player.getRepresentingEntity().getX(), player.getRepresentingEntity().getY(), player.getRepresentingEntity().getZ(), new AABB(player.getRepresentingEntity().getX() - r, player.getRepresentingEntity().getY()
-                - r + 1, player.getRepresentingEntity().getZ()
-                - r, player.getRepresentingEntity().getX() + r, player.getRepresentingEntity().getY() + r + 1, player.getRepresentingEntity().getZ() + r));
-        if (closestVampire != null) return closestVampire.distanceTo(player.getRepresentingEntity());
+        Player player = hunter.asEntity();
+        LivingEntity closestVampire = player.getCommandSenderWorld().getNearestEntity(LivingEntity.class, vampirePredicate, null, player.getX(), player.getY(), player.getZ(), new AABB(player.getX() - r, player.getY()
+                - r + 1, player.getZ()
+                - r, player.getX() + r, player.getY() + r + 1, player.getZ() + r));
+        if (closestVampire != null) return closestVampire.distanceTo(player);
         return Double.MAX_VALUE;
     }
 

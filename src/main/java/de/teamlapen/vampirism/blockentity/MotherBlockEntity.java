@@ -324,9 +324,10 @@ public class MotherBlockEntity extends BlockEntity {
             if (livingentity instanceof ServerPlayer serverplayer) {
                 ModAdvancements.TRIGGER_MOTHER_WIN.get().trigger(serverplayer);
                 serverplayer.awardStat(ModStats.MOTHER_DEFEATED.get(), 1);
-                FactionPlayerHandler.getOpt(serverplayer).filter(s -> s.getCurrentFaction() != null && s.getCurrentLevel() < s.getCurrentFaction().getHighestReachableLevel()).ifPresent(handler -> {
+                FactionPlayerHandler handler = FactionPlayerHandler.get(serverplayer);
+                if (handler.getCurrentFaction() != null && handler.getCurrentLevel() < handler.getCurrentFaction().getHighestReachableLevel()) {
                     handler.setFactionLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1);
-                });
+                }
             }
         }
     }

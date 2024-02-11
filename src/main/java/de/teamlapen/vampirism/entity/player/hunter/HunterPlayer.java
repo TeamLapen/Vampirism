@@ -29,7 +29,6 @@ import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,12 +57,14 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     private static final String NBT_KEY = "hunter_player";
     public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
 
-    private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
-
     public static @NotNull HunterPlayer get(@NotNull Player player) {
         return player.getData(ModAttachments.HUNTER_PLAYER);
     }
 
+    /**
+     * @deprecated Every player should have a hunter player
+     */
+    @Deprecated
     public static @NotNull Optional<HunterPlayer> getOpt(@NotNull Player player) {
         return Optional.ofNullable(player.getData(ModAttachments.HUNTER_PLAYER));
     }
@@ -219,7 +220,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
             }
         } else {
             if (this.player.level().getGameTime() % 100 == 16) {
-                if (OilUtils.getEquippedArmorOils(this.player).size() > 0) {
+                if (!OilUtils.getEquippedArmorOils(this.player).isEmpty()) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 120, 0, false, false));
                 }
             }
@@ -266,10 +267,12 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public void updateMinionAttributes(boolean increasedStats) {
-        MinionWorldData.getData(this.player.level()).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
-            (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
-            HelperLib.sync(minion);
-        }));
+        MinionWorldData.getData(this.player.level()).ifPresent(a -> {
+            a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
+                (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
+                HelperLib.sync(minion);
+            });
+        });
     }
 
     @Override

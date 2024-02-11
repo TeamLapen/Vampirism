@@ -120,9 +120,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int p_77615_4_) {
         if (entity instanceof Player) {
-            all_crucifix.forEach(item -> {
-                ((Player) entity).getCooldowns().addCooldown(item, getCooldown(stack));
-            });
+            all_crucifix.forEach(item -> ((Player) entity).getCooldowns().addCooldown(item, getCooldown(stack)));
         }
     }
 
@@ -148,7 +146,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
             } else if (level >= 8) {
                 tier = 2;
             }
-            if (VampirePlayer.getOpt((Player) e).map(VampirePlayer::getSkillHandler).map(h -> h.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT.get())).orElse(false)) {
+            if (VampirePlayer.get((Player) e).getSkillHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT.get())) {
                 tier++;
             }
             return tier;

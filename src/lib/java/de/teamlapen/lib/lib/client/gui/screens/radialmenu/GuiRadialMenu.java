@@ -182,7 +182,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
             if (numberOfSlices % 2 != 0) {
-                angle1 += Math.PI / numberOfSlices;
+                angle1 += (float) (Math.PI / numberOfSlices);
             }
             float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);

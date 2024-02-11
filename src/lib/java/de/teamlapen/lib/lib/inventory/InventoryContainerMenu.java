@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 
 public abstract class InventoryContainerMenu extends AbstractContainerMenu {
@@ -219,7 +220,7 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
             this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(@NotNull NonNullLazy<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+        public SelectorInfo(@NotNull Supplier<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this(itemStack -> lazyItemCollection.get().contains(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 

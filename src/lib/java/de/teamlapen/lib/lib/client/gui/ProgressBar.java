@@ -37,7 +37,7 @@ public class ProgressBar extends AbstractWidget {
         int j = getFGColor();
         graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
-        setTooltip(Tooltip.create(Component.literal("" + ((int) (progress * 100f)) + "%")));
+        setTooltip(Tooltip.create(Component.literal(((int) (progress * 100f)) + "%")));
     }
 
     public void setColor(int color) {

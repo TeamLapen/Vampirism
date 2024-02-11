@@ -71,7 +71,7 @@ public class FogDiffuserBlockEntity extends BlockEntity {
             }
             case BOOTING -> {
                 if (level.getGameTime() % 128 == 0) {
-                    blockEntity.bootProgress += 0.1;
+                    blockEntity.bootProgress += 0.1F;
                     if (blockEntity.bootProgress >= 1) {
                         blockEntity.state = State.ACTIVE;
                     }

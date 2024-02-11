@@ -35,14 +35,14 @@ public class VersionUpdater {
     }
 
     private static void update1_9to1_10() {
-        Double skillPointsPerLevel = VampirismConfig.BALANCE.skillPointsPerLevel.get();
+        double skillPointsPerLevel = VampirismConfig.BALANCE.skillPointsPerLevel.get();
         if (skillPointsPerLevel == 1) {
             skillPointsPerLevel = VampirismConfig.BALANCE.skillPointsPerLevel.getDefault();
         } else {
             skillPointsPerLevel *= 2;
         }
         VampirismConfig.BALANCE.skillPointsPerLevel.set(skillPointsPerLevel);
-        Double skillPointsPerLordLevel = VampirismConfig.BALANCE.skillPointsPerLordLevel.get();
+        double skillPointsPerLordLevel = VampirismConfig.BALANCE.skillPointsPerLordLevel.get();
         if (skillPointsPerLordLevel == 1) {
             skillPointsPerLordLevel = VampirismConfig.BALANCE.skillPointsPerLordLevel.getDefault();
         } else {

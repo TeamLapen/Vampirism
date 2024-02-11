@@ -63,7 +63,6 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
             this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        ;
         this.lordSkinButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), minecraft.font).pos(this.guiLeft + 20, this.guiTop + 64).selected(useLordSkin).onValueChange((button, selected) -> {
             useLordSkin = selected;
             entity.setUseLordSkin(useLordSkin);

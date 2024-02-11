@@ -107,7 +107,7 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     public void onTouched(@NotNull Player player) {
         if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-            VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength));
+            DamageHandler.affectVampireGarlicDirect(VampirePlayer.get(player), strength);
         }
 
     }

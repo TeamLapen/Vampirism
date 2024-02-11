@@ -39,9 +39,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
-        getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> {
-            texts.add(item.getName(item.getDefaultInstance()).copy().append(" " + items.size()));
-        });
+        getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.add(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
     }
 
     @Override

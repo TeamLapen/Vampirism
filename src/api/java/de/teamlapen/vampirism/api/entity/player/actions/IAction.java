@@ -108,6 +108,7 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
         /**
          * The user does not have the correct permission to use the action {@link de.teamlapen.vampirism.util.Permissions#ACTION}
          */
+        @SuppressWarnings("JavadocReference")
         PERMISSION_DISALLOWED
     }
 

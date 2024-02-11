@@ -41,7 +41,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int refreshTasksList(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().updateTaskLists()));
+            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().updateTaskLists());
         }
         return 0;
     }
@@ -49,7 +49,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int resetTasksList(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().resetTaskLists()));
+            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().resetTaskLists());
         }
         return 0;
     }
@@ -57,7 +57,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int clearTasks(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset()));
+            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset());
         }
 
         return 0;
@@ -66,7 +66,8 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int resetLordTasks(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(fph -> fph.resetLordTasks(fph.getLordLevel()));
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.resetLordTasks(handler.getLordLevel());
         }
         return 0;
     }

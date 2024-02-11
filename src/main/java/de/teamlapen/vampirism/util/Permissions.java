@@ -16,16 +16,16 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Permissions {
-    @SuppressWarnings("rawtypes")
-    public static final PermissionDynamicContextKey<IAction> ACTION_CONTEXT = new PermissionDynamicContextKey<>(IAction.class, "action", action -> RegUtil.id(action).toString());
+    public static final PermissionDynamicContextKey<IAction<?>> ACTION_CONTEXT = new PermissionDynamicContextKey<>((Class<IAction<?>>) (Object) IAction.class, "action", action -> RegUtil.id(action).toString());
 
     public static final PermissionNode<Boolean> GENERAL_CHECK = new PermissionNode<>(REFERENCE.MODID, "check", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
     public static final Permission FEED = create(new PermissionNode<>(REFERENCE.MODID, "bite.feed", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
     public static final Permission FEED_PLAYER = create(new PermissionNode<>(REFERENCE.MODID, "bite.feed.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
     public static final Permission INFECT_PLAYER = create(new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
-    public static final ContextPermission<IAction> ACTION = new ContextPermission<>(new PermissionNode<>(REFERENCE.MODID, "action", PermissionTypes.BOOLEAN, (player, playerUUID, context) -> true), ACTION_CONTEXT);
+    public static final ContextPermission<IAction<?>> ACTION = new ContextPermission<>(new PermissionNode<>(REFERENCE.MODID, "action", PermissionTypes.BOOLEAN, (player, playerUUID, context) -> true), ACTION_CONTEXT);
 
 
     @SubscribeEvent

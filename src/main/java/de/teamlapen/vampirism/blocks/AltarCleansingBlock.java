@@ -69,12 +69,10 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
     @Override
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide || !player.isAlive()) return InteractionResult.PASS;
-        return FactionPlayerHandler.getOpt(player).map(handler -> {
-            if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
-                VampirismMod.proxy.displayRevertBackScreen();
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.PASS;
-        }).orElse(InteractionResult.PASS);
+        if (FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION)) {
+            VampirismMod.proxy.displayRevertBackScreen();
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
     }
 }

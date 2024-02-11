@@ -166,12 +166,6 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     @Deprecated
     @Override
-    public void addNoSundamageBiomes(ResourceLocation... biomes) {
-        this.apiSettings.biomes.addAll(Arrays.stream(biomes).map(id -> ResourceKey.create(Registries.BIOME, id)).toList());
-    }
-
-    @Deprecated
-    @Override
     public void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         if (sundamage) {
             apiSettings.sundamageLevels.add(dimension);

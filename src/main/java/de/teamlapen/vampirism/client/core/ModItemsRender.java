@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
@@ -79,19 +78,16 @@ public class ModItemsRender {
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
-            event.register(item.get(), new IItemDecorator() {
-                @Override
-                public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-                    ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
-                        PoseStack posestack = graphics.pose();
-                        posestack.pushPose();
-                        posestack.translate(xOffset, yOffset + 8, 0);
-                        posestack.scale(0.5f, 0.5f, 0.5f);
-                        graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
-                        posestack.popPose();
-                    });
-                    return false;
-                }
+            event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
+                ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
+                    PoseStack posestack = graphics.pose();
+                    posestack.pushPose();
+                    posestack.translate(xOffset, yOffset + 8, 0);
+                    posestack.scale(0.5f, 0.5f, 0.5f);
+                    graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
+                    posestack.popPose();
+                });
+                return false;
             });
         });
     }

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -21,7 +23,7 @@ import java.util.function.Function;
 public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
     private final int highestLordLevel;
-    private final NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier;
+    private final Supplier<AttachmentType<T>> playerCapabilitySupplier;
     private final BiFunction<Integer, TitleGender, Component> lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private final boolean hasLordSkills;

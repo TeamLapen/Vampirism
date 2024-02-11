@@ -71,7 +71,8 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     /**
      * @deprecated use {@link #asEntity()} instead
      */
-    @ApiStatus.Obsolete
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
     Player getRepresentingPlayer();
 
     @Override

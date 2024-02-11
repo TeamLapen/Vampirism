@@ -38,7 +38,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(@NotNull IVampirePlayer player, ActivationContext context) {
-        Player shooter = player.getRepresentingPlayer();
+        Player shooter = player.asEntity();
 
         float directDamage = VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;

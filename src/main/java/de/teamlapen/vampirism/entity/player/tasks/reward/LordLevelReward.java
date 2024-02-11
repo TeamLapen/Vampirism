@@ -17,11 +17,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
-    public static final Codec<LordLevelReward> CODEC = RecordCodecBuilder.create(inst -> {
-        return inst.group(Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
-                ComponentSerialization.FLAT_CODEC.fieldOf("description").forGetter(i -> i.description)
-        ).apply(inst, LordLevelReward::new);
-    });
+    public static final Codec<LordLevelReward> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
+                    ComponentSerialization.FLAT_CODEC.fieldOf("description").forGetter(i -> i.description)
+            ).apply(inst, LordLevelReward::new));
 
     public final int targetLevel;
     private final Component description;
@@ -38,11 +38,10 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
     @Override
     public void applyReward(@NotNull IFactionPlayer<?> p) {
-        FactionPlayerHandler.getOpt(p.getRepresentingPlayer()).ifPresent(fph -> {
-            if (fph.getLordLevel() == targetLevel - 1) {
-                fph.setLordLevel(targetLevel);
-            }
-        });
+        FactionPlayerHandler fph = FactionPlayerHandler.get(p.asEntity());
+        if (fph.getLordLevel() == targetLevel - 1) {
+            fph.setLordLevel(targetLevel);
+        }
     }
 
     @Override

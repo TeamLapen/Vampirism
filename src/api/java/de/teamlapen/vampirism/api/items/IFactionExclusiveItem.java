@@ -40,7 +40,7 @@ public interface IFactionExclusiveItem extends ItemLike {
             if (player != null) {
                 color = VampirismAPI.factionRegistry().getFaction(player) == faction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
             }
-            tooltip.add(Component.translatable(" ").append(faction.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
+            tooltip.add(Component.literal(" ").append(faction.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
         }
     }
 
@@ -50,6 +50,7 @@ public interface IFactionExclusiveItem extends ItemLike {
      * <p>
      * This must produce the same tooltip line as the default handler.
      */
+    @SuppressWarnings("JavadocReference")
     default void addOilDescTooltip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         if (!stack.hasTag()) return;
         CompoundTag tag = stack.getTag().getCompound("applied_oil");

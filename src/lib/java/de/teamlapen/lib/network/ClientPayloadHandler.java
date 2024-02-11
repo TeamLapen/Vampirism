@@ -12,8 +12,6 @@ public class ClientPayloadHandler {
     }
 
     public void handleUpdateEntityPacket(ClientboundUpdateEntityPacket pkt, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            VampLib.proxy.handleUpdateEntityPacket(pkt);
-        });
+        context.workHandler().execute(() -> VampLib.proxy.handleUpdateEntityPacket(pkt));
     }
 }

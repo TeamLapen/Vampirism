@@ -60,7 +60,7 @@ public record ItemRequirement(@NotNull ResourceLocation id, @NotNull ItemStack s
      */
     @Override
     public void removeRequirement(@NotNull IFactionPlayer<?> player) {
-        player.getRepresentingPlayer().getInventory().clearOrCountMatchingItems(itemStack -> ItemStackUtil.areStacksEqualIgnoreAmount(itemStack, this.stack), getAmount(player), player.getRepresentingPlayer().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
+        player.asEntity().getInventory().clearOrCountMatchingItems(itemStack -> ItemStackUtil.areStacksEqualIgnoreAmount(itemStack, this.stack), getAmount(player), player.asEntity().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
     }
 
     @Override

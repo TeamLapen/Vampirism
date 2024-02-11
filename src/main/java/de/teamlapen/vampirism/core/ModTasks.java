@@ -123,6 +123,7 @@ public class ModTasks {
         return ResourceKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, path));
     }
 
+    @SuppressWarnings("deprecation")
     public static void createTasks(BootstapContext<Task> context) {
         context.register(FEEDING_ADAPTER, TaskBuilder.builder(FEEDING_ADAPTER).defaultTitle().unlockedBy(new LvlUnlocker(4)).addRequirement(ModTags.Entities.ADVANCED_HUNTER, 10).addRequirement(new ItemStack(Items.GOLD_INGOT, 5)).setReward(new ItemStack(ModItems.FEEDING_ADAPTER.get())).build());
         context.register(VAMPIRE_LORD_1, TaskBuilder.builder(VAMPIRE_LORD_1).defaultTitle().unlockedBy(new LvlUnlocker(VReference.VAMPIRE_FACTION.getHighestReachableLevel())).addRequirement(ModStats.INFECTED_CREATURES.get(), 25).addRequirement(new ItemStack(ModItems.PURE_BLOOD_4.get(), 5)).addRequirement(new ItemStack(Items.GOLD_INGOT, 32)).addRequirement(ModStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new LordLevelReward(1, Component.translatable("task.vampirism.vampire_lord1.reward"))).build());

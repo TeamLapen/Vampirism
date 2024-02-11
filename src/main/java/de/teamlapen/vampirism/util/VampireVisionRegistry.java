@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Implementation for several small registries.
@@ -22,26 +21,6 @@ public class VampireVisionRegistry implements IVampireVisionRegistry {
     private final static String LEGACY_NAMESPACE = "vampirismlegacy";
     private final ArrayList<@NotNull IVampireVision> visionList = new ArrayList<>();
     private final BiMap<@NotNull ResourceLocation, @NotNull IVampireVision> visionMap = HashBiMap.create();
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public int getIdOfVision(IVampireVision vision) {
-        return visionList.indexOf(vision);
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public
-    @Nullable
-    IVampireVision getVisionOfId(int id) {
-        return visionList.get(id);
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public ResourceLocation getIdForId(int id) {
-        return this.visionMap.inverse().get(this.visionList.get(id));
-    }
 
     @Override
     public @NotNull ResourceLocation getVisionId(IVampireVision vision) {
@@ -60,11 +39,6 @@ public class VampireVisionRegistry implements IVampireVisionRegistry {
     @Override
     public @NotNull List<IVampireVision> getVisions() {
         return ImmutableList.copyOf(visionList);
-    }
-
-    @Override
-    public <T extends IVampireVision> T registerVision(String key, T vision) {
-        return this.registerVision(new ResourceLocation(LEGACY_NAMESPACE, key.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_")), vision);
     }
 
     @Override

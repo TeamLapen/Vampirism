@@ -15,7 +15,7 @@ public record WeapontableShapedRecipePattern(int width, int height, NonNullList<
         
     }
 
-    public static record Data(Map<Character, Ingredient> key, List<String> pattern) {
+    public record Data(Map<Character, Ingredient> key, List<String> pattern) {
 
     }
 }

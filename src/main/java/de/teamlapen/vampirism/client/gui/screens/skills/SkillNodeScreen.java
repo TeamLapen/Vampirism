@@ -215,7 +215,7 @@ public class SkillNodeScreen {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         Holder<ISkill<?>>[] elements = this.skillNode.elements().toArray(Holder[]::new);
-        scrollX -= getNodeWidth() / 2f;
+        scrollX -= (int) (getNodeWidth() / 2f);
 
         //check if a node is hovered
         int hoveredSkillIndex = -1;

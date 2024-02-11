@@ -2,7 +2,6 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.util.QualifiedVersion;
 import de.teamlapen.vampirism.api.VReference;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 
 /**

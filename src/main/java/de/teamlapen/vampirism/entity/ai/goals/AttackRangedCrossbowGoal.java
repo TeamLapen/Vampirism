@@ -158,7 +158,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
         UNCHARGED,
         CHARGING,
         CHARGED,
-        READY_TO_ATTACK;
+        READY_TO_ATTACK
     }
 
 }

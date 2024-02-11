@@ -10,8 +10,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture, float scale) implements ParticleOptions {
@@ -30,6 +28,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
                     Codec.FLOAT.fieldOf("s").forGetter((p_239804_0_) -> p_239804_0_.scale)
             ).apply(p_239803_0_, (a, d, x, y, z, t, s) -> new FlyingBloodParticleOptions(a, d, x, y, z, new ResourceLocation(t), s)));
 
+    @Deprecated
     public static final ParticleOptions.Deserializer<FlyingBloodParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @NotNull
         public FlyingBloodParticleOptions fromCommand(@NotNull ParticleType<FlyingBloodParticleOptions> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {

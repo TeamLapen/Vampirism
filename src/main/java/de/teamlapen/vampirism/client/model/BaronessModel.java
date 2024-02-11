@@ -186,17 +186,17 @@ public class BaronessModel extends AgeableListModel<VampireBaronEntity> implemen
         this.head.y = 0.0F;
 
 
-        this.armRight.xRot += Mth.sin(ageInTicks * 0.067F) * 0.06F - 0.03;
-        this.armLeft.xRot -= Mth.sin(ageInTicks * 0.067F) * 0.06F + 0.03;
+        this.armRight.xRot += (float) (Mth.sin(ageInTicks * 0.067F) * 0.06F - 0.03);
+        this.armLeft.xRot -= (float) (Mth.sin(ageInTicks * 0.067F) * 0.06F + 0.03);
 
 
         this.headOverlay.copyFrom(this.head);
         this.armLeftOverlay.copyFrom(this.armLeft);
         this.armRightOverlay.copyFrom(this.armRight);
         this.clawsLeft.copyFrom(this.armLeft);
-        this.clawsLeft.y += 8.5;
+        this.clawsLeft.y += 8.5F;
         this.clawsRight.copyFrom(this.armRight);
-        this.clawsRight.y += 9.5;
+        this.clawsRight.y += 9.5F;
     }
 
     @Override

@@ -169,7 +169,7 @@ public class ModPlayerEventHandler {
             if (VampirismPlayerAttributes.get(player).getVampSpecial().bat) {
                 event.setCanceled(true);
             }
-            HunterPlayer.getOpt(player).ifPresent(HunterPlayer::breakDisguise);
+            HunterPlayer.get(player).breakDisguise();
             if (!checkItemUsePerm(player.getMainHandItem(), player)) {
                 event.setCanceled(true);
             }
@@ -179,9 +179,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.@NotNull BreakEvent event) {
-        if (event.getPlayer() != null) {
-            HunterPlayer.getOpt(event.getPlayer()).ifPresent(HunterPlayer::breakDisguise);
-        }
+        HunterPlayer.get(event.getPlayer()).breakDisguise();
     }
 
     @SubscribeEvent
@@ -208,7 +206,7 @@ public class ModPlayerEventHandler {
                     }
                 }
             }
-            HunterPlayer.getOpt((Player) event.getEntity()).ifPresent(HunterPlayer::breakDisguise);
+            HunterPlayer.get((Player) event.getEntity()).breakDisguise();
         } catch (Exception e) {
             // Added try catch to prevent any exception in case some other mod uses auto placers or so
         }
@@ -269,10 +267,10 @@ public class ModPlayerEventHandler {
         if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getCommandSenderWorld().isClientSide) {
-                    if (event.getEntity() instanceof IVampire) {
-                        DamageHandler.affectVampireGarlicDirect((IVampire) event.getEntity(), EnumStrength.MEDIUM);
-                    } else if (event.getEntity() instanceof Player) {
-                        VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(vampire -> DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM));
+                    if (event.getEntity() instanceof IVampire vampire) {
+                        DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM);
+                    } else if (event.getEntity() instanceof Player player) {
+                        DamageHandler.affectVampireGarlicDirect(VampirePlayer.get(player), EnumStrength.MEDIUM);
                     }
                 }
             }
@@ -291,19 +289,19 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onLivingAttack(@NotNull LivingAttackEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (event.getEntity().isAlive() && !FactionPlayerHandler.getOpt((Player) event.getEntity()).map(h -> h.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false)) {
+            if (event.getEntity().isAlive() && !FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
             }
         }
         if (event.getSource().getEntity() instanceof Player) {
-            HunterPlayer.getOpt((Player) event.getSource().getEntity()).ifPresent(HunterPlayer::breakDisguise);
+            HunterPlayer.get((Player) event.getSource().getEntity()).breakDisguise();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingDeathFirst(@NotNull LivingDeathEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (VampirePlayer.getOpt((Player) event.getEntity()).map(v -> v.onDeadlyHit(event.getSource())).orElse(false)) {
+        if (event.getEntity() instanceof Player player) {
+            if (VampirePlayer.get(player).onDeadlyHit(event.getSource())) {
                 event.setCanceled(true);
             }
         }
@@ -409,18 +407,19 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.@NotNull NameFormat event) {
         if (event.getEntity() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(fph -> fph.getCurrentFactionPlayer().ifPresent(fp -> {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
+            handler.getCurrentFactionPlayer().ifPresent(fp -> {
                 IFaction<?> f = fp.getDisguisedAs();
                 if (f != null) {
                     MutableComponent displayName;
-                    if (fph.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                        displayName = Component.literal("[").append(fph.getLordTitle()).append("] ").append(event.getDisplayname());
+                    if (handler.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
+                        displayName = Component.literal("[").append(handler.getLordTitle()).append("] ").append(event.getDisplayname());
                     } else {
                         displayName = event.getDisplayname().copy();
                     }
                     event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
                 }
-            }));
+            });
         }
     }
 
@@ -459,9 +458,9 @@ public class ModPlayerEventHandler {
         boolean message = !player.getCommandSenderWorld().isClientSide;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionExclusiveItem factionItem) {
             if (!player.isAlive()) return false;
-            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IFaction<?> usingFaction = factionItem.getExclusiveFaction(stack);
-            if (usingFaction != null && !handler.map(h -> h.isInFaction(usingFaction)).orElse(false)) {
+            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
                 if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
                 }
@@ -469,13 +468,13 @@ public class ModPlayerEventHandler {
             } else if (stack.getItem() instanceof IFactionLevelItem<?> levelItem) {
                 ISkill<?> requiredSkill = levelItem.getRequiredSkill(stack);
 
-                if (handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0) < levelItem.getMinLevel(stack)) {
+                if (handler.getCurrentLevel() < levelItem.getMinLevel(stack)) {
                     if (message) {
                         player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_level"), true);
                     }
                     return false;
                 } else if (requiredSkill != null) {
-                    IFactionPlayer<?> factionPlayer = handler.flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+                    IFactionPlayer<?> factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
                     if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                         if (message) {
                             player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_skill"), true);
@@ -504,7 +503,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
         if (event.getNewGameMode() == GameType.SPECTATOR) {
-            FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(handler -> handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions()));
+            FactionPlayerHandler.getCurrentFactionPlayer(event.getEntity()).ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions());
         }
     }
 }

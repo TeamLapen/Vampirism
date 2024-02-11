@@ -106,10 +106,10 @@ public class ClientProxy extends CommonProxy {
                         LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
                     }
                 }
-                if (msg.getCaps() != null) {
+                if (msg.getAttachments() != null) {
 
-                    for (String key : msg.getCaps().getAllKeys()) {
-                        handleCapability(e, new ResourceLocation(key), msg.getCaps().getCompound(key));
+                    for (String key : msg.getAttachments().getAllKeys()) {
+                        handleCapability(e, new ResourceLocation(key), msg.getAttachments().getCompound(key));
                     }
 
 

@@ -21,7 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
@@ -71,20 +71,20 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, @NotNull Player player) {
-        super.onArmorTick(stack, world, player);
-        if (player.tickCount % 16 == 8) {
-            if (!Helper.isVampire(player)) {
-                player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+        if (pEntity instanceof LivingEntity living && pSlotId >= 36 && pSlotId <= 39) {
+            if (living.tickCount % 16 == 8) {
+                if (!Helper.isVampire(living)) {
+                    living.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
+                }
             }
-        }
-        if (stack.getItem() == ModItems.VAMPIRE_CLOTHING_CROWN.get() && stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
-            UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
-            if (player.tickCount % 16 == 4) {
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
-                player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
+            if (pStack.getItem() == ModItems.VAMPIRE_CLOTHING_CROWN.get() && pStack.hasCustomHoverName() && "10000000".equals(pStack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
+                UtilLib.spawnParticlesAroundEntity(living, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
+                if (living.tickCount % 16 == 4) {
+                    living.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
+                    living.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
+                }
             }
         }
     }
-
 }

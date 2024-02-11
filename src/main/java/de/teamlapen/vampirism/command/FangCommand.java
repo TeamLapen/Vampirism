@@ -21,7 +21,7 @@ public class FangCommand extends BasicCommand {
     }
 
     private static int setFang(@NotNull CommandContext<CommandSourceStack> context, @NotNull Player player, int type) {
-        if (VampirePlayer.getOpt(player).map(vampire -> vampire.setFangType(type)).orElse(false)) {
+        if (VampirePlayer.get(player).setFangType(type)) {
             context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.fang.success", type), false);
         }
         return type;

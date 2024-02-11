@@ -29,7 +29,7 @@ public class ResetActionsCommand extends BasicCommand {
     private static int resetActions(@NotNull CommandSourceStack commandSource, @NotNull List<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;
-            FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).ifPresent(factionPlayer -> {
+            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();

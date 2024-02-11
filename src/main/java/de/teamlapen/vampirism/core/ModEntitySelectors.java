@@ -24,7 +24,7 @@ public class ModEntitySelectors {
     private static final String MIN_LEVEL = "vampirism:minLevel";
     private static final String MAX_LEVEL = "vampirism:maxLevel";
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("command.vampirism.argument.faction.notfound", p_208726_0_));
 
 
     public static void registerSelectors() {
@@ -39,7 +39,7 @@ public class ModEntitySelectors {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
                         } else if (f instanceof IPlayableFaction && input instanceof Player) {
-                            boolean flag1 = FactionPlayerHandler.getOpt((Player) input).map(h -> h.isInFaction(f)).orElse(false);
+                            boolean flag1 = FactionPlayerHandler.get((Player) input).isInFaction(f);
                             return invert != flag1;
                         }
                         return invert;
@@ -56,7 +56,7 @@ public class ModEntitySelectors {
             if ((bound.min().isEmpty() || bound.min().get() >= 0) && (bound.max().isEmpty() || bound.max().get() >= 0)) {
                 parser.addPredicate(input -> {
                     if (input instanceof Player) {
-                        int level = FactionPlayerHandler.getOpt((Player) input).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+                        int level = FactionPlayerHandler.get((Player) input).getCurrentLevel();
                         return (bound.min().isEmpty() || bound.min().get() <= level) && (bound.max().isEmpty() || bound.max().get() >= level);
                     }
                     return false;

@@ -28,9 +28,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleVampireBookPacket(ClientboundOpenVampireBookPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> {
-            openScreen(new VampireBookScreen(VampireBookManager.getInstance().getBookById(msg.bookId())));
-        });
+        context.workHandler().execute(() -> openScreen(new VampireBookScreen(VampireBookManager.getInstance().getBookById(msg.bookId()))));
     }
 
     public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, PlayPayloadContext context) {
@@ -45,9 +43,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> {
-            openScreen(new SelectMinionScreen(msg.action(), msg.minions()));
-        });
+        context.workHandler().execute(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
     }
 
     public static void handleSundamageData(ClientboundSundamagePacket msg, IPayloadContext context) {

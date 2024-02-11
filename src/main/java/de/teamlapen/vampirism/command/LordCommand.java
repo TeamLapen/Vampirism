@@ -40,14 +40,18 @@ public class LordCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, final int level, @NotNull Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
-            Optional<FactionPlayerHandler> opt = FactionPlayerHandler.getOpt(player);
-            opt.map(FactionPlayerHandler::getCurrentFaction).orElseThrow(NO_FACTION::create);
-            opt.filter(handler -> {
-                int maxLevel = handler.getCurrentFaction().getHighestReachableLevel();
-                return handler.getCurrentLevel() == maxLevel && handler.setFactionLevel(handler.getCurrentFaction(), maxLevel);
-            }).orElseThrow(LEVEL_UP_FAILED::create);
-            opt.filter(handler -> handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))).orElseThrow(LORD_FAILED::create);
-            opt.ifPresent(s -> context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), s.getCurrentFaction().getName(), s.getLordLevel()), true));
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            if (handler.getCurrentFaction() == null) {
+                throw NO_FACTION.create();
+            }
+            int maxLevel = handler.getCurrentFaction().getHighestReachableLevel();
+            if (handler.getCurrentLevel() == maxLevel && handler.setFactionLevel(handler.getCurrentFaction(), maxLevel)) {
+                throw LEVEL_UP_FAILED.create();
+            }
+            if (handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))) {
+                throw LORD_FAILED.create();
+            }
+            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), handler.getCurrentFaction().getName(), handler.getLordLevel()), true);
         }
         return 0;
     }

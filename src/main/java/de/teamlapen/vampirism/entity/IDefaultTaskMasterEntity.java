@@ -26,12 +26,12 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
     VillagerType getBiomeType();
 
     default boolean processInteraction(@NotNull Player playerEntity, @NotNull Entity entity) {
-        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
+        if (FactionPlayerHandler.getCurrentFactionPlayer(playerEntity).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleMenuProvider((containerId, playerInventory, player) -> new TaskBoardMenu(containerId, playerInventory), entity.getDisplayName().plainCopy()));
             if (containerIdOpt.isPresent()) {
-                FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
+                FactionPlayerHandler.getCurrentFactionPlayer(playerEntity).ifPresent(iFactionPlayer -> {
                     iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUUID());
-                }));
+                });
                 return true;
             }
         } else {

@@ -15,12 +15,11 @@ import java.util.UUID;
 public record ClientboundBossEventSoundPacket(UUID  bossEventUuid, ResourceKey<SoundEvent> sound) implements CustomPacketPayload {
 
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "boss_event_sound");
-    public static final Codec<ClientboundBossEventSoundPacket> CODEC = RecordCodecBuilder.create(builder -> {
-        return builder.group(
-                Codec.STRING.xmap(UUID::fromString, UUID::toString).fieldOf("boss_event_uuid").forGetter(l -> l.bossEventUuid),
-                ResourceKey.codec(Registries.SOUND_EVENT).fieldOf("sound").forGetter(l -> l.sound)
-        ).apply(builder, ClientboundBossEventSoundPacket::new);
-    });
+    public static final Codec<ClientboundBossEventSoundPacket> CODEC = RecordCodecBuilder.create(builder ->
+            builder.group(
+                    Codec.STRING.xmap(UUID::fromString, UUID::toString).fieldOf("boss_event_uuid").forGetter(l -> l.bossEventUuid),
+                    ResourceKey.codec(Registries.SOUND_EVENT).fieldOf("sound").forGetter(l -> l.sound)
+            ).apply(builder, ClientboundBossEventSoundPacket::new));
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {

@@ -35,13 +35,13 @@ public class DifficultyCalculator {
         int sum = 0;
         for (Player p : playerList) {
             if (!p.isAlive()) continue;
-            Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(p);
-            int pLevel = handler.map(FactionPlayerHandler::getCurrentLevel).orElse(0);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(p);
+            int pLevel = handler.getCurrentLevel();
             if (pLevel == 0) {
                 min = 0;
                 continue;
             }
-            int level = (int) (pLevel / (float) handler.map(FactionPlayerHandler::getCurrentFaction).map(IPlayableFaction::getHighestReachableLevel).orElse(pLevel) * 100F);
+            int level = (int) (pLevel / (float) handler.getCurrentFaction().getHighestReachableLevel());
             if (level < min) {
                 min = level;
             }

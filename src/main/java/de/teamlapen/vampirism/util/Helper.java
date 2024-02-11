@@ -125,7 +125,7 @@ public class Helper {
     }
 
     public static boolean canBecomeVampire(@NotNull Player player) {
-        return FactionPlayerHandler.getOpt(player).map(v -> v.canJoin(VReference.VAMPIRE_FACTION)).orElse(false);
+        return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
     }
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {

@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -96,8 +94,9 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * return in {@link net.minecraft.world.entity.PathfinderMob#getTypeName()} ()}
+     * return in {@link net.minecraft.world.entity.PathfinderMob#getTypeName()}
      */
+    @SuppressWarnings("JavadocReference")
     default @NotNull Component getNameC(@NotNull Supplier<Component> baseName) {
         if (data().name == null) {
             this.data().name = Component.translatable("entity.vampirism.vampire").append(" ").append(baseName.get());

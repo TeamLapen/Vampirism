@@ -125,7 +125,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
         if (!level().isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
-            int amt = VampirePlayer.getOpt(player).map(vampire -> vampire.onBite(this)).orElse(0);
+            int amt = VampirePlayer.get(player).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, new DrinkBloodContext(player));
             return true;
         }

@@ -167,38 +167,37 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
     public void convertToMinion(@NotNull Player lord) {
-        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
-            if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
-                    if (controller.hasFreeMinionSlot()) {
-                        if (fph.getCurrentFaction() == this.getFaction()) {
-                            boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
-                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
-                            data.updateEntityCaps(this.serializeAttachments());
-                            CompoundTag compoundTag = saveWithoutId(new CompoundTag());
-                            int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
-                            if (id < 0) {
-                                LOGGER.error("Failed to get minion slot");
-                                return;
-                            }
-                            HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level());
-                            minion.claimMinionSlot(id, controller);
-                            minion.copyPosition(this);
-                            minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.STAY.get());
-                            UtilLib.replaceEntity(this, minion);
-
-                        } else {
-                            LOGGER.warn("Wrong faction for minion");
+        FactionPlayerHandler fph = FactionPlayerHandler.get(lord);
+        if (fph.getMaxMinions() > 0) {
+            MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                if (controller.hasFreeMinionSlot()) {
+                    if (fph.getCurrentFaction() == this.getFaction()) {
+                        boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
+                        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
+                        data.updateEntityCaps(this.serializeAttachments());
+                        CompoundTag compoundTag = saveWithoutId(new CompoundTag());
+                        int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
+                        if (id < 0) {
+                            LOGGER.error("Failed to get minion slot");
+                            return;
                         }
+                        HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level());
+                        minion.claimMinionSlot(id, controller);
+                        minion.copyPosition(this);
+                        minion.markAsConverted();
+                        controller.activateTask(0, MinionTasks.STAY.get());
+                        UtilLib.replaceEntity(this, minion);
+
                     } else {
-                        LOGGER.warn("No free slot");
+                        LOGGER.warn("Wrong faction for minion");
                     }
-                });
-            } else {
-                LOGGER.error("Can't have minions");
-            }
-        });
+                } else {
+                    LOGGER.warn("No free slot");
+                }
+            });
+        } else {
+            LOGGER.error("Can't have minions");
+        }
     }
 
     @Override
@@ -381,9 +380,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public int suggestEntityLevel(@NotNull Difficulty d) {
         return switch (this.random.nextInt(6)) {
-            case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2 -> (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            case 0 -> (int) (d.minPercLevel() / 100F * MAX_LEVEL);
+            case 1 -> (int) (d.avgPercLevel() / 100F * MAX_LEVEL);
+            case 2 -> (int) (d.maxPercLevel() / 100F * MAX_LEVEL);
             default -> this.random.nextInt(MAX_LEVEL + 1);
         };
 
@@ -426,33 +425,32 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     }
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
-                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
-                        if (fph.getMaxMinions() > 0) {
-                            ItemStack heldItem = player.getItemInHand(hand);
+                    FactionPlayerHandler fph = FactionPlayerHandler.get(player);
+                    if (fph.getMaxMinions() > 0) {
+                        ItemStack heldItem = player.getItemInHand(hand);
 
-                            if (this.getEntityLevel() > 0) {
-                                if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
-                                }
-                            } else {
-                                boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
-                                if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                    if (!freeSlot) {
-                                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.no_free_slot"), false);
-                                    } else {
-                                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.start_serving"), false);
-                                        convertToMinion(player);
-                                        if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                                    }
-                                } else if (freeSlot) {
-                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
-                                }
+                        if (this.getEntityLevel() > 0) {
+                            if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
                             }
                         } else {
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
+                            boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
+                            if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
+                                if (!freeSlot) {
+                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.no_free_slot"), false);
+                                } else {
+                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.start_serving"), false);
+                                    convertToMinion(player);
+                                    if (!player.getAbilities().instabuild) heldItem.shrink(1);
+                                }
+                            } else if (freeSlot) {
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                            }
                         }
-                    });
+                    } else {
+                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
+                    }
                     return InteractionResult.SUCCESS;
                 }
 

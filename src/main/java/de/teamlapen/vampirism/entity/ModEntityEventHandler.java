@@ -111,8 +111,8 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
-        if (event.getSlot().getType() == EquipmentSlot.Type.ARMOR && event.getEntity() instanceof Player) {
-            VampirePlayer.getOpt((Player) event.getEntity()).ifPresent(VampirePlayer::requestNaturalArmorUpdate);
+        if (event.getSlot().getType() == EquipmentSlot.Type.ARMOR && event.getEntity() instanceof Player player) {
+            VampirePlayer.get(player).requestNaturalArmorUpdate();
         }
     }
 

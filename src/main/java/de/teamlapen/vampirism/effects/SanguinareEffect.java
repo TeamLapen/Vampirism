@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.client.extensions.EffectExtensions;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -24,7 +23,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 
-public class SanguinareEffect extends VampirismEffect implements EffectWithNoCounter {
+public class SanguinareEffect extends VampirismEffect {
     /**
      * @param player Whether to use the player effect duration or the mob duration
      */
@@ -63,8 +62,8 @@ public class SanguinareEffect extends VampirismEffect implements EffectWithNoCou
         if (entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
-        if (entity instanceof Player) {
-            VampirePlayer.getOpt((Player) entity).ifPresent(VampirePlayer::onSanguinareFinished);
+        if (entity instanceof Player player) {
+            VampirePlayer.get(player).onSanguinareFinished();
         }
     }
 

@@ -51,9 +51,9 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
 
     @Override
     public boolean onUpdate(@NotNull IHunterPlayer player) {
-        if (!(player.getRepresentingEntity().tickCount % 3 == 0)) {
-            Collection<MobEffectInstance> effects = player.getRepresentingEntity().getActiveEffects();
-            effects.stream().filter(instance -> shouldRemove(instance.getEffect())).toList().forEach(s -> player.getRepresentingPlayer().removeEffect(s.getEffect()));
+        if (!(player.asEntity().tickCount % 3 == 0)) {
+            Collection<MobEffectInstance> effects = player.asEntity().getActiveEffects();
+            effects.stream().filter(instance -> shouldRemove(instance.getEffect())).toList().forEach(s -> player.asEntity().removeEffect(s.getEffect()));
         }
         return false;
     }

@@ -54,13 +54,12 @@ public record ConverterEntry(Converter converter, Optional<ResourceLocation> ove
                 this(values.stream().collect(Collectors.toMap(com.mojang.datafixers.util.Pair::getFirst, com.mojang.datafixers.util.Pair::getSecond, (a, b) -> b)));
             }
 
-            private static final Codec<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst -> {
-                return inst.group(
-                        BuiltInRegistries.ATTRIBUTE.byNameCodec().fieldOf("attribute").forGetter(com.mojang.datafixers.util.Pair::getFirst),
-                        FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
-                        Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
-                ).apply(inst, ((attribute, floatProvider, aDouble) -> com.mojang.datafixers.util.Pair.of(attribute, com.mojang.datafixers.util.Pair.of(floatProvider, aDouble))));
-            });
+            private static final Codec<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst ->
+                    inst.group(
+                            BuiltInRegistries.ATTRIBUTE.byNameCodec().fieldOf("attribute").forGetter(Pair::getFirst),
+                            FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
+                            Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
+                    ).apply(inst, ((attribute, floatProvider, aDouble) -> Pair.of(attribute, Pair.of(floatProvider, aDouble)))));
             public static final Codec<ConvertingAttributeModifier> CODEC = CODEC_PAIR.listOf().xmap(
                     ConvertingAttributeModifier::new,
                     x -> x.attributeModifier.entrySet().stream().map(s -> com.mojang.datafixers.util.Pair.of(s.getKey(), com.mojang.datafixers.util.Pair.of(s.getValue().getFirst(), s.getValue().getSecond()))).collect(Collectors.toList())

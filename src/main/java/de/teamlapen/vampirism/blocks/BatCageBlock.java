@@ -60,7 +60,7 @@ public class BatCageBlock extends BaseEntityBlock {
 
     @Override
     public @NotNull BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+        return pState.setValue(FACING, pMirror.mirror(pState.getValue(FACING)));
     }
 
     @Override

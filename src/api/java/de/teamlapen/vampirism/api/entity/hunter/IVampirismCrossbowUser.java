@@ -36,6 +36,6 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob {
     }
 
     enum ArmPose {
-        NEUTRAL, CROSSBOW_HOLD, CROSSBOW_CHARGE;
+        NEUTRAL, CROSSBOW_HOLD, CROSSBOW_CHARGE
     }
 }

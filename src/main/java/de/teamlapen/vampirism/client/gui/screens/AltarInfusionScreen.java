@@ -85,8 +85,6 @@ public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
         if (requirement.isEmpty()) {
             component = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
         }
-        component.ifPresent(c -> {
-            graphics.renderTooltip(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
-        });
+        component.ifPresent(c -> graphics.renderTooltip(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60));
     }
 }

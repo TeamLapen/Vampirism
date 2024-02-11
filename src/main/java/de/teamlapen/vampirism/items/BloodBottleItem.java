@@ -133,8 +133,8 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
         }
         ItemStack copy = stack.copy();
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.getOpt((Player) pLivingEntity).orElse(null);
-        if (vampire == null || vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
+        VampirePlayer vampire = VampirePlayer.get((Player) pLivingEntity);
+        if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             pLivingEntity.releaseUsingItem();
             return;
         }
@@ -157,15 +157,14 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        VampirePlayer vampire = VampirePlayer.get(playerIn);
+        if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
-            if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
-                playerIn.startUsingItem(handIn);
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-            }
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        }).orElse(new InteractionResultHolder<>(InteractionResult.PASS, stack));
+        if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
+            playerIn.startUsingItem(handIn);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        }
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
     @Override

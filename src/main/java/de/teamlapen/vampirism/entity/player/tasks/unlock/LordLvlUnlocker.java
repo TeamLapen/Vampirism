@@ -37,7 +37,7 @@ public class LordLvlUnlocker implements TaskUnlocker {
 
     @Override
     public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
-        int aL = FactionPlayerHandler.getOpt(playerEntity.getRepresentingPlayer()).map(FactionPlayerHandler::getLordLevel).orElse(0);
+        int aL = FactionPlayerHandler.get(playerEntity.asEntity()).getLordLevel();
         return exact ? aL == reqLordLevel : aL >= reqLordLevel;
     }
 

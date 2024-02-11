@@ -38,7 +38,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
             inst.group(
                     Codec.INT.fieldOf("id").forGetter(ClientboundUpdateEntityPacket::getId),
                     ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "data").forGetter(x -> Optional.ofNullable(x.getData())),
-                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "caps").forGetter(x -> Optional.ofNullable(x.getCaps())),
+                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "caps").forGetter(x -> Optional.ofNullable(x.getAttachments())),
                     Codec.BOOL.optionalFieldOf("itself", false).forGetter(ClientboundUpdateEntityPacket::isPlayerItself)
             ).apply(inst, ClientboundUpdateEntityPacket::new)
     );
@@ -148,21 +148,22 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
 
     private int id;
     private @Nullable CompoundTag data;
-    private @Nullable CompoundTag caps;
+    private @Nullable CompoundTag attachments;
     private boolean playerItself = false;
 
-    private ClientboundUpdateEntityPacket(int id, Optional<CompoundTag> data, Optional<CompoundTag> caps, boolean playerItself) {
-        this(id, data.orElse(null), caps.orElse(null), playerItself);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private ClientboundUpdateEntityPacket(int id, Optional<CompoundTag> data, Optional<CompoundTag> attachments, boolean playerItself) {
+        this(id, data.orElse(null), attachments.orElse(null), playerItself);
     }
-    private ClientboundUpdateEntityPacket(int id, @Nullable CompoundTag data, @Nullable CompoundTag caps, boolean playerItself) {
+    private ClientboundUpdateEntityPacket(int id, @Nullable CompoundTag data, @Nullable CompoundTag attackments, boolean playerItself) {
         this.id = id;
         this.data = data;
-        this.caps = caps;
+        this.attachments = attackments;
         this.playerItself = playerItself;
     }
 
-    public @Nullable CompoundTag getCaps() {
-        return caps;
+    public @Nullable CompoundTag getAttachments() {
+        return attachments;
     }
 
     public @Nullable CompoundTag getData() {

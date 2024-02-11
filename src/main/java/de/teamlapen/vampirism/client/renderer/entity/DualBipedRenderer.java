@@ -130,6 +130,7 @@ public abstract class DualBipedRenderer<T extends Mob, M extends HumanoidModel<T
         }
 
         private A getArmorModel(EquipmentSlot slot, A innerModel, A outerModel) {
+            //noinspection rawtypes
             return ((HumanoidArmorLayerAccessor) this).invoke_usesInnerModel(slot) ? innerModel : outerModel;
         }
     }

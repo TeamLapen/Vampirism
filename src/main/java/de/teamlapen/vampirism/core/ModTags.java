@@ -31,13 +31,7 @@ public class ModTags {
     }
 
     public static class Blocks {
-        @Deprecated
-        public static final TagKey<Block> CASTLE_BLOCK = tag("castle_block");
         public static final TagKey<Block> CURSED_EARTH = tag("cursed_earth");
-        @Deprecated
-        public static final TagKey<Block> CASTLE_STAIRS = tag("castle_stairs");
-        @Deprecated
-        public static final TagKey<Block> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Block> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Block> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");
         public static final TagKey<Block> TOTEM_TOP_CRAFTED = tag("totem_top_crafted");
@@ -74,12 +68,9 @@ public class ModTags {
         public static final TagKey<Item> HUNTER_INTEL = tag("hunter_intel");
         public static final TagKey<Item> PURE_BLOOD = tag("pure_blood");
         public static final TagKey<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
-        public static final TagKey<Item> CASTLE_BLOCK = tag("castle_block");
         public static final TagKey<Item> GARLIC = tag(forge("crops/garlic"));
         public static final TagKey<Item> HOLY_WATER = tag("holy_water");
         public static final TagKey<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
-        public static final TagKey<Item> CASTLE_STAIRS = tag("castle_stairs");
-        public static final TagKey<Item> CASTLE_SLAPS = tag("castle_slaps");
         public static final TagKey<Item> CURSEDEARTH = tag("cursed_earth");
         public static final TagKey<Item> DARK_SPRUCE_LOG = tag("dark_spruce_log");
         public static final TagKey<Item> CURSED_SPRUCE_LOG = tag("cursed_spruce_log");

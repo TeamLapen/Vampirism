@@ -85,7 +85,7 @@ public class UtilLib {
      * Gets players looking spot (blocks only).
      *
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
-     * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
+     * @return The position as a MovingObjectPosition, a {@link  net.minecraft.world.phys.HitResult.Type#MISS} if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
     public static @NotNull HitResult getPlayerLookingSpot(@NotNull Player player, double restriction) {
         float scale = 1.0F;

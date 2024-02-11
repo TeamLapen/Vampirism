@@ -81,7 +81,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide) {
             if (!Helper.isHunter(player)) {
-                player.displayClientMessage(Component.translatable("This seem unfamiliar"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 return InteractionResult.CONSUME;
             }
             int fluid = world.getBlockState(pos).getValue(LAVA);
@@ -112,7 +112,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                 if (canUse(player) && player instanceof ServerPlayer) {
                     player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
                 } else {
-                    player.displayClientMessage(Component.translatable("You have not learned how to use this"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
                 }
             }
         }
@@ -129,7 +129,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
      */
     private boolean canUse(@NotNull Player player) {
         if (Helper.isHunter(player)) {
-            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(handler -> handler.isSkillEnabled(HunterSkills.WEAPON_TABLE.get())).orElse(false);
+            return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.WEAPON_TABLE.get());
         }
         return false;
     }

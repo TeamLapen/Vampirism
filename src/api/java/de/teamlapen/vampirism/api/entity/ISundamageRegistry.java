@@ -18,17 +18,10 @@ public interface ISundamageRegistry {
 
     /**
      * Register a biome by instance in which no sundamage applies to vampires.
-     *
-     * @deprecated use datapacks or {@link #addNoSundamageBiomes(ResourceKey[])} instead
-     */
-    @Deprecated
-    void addNoSundamageBiomes(ResourceLocation... biomes);
-
-    /**
-     * Register a biome by instance in which no sundamage applies to vampires.
      * <p>
      * Use this or a datapack.
      */
+    @SuppressWarnings("unchecked")
     void addNoSundamageBiomes(ResourceKey<Biome>... biomes);
 
     /**

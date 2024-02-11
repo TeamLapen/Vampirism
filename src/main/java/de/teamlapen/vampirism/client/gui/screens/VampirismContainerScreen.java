@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
+import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskList;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.inventory.TaskMenu;
@@ -133,7 +134,14 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     protected void init() {
         super.init();
         if (factionPlayer.getLevel() > 0) {
-            this.level = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).filter(f -> f.getLordLevel() > 0).map(f -> f.getLordTitle().copy().append(" (" + f.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel())).withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
+            FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
+            MutableComponent component;
+            if (handler.getLordLevel() > 0) {
+                component = handler.getLordTitle().copy().append(" (" + handler.getLordLevel() + ")");
+            } else {
+                component = Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel());
+            }
+            this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
         } else {
             this.level = Component.empty();
         }
@@ -155,7 +163,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             EditSelectMinionTaskScreen.show();
         }, Component.empty()));
         button3.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.edit_tasks")));
-        button3.visible = FactionPlayerHandler.getOpt(factionPlayer.getRepresentingPlayer()).map(a -> a.getLordLevel()> 0).orElse(false);
+        button3.visible = FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() > 0;
 
         Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 29, this.topPos + 90, 20, 20, APPEARANCE, (context) -> {
             Minecraft.getInstance().setScreen(new VampirePlayerAppearanceScreen(this));
@@ -276,7 +284,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             }
 
             private void clickLocator(Button button) {
-                Player player = factionPlayer.getRepresentingPlayer();
+                Player player = factionPlayer.asEntity();
                 Component position = ((VampirismMenu) menu).taskWrapper.get(getItem().getTaskBoard()).getLastSeenPos().map(pos -> {
                     int i = Mth.floor(UtilLib.horizontalDistance(player.blockPosition(), pos));
                     MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {

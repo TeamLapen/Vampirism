@@ -13,13 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 public record BooleanRequirement(@NotNull ResourceLocation id, @NotNull FactionPlayerBooleanSupplier function, @NotNull Component description) implements TaskRequirement.Requirement<Boolean> {
 
-    public static final Codec<BooleanRequirement> CODEC = RecordCodecBuilder.create(inst -> {
-        return inst.group(
-                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
-                FactionPlayerBooleanSupplier.CODEC.fieldOf("function").forGetter(i -> i.function),
-                ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
-        ).apply(inst, (id, supplier, desc) -> new BooleanRequirement(id.orElseGet(() -> FactionPlayerBooleanSupplier.getId(supplier)), supplier, desc));
-    });
+    public static final Codec<BooleanRequirement> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
+                    FactionPlayerBooleanSupplier.CODEC.fieldOf("function").forGetter(i -> i.function),
+                    ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
+            ).apply(inst, (id, supplier, desc) -> new BooleanRequirement(id.orElseGet(() -> FactionPlayerBooleanSupplier.getId(supplier)), supplier, desc)));
 
     public BooleanRequirement(@NotNull FactionPlayerBooleanSupplier function, Component description) {
         this(FactionPlayerBooleanSupplier.getId(function), function, description);

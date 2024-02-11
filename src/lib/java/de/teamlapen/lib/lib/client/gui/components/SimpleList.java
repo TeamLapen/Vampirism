@@ -111,7 +111,7 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         }
 
         public SimpleList<T> build() {
-            SimpleList<T> simpleList = new SimpleList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
+            SimpleList<T> simpleList = new SimpleList<>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
             simpleList.setX(this.x);
             //noinspection unchecked
             simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<T>(x.getKey(), x.getValue())).toList()));

@@ -111,17 +111,16 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     private boolean handleInjections(@NotNull Player player, @NotNull Level world, @NotNull ItemStack stack, @NotNull BlockPos pos) {
-        return FactionPlayerHandler.getOpt(player).map(handler -> {
-            IPlayableFaction<?> faction = handler.getCurrentFaction();
-            if (stack.getItem().equals(ModItems.INJECTION_GARLIC.get())) {
-                return handleGarlicInjection(player, world, handler, faction);
-            }
-            if (stack.getItem().equals(ModItems.INJECTION_SANGUINARE.get())) {
-                return handleSanguinareInjection(world, pos, player, handler, faction);
-            }
-            return false;
-        }).orElse(false);
+        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        IPlayableFaction<?> faction = handler.getCurrentFaction();
 
+        if (stack.getItem().equals(ModItems.INJECTION_GARLIC.get())) {
+            return handleGarlicInjection(player, world, handler, faction);
+        }
+        if (stack.getItem().equals(ModItems.INJECTION_SANGUINARE.get())) {
+            return handleSanguinareInjection(world, pos, player, handler, faction);
+        }
+        return false;
     }
 
     private boolean handleSanguinareInjection(@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
@@ -218,11 +217,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public @NotNull BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
     public BlockState playerWillDestroy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
         if (!world.isClientSide && player.isCreative()) {
             EnumPart part = blockState.getValue(PART);
@@ -237,11 +231,6 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         }
 
         return super.playerWillDestroy(world, blockPos, blockState, player);
-    }
-
-    @Override
-    public @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override

@@ -28,19 +28,16 @@ import java.util.Optional;
 public class OblivionItem extends Item {
 
     public static void applyEffect(@NotNull IFactionPlayer<?> factionPlayer) {
-        Player player = factionPlayer.getRepresentingPlayer();
-        FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
-            ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-            if (((SkillHandler<?>) skillHandler).noSkillEnabled()) {
-                return;
-            }
-            boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
-            player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
-            if (factionPlayer instanceof IAttachedSyncable) {
-                HelperLib.sync((IAttachedSyncable) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
-            }
-        });
-
+        Player player = factionPlayer.asEntity();
+        ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
+        if (((SkillHandler<?>) skillHandler).noSkillEnabled()) {
+            return;
+        }
+        boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
+        player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
+        if (factionPlayer instanceof IAttachedSyncable syncable) {
+            HelperLib.sync(syncable, player, false);
+        }
     }
 
     public OblivionItem(@NotNull Properties properties) {
@@ -58,7 +55,7 @@ public class OblivionItem extends Item {
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         stack.shrink(1);
         if (entityLiving instanceof Player) {
-            FactionPlayerHandler.getOpt(((Player) entityLiving)).map(FactionPlayerHandler::getCurrentFactionPlayer).orElseGet(Optional::empty).ifPresent(OblivionItem::applyEffect);
+            FactionPlayerHandler.getCurrentFactionPlayer((Player) entityLiving).ifPresent(OblivionItem::applyEffect);
         }
         if (entityLiving instanceof MinionEntity) {
             ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));

@@ -5,7 +5,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Debug;
 
 /**
  * Should be implemented (through the subclasses) by any faction entity
@@ -23,11 +22,11 @@ public interface IFactionEntity extends IEntity {
      * @return The EntityLivingBase represented by this object.
      * @deprecated use {@link #asEntity()}
      */
-    @ApiStatus.Obsolete
+    @Deprecated
     LivingEntity getRepresentingEntity();
 
     @Override
-    default @NotNull Entity asEntity() {
+    default @NotNull LivingEntity asEntity() {
         return getRepresentingEntity();
     }
 }

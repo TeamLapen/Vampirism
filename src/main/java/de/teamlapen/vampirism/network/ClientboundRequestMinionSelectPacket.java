@@ -30,18 +30,17 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @return Empty if no minions are available
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
-        return FactionPlayerHandler.getOpt(player).flatMap(fp -> {
-            PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
-            Collection<Integer> ids = controller.getCallableMinions();
-            if (!ids.isEmpty()) {
-                List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
-                ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
-                return Optional.of(new ClientboundRequestMinionSelectPacket(action, minions));
-            } else {
-                ServerboundSelectMinionTaskPacket.printRecoveringMinions(player, controller.getRecoveringMinionNames());
-            }
-            return Optional.empty();
-        });
+        FactionPlayerHandler fp = FactionPlayerHandler.get(player);
+        PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
+        Collection<Integer> ids = controller.getCallableMinions();
+        if (!ids.isEmpty()) {
+            List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
+            ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+            return Optional.of(new ClientboundRequestMinionSelectPacket(action, minions));
+        } else {
+            ServerboundSelectMinionTaskPacket.printRecoveringMinions(player, controller.getRecoveringMinionNames());
+        }
+        return Optional.empty();
     }
 
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "request_minion_select");

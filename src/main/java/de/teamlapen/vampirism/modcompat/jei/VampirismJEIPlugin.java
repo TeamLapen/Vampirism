@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.entity.player.tasks.TaskUtil;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.items.BlessableItem;
-import de.teamlapen.vampirism.mixin.accessor.RecipeManagerAccessor;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;

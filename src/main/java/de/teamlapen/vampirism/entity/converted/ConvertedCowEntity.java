@@ -99,7 +99,7 @@ public class ConvertedCowEntity extends Cow implements CurableConvertedCreature<
     }
 
     @Override
-    public @NotNull Component getName() {
+    public @NotNull Component getTypeName() {
         return this.getNameC(EntityType.COW::getDescription);
     }
 

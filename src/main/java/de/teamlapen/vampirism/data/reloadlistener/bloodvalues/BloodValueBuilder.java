@@ -85,9 +85,7 @@ public class BloodValueBuilder {
     }
 
     public static class Entry {
-        public static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> {
-            return instance.group(ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id), Codec.FLOAT.fieldOf("value").forGetter(e -> e.value)).apply(instance, Entry::new);
-        });
+        public static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(ResourceLocation.CODEC.fieldOf("id").forGetter(e -> e.id), Codec.FLOAT.fieldOf("value").forGetter(e -> e.value)).apply(instance, Entry::new));
         private final ResourceLocation id;
         private final float value;
 

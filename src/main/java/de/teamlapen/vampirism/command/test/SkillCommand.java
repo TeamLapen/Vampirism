@@ -53,7 +53,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int enableAll(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
-        FactionPlayerHandler playerHandler = FactionPlayerHandler.getOpt(asPlayer).orElseThrow(NO_FACTION::create);
+        FactionPlayerHandler playerHandler = FactionPlayerHandler.get(asPlayer);
         IFactionPlayer<?> factionPlayer = playerHandler.getCurrentFactionPlayer().orElseThrow(NO_FACTION::create);
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         for (ISkill<?> skill : RegUtil.values(ModRegistries.SKILLS)) {

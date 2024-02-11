@@ -72,12 +72,9 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
 
-        this.useLordSkinButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), this.font).pos(this.guiLeft + 20, this.guiTop + 86).selected(useLordSkin).onValueChange(new Checkbox.OnValueChange() {
-            @Override
-            public void onValueChange(@NotNull Checkbox checkBox, boolean selected) {
-                useLordSkin = selected;
-                entity.setUseLordSkin(selected);
-            }
+        this.useLordSkinButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), this.font).pos(this.guiLeft + 20, this.guiTop + 86).selected(useLordSkin).onValueChange((checkBox, selected) -> {
+            useLordSkin = selected;
+            entity.setUseLordSkin(selected);
         }).build());
 
         this.hatList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 64 + 19, 99, 60).componentsWithClickAndHover(IntStream.range(0, 3).mapToObj(id -> Component.translatable("gui.vampirism.minion_appearance.hat").append(" " + (id + 1))).toList(), this::hat, this::previewHat).build());

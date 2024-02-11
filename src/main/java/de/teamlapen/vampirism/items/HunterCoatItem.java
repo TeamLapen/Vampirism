@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-public class HunterCoatItem extends VampirismHunterArmorItem implements IItemWithTier {
+public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
     /**
      * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}

@@ -5,7 +5,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * mixin interface that will be implemented in {@link MobEffectInstance}
+ * Interface for {@link MobEffectInstance} to supply source identifier for the instance.<br>
+ * <br>
+ * This interface will be implemented using mixins
  */
 public interface EffectInstanceWithSource {
 
@@ -34,8 +36,9 @@ public interface EffectInstanceWithSource {
     boolean hasSource();
 
     /**
-     * sets the duration to 1,
-     * which means that the effect will be removed in the next tick and the next hidden effect is applied
+     * remove this effect instance from the entity
+     *
+     * @implNote this will set the effect duration to 1
      */
     void removeEffect();
 }

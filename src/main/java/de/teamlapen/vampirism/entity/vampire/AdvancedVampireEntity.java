@@ -315,7 +315,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public int suggestEntityLevel(@NotNull Difficulty d) {
         if (random.nextBoolean()) {
-            return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
+            return (int) (d.avgPercLevel() * MAX_LEVEL / 100F);
         }
         return random.nextInt(MAX_LEVEL + 1);
 

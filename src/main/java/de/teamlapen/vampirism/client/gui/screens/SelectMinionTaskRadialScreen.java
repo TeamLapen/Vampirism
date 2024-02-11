@@ -44,15 +44,16 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     public static void show(KeyMapping mapping) {
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
-            Collection<Entry> tasks = getTasks(p);
+        FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
+        if (handler.getLordLevel() > 0) {
+            Collection<Entry> tasks = getTasks(handler);
             if (tasks.isEmpty() ) {
                 Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_minion_tasks"), true);
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
             }
-        });
+        };
     }
 
     private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {

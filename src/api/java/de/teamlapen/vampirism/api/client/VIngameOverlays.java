@@ -29,7 +29,7 @@ public class VIngameOverlays {
     /**
      * Faction level element
      * <br>
-     * Is rendered above {@link net.neoforged.neoforge.client.overlay.VanillaGuiOverlay#EXPERIENCE_BAR}
+     * Is rendered above {@link net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay#EXPERIENCE_BAR}
      */
     public static IGuiOverlay FACTION_LEVEL_ELEMENT;
     public static final ResourceLocation FACTION_LEVEL_ID = new ResourceLocation("vampirism", "faction_level");

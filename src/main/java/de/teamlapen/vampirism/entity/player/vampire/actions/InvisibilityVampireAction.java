@@ -21,7 +21,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     protected void activate(@NotNull IVampirePlayer player) {
-        player.getRepresentingPlayer().setInvisible(true);
+        player.asEntity().setInvisible(true);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(false);
+        vampire.asEntity().setInvisible(false);
         ((VampirePlayer) vampire).getSpecialAttributes().invisible = false;
     }
 
@@ -57,8 +57,8 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public boolean onUpdate(@NotNull IVampirePlayer vampire) {
-        if (!vampire.getRepresentingPlayer().isInvisible()) {
-            vampire.getRepresentingPlayer().setInvisible(true);
+        if (!vampire.asEntity().isInvisible()) {
+            vampire.asEntity().setInvisible(true);
         }
         return false;
     }

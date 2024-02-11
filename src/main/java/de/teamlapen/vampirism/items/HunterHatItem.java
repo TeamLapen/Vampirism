@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 /**
  * Simple headwear that look like a hunter head
  */
-public class HunterHatItem extends VampirismHunterArmorItem {
+public class HunterHatItem extends HunterArmorItem {
     private final HatType type;
 
     public HunterHatItem(HatType type) {
@@ -56,17 +56,20 @@ public class HunterHatItem extends VampirismHunterArmorItem {
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if (stack.hasCustomHoverName() && "10000000".equals(stack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
-            UtilLib.spawnParticlesAroundEntity(player, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
-            if (player.tickCount % 16 == 4) {
-                player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
-                player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+        if (pSlotId >= 36 && pSlotId <= 39 && pEntity instanceof Player living) {
+            if (pStack.hasCustomHoverName() && "10000000".equals(pStack.getHoverName().getString()) && VampirismAPI.settings().isSettingTrue("vampirism:10000000d")) {
+                UtilLib.spawnParticlesAroundEntity(living, ParticleTypes.ELECTRIC_SPARK, 0.5, 4);
+                if (living.tickCount % 16 == 4) {
+                    living.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 30, 0));
+                    living.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100, 2));
+                }
             }
         }
     }
 
     public enum HatType {
-        TYPE_1, TYPE_2;
+        TYPE_1, TYPE_2
     }
 }

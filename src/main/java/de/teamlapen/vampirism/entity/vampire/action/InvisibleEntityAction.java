@@ -25,7 +25,7 @@ public class InvisibleEntityAction<T extends PathfinderMob & IEntityActionUser> 
 
     @Override
     public void deactivate(@NotNull T entity) {
-        entity.getRepresentingEntity().setInvisible(false);
+        entity.asEntity().setInvisible(false);
 
     }
 
@@ -52,8 +52,8 @@ public class InvisibleEntityAction<T extends PathfinderMob & IEntityActionUser> 
 
     @Override
     public void onUpdate(@NotNull T entity, int duration) {
-        if (!entity.getRepresentingEntity().isInvisible()) {
-            entity.getRepresentingEntity().setInvisible(true);
+        if (!entity.asEntity().isInvisible()) {
+            entity.asEntity().setInvisible(true);
         }
     }
 

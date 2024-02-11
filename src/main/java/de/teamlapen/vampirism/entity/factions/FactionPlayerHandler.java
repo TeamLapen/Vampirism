@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.REFERENCE;
@@ -15,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
@@ -34,17 +34,19 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +67,10 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         return player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get());
     }
 
+    /**
+     * @deprecated a player will always have a FactionPlayerHandler
+     */
+    @Deprecated
     public static @NotNull Optional<FactionPlayerHandler> getOpt(@NotNull Player player) {
         return Optional.of(player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get()));
     }
@@ -73,7 +79,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
     public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player) {
-        return getOpt(player).flatMap(FactionPlayerHandler::getCurrentFactionPlayer);
+        return get(player).getCurrentFactionPlayer();
     }
 
     private final Player player;
@@ -96,11 +102,11 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     @Override
     public boolean canJoin(IPlayableFaction<?> faction) {
-        Event.Result res = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
-        if (res == Event.Result.DEFAULT) {
+        PlayerFactionEvent.CanJoinFaction.Behavior behavior = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
+        if (behavior == PlayerFactionEvent.CanJoinFaction.Behavior.ONLY_WHEN_NO_FACTION) {
             return currentFaction == null;
         }
-        return res == Event.Result.ALLOW;
+        return behavior == PlayerFactionEvent.CanJoinFaction.Behavior.ALLOW;
     }
 
     @Override
@@ -230,7 +236,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
-            IPlayableFaction<?> otherFaction = getOpt((Player) src.getEntity()).map(FactionPlayerHandler::getCurrentFaction).orElse(null);
+            IPlayableFaction<?> otherFaction = get((Player) src.getEntity()).getCurrentFaction();
             if (this.currentFaction == null || otherFaction == null) {
                 return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
             }

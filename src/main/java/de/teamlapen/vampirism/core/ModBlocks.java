@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.MotherTrophyItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.ModTreeGrower;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;

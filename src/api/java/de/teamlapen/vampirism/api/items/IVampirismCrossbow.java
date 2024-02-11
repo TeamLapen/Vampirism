@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 public interface IVampirismCrossbow extends ItemLike {
 
     /**
-     * modded variant of {@link net.minecraft.item.CrossbowItem#performShooting(net.minecraft.world.World, net.minecraft.entity.LivingEntity, net.minecraft.util.Hand, net.minecraft.item.ItemStack, float, float)} that is not static
+     * modded variant of {@link net.minecraft.world.item.CrossbowItem#performShooting(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand, net.minecraft.world.item.ItemStack, float, float)} that is not static
      *
      * @return true if the crossbow is empty
      */
@@ -39,7 +39,6 @@ public interface IVampirismCrossbow extends ItemLike {
     boolean canSelectAmmunition(ItemStack crossbow);
 
     /**
-     * @param crossbow
      * @return the currently selected ammunition or {@link java.util.Optional#empty()} if no ammunition is selected
      */
     Optional<Item> getAmmunition(ItemStack crossbow);

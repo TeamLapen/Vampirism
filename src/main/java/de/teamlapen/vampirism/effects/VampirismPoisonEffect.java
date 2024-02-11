@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import org.jetbrains.annotations.NotNull;

@@ -9,7 +9,4 @@ import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
  */
 public abstract class CommonProxy implements IProxy {
 
-    @Override
-    public void onInitStep(Step step, ParallelDispatchEvent event) {
-    }
 }

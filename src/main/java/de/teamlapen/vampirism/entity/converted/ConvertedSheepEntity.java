@@ -99,7 +99,7 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     }
 
     @Override
-    public @NotNull Component getName() {
+    public @NotNull Component getTypeName() {
         return this.getNameC(EntityType.SHEEP::getDescription);
     }
 

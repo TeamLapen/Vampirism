@@ -22,10 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.UseAnim;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.network.NetworkInitialization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -165,7 +162,7 @@ public class MinionContainer extends InventoryContainerMenu {
                 return null;
             }
             //noinspection ConstantConditions
-            ILordPlayer player = FactionPlayerHandler.getOpt(inv.player).orElse(null);
+            ILordPlayer player = FactionPlayerHandler.get(inv.player);
             return MinionContainer.create(windowId, inv, (MinionEntity<?>) e, player);
         }
     }

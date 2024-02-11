@@ -63,9 +63,6 @@ public class TagProvider {
         protected void addTags(HolderLookup.Provider holderLookup) {
             tag(BlockTags.DIRT).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
             tag(ModTags.Blocks.CURSED_EARTH).add(ModBlocks.CURSED_EARTH.get(), ModBlocks.CURSED_GRASS.get());
-            tag(ModTags.Blocks.CASTLE_BLOCK).add(ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.BLOODY_DARK_STONE_BRICKS.get(), ModBlocks.DARK_STONE.get(), ModBlocks.PURPLE_STONE_BRICKS.get(), ModBlocks.CRACKED_DARK_STONE_BRICKS.get());
-            tag(ModTags.Blocks.CASTLE_SLAPS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get());
-            tag(ModTags.Blocks.CASTLE_STAIRS).add(ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());
             tag(BlockTags.FLOWER_POTS).add(ModBlocks.POTTED_VAMPIRE_ORCHID.get());
             tag(ModTags.Blocks.REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get(), ModBlocks.REMAINS.get(), ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get());
             tag(ModTags.Blocks.ACTIVE_REMAINS).add(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), ModBlocks.VULNERABLE_REMAINS.get());
@@ -100,9 +97,6 @@ public class TagProvider {
                     .add(ModBlocks.CANDELABRA.get())
                     .add(ModBlocks.CANDELABRA_WALL.get())
                     .add(ModBlocks.ALCHEMY_TABLE.get())
-                    .addTag(ModTags.Blocks.CASTLE_BLOCK)
-                    .addTag(ModTags.Blocks.CASTLE_SLAPS)
-                    .addTag(ModTags.Blocks.CASTLE_STAIRS)
                     .addTag(ModTags.Blocks.TOTEM_TOP)
                     .addTag(ModTags.Blocks.DARK_STONE)
                     .addTag(ModTags.Blocks.DARK_STONE_BRICKS)
@@ -219,9 +213,6 @@ public class TagProvider {
         @SuppressWarnings("unchecked")
         @Override
         protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
-            copy(ModTags.Blocks.CASTLE_BLOCK, ModTags.Items.CASTLE_BLOCK);
-            copy(ModTags.Blocks.CASTLE_STAIRS, ModTags.Items.CASTLE_STAIRS);
-            copy(ModTags.Blocks.CASTLE_SLAPS, ModTags.Items.CASTLE_SLAPS);
             copy(ModTags.Blocks.CURSED_EARTH, ModTags.Items.CURSEDEARTH);
             copy(ModTags.Blocks.DARK_SPRUCE_LOG, ModTags.Items.DARK_SPRUCE_LOG);
             copy(ModTags.Blocks.CURSED_SPRUCE_LOG, ModTags.Items.CURSED_SPRUCE_LOG);
@@ -256,8 +247,6 @@ public class TagProvider {
             tag(ModTags.Items.GARLIC).add(ModItems.ITEM_GARLIC.get());
             tag(ModTags.Items.HOLY_WATER).add(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get());
             tag(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
-            tag(ItemTags.STAIRS).addTag(ModTags.Items.CASTLE_STAIRS);
-            tag(ItemTags.SLABS).addTag(ModTags.Items.CASTLE_SLAPS);
             tag(ItemTags.PIGLIN_LOVED).add(ModItems.VAMPIRE_CLOTHING_CROWN.get());
             tag(ModTags.Items.HEART).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
             tag(ItemTags.BOATS).add(ModItems.DARK_SPRUCE_BOAT.get(), ModItems.CURSED_SPRUCE_BOAT.get());

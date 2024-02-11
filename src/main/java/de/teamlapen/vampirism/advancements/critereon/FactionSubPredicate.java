@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 
 import java.util.Optional;
 
@@ -70,10 +69,10 @@ public class FactionSubPredicate implements EntitySubPredicate {
     @Override
     public boolean matches(@NotNull Entity pEntity, @NotNull ServerLevel pLevel, @Nullable Vec3 p_218830_) {
         if (pEntity instanceof Player player) {
-            return FactionPlayerHandler.getOpt(player)
-                    .filter(handler -> faction == null || handler.getCurrentFaction() == faction)
-                    .filter(handler -> level.isEmpty() || handler.getCurrentLevel() >= level.get())
-                    .filter(handler -> lordLevel.isEmpty() || handler.getLordLevel() >= lordLevel.get()).isPresent();
+            FactionPlayerHandler fph = FactionPlayerHandler.get(player);
+            return faction == null || fph.getCurrentFaction() == faction
+                    && level.isEmpty() || fph.getCurrentLevel() >= level.get()
+                    && lordLevel.isEmpty() || fph.getLordLevel() >= lordLevel.get();
         }
         return false;
     }

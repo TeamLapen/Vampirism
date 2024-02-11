@@ -44,9 +44,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
     public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
         if (this.curedBlockSupplier != null) {
             BlockState newState = this.curedBlockSupplier.get().defaultBlockState();
-            state.getValues().keySet().forEach((@SuppressWarnings("rawtypes") Property property) -> {
-                newState.setValue(property, state.getValue(property));
-            });
+            state.getValues().keySet().forEach((@SuppressWarnings("rawtypes") Property property) -> newState.setValue(property, state.getValue(property)));
             level.setBlockAndUpdate(pos, newState);
         }
     }

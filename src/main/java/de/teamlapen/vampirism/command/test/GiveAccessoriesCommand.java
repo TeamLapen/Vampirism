@@ -45,9 +45,9 @@ public class GiveAccessoriesCommand extends BasicCommand {
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);
-                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.success", set.getName(), number), false);
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.success"), false);
             } else {
-                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.incompatible", set.getName(), number), false);
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.test.give_accessories.incompatible"), false);
             }
         }
         return 0;

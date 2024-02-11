@@ -235,9 +235,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     if (sleepResult1 != null) {
                         player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                     }
-                }).ifRight(u -> {
-                    setCoffinSleepPosition(player, finalPos, finalState);
-                });
+                }).ifRight(u -> setCoffinSleepPosition(player, finalPos, finalState));
                 return InteractionResult.CONSUME;
             }
         }
@@ -440,9 +438,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             }
             VoxelShape[] shapes = new VoxelShape[4];
             VoxelShape finalShape = shape;
-            Direction.Plane.HORIZONTAL.stream().forEach(dir -> {
-                shapes[dir.get2DDataValue()] = buildShapeDirectional(finalShape, dir);
-            });
+            Direction.Plane.HORIZONTAL.stream().forEach(dir -> shapes[dir.get2DDataValue()] = buildShapeDirectional(finalShape, dir));
             return shapes;
         }
 

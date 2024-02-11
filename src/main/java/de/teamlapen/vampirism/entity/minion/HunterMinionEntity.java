@@ -209,7 +209,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean canUseCrossbow(ItemStack stack) {
-        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(p -> HunterPlayer.getOpt(p.getPlayer()).map(HunterPlayer::getSkillHandler)).map(skillHandler -> skillHandler.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false) : true;
+        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().map(p -> HunterPlayer.get(p.getPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false) : true;
     }
 
     @Override
@@ -234,7 +234,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
         Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
         if (slotType == EquipmentSlot.MAINHAND) {
-            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || HunterPlayer.getOpt(getLord().getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get())).orElse(false));
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || HunterPlayer.get(getLord().getPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS.get()));
         }
         return predicate;
     }

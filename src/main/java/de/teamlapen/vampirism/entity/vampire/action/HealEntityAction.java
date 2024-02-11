@@ -18,7 +18,7 @@ public class HealEntityAction<T extends PathfinderMob & IEntityActionUser> exten
 
     @Override
     public boolean activate(@NotNull T entity) {
-        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * VampirismConfig.BALANCE.eaHealAmount.get());
+        entity.asEntity().heal(entity.getMaxHealth() / 100 * VampirismConfig.BALANCE.eaHealAmount.get());
         ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.HEART, entity.getX(), entity.getY() + 1, entity.getZ(), 10, 0.3, 0.3, 0.3, 0);
         return true;
     }

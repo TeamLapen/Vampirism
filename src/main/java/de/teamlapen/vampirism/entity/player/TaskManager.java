@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISavable;
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -360,7 +359,7 @@ public class TaskManager implements ITaskManager, ISavable {
      * returns all completed taskInstance requirements for the given taskInstance for the specific taskInstance board
      *
      * @param taskInstance the taskInstance to be checked
-     * @return a list of all taskInstance requirements
+     * @return a map of all taskInstance requirements
      */
     private @NotNull Map<ResourceLocation, Integer> getCompletedRequirements(@NotNull ITaskInstance taskInstance) {
         Map<ResourceLocation, Integer> completed = new HashMap<>();

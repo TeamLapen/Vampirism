@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.datamaps.ConvertibleEntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.EmptyEntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -25,17 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Manages biteable values.
- * Get values from various sources
- * Static values present in datapacks from {@link de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener#entities}
- * Dynamically calculated values from itself
- * Dynamically saved values on world load from {@link de.teamlapen.vampirism.data.reloadlistener.BloodValuesReloadListener#entities}}
- * <p>
- * <p>
- * Dynamic values are calculated during gameplay and saved on stopping (server).
- * Values are currently not synced between server and client, however, ExtendedCreatures do so.
- */
 public class BiteableEntryManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -83,7 +72,7 @@ public class BiteableEntryManager {
     /**
      * returns an existing entry
      *
-     * @param creature for which a {@link BiteableEntry} is requested
+     * @param creature for which a {@link IEntityBloodEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @Nullable
@@ -91,13 +80,13 @@ public class BiteableEntryManager {
         if (calculatedEntries.containsKey(creature.getType())) {
             return calculatedEntries.get(creature.getType());
         }
-        return creature.getType().builtInRegistryHolder().getData(ModRegistries.ENTITY_BLOOD);
+        return BuiltInRegistries.ENTITY_TYPE.createIntrusiveHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD);
     }
 
     /**
      * returns an existing entry or creates a new one
      *
-     * @param creature for which a {@link BiteableEntry} is requested
+     * @param creature for which a {@link IEntityBloodEntry} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @NotNull

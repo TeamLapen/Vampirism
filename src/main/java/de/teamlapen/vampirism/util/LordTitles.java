@@ -33,7 +33,7 @@ public class LordTitles {
                     case 5 -> VAMPIRE_5F;
                     default -> EMPTY;
                 };
-            default -> switch (level) {
+            case MALE, UNKNOWN -> switch (level) {
                 case 1 -> VAMPIRE_1M;
                 case 2 -> VAMPIRE_2M;
                 case 3 -> VAMPIRE_3M;

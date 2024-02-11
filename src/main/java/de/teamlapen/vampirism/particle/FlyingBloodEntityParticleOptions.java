@@ -22,6 +22,7 @@ public record FlyingBloodEntityParticleOptions(int entity, boolean direct) imple
                     Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct))
             .apply(p_239803_0_, FlyingBloodEntityParticleOptions::new));
 
+    @Deprecated
     public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @NotNull
         public FlyingBloodEntityParticleOptions fromCommand(@NotNull ParticleType<FlyingBloodEntityParticleOptions> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
@@ -49,6 +50,6 @@ public record FlyingBloodEntityParticleOptions(int entity, boolean direct) imple
     @NotNull
     @Override
     public String writeToString() {
-        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + entity + "" + direct;
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + entity + direct;
     }
 }

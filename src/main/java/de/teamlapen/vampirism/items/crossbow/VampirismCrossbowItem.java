@@ -157,6 +157,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * see comments for changes
      */
+    @SuppressWarnings("JavadocReference")
     protected void shootProjectileMod(Level p_220016_0_, LivingEntity p_220016_1_, InteractionHand p_220016_2_, ItemStack p_220016_3_, ItemStack p_220016_4_, float p_220016_5_, boolean p_220016_6_, float p_220016_7_, float p_220016_8_) {
         if (!p_220016_0_.isClientSide) {
             AbstractArrow projectileentity;
@@ -192,12 +193,12 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             ((IEntityCrossbowArrow)arrowEntity).setIgnoreHurtTimer();
         }
 
-        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+        int j = stack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
         if (j > 0) {
             arrowEntity.setBaseDamage(arrowEntity.getBaseDamage() + (double) j * 0.2D + 0.2D);
         }
 
-        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+        int k = stack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
 
         if (k > 0) {
             arrowEntity.setKnockback(k);
@@ -234,7 +235,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     public int getChargeDurationMod(ItemStack crossbow) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, crossbow);
+        int i = crossbow.getEnchantmentLevel(Enchantments.QUICK_CHARGE);
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
     }
 
@@ -247,11 +248,11 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     protected int isFrugal(ItemStack crossbow) {
-        return EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get(), crossbow);
+        return crossbow.getEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get());
     }
 
     protected boolean isInfinit(ItemStack crossbow) {
-        return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, crossbow) > 0;
+        return crossbow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
     }
 
     protected boolean canBeInfinit(ItemStack crossbow) {
@@ -263,6 +264,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * see comments for change
      */
+    @SuppressWarnings("JavadocReference")
     protected boolean tryLoadProjectilesMod(LivingEntity entity, ItemStack crossbow) {
         boolean flag = entity instanceof Player && ((Player)entity).getAbilities().instabuild;
         ItemStack projectile = entity.getProjectile(crossbow);
@@ -283,6 +285,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * <br>
      * changes at comments
      */
+    @SuppressWarnings("JavadocReference")
     protected boolean loadProjectileMod(LivingEntity entity, ItemStack crossbow, ItemStack projectile, boolean p_220023_3_, boolean noConsume) {
         if (projectile.isEmpty()) {
             return false;

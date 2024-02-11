@@ -23,7 +23,7 @@ class VampirismRecipeHelper {
 
     @NotNull
     static ISkill<?> @NotNull [] deserializeSkills(@Nullable JsonArray jsonObject) {
-        if (jsonObject == null || jsonObject.size() == 0) {
+        if (jsonObject == null || jsonObject.isEmpty()) {
             return new ISkill[0];
         }
         ISkill<?>[] skills = new ISkill[jsonObject.size()];

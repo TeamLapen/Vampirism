@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
-import de.teamlapen.vampirism.datamaps.ConvertibleEntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.datamaps.ItemBlood;

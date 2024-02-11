@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -17,7 +14,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPointProvider;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
@@ -30,14 +26,12 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +58,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public SkillHandler(T player, IPlayableFaction<T> faction) {
         this.player = player;
         this.faction = faction;
-        this.treeData = ISkillTreeData.getData(player.getRepresentingPlayer().level());
+        this.treeData = ISkillTreeData.getData(player.asEntity().level());
     }
 
     public @NotNull Optional<ISkillNode> anyLastNode() {
@@ -77,7 +71,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public @NotNull Result canSkillBeEnabled(@NotNull ISkill<T> skill) {
-        if (player.getRepresentingPlayer().getEffect(ModEffects.OBLIVION.get()) != null) {
+        if (player.asEntity().getEffect(ModEffects.OBLIVION.get()) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
         if (isSkillEnabled(skill)) {
@@ -118,7 +112,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void damageRefinements() {
         this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
-            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
+            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().asEntity().getRandom().nextInt(60);
             Integer unbreakingLevel = EnchantmentHelper.getEnchantments(stack).get(Enchantments.UNBREAKING);
             if (unbreakingLevel != null) {
                 damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
@@ -152,11 +146,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             skill.onEnable(player);
             enabledSkills.add(skill);
             if (!fromLoading) {
-                this.player.getRepresentingPlayer().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill));
+                this.player.asEntity().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill));
             }
             dirty = true;
             //noinspection ConstantValue
-            if (this.player.getRepresentingPlayer() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
+            if (this.player.asEntity() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
                 ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().trigger(serverPlayer, skill);
             }
         }
@@ -234,7 +228,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     @Override
     public ISkill<T> @Nullable [] getParentSkills(@NotNull ISkill<T> skill) {
         Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> nodeForSkill = this.treeData.getNodeForSkill(this.unlockedTrees, skill);
-        return nodeForSkill.flatMap(x -> this.treeData.getParent(x)).stream().flatMap(x -> x.value().skills().stream()).map(x -> x.value()).toArray(ISkill[]::new);
+        return nodeForSkill.flatMap(this.treeData::getParent).stream().flatMap(x -> x.value().skills().stream()).map(Holder::value).toArray(ISkill[]::new);
     }
 
     public T getPlayer() {
@@ -242,7 +236,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public boolean noSkillEnabled() {
-        List<ISkill<?>> list = this.unlockedTrees.stream().map(x -> this.treeData.root(x)).flatMap(x -> x.elements().stream()).map(Holder::value).collect(Collectors.toList());
+        List<ISkill<?>> list = this.unlockedTrees.stream().map(this.treeData::root).flatMap(x -> x.elements().stream()).map(Holder::value).collect(Collectors.toList());
         return this.enabledSkills.isEmpty() || new HashSet<>(list).containsAll(this.enabledSkills);
     }
 
@@ -276,7 +270,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
-        Registry<ISkillNode> nodes = player.getRepresentingPlayer().level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        Registry<ISkillNode> nodes = player.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
         return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
     }
 
@@ -329,8 +323,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (nbt.contains("unlocked_trees")) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
-            unlockedTrees.stream().map(s -> (StringTag)s).forEach(tag -> {
-                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().getRepresentingPlayer().level(), tag.getAsString()));
+            unlockedTrees.stream().map(StringTag.class::cast).forEach(tag -> {
+                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().asEntity().level(), tag.getAsString()));
             });
         }
     }
@@ -378,8 +372,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (nbt.contains("unlocked_trees", Tag.TAG_LIST)) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
-            unlockedTrees.stream().map(s -> (StringTag)s).forEach(tag -> {
-                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().getRepresentingPlayer().level(), tag.getAsString()));
+            unlockedTrees.stream().map(StringTag.class::cast).forEach(tag -> {
+                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().asEntity().level(), tag.getAsString()));
             });
         }
     }
@@ -414,7 +408,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         nbt.put("refinement_items", refinements);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().getRepresentingPlayer().level(), tree.value()).toString()));
+            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
         return nbt;
@@ -441,7 +435,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         nbt.put("refinement_items", refinementItems);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().getRepresentingPlayer().level(), tree.value()).toString()));
+            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
         dirty = false;
@@ -456,7 +450,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 set.getRefinements().stream().map(Supplier::get).forEach(x -> {
                     this.activeRefinements.add(x);
                     if (!this.player.isRemote() && x.getAttribute() != null) {
-                        AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
+                        AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
                         double value = x.getModifierValue();
                         AttributeModifier t = attributeInstance.getModifier(x.getUUID());
                         if (t != null) {
@@ -482,7 +476,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                     set.getRefinements().stream().map(Supplier::get).forEach(x -> {
                         this.activeRefinements.remove(x);
                         if (!this.player.isRemote() && x.getAttribute() != null) {
-                            AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
+                            AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(x);
                             ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
                             double value = t.getAmount() - x.getModifierValue();

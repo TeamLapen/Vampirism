@@ -34,7 +34,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(net.minecraftforge.client.event.ModelEvent.BakingCompleted)})
+     * Filled when the fluid json model is loaded (in {@link net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult})
      */
     public static final BakedModel[] BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];
     public static final BakedModel[] IMPURE_BLOOD_FLUID_MODELS = new BakedModel[FLUID_LEVELS];

@@ -11,7 +11,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
@@ -146,7 +145,7 @@ public class ModPotions {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
     }
 
-    private static void master(Supplier<? extends Potion> out, NonNullSupplier<Ingredient> in, int count, int countReduced) {
+    private static void master(Supplier<? extends Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(() -> Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
     }
 }

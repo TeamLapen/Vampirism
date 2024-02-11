@@ -165,7 +165,7 @@ public class VampireBookScreen extends Screen {
         List<FormattedText> pageLines = lines.size() > firstCount ? lines.subList(0, firstCount) : lines;
         pages.add(combineWithNewLine(pageLines));
         pageLines.clear();
-        while (lines.size() > 0) {
+        while (!lines.isEmpty()) {
             pageLines = lines.size() > count ? lines.subList(0, count) : lines;
             pages.add(combineWithNewLine(pageLines));
             pageLines.clear();

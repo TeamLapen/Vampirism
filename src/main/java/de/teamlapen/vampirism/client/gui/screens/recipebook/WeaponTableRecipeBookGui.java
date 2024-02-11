@@ -26,7 +26,7 @@ public class WeaponTableRecipeBookGui extends RecipeBookComponent {
         recipeLists.forEach((p_193944_1_) -> p_193944_1_.canCraft(((RecipeBookComponentAccessor) this).getStackedContents(), this.menu.getGridWidth(), this.menu.getGridHeight(), ((RecipeBookComponentAccessor) this).getBook()));
 
         List<RecipeCollection> list1 = Lists.newArrayList(recipeLists);
-        FactionPlayerHandler.getOpt(this.minecraft.player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).ifPresent(player -> list1.removeIf(recipeList -> {
+        FactionPlayerHandler.get(this.minecraft.player).getCurrentFactionPlayer().ifPresent(player -> list1.removeIf(recipeList -> {
             if (recipeList.getRecipes().stream().anyMatch(recipe -> recipe.value().getType() != ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get())) {
                 return true;
             }

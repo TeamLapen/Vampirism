@@ -88,7 +88,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
             return TaskAction.COMPLETE;
         } else if (isTaskNotAccepted(taskInfo)) {
             return TaskAction.ACCEPT;
-        } else if (!taskInfo.isUnique(this.registry) && this.factionPlayer.getRepresentingPlayer().level().getGameTime() > taskInfo.getTaskTimeStamp()) {
+        } else if (!taskInfo.isUnique(this.registry) && this.factionPlayer.asEntity().level().getGameTime() > taskInfo.getTaskTimeStamp()) {
             return TaskAction.REMOVE;
         } else {
             return TaskAction.ABORT;
@@ -97,7 +97,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
 
     @Override
     public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
-        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.asEntity().level().getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
                 this.taskInstances.remove(taskInfo);
                 VampLib.proxy.createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
             }
-            case ACCEPT -> taskInfo.startTask(factionPlayer.getRepresentingPlayer().level().getGameTime() + taskInfo.getTaskDuration());
+            case ACCEPT -> taskInfo.startTask(factionPlayer.asEntity().level().getGameTime() + taskInfo.getTaskDuration());
             default -> taskInfo.aboardTask();
         }
         VampirismMod.proxy.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));

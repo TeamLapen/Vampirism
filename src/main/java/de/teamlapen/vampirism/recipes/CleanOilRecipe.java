@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.recipes;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

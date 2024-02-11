@@ -18,7 +18,6 @@ import java.util.function.Supplier;
  * <br>
  * used for {@link IFactionBuilder}
  *
- * @apiNote supplier are invoked in {@link net.minecraftforge.fml.event.lifecycle.InterModProcessEvent}
  */
 public interface IFactionVillageBuilder {
 

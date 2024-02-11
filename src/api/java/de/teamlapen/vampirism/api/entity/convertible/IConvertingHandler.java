@@ -1,16 +1,14 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import net.minecraft.util.valueproviders.FloatProvider;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
- * Handles conversion of entities
+ * Handles the actual conversion of entities
  */
 public interface IConvertingHandler<T extends PathfinderMob> {
 
@@ -21,6 +19,10 @@ public interface IConvertingHandler<T extends PathfinderMob> {
     @Nullable
     IConvertedCreature<T> createFrom(T entity);
 
+    /**
+     * updates the attributes of the converted creature
+     * @param creature the converted creature
+     */
     default void updateEntityAttributes(PathfinderMob creature) {
 
     }

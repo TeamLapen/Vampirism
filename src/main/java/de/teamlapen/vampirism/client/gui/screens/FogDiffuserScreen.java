@@ -35,7 +35,7 @@ public class FogDiffuserScreen extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.startupProgress = this.addRenderableWidget(new ProgressBar(this.guiLeft + 25, this.guiTop + 30, 170, Component.translatable("startup")));
+        this.startupProgress = this.addRenderableWidget(new ProgressBar(this.guiLeft + 25, this.guiTop + 30, 170, Component.translatable("gui.vampirism.garlic_diffuser.startup")));
         this.startupProgress.setColor(0xaaaaaa);
     }
 

@@ -144,14 +144,17 @@ public class ModKeys {
             HitResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
             LocalPlayer player = Minecraft.getInstance().player;
-            if (mouseOver != null && !player.isSpectator() && VampirePlayer.getOpt(player).map(vp -> vp.getLevel() > 0 && !vp.getActionHandler().isActionActive(VampireActions.BAT.get())).orElse(false)) {
-                if (mouseOver instanceof EntityHitResult) {
-                    VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
-                } else if (mouseOver instanceof BlockHitResult) {
-                    BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                    VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(pos));
-                } else {
-                    LOGGER.warn("Unknown mouse over type while trying to feed");
+            if (mouseOver != null && !player.isSpectator()) {
+                VampirePlayer vampire = VampirePlayer.get(player);
+                if (vampire.getLevel() > 0 && vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
+                    if (mouseOver instanceof EntityHitResult) {
+                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
+                    } else if (mouseOver instanceof BlockHitResult) {
+                        BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
+                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(pos));
+                    } else {
+                        LOGGER.warn("Unknown mouse over type while trying to feed");
+                    }
                 }
             }
         }
@@ -180,9 +183,9 @@ public class ModKeys {
 
     private void openMinionTaskMenu() {
         if(Minecraft.getInstance().player.isSpectator()) return;
-        FactionPlayerHandler.getOpt(mc.player).filter(p -> p.getLordLevel() > 0).ifPresent(p -> {
+        if (FactionPlayerHandler.get(mc.player).getLordLevel() > 0) {
             SelectMinionTaskRadialScreen.show();
-        });
+        };
     }
 
     private void toggleAction(int id) {
@@ -191,7 +194,8 @@ public class ModKeys {
             this.actionTriggerTime.put(id, t);
             Player player = mc.player;
             if (player.isAlive()) {
-                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction(id))));
+                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+                handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, handler.getBoundAction(id)));
             }
         }
     }
@@ -201,10 +205,10 @@ public class ModKeys {
      **/
     private void toggleBoundAction(@NotNull IFactionPlayer<?> player, @Nullable IAction<?> action) {
         if (action == null) {
-            player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+            player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
             if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
-                player.getRepresentingPlayer().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
+                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
             } else {
                 VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
             }

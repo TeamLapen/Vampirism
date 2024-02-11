@@ -77,7 +77,7 @@ public class DBNOScreen extends Screen {
         if (this.enableButtonsTimer == 20) {
             dieButton.active = true;
         }
-        resurrectButton.updateState(Optional.ofNullable(this.minecraft.player).flatMap(VampirePlayer::getOpt).filter(v -> v.getDbnoDuration() > 0).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f));
+        resurrectButton.updateState(Optional.ofNullable(this.minecraft.player).map(VampirePlayer::get).filter(v -> v.getDbnoDuration() > 0).map(v -> v.getDbnoTimer() / (float) v.getDbnoDuration()).orElse(0f));
     }
 
     protected void init() {
@@ -89,7 +89,7 @@ public class DBNOScreen extends Screen {
         dieButton.active = false;
         resurrectButton = this.addRenderableWidget(new CooldownButton(this.width / 2 - 100, this.height / 4 + 96, 200, 20, Component.translatable("gui.vampirism.dbno.resurrect"), (p_213020_1_) -> {
             if (this.minecraft.player != null) {
-                VampirePlayer.getOpt(this.minecraft.player).ifPresent(VampirePlayer::tryResurrect);
+                VampirePlayer.get(this.minecraft.player).tryResurrect();
             }
             VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESURRECT));
             this.minecraft.setScreen(null);

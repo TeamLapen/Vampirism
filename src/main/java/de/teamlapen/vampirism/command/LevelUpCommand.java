@@ -26,19 +26,18 @@ public class LevelUpCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int levelUp(@NotNull CommandContext<CommandSourceStack> context, @NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                if (handler.getCurrentLevel() == 0) {
-                    context.getSource().sendFailure(Component.translatable("command.vampirism.base.levelup.nofaction", players.size() > 1 ? player.getDisplayName() : "Player"));
-                } else if (handler.getCurrentLevel() == handler.getCurrentFaction().getHighestReachableLevel()) {
-                    context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.levelup.max", players.size() > 1 ? player.getDisplayName() : "Player"), true);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            if (handler.getCurrentLevel() == 0) {
+                context.getSource().sendFailure(Component.translatable("command.vampirism.base.levelup.nofaction", players.size() > 1 ? player.getDisplayName() : "Player"));
+            } else if (handler.getCurrentLevel() == handler.getCurrentFaction().getHighestReachableLevel()) {
+                context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.levelup.max", players.size() > 1 ? player.getDisplayName() : "Player"), true);
+            } else {
+                if (handler.setFactionAndLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1)) {
+                    context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.levelup.newlevel", player.getName(), handler.getCurrentFaction().getName(), handler.getCurrentLevel()), true);
                 } else {
-                    if (handler.setFactionAndLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1)) {
-                        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.levelup.newlevel", player.getName(), handler.getCurrentFaction().getName(), handler.getCurrentLevel()), true);
-                    } else {
-                        context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
-                    }
+                    context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.vampirism.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.vampirism.failed_to_execute"));
                 }
-            });
+            }
         }
         return 0;
     }

@@ -32,14 +32,13 @@ public record ClientboundTaskPacket(int containerId,
             return DataResult.error(() -> "Invalid List");
         }
     }, ArrayList::new).stable();
-    public static final Codec<ClientboundTaskPacket> CODEC = RecordCodecBuilder.create(func -> {
-        return func.group(
-                Codec.INT.fieldOf("containerId").forGetter(ClientboundTaskPacket::containerId),
-                Codec.unboundedMap(UUID_CODEC, TaskManager.TaskWrapper.CODEC).fieldOf("taskWrappers").forGetter(ClientboundTaskPacket::taskWrappers),
-                Codec.unboundedMap(UUID_CODEC, SET_CODEC).fieldOf("completableTasks").forGetter(ClientboundTaskPacket::completableTasks),
-                Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT))).fieldOf("completedRequirements").forGetter(ClientboundTaskPacket::completedRequirements)
-        ).apply(func, ClientboundTaskPacket::new);
-    });
+    public static final Codec<ClientboundTaskPacket> CODEC = RecordCodecBuilder.create(func ->
+            func.group(
+                    Codec.INT.fieldOf("containerId").forGetter(ClientboundTaskPacket::containerId),
+                    Codec.unboundedMap(UUID_CODEC, TaskManager.TaskWrapper.CODEC).fieldOf("taskWrappers").forGetter(ClientboundTaskPacket::taskWrappers),
+                    Codec.unboundedMap(UUID_CODEC, SET_CODEC).fieldOf("completableTasks").forGetter(ClientboundTaskPacket::completableTasks),
+                    Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT))).fieldOf("completedRequirements").forGetter(ClientboundTaskPacket::completedRequirements)
+            ).apply(func, ClientboundTaskPacket::new));
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {

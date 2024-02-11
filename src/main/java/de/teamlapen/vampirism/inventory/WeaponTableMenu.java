@@ -45,7 +45,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModContainer.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
-        this.hunterPlayer = HunterPlayer.getOpt(playerInventory.player).orElseThrow();
+        this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.player = playerInventory.player;
         this.addSlot(new WeaponTableCraftingSlot(playerInventory.player, craftMatrix, craftResult, 0, 144, 46, worldPosCallable));
 

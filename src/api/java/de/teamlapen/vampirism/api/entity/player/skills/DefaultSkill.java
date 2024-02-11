@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.Util;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -36,7 +34,6 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         this.skillPointCost = skillPointCost;
     }
 
-    @Deprecated
     @Override
     public String getTranslationKey() {
         if (this.translationId == null) {
@@ -47,7 +44,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
     @Override
     public final void onDisable(@NotNull T player) {
-        removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
+        removeAttributesModifiersFromEntity(player.asEntity());
         player.getActionHandler().relockActions(getActions());
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             onDisabled(player);
@@ -58,7 +55,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
     @Override
     public final void onEnable(@NotNull T player) {
-        applyAttributesModifiersToEntity(player.getRepresentingPlayer());
+        applyAttributesModifiersToEntity(player.asEntity());
 
         player.getActionHandler().unlockActions(getActions());
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {

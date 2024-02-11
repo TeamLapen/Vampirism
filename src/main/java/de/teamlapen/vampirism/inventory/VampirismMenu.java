@@ -83,12 +83,12 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     @Override
     public @NotNull TaskAction buttonAction(@NotNull ITaskInstance taskInfo) {
-        return taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp() ? TaskMenu.TaskAction.ABORT : TaskAction.REMOVE;
+        return taskInfo.isUnique(this.registry) || this.factionPlayer.asEntity().level().getGameTime() < taskInfo.getTaskTimeStamp() ? TaskMenu.TaskAction.ABORT : TaskAction.REMOVE;
     }
 
     @Override
     public boolean canCompleteTask(@NotNull ITaskInstance taskInfo) {
-        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.getRepresentingPlayer().level().getGameTime() < taskInfo.getTaskTimeStamp());
+        return this.completableTasks.containsKey(taskInfo.getTaskBoard()) && this.completableTasks.get(taskInfo.getTaskBoard()).contains(taskInfo.getId()) && (taskInfo.isUnique(this.registry) || this.factionPlayer.asEntity().level().getGameTime() < taskInfo.getTaskTimeStamp());
     }
 
     @Override

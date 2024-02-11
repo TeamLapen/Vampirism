@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -102,7 +101,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
 
         List<ISkill<?>> requiredSkills = recipe.getRequiredSkills();
         if (!requiredSkills.isEmpty()) {
-            MutableComponent skillText = Component.translatable("gui.vampirism.hunter_weapon_table.skill", " ");
+            MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
             for (ISkill<?> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.getName()).append(" ");

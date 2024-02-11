@@ -11,8 +11,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -31,7 +29,7 @@ public class BakedAltarInspirationModel implements IDynamicBakedModel {
 
     /**
      * Stores a fluid level -> fluid model array
-     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(net.minecraftforge.client.event.ModelEvent.BakingCompleted)})
+     * Filled when the fluid json model is loaded (in {@link net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult} )
      */
     public static final BakedModel[] FLUID_MODELS = new BakedModel[FLUID_LEVELS];
 

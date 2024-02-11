@@ -27,10 +27,9 @@ public class BindActionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int bindAction(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IAction<?> action) {
-        FactionPlayerHandler.getOpt(asPlayer).ifPresent(fp -> {
-            fp.setBoundAction(number, action, true, true);
-            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
-        });
+        FactionPlayerHandler handler = FactionPlayerHandler.get(asPlayer);
+        handler.setBoundAction(number, action, true, true);
+        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.bind_action.success", action.getName(), number), false);
         return 0;
     }
 

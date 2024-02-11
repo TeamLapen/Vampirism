@@ -41,7 +41,7 @@ public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
 
         @Override
         public HoverList<T> build() {
-            HoverList<T> simpleList = new HoverList<T>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
+            HoverList<T> simpleList = new HoverList<>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
             simpleList.setX(this.x);
             //noinspection unchecked
             simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<T>(x.getLeft(), x.getMiddle(), x.getRight())).toList()));

@@ -34,9 +34,7 @@ import java.util.stream.Collectors;
 public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends ReorderingGuiRadialMenu<IAction<?>> {
 
     public static void show() {
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(optional -> optional).ifPresent(factionPlayer -> {
-            Minecraft.getInstance().setScreen(new EditSelectActionScreen(factionPlayer));
-        });
+        FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFactionPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen(factionPlayer)));
     }
 
     private static void drawActionPart(@Nullable IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
@@ -81,7 +79,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
     private void resetKeyBindings() {
         ModKeys.ACTION_KEYS.keySet().forEach(key -> {
-            FactionPlayerHandler.getOpt(getMinecraft().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(key, null, false, false));
+            FactionPlayerHandler.get(getMinecraft().player).setBoundAction(key, null, false, false);
             VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(key, null));
         });
         this.keyBindingList.clearActions();
@@ -104,8 +102,8 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
             super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
             this.setRenderBackground(false);
             this.setX(x);
-            FactionPlayerHandler opt = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).get();
-            replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), opt.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.index)).toList());
+            FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
+            replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), handler.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.index)).toList());
         }
 
         @Override
@@ -179,7 +177,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
             private void switchAction(@Nullable IAction<?> action) {
                 this.action = action;
                 VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.index, this.action));
-                FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.setBoundAction(this.index, this.action, false, false));
+                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction(this.index, this.action, false, false);
                 if (action != null) {
                     this.imageWidget = ImageWidget.texture(16, 16, getActionIcon(action), 16, 16);
                     this.imageWidget.setPosition(90, 2);

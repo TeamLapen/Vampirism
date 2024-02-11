@@ -30,7 +30,7 @@ public class EntityCommand extends BasicCommand {
                 ResourceLocation id = RegUtil.id(entity.getType());
                 commandSource.sendSuccess(() -> Component.literal(id.toString()), true);
             } else {
-                commandSource.sendSuccess(() -> Component.translatable("Not biteable %s", entity.getClass().getName()), true);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.entity.notbiteable", entity.getClass().getName()), true);
             }
         }
         return 0;

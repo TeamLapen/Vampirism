@@ -31,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -93,25 +92,22 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     @Override
     public boolean canOpen(@NotNull Player player) {
         if (super.canOpen(player)) {
-            return HunterPlayer.getOpt(player).map(hp -> {
-                if (hp.getLevel() > 0) {
-                    if (ownerID == null) {
-                        setOwnerID(player);
-                        this.config.deriveFromHunter(hp);
-                        return true;
-                    } else if (ownerID.equals(player.getUUID())) {
-                        this.config.deriveFromHunter(hp);
-                        return true;
-                    } else {
-                        player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
-                    }
+            HunterPlayer hunter = HunterPlayer.get(player);
+            if (hunter.getLevel() > 0) {
+                if (ownerID == null) {
+                    setOwnerID(player);
+                    this.config.deriveFromHunter(hunter);
+                    return true;
+                } else if (ownerID.equals(player.getUUID())) {
+                    this.config.deriveFromHunter(hunter);
+                    return true;
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
                 }
-                return false;
-
-            }).orElse(false);
-
+            } else {
+                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+            }
+            return false;
         }
         return false;
     }
@@ -273,7 +269,9 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         //Periodically update table capabilities if player is loaded
         if (blockEntity.ownerID != null && level.getGameTime() % 64 == 0) {
             Player owner = level.getPlayerByUUID(blockEntity.ownerID);
-            if (owner != null) HunterPlayer.getOpt(owner).ifPresent(blockEntity.config::deriveFromHunter);
+            if (owner != null) {
+                blockEntity.config.deriveFromHunter(HunterPlayer.get(owner));
+            }
         }
 
         boolean canBrew = blockEntity.canBrew();

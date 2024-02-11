@@ -8,11 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Helper for compatibility with PlayerRevive https://www.curseforge.com/minecraft/mc-mods/playerrevive
+ * Helper for compatibility with PlayerRevive <a href="https://www.curseforge.com/minecraft/mc-mods/playerrevive">Player Revive</a>
  * <p>
  * The down time from PlayerRevive waiting for a revive is counted towards the DBNO timeout before the player can resurrect.
- * Using these methods: https://github.com/CreativeMD/PlayerRevive/blob/5a2fae4075a7fdfe3452f18b4939b6d21372542e/src/main/java/team/creative/playerrevive/server/PlayerReviveServer.java#L23-L33
- * Based on https://github.com/CreativeMD/PlayerRevive/issues/97#issuecomment-1255953836
+ * Using these methods: <a href="https://github.com/CreativeMD/PlayerRevive/blob/5a2fae4075a7fdfe3452f18b4939b6d21372542e/src/main/java/team/creative/playerrevive/server/PlayerReviveServer.java#L23-L33">PlayerReviveServer</a>
+ * Based on <a href="https://github.com/CreativeMD/PlayerRevive/issues/97#issuecomment-1255953836">Github Issue</a>
  *
  */
 public class PlayerReviveHelper {

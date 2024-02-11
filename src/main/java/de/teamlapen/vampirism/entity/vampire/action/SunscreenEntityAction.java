@@ -19,12 +19,12 @@ public class SunscreenEntityAction<T extends PathfinderMob & IEntityActionUser> 
 
     @Override
     public void activate(@NotNull T entity) {
-        entity.getRepresentingEntity().addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(entity.getEntityLevel()), 3, false, false));
+        entity.asEntity().addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), getDuration(entity.getEntityLevel()), 3, false, false));
     }
 
     @Override
     public void deactivate(@NotNull T entity) {
-        entity.getRepresentingEntity().removeEffect(ModEffects.SUNSCREEN.get());
+        entity.asEntity().removeEffect(ModEffects.SUNSCREEN.get());
     }
 
     @Override

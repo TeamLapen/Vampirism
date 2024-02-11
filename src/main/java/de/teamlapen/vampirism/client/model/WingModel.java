@@ -70,8 +70,8 @@ public class WingModel<T extends LivingEntity> extends AgeableListModel<T> {
             this.wingLeft.y = 2.5f;
         }
 
-        this.wingLeft.zRot -= Mth.cos((entityIn.tickCount + partialTick) * 0.0662F + (float) Math.PI) * 0.06;
-        this.wingRight.zRot += Mth.cos((entityIn.tickCount + partialTick) * 0.0662F + (float) Math.PI) * 0.06;
+        this.wingLeft.zRot -= (float) (Mth.cos((entityIn.tickCount + partialTick) * 0.0662F + (float) Math.PI) * 0.06);
+        this.wingRight.zRot += (float) (Mth.cos((entityIn.tickCount + partialTick) * 0.0662F + (float) Math.PI) * 0.06);
 
         this.wingLeft.yRot -= 0.3f;
         this.wingRight.yRot += 0.3f;

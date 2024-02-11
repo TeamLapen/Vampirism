@@ -111,7 +111,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     public static class HunterLordSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
-         * @param skillPointCost
          * @param desc           Enable description using the default unlocalized key
          */
         public HunterLordSkill(int skillPointCost, boolean desc) {

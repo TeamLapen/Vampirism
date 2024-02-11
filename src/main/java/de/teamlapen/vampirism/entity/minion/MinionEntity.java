@@ -516,7 +516,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).flatMap(FactionPlayerHandler::getOpt).orElse(null);
+        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).orElse(null);
     }
 
     protected @NotNull Optional<UUID> getLordID() {

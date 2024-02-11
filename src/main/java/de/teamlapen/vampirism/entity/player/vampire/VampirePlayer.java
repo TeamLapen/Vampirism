@@ -38,7 +38,7 @@ import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import de.teamlapen.vampirism.items.VampirismHunterArmorItem;
+import de.teamlapen.vampirism.items.HunterArmorItem;
 import de.teamlapen.vampirism.mixin.accessor.ArmorItemAccessor;
 import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
@@ -123,7 +123,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return player.getData(ModAttachments.VAMPIRE_PLAYER);
     }
 
-
+    /**
+     * @deprecated a player will always have a vampire player attachment
+     */
+    @Deprecated
     public static @NotNull Optional<VampirePlayer> getOpt(@NotNull Player player) {
         return Optional.of(player.getData(ModAttachments.VAMPIRE_PLAYER));
     }
@@ -307,8 +310,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (((Player) entity).getAbilities().instabuild || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
-            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((Player) entity).map(v -> v.canBeBitten(this)).orElse(false) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
-                if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof VampirismHunterArmorItem)) {
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((Player) entity).canBeBitten(this) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
+                if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof HunterArmorItem)) {
                     return BITE_TYPE.SUCK_BLOOD_PLAYER;
                 }
             } else {
@@ -760,11 +763,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      */
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
-            FactionPlayerHandler.getOpt(player).ifPresent(handler -> {
-                handler.joinFaction(getFaction());
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.joinFaction(getFaction());
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300));
                 player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
-            });
         }
     }
 
@@ -988,7 +990,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (data.length > 2) {
                     this.setGlowingEyes(data[2] > 0);
                     if (data.length > 3) {
-                        FactionPlayerHandler.getOpt(this.player).ifPresent(handler -> handler.setTitleGender(data[3] > 0));
+                        FactionPlayerHandler.get(this.player).setTitleGender(data[3] > 0);
                     }
                 }
             }
@@ -1251,8 +1253,9 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 continue_feeding = false;
             }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
-            blood = VampirePlayer.getOpt((Player) entity).map(v -> v.onBite(this)).orElse(0);
-            saturationMod = VampirePlayer.getOpt((Player) entity).map(VampirePlayer::getBloodSaturation).orElse(0f);
+            VampirePlayer vampire = VampirePlayer.get((Player) entity);
+            blood = vampire.onBite(this);
+            saturationMod = vampire.getBloodSaturation();
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
@@ -1398,7 +1401,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).flatMap(a -> FactionPlayerHandler.getOpt(this.player).map(a::getOrCreateController)).ifPresent(controller -> controller.contactMinions((minion) -> {
+        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
             HelperLib.sync(minion);
         }));
@@ -1475,7 +1478,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     this.vision = vision;
                     this.vision.onActivated(VampirePlayer.this);
                 } else if (VampirePlayer.this.player.isAddedToWorld()) {
-                    VampirePlayer.this.player.displayClientMessage(Component.translatable("Vision is disabled by config"),true);
+                    VampirePlayer.this.player.displayClientMessage(Component.translatable("text.vampirism.vision_disabled_by_config"),true);
                 }
                 this.visionId = VampirismAPI.vampireVisionRegistry().getVisionId(vision);
             } else {
@@ -1505,24 +1508,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         @Override
         public void deserializeNBT(@NotNull CompoundTag tag) {
             if (tag.getBoolean("hasVision")) {
-                if (tag.contains("vision")) {
-                    // legacy support for integer ids
-                    if (tag.contains("vision", Tag.TAG_INT)) {
-                        //noinspection removal
-                        this.activate(VampirismAPI.vampireVisionRegistry().getVisionOfId(tag.getInt("vision")));
-                    } else if (tag.contains("vision", Tag.TAG_STRING)) {
-                        this.activate(VampirismAPI.vampireVisionRegistry().getVision(new ResourceLocation(tag.getString("vision"))));
-                    }
-                } else if(tag.contains("visionId")) {
+                if (tag.contains("vision", Tag.TAG_STRING)) {
+                    this.activate(VampirismAPI.vampireVisionRegistry().getVision(new ResourceLocation(tag.getString("vision"))));
+                } else if(tag.contains("visionId", Tag.TAG_STRING)) {
                     this.deactivate();
-                    //legacy support for integer ids
-                    if (tag.contains("visionId", Tag.TAG_INT)) {
-                        //noinspection removal
-                        this.visionId = VampirismAPI.vampireVisionRegistry().getIdForId(tag.getInt("visionId"));
-
-                    } else if (tag.contains("visionId", Tag.TAG_STRING)) {
-                        this.visionId = new ResourceLocation(tag.getString("visionId"));
-                    }
+                    this.visionId = new ResourceLocation(tag.getString("visionId"));
                 }
             } else {
                 this.deactivate();

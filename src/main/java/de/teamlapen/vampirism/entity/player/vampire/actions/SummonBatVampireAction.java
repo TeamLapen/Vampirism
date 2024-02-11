@@ -22,7 +22,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(@NotNull IVampirePlayer player, ActivationContext context) {
-        Player entityPlayer = player.getRepresentingPlayer();
+        Player entityPlayer = player.asEntity();
         boolean refined = player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
         int amount = VampirismConfig.BALANCE.vaSummonBatsCount.get();
         if (amount > 1 && refined) {
@@ -33,8 +33,8 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             e.restrictLiveSpan();
             if (refined) e.setTargeting();
             e.setResting(false);
-            e.copyPosition(player.getRepresentingPlayer());
-            player.getRepresentingPlayer().getCommandSenderWorld().addFreshEntity(e);
+            e.copyPosition(player.asEntity());
+            player.asEntity().getCommandSenderWorld().addFreshEntity(e);
         }
         entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.BAT_SWARM.get(), SoundSource.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
         return true;

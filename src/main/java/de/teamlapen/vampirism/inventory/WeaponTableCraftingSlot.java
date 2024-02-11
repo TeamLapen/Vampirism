@@ -54,7 +54,7 @@ public class WeaponTableCraftingSlot extends Slot {
             }
             return 0;
         }), 0);
-        final IWeaponTableRecipe recipe = HunterPlayer.getOpt(playerIn).map(hunterPlayer -> findMatchingRecipe(playerIn, hunterPlayer, lava)).orElse(null);
+        final IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, HunterPlayer.get(playerIn), lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             worldPos.execute(((world, pos) -> {
                 int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());

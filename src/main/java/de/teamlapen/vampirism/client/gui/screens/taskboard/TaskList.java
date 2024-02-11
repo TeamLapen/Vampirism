@@ -54,7 +54,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         super(minecraft, width, height, y, 21, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
-        this.registry = factionPlayer.getRepresentingPlayer().level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+        this.registry = factionPlayer.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
         this.setX(x);
     }
 
@@ -262,7 +262,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             void setOffset(int x, int y);
         }
 
-        private abstract class ItemWidget extends AbstractWidget implements MovableWidget {
+        private abstract static class ItemWidget extends AbstractWidget implements MovableWidget {
             protected static final ItemStack PAPER = new ItemStack(Items.PAPER);
 
             private final ItemStack stack;

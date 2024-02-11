@@ -60,13 +60,6 @@ public class BloodHelper {
         return stack.getAmount();
     }
 
-    public static int getBlood(@NotNull Optional<IFluidHandler> opt) {
-        return opt.map(handler -> {
-            FluidStack stack = handler.drain(new FluidStack(ModFluids.BLOOD.get(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
-            return stack.getAmount();
-        }).orElse(0);
-    }
-
     /**
      * Tries to drain the given amount out of the stack.
      *

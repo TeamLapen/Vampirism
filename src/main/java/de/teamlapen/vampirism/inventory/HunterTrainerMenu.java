@@ -44,7 +44,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
         super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()));
         this.player = playerInventory.player;
         this.entity = trainer;
-        this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) + 1);
+        this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1);
     }
 
     @Override

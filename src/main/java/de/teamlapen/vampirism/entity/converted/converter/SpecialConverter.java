@@ -16,7 +16,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> implements Converter {

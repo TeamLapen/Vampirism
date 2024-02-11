@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import de.teamlapen.vampirism.core.ModContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

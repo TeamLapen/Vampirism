@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
@@ -156,7 +157,8 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER)) {
-            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt(player).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
+            ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
+            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (skillHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 DamageHandler.hurtModded(target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
@@ -169,7 +171,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
             float trained = getTrained(stack, attacker);
             int exp = target instanceof Player ? 10 : (attacker instanceof Player ? (Helper.getExperiencePoints(target, (Player) attacker)) : 5);
             float newTrained = exp / 5f * (1.0f - trained) / 15f;
-            if (attacker instanceof Player && VampirePlayer.getOpt(((Player) attacker)).map(VampirePlayer::getSkillHandler).map(handler -> handler.isRefinementEquipped(ModRefinements.SWORD_TRAINED_AMOUNT.get())).orElse(false)) {
+            if (attacker instanceof Player && VampirePlayer.get((Player) attacker).getSkillHandler().isRefinementEquipped(ModRefinements.SWORD_TRAINED_AMOUNT.get())) {
                 newTrained *= VampirismConfig.BALANCE.vrSwordTrainingSpeedMod.get();
             }
             trained += newTrained;
@@ -269,16 +271,15 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        return VampirePlayer.getOpt(playerIn).map(vampire -> {
-            if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        VampirePlayer vampire = VampirePlayer.get(playerIn);
+        if (vampire.getLevel() == 0) return new InteractionResultHolder<>(InteractionResult.PASS, stack);
 
-            if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE.get()) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED.get()) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
-                playerIn.startUsingItem(handIn);
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-            }
+        if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE.get()) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED.get()) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
+            playerIn.startUsingItem(handIn);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        }
 
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        }).orElse(new InteractionResultHolder<>(InteractionResult.PASS, stack));
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
     @Override

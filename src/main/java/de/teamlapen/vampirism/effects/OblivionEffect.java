@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.lib.lib.util.LogUtil;
-import de.teamlapen.vampirism.api.entity.effect.EffectWithNoCounter;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.Set;
 
-public class OblivionEffect extends VampirismEffect implements EffectWithNoCounter {
+public class OblivionEffect extends VampirismEffect {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -42,7 +41,7 @@ public class OblivionEffect extends VampirismEffect implements EffectWithNoCount
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
             if (entityLivingBaseIn instanceof Player player) {
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null, Optional.empty()));
-                FactionPlayerHandler.getOpt(((Player) entityLivingBaseIn)).map(FactionPlayerHandler::getCurrentFactionPlayer).flatMap(factionPlayer -> factionPlayer).ifPresent(factionPlayer -> {
+                FactionPlayerHandler.getCurrentFactionPlayer(((Player) entityLivingBaseIn)).ifPresent(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<ISkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {

@@ -70,15 +70,15 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.fangType = vampAtt.fangType;
         this.eyeType = vampAtt.eyeType;
         this.glowingEyes = vampAtt.glowingEyes;
-        this.titleGender = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::titleGender).map(s -> s == IPlayableFaction.TitleGender.FEMALE).orElse(false);
+        this.titleGender = FactionPlayerHandler.get(Minecraft.getInstance().player).titleGender() == IPlayableFaction.TitleGender.FEMALE;
 
         this.titleGenderButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).pos(this.guiLeft + 20, this.guiTop + 91).selected(titleGender).onValueChange((button, selected) -> {
             titleGender = selected;
-            FactionPlayerHandler.getOpt(entity).ifPresent(p -> p.setTitleGender(titleGender));
+            FactionPlayerHandler.get(entity).setTitleGender(titleGender);
         }).build());
         this.glowingEyesButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), minecraft.font).pos(this.guiLeft + 20, this.guiTop + 70).selected(glowingEyes).onValueChange((button, selected) -> {
             glowingEyes = selected;
-            VampirePlayer.getOpt(entity).ifPresent(p -> p.setGlowingEyes(glowingEyes));
+            VampirePlayer.get(entity).setGlowingEyes(glowingEyes);
         }).build());
 
         this.fangList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80).componentsWithClickAndHover(IntStream.range(0, REFERENCE.FANG_TYPE_COUNT).mapToObj(type -> Component.translatable("gui.vampirism.appearance.fang").append(" " + (type + 1))).toList(), this::fang, this::hoverFang).build());
@@ -99,41 +99,37 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     private void eye(int eyeType) {
-        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
-            vampire.setEyeType(this.eyeType = eyeType);
-            setEyeListVisibility(false);
-        });
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        vampire.setEyeType(this.eyeType = eyeType);
+        setEyeListVisibility(false);
     }
 
     private void fang(int fangType) {
-        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
-            vampire.setFangType(this.fangType = fangType);
-            setFangListVisibility(false);
-        });
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        vampire.setFangType(this.fangType = fangType);
+        setFangListVisibility(false);
     }
 
     private void hoverEye(int eyeType, boolean hovered) {
-        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
-            if (hovered) {
-                vampire.setEyeType(eyeType);
-            } else {
-                if (vampire.getEyeType() == eyeType) {
-                    vampire.setEyeType(this.eyeType);
-                }
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        if (hovered) {
+            vampire.setEyeType(eyeType);
+        } else {
+            if (vampire.getEyeType() == eyeType) {
+                vampire.setEyeType(this.eyeType);
             }
-        });
+        }
     }
 
     private void hoverFang(int fangType, boolean hovered) {
-        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
-            if (hovered) {
-                vampire.setFangType(fangType);
-            } else {
-                if (vampire.getFangType() == fangType) {
-                    vampire.setFangType(this.fangType);
-                }
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        if (hovered) {
+            vampire.setFangType(fangType);
+        } else {
+            if (vampire.getFangType() == fangType) {
+                vampire.setFangType(this.fangType);
             }
-        });
+        }
     }
 
     private void setEyeListVisibility(boolean show) {

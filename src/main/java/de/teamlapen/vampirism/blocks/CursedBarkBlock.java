@@ -43,19 +43,18 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
         entity.setDeltaMovement(entity.getDeltaMovement().add(thrust));
 
         if (!level.isClientSide) {
-            if (entity instanceof Player) {
-                VampirePlayer.getOpt(((Player) entity)).ifPresent(vampire -> {
-                    if (vampire.getRemainingBarkTicks() == 0) {
-                        vampire.removeBlood(0.02f);
-                        vampire.increaseRemainingBarkTicks(40);
-                    }
-                });
+            if (entity instanceof Player player) {
+                VampirePlayer vampire = VampirePlayer.get(player);
+                if (vampire.getRemainingBarkTicks() == 0) {
+                    vampire.removeBlood(0.02f);
+                    vampire.increaseRemainingBarkTicks(40);
+                }
             } else {
                 ExtendedCreature.getSafe(entity).ifPresent(creature -> {
-                    if (((ExtendedCreature) creature).getRemainingBarkTicks() == 0) {
+                    if (creature.getRemainingBarkTicks() == 0) {
                         creature.setBlood(creature.getBlood() - 1);
-                        ((ExtendedCreature) creature).sync();
-                        ((ExtendedCreature) creature).increaseRemainingBarkTicks(40);
+                        creature.sync();
+                        creature.increaseRemainingBarkTicks(40);
                     }
 
                 });

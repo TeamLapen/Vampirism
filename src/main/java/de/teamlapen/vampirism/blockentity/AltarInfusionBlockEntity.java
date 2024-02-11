@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -38,9 +37,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.apache.logging.log4j.LogManager;
@@ -54,7 +50,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     private final static Logger LOGGER = LogManager.getLogger(AltarInfusionBlockEntity.class);
     private static final int DURATION_TICK = 450;
-    private final IItemHandler itemHandlerOptional;
     /**
      * Used to store a saved player UUID during read until world and player are available
      */
@@ -76,7 +71,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
-        this.itemHandlerOptional = new InvWrapper(this);
     }
 
     /**
@@ -265,13 +259,13 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (phase.equals(PHASE.LEVELUP)) {
             if (!level.isClientSide) {
                 assert player.isAlive();
-                Optional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(player);
-                if (handler.map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1).orElse(false)) {
+                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+                if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
-                handler.ifPresent(h -> h.setFactionLevel(VReference.VAMPIRE_FACTION, h.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1));
-                VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none()));
+                handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
+                VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
                 if (player instanceof ServerPlayer serverPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
@@ -323,12 +317,10 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private boolean checkItemRequirements() {
         int newLevel = targetLevel;
-        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> {
-            return InventoryHelper.checkItems(this, new Item[]{
-                            PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
-                    new int[]{req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
-                    (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()));
-        }).orElse(ItemStack.EMPTY);
+        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> InventoryHelper.checkItems(this, new Item[]{
+                        PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
+                new int[]{req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
+                (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()))).orElse(ItemStack.EMPTY);
         return missing.isEmpty();
 
     }
@@ -394,9 +386,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Consume the required tileInventory
      */
     private void consumeItems() {
-        VampireLeveling.getInfusionRequirement(targetLevel).ifPresent(req -> {
-            InventoryHelper.removeItems(this, req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity());
-        });
+        VampireLeveling.getInfusionRequirement(targetLevel).ifPresent(req -> InventoryHelper.removeItems(this, req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()));
     }
 
     /**
@@ -420,7 +410,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     private boolean loadRitual(@NotNull UUID playerID) {
         if (this.level == null) return false;
-        if (this.level.players().size() == 0) return false;
+        if (this.level.players().isEmpty()) return false;
         this.player = this.level.getPlayerByUUID(playerID);
         if (this.player != null && player.isAlive()) {
             this.targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;

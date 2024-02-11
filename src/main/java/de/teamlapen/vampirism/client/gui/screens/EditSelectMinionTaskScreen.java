@@ -26,9 +26,7 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
     }
 
     public static void show() {
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(playerHandler -> {
-            Minecraft.getInstance().setScreen(new EditSelectMinionTaskScreen(playerHandler));
-        });
+        Minecraft.getInstance().setScreen(new EditSelectMinionTaskScreen(FactionPlayerHandler.get(Minecraft.getInstance().player)));
     }
 
     private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {

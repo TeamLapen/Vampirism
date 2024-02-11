@@ -255,10 +255,6 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
         }
 
         @Override
-        public void stop() {
-        }
-
-        @Override
         public boolean requiresUpdateEveryTick() {
             return true;
         }

@@ -349,7 +349,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             getLord().ifPresent(player -> {
                 player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler).ifPresent(s -> {
                     if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
-                        i.deathCooldown *= 0.8;
+                        i.deathCooldown *= (int) 0.8;
                     }
                 });
             });
@@ -459,7 +459,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.minion.could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.command_could_not_activate"), false));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
@@ -468,7 +468,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     private @NotNull Optional<? extends ILordPlayer> getLord() {
-        return getLordPlayer().flatMap(FactionPlayerHandler::getOpt);
+        return getLordPlayer().flatMap(player -> Optional.of(FactionPlayerHandler.get(player)));
     }
 
     private @NotNull Optional<Player> getLordPlayer() {

@@ -82,6 +82,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -190,10 +191,11 @@ public class VampirismMod {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.SIEVE.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.POTION_TABLE.get(), new ICapabilityProvider<>() {
             @Override
-            public @Nullable IItemHandler getCapability(PotionTableBlockEntity object, Direction context) {
+            public @Nullable IItemHandler getCapability(@NotNull PotionTableBlockEntity object, @NotNull Direction context) {
                 return object.getCapability(object, context);
             }
         });
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.ALTAR_INFUSION.get(), (o, side) -> new InvWrapper(o));
     }
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {

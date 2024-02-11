@@ -31,23 +31,6 @@ public interface IVampire extends IFactionEntity {
     }
 
     /**
-     * @deprecated Use {@link #drinkBlood(int, float, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}  instead
-     */
-    @Deprecated(forRemoval = true)
-    default void drinkBlood(int amt, float saturationMod) {
-        drinkBlood(amt, saturationMod, true, IDrinkBloodContext.none());
-    }
-
-
-    /**
-     * @deprecated Use {@link #drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)} instead
-     */
-    @Deprecated(forRemoval = true)
-    default void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        drinkBlood(amt, saturationMod, useRemaining, IDrinkBloodContext.none());
-    }
-
-    /**
      * Adds blood to the vampires blood stats.
      * If useRemaining is true, any remaining blood might be used otherwise. For example, it might be put into blood bottles
      *

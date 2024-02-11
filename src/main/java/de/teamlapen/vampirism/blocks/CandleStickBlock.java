@@ -151,9 +151,7 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
     }
 
     public static boolean canLight(@NotNull BlockState pState) {
-        return pState.is(BlockTags.CANDLES, (p_152810_) -> {
-            return p_152810_.hasProperty(LIT) && p_152810_.hasProperty(WATERLOGGED);
-        }) && !pState.getValue(LIT) && !pState.getValue(WATERLOGGED);
+        return pState.is(BlockTags.CANDLES, (p_152810_) -> p_152810_.hasProperty(LIT) && p_152810_.hasProperty(WATERLOGGED)) && !pState.getValue(LIT) && !pState.getValue(WATERLOGGED);
     }
 
     @NotNull

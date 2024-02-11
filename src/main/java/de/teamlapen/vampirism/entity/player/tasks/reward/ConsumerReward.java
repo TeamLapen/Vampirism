@@ -13,12 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConsumerReward implements TaskReward, ITaskRewardInstance {
 
-    public static final Codec<ConsumerReward> CODEC = RecordCodecBuilder.create(inst -> {
-        return inst.group(
-                FactionPlayerConsumer.CODEC.fieldOf("consumer").forGetter(i -> i.consumer),
-                ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
-        ).apply(inst, ConsumerReward::new);
-    });
+    public static final Codec<ConsumerReward> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    FactionPlayerConsumer.CODEC.fieldOf("consumer").forGetter(i -> i.consumer),
+                    ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
+            ).apply(inst, ConsumerReward::new));
 
     private final @NotNull FactionPlayerConsumer consumer;
     private final Component description;

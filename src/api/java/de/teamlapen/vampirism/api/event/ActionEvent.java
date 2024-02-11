@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -114,14 +115,18 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction}.
      */
-    @HasResult
     public static class ActionUpdateEvent extends ActionEvent {
         private final int remainingDuration;
-        private boolean overrideDeactivation;
+        private boolean deactivate;
+        private boolean skipActionUpdate;
 
-        public ActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration) {
+        public ActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull ILastingAction<?> action, int remainingDuration) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
+        }
+
+        public @NotNull ILastingAction<?> getAction() {
+            return (ILastingAction<?>) super.getAction();
         }
 
         /**
@@ -136,15 +141,23 @@ public abstract class ActionEvent extends Event {
          *
          * @param overrideDeactivation If true, the action will be deactivated.
          */
-        public void setOverrideDeactivation(boolean overrideDeactivation) {
-            this.overrideDeactivation = overrideDeactivation;
+        public void setDeactivation(boolean overrideDeactivation) {
+            this.deactivate = overrideDeactivation;
         }
 
         /**
          * @return If true, the action will be deactivated.
          */
-        public boolean shouldOverrideDeactivation() {
-            return this.overrideDeactivation;
+        public boolean shouldDeactivation() {
+            return this.deactivate;
+        }
+
+        public void setSkipActionUpdate(boolean skipActionUpdate) {
+            this.skipActionUpdate = skipActionUpdate;
+        }
+
+        public boolean shouldSkipActionUpdate() {
+            return this.skipActionUpdate;
         }
 
     }

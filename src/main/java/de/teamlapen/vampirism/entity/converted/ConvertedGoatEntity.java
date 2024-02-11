@@ -98,7 +98,7 @@ public class ConvertedGoatEntity extends Goat implements CurableConvertedCreatur
     }
 
     @Override
-    public @NotNull Component getName() {
+    public @NotNull Component getTypeName() {
         return this.getNameC(EntityType.GOAT::getDescription);
     }
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items.crossbow;
 
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -32,7 +33,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
 
     @Nullable
     @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return HunterSkills.TECH_WEAPONS.get();
     }
 

@@ -1,51 +1,32 @@
 package de.teamlapen.vampirism.command.test;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IMinionBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFactionBuilder;
-import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
-import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -112,31 +93,40 @@ public class MinionCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
-        FactionPlayerHandler fph = FactionPlayerHandler.getOpt(p).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
-            PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
-            if (controller.hasFreeMinionSlot()) {
+        FactionPlayerHandler fph = handler(p);
 
-                if (fph.getCurrentFaction() == faction) {
-                    @SuppressWarnings("unchecked") int id = controller.createNewMinionSlot((MinionData) data, (EntityType<? extends MinionEntity<?>>) type);
-                    if (id < 0) {
-                        throw fail.create("Failed to get new minion slot");
-                    }
-                    controller.createMinionEntityAtPlayer(id, p);
-                } else {
-                    throw fail.create("Wrong faction");
+        PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
+        if (controller.hasFreeMinionSlot()) {
+
+            if (fph.getCurrentFaction() == faction) {
+                @SuppressWarnings("unchecked") int id = controller.createNewMinionSlot((MinionData) data, (EntityType<? extends MinionEntity<?>>) type);
+                if (id < 0) {
+                    throw fail.create("Failed to get new minion slot");
                 }
-
-
+                controller.createMinionEntityAtPlayer(id, p);
             } else {
-                throw fail.create("No free slot");
+                throw fail.create("Wrong faction");
             }
+
+
+        } else {
+            throw fail.create("No free slot");
+        }
 
         return 0;
     }
 
+    private static FactionPlayerHandler handler(Player player) {
+        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        if (handler.getMaxMinions() <= 0) {
+            throw new IllegalArgumentException("Can't have minions");
+        }
+        return handler;
+    }
+
     @SuppressWarnings("SameReturnValue")
     private static int recall(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.getOpt(player).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
+        FactionPlayerHandler factionPlayerHandler = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(factionPlayerHandler);
         Collection<Integer> ids = controller.recallMinions(true);
         for (Integer id : ids) {
@@ -149,7 +139,7 @@ public class MinionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler fph = FactionPlayerHandler.getOpt(player).filter(s -> s.getMaxMinions() > 0).orElseThrow(() -> fail.create("Can't have minions"));
+        FactionPlayerHandler fph = handler(player);
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.getUnclaimedMinions();
             for (Integer id : ids) {

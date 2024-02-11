@@ -21,7 +21,7 @@ public class EyeCommand extends BasicCommand {
     }
 
     private static int setEye(@NotNull CommandContext<CommandSourceStack> context, @NotNull Player player, int type) {
-        if (VampirePlayer.getOpt(player).map(vampire -> vampire.setEyeType(type)).orElse(false)) {
+        if (VampirePlayer.get(player).setEyeType(type)) {
             context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.eye.success", type), false);
         }
         return type;

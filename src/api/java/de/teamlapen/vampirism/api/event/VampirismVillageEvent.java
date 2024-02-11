@@ -138,7 +138,6 @@ public abstract class VampirismVillageEvent extends Event {
      * Fired when the Capture process is finished the Villager should be affected by the faction change
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
-    @HasResult
     public static abstract class VillagerCaptureFinish extends VampirismVillageEvent {
 
         @NotNull
@@ -170,8 +169,22 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         public static class Pre extends VillagerCaptureFinish {
+
+            private boolean disableEntityConversion = false;
+
             public Pre(ITotem totem, @NotNull List<Villager> villagerIn, boolean forced) {
                 super(totem, villagerIn, forced);
+            }
+
+            public void setDisableEntityConversion(boolean disableEntityConversion) {
+                this.disableEntityConversion = disableEntityConversion;
+            }
+
+            /**
+             * @return If true the entities should not be changed by vampirism.
+             */
+            public boolean isEntityConversionDisabled() {
+                return disableEntityConversion;
             }
         }
     }
@@ -180,12 +193,13 @@ public abstract class VampirismVillageEvent extends Event {
      * fired when the caption process is started
      * set the result to {@code DENY} to skip the vanilla code
      */
-    @HasResult
     public static class InitiateCapture extends VampirismVillageEvent {
 
         @NotNull
         private final IFaction<?> capturingFaction;
+        @Nullable
         private String message;
+        private boolean disallowCapture = false;
 
         public InitiateCapture(ITotem totem, @NotNull IFaction<?> capturingFaction) {
             super(totem);
@@ -201,12 +215,34 @@ public abstract class VampirismVillageEvent extends Event {
             return capturingFaction;
         }
 
+        /**
+         * Get an optional message when the capture is disallowed
+         */
+        @Nullable
         public String getMessage() {
-            return message;
+            return this.message;
         }
 
-        public void setMessage(String message) {
+        /**
+         * Set an optional message when the capture is disallowed
+         * @param message the message
+         */
+        public void setMessage(@Nullable String message) {
             this.message = message;
+        }
+
+        /**
+         * Should the capture be disallowed it is helpful to set an additional message {@link #setMessage(String)}
+         */
+        public void disallowCapture() {
+            this.disallowCapture = true;
+        }
+
+        /**
+         * Disallow the raid start
+         */
+        public boolean isCaptureDisallowed() {
+            return this.disallowCapture;
         }
     }
 

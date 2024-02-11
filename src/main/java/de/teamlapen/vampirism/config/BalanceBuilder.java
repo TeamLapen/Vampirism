@@ -66,7 +66,7 @@ public class BalanceBuilder {
      * Build the registered configuration considering the modifiers using the give Forge level and inject the created {@link ModConfigSpec.ConfigValue} into the given BalanceConfig using reflection
      */
     public void build(BalanceConfig conf, ModConfigSpec.@NotNull Builder builder) {
-        if (balanceModifications.size() > 0) {
+        if (!balanceModifications.isEmpty()) {
             LOGGER.info("Building balance configuration with {} modifications", balanceModifications.size());
         }
         for (Map.Entry<String, Map<String, Conf>> stringMapEntry : categoryConfigMap.entrySet()) {

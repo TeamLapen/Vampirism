@@ -162,39 +162,38 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
     public void convertToMinion(@NotNull Player lord) {
-        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
-            if (fph.getMaxMinions() > 0) {
-                MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
-                    if (controller.hasFreeMinionSlot()) {
-                        if (fph.getCurrentFaction() == this.getFaction()) {
-                            boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
-                            VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
-                            data.updateEntityCaps(this.serializeAttachments());
-                            int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
-                            if (id < 0) {
-                                LOGGER.error("Failed to get minion slot");
-                                return;
-                            }
-                            VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level());
-                            minion.claimMinionSlot(id, controller);
-                            minion.copyPosition(this);
-                            minion.markAsConverted();
-                            controller.activateTask(0, MinionTasks.STAY.get());
-                            UtilLib.replaceEntity(this, minion);
-
-                        } else {
-                            LOGGER.warn("Wrong faction for minion");
+        FactionPlayerHandler fph = FactionPlayerHandler.get(lord);
+        if (fph.getMaxMinions() > 0) {
+            MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                if (controller.hasFreeMinionSlot()) {
+                    if (fph.getCurrentFaction() == this.getFaction()) {
+                        boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
+                        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
+                        data.updateEntityCaps(this.serializeAttachments());
+                        int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
+                        if (id < 0) {
+                            LOGGER.error("Failed to get minion slot");
+                            return;
                         }
+                        VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level());
+                        minion.claimMinionSlot(id, controller);
+                        minion.copyPosition(this);
+                        minion.markAsConverted();
+                        controller.activateTask(0, MinionTasks.STAY.get());
+                        UtilLib.replaceEntity(this, minion);
+
                     } else {
-                        LOGGER.warn("No free slot");
+                        LOGGER.warn("Wrong faction for minion");
                     }
-                });
+                } else {
+                    LOGGER.warn("No free slot");
+                }
+            });
 
 
-            } else {
-                LOGGER.error("Can't have minions");
-            }
-        });
+        } else {
+            LOGGER.error("Can't have minions");
+        }
 
     }
 
@@ -397,9 +396,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public int suggestEntityLevel(@NotNull Difficulty d) {
         return switch (this.random.nextInt(5)) {
-            case 0 -> (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1 -> (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2 -> (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            case 0 -> (int) (d.minPercLevel() / 100F * MAX_LEVEL);
+            case 1 -> (int) (d.avgPercLevel() / 100F * MAX_LEVEL);
+            case 2 -> (int) (d.maxPercLevel() / 100F * MAX_LEVEL);
             default -> this.random.nextInt(MAX_LEVEL + 1);
         };
     }
@@ -442,34 +441,33 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide) {
-                int vampireLevel = FactionPlayerHandler.getOpt(player).map(fph -> fph.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0);
+                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+                int vampireLevel = handler.getCurrentLevel(VReference.VAMPIRE_FACTION);
                 if (vampireLevel > 0) {
-                    return FactionPlayerHandler.getOpt(player).map(fph -> {
-                        if (fph.getMaxMinions() > 0) {
-                            ItemStack heldItem = player.getItemInHand(hand);
-                            //noinspection Convert2MethodRef
-                            boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
-                            if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
-                                if (!freeSlot) {
-                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
-                                } else {
-                                    String key = switch (this.getRandom().nextInt(3)) {
-                                        case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
-                                        case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
-                                        default -> "text.vampirism.basic_vampire.minion.start_serving3";
-                                    };
-                                    player.displayClientMessage(Component.translatable(key), false);
-                                    convertToMinion(player);
-                                    if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                                }
-                            } else if (freeSlot) {
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                    if (handler.getMaxMinions() > 0) {
+                        ItemStack heldItem = player.getItemInHand(hand);
+                        //noinspection Convert2MethodRef
+                        boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(handler)).map(c -> c.hasFreeMinionSlot()).orElse(false);
+                        player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
+                        if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
+                            if (!freeSlot) {
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                            } else {
+                                String key = switch (this.getRandom().nextInt(3)) {
+                                    case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
+                                    case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
+                                    default -> "text.vampirism.basic_vampire.minion.start_serving3";
+                                };
+                                player.displayClientMessage(Component.translatable(key), false);
+                                convertToMinion(player);
+                                if (!player.getAbilities().instabuild) heldItem.shrink(1);
                             }
-                            return InteractionResult.SUCCESS;
+                        } else if (freeSlot) {
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                         }
-                        return InteractionResult.PASS;
-                    }).orElse(InteractionResult.PASS);
+                        return InteractionResult.SUCCESS;
+                    }
+                    return InteractionResult.PASS;
                 }
             }
             return InteractionResult.PASS;
@@ -501,7 +499,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, StructureTags.VILLAGE)));
-        this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
+        this.targetSelector.addGoal(8, new DefendLeaderGoal<>(this));
     }
 
     protected void updateEntityAttributes() {

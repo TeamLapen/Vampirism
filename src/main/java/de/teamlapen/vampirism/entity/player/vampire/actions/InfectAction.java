@@ -35,7 +35,7 @@ public class InfectAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
-        Player player = vampire.getRepresentingPlayer();
+        Player player = vampire.asEntity();
         Entity creature =  context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
             if (UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
@@ -54,7 +54,7 @@ public class InfectAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
-        if (player.getRepresentingPlayer().level().getDifficulty() == Difficulty.PEACEFUL) return false;
+        if (player.asEntity().level().getDifficulty() == Difficulty.PEACEFUL) return false;
         if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if (target != null) {
@@ -71,7 +71,7 @@ public class InfectAction extends DefaultVampireAction {
         } else if (target instanceof PathfinderMob) {
             return ExtendedCreature.getSafe(target);
         } else if (target instanceof Player) {
-            return VampirePlayer.getOpt((Player) target);
+            return Optional.of(VampirePlayer.get((Player) target));
         }
         return Optional.empty();
     }

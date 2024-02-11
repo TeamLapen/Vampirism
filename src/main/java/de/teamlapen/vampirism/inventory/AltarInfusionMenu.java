@@ -24,6 +24,7 @@ import java.util.Optional;
 
 public class AltarInfusionMenu extends ItemCombinerMenu {
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<VampireLeveling.AltarInfusionRequirements> lvlRequirement;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
@@ -36,7 +37,7 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
         super(ModContainer.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable);
         ((ItemCombinerMenuAccessor) this).setInputSlots(inventory);
         this.init(playerInventory);
-        this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.getOpt(player).map(h -> h.getCurrentLevel(VReference.VAMPIRE_FACTION)).orElse(0) + 1);
+        this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.get(player).getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
     }
 
     protected void init(@NotNull Inventory playerInventory) {

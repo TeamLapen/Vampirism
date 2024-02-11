@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,16 +53,7 @@ public class BlessableItem extends Item {
         return recipes;
     }
 
-    public static class Recipe {
-        public final boolean enhanced;
-        public final BlessableItem input;
-        public final Item output;
-
-        public Recipe(boolean enhanced, BlessableItem input, Item output) {
-            this.enhanced = enhanced;
-            this.input = input;
-            this.output = output;
-        }
+    public record Recipe(boolean enhanced, BlessableItem input, Item output) {
     }
 
     public BlessableItem(@NotNull Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
@@ -96,15 +88,12 @@ public class BlessableItem extends Item {
     @Override
     public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration) {
         if (pRemainingUseDuration == 300 && pLivingEntity.level().isClientSide() && pLivingEntity instanceof Player player) {
-            HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).ifPresent(att -> {
-                if (att.blessingSoundReference != null) {
-                    att.blessingSoundReference.stopPlaying();
-                }
-                att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, pLivingEntity.blockPosition(), 1, 1);
-                att.blessingSoundReference.startPlaying();
-
-            });
-
+            HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
+            if (att.blessingSoundReference != null) {
+                att.blessingSoundReference.stopPlaying();
+            }
+            att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, pLivingEntity.blockPosition(), 1, 1);
+            att.blessingSoundReference.startPlaying();
         }
         if (pRemainingUseDuration % 20 == 1) {
 
@@ -133,11 +122,10 @@ public class BlessableItem extends Item {
     @Override
     public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level world, @NotNull LivingEntity entity, int duration) {
         if (entity.level().isClientSide() && entity instanceof Player player) {
-            HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).ifPresent(att -> {
-                if (att.blessingSoundReference != null) {
-                    att.blessingSoundReference.stopPlaying();
-                }
-            });
+            HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
+            if (att.blessingSoundReference != null) {
+                att.blessingSoundReference.stopPlaying();
+            }
         }
     }
 

@@ -13,7 +13,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -90,9 +89,9 @@ public class CoffinBlockEntity extends BlockEntity {
         // Calculate lid position
         boolean isClosed = blockEntity.hasLevel() && CoffinBlock.isClosed(level, pos);
         if (!isClosed) {
-            blockEntity.lidPos += 0.02;
+            blockEntity.lidPos += 0.02F;
         } else {
-            blockEntity.lidPos -= 0.02;
+            blockEntity.lidPos -= 0.02F;
         }
         blockEntity.lidPos = Mth.clamp(blockEntity.lidPos, 0, 1);
 

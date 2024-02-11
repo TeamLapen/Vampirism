@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.HunterActionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
-import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
@@ -19,19 +16,14 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
@@ -41,7 +33,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
         boolean instaKillFromBehind = false;
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player && attacker.isAlive()) {
-            @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getOpt((Player) attacker).flatMap(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+            @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer((Player) attacker).orElse(null);
             if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                 ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                 if (skillHandler.isSkillEnabled(HunterSkills.STAKE2.get())) {

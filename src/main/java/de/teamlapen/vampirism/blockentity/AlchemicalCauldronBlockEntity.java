@@ -79,7 +79,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 return false;
             }
-            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())).orElse(false)) {
+            if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())) {
                 if (ownerID == null) {
                     setOwnerID(player);
                     return true;
@@ -293,16 +293,15 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         if (ownerID == null) return false;
         Player playerEntity = this.level.getPlayerByUUID(ownerID);
         if (playerEntity == null || !playerEntity.isAlive()) return false;
-        return HunterPlayer.getOpt(playerEntity).map(hunter -> {
-            boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
-            if (canCook) {
-                recipeChecked = recipe;
-                return true;
-            } else {
-                recipeChecked = null;
-                return false;
-            }
-        }).orElse(false);
+        HunterPlayer hunter = HunterPlayer.get(playerEntity);
+        boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
+        if (canCook) {
+            recipeChecked = recipe;
+            return true;
+        } else {
+            recipeChecked = null;
+            return false;
+        }
     }
 
     /**

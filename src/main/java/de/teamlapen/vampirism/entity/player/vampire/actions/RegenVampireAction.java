@@ -61,7 +61,7 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.isRemote() && vampire.getRepresentingPlayer().tickCount % 50 == 0) {
+        if (!vampire.isRemote() && vampire.asEntity().tickCount % 50 == 0) {
             applyEffect(vampire);
         }
         return false;

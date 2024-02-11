@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
-import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.EntityType;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface IMinionBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {

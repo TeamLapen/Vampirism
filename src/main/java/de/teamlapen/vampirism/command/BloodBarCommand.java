@@ -37,10 +37,10 @@ public class BloodBarCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int setBloodBar(int amount, @NotNull Collection<ServerPlayer> player) {
-        player.stream().map(VampirePlayer::getOpt).filter(player1 -> player1.map(FactionBasePlayer::getLevel).orElse(0) > 0).forEach(player1 -> player1.ifPresent(vampire -> {
+        player.stream().map(VampirePlayer::get).filter(player1 -> player1.getLevel() > 0).forEach(vampire -> {
             vampire.useBlood(Integer.MAX_VALUE, true);
             vampire.drinkBlood(amount, 0, false, DrinkBloodContext.none());
-        }));
+        });
         return 0;
     }
 }

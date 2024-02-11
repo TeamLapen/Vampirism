@@ -115,12 +115,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull MobType getMobType() {
-        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
-    }
-
-    @Override
-    public @NotNull Component getName() {
+    public @NotNull Component getTypeName() {
         return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getName);
     }
 
@@ -246,9 +241,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
         if (!nbt.contains("source_entity")) {
-            getSourceEntityDataParamOpt().ifPresent(p -> {
-                getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString()));
-            });
+            getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
         }
     }
 

@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -164,7 +165,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer<T>> @NotNull IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier) {
+    public <T extends IFactionPlayer<T>> @NotNull IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, Supplier<AttachmentType<T>> playerCapabilitySupplier) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism] Parameters for faction cannot be null");
         }
@@ -271,12 +272,12 @@ public class FactionRegistry implements IFactionRegistry {
 
     public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends FactionBuilder<T> implements IPlayableFactionBuilder<T> {
 
-        protected final NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier;
+        protected final Supplier<AttachmentType<T>> playerCapabilitySupplier;
         protected int highestLevel = 1;
         protected Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
         protected LordPlayerBuilder<T> lord = new LordPlayerBuilder<>(this);
 
-        public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier) {
+        public PlayableFactionBuilder(ResourceLocation id, Class<T> entityInterface, Supplier<AttachmentType<T>> playerCapabilitySupplier) {
             super(id, entityInterface);
             this.playerCapabilitySupplier = playerCapabilitySupplier;
         }

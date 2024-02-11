@@ -48,7 +48,7 @@ public class RegenerationEntityAction<T extends PathfinderMob & IEntityActionUse
 
     @Override
     public void onUpdate(@NotNull T entity, int duration) {
-        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getEntityLevel()) * 20f)); // seconds in ticks
+        entity.asEntity().heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getEntityLevel()) * 20f)); // seconds in ticks
         if (duration % 15 == 0) {
             ModParticles.spawnParticlesServer(entity.getCommandSenderWorld(), ParticleTypes.HEART, entity.getX(), entity.getY() + 1, entity.getZ(), 3, 0.2, 0.2, 0.2, 0);
         }

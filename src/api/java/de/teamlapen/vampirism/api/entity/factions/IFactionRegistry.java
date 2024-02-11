@@ -89,7 +89,7 @@ public interface IFactionRegistry {
      * @return a player faction builder
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer<T>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, NonNullSupplier<AttachmentType<T>> playerCapabilitySupplier);
+    <T extends IFactionPlayer<T>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, Supplier<AttachmentType<T>> playerCapabilitySupplier);
 
     @Nullable
     IMinionEntry<?,?> getMinion(ResourceLocation minionId);
