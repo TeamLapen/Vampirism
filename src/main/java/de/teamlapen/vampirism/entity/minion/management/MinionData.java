@@ -20,25 +20,32 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
+public abstract class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
 
 
     public final static int MAX_NAME_LENGTH = 15;
     protected final static Logger LOGGER = LogManager.getLogger();
 
-    @NotNull
-    public static MinionData fromNBT(@NotNull CompoundTag nbt) {
+    @Nullable
+    public static <T extends MinionData> T fromNBT(@NotNull CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(IFactionRegistry.IMinionEntry::data).map(Supplier::get).map(s-> {
-            ((MinionData)s).deserializeNBT(nbt);
-            return (MinionData)s;
-        }).orElse(new MinionData());
+            try {
+                @SuppressWarnings("unchecked")
+                T t = (T)s;
+                t.deserializeNBT(nbt);
+                return t;
+            } catch (ClassCastException ex) {
+                return null;
+            }
+        }).orElse(null);
     }
 
     private final @NotNull MinionInventory inventory;

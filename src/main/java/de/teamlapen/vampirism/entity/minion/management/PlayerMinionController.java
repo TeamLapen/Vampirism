@@ -253,17 +253,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         MinionInfo[] infos = new MinionInfo[data.size()];
         //noinspection unchecked
         Optional<Integer>[] tokens = new Optional[data.size()];
+        Set<Integer> removedData = new HashSet<>();
         for (Tag n : data) {
             CompoundTag tag = (CompoundTag) n;
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
+            if (d == null) {
+                removedData.add(id);
+                continue;
+            }
             ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
             if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeID)) {
-                LOGGER.warn("Cannot find saved minion type {}. Aborting controller load", entityTypeID);
-                this.minions = new MinionInfo[0];
-                //noinspection unchecked
-                this.minionTokens = new Optional[0];
-                return;
+                LOGGER.warn("Cannot find saved minion type {}. Continue without entry", entityTypeID);
+                removedData.add(id);
+                continue;
             }
 
             //noinspection unchecked
@@ -279,6 +282,25 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             }
 
         }
+
+        if (!removedData.isEmpty()) {
+            MinionInfo[] newInfos = new MinionInfo[infos.length - removedData.size()];
+            //noinspection unchecked
+            Optional<Integer>[] newTokens = new Optional[tokens.length - removedData.size()];
+            int im = 0;
+            for (int i = 0; i < infos.length; i++) {
+                MinionInfo info = infos[i];
+                if (info != null) {
+                    newInfos[i-im] = info;
+                    newTokens[i-im] = tokens[i];
+                } else {
+                    im++;
+                }
+            }
+            infos = newInfos;
+            tokens = newTokens;
+        }
+
         this.minions = infos;
         this.minionTokens = tokens;
     }

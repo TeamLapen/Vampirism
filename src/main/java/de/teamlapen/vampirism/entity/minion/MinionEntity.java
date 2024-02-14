@@ -336,12 +336,18 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
         if (nbt.contains("data_type", Tag.TAG_STRING)) {
             try {
-                @SuppressWarnings("unchecked")
-                T data = (T) MinionData.fromNBT(nbt);
-                this.minionData = data;
-                this.onMinionDataReceived(data);
-                this.minionId = nbt.getInt("minion_id");
-                super.setCustomName(data.getFormattedName());
+                @Nullable
+                MinionData data = MinionData.fromNBT(nbt);
+                if (data == null) {
+                    LOGGER.warn("Failed to find correct minion data");
+                } else {
+                    @SuppressWarnings("unchecked")
+                    T cast = ((T) data);
+                    this.minionData = cast;
+                    this.onMinionDataReceived(cast);
+                    this.minionId = nbt.getInt("minion_id");
+                    super.setCustomName(data.getFormattedName());
+                }
             } catch (ClassCastException e) {
                 LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
             }
