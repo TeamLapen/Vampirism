@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 public class ClientConfigHelper {
 
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(IAction.class, new IActionTypeAdapter())
+            .registerTypeHierarchyAdapter(List.class, new IActionListTypeAdapter())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
             .registerTypeHierarchyAdapter(SelectMinionTaskRadialScreen.Entry.class, new EntryTypeAdapter())
             .create();
@@ -191,23 +191,31 @@ public class ClientConfigHelper {
 
     }
 
-    /**
-     * Gson type adapter for {@link IAction}
-     */
-    private static final class IActionTypeAdapter extends TypeAdapter<IAction<?>> {
+    private static final class IActionListTypeAdapter extends TypeAdapter<List<IAction<?>>> {
 
         @Override
-        public @NotNull IAction<?> read(@NotNull JsonReader in) throws IOException {
-            return RegUtil.getAction(new ResourceLocation(in.nextString()));
+        public @NotNull List<IAction<?>> read(@NotNull JsonReader in) throws IOException {
+            List<IAction<?>> actions = new ArrayList<>();
+            in.beginArray();
+            while (in.hasNext()) {
+                IAction<?> action = RegUtil.getAction(new ResourceLocation(in.nextString()));
+                if (action != null) {
+                    actions.add(action);
+                }
+            }
+            in.endArray();
+            return actions;
         }
 
         @Override
-        public void write(@NotNull JsonWriter out, @Nullable IAction<?> value) throws IOException {
-            if (value == null) {
-                out.nullValue();
-                return;
+        public void write(@NotNull JsonWriter out, @Nullable List<IAction<?>> value) throws IOException {
+            out.beginArray();
+            if (value != null) {
+                for (IAction<?> action : value) {
+                    out.value(RegUtil.id(action).toString());
+                }
             }
-            out.value(RegUtil.id(value).toString());
+            out.endArray();
         }
     }
 
