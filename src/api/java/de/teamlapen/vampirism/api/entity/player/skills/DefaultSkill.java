@@ -111,7 +111,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         }
     }
 
-    private @NotNull Collection<IAction<T>> getActions() {
+    public @NotNull Collection<IAction<T>> getActions() {
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {

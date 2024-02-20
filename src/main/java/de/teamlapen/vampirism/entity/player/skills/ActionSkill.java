@@ -72,7 +72,7 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
         return RegUtil.id(action.get());
     }
 
-    public IAction<T> getAction() {
+    public IAction<T> action() {
         return action.get();
     }
 

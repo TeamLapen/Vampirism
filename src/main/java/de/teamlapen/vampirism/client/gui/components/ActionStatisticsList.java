@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.mixin.client.accessor.StatsScreenAccessor;
@@ -221,7 +222,9 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
 
             for(int i = 0; i < skillColumns.size(); ++i) {
                 Stat<ISkill<?>> stat;
-                if (getSkill() instanceof ISkill<?>) {
+                if (getSkill() instanceof SkillCallbacks.EmptyActionSkill<?> empty) {
+                    stat = null;
+                } else if (getSkill() instanceof ISkill<?>) {
                     stat = skillColumns.get(i).get(this.getSkill());
                 } else {
                     stat = null;
@@ -234,9 +237,9 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 Stat<IAction<?>> stat;
                 if (this.skill instanceof IActionSkill<?> actionSkill) {
                     StatType<IAction<?>> stats = actionColumns.get(j);
-                    IAction<?> action = actionSkill.getAction();
+                    IAction<?> action = actionSkill.action();
                     if (stats != ModStats.ACTION_TIME.get() || action instanceof ILastingAction<?>) {
-                        stat = actionColumns.get(j).get(actionSkill.getAction());
+                        stat = actionColumns.get(j).get(actionSkill.action());
                     } else {
                         stat = null;
                     }
@@ -250,7 +253,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         public void renderSkill(GuiGraphics pGuiGraphics, int pTop, int pLeft) {
             ResourceLocation texture;
             if (skill instanceof IActionSkill<?> actionSkill) {
-                ResourceLocation id = RegUtil.id(actionSkill.getAction());
+                ResourceLocation id = RegUtil.id(actionSkill.action());
                 texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
             } else {
                 ResourceLocation id = RegUtil.id(skill);
@@ -276,8 +279,8 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 j = 0;
             } else if (actionColumns.contains(sortColumn)) {
                 StatType<IAction<?>> stattype1 = (StatType<IAction<?>>) ActionStatisticsList.this.sortColumn;
-                i = item instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.getAction()) : -1;
-                j = item1 instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.getAction()) : -1;
+                i = item instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
+                j = item1 instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
             } else {
                 StatType<ISkill<?>> stattype1 = (StatType<ISkill<?>>) ActionStatisticsList.this.sortColumn;
                 i = screen.getStats().getValue(stattype1, item);
