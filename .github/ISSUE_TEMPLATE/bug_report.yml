@@ -13,15 +13,16 @@ body:
     attributes:
       label: Minecraft Version
       options:
-        - 1.12.x
-        - 1.14.x
-        - 1.15.x
-        - 1.16.x
-        - 1.17.x
-        - 1.18.x
-        - 1.19.2
+        - 1.20.4+
+        - 1.20.1
         - 1.19.3+
-        - 1.20.x
+        - 1.19.2
+        - 1.18.x
+        - 1.17.x
+        - 1.16.x
+        - 1.15.x
+        - 1.14.x
+        - 1.12.x
     validations:
       required: true
   - type: input
@@ -69,7 +70,6 @@ body:
       placeholder: |
         If crashed either crash-xxx-server.txt or crash-xxx-client.txt
         Otherwise logs/debug.log
-      render: shell
   - type: textarea
     id: reproduce
     attributes:
