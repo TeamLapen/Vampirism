@@ -29,5 +29,6 @@ public class VampirismAttachments {
         public static final ResourceLocation GARLIC_HANDLER = new ResourceLocation(VReference.MODID, "garlic_handler");
         public static final ResourceLocation FOG_HANDLER = new ResourceLocation(VReference.MODID, "fog_handler");
         public static final ResourceLocation DAMAGE_HANDLER = new ResourceLocation(VReference.MODID, "damage_handler");
+        public static final ResourceLocation VAMPIRE_BAT = new ResourceLocation(VReference.MODID, "vampire_bat");
     }
 }

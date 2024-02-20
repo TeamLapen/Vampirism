@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -59,7 +60,6 @@ public class RenderHandler implements ResourceManagerReloadListener {
     private final Logger LOGGER = LogManager.getLogger();
     @Nullable
     private OutlineBufferSource bloodVisionBuffer;
-    private @Nullable Bat entityBat;
     /**
      * Fog fade counter
      * Between 0 and {@link #BLOOD_VISION_FADE_TICKS}
@@ -316,32 +316,28 @@ public class RenderHandler implements ResourceManagerReloadListener {
             event.setCanceled(true);
         } else if (vAtt.bat) {
             event.setCanceled(true);
-            if (entityBat == null) {
-                entityBat = EntityType.BAT.create(event.getEntity().getCommandSenderWorld());
-                entityBat.setResting(false);
-            }
+            var bat = player.getData(ModAttachments.VAMPIRE_BAT);
 
             float partialTicks = event.getPartialTick();
 
             // Copy values
-            entityBat.yBodyRotO = player.yBodyRotO;
-            entityBat.yBodyRot = player.yBodyRot;
-            entityBat.tickCount = player.tickCount;
-            entityBat.setXRot(player.getXRot());
-            entityBat.setYRot(player.getYRot());
-            entityBat.yHeadRot = player.yHeadRot;
-            entityBat.yRotO = player.yRotO;
-            entityBat.xRotO = player.xRotO;
-            entityBat.yHeadRotO = player.yHeadRotO;
-            entityBat.setInvisible(player.isInvisible());
+            bat.yBodyRotO = player.yBodyRotO;
+            bat.yBodyRot = player.yBodyRot;
+            bat.tickCount = player.tickCount;
+            bat.setXRot(player.getXRot());
+            bat.setYRot(player.getYRot());
+            bat.yHeadRot = player.yHeadRot;
+            bat.yRotO = player.yRotO;
+            bat.xRotO = player.xRotO;
+            bat.yHeadRotO = player.yHeadRotO;
+            bat.setInvisible(player.isInvisible());
 
             // Calculate render parameter
-            double d0 = Mth.lerp(partialTicks, entityBat.xOld, entityBat.getX());
-            double d1 = Mth.lerp(partialTicks, entityBat.yOld, entityBat.getY());
-            double d2 = Mth.lerp(partialTicks, entityBat.zOld, entityBat.getZ());
-            float f = Mth.lerp(partialTicks, entityBat.yRotO, entityBat.getYRot());
-            mc.getEntityRenderDispatcher().render(entityBat, d0, d1, d2, f, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(entityBat, partialTicks));
-
+            double d0 = Mth.lerp(partialTicks, bat.xOld, bat.getX());
+            double d1 = Mth.lerp(partialTicks, bat.yOld, bat.getY());
+            double d2 = Mth.lerp(partialTicks, bat.zOld, bat.getZ());
+            float f = Mth.lerp(partialTicks, bat.yRotO, bat.getYRot());
+            mc.getEntityRenderDispatcher().render(bat, d0, d1, d2, f, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(bat, partialTicks));
         }
     }
 
