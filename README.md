@@ -197,31 +197,26 @@ The code style used in this project is the IntelliJ default one.
 For Eclipse, you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 
 ## Licence
-The source code and text in this repository is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/CODE_LICENCE) ***except*** for the following parts:
+The source code and text in this repository is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/1.20/CODE_LICENCE) ***except*** for the following parts:
 
 ##### Textures
 Any textures included in this mod are licenced under the following terms:
-```
-Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
+> Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
 If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
-```
 
 ##### Sounds
 The sounds used in this mod are individual licensed and may only be used outside Vampirism under the respective licensing terms if noted as such.
-
-###### Attribution
-This mod uses these sounds from freesound:  
-DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC
-Attribution  
-vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
-bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution  
-the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution  
-Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution  
-Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
-Licence: CC0  
-Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
-blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
-Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
+| Sound | Creator | Link | License |
+|-------|---------|------|---------|
+| DST-VampireMonk | Striderjapan | [🔗](https://freesound.org/people/Striderjapan/sounds/141368/) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| vampire bites | Bernuy | [🔗](https://freesound.org/people/Bernuy/sounds/268501/) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| bow02 | Erdie | [🔗](https://freesound.org/people/Erdie/sounds/65734/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| the swarm v31m3 | Setuniman | [🔗](https://freesound.org/people/Setuniman/sounds/130695/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Boiling Towel | unfa | [🔗](https://freesound.org/people/unfa/sounds/174499/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
+| Pepper mill grinds pepper | Black_River_Phonogram | [🔗](https://freesound.org/people/Black_River_Phonogram/sounds/424605/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
+| Slimey | nebulasnails | [🔗](https://freesound.org/people/nebulasnails/sounds/495116/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
+| blood sucker | Bernuy | [🔗](https://freesound.org/people/Bernuy/sounds/268499/) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| Organ Ambience, Calm, A | InspectorJ | [🔗](https://freesound.org/people/InspectorJ/sounds/411991/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 
 ##### Sit functionality - `sit` package
 
