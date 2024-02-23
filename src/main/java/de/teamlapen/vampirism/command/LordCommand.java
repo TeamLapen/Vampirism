@@ -45,10 +45,10 @@ public class LordCommand extends BasicCommand {
                 throw NO_FACTION.create();
             }
             int maxLevel = handler.getCurrentFaction().getHighestReachableLevel();
-            if (handler.getCurrentLevel() == maxLevel && handler.setFactionLevel(handler.getCurrentFaction(), maxLevel)) {
+            if (handler.getCurrentLevel() == maxLevel && !handler.setFactionLevel(handler.getCurrentFaction(), maxLevel)) {
                 throw LEVEL_UP_FAILED.create();
             }
-            if (handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))) {
+            if (!handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))) {
                 throw LORD_FAILED.create();
             }
             context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), handler.getCurrentFaction().getName(), handler.getLordLevel()), true);
