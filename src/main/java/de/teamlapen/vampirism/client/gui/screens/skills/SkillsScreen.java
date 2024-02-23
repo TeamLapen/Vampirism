@@ -145,7 +145,7 @@ public class SkillsScreen extends Screen {
     public void renderInside(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
         PoseStack pose = graphics.pose();
         if (this.selectedTab != null) {
-            this.selectedTab.drawContents(graphics, x + 9, y + 18);
+            this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX-9-guiLeft, mouseY-18 - guiTop);
         } else {
             pose.pushPose();
             pose.translate(x + 9, y + 18, 0);
@@ -224,10 +224,14 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
-            return this.selectedTab.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null && this.isMouseOverContent(pMouseX, pMouseY)) {
+            return this.selectedTab.mouseScrolled(pMouseX-9-guiLeft, pMouseY-18-guiTop, pScrollX, pScrollY);
         }
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
+    }
+
+    private boolean isMouseOverContent(double pMouseX, double pMouseY) {
+        return pMouseX > guiLeft + 8 && pMouseX <= guiLeft + 9 + SkillsTabScreen.SCREEN_WIDTH && pMouseY > guiTop + 17 && pMouseY <= guiTop + 18 + SkillsTabScreen.SCREEN_HEIGHT;
     }
 
     @Override
@@ -246,7 +250,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
         this.scrolling = true;
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null && isMouseOverContent(mouseX, mouseY)) {
             this.selectedTab.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
         }
         return super.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);

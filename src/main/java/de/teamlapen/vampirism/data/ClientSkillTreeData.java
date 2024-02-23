@@ -155,7 +155,7 @@ public class ClientSkillTreeData implements ISkillTreeData {
         int max = 0;
         for (var child : node.children()) {
             // this value should be synced with the skill screen renderer
-            max = Math.max(max, getNodeHeight(child) + 50);
+            max = Math.max(max, getNodeHeight(child) + 60);
         }
         return max;
     }

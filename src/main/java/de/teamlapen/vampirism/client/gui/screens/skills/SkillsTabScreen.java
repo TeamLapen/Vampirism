@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
@@ -45,16 +46,18 @@ public class SkillsTabScreen {
     private final int treeWidth;
     private final int treeHeight;
     private final ResourceLocation background;
-    private double scrollX;
-    private double scrollY;
-    private int minX = Integer.MIN_VALUE;
-    private int minY = Integer.MIN_VALUE;
-    private int maxX = Integer.MAX_VALUE;
-    private int maxY = Integer.MAX_VALUE;
-    private float zoom = 1;
+    private double minX = Double.MIN_VALUE;
+    private double minY = Double.MAX_VALUE;
+    private double maxX = Double.MAX_VALUE;
+    private double maxY = Double.MIN_VALUE;
+    private double zoom = 1;
     private final int index;
     private float fade;
     private final ClientSkillTreeData treeData;
+    private double centerX;
+    private double centerY;
+    private final double maxZoom = 2;
+    private final double minZoom = 0.25;
 
 
     public SkillsTabScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, int index, Holder<ISkillTree> skillTree, @NotNull ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
@@ -75,18 +78,16 @@ public class SkillsTabScreen {
         addNode(this.root);
 
         recalculateBorders();
-        this.scrollX = 0;
-        this.scrollY = 20;
     }
 
     private void recalculateBorders() {
-        this.minY = (int) -((this.treeHeight) * this.zoom);
-        this.maxY = (int) (20 * this.zoom);
+        this.minY = -(this.treeHeight+16);
+        this.maxY = 20;
 
-        this.minX = (int) ((-this.treeWidth/2) * this.zoom);
-        this.maxX = (int) ((this.treeWidth/2) * this.zoom);
-
-        this.center();
+        this.minX = -SCREEN_WIDTH/2d;
+        this.maxX = this.treeWidth - SCREEN_WIDTH/2d;
+        this.centerX = 0;
+        this.centerY = 0;
     }
 
     private void addNode(@NotNull SkillNodeScreen screen) {
@@ -112,29 +113,25 @@ public class SkillsTabScreen {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(@NotNull GuiGraphics graphics, int x, int y) {
+    public void drawContents(@NotNull GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
         PoseStack pose = graphics.pose();
 
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
         pose.pushPose();
         pose.translate(x, y, 0);
+        pose.translate(SCREEN_WIDTH/2d + centerX, 20 + centerY, 0);
 
+        pose.scale((float)this.zoom,(float) this.zoom, 1);
 
-        int i = getX();
-        int j = getY();
-        int k = i % 16;
-        int l = j % 16;
-        pose.scale(this.zoom, this.zoom, 1);
-
-        for (int i1 = -1; i1 <= 15 / this.zoom; ++i1) {
-            for (int j1 = -1; j1 <= 12 / this.zoom; ++j1) {
-                graphics.blit(this.background, k + 16 * i1, l + 16 * j1, 0.0F, 0.0F, 16, 16, 16, 16);
+        for (int i = -(int)(((SCREEN_WIDTH/2 + centerX)  /16/zoom)) -1; i <= (int)(((SCREEN_WIDTH/2 - centerX)  /16/zoom)); ++i) {
+            for (int j = -(int)((20 + centerY)/16/zoom) -1; j <= (int)((SCREEN_HEIGHT - centerY)/16/zoom); ++j) {
+                graphics.blit(this.background, 16 * i, 16 * j, 0.0F, 0.0F, 16, 16, 16, 16);
             }
         }
 
-        this.root.drawConnectivity(graphics, i, j, true);
-        this.root.drawConnectivity(graphics, i, j, false);
-        this.root.draw(graphics, i, j);
+        this.root.drawConnectivity(graphics, 0,0, true);
+        this.root.drawConnectivity(graphics, 0, 0, false);
+        this.root.draw(graphics, 0, 0);
         pose.popPose();
 
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
@@ -155,15 +152,16 @@ public class SkillsTabScreen {
         pose.translate(0.0F, 0.0F, -200.0F);
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
-        int scrollX = getX();
-        int scrollY = getY();
-        if (mouseX >= 0 && mouseX < 235 && mouseY >= 0 && mouseY < 173) {
+        if (mouseX >= 0 && mouseX < SCREEN_WIDTH && mouseY >= 0 && mouseY < SCREEN_HEIGHT) {
+            double scaledMouseX = getScaledMouseX(mouseX);
+            double scaledMouseY = getScaledMouseY(mouseY);
             for (SkillNodeScreen nodeScreen : this.nodes.values()) {
-                if (nodeScreen.isMouseOver(mouseX / this.zoom, mouseY / this.zoom, scrollX, scrollY)) {
+                if (nodeScreen.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
                     flag = true;
                     pose.pushPose();
-                    pose.scale(this.zoom, this.zoom, 1);
-                    nodeScreen.drawHover(graphics, mouseX / this.zoom, mouseY / this.zoom, this.fade, scrollX, scrollY);
+                    pose.translate(SCREEN_WIDTH/2d + centerX, 20 + centerY, 0);
+                    pose.scale((float) this.zoom, (float) this.zoom, 1);
+                    nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0,0);
                     pose.popPose();
                     break;
                 }
@@ -178,41 +176,40 @@ public class SkillsTabScreen {
         }
     }
 
-    public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
-        this.scrollX += xDragged;
-        this.scrollY += yDragged;
-        center();
+    private double getScaledMouseX(double mouseX) {
+        return (mouseX - SCREEN_WIDTH/2d - centerX)/zoom;
     }
 
-    private void center() {
-        this.scrollX = Mth.clamp(this.scrollX, this.minX, this.maxX);
-        this.scrollY = Mth.clamp(this.scrollY, this.minY, this.maxY);
+    private double getScaledMouseY(double mouseY) {
+        return (mouseY - 20 - centerY) /zoom;
+    }
+
+    public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
+        center(this.centerX + xDragged, this.centerY + yDragged);
+    }
+
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+        var mouseX = getScaledMouseX(pMouseX);
+        var mouseY = getScaledMouseY(pMouseY);
+        this.zoom = Mth.clamp(this.zoom + (float)pScrollX * 0.1f + (float)pScrollY * 0.1f, this.minZoom, this.maxZoom);
+
+        center(this.centerX - (mouseX - getScaledMouseX(pMouseX)) * zoom, this.centerY - (mouseY - getScaledMouseY(pMouseY)) * zoom);
+        return true;
+    }
+
+    public void center(double x, double y) {
+        this.centerX = Mth.clamp(x, this.minX *zoom, this.maxX*zoom);
+        this.centerY = Mth.clamp(y, -this.treeHeight*zoom,  20*zoom);
     }
 
     public Component getTitle() {
         return this.title;
     }
 
-    private int getX(){
-        int centerX = (SCREEN_WIDTH / 2);
-        centerX += (int) scrollX;
-        centerX /= (int) this.zoom;
-        return centerX;
-    }
-
-    private int getY() {
-        int centerY = 20;
-        centerY += (int) scrollY;
-        centerY /= (int) this.zoom;
-        return centerY;
-    }
-
     @Nullable
     public ISkill<?> getSelected(int mouseX, int mouseY) {
-        int i = getX();
-        int j = getY();
         for (SkillNodeScreen screen : this.nodes.values()) {
-            ISkill<?> selected = screen.getSelectedSkill(mouseX / this.zoom, mouseY / this.zoom, i, j);
+            ISkill<?> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY),0,0);
             if (selected != null) {
                 return selected;
             }
@@ -222,29 +219,6 @@ public class SkillsTabScreen {
 
     public int getRemainingPoints() {
         return this.skillHandler.getLeftSkillPoints();
-    }
-
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        double scrollXP = this.scrollX * this.zoom;
-        double scrollYP = this.scrollY * this.zoom;
-        this.zoom = (float) (this.zoom + ((pScrollX + pScrollY) / 25));
-        float heightZoom = this.zoom;
-        float widthZoom = this.zoom;
-        if (this.zoom * (this.treeHeight) < (SCREEN_HEIGHT)) {
-            heightZoom = Math.max(this.zoom, (float) (SCREEN_HEIGHT) / (this.treeHeight));
-        }
-        if (this.zoom * this.treeWidth < (SCREEN_WIDTH - 20)) {
-            widthZoom = Math.max(this.zoom, (float) (SCREEN_WIDTH - 20) / (Math.max(60, this.treeWidth)));
-        }
-
-        this.zoom = Math.min(heightZoom, widthZoom);
-        this.zoom = Math.min(1, this.zoom);
-
-        this.scrollX = scrollXP / this.zoom;
-        this.scrollY = scrollYP / this.zoom;
-
-        recalculateBorders();
-        return true;
     }
 
     public void drawDisableText(@NotNull GuiGraphics graphics, int x, int y) {
