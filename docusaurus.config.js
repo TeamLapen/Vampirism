@@ -37,7 +37,7 @@ const config = {
           versions: {
             current: {
               /** this value must be changed if a new version is released */
-              label: '1.10',
+              label: '1.10 NeoForge',
             }
           },
         },
