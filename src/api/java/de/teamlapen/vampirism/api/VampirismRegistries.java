@@ -2,7 +2,8 @@ package de.teamlapen.vampirism.api;
 
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
@@ -56,9 +57,10 @@ public class VampirismRegistries {
     public static final ResourceKey<Registry<ISkillTree>> SKILL_TREE_ID = key("skill_tree");
 
     // data maps
-    public static final ResourceLocation ITEM_BLOOD_VALUE_ID = new ResourceLocation(VReference.MODID, "item_blood_value");
-    public static final ResourceLocation ENTITY_BLOOD_VALUE_ID = new ResourceLocation(VReference.MODID, "entity_blood_value");
-    public static final ResourceLocation FLUID_BLOOD_CONVERSION_ID = new ResourceLocation(VReference.MODID, "fluid_blood_conversion");
+    public static final ResourceLocation ITEM_BLOOD_MAP_ID = new ResourceLocation(VReference.MODID, "item_blood");
+    public static final ResourceLocation ENTITY_BLOOD_MAP_ID = new ResourceLocation(VReference.MODID, "entity_blood");
+    public static final ResourceLocation FLUID_BLOOD_CONVERSION_MAP_ID = new ResourceLocation(VReference.MODID, "fluid_blood_conversion");
+    public static final ResourceLocation ENTITY_CONVERTER_MAP_ID = new ResourceLocation(VReference.MODID, "entity_converter");
 
     // for registry access in the api
     public static final Supplier<Registry<ISkill<?>>> SKILLS = Suppliers.memoize(() -> (Registry<ISkill<?>>) BuiltInRegistries.REGISTRY.get((ResourceKey) SKILLS_ID));
@@ -75,9 +77,10 @@ public class VampirismRegistries {
     public static final Supplier<Registry<Codec<? extends Converter>>> ENTITY_CONVERTER = Suppliers.memoize(() -> (Registry<Codec<? extends Converter>>) BuiltInRegistries.REGISTRY.get((ResourceKey) ENTITY_CONVERTER_ID));
 
     // for data maps access in the api
-    public static final Supplier<DataMapType<Item, IItemBlood>> ITEM_BLOOD_VALUES = Suppliers.memoize(() -> (DataMapType<Item, IItemBlood>) RegistryManager.getDataMap(Registries.ITEM, ITEM_BLOOD_VALUE_ID));
-    public static final Supplier<DataMapType<EntityType<?>, IEntityBloodEntry>> ENTITY_BLOOD_VALUES = Suppliers.memoize(() -> (DataMapType<EntityType<?>, IEntityBloodEntry>) RegistryManager.getDataMap(Registries.ENTITY_TYPE, ENTITY_BLOOD_VALUE_ID));
-    public static final Supplier<DataMapType<Fluid, IFluidBloodConversion>> FLUID_BLOOD_CONVERSION = Suppliers.memoize(() -> (DataMapType<Fluid, IFluidBloodConversion>) RegistryManager.getDataMap(Registries.FLUID, FLUID_BLOOD_CONVERSION_ID));
+    public static final Supplier<DataMapType<Item, IItemBlood>> ITEM_BLOOD_MAP = Suppliers.memoize(() -> (DataMapType<Item, IItemBlood>) RegistryManager.getDataMap(Registries.ITEM, ITEM_BLOOD_MAP_ID));
+    public static final Supplier<DataMapType<EntityType<?>, IEntityBlood>> ENTITY_BLOOD_MAP = Suppliers.memoize(() -> (DataMapType<EntityType<?>, IEntityBlood>) RegistryManager.getDataMap(Registries.ENTITY_TYPE, ENTITY_BLOOD_MAP_ID));
+    public static final Supplier<DataMapType<Fluid, IFluidBloodConversion>> FLUID_BLOOD_CONVERSION_MAP = Suppliers.memoize(() -> (DataMapType<Fluid, IFluidBloodConversion>) RegistryManager.getDataMap(Registries.FLUID, FLUID_BLOOD_CONVERSION_MAP_ID));
+    public static final Supplier<DataMapType<EntityType<?>, IConverterEntry>> ENTITY_CONVERTER_MAP = Suppliers.memoize(() -> (DataMapType<EntityType<?>, IConverterEntry>) RegistryManager.getDataMap(Registries.ENTITY_TYPE, ENTITY_CONVERTER_MAP_ID));
 
     private static <T> @NotNull ResourceKey<Registry<T>> key(@NotNull String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(VReference.MODID, name));

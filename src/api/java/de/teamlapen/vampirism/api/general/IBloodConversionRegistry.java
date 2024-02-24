@@ -20,8 +20,8 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
  * <br>
  *
  * Values are loaded using <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * {@link VampirismRegistries#ITEM_BLOOD_VALUES}<br>
- * {@link VampirismRegistries#FLUID_BLOOD_CONVERSION}
+ * {@link VampirismRegistries#ITEM_BLOOD_MAP}<br>
+ * {@link VampirismRegistries#FLUID_BLOOD_CONVERSION_MAP}
  * <br>
  * <br>
  * Entity blood values are handled by {@link de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry}

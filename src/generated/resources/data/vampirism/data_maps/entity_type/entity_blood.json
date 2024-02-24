@@ -1,0 +1,88 @@
+{
+  "values": {
+    "minecraft:allay": {
+      "blood": 0
+    },
+    "minecraft:axolotl": {
+      "blood": 0
+    },
+    "minecraft:bee": {
+      "blood": 0
+    },
+    "minecraft:camel": {
+      "blood": 15
+    },
+    "minecraft:cat": {
+      "blood": 3
+    },
+    "minecraft:chicken": {
+      "blood": 0
+    },
+    "minecraft:cow": {
+      "blood": 10
+    },
+    "minecraft:donkey": {
+      "blood": 13
+    },
+    "minecraft:fox": {
+      "blood": 4
+    },
+    "minecraft:frog": {
+      "blood": 0
+    },
+    "minecraft:goat": {
+      "blood": 7
+    },
+    "minecraft:horse": {
+      "blood": 13
+    },
+    "minecraft:llama": {
+      "blood": 10
+    },
+    "minecraft:mooshroom": {
+      "blood": 10
+    },
+    "minecraft:mule": {
+      "blood": 13
+    },
+    "minecraft:ocelot": {
+      "blood": 4
+    },
+    "minecraft:panda": {
+      "blood": 13
+    },
+    "minecraft:parrot": {
+      "blood": 0
+    },
+    "minecraft:pig": {
+      "blood": 5
+    },
+    "minecraft:polar_bear": {
+      "blood": 10
+    },
+    "minecraft:rabbit": {
+      "blood": 2
+    },
+    "minecraft:sheep": {
+      "blood": 5
+    },
+    "minecraft:skeleton_horse": {
+      "blood": 0
+    },
+    "minecraft:sniffer": {
+      "blood": 20
+    },
+    "minecraft:trader_llama": {
+      "blood": 10
+    },
+    "minecraft:turtle": {
+      "blood": 5
+    },
+    "minecraft:villager": {
+      "blood": 15
+    },
+    "minecraft:wolf": {
+      "blood": 5
+    }
+  }
+}

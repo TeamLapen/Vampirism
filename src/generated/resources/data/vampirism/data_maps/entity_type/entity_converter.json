@@ -1,0 +1,103 @@
+{
+  "values": {
+    "minecraft:camel": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_camel"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/camel_overlay.png"
+    },
+    "minecraft:cat": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/cat_overlay.png"
+    },
+    "minecraft:cow": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_cow"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/cow_overlay.png"
+    },
+    "minecraft:donkey": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_donkey"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+    },
+    "minecraft:fox": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_fox"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/fox_overlay.png"
+    },
+    "minecraft:goat": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_goat"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/goat_overlay.png"
+    },
+    "minecraft:horse": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_horse"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+    },
+    "minecraft:llama": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/llama_overlay.png"
+    },
+    "minecraft:mule": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_mule"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/horse_overlay.png"
+    },
+    "minecraft:panda": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/panda_overlay.png"
+    },
+    "minecraft:pig": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/pig_overlay.png"
+    },
+    "minecraft:polar_bear": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/polarbear_overlay.png"
+    },
+    "minecraft:rabbit": {
+      "handler": {
+        "type": "vampirism:default"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/rabbit_overlay.png"
+    },
+    "minecraft:sheep": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_sheep"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/sheep_overlay.png"
+    },
+    "minecraft:villager": {
+      "handler": {
+        "type": "vampirism:special",
+        "converted_type": "vampirism:villager_converted"
+      },
+      "overlay": "vampirism:textures/entity/vanilla/villager_overlay.png"
+    }
+  }
+}

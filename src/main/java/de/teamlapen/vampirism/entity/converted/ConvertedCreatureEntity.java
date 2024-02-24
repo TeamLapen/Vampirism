@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.lib.lib.storage.ISyncable;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTags;
@@ -316,7 +315,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Nullable
     protected IConvertingHandler<?> getConvertedHandler() {
         if (entityCreature.isEmpty()) return null;
-        IConvertingHandler<?> handler = this.entityCreature.map(s -> VampirismAPI.entityRegistry().getEntry(s)).map(IEntityBloodEntry::converter).map(s -> s.converter().createHandler(s.overlay().orElse(null))).orElse(null);
+        IConvertingHandler<?> handler = this.entityCreature.map(s -> VampirismAPI.entityRegistry().getConverterEntry(s)).map(s -> s.converter().createHandler(s.overlay().orElse(null))).orElse(null);
         if (handler == null) {
             LOGGER.warn("No converting handler found for {}", entityCreature.get());
         }

@@ -38,7 +38,7 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IItemBlood getItemBlood(@NotNull ItemStack stack) {
-        IItemBlood data = stack.getItemHolder().getData(VampirismRegistries.ITEM_BLOOD_VALUES.get());
+        IItemBlood data = stack.getItemHolder().getData(VampirismRegistries.ITEM_BLOOD_MAP.get());
         if (data == null) {
             data = CALCULATED.get(stack.getItem());
         }
@@ -60,8 +60,8 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IFluidBloodConversion getFluidConversion(@NotNull Fluid fluid) {
-        Map<ResourceKey<Fluid>, IFluidBloodConversion> dataMap = BuiltInRegistries.FLUID.getDataMap(VampirismRegistries.FLUID_BLOOD_CONVERSION.get());
-        var conversion = BuiltInRegistries.FLUID.wrapAsHolder(fluid).getData(ModRegistries.FLUID_BLOOD_CONVERSION);
+        Map<ResourceKey<Fluid>, IFluidBloodConversion> dataMap = BuiltInRegistries.FLUID.getDataMap(VampirismRegistries.FLUID_BLOOD_CONVERSION_MAP.get());
+        var conversion = BuiltInRegistries.FLUID.wrapAsHolder(fluid).getData(ModRegistries.FLUID_BLOOD_CONVERSION_MAP);
         if (conversion != null) {
             return conversion;
         }

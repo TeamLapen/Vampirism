@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.datamaps.ItemBlood;
@@ -71,11 +73,12 @@ public class ModRegistries {
     public static final Registry<Codec<? extends TaskUnlocker>> TASK_UNLOCKER = DEFERRED_TASK_UNLOCKER.makeRegistry(builder -> {});
     public static final Registry<Codec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = DEFERRED_TASK_REQUIREMENTS.makeRegistry(builder -> {});
     public static final Registry<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DEFERRED_TASK_REWARD_INSTANCES.makeRegistry(builder -> {});
-    public static final Registry<Codec<? extends Converter>> ENTIITY_CONVERTER = DEFERRED_ENTITY_CONVERTER.makeRegistry(builder -> {});
+    public static final Registry<Codec<? extends Converter>> ENTITY_CONVERTER = DEFERRED_ENTITY_CONVERTER.makeRegistry(builder -> {});
 
-    public static final DataMapType<Item, IItemBlood> ITEM_BLOOD = DataMapType.builder(VampirismRegistries.ITEM_BLOOD_VALUE_ID, Registries.ITEM, ItemBlood.CODEC).synced(ItemBlood.NETWORK_CODEC, true).build();
-    public static final DataMapType<EntityType<?>, IEntityBloodEntry> ENTITY_BLOOD = DataMapType.builder(ENTITY_BLOOD_VALUE_ID, Registries.ENTITY_TYPE, EntityBloodEntry.GLOBAL_CODEC).synced(EntityBloodEntry.GLOBAL_NETWORK_CODEC, true).build();
-    public static final DataMapType<Fluid, IFluidBloodConversion> FLUID_BLOOD_CONVERSION = DataMapType.builder(VampirismRegistries.FLUID_BLOOD_CONVERSION_ID, Registries.FLUID, FluidBloodConversion.CODEC).synced(FluidBloodConversion.NETWORK_CODEC, true).build();
+    public static final DataMapType<Item, IItemBlood> ITEM_BLOOD_MAP = DataMapType.builder(VampirismRegistries.ITEM_BLOOD_MAP_ID, Registries.ITEM, ItemBlood.CODEC).synced(ItemBlood.NETWORK_CODEC, true).build();
+    public static final DataMapType<EntityType<?>, IEntityBlood> ENTITY_BLOOD_MAP = DataMapType.builder(ENTITY_BLOOD_MAP_ID, Registries.ENTITY_TYPE, EntityBloodEntry.CODEC).synced(EntityBloodEntry.NETWORK_CODEC, true).build();
+    public static final DataMapType<Fluid, IFluidBloodConversion> FLUID_BLOOD_CONVERSION_MAP = DataMapType.builder(VampirismRegistries.FLUID_BLOOD_CONVERSION_MAP_ID, Registries.FLUID, FluidBloodConversion.CODEC).synced(FluidBloodConversion.NETWORK_CODEC, true).build();
+    public static final DataMapType<EntityType<?>, IConverterEntry> ENTITY_CONVERTER_MAP = DataMapType.builder(ENTITY_CONVERTER_MAP_ID, Registries.ENTITY_TYPE, ConverterEntry.CODEC).synced(ConverterEntry.CODEC, true).build();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(Registries.BIOME, ModBiomes::createBiomes)
@@ -117,9 +120,10 @@ public class ModRegistries {
     }
 
     static void registerDataMaps(RegisterDataMapTypesEvent event) {
-        event.register(ITEM_BLOOD);
-        event.register(FLUID_BLOOD_CONVERSION);
-        event.register(ENTITY_BLOOD);
+        event.register(ITEM_BLOOD_MAP);
+        event.register(FLUID_BLOOD_CONVERSION_MAP);
+        event.register(ENTITY_BLOOD_MAP);
+        event.register(ENTITY_CONVERTER_MAP);
     }
 
     public static Collection<DeferredHolder<IAction<?>, ? extends IAction<?>>> allActions() {

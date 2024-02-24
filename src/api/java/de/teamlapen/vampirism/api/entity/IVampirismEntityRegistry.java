@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity;
 
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -16,11 +17,11 @@ import java.util.Map;
  * Registry for entity blood values and converting handler
  * <br>
  * <br>
- * {@link de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry} can be optioned here as well as converting handler and overlay texture
+ * {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} can be optioned here as well as converting handler and overlay texture
  * <br>
  * <br>
  * Values are loaded using the following <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * - {@link VampirismRegistries#ENTITY_BLOOD_VALUES}<br>
+ * - {@link VampirismRegistries#ENTITY_BLOOD_MAP}<br>
  */
 public interface IVampirismEntityRegistry {
 
@@ -52,15 +53,23 @@ public interface IVampirismEntityRegistry {
     ResourceLocation getConvertibleOverlay(String originalEntity);
 
     /**
-     * Get the {@link IEntityBloodEntry} for the given creature.
+     * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} for the given creature.
      *
      * @return the explicit entry or a calculated entry if one exists.
      */
     @Nullable
-    IEntityBloodEntry getEntry(PathfinderMob creature);
+    IEntityBlood getEntry(PathfinderMob creature);
 
     /**
-     * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry} for the given creature.<br>
+     * Get the {@link de.teamlapen.vampirism.api.datamaps.IConverterEntry} for the given creature.
+     *
+     * @return a value set by a datapack or null if none is set
+     */
+    @Nullable
+    IConverterEntry getConverterEntry(PathfinderMob creature);
+
+    /**
+     * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} for the given creature.<br>
      * <br>
      * Should no explicit entry exist or one already been calculated, a new entry will be created.<br>
      * <br>
@@ -76,5 +85,5 @@ public interface IVampirismEntityRegistry {
      * @return a new or existing entry
      */
     @NotNull
-    IEntityBloodEntry getOrCreateEntry(PathfinderMob creature);
+    IEntityBlood getOrCreateEntry(PathfinderMob creature);
 }

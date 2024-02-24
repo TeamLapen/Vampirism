@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.datamaps;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public record ConverterEntry(Converter converter, Optional<ResourceLocation> overlay) implements IEntityBloodEntry.IConverterEntry {
-        public static final Codec<IEntityBloodEntry.IConverterEntry> CODEC = RecordCodecBuilder.create(inst -> {
+public record ConverterEntry(Converter converter, Optional<ResourceLocation> overlay) implements IConverterEntry {
+        public static final Codec<IConverterEntry> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
-                    ExtraCodecs.strictOptionalField(Converter.CODEC, "handler", new DefaultConverter()).forGetter(IEntityBloodEntry.IConverterEntry::converter),
-                    ResourceLocation.CODEC.optionalFieldOf("overlay").forGetter(IEntityBloodEntry.IConverterEntry::overlay)
+                    ExtraCodecs.strictOptionalField(Converter.CODEC, "handler", new DefaultConverter()).forGetter(IConverterEntry::converter),
+                    ResourceLocation.CODEC.optionalFieldOf("overlay").forGetter(IConverterEntry::overlay)
             ).apply(inst, ConverterEntry::new);
         });
 

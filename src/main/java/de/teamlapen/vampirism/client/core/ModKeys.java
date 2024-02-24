@@ -146,7 +146,7 @@ public class ModKeys {
             LocalPlayer player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator()) {
                 VampirePlayer vampire = VampirePlayer.get(player);
-                if (vampire.getLevel() > 0 && vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
+                if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
                     if (mouseOver instanceof EntityHitResult) {
                         VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
                     } else if (mouseOver instanceof BlockHitResult) {

@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import de.teamlapen.vampirism.api.datamaps.IEntityBloodEntry;
+import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
-import de.teamlapen.vampirism.datamaps.EmptyEntityBloodEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,7 +28,7 @@ public class BiteableEntryManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @NotNull
-    private final Map<EntityType<?>, IEntityBloodEntry> calculatedEntries = new HashMap<>();
+    private final Map<EntityType<?>, IEntityBlood> calculatedEntries = new HashMap<>();
 
     /**
      * Calculate the blood value for the given creature
@@ -38,12 +37,12 @@ public class BiteableEntryManager {
      * @return The created entry or null
      */
     @NotNull
-    public IEntityBloodEntry calculate(@NotNull PathfinderMob creature) {
-        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return EmptyEntityBloodEntry.INSTANCE;
+    public IEntityBlood calculate(@NotNull PathfinderMob creature) {
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get()) return EntityBloodEntry.EMPTY;
         EntityType<?> type = creature.getType();
         ResourceLocation id = RegUtil.id(type);
         if (isEntityBlacklisted(creature)) {
-            return EmptyEntityBloodEntry.INSTANCE;
+            return EntityBloodEntry.EMPTY;
         }
         AABB bb = creature.getBoundingBox();
         double v = bb.maxX - bb.minX;
@@ -63,7 +62,7 @@ public class BiteableEntryManager {
         }
         LOGGER.debug("Calculated size {} and blood value {} for entity {}", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
-            return EmptyEntityBloodEntry.INSTANCE;
+            return EntityBloodEntry.EMPTY;
         } else {
             return new EntityBloodEntry(blood);
         }
@@ -72,26 +71,26 @@ public class BiteableEntryManager {
     /**
      * returns an existing entry
      *
-     * @param creature for which a {@link IEntityBloodEntry} is requested
+     * @param creature for which a {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @Nullable
-    public IEntityBloodEntry get(@NotNull PathfinderMob creature) {
+    public IEntityBlood get(@NotNull PathfinderMob creature) {
         if (calculatedEntries.containsKey(creature.getType())) {
             return calculatedEntries.get(creature.getType());
         }
-        return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD);
+        return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD_MAP);
     }
 
     /**
      * returns an existing entry or creates a new one
      *
-     * @param creature for which a {@link IEntityBloodEntry} is requested
+     * @param creature for which a {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} is requested
      * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
     @NotNull
-    public IEntityBloodEntry getOrCalculate(@NotNull PathfinderMob creature) {
-        IEntityBloodEntry entry = get(creature);
+    public IEntityBlood getOrCalculate(@NotNull PathfinderMob creature) {
+        IEntityBlood entry = get(creature);
         if (entry == null) {
             entry = calculate(creature);
             calculatedEntries.put(creature.getType(), entry);
