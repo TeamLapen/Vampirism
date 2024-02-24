@@ -113,12 +113,17 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
         return localizedName;
     }
 
+
+
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IWeaponTableRecipe> holder, IFocusGroup focuses) {
         IWeaponTableRecipe recipe = holder.value();
         if (recipe instanceof ShapelessWeaponTableRecipe) {
             builder.setShapeless();
         }
+        List<List<ItemStack>> inputs = recipe.getIngredients().stream()
+                .map(ingredient -> List.of(ingredient.getItems()))
+                .toList();
         List<List<ItemStack>> list = recipe.getIngredients().stream().map(s -> List.of(s.getItems())).toList();
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 32);
         output.addItemStack(RecipeUtil.getResultItem(recipe));
@@ -134,15 +139,60 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
         int height = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeHeight() : 4;
         int width = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeWidth() : 4;
 
-        for (int i = 0; i < height; i++) {
-            for (int i1 = 0; i1 < width; i1++) {
-                IRecipeSlotBuilder slot = inputSlots.get(i1 + i * 4);
-
-                List<ItemStack> itemList = list.get(i1 + i * width);
-                if (itemList != null) {
-                    slot.addIngredients(VanillaTypes.ITEM_STACK, itemList);
-                }
+        for (int i = 0; i < inputs.size(); i++) {
+            int index = getCraftingIndex(i, width, height);
+            IRecipeSlotBuilder slot = inputSlots.get(index);
+            List<ItemStack> itemStacks = inputs.get(i);
+            if (itemStacks != null) {
+                slot.addIngredients(VanillaTypes.ITEM_STACK, itemStacks);
             }
         }
+    }
+
+    private static int getCraftingIndex(int i, int width, int height) {
+        int index;
+        if (width == 1) {
+            if (height == 4) {
+                index = (i * 4) + 1;
+            } else if (height == 3) {
+                index = (i * 4) + 1;
+            } else if (height == 2) {
+                index = (i * 4) + 1;
+            } else {
+                index = 5;
+            }
+        } else if (height == 1) {
+            index = i + 4;
+        } else if (width == 2) {
+            index = i;
+            if (i > 1) {
+                index+=2;
+                if (i > 3) {
+                    index+=2;
+                    if (i > 5){
+                        index+=2;
+                    }
+                }
+            }
+        } else if (height == 2) {
+            index = i;
+            if (width == 3 && i > 2) {
+                index++;
+            }
+        } else if (width == 3) {
+            index = i;
+            if (i > 2) {
+                index++;
+                if (i > 5) {
+                    index++;
+                    if (i > 8) {
+                        index++;
+                    }
+                }
+            }
+        } else {
+            index = i;
+        }
+        return index;
     }
 }

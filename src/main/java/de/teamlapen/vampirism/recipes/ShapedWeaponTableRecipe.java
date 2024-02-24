@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.FactionCodec;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
@@ -115,6 +116,12 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     @Override
     public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
         return this.pattern.matches(inv);
+    }
+
+    @NotNull
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return this.pattern.ingredients();
     }
 
     @Override
