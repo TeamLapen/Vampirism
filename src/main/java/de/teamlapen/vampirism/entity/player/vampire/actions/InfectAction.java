@@ -58,6 +58,9 @@ public class InfectAction extends DefaultVampireAction {
         if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if (target != null) {
+                if (UtilLib.canReallySee((LivingEntity) target, player.asEntity(), false)) {
+                    return false;
+                }
                 return deriveBiteableEntry(target).map(b -> b.canBeInfected(player)).orElse(false);
             }
             return false;
