@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.Color;
+import de.teamlapen.vampirism.mixin.client.accessor.BossHealthOverlayAccessor;
 import de.teamlapen.vampirism.mixin.client.accessor.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CustomBossEventOverlay implements IGuiOverlay {
-    private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
+    private static final ResourceLocation BAR_PROGRESS_SPRITE = new ResourceLocation("boss_bar/white_progress");
     private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
 
@@ -75,15 +76,14 @@ public class CustomBossEventOverlay implements IGuiOverlay {
                 }
             }
             graphics.setColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
-            graphics.blit(GUI_BARS_TEXTURES, k + textureStart, j, textureStart, BossEvent.BossBarColor.WHITE.ordinal() * 5 * 2 + 5, width, 5);
-            textureStart += width;
+            graphics.blitSprite(BAR_PROGRESS_SPRITE, 182, 5, textureStart, 0, k + textureStart, j, width, 5);
             graphics.setColor(1, 1, 1, 1);
+            textureStart += width;
         }
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
             graphics.setColor(1, 1, 1, 1);
-            int y = 80 + (value.getOverlay().ordinal() - 1) * 5 * 2;
             RenderSystem.enableBlend();
-            graphics.blit(GUI_BARS_TEXTURES, k, j, 0, y, 182, 5);
+            graphics.blitSprite(BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal()-1], k, j, 182, 5);
             RenderSystem.disableBlend();
         }
     }
