@@ -55,7 +55,7 @@ public interface IVampirismEntityRegistry {
     /**
      * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} for the given creature.
      *
-     * @return the explicit entry or a calculated entry if one exists.
+     * @return the explicit entry
      */
     @Nullable
     IEntityBlood getEntry(PathfinderMob creature);
