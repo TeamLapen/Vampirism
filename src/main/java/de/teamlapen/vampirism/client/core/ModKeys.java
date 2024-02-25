@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
+import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
@@ -18,6 +20,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -50,39 +53,25 @@ public class ModKeys {
     private static final long ACTION_BUTTON_COOLDOWN = 500;
 
     private static final String CATEGORY = "keys.vampirism.category";
-    private static final String SUCK_BLOOD = "keys.vampirism.suck";
-    private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
-    private static final String OPEN_VAMPIRISM_MENU = "keys.vampirism.select_skills";
-    private static final String SWITCH_VISION = "keys.vampirism.vision";
-    private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
-    private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
-    private static final String ACTIVATE_ACTION3 = "keys.vampirism.action3";
-    private static final String ACTIVATE_ACTION4 = "keys.vampirism.action4";
-    private static final String ACTIVATE_ACTION5 = "keys.vampirism.action5";
-    private static final String ACTIVATE_ACTION6 = "keys.vampirism.action6";
-    private static final String ACTIVATE_ACTION7 = "keys.vampirism.action7";
-    private static final String ACTIVATE_ACTION8 = "keys.vampirism.action8";
-    private static final String ACTIVATE_ACTION9 = "keys.vampirism.action9";
-    private static final String MINION_TASK = "keys.vampirism.minion_task";
-    private static final String SELECT_AMMO_NAME = "keys.vampirism.select_ammo";
 
-    public static final KeyMapping SUCK = new KeyMapping(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
-    public static final KeyMapping ACTION = new KeyMapping(TOGGLE_ACTIONS, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
-    public static final KeyMapping VAMPIRISM_MENU = new KeyMapping(OPEN_VAMPIRISM_MENU, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
-    public static final KeyMapping VISION = new KeyMapping(SWITCH_VISION, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    public static final KeyMapping ACTION1 = new KeyMapping(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
-    public static final KeyMapping ACTION2 = new KeyMapping(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
-    public static final KeyMapping ACTION3 = new KeyMapping(ACTIVATE_ACTION3, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
-    public static final KeyMapping ACTION4 = new KeyMapping(ACTIVATE_ACTION4, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION5 = new KeyMapping(ACTIVATE_ACTION5, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION6 = new KeyMapping(ACTIVATE_ACTION6, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION7 = new KeyMapping(ACTIVATE_ACTION7, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION8 = new KeyMapping(ACTIVATE_ACTION8, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION9 = new KeyMapping(ACTIVATE_ACTION9, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping MINION = new KeyMapping(MINION_TASK, KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping SELECT_AMMO = new KeyMapping(SELECT_AMMO_NAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyMapping SUCK = new KeyMapping("keys.vampirism.suck", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    public static final KeyMapping ACTION = new KeyMapping("keys.vampirism.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
+    public static final KeyMapping VAMPIRISM_MENU = new KeyMapping("keys.vampirism.select_skills", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    public static final KeyMapping VISION = new KeyMapping("keys.vampirism.vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
+    public static final KeyMapping ACTION1 = new KeyMapping("keys.vampirism.action1", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
+    public static final KeyMapping ACTION2 = new KeyMapping("keys.vampirism.action2", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
+    public static final KeyMapping ACTION3 = new KeyMapping("keys.vampirism.action3", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
+    public static final KeyMapping ACTION4 = new KeyMapping("keys.vampirism.action4", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION5 = new KeyMapping("keys.vampirism.action5", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION6 = new KeyMapping("keys.vampirism.action6", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION7 = new KeyMapping("keys.vampirism.action7", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION8 = new KeyMapping("keys.vampirism.action8", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION9 = new KeyMapping("keys.vampirism.action9", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping MINION = new KeyMapping("keys.vampirism.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping SELECT_AMMO = new KeyMapping("keys.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.vampirism.skill_screen",KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
-    public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1,ACTION1, 2,ACTION2, 3,ACTION3, 4,ACTION4, 5,ACTION5, 6,ACTION6, 7,ACTION7, 8,ACTION8, 9,ACTION9);
+    public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1, ACTION1, 2, ACTION2, 3, ACTION3, 4, ACTION4, 5, ACTION5, 6, ACTION6, 7, ACTION7, 8, ACTION8, 9, ACTION9);
 
     static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.register(ACTION);
@@ -91,6 +80,7 @@ public class ModKeys {
         event.register(VISION);
         event.register(MINION);
         event.register(SELECT_AMMO);
+        event.register(SKILL_SCREEN);
         ACTION_KEYS.forEach((i, k) -> event.register(k));
     }
 
@@ -107,6 +97,7 @@ public class ModKeys {
         keyMappingActions.put(VISION, this::switchVision);
         keyMappingActions.put(MINION, this::openMinionTaskMenu);
         keyMappingActions.put(SELECT_AMMO, this::selectAmmo);
+        keyMappingActions.put(SKILL_SCREEN, this::openSkillScreen);
         ACTION_KEYS.forEach((i, key) -> keyMappingActions.put(key, () -> toggleAction(i)));
         this.keyMappingActions = keyMappingActions.build();
         this.mc = Minecraft.getInstance();
@@ -175,6 +166,12 @@ public class ModKeys {
 
     private void openVampirismMenu() {
         VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
+    }
+
+    private void openSkillScreen() {
+        FactionPlayerHandler.getCurrentFactionPlayer(mc.player).ifPresent(factionPlayer -> {
+            mc.setScreen(new SkillsScreen(factionPlayer, mc.screen));
+        });
     }
 
     private void switchVision() {
