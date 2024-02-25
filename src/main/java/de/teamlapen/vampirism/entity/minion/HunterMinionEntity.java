@@ -45,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -222,7 +223,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IVampirismCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                return ModItems.ARROW_CLIP.get().getDefaultInstance();
+                var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
+                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance()));
+                return clip;
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
             }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.ai.goals;
 
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -127,7 +128,8 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
                 if (i >= ((IVampirismCrossbow) itemstack.getItem()).getChargeDurationMod(itemstack)) {
                     this.mob.releaseUsingItem();
                     this.crossbowState = CrossbowState.CHARGED;
-                    this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
+                    var delay = getAttackDelay(itemstack);
+                    this.attackDelay = delay + this.mob.getRandom().nextInt(delay);
                     this.mob.setChargingCrossbow(false);
                 }
             } else if (this.crossbowState == CrossbowState.CHARGED) {
@@ -142,12 +144,17 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
                     CrossbowItem.setCharged(itemstack1, false);
                     this.crossbowState = CrossbowState.UNCHARGED;
                 } else {
-                    this.attackDelay = 20 + this.mob.getRandom().nextInt(20);
+                    var delay = getAttackDelay(itemstack1);
+                    this.attackDelay = delay + this.mob.getRandom().nextInt(delay);
                     this.crossbowState = CrossbowState.CHARGED;
                 }
             }
 
         }
+    }
+
+    private int getAttackDelay(ItemStack stack) {
+        return stack.getItem() instanceof TechCrossbowItem ? 10 : 20;
     }
 
     private boolean canRun() {
