@@ -162,7 +162,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
 
         if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
             playerIn.startUsingItem(handIn);
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            return new InteractionResultHolder<>(InteractionResult.sidedSuccess(worldIn.isClientSide), stack);
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
