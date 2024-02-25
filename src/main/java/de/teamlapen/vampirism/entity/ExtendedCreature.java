@@ -146,7 +146,10 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
      * Set's maximum blood and current blood
      */
     private void setMaxBlood(int blood) {
-        maxBlood = blood;
+        if (this.maxBlood <= 0) {
+            blood = -1;
+        }
+        this.maxBlood = blood;
         this.blood = blood;
     }
 
