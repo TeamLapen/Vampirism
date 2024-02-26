@@ -12,6 +12,6 @@ import java.util.stream.Collectors;
 
 public class TaskUtil {
     public static @NotNull List<Task> getItemRewardTasks(RegistryAccess access) {
-        return access.registryOrThrow(VampirismRegistries.TASK_ID).stream().filter(obj -> obj.getReward() instanceof ItemReward).collect(Collectors.toList());
+        return access.registryOrThrow(VampirismRegistries.Keys.TASK).stream().filter(obj -> obj.getReward() instanceof ItemReward).collect(Collectors.toList());
     }
 }

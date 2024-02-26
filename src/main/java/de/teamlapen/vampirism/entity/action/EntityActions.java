@@ -15,7 +15,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * Register and holds all actions for vampirism entities
  */
 public class EntityActions {
-    public static final DeferredRegister<IEntityAction> ENTITY_ACTIONS = DeferredRegister.create(VampirismRegistries.ENTITY_ACTIONS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IEntityAction> ENTITY_ACTIONS = DeferredRegister.create(VampirismRegistries.Keys.ENTITY_ACTION, REFERENCE.MODID);
 
     public static final DeferredHolder<IEntityAction, InvisibleEntityAction<?>> ENTITY_INVISIBLE = ENTITY_ACTIONS.register("entity_invisible", () -> new InvisibleEntityAction<>(EntityActionTier.Medium, EntityClassType.Assassin));
     /**

@@ -48,7 +48,7 @@ public class ClientSkillTreeData implements ISkillTreeData {
 
     private void initData(List<ClientboundSkillTreePacket.ConfigHolder> trees) {
         configuration.clear();
-        configuration = trees.stream().map(s -> s.toConfiguration(this.access.registryOrThrow(VampirismRegistries.SKILL_TREE_ID), this.access.registryOrThrow(VampirismRegistries.SKILL_NODE_ID))).flatMap(s -> s.skillTree().unwrapKey().map(x -> Pair.of(x, s)).stream()).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        configuration = trees.stream().map(s -> s.toConfiguration(this.access.registryOrThrow(VampirismRegistries.Keys.SKILL_TREE), this.access.registryOrThrow(VampirismRegistries.Keys.SKILL_NODE))).flatMap(s -> s.skillTree().unwrapKey().map(x -> Pair.of(x, s)).stream()).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
     public ClientSkillTreeData(RegistryAccess access) {

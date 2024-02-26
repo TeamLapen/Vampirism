@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModOils {
-    public static final DeferredRegister<IOil> OILS = DeferredRegister.create(VampirismRegistries.OILS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IOil> OILS = DeferredRegister.create(VampirismRegistries.Keys.OIL, REFERENCE.MODID);
 
     public static final DeferredHolder<IOil, IOil> EMPTY = OILS.register("empty", () -> new Oil(16253176));
     public static final DeferredHolder<IOil, IOil> PLANT = OILS.register("plant", () -> new Oil(0x7e6d27));

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
@@ -79,7 +80,7 @@ public class BiteableEntryManager {
         if (calculatedEntries.containsKey(creature.getType())) {
             return calculatedEntries.get(creature.getType());
         }
-        return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(creature.getType()).getData(ModRegistries.ENTITY_BLOOD_MAP);
+        return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(creature.getType()).getData(ModDataMaps.ENTITY_BLOOD_MAP);
     }
 
     /**

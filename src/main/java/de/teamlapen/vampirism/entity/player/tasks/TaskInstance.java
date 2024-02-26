@@ -35,7 +35,7 @@ public class TaskInstance implements ITaskInstance {
     public static final Codec<TaskInstance> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 CodecUtil.UUID.fieldOf("taskGiver").forGetter(t -> t.taskGiver),
-                ResourceKey.codec(VampirismRegistries.TASK_ID).fieldOf("task").forGetter(t -> t.task),
+                ResourceKey.codec(VampirismRegistries.Keys.TASK).fieldOf("task").forGetter(t -> t.task),
                 CodecUtil.UUID.fieldOf("instanceId").forGetter(t -> t.instanceId),
                 Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("stats").forGetter(t -> t.stats),
                 ITaskRewardInstance.CODEC.fieldOf("reward").forGetter(t -> t.reward),
@@ -48,7 +48,7 @@ public class TaskInstance implements ITaskInstance {
     @Deprecated
     @NotNull
     public static TaskInstance readLegacy(@NotNull CompoundTag nbt) {
-        ResourceKey<Task> task = ResourceKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(nbt.getString("task")));
+        ResourceKey<Task> task = ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(nbt.getString("task")));
         UUID id = nbt.getUUID("id");
         UUID insId = nbt.getUUID("insId");
         boolean accepted = nbt.getBoolean("accepted");

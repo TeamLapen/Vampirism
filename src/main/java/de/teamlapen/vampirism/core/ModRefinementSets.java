@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 public class ModRefinementSets {
-    public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(VampirismRegistries.REFINEMENT_SET_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(VampirismRegistries.Keys.REFINEMENT_SET, REFERENCE.MODID);
 
     public static void register(IEventBus bus) {
         REFINEMENT_SETS.register(bus);

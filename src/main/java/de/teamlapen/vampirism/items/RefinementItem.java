@@ -138,7 +138,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack stack = getDefaultInstance();
-        StreamSupport.stream(VampirismRegistries.REFINEMENT_SETS.get().spliterator(), false).filter(set -> getExclusiveFaction(stack) == null || set.getFaction() == getExclusiveFaction(stack)).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
+        StreamSupport.stream(VampirismRegistries.REFINEMENT_SET.get().spliterator(), false).filter(set -> getExclusiveFaction(stack) == null || set.getFaction() == getExclusiveFaction(stack)).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
             ItemStack s = stack.copy();
             applyRefinementSet(s, set);
             return s;

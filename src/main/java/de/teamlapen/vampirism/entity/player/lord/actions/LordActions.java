@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 public class LordActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.ACTIONS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.Keys.ACTION, REFERENCE.MODID);
 
     public static final DeferredHolder<IAction<?>, SpeedLordAction<?>> LORD_SPEED = ACTIONS.register("lord_speed", SpeedLordAction::new);
     public static final DeferredHolder<IAction<?>, AttackSpeedLordAction<?>> LORD_ATTACK_SPEED = ACTIONS.register("lord_attack_speed", AttackSpeedLordAction::new);

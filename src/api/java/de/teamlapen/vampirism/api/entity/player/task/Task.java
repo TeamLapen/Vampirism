@@ -25,7 +25,7 @@ public class Task {
                 ComponentSerialization.CODEC.fieldOf("title").forGetter(i -> i.title)
         ).apply(inst, Task::new);
     });
-    public static final Codec<Holder<Task>> HOLDER_CODEC = RegistryFileCodec.create(VampirismRegistries.TASK_ID, CODEC);
+    public static final Codec<Holder<Task>> HOLDER_CODEC = RegistryFileCodec.create(VampirismRegistries.Keys.TASK, CODEC);
 
     @NotNull
     private final TaskRequirement requirements;

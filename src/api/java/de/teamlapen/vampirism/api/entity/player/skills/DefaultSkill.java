@@ -37,7 +37,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     @Override
     public String getTranslationKey() {
         if (this.translationId == null) {
-            this.translationId = Util.makeDescriptionId("skill", VampirismRegistries.SKILLS.get().getKey(this));
+            this.translationId = Util.makeDescriptionId("skill", VampirismRegistries.SKILL.get().getKey(this));
         }
         return translationId;
     }
@@ -133,7 +133,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private @Nullable ResourceLocation getRegistryName() {
-        return VampirismRegistries.SKILLS.get().getKey(this);
+        return VampirismRegistries.SKILL.get().getKey(this);
     }
 
     @Range(from = 0, to = 9)

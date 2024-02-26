@@ -31,10 +31,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("unused")
 public class ModTasks {
-    public static final DeferredRegister<Codec<? extends TaskUnlocker>> TASK_UNLOCKER = DeferredRegister.create(VampirismRegistries.TASK_UNLOCKER_ID, REFERENCE.MODID);
-    public static final DeferredRegister<Codec<? extends TaskReward>> TASK_REWARDS = DeferredRegister.create(VampirismRegistries.TASK_REWARD_ID, REFERENCE.MODID);
-    public static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = DeferredRegister.create(VampirismRegistries.TASK_REQUIREMENT_ID, REFERENCE.MODID);
-    public static final DeferredRegister<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DeferredRegister.create(VampirismRegistries.TASK_REWARD_INSTANCE_ID, REFERENCE.MODID);
+    public static final DeferredRegister<Codec<? extends TaskUnlocker>> TASK_UNLOCKER = DeferredRegister.create(VampirismRegistries.Keys.TASK_UNLOCKER, REFERENCE.MODID);
+    public static final DeferredRegister<Codec<? extends TaskReward>> TASK_REWARDS = DeferredRegister.create(VampirismRegistries.Keys.TASK_REWARD, REFERENCE.MODID);
+    public static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = DeferredRegister.create(VampirismRegistries.Keys.TASK_REQUIREMENT, REFERENCE.MODID);
+    public static final DeferredRegister<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DeferredRegister.create(VampirismRegistries.Keys.TASK_REWARD_INSTANCE, REFERENCE.MODID);
 
     public static final DeferredHolder<Codec<? extends TaskUnlocker>,Codec<? extends TaskUnlocker>> LORD_LEVEL_UNLOCKER = TASK_UNLOCKER.register("lord_level", () -> LordLvlUnlocker.CODEC);
     public static final DeferredHolder<Codec<? extends TaskUnlocker>,Codec<? extends TaskUnlocker>> LEVEL_UNLOCKER = TASK_UNLOCKER.register("level", () -> LvlUnlocker.CODEC);
@@ -120,7 +120,7 @@ public class ModTasks {
     }
 
     private static ResourceKey<Task> key(String path) {
-        return ResourceKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, path));
+        return ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(REFERENCE.MODID, path));
     }
 
     @SuppressWarnings("deprecation")

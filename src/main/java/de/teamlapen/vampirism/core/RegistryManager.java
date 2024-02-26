@@ -106,6 +106,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
-        ModRegistries.registerDataMaps(event);
+        ModDataMaps.registerDataMaps(event);
     }
 }

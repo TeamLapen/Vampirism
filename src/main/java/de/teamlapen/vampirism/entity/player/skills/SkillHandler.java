@@ -270,7 +270,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
-        Registry<ISkillNode> nodes = player.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        Registry<ISkillNode> nodes = player.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_NODE);
         return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
     }
 

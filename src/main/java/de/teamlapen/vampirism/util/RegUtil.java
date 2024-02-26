@@ -90,7 +90,7 @@ public class RegUtil {
     }
 
     public static ResourceLocation id(@NotNull Level level, ISkillTree tree) {
-        return level.registryAccess().registryOrThrow(VampirismRegistries.SKILL_TREE_ID).getKey(tree);
+        return level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE).getKey(tree);
     }
 
     public static Optional<ResourceKey<IAction<?>>> key(@NotNull IAction<?> action) {
@@ -183,6 +183,6 @@ public class RegUtil {
     }
 
     public static Holder<ISkillTree> getSkillTree(Level level, String asString) {
-        return level.registryAccess().registryOrThrow(VampirismRegistries.SKILL_TREE_ID).getHolderOrThrow(ResourceKey.create(VampirismRegistries.SKILL_TREE_ID,new ResourceLocation(asString)));
+        return level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE).getHolderOrThrow(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE,new ResourceLocation(asString)));
     }
 }

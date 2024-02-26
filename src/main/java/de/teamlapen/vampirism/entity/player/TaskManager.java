@@ -73,7 +73,7 @@ public class TaskManager implements ITaskManager, ISavable {
         this.faction = faction;
         this.player = player;
         this.factionPlayer = factionPlayer;
-        this.registry = player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+        this.registry = player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
     }
 
     // interface -------------------------------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ public class TaskManager implements ITaskManager, ISavable {
         //completed tasks
         if (compoundNBT.contains("completedTasks")) {
             compoundNBT.getCompound("completedTasks").getAllKeys().forEach(taskId -> {
-                var key = ResourceKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(taskId));
+                var key = ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(taskId));
                 if (this.registry.containsKey(key)) {
                     this.completedTasks.add(key);
                 }
@@ -460,7 +460,7 @@ public class TaskManager implements ITaskManager, ISavable {
     }
 
     private boolean matchesFaction(@NotNull Holder<Task> task) {
-        return !task.is(ModTags.Tasks.HAS_FACTION) || this.faction.getTag(VampirismRegistries.TASK_ID).map(task::is).orElse(false);
+        return !task.is(ModTags.Tasks.HAS_FACTION) || this.faction.getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

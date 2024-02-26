@@ -37,7 +37,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @SuppressWarnings("unused")
 public class HunterSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.Keys.SKILL, REFERENCE.MODID);
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(SkillType.LORD.createIdForFaction(VReference.HUNTER_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
@@ -134,7 +134,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> LORD_6 = node("lord_6");
 
         private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(VampirismRegistries.SKILL_NODE_ID, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_NODE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
         }
 
         public static void createSkillNodes(BootstapContext<ISkillNode> context) {
@@ -178,11 +178,11 @@ public class HunterSkills {
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
 
         private static ResourceKey<ISkillTree> tree(String path) {
-            return ResourceKey.create(VampirismRegistries.SKILL_TREE_ID, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
         }
 
         public static void createSkillTrees(BootstapContext<ISkillTree> context) {
-            HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.SKILL_NODE_ID);
+            HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.Keys.SKILL_NODE);
             context.register(LEVEL, new SkillTree(VReference.HUNTER_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(VReference.HUNTER_FACTION)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level")));
             context.register(LORD, new SkillTree(VReference.HUNTER_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.lord(VReference.HUNTER_FACTION)).build(), new ItemStack(ModItems.HUNTER_MINION_EQUIPMENT.get()), Component.translatable("text.vampirism.skills.lord")));
         }

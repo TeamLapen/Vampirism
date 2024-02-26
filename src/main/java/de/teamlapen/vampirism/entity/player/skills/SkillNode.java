@@ -24,7 +24,7 @@ public record SkillNode(@NotNull List<Holder<ISkill<?>>> skills, @NotNull List<R
     public static final Codec<ISkillNode> CODEC = ExtraCodecs.lazyInitializedCodec(() ->RecordCodecBuilder.create(inst ->
             inst.group(
                     ExtraCodecs.nonEmptyList(ModRegistries.SKILLS.holderByNameCodec().listOf()).fieldOf("skills").forGetter(ISkillNode::skills),
-                    ExtraCodecs.strictOptionalField(ExtraCodecs.lazyInitializedCodec(() -> ResourceKey.codec(VampirismRegistries.SKILL_NODE_ID)).listOf(), "locking_nodes", List.of()).forGetter(ISkillNode::lockingNodes)
+                    ExtraCodecs.strictOptionalField(ExtraCodecs.lazyInitializedCodec(() -> ResourceKey.codec(VampirismRegistries.Keys.SKILL_NODE)).listOf(), "locking_nodes", List.of()).forGetter(ISkillNode::lockingNodes)
             ).apply(inst, SkillNode::new)
     ));
 

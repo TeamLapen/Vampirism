@@ -391,7 +391,7 @@ public class TagProvider {
     public static class ModTasksProvider extends TagsProvider<Task> {
 
         protected ModTasksProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
-            super(output, VampirismRegistries.TASK_ID, provider, REFERENCE.MODID, existingFileHelper);
+            super(output, VampirismRegistries.Keys.TASK, provider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override
@@ -469,7 +469,7 @@ public class TagProvider {
     public static class ModSkillTreeProvider extends TagsProvider<ISkillTree> {
 
         protected ModSkillTreeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
-            super(output, VampirismRegistries.SKILL_TREE_ID, provider, REFERENCE.MODID, existingFileHelper);
+            super(output, VampirismRegistries.Keys.SKILL_TREE, provider, REFERENCE.MODID, existingFileHelper);
         }
 
         @Override

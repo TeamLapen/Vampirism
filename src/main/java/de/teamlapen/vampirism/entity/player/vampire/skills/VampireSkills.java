@@ -42,7 +42,7 @@ import java.util.Collection;
  */
 @SuppressWarnings("unused")
 public class VampireSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.Keys.SKILL, REFERENCE.MODID);
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.register(SkillType.LEVEL.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(SkillType.LORD.createIdForFaction(VReference.VAMPIRE_FACTION.getID()).getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
@@ -132,7 +132,7 @@ public class VampireSkills {
         public static final ResourceKey<ISkillNode> LORD_SKILL5 = node("lord_skill5");
 
         private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(VampirismRegistries.SKILL_NODE_ID, new ResourceLocation(REFERENCE.MODID, "vampire/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_NODE, new ResourceLocation(REFERENCE.MODID, "vampire/" + path));
         }
 
         public static void createSkillNodes(BootstapContext<ISkillNode> context) {
@@ -174,11 +174,11 @@ public class VampireSkills {
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
 
         private static ResourceKey<ISkillTree> tree(String path) {
-            return ResourceKey.create(VampirismRegistries.SKILL_TREE_ID, new ResourceLocation(REFERENCE.MODID, "vampire/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, "vampire/" + path));
         }
 
         public static void createSkillTrees(BootstapContext<ISkillTree> context) {
-            HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.SKILL_NODE_ID);
+            HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.Keys.SKILL_NODE);
 
             context.register(LEVEL, new SkillTree(VReference.VAMPIRE_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(VReference.VAMPIRE_FACTION)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level")));
             context.register(LORD, new SkillTree(VReference.VAMPIRE_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.lord(VReference.VAMPIRE_FACTION)).build(), new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("text.vampirism.skills.lord")));

@@ -17,8 +17,8 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
 
     public static final Codec<SkillTreeConfiguration> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
-                    RegistryFixedCodec.create(VampirismRegistries.SKILL_TREE_ID).fieldOf("skill_tree").forGetter(SkillTreeConfiguration::skillTree),
-                    RegistryFixedCodec.create(VampirismRegistries.SKILL_NODE_ID).fieldOf("node").forGetter(SkillTreeConfiguration::root),
+                    RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE).fieldOf("skill_tree").forGetter(SkillTreeConfiguration::skillTree),
+                    RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_NODE).fieldOf("node").forGetter(SkillTreeConfiguration::root),
                     SkillTreeNodeConfiguration.CODEC.listOf().fieldOf("children").forGetter(SkillTreeConfiguration::children)
             ).apply(inst, SkillTreeConfiguration::new)
     );
@@ -57,7 +57,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
 
         public static final Codec<SkillTreeNodeConfiguration> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        RegistryFixedCodec.create(VampirismRegistries.SKILL_NODE_ID).fieldOf("node").forGetter(SkillTreeNodeConfiguration::node),
+                        RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_NODE).fieldOf("node").forGetter(SkillTreeNodeConfiguration::node),
                         ExtraCodecs.strictOptionalField(ExtraCodecs.lazyInitializedCodec(() -> SkillTreeNodeConfiguration.CODEC).listOf(), "children", List.of()).forGetter(SkillTreeNodeConfiguration::children)
                 ).apply(inst, SkillTreeNodeConfiguration::new)
         );

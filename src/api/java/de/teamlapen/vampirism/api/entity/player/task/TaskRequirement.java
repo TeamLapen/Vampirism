@@ -120,7 +120,7 @@ public class TaskRequirement {
 
     public interface Requirement<T> {
 
-        Codec<Requirement<?>> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REQUIREMENTS.get().byNameCodec()).dispatch(Requirement::codec, Function.identity());
+        Codec<Requirement<?>> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REQUIREMENT.get().byNameCodec()).dispatch(Requirement::codec, Function.identity());
 
         /**
          * @return the needed amount of the {@link #getStat(IFactionPlayer)} to complete this requirement

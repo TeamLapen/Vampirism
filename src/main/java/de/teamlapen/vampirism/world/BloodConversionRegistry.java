@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.world;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
+import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.datamaps.ItemBlood;
@@ -38,7 +39,7 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IItemBlood getItemBlood(@NotNull ItemStack stack) {
-        IItemBlood data = stack.getItemHolder().getData(VampirismRegistries.ITEM_BLOOD_MAP.get());
+        IItemBlood data = stack.getItemHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
         if (data == null) {
             data = CALCULATED.get(stack.getItem());
         }
@@ -60,8 +61,8 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IFluidBloodConversion getFluidConversion(@NotNull Fluid fluid) {
-        Map<ResourceKey<Fluid>, IFluidBloodConversion> dataMap = BuiltInRegistries.FLUID.getDataMap(VampirismRegistries.FLUID_BLOOD_CONVERSION_MAP.get());
-        var conversion = BuiltInRegistries.FLUID.wrapAsHolder(fluid).getData(ModRegistries.FLUID_BLOOD_CONVERSION_MAP);
+        Map<ResourceKey<Fluid>, IFluidBloodConversion> dataMap = BuiltInRegistries.FLUID.getDataMap(VampirismDataMaps.FLUID_BLOOD_CONVERSION.get());
+        var conversion = BuiltInRegistries.FLUID.wrapAsHolder(fluid).getData(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP);
         if (conversion != null) {
             return conversion;
         }

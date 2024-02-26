@@ -222,7 +222,7 @@ public class ModTags {
         public static final TagKey<Task> AWARDS_LORD_LEVEL = tag("awards_lord_level");
 
         private static @NotNull TagKey<Task> tag(@NotNull String name) {
-            return TagKey.create(VampirismRegistries.TASK_ID, new ResourceLocation(REFERENCE.MODID, name));
+            return TagKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
@@ -242,7 +242,7 @@ public class ModTags {
         public static final TagKey<ISkillTree> LORD = tag("type/lord");
 
         private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
-            return TagKey.create(VampirismRegistries.SKILL_TREE_ID, new ResourceLocation(REFERENCE.MODID, name));
+            return TagKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, name));
         }
 
     }

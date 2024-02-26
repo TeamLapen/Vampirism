@@ -50,8 +50,8 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int x = 4;
         int y = 40;
         graphics.drawString(minecraft.font, task.getTitle(), 1, 1, Color.GRAY.getRGB(), false);
-        Registry<Task> tasks = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
-        Component taskmasterComponent = Arrays.stream(VampirismAPI.factionRegistry().getFactions()).filter(s -> s.getTag(VampirismRegistries.TASK_ID).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("text.vampirism.faction_representative"));
+        Registry<Task> tasks = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
+        Component taskmasterComponent = Arrays.stream(VampirismAPI.factionRegistry().getFactions()).filter(s -> s.getTag(VampirismRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("text.vampirism.faction_representative"));
         Component text = Component.translatable("text.vampirism.task.reward_obtain", taskmasterComponent);
         y += UtilLib.renderMultiLine(minecraft.font, graphics, text, 160, x, y, Color.GRAY.getRGB());
 

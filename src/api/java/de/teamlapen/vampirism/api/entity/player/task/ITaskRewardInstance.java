@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public interface ITaskRewardInstance {
 
-    Codec<ITaskRewardInstance> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARD_INSTANCES.get().byNameCodec()).dispatch(ITaskRewardInstance::codec, Function.identity());
+    Codec<ITaskRewardInstance> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARD_INSTANCE.get().byNameCodec()).dispatch(ITaskRewardInstance::codec, Function.identity());
 
     /**
      * applies the reward to the player upon task completion

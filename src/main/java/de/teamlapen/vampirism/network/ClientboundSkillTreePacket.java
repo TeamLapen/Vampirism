@@ -48,8 +48,8 @@ public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implemen
     public record ConfigHolder(ResourceKey<ISkillTree> skillTree, ResourceKey<ISkillNode> root, List<NodeHolder> children) {
         public static final Codec<ConfigHolder> CODEC = RecordCodecBuilder.create(inst
                         -> inst.group(
-                        ResourceKey.codec(VampirismRegistries.SKILL_TREE_ID).fieldOf("skill_tree").forGetter(x -> x.skillTree),
-                        ResourceKey.codec(VampirismRegistries.SKILL_NODE_ID).fieldOf("root").forGetter(x -> x.root),
+                        ResourceKey.codec(VampirismRegistries.Keys.SKILL_TREE).fieldOf("skill_tree").forGetter(x -> x.skillTree),
+                        ResourceKey.codec(VampirismRegistries.Keys.SKILL_NODE).fieldOf("root").forGetter(x -> x.root),
                         NodeHolder.CODEC.listOf().fieldOf("children").forGetter(ConfigHolder::children)
                 ).apply(inst, ConfigHolder::new)
         );
@@ -62,7 +62,7 @@ public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implemen
     public record NodeHolder(ResourceKey<ISkillNode> node, List<NodeHolder> children) {
         public static final Codec<NodeHolder> CODEC = RecordCodecBuilder.create(inst
                         -> inst.group(
-                        ResourceKey.codec(VampirismRegistries.SKILL_NODE_ID).fieldOf("node").forGetter(x -> x.node),
+                        ResourceKey.codec(VampirismRegistries.Keys.SKILL_NODE).fieldOf("node").forGetter(x -> x.node),
                         ExtraCodecs.lazyInitializedCodec(() -> NodeHolder.CODEC).listOf().fieldOf("children").forGetter(NodeHolder::children)
                 ).apply(inst, NodeHolder::new)
         );

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Registers and holds all skills for hunter players
  */
 public class HunterActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.ACTIONS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.Keys.ACTION, REFERENCE.MODID);
 
     public static final DeferredHolder<IAction<?>, AwarenessHunterAction> AWARENESS_HUNTER = ACTIONS.register("awareness_hunter", AwarenessHunterAction::new);
     public static final DeferredHolder<IAction<?>, DisguiseHunterAction> DISGUISE_HUNTER = ACTIONS.register("disguise_hunter", DisguiseHunterAction::new);

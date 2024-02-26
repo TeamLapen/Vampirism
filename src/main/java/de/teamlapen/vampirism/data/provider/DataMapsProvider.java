@@ -33,10 +33,10 @@ public class DataMapsProvider extends DataMapProvider {
     @Override
     protected void gather() {
         gatherCompostables(builder(NeoForgeDataMaps.COMPOSTABLES));
-        gatherItemBlood(builder(ModRegistries.ITEM_BLOOD_MAP));
-        gatherFluidBloodConversion(builder(ModRegistries.FLUID_BLOOD_CONVERSION_MAP));
-        gatherEntityBlood(builder(ModRegistries.ENTITY_BLOOD_MAP));
-        gatherEntityConverter(builder(ModRegistries.ENTITY_CONVERTER_MAP));
+        gatherItemBlood(builder(ModDataMaps.ITEM_BLOOD_MAP));
+        gatherFluidBloodConversion(builder(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP));
+        gatherEntityBlood(builder(ModDataMaps.ENTITY_BLOOD_MAP));
+        gatherEntityConverter(builder(ModDataMaps.ENTITY_CONVERTER_MAP));
     }
 
     protected void gatherCompostables(Builder<Compostable, Item> compostables) {

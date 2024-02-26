@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.Arrays;
 
 public class MinionTasks {
-    public static final DeferredRegister<IMinionTask<?, ?>> MINION_TASKS = DeferredRegister.create(VampirismRegistries.MINION_TASKS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IMinionTask<?, ?>> MINION_TASKS = DeferredRegister.create(VampirismRegistries.Keys.MINION_TASK, REFERENCE.MODID);
 
 
     public static final DeferredHolder<IMinionTask<?,?>,StayTask> STAY = MINION_TASKS.register("stay", StayTask::new);

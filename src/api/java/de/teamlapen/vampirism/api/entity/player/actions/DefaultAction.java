@@ -47,7 +47,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     @Override
     public @NotNull String getTranslationKey() {
         if (this.translationId == null) {
-            this.translationId = Util.makeDescriptionId("action", VampirismRegistries.ACTIONS.get().getKey(this));
+            this.translationId = Util.makeDescriptionId("action", VampirismRegistries.ACTION.get().getKey(this));
         }
         return this.translationId;
     }
@@ -98,6 +98,6 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
     protected abstract boolean activate(T player, ActivationContext context);
 
     private @Nullable ResourceLocation getRegistryName() {
-        return VampirismRegistries.ACTIONS.get().getKey(this);
+        return VampirismRegistries.ACTION.get().getKey(this);
     }
 }

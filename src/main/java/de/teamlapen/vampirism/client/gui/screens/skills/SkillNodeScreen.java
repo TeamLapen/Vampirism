@@ -114,7 +114,7 @@ public class SkillNodeScreen {
     }
 
     private List<ISkill<?>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
-        Registry<ISkillNode> nodes = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        Registry<ISkillNode> nodes = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_NODE);
         return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).map(Holder::value).collect(Collectors.toList());
     }
 

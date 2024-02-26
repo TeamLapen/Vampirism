@@ -55,7 +55,7 @@ public interface IFactionExclusiveItem extends ItemLike {
         if (!stack.hasTag()) return;
         CompoundTag tag = stack.getTag().getCompound("applied_oil");
         if (tag.contains("oil")) {
-            IOil oil = VampirismRegistries.OILS.get().get(new ResourceLocation(tag.getString("oil")));
+            IOil oil = VampirismRegistries.OIL.get().get(new ResourceLocation(tag.getString("oil")));
             int duration = tag.getInt("duration");
             if (oil instanceof IApplicableOil && duration > 0) {
                 ((IApplicableOil) oil).getToolTipLine(stack, ((IApplicableOil) oil), duration, flagIn).ifPresent(tooltip::add);

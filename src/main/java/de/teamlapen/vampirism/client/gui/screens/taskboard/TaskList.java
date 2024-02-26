@@ -54,7 +54,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         super(minecraft, width, height, y, 21, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
-        this.registry = factionPlayer.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID);
+        this.registry = factionPlayer.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
         this.setX(x);
     }
 

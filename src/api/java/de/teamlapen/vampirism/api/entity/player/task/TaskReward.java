@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public interface TaskReward {
 
-    Codec<TaskReward> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARDS.get().byNameCodec()).dispatch(TaskReward::codec, Function.identity());
+    Codec<TaskReward> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARD.get().byNameCodec()).dispatch(TaskReward::codec, Function.identity());
 
     ITaskRewardInstance createInstance(IFactionPlayer<?> player);
 

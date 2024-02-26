@@ -21,8 +21,8 @@ public class SkillTreeProvider extends de.teamlapen.vampirism.data.provider.pare
 
     @Override
     protected void buildSkillTrees(HolderLookup.Provider provider, @NotNull SkillTreeOutput output) {
-        HolderLookup.RegistryLookup<ISkillTree> trees = provider.lookupOrThrow(VampirismRegistries.SKILL_TREE_ID);
-        HolderLookup.RegistryLookup<ISkillNode> nodes = provider.lookupOrThrow(VampirismRegistries.SKILL_NODE_ID);
+        HolderLookup.RegistryLookup<ISkillTree> trees = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_TREE);
+        HolderLookup.RegistryLookup<ISkillNode> nodes = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_NODE);
         output.accept(modId("hunter_level"), new SkillTreeConfiguration(trees.getOrThrow(HunterSkills.Trees.LEVEL), nodes.getOrThrow(HunterSkills.Nodes.LEVEL_ROOT),
                 new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.SKILL2),
                         new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(HunterSkills.Nodes.SKILL3),

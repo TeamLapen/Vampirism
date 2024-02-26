@@ -13,7 +13,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 public class LordSkills {
 
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.SKILLS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.Keys.SKILL, REFERENCE.MODID);
 
 
     public static final DeferredHolder<ISkill<?>, ISkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill<>(LordActions.LORD_SPEED::get, ModTags.SkillTrees.LORD, 1, true));

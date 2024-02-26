@@ -34,19 +34,15 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -252,7 +248,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
      */
     public void resetLordTasks(int minLevel) {
         getCurrentFactionPlayer().map(IFactionPlayer::getTaskManager).ifPresent(manager -> {
-            this.player.level().registryAccess().registryOrThrow(VampirismRegistries.TASK_ID).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
+            this.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK).getTagOrEmpty(ModTags.Tasks.AWARDS_LORD_LEVEL).forEach(holder -> {
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });
         });
@@ -407,7 +403,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     private void checkSkillTreeLocks() {
         if (this.player.level() instanceof ServerLevel level) {
-            Registry<ISkillTree> registryAccess = this.player.level().registryAccess().registryOrThrow(VampirismRegistries.SKILL_TREE_ID);
+            Registry<ISkillTree> registryAccess = this.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE);
             getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 factionPlayer.getSkillHandler().updateUnlockedSkillTrees(registryAccess.holders().filter(s -> s.value().unlockPredicate().matches(level, null, this.player)).collect(Collectors.toList()));
             });

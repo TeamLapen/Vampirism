@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
@@ -41,25 +42,26 @@ import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 import java.util.Collection;
 
-import static de.teamlapen.vampirism.api.VampirismRegistries.*;
+import static de.teamlapen.vampirism.api.VampirismRegistries.Keys.*;
+import static de.teamlapen.vampirism.api.VampirismDataMaps.Keys.*;
 
 public class ModRegistries {
 
-    static final DeferredRegister<ISkill<?>> DEFERRED_SKILLS = DeferredRegister.create(SKILLS_ID, SKILLS_ID.location().getNamespace());
-    static final DeferredRegister<IAction<?>> DEFERRED_ACTIONS = DeferredRegister.create(ACTIONS_ID, ACTIONS_ID.location().getNamespace());
-    static final DeferredRegister<IEntityAction> DEFERRED_ENTITY_ACTIONS = DeferredRegister.create(ENTITY_ACTIONS_ID, ENTITY_ACTIONS_ID.location().getNamespace());
-    static final DeferredRegister<IMinionTask<?, ?>> DEFERRED_MINION_TASKS = DeferredRegister.create(MINION_TASKS_ID, MINION_TASKS_ID.location().getNamespace());
-    static final DeferredRegister<Task> DEFERRED_TASKS = DeferredRegister.create(TASK_ID, TASK_ID.location().getNamespace());
-    static final DeferredRegister<IRefinement> DEFERRED_REFINEMENTS = DeferredRegister.create(REFINEMENT_ID, REFINEMENT_ID.location().getNamespace());
-    static final DeferredRegister<IRefinementSet> DEFERRED_REFINEMENT_SETS = DeferredRegister.create(REFINEMENT_SET_ID, REFINEMENT_SET_ID.location().getNamespace());
-    static final DeferredRegister<IOil> DEFERRED_OILS = DeferredRegister.create(OILS_ID, OILS_ID.location().getNamespace());
-    static final DeferredRegister<Codec<? extends TaskReward>> DEFERRED_TASK_REWARDS = DeferredRegister.create(TASK_REWARD_ID, TASK_REWARD_ID.location().getNamespace());
-    static final DeferredRegister<Codec<? extends TaskUnlocker>> DEFERRED_TASK_UNLOCKER = DeferredRegister.create(TASK_UNLOCKER_ID, TASK_UNLOCKER_ID.location().getNamespace());
-    static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> DEFERRED_TASK_REQUIREMENTS = DeferredRegister.create(TASK_REQUIREMENT_ID, TASK_REQUIREMENT_ID.location().getNamespace());
-    static final DeferredRegister<Codec<? extends ITaskRewardInstance>> DEFERRED_TASK_REWARD_INSTANCES = DeferredRegister.create(TASK_REWARD_INSTANCE_ID, TASK_REWARD_INSTANCE_ID.location().getNamespace());
-    static final DeferredRegister<Codec<? extends Converter>> DEFERRED_ENTITY_CONVERTER = DeferredRegister.create(ENTITY_CONVERTER_ID, ENTITY_CONVERTER_ID.location().getNamespace());
-    static final DeferredRegister<ISkillNode> DEFERRED_SKILL_NODES = DeferredRegister.create(SKILL_NODE_ID, SKILL_NODE_ID.location().getNamespace());
-    static final DeferredRegister<ISkillTree> DEFERRED_SKILL_TREES = DeferredRegister.create(SKILL_TREE_ID, SKILL_TREE_ID.location().getNamespace());
+    static final DeferredRegister<ISkill<?>> DEFERRED_SKILLS = DeferredRegister.create(SKILL, SKILL.location().getNamespace());
+    static final DeferredRegister<IAction<?>> DEFERRED_ACTIONS = DeferredRegister.create(ACTION, ACTION.location().getNamespace());
+    static final DeferredRegister<IEntityAction> DEFERRED_ENTITY_ACTIONS = DeferredRegister.create(ENTITY_ACTION, ENTITY_ACTION.location().getNamespace());
+    static final DeferredRegister<IMinionTask<?, ?>> DEFERRED_MINION_TASKS = DeferredRegister.create(MINION_TASK, MINION_TASK.location().getNamespace());
+    static final DeferredRegister<Task> DEFERRED_TASKS = DeferredRegister.create(TASK, TASK.location().getNamespace());
+    static final DeferredRegister<IRefinement> DEFERRED_REFINEMENTS = DeferredRegister.create(REFINEMENT, REFINEMENT.location().getNamespace());
+    static final DeferredRegister<IRefinementSet> DEFERRED_REFINEMENT_SETS = DeferredRegister.create(REFINEMENT_SET, REFINEMENT_SET.location().getNamespace());
+    static final DeferredRegister<IOil> DEFERRED_OILS = DeferredRegister.create(OIL, OIL.location().getNamespace());
+    static final DeferredRegister<Codec<? extends TaskReward>> DEFERRED_TASK_REWARDS = DeferredRegister.create(TASK_REWARD, TASK_REWARD.location().getNamespace());
+    static final DeferredRegister<Codec<? extends TaskUnlocker>> DEFERRED_TASK_UNLOCKER = DeferredRegister.create(VampirismRegistries.Keys.TASK_UNLOCKER, VampirismRegistries.Keys.TASK_UNLOCKER.location().getNamespace());
+    static final DeferredRegister<Codec<? extends TaskRequirement.Requirement<?>>> DEFERRED_TASK_REQUIREMENTS = DeferredRegister.create(TASK_REQUIREMENT, TASK_REQUIREMENT.location().getNamespace());
+    static final DeferredRegister<Codec<? extends ITaskRewardInstance>> DEFERRED_TASK_REWARD_INSTANCES = DeferredRegister.create(TASK_REWARD_INSTANCE, TASK_REWARD_INSTANCE.location().getNamespace());
+    static final DeferredRegister<Codec<? extends Converter>> DEFERRED_ENTITY_CONVERTER = DeferredRegister.create(VampirismRegistries.Keys.ENTITY_CONVERTER, VampirismRegistries.Keys.ENTITY_CONVERTER.location().getNamespace());
+    static final DeferredRegister<ISkillNode> DEFERRED_SKILL_NODES = DeferredRegister.create(SKILL_NODE, SKILL_NODE.location().getNamespace());
+    static final DeferredRegister<ISkillTree> DEFERRED_SKILL_TREES = DeferredRegister.create(SKILL_TREE, SKILL_TREE.location().getNamespace());
 
 
     public static final Registry<ISkill<?>> SKILLS = DEFERRED_SKILLS.makeRegistry(builder -> builder.callback(new SkillCallbacks()));
@@ -75,11 +77,6 @@ public class ModRegistries {
     public static final Registry<Codec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = DEFERRED_TASK_REWARD_INSTANCES.makeRegistry(builder -> {});
     public static final Registry<Codec<? extends Converter>> ENTITY_CONVERTER = DEFERRED_ENTITY_CONVERTER.makeRegistry(builder -> {});
 
-    public static final DataMapType<Item, IItemBlood> ITEM_BLOOD_MAP = DataMapType.builder(VampirismRegistries.ITEM_BLOOD_MAP_ID, Registries.ITEM, ItemBlood.CODEC).synced(ItemBlood.NETWORK_CODEC, true).build();
-    public static final DataMapType<EntityType<?>, IEntityBlood> ENTITY_BLOOD_MAP = DataMapType.builder(ENTITY_BLOOD_MAP_ID, Registries.ENTITY_TYPE, EntityBloodEntry.CODEC).synced(EntityBloodEntry.NETWORK_CODEC, true).build();
-    public static final DataMapType<Fluid, IFluidBloodConversion> FLUID_BLOOD_CONVERSION_MAP = DataMapType.builder(VampirismRegistries.FLUID_BLOOD_CONVERSION_MAP_ID, Registries.FLUID, FluidBloodConversion.CODEC).synced(FluidBloodConversion.NETWORK_CODEC, true).build();
-    public static final DataMapType<EntityType<?>, IConverterEntry> ENTITY_CONVERTER_MAP = DataMapType.builder(ENTITY_CONVERTER_MAP_ID, Registries.ENTITY_TYPE, ConverterEntry.CODEC).synced(ConverterEntry.CODEC, true).build();
-
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(Registries.BIOME, ModBiomes::createBiomes)
             .add(Registries.CONFIGURED_FEATURE, VampirismFeatures::createConfiguredFeatures)
@@ -90,9 +87,9 @@ public class ModRegistries {
             .add(Registries.STRUCTURE_SET, ModStructures::createStructureSets)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::createDamageTypes)
-            .add(TASK_ID, ModTasks::createTasks)
-            .add(SKILL_NODE_ID, ModSkills::createSkillNodes)
-            .add(SKILL_TREE_ID, ModSkills::createSkillTrees)
+            .add(TASK, ModTasks::createTasks)
+            .add(SKILL_NODE, ModSkills::createSkillNodes)
+            .add(SKILL_TREE, ModSkills::createSkillTrees)
             ;
 
     static void init(IEventBus bus) {
@@ -114,16 +111,9 @@ public class ModRegistries {
     }
 
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(TASK_ID, Task.CODEC, Task.CODEC);
-        event.dataPackRegistry(SKILL_TREE_ID, SkillTree.CODEC, SkillTree.CODEC);
-        event.dataPackRegistry(SKILL_NODE_ID, SkillNode.CODEC, SkillNode.CODEC);
-    }
-
-    static void registerDataMaps(RegisterDataMapTypesEvent event) {
-        event.register(ITEM_BLOOD_MAP);
-        event.register(FLUID_BLOOD_CONVERSION_MAP);
-        event.register(ENTITY_BLOOD_MAP);
-        event.register(ENTITY_CONVERTER_MAP);
+        event.dataPackRegistry(TASK, Task.CODEC, Task.CODEC);
+        event.dataPackRegistry(SKILL_TREE, SkillTree.CODEC, SkillTree.CODEC);
+        event.dataPackRegistry(SKILL_NODE, SkillNode.CODEC, SkillNode.CODEC);
     }
 
     public static Collection<DeferredHolder<IAction<?>, ? extends IAction<?>>> allActions() {

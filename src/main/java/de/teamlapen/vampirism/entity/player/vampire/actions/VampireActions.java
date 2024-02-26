@@ -12,7 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Registers and holds all skills for vampire player
  */
 public class VampireActions {
-    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.ACTIONS_ID, REFERENCE.MODID);
+    public static final DeferredRegister<IAction<?>> ACTIONS = DeferredRegister.create(VampirismRegistries.Keys.ACTION, REFERENCE.MODID);
 
     public static final DeferredHolder<IAction<?>, BatVampireAction> BAT = ACTIONS.register("bat", BatVampireAction::new);
     public static final DeferredHolder<IAction<?>, DarkBloodProjectileAction> DARK_BLOOD_PROJECTILE = ACTIONS.register("dark_blood_projectile", DarkBloodProjectileAction::new);
