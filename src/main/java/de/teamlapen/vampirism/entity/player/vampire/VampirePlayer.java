@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigg
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -101,7 +102,6 @@ import java.util.function.Predicate;
  */
 public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
     private static final String NBT_KEY = "vampire_player";
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     private final static int FEED_TIMER = 20;
@@ -398,7 +398,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public @NotNull ResourceLocation getAttachedKey() {
-        return SERIALIZER_ID;
+        return VampirismAttachments.Keys.VAMPIRE_PLAYER;
     }
 
     public int getDbnoDuration() {
@@ -1409,7 +1409,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public String nbtKey() {
-        return NBT_KEY;
+        return getAttachedKey().getPath();
     }
 
     private class VisionStatus implements ISyncableSaveData {

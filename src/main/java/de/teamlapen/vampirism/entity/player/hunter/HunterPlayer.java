@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -54,8 +55,6 @@ import java.util.function.Predicate;
  * Main class for hunter players
  */
 public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IHunterPlayer {
-    private static final String NBT_KEY = "hunter_player";
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
 
     public static @NotNull HunterPlayer get(@NotNull Player player) {
         return player.getData(ModAttachments.HUNTER_PLAYER);
@@ -95,7 +94,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public @NotNull ResourceLocation getAttachedKey() {
-        return SERIALIZER_ID;
+        return VampirismAttachments.Keys.HUNTER_PLAYER;
     }
 
     @Override
@@ -277,7 +276,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
 
     @Override
     public String nbtKey() {
-        return NBT_KEY;
+        return getAttachedKey().getPath();
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, HunterPlayer> {
