@@ -1,8 +1,14 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -10,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -20,6 +27,45 @@ import java.util.stream.Stream;
 
 
 public class ChandelierBlock extends VampirismBlock {
+
+    private static final Iterable<Vec3> PARTICLE_OFFSETS = ImmutableList.of(new Vec3(0.09375, 0.6875, 0.53125), new Vec3(0.46875, 0.6875, 0.15625), new Vec3(0.46875, 0.6875, 0.90625), new Vec3(0.84375, 0.6875, 0.53125), new Vec3(0.15625, 0.6875, 0.21875), new Vec3(0.15625, 0.6875, 0.84375), new Vec3(0.78125, 0.6875, 0.21875), new Vec3(0.78125, 0.6875, 0.84375));
+
+    public ChandelierBlock() {
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
+    }
+
+    @NotNull
+    @Override
+    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
+        return canSupportCenter(worldIn, pos.above(), Direction.DOWN);
+    }
+
+    @NotNull
+    @Override
+    public BlockState updateShape(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+        return facing == Direction.UP && !this.canSurvive(stateIn, worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
+    @Override
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
+        PARTICLE_OFFSETS.forEach(p_220695_ -> addParticlesAndSound(pLevel, p_220695_.add((double) pPos.getX(), (double) pPos.getY(), (double) pPos.getZ()), pRandom));
+    }
+
+    private static void addParticlesAndSound(Level pLevel, Vec3 pOffset, RandomSource pRandom) {
+        float f = pRandom.nextFloat();
+        if (f < 0.3F) {
+            pLevel.addParticle(ParticleTypes.SMOKE, pOffset.x, pOffset.y, pOffset.z, 0.0, 0.0, 0.0);
+            if (f < 0.17F) {
+                pLevel.playLocalSound(pOffset.x + 0.5, pOffset.y + 0.5, pOffset.z + 0.5, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + pRandom.nextFloat(), pRandom.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+        pLevel.addParticle(ParticleTypes.SMALL_FLAME, pOffset.x, pOffset.y, pOffset.z, 0.0, 0.0, 0.0);
+    }
 
     private final static VoxelShape SHAPE = Stream.of(
             Block.box(7, 10, 8, 8, 16, 9),
@@ -79,25 +125,4 @@ public class ChandelierBlock extends VampirismBlock {
             Block.box(7, 9, 2, 8, 10, 3),
             Block.box(7, 9, 14, 8, 10, 15)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
-
-    public ChandelierBlock() {
-        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2).lightLevel(s -> 14).noOcclusion());
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return SHAPE;
-    }
-
-    @Override
-    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
-        return canSupportCenter(worldIn, pos.above(), Direction.DOWN);
-    }
-
-    @NotNull
-    @Override
-    public BlockState updateShape(@NotNull BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
-        return facing == Direction.UP && !this.canSurvive(stateIn, worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
 }

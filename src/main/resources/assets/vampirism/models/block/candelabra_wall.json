@@ -1,14 +1,13 @@
 {
 	"credit": "Made by 1LiterZinalco",
+	"render_type": "minecraft:cutout",
 	"textures": {
-		"0": "block/campfire_fire",
 		"1": "block/gold_block",
 		"3": "block/mushroom_stem",
 		"4": "block/black_wool",
 		"5": "vampirism:block/dark_steel",
 		"particle": "vampirism:block/dark_steel"
 	},
-	"render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"name": "base1",
@@ -117,8 +116,8 @@
 		},
 		{
 			"name": "pin",
-			"from": [7.95, 13.75, 12.92071],
-			"to": [8.05, 14.35, 13.02071],
+			"from": [7.86, 13.75, 12.83],
+			"to": [8.16, 14.35, 13.13],
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 14.25, 12.97071]},
 			"faces": {
 				"north": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
@@ -126,24 +125,6 @@
 				"south": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"west": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"up": {"uv": [0, 0, 0.1, 0.1], "texture": "#4"}
-			}
-		},
-		{
-			"from": [7.9, 14.3, 12.61],
-			"to": [7.9, 15.8, 14.11],
-			"rotation": {"angle": -45, "axis": "y", "origin": [8.4, 14.8, 13.3]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
-			}
-		},
-		{
-			"from": [8.00402, 14.3, 12.23887],
-			"to": [8.00402, 15.8, 13.73887],
-			"rotation": {"angle": 45, "axis": "y", "origin": [8.00402, 14.8, 12.98887]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		},
 		{
@@ -175,8 +156,8 @@
 		},
 		{
 			"name": "pin",
-			"from": [2.95, 11.75, 12.92071],
-			"to": [3.05, 12.35, 13.02071],
+			"from": [2.86, 11.75, 12.83],
+			"to": [3.16, 12.35, 13.13],
 			"rotation": {"angle": 45, "axis": "y", "origin": [3, 12.25, 12.97071]},
 			"faces": {
 				"north": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
@@ -184,24 +165,6 @@
 				"south": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"west": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"up": {"uv": [0, 0, 0.1, 0.1], "texture": "#4"}
-			}
-		},
-		{
-			"from": [2.9, 12.3, 12.61],
-			"to": [2.9, 13.8, 14.11],
-			"rotation": {"angle": -45, "axis": "y", "origin": [3.4, 12.8, 13.3]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
-			}
-		},
-		{
-			"from": [3.00402, 12.3, 12.23887],
-			"to": [3.00402, 13.8, 13.73887],
-			"rotation": {"angle": 45, "axis": "y", "origin": [3.00402, 12.8, 12.98887]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		},
 		{
@@ -233,8 +196,8 @@
 		},
 		{
 			"name": "pin",
-			"from": [12.95, 11.75, 12.92071],
-			"to": [13.05, 12.35, 13.02071],
+			"from": [12.86, 11.75, 12.83],
+			"to": [13.16, 12.35, 13.13],
 			"rotation": {"angle": 45, "axis": "y", "origin": [13, 12.25, 12.97071]},
 			"faces": {
 				"north": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
@@ -242,24 +205,6 @@
 				"south": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"west": {"uv": [0, 0, 0.1, 0.6], "texture": "#4"},
 				"up": {"uv": [0, 0, 0.1, 0.1], "texture": "#4"}
-			}
-		},
-		{
-			"from": [12.9, 12.3, 12.61],
-			"to": [12.9, 13.8, 14.11],
-			"rotation": {"angle": -45, "axis": "y", "origin": [13.4, 12.8, 13.3]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
-			}
-		},
-		{
-			"from": [13.00402, 12.3, 12.23887],
-			"to": [13.00402, 13.8, 13.73887],
-			"rotation": {"angle": 45, "axis": "y", "origin": [13.00402, 12.8, 12.98887]},
-			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		},
 		{
@@ -301,21 +246,31 @@
 			"translation": [0, 0, -7.75]
 		}
 	},
-	"groups": [0, 1, 2, 3, 4, 5, 6,
+	"groups": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
 		{
 			"name": "candle1",
 			"origin": [15, 18, 15],
-			"children": [7, 8, 9, 10, 11]
+			"color": 0,
+			"children": [7, 8, 9]
 		},
 		{
 			"name": "candle2",
 			"origin": [15, 18, 15],
-			"children": [12, 13, 14, 15, 16]
+			"color": 0,
+			"children": [10, 11, 12]
 		},
 		{
 			"name": "candle3",
 			"origin": [15, 18, 15],
-			"children": [17, 18, 19, 20, 21]
+			"color": 0,
+			"children": [13, 14, 15]
 		}
 	]
 }
