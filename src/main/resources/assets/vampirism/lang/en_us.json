@@ -551,7 +551,7 @@
   "text.vampirism.altar_infusion.ritual_missing_pillars": "You need more or stronger pillars for your ritual",
   "text.vampirism.altar_infusion.ritual_level_wrong": "You cannot use this altar at this level",
   "text.vampirism.altar_infusion.ritual_still_running": "The ritual is still running",
-  "text.vampirism.altar_infusion.ritual.wrong_faction": "This altar seem unfamiliar",
+  "text.vampirism.altar_infusion.ritual.wrong_faction": "This altar seems unfamiliar",
   "text.vampirism.altar_infusion.ritual_night_only": "You can only perform this ritual at night",
   "text.vampirism.weapon_table.cannot_use": "You have not learned how to use this",
   "text.vampirism.blood_potion_table.cannot_use": "You have not learned how to use this",
