@@ -76,7 +76,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
     @Override
     public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
-        return repairItem.is(Tags.Items.STRING) || super.isValidRepairItem(crossbow, repairItem);
+        return repairItem.is(Tags.Items.STRING);
     }
 
     @Override

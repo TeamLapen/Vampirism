@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
 import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
 import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.data.provider.SundamageProvider;
 import de.teamlapen.vampirism.entity.player.tasks.TaskUtil;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
@@ -39,17 +40,19 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Plugin for Just Enough Items
@@ -135,46 +138,31 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     }
 
-    private @NotNull List<IJeiAnvilRecipe> getRepairRecipes(@NotNull IVanillaRecipeFactory factory) {
+    private @NotNull <T extends Item> List<IJeiAnvilRecipe> getRepairRecipes(@NotNull IVanillaRecipeFactory factory) {
         List<IJeiAnvilRecipe> recipes = new ArrayList<>();
-        Map<Ingredient, List<Item>> items = Maps.newHashMap();
-        Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
-        items.put(ironIngredient, Lists.newArrayList(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()));
-        Ingredient stringIngredient = Ingredient.of(Tags.Items.STRING);
-        items.put(stringIngredient, Lists.newArrayList(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get()));
-        Ingredient leather = Ingredient.of(Tags.Items.LEATHER);
-        items.put(leather, Lists.newArrayList(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()));
-        Ingredient bloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
-        items.put(bloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_STRIKER_NORMAL.get()));
-        Ingredient enhancedBloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get());
-        items.put(enhancedBloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get()));
-        Ingredient human_heart = Ingredient.of(ModTags.Items.HEART);
-        items.put(human_heart, Lists.newArrayList(ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get(), ModItems.VAMPIRE_CLOAK_RED_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_RED.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()));
-
-        for (Map.Entry<Ingredient, List<Item>> entry : items.entrySet()) {
-
-            List<ItemStack> repairMaterials = Lists.newArrayList(
-                    entry.getKey().getItems()
-            );
-
-            for (Item ingredientItem : entry.getValue()) {
-                ItemStack ingredient = new ItemStack(ingredientItem);
-                ItemStack damaged1 = ingredient.copy();
-                damaged1.setDamageValue(damaged1.getMaxDamage());
-                ItemStack damaged2 = ingredient.copy();
-                damaged2.setDamageValue(damaged2.getMaxDamage() * 3 / 4);
-                ItemStack damaged3 = ingredient.copy();
-                damaged3.setDamageValue(damaged3.getMaxDamage() * 2 / 4);
-
-                if (!repairMaterials.isEmpty()) {
-                    IJeiAnvilRecipe repairWithMaterial = factory.createAnvilRecipe(damaged1, repairMaterials, Collections.singletonList(damaged2));
-                    recipes.add(repairWithMaterial);
-                }
-                IJeiAnvilRecipe repairWithSame = factory.createAnvilRecipe(damaged2, Collections.singletonList(damaged2), Collections.singletonList(damaged3));
-                recipes.add(repairWithSame);
-            }
-        }
+        addRepairItem(factory, recipes::add, axe -> axe.getTier().getRepairIngredient(), ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get(), ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get(), ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_STRIKER_NORMAL.get());
+        addRepairItem(factory, recipes::add, armor -> armor.getMaterial().getRepairIngredient(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get(), ModItems.VAMPIRE_CLOAK_RED_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_RED.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get());
+        addRepairItem(factory, recipes::add, crossbow -> Ingredient.of(Items.STRING), ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get());
+        addRepairItem(factory, recipes::add, crossbow -> Ingredient.of(Items.IRON_INGOT), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         return recipes;
+    }
+
+    private <T extends Item> void addRepairItem(@NotNull IVanillaRecipeFactory factory, Consumer<IJeiAnvilRecipe> consumer, Function<T, Ingredient> ingredientFunction, T... items) {
+        for (T item : items) {
+            ItemStack damageThreeQuarters = item.getDefaultInstance();
+            damageThreeQuarters.setDamageValue(damageThreeQuarters.getMaxDamage() * 3 / 4);
+            ItemStack damageHalf = item.getDefaultInstance();
+            damageHalf.setDamageValue(damageHalf.getMaxDamage() / 2);
+
+            IJeiAnvilRecipe repairWithSame = factory.createAnvilRecipe(List.of(damageThreeQuarters), List.of(damageThreeQuarters), List.of(damageHalf));
+            consumer.accept(repairWithSame);
+            Optional.ofNullable(ingredientFunction.apply(item)).map(s -> s.getItems()).filter(s -> s.length > 0).map(s -> List.of(s)).ifPresent(repairMaterials -> {
+                ItemStack damagedFully = item.getDefaultInstance();
+                damagedFully.setDamageValue(damagedFully.getMaxDamage());
+                IJeiAnvilRecipe repairWithMaterial = factory.createAnvilRecipe(List.of(damagedFully), repairMaterials, List.of(damageThreeQuarters));
+                consumer.accept(repairWithMaterial);
+            });
+        }
     }
 
     private @NotNull List<CraftingRecipe> getApplicableOilRecipes() {
