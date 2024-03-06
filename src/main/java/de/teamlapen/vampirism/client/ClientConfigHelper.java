@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.client;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -37,10 +34,15 @@ import java.util.stream.Stream;
 public class ClientConfigHelper {
 
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(List.class, new IActionListTypeAdapter())
+            .registerTypeAdapter(TypeToken.getParameterized(List.class, IAction.class).getType(), new IActionListTypeAdapter())
+            .registerTypeAdapter(TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType(), new EntryListTypeAdapter())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
-            .registerTypeHierarchyAdapter(SelectMinionTaskRadialScreen.Entry.class, new EntryTypeAdapter())
             .create();
+
+    @SuppressWarnings("unchecked")
+    private static final TypeToken<Map<ResourceLocation, List<IAction<?>>>> ACTION_TOKEN = (TypeToken<Map<ResourceLocation, List<IAction<?>>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, IAction.class).getType());
+    @SuppressWarnings("unchecked")
+    private static final TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>> MINION_TASK_TOKEN = (TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType());
 
     /**
      * Dummy task order identifier id no faction is given, but this should never happen
@@ -63,7 +65,7 @@ public class ClientConfigHelper {
         if (VampirismConfig.isClientConfigSpec(event.getConfig().getSpec())) {
             try {
                 String string = VampirismConfig.CLIENT.actionOrder.get();
-                ACTION_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, new TypeToken<>() {}), HashMap::new);
+                ACTION_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, ACTION_TOKEN), HashMap::new);
             } catch (JsonSyntaxException | IllegalArgumentException e) {
                 VampirismConfig.LOGGER.error("Failed to parse action order config", e);
                 VampirismConfig.CLIENT.actionOrder.set(VampirismConfig.CLIENT.actionOrder.getDefault());
@@ -71,7 +73,7 @@ public class ClientConfigHelper {
             }
             try {
                 String string = VampirismConfig.CLIENT.minionTaskOrder.get();
-                MINION_TASK_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, new TypeToken<>() {}), HashMap::new);
+                MINION_TASK_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, MINION_TASK_TOKEN), HashMap::new);
             } catch (JsonSyntaxException | IllegalArgumentException e) {
                 VampirismConfig.LOGGER.error("Failed to parse minion task order config", e);
                 VampirismConfig.CLIENT.minionTaskOrder.set(VampirismConfig.CLIENT.minionTaskOrder.getDefault());
@@ -88,7 +90,7 @@ public class ClientConfigHelper {
      */
     public static boolean testActions(Object string) {
         try {
-            GSON.fromJson((String) string, new TypeToken<Map<ResourceLocation, List<IAction<?>>>>() {});
+            GSON.fromJson((String) string, ACTION_TOKEN);
         } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException e) {
             return false;
         }
@@ -102,7 +104,7 @@ public class ClientConfigHelper {
      */
     public static boolean testTasks(Object string) {
         try {
-            GSON.fromJson((String) string, new TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>>() {});
+            GSON.fromJson((String) string, MINION_TASK_TOKEN);
         } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException  e) {
             return false;
         }
@@ -175,8 +177,12 @@ public class ClientConfigHelper {
      */
     public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull  List<IAction<?>> actions) {
         ACTION_ORDER.put(id, actions);
-        String object = GSON.toJson(ACTION_ORDER);
-        VampirismConfig.CLIENT.actionOrder.set(object);
+        try {
+            String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
+            VampirismConfig.CLIENT.actionOrder.set(object);
+        } catch (JsonParseException e) {
+            VampirismConfig.LOGGER.error("Failed to save action order", e);
+        }
     }
 
     /**
@@ -187,8 +193,12 @@ public class ClientConfigHelper {
      */
     public static void saveMinionTaskOrder(@Nullable IFaction<?> faction, @NotNull  List<SelectMinionTaskRadialScreen.Entry> tasks) {
         MINION_TASK_ORDER.put(Optional.ofNullable(faction).map(IFaction::getID).orElse(NONE), tasks);
-        String object = GSON.toJson(MINION_TASK_ORDER);
-        VampirismConfig.CLIENT.minionTaskOrder.set(object);
+        try {
+            String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());
+            VampirismConfig.CLIENT.minionTaskOrder.set(object);
+        } catch (JsonParseException e) {
+            VampirismConfig.LOGGER.error("Failed to save minion task order", e);
+        }
 
     }
 
@@ -220,30 +230,35 @@ public class ClientConfigHelper {
         }
     }
 
-    /**
-     * Gson type adapter for {@link SelectMinionTaskRadialScreen.Entry}
-     */
-    private static final class EntryTypeAdapter extends TypeAdapter<SelectMinionTaskRadialScreen.Entry> {
+    private static final class EntryListTypeAdapter extends TypeAdapter<List<SelectMinionTaskRadialScreen.Entry>> {
 
         @Override
-        public void write(JsonWriter out, @Nullable SelectMinionTaskRadialScreen.Entry value) throws IOException {
-            if (value == null) {
-                out.nullValue();
-                return;
+        public @NotNull List<SelectMinionTaskRadialScreen.Entry> read(@NotNull JsonReader in) throws IOException {
+            List<SelectMinionTaskRadialScreen.Entry> actions = new ArrayList<>();
+            in.beginArray();
+            while (in.hasNext()) {
+                ResourceLocation resourceLocation = new ResourceLocation(in.nextString());
+                IMinionTask<?, ?> minionTask = RegUtil.getMinionTask(resourceLocation);
+                SelectMinionTaskRadialScreen.Entry entry = SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.get(resourceLocation);
+                if (entry != null) {
+                    actions.add(entry);
+                } else if (minionTask != null) {
+                    actions.add(new SelectMinionTaskRadialScreen.Entry(minionTask));
+                }
             }
-            out.value(value.getId().toString());
+            in.endArray();
+            return actions;
         }
 
         @Override
-        public SelectMinionTaskRadialScreen.Entry read(JsonReader in) throws IOException {
-            ResourceLocation id = new ResourceLocation(in.nextString());
-            IMinionTask<?, ?> minionTask = RegUtil.getMinionTask(id);
-            if (minionTask != null) {
-                return new SelectMinionTaskRadialScreen.Entry(minionTask);
-            } else {
-                return SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.get(id);
+        public void write(@NotNull JsonWriter out, @Nullable List<SelectMinionTaskRadialScreen.Entry> value) throws IOException {
+            out.beginArray();
+            if (value != null) {
+                for (SelectMinionTaskRadialScreen.Entry action : value) {
+                    out.value(action.getId().toString());
+                }
             }
+            out.endArray();
         }
     }
-
 }
