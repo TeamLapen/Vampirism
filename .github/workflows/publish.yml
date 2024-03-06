@@ -51,7 +51,7 @@ jobs:
             echo "environment=Release" >> $GITHUB_OUTPUT
             echo "version=release" >> $GITHUB_OUTPUT
           fi
-        elif [[ ${{ github.event.ref }} =~ refs\/tags\/v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-(0|[1-9]\d*)\.(0|[1-9]\d*) ]]; then
+        elif [[ ${{ github.event.ref }} =~ refs\/tags\/v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-(0|[1-9]\d*)\.(0|[1-9]\d*)(\.(0|[1-9]\d*))? ]]; then
           echo "environment=Release" >> $GITHUB_OUTPUT
           echo "version=release" >> $GITHUB_OUTPUT
         fi
