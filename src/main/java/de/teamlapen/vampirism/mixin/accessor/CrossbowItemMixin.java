@@ -16,11 +16,6 @@ import java.util.List;
 @Mixin(CrossbowItem.class)
 public interface CrossbowItemMixin {
 
-    @Accessor("midLoadSoundPlayed")
-    void setMidLoadSoundPlayer(boolean value);
-
-    @Accessor("startSoundPlayed")
-    void setStartSoundPlayed(boolean value);
 
     @NotNull
     @Invoker("getChargedProjectiles")

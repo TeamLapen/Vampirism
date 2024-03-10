@@ -100,6 +100,10 @@ public class ServerPayloadHandler {
                 if (stack.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
                     crossbow.setAmmunition(stack, msg.ammoId());
                 }
+                ItemStack offhand = player.getOffhandItem();
+                if (offhand.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
+                    crossbow.setAmmunition(offhand, msg.ammoId());
+                }
             });
         });
     }

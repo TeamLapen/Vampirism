@@ -80,6 +80,7 @@
     "client.accessor.CameraAccessor",
     "client.accessor.EffectRenderingInventoryScreenAccessor",
     "client.accessor.HumanoidArmorLayerAccessor",
+    "client.accessor.ItemInHandRendererAccessor",
     "client.accessor.LivingEntityRendererAccessor",
     "client.accessor.ParticleEngineAccessor",
     "client.accessor.RecipeBookComponentAccessor",

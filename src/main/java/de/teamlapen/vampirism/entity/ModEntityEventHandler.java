@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.HunterAxeItem;
 import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
+import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
 import de.teamlapen.vampirism.mixin.accessor.NearestAttackableTargetGoalAccessor;
@@ -238,6 +239,13 @@ public class ModEntityEventHandler {
                 }
                 ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemStartUsing(LivingEntityUseItemEvent.Start event) {
+        if (event.getItem().getItem() instanceof VampirismCrossbowItem crossbowItem) {
+            event.setDuration(crossbowItem.getCombinedUseDuration(event.getItem(), event.getEntity(), event.getEntity().getUsedItemHand()));
         }
     }
 
