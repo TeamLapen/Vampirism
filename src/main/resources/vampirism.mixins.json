@@ -61,6 +61,7 @@
     "accessor.VillagerAccessor",
     "accessor.VillagerHostilesSensorAccessor",
     "accessor.WalkAnimationStateAccessor",
+    "client.ItemInHandRendererMixin",
     "client.accessor.MobEffectAccessor"
   ],
   "client": [
@@ -76,6 +77,7 @@
     "client.accessor.CameraAccessor",
     "client.accessor.EffectRenderingInventoryScreenAccessor",
     "client.accessor.HumanoidArmorLayerAccessor",
+    "client.accessor.ItemInHandRendererAccessor",
     "client.accessor.LivingEntityRendererAccessor",
     "client.accessor.ParticleEngineAccessor",
     "client.accessor.RecipeBookComponentAccessor",

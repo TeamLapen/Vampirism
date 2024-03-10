@@ -21,6 +21,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -50,8 +51,9 @@ public class VampirismModClient {
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
 
-        NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        this.modEventBus.register(this);
 
+        NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.register(this.overlay);
         NeoForge.EVENT_BUS.register(this.renderHandler);
         NeoForge.EVENT_BUS.register(new ClientEventHandler());

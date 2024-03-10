@@ -9,11 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(CrossbowItem.class)
 public interface CrossbowItemMixin {
 
-    @Accessor("midLoadSoundPlayed")
-    void setMidLoadSoundPlayer(boolean value);
-
-    @Accessor("startSoundPlayed")
-    void setStartSoundPlayed(boolean value);
 
     @Invoker("getShotPitch")
     static float getShotPitches(RandomSource p_220024_, int w){

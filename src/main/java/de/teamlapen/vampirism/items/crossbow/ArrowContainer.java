@@ -64,9 +64,9 @@ public class ArrowContainer extends Item implements IArrowContainer {
     public void addArrows(ItemStack container, List<ItemStack> arrowStacks) {
         ArrayList<ItemStack> arrows = new ArrayList<>(getArrows(container));
         Iterator<ItemStack> iterator = arrowStacks.iterator();
-        for(var stack = iterator.next(); iterator.hasNext();) {
-            if (arrows.size() >= maxCount) break;
-            arrows.add(stack);
+        while (iterator.hasNext() && arrows.size() < maxCount) {
+            ItemStack next = iterator.next();
+            arrows.add(next);
             iterator.remove();
         }
         container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));

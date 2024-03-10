@@ -7,13 +7,18 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -33,12 +38,18 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -112,6 +123,33 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
+    public int getDefaultProjectileRange() {
+        return 8;
+    }
+
+    public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+        ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+        if (otherItemStack.getItem() instanceof VampirismCrossbowItem otherItem && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
+            return this.getUseDuration(stack) + otherItem.getUseDuration(otherItemStack);
+        }
+        return this.getUseDuration(stack);
+    }
+
+    public boolean canUseDoubleCrossbow(LivingEntity entity) {
+        return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT.get());
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.CUSTOM;
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(ItemExtensions.HUNTER_CROSSBOW);
+    }
+
+    @Override
     public int getUseDuration(@NotNull ItemStack crossbow) {
         return getChargeDurationMod(crossbow) + 3;
     }
@@ -127,6 +165,13 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
                 this.shoot(level, shooter, hand, crossbow, arrows, speed, angle, shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
+
+                if (hand == InteractionHand.MAIN_HAND) {
+                    ItemStack otherStack = shooter.getItemInHand(InteractionHand.OFF_HAND);
+                    if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof VampirismCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
+                        otherCrossbow.use(level, player, InteractionHand.OFF_HAND);
+                    }
+                }
             }
         }
     }
@@ -170,39 +215,35 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack p_77615_1_, @NotNull Level p_77615_2_, @NotNull LivingEntity p_77615_3_, int p_77615_4_) {
-        int i = this.getUseDuration(p_77615_1_) - p_77615_4_;
-        float f = getPowerForTimeMod(i, p_77615_1_);
-        if (f >= 1.0F && !isCharged(p_77615_1_) && tryLoadProjectiles(p_77615_3_, p_77615_1_)) {
-            SoundSource soundcategory = p_77615_3_ instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-            p_77615_2_.playSound(null, p_77615_3_.getX(), p_77615_3_.getY(), p_77615_3_.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (p_77615_2_.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
+    public void releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity entity, int pTimeCharged) {
+        int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
+        int useDuration = this.getUseDuration(itemStack);
+        int combinedChargingDuration = combinedUseDuration - pTimeCharged;
+        int chargingDuration = useDuration - pTimeCharged;
+        if (combinedChargingDuration != useDuration) {
+            chargingDuration += combinedUseDuration - useDuration;
+        }
+        if ((float)chargingDuration/ getChargeDurationMod(itemStack) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
+            ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            if (canUseDoubleCrossbow(entity)&& (float)combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof VampirismCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
+                tryLoadProjectiles(entity, otherStack);
+            }
+            SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
     }
 
-    public float getPowerForTimeMod(int p_220031_0_, ItemStack p_220031_1_) {
-        float f = (float)p_220031_0_ / (float)getChargeDurationMod(p_220031_1_);
-        if (f > 1.0F) {
-            f = 1.0F;
+    public int getCombinedChargeDurationMod(ItemStack crossbow, LivingEntity entity, InteractionHand hand) {
+        ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+        if (otherItemStack.getItem() instanceof VampirismCrossbowItem other && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
+            return this.getChargeDurationMod(crossbow) + other.getChargeDurationMod(otherItemStack);
         }
-
-        return f;
+        return this.getChargeDurationMod(crossbow);
     }
 
     public int getChargeDurationMod(ItemStack crossbow) {
         int i = crossbow.getEnchantmentLevel(Enchantments.QUICK_CHARGE);
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
-    }
-
-    protected int isFrugal(ItemStack crossbow) {
-        return crossbow.getEnchantmentLevel(ModEnchantments.ARROW_FRUGALITY.get());
-    }
-
-    protected boolean isInfinit(ItemStack crossbow) {
-        return crossbow.getEnchantmentLevel(Enchantments.INFINITY) > 0;
-    }
-
-    protected boolean canBeInfinit(ItemStack crossbow) {
-        return true;
     }
 
     protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
@@ -219,6 +260,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
     protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
         if (projectileStack.getItem() instanceof IArrowContainer container) {
+            if (shooter.hasInfiniteMaterials()) {
+                projectileStack = projectileStack.copy();
+            }
             return container.getAndRemoveArrows(projectileStack).stream().toList();
         } else {
             return List.of(projectileStack);
