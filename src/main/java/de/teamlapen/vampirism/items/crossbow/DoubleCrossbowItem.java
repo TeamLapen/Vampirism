@@ -28,4 +28,9 @@ public class DoubleCrossbowItem extends HunterCrossbowItem {
         var second = super.tryLoadProjectiles(pShooter, pCrossbowStack);
         return first || second;
     }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 3f : 1.5f;
+    }
 }

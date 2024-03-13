@@ -72,4 +72,9 @@ public class TechCrossbowItem extends HunterCrossbowItem {
         return Optional.empty();
     }
 
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 4.5f : 2f;
+    }
+
 }

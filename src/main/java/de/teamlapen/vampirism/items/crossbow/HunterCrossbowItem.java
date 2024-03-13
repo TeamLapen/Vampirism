@@ -145,19 +145,19 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float angle, @Nullable LivingEntity p_331602_) {
+    public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inacurracy, @Nullable LivingEntity p_331602_) {
         if (!level.isClientSide()) {
             if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
                 List<ItemStack> arrows = getShootingProjectiles(crossbow, availableProjectiles);
-                this.shoot(level, shooter, hand, crossbow, arrows, speed, angle, shooter instanceof Player, p_331602_);
+                ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+                this.shoot(level, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
 
                 if (hand == InteractionHand.MAIN_HAND) {
-                    ItemStack otherStack = shooter.getItemInHand(InteractionHand.OFF_HAND);
                     if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
                         otherCrossbow.use(level, player, InteractionHand.OFF_HAND);
                     }
@@ -177,6 +177,11 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
                 level.addFreshEntity(projectile);
             }
         }
+    }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return 1;
     }
 
     protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {

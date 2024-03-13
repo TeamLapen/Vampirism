@@ -29,4 +29,9 @@ public class SingleCrossbowItem extends HunterCrossbowItem {
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 2f : 0.4f;
+    }
 }

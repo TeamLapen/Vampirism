@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -48,4 +49,8 @@ public interface IHunterCrossbow extends IVampirismCrossbow {
      * @return a predicate that returns true if the given itemstack is a supported projectile
      */
     Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow);
+
+    boolean canUseDoubleCrossbow(LivingEntity entity);
+
+    float getInaccuracy(ItemStack stack, boolean doubleCrossbow);
 }
