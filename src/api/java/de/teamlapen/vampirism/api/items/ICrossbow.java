@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.items;
 
-import com.google.errorprone.annotations.ForOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +21,7 @@ public interface ICrossbow extends ItemLike {
      * performs the actual shooting of the crossbow
      * @implNote This does not check if the crossbow is charged and does not the set . This should be done before calling this method
      */
-    boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle);
+    boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float inaccuracy, float angle);
 
     /**
      * gets the required charge duration for the given crossbow

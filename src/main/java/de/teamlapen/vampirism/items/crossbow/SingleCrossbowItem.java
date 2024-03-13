@@ -35,4 +35,9 @@ public class SingleCrossbowItem extends VampirismCrossbowItem {
     public float[] getShotPitches(RandomSource pRandom) {
         return new float[] { 1 };
     }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 1f : 0.4f;
+    }
 }

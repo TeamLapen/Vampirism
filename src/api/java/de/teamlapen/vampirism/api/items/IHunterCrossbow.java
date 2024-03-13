@@ -32,4 +32,6 @@ public interface IHunterCrossbow extends ICrossbow {
     }
 
     boolean canUseDoubleCrossbow(LivingEntity entity);
+
+    float getInaccuracy(ItemStack stack, boolean doubleCrossbow);
 }

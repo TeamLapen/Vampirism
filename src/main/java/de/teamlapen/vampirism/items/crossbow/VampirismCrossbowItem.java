@@ -145,10 +145,11 @@ public abstract class VampirismCrossbowItem extends ProjectileWeaponItem impleme
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand) {
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if (isCharged(itemstack)) {
-            shoot(level, player, interactionHand, itemstack);
             ItemStack otherStack = player.getItemInHand(interactionHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-            if (canUseDoubleCrossbow(player) && otherStack.getItem() instanceof VampirismCrossbowItem && isCharged(otherStack)) {
-                shoot(level, player, interactionHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, otherStack);
+            boolean doubleCrossbow = canUseDoubleCrossbow(player) && otherStack.getItem() instanceof IHunterCrossbow && isCharged(otherStack);
+            shoot(level, player, interactionHand, itemstack, getInaccuracy(itemstack, doubleCrossbow));
+            if (doubleCrossbow) {
+                shoot(level, player, interactionHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, otherStack, ((IHunterCrossbow) otherStack.getItem()).getInaccuracy(otherStack, true));
             }
             return InteractionResultHolder.consume(itemstack);
         } else if (!player.getProjectile(itemstack).isEmpty()) {
@@ -164,13 +165,18 @@ public abstract class VampirismCrossbowItem extends ProjectileWeaponItem impleme
         }
     }
 
-    protected void shoot(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand, ItemStack itemstack) {
-        performShooting(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), 1.0F);
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return 0;
+    }
+
+    protected void shoot(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand, ItemStack itemstack, float inaccuracy) {
+        performShooting(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), inaccuracy, 0);
         setUncharged(player, itemstack);
     }
 
     @Override
-    public boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle) {
+    public boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float velocity, float inaccuracy, float angle) {
         List<ItemStack> list = getChargedProjectiles(stack);
         float[] afloat = getShotPitches(shooter.getRandom());
 
@@ -178,7 +184,7 @@ public abstract class VampirismCrossbowItem extends ProjectileWeaponItem impleme
             ItemStack itemstack = list.get(i);
             boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectile(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle);
+                shootProjectile(level, shooter, hand, stack, itemstack, afloat[i], flag, velocity, inaccuracy, angle);
                 break;
             }
         }
@@ -193,7 +199,7 @@ public abstract class VampirismCrossbowItem extends ProjectileWeaponItem impleme
     }
 
     @SuppressWarnings("UnreachableCode")
-    protected void shootProjectile(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, ItemStack projectile, float pitch, boolean pickup, float speed, float angle) {
+    protected void shootProjectile(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, ItemStack projectile, float pitch, boolean pickup, float velocity, float inaccuracy, float angle) {
         if (!level.isClientSide) {
             AbstractArrow projectileentity = modifyArrow(crossbow, getArrow(level, shooter, crossbow, projectile));
             if (pickup) {
@@ -201,13 +207,13 @@ public abstract class VampirismCrossbowItem extends ProjectileWeaponItem impleme
             }
 
             if (shooter instanceof CrossbowAttackMob crossbowUser) {
-                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), crossbow, projectileentity, (float) 0.0);
+                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), crossbow, projectileentity, angle);
             } else {
                 Vec3 vec31 = shooter.getUpVector(1.0F);
-                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((float) 0.0 * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((float) angle * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
                 Vec3 vec3 = shooter.getViewVector(1.0F);
                 Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
-                projectileentity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), speed, angle);
+                projectileentity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), velocity, inaccuracy);
             }
 
             crossbow.hurtAndBreak(1, shooter, (p_220017_1_) -> {

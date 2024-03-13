@@ -181,15 +181,21 @@ public class ItemExtensions {
             boolean flag2 = humanoidarm == HumanoidArm.RIGHT;
             int i = flag2 ? 1 : -1;
 
-            int totalDuration = item.getCombinedUseDuration(pStack, pPlayer, pHand);
-            int itemDuration = item.asItem().getUseDuration(pStack);
+
             float itemUseDuration = pPlayer.getUseItemRemainingTicks();
-            if (usingMainHand && itemUseDuration > itemDuration) {
-                itemUseDuration = 0;
-            } else if (!usingMainHand && totalDuration != itemDuration) {
-                itemUseDuration = Math.max(0, itemUseDuration - (totalDuration - itemDuration));
+
+            boolean check = pPlayer.isUsingItem() && (pPlayer.getUsedItemHand() == pHand) != usingMainHand && (item.canUseDoubleCrossbow(pPlayer) || !usingMainHand) && !flag1;
+            // only call methods in case all previous checks are true
+            if (check) {
+                int totalDuration = item.getCombinedUseDuration(pStack, pPlayer, pHand);
+                int itemDuration = item.asItem().getUseDuration(pStack);
+                if (usingMainHand && itemUseDuration > itemDuration) {
+                    itemUseDuration = 0;
+                } else if (!usingMainHand && totalDuration != itemDuration) {
+                    itemUseDuration = Math.max(0, itemUseDuration - (totalDuration - itemDuration));
+                }
             }
-            if (pPlayer.isUsingItem() && itemUseDuration > 0 && (pPlayer.getUsedItemHand() == pHand) != usingMainHand && (item.canUseDoubleCrossbow(pPlayer) || !usingMainHand) && !flag1) {
+            if (check && itemUseDuration > 0) {
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
                 pPoseStack.translate((float)i * -0.4785682F, -0.094387F, 0.05731531F);
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(-11.935F));

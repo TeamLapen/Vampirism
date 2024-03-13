@@ -5,14 +5,12 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -42,8 +40,8 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
-    protected void shoot(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand, ItemStack itemstack) {
-        if(performShooting(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
+    protected void shoot(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand, ItemStack itemstack, float inaccuracy) {
+        if(performShooting(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), inaccuracy , 0)) { // do not set uncharged if projectiles left | get shooting power from crossbow
             setCharged(itemstack, false);
         } else {
             boolean faster = HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE);
@@ -52,14 +50,14 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
-    public boolean performShooting(Level level, LivingEntity livingEntity, InteractionHand hand, ItemStack crossbow, float speed, float angle) {
+    public boolean performShooting(Level level, LivingEntity livingEntity, InteractionHand hand, ItemStack crossbow, float velocity, float inaccuracy, float angle) {
         List<ItemStack> list = getChargedProjectiles(crossbow);
         float[] afloat = getShotPitches(livingEntity.getRandom());
 
         ItemStack itemstack = getProjectile(livingEntity, crossbow, list); //delegate for easy usage and frugality
         boolean flag = !(livingEntity instanceof Player player) || player.getAbilities().instabuild;
         if (!itemstack.isEmpty()) {
-            shootProjectile(level, livingEntity, hand, crossbow, itemstack, afloat[0], flag, speed, angle); // do not shoot more than one projectile
+            shootProjectile(level, livingEntity, hand, crossbow, itemstack, afloat[0], flag, velocity, inaccuracy, angle); // do not shoot more than one projectile
         }
 
         onCrossbowShot(level, livingEntity, crossbow);
@@ -119,5 +117,10 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Override
     public float[] getShotPitches(RandomSource pRandom) {
         return new float[]{ 1 };
+    }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 4.5f : 2f;
     }
 }

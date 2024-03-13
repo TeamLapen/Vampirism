@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
-import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,14 +35,14 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
         var b1 = tryLoadProjectiles(entity, itemStack);
         var b2 = tryLoadProjectiles(entity, itemStack);
         if (b1 || b2) {
-            CrossbowItem.setCharged(itemStack, true);
+            setCharged(itemStack, true);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle) {
+    public boolean performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float velocity, float inaccuracy, float angle) {
         List<ItemStack> list = getChargedProjectiles(stack);
         float[] afloat = getShotPitches(shooter.getRandom());
 
@@ -51,7 +50,7 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
             ItemStack itemstack = list.get(i);
             boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectile(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle); // only one arrow per projectile
+                shootProjectile(level, shooter, hand, stack, itemstack, afloat[i], flag, velocity, inaccuracy * (i+1), angle); // only one arrow per projectile
             }
         }
 
@@ -61,6 +60,11 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
 
     @Override
     public float[] getShotPitches(RandomSource pRandom) {
-        return new float[] { 1, 1 };
+        return new float[] { 1, 1.6f };
+    }
+
+    @Override
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 3f : 1.5f;
     }
 }
