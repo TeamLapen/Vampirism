@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
@@ -43,43 +43,39 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
 
     @Override
     protected void shoot(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand, ItemStack itemstack) {
-        if(performShootingMod(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
-            CrossbowItem.setCharged(itemstack, false);
+        if(performShooting(level, player, interactionHand, itemstack, getShootingPowerMod(itemstack), 1.0F)) { // do not set uncharged if projectiles left | get shooting power from crossbow
+            setCharged(itemstack, false);
         } else {
             boolean faster = HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE);
             player.getCooldowns().addCooldown(this, faster ? 5 : 10); // add cooldown if projectiles left
         }
     }
 
-    /**
-     * same as {@link net.minecraft.world.item.CrossbowItem#performShooting(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand, net.minecraft.world.item.ItemStack, float, float)}
-     * <br>
-     * TODO 1.19 recheck
-     */
-    public boolean performShootingMod(Level p_220014_0_, LivingEntity p_220014_1_, InteractionHand p_220014_2_, ItemStack p_220014_3_, float p_220014_4_, float p_220014_5_) {
-        List<ItemStack> list = CrossbowItemMixin.getChargedProjectiles(p_220014_3_);
-        float[] afloat = CrossbowItemMixin.getShotPitches(p_220014_1_.getRandom());
+    @Override
+    public boolean performShooting(Level level, LivingEntity livingEntity, InteractionHand hand, ItemStack crossbow, float speed, float angle) {
+        List<ItemStack> list = getChargedProjectiles(crossbow);
+        float[] afloat = getShotPitches(livingEntity.getRandom());
 
-        ItemStack itemstack = getProjectile(p_220014_1_, p_220014_3_, list); //delegate for easy usage and frugality
-        boolean flag = !(p_220014_1_ instanceof Player player) || player.getAbilities().instabuild;
+        ItemStack itemstack = getProjectile(livingEntity, crossbow, list); //delegate for easy usage and frugality
+        boolean flag = !(livingEntity instanceof Player player) || player.getAbilities().instabuild;
         if (!itemstack.isEmpty()) {
-            shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, afloat[0], flag, p_220014_4_, p_220014_5_); // do not shoot more than one projectile
+            shootProjectile(level, livingEntity, hand, crossbow, itemstack, afloat[0], flag, speed, angle); // do not shoot more than one projectile
         }
 
-        CrossbowItemMixin.onCrossbowShot(p_220014_0_, p_220014_1_, p_220014_3_);
-        setChargedProjectiles(p_220014_3_, list); // set the loaded projectiles
+        onCrossbowShot(level, livingEntity, crossbow);
+        setChargedProjectiles(crossbow, list); // set the loaded projectiles
         return list.isEmpty();
     }
 
-    private static void setChargedProjectiles(ItemStack p_220014_0_, List<ItemStack> p_220014_1_) {
-        CompoundTag compoundnbt = p_220014_0_.getOrCreateTag();
+    private void setChargedProjectiles(ItemStack crossbow, List<ItemStack> projectiles) {
+        CompoundTag crossbowTag = crossbow.getOrCreateTag();
         ListTag list = new ListTag();
-        p_220014_1_.forEach(stack -> {
+        projectiles.forEach(stack -> {
             CompoundTag stackNbt = new CompoundTag();
             stack.save(stackNbt);
             list.add(stackNbt);
         });
-        compoundnbt.put("ChargedProjectiles", list);
+        crossbowTag.put("ChargedProjectiles", list);
     }
 
     @Override
@@ -96,17 +92,17 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
-    protected boolean canBeInfinit(ItemStack crossbow) {
+    protected boolean canBeInfinite(ItemStack crossbow) {
         return false;
     }
 
     @Override
-    public int getChargeDurationMod(ItemStack crossbow) {
+    public int getChargeDuration(ItemStack crossbow) {
         return this.chargeTime;
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+    public boolean canApplyAtEnchantingTable(@NotNull ItemStack stack, @NotNull Enchantment enchantment) {
         return enchantment != Enchantments.QUICK_CHARGE && enchantment != Enchantments.INFINITY_ARROWS && super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
@@ -118,5 +114,10 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     @Override
     public Optional<Item> getAmmunition(ItemStack crossbow) {
         return Optional.empty();
+    }
+
+    @Override
+    public float[] getShotPitches(RandomSource pRandom) {
+        return new float[]{ 1 };
     }
 }

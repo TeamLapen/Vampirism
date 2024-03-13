@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.hunter;
 
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,11 +26,11 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob {
 
     @Override
     default void performCrossbowAttack(@Nonnull LivingEntity entity, float speed) {
-        InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(entity, IVampirismCrossbow.class::isInstance);
+        InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(entity, ICrossbow.class::isInstance);
         ItemStack itemstack = entity.getItemInHand(hand);
-        if (itemstack.getItem() instanceof IVampirismCrossbow) {
-            if (CrossbowItem.isCharged(itemstack)){
-                ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level(), entity, hand, itemstack, speed, (float) (14 - entity.level().getDifficulty().getId() * 4));
+        if (itemstack.getItem() instanceof ICrossbow crossbow) {
+            if (crossbow.isCharged(itemstack)){
+                crossbow.performShooting(entity.level(), entity, hand, itemstack, speed, (float) (14 - entity.level().getDifficulty().getId() * 4));
                 this.onCrossbowAttackPerformed();
             }
         }

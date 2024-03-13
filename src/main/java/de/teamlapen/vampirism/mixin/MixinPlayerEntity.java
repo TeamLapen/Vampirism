@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -41,7 +42,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
 
     @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getSupportedHeldProjectiles()Ljava/util/function/Predicate;"))
     private Predicate<ItemStack> getSupport(Predicate<ItemStack> original, ItemStack shootable) {
-        if (shootable.getItem() instanceof IVampirismCrossbow crossbow) {
+        if (shootable.getItem() instanceof ICrossbow crossbow) {
             return crossbow.getSupportedProjectiles(shootable);
         }
         return original;
@@ -49,7 +50,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
 
     @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getAllSupportedProjectiles()Ljava/util/function/Predicate;"))
     private Predicate<ItemStack> getAllSupport(Predicate<ItemStack> original, ItemStack shootable) {
-        if (shootable.getItem() instanceof IVampirismCrossbow crossbow) {
+        if (shootable.getItem() instanceof ICrossbow crossbow) {
             return crossbow.getSupportedProjectiles(shootable);
         }
         return original;

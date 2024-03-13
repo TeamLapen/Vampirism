@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -28,5 +29,10 @@ public class SingleCrossbowItem extends VampirismCrossbowItem {
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
+    }
+
+    @Override
+    public float[] getShotPitches(RandomSource pRandom) {
+        return new float[] { 1 };
     }
 }

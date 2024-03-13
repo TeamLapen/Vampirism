@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", IVampirismCrossbow.class::isInstance);
+    public static final EnchantmentCategory CROSSBOW_ENCHANTMENT = EnchantmentCategory.create("VAMPIRISM_CROSSBOW", ICrossbow.class::isInstance);
 
     public static final Supplier<Fluid> BLOOD = DeferredHolder.create(Registries.FLUID, new ResourceLocation("vampirism", "blood"));
     /**

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
@@ -49,16 +50,16 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
     }
 
     private boolean isHoldingCrossbow() {
-        return this.mob.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+        return this.mob.isHolding(stack -> stack.getItem() instanceof ICrossbow);
     }
 
     private boolean canUseCrossbow() {
         ItemStack stack = this.mob.getMainHandItem();
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof ICrossbow) {
             return this.mob.canUseCrossbow(stack);
         }
         stack = this.mob.getOffhandItem();
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof ICrossbow) {
             return this.mob.canUseCrossbow(stack);
         }
         return false;
@@ -81,6 +82,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
         }
     }
 
+    @SuppressWarnings("UnreachableCode")
     @Override
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
@@ -113,7 +115,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
             this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             if (this.crossbowState == CrossbowState.UNCHARGED) {
                 if (!flag2) {
-                    this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance));
+                    this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, ICrossbow.class::isInstance));
                     this.crossbowState = CrossbowState.CHARGING;
                     this.mob.setChargingCrossbow(true);
                 }
@@ -125,7 +127,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
 
                 int i = this.mob.getTicksUsingItem();
                 ItemStack itemstack = this.mob.getUseItem();
-                if (i >= ((IVampirismCrossbow) itemstack.getItem()).getChargeDurationMod(itemstack)) {
+                if (i >= ((ICrossbow) itemstack.getItem()).getChargeDuration(itemstack)) {
                     this.mob.releaseUsingItem();
                     this.crossbowState = CrossbowState.CHARGED;
                     var delay = getAttackDelay(itemstack);
@@ -139,9 +141,9 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
                 }
             } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && flag) {
                 this.mob.performRangedAttack(livingentity, 1.0F);
-                ItemStack itemstack1 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance));
-                if (CrossbowItemMixin.getChargedProjectiles(itemstack1).isEmpty()) {
-                    CrossbowItem.setCharged(itemstack1, false);
+                ItemStack itemstack1 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, ICrossbow.class::isInstance));
+                if (itemstack1.getItem() instanceof ICrossbow crossbow && crossbow.getChargedProjectiles(itemstack1).isEmpty()) {
+                    crossbow.setCharged(itemstack1, false);
                     this.crossbowState = CrossbowState.UNCHARGED;
                 } else {
                     var delay = getAttackDelay(itemstack1);

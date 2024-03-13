@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectAmmoTypePacket;
@@ -33,7 +34,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     public static void show() {
         Player player = Minecraft.getInstance().player;
         ItemStack crossbowStack = player.getMainHandItem();
-        if(Helper.isHunter(player) && crossbowStack.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack))  {
+        if(Helper.isHunter(player) && crossbowStack.getItem() instanceof ICrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack))  {
             var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item))).collect(Collectors.toList());
             ammoTypes.add(new AmmoType(null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));

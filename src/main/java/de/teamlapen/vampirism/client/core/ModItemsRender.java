@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.items.oil.IOil;
@@ -33,7 +34,7 @@ public class ModItemsRender {
     public static void registerItemModelPropertyUnsafe() {
         Stream.of(ModItems.BASIC_CROSSBOW.get(),ModItems.BASIC_DOUBLE_CROSSBOW.get(),ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(),ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
             ItemProperties.register(item, new ResourceLocation(REFERENCE.MODID, "charged"), (stack, world, entity, tint) -> {
-                return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
+                return item.isCharged(stack) ? 0.0f : 1.0f;
             });
         });
         ItemProperties.register(ModItems.ARROW_CLIP.get(), new ResourceLocation(REFERENCE.MODID, "filled"), (stack, world, entity, tint) -> {
@@ -79,7 +80,7 @@ public class ModItemsRender {
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
             event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
-                ((IVampirismCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
+                ((ICrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
                     PoseStack posestack = graphics.pose();
                     posestack.pushPose();
                     posestack.translate(xOffset, yOffset + 8, 0);

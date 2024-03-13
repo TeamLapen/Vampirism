@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.items.ICrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
@@ -97,11 +98,11 @@ public class ServerPayloadHandler {
         context.workHandler().execute(() -> {
             context.player().ifPresent(player -> {
                 ItemStack stack = player.getMainHandItem();
-                if (stack.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
+                if (stack.getItem() instanceof ICrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
                     crossbow.setAmmunition(stack, msg.ammoId());
                 }
                 ItemStack offhand = player.getOffhandItem();
-                if (offhand.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
+                if (offhand.getItem() instanceof ICrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
                     crossbow.setAmmunition(offhand, msg.ammoId());
                 }
             });

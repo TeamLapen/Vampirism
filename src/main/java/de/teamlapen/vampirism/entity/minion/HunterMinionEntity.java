@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
@@ -205,7 +206,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean isHoldingCrossbow() {
-        return this.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+        return this.isHolding(stack -> stack.getItem() instanceof IHunterCrossbow);
     }
 
     @Override
@@ -221,7 +222,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @NotNull
     @Override
     public ItemStack getProjectile(ItemStack stack) {
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
                 var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
                 ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance()));
