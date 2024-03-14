@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 public class Color {
 
-    public static final Codec<Color> CODEC = Codec.INT.xmap(Color::new, Color::getRGB);
+    public static final Codec<Color> CODEC = Codec.STRING.xmap(s -> new Color(Integer.parseInt(s)), l -> String.valueOf(l.getRGB()));
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color BLUE = new Color(0, 0, 255);
     public static final Color MAGENTA = new Color(255, 0, 255);
