@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:crossbow_arrow_spitfire"
+        "recipe": "minecraft:garlic_arrow_1"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -33,7 +33,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:crossbow_arrow_spitfire"
+      "minecraft:garlic_arrow_1"
     ]
   }
 }

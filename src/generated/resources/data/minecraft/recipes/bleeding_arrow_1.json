@@ -9,7 +9,7 @@
       "type": "neoforge:components",
       "components": {
         "vampirism:oil_contents": {
-          "oil": "vampirism:teleport"
+          "oil": "vampirism:bleeding"
         }
       },
       "items": "vampirism:oil_bottle"
@@ -18,6 +18,6 @@
   "lava": 1,
   "result": {
     "count": 1,
-    "id": "vampirism:crossbow_arrow_teleport"
+    "id": "vampirism:crossbow_arrow_bleeding"
   }
 }

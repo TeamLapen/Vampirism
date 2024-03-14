@@ -11,19 +11,15 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_garlic": {
+    "has_skill": {
       "conditions": {
-        "items": [
-          {
-            "items": "#c:crops/garlic"
-          }
-        ]
+        "skill": "vampirism:weapon_table"
       },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "vampirism:skill_unlocked"
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:crossbow_arrow_vampire_killer"
+        "recipe": "minecraft:spitfire_arrow_1"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +27,13 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_garlic",
+      "has_skill",
       "has_crossbow_arrow_normal"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:crossbow_arrow_vampire_killer"
+      "minecraft:spitfire_arrow_1"
     ]
   }
 }

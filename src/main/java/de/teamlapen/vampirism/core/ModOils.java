@@ -36,6 +36,10 @@ public class ModOils {
     public static final DeferredHolder<IOil, SmeltingOil> SMELT = OILS.register("smelt", () -> new SmeltingOil(0x123456, 30));
     public static final DeferredHolder<IOil, IOil> TELEPORT = OILS.register("teleport", () -> new Oil(0x0b4d42));
     public static final DeferredHolder<IOil, EvasionOil> EVASION = OILS.register("evasion", () -> new EvasionOil(0x888800, 60));
+    public static final DeferredHolder<IOil, IOil> GARLIC = OILS.register("garlic", () -> new Oil(0xffffff));
+    public static final DeferredHolder<IOil, IOil> SPITFIRE = OILS.register("spitfire", () -> new Oil(0xFF2211));
+    public static final DeferredHolder<IOil, IOil> VAMPIRE_KILLER = OILS.register("vampire_killer", () -> new Oil(0x7A0073));
+    public static final DeferredHolder<IOil, IOil> BLEEDING = OILS.register("bleeding", () -> new Oil(11141120));
 
     static void register(IEventBus bus) {
         OILS.register(bus);

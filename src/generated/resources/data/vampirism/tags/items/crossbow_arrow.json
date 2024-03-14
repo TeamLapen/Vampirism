@@ -2,6 +2,9 @@
   "values": [
     "vampirism:crossbow_arrow_normal",
     "vampirism:crossbow_arrow_spitfire",
-    "vampirism:crossbow_arrow_vampire_killer"
+    "vampirism:crossbow_arrow_vampire_killer",
+    "vampirism:crossbow_arrow_teleport",
+    "vampirism:crossbow_arrow_bleeding",
+    "vampirism:crossbow_arrow_garlic"
   ]
 }

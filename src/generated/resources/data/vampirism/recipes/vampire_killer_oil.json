@@ -1,0 +1,24 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:garlic"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": {
+    "tag": "vampirism:holy_water"
+  },
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:vampire_killer"
+      }
+    },
+    "count": 1,
+    "id": "vampirism:oil_bottle"
+  }
+}

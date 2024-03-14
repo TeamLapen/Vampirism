@@ -6,10 +6,16 @@
       "item": "vampirism:crossbow_arrow_normal"
     },
     {
+      "item": "vampirism:crossbow_arrow_normal"
+    },
+    {
+      "item": "vampirism:crossbow_arrow_normal"
+    },
+    {
       "type": "neoforge:components",
       "components": {
         "vampirism:oil_contents": {
-          "oil": "vampirism:teleport"
+          "oil": "vampirism:garlic"
         }
       },
       "items": "vampirism:oil_bottle"
@@ -17,7 +23,7 @@
   ],
   "lava": 1,
   "result": {
-    "count": 1,
-    "id": "vampirism:crossbow_arrow_teleport"
+    "count": 3,
+    "id": "vampirism:crossbow_arrow_garlic"
   }
 }
