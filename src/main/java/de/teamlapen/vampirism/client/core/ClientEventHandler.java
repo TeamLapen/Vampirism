@@ -90,9 +90,6 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if(modelLoc.getPath().contains("fluid")){
-                    LOGGER.info(modelLoc);
-                }
                 if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(ModBlocks.BLOOD_CONTAINER.getId().getPath())) {
                     modelLocations.add(modelLoc);
                 }
