@@ -29,24 +29,25 @@ public class BatCageBESR extends VampirismBESR<BatCageBlockEntity> {
         BlockState blockState = pBlockEntity.getBlockState();
         if (blockState.getValue(BatCageBlock.CONTAINS_BAT)) {
             checkBat(pBlockEntity.getLevel());
-            renderBat(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, blockState.getValue(BatCageBlock.FACING));
+            renderBat(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, blockState.getValue(BatCageBlock.FACING), pBlockEntity.getLevel(), pPartialTick);
         }
     }
 
     private void checkBat(Level pLevel) {
         if (bat == null) {
             this.bat = EntityType.BAT.create(pLevel);
-            this.bat.setResting(true);
+            this.bat.flyAnimationState.stop();
+            this.bat.restAnimationState.startIfStopped(this.bat.hashCode());
         }
     }
 
-    private void renderBat(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay, Direction direction) {
+    private void renderBat(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay, Direction direction, Level level, float pPartialTick) {
         pPoseStack.pushPose();
-        pPoseStack.translate(0.5F, 0.2F, 0.5F);
+        pPoseStack.translate(0.5F, 1F, 0.5F);
         pPoseStack.mulPose(Axis.YN.rotationDegrees(90 * direction.get2DDataValue()));
-        pPoseStack.scale(0.35F, 0.35F, 0.35F);
+        pPoseStack.scale(0.65F, 0.65F, 0.65F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(180));
-        this.model.setupAnim(this.bat, 0, 0, 0, -1, -1);
+        this.model.setupAnim(this.bat, 0, 0, (float)level.getGameTime() + pPartialTick + (float) this.bat.hashCode(), -1, -1);
         this.model.renderToBuffer(pPoseStack, pBuffer.getBuffer(this.model.renderType(new ResourceLocation("textures/entity/bat.png"))), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
         pPoseStack.popPose();
     }
