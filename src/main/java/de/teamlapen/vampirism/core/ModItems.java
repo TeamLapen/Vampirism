@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.arrow.*;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import net.minecraft.ChatFormatting;
@@ -85,10 +86,12 @@ public class ModItems {
     public static final DeferredItem<Item> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", () -> new Item(props()));
     public static final DeferredItem<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = register("blood_infused_enhanced_iron_ingot", () -> new Item(props()));
 
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = register("crossbow_arrow_normal", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.NORMAL));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = register("crossbow_arrow_spitfire", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.SPITFIRE));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.VAMPIRE_KILLER));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(CrossbowArrowItem.EnumArrowType.TELEPORT));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = register("crossbow_arrow_normal", () -> new CrossbowArrowItem(new NormalBehavior(), new Item.Properties()));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = register("crossbow_arrow_spitfire", () -> new CrossbowArrowItem(new SpitfireBehavior(), new Item.Properties()));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = register("crossbow_arrow_vampire_killer", () -> new CrossbowArrowItem(new VampireKillerBehavior(), new Item.Properties()));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = register("crossbow_arrow_teleport", () -> new CrossbowArrowItem(new TeleportBehavior(), new Item.Properties()));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_BLEEDING = register("crossbow_arrow_bleeding", () -> new CrossbowArrowItem(new BleedingBehavior(), new Item.Properties()));
+    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_GARLIC = register("crossbow_arrow_garlic", () -> new CrossbowArrowItem(new GarlicBehavior(), new Item.Properties()));
 
     public static final DeferredItem<SingleCrossbowItem> ENHANCED_CROSSBOW = register("enhanced_crossbow", () -> new SingleCrossbowItem(props().durability(930), 1.5F, 15, Tiers.IRON, HunterSkills.MASTER_CRAFTSMANSHIP));
     public static final DeferredItem<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(props().durability(930),1.5F, 15, Tiers.IRON, HunterSkills.MASTER_CRAFTSMANSHIP));

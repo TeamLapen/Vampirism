@@ -21,7 +21,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:crossbow_arrow_spitfire"
+        "recipe": "minecraft:bleeding_arrow_1"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -35,7 +35,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:crossbow_arrow_spitfire"
+      "minecraft:bleeding_arrow_1"
     ]
   }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "neoforge:nbt",
+    "item": "vampirism:oil_bottle",
+    "strict": true,
+    "tag": "{oil:\"vampirism:plant\"}"
+  },
+  "input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:bleeding"
+    }
+  }
+}

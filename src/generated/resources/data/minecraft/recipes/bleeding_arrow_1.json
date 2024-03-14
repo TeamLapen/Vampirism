@@ -1,0 +1,19 @@
+{
+  "type": "vampirism:shapeless_crafting_weapontable",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "vampirism:crossbow_arrow_normal"
+    },
+    {
+      "type": "neoforge:nbt",
+      "item": "vampirism:oil_bottle",
+      "strict": true,
+      "tag": "{oil:\"vampirism:bleeding\"}"
+    }
+  ],
+  "lava": 1,
+  "result": {
+    "item": "vampirism:crossbow_arrow_bleeding"
+  }
+}

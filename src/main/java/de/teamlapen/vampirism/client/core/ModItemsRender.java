@@ -50,10 +50,10 @@ public class ModItemsRender {
         //Crossbow arrow
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
-                return ((CrossbowArrowItem) stack.getItem()).getType().color;
+                return ((CrossbowArrowItem) stack.getItem()).tintIndex();
             }
             return 0xFFFFFF;
-        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get());
+        }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_GARLIC.get());
         event.register((state, tintIndex) -> {
             return 0x1E1F1F;
         }, ModBlocks.DARK_SPRUCE_LEAVES.get());

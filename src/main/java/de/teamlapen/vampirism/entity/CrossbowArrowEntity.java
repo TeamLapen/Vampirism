@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbowArrow {
@@ -43,8 +44,9 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
         arrowStack.setCount(1);
     }
 
-    public CrossbowArrowItem.EnumArrowType getArrowType() {
-        return getPickupItem().getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) getPickupItem().getItem()).getType() : CrossbowArrowItem.EnumArrowType.NORMAL;
+    @Nullable
+    public IVampirismCrossbowArrow.ICrossbowArrowBehavior getArrowType() {
+        return getPickupItem().getItem() instanceof CrossbowArrowItem ? ((CrossbowArrowItem) getPickupItem().getItem()).getBehavior() : null;
     }
 
 
@@ -81,7 +83,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     protected void onHitBlock(@NotNull BlockHitResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
-            ((IVampirismCrossbowArrow<?>) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner());
+            ((IVampirismCrossbowArrow<?>) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner(), blockRayTraceResult.getDirection());
         }
         super.onHitBlock(blockRayTraceResult);
     }

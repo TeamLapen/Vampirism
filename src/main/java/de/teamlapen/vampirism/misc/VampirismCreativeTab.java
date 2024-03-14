@@ -338,8 +338,10 @@ public class VampirismCreativeTab {
 
             addItem(CROSSBOW_ARROW_NORMAL);
             addItem(CROSSBOW_ARROW_SPITFIRE);
+            addItem(CROSSBOW_ARROW_GARLIC);
             addItem(CROSSBOW_ARROW_VAMPIRE_KILLER);
             addItem(CROSSBOW_ARROW_TELEPORT);
+            addItem(CROSSBOW_ARROW_BLEEDING);
             addItem(ARROW_CLIP);
 
             addItem(PITCHFORK);

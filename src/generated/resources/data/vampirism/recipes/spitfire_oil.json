@@ -1,0 +1,19 @@
+{
+  "type": "vampirism:alchemical_table",
+  "ingredient": {
+    "type": "neoforge:nbt",
+    "item": "vampirism:oil_bottle",
+    "strict": true,
+    "tag": "{oil:\"vampirism:plant\"}"
+  },
+  "input": {
+    "item": "vampirism:item_alchemical_fire"
+  },
+  "result": {
+    "Count": 1,
+    "id": "vampirism:oil_bottle",
+    "tag": {
+      "oil": "vampirism:spitfire"
+    }
+  }
+}

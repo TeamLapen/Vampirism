@@ -215,6 +215,8 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
         withExistingParent(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), modLoc("item/crossbow_arrow"));
         withExistingParent(ModItems.CROSSBOW_ARROW_TELEPORT.get(), modLoc("item/crossbow_arrow"));
+        withExistingParent(ModItems.CROSSBOW_ARROW_BLEEDING.get(), modLoc("item/crossbow_arrow"));
+        withExistingParent(ModItems.CROSSBOW_ARROW_GARLIC.get(), modLoc("item/crossbow_arrow"));
 
         item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), modLoc("item/armor_of_swiftness_chest_normal"), modLoc("item/armor_of_swiftness_chest_normal_overlay"));
         item(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), modLoc("item/armor_of_swiftness_chest_enhanced"), modLoc("item/armor_of_swiftness_chest_enhanced_overlay"));

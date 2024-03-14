@@ -9,15 +9,15 @@
       "item": "vampirism:crossbow_arrow_normal"
     },
     {
-      "item": "vampirism:crossbow_arrow_normal"
-    },
-    {
-      "item": "vampirism:item_alchemical_fire"
+      "type": "neoforge:nbt",
+      "item": "vampirism:oil_bottle",
+      "strict": true,
+      "tag": "{oil:\"vampirism:garlic\"}"
     }
   ],
   "lava": 1,
   "result": {
-    "count": 3,
-    "item": "vampirism:crossbow_arrow_spitfire"
+    "count": 2,
+    "item": "vampirism:crossbow_arrow_garlic"
   }
 }

@@ -30,162 +30,70 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
- */
 public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
 
-    private final EnumArrowType type;
+    private final ICrossbowArrowBehavior behavior;
 
 
-    public CrossbowArrowItem(EnumArrowType type) {
-        super(new Properties());
-        this.type = type;
+    public CrossbowArrowItem(ICrossbowArrowBehavior behavior, Properties properties) {
+        super(properties);
+        this.behavior = behavior;
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
-        switch (type) {
-            case SPITFIRE -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
-            case VAMPIRE_KILLER -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
-            case TELEPORT -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
-        }
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level world, @NotNull List<Component> textComponents, @NotNull TooltipFlag tooltipFlag) {
+        this.behavior.appendHoverText(itemStack, world, textComponents, tooltipFlag);
     }
 
     @NotNull
     @Override
     public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, entity, stack);
-        arrowEntity.setEffectsFromItem(stack);
-        arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
-        if (this.type == EnumArrowType.SPITFIRE) {
-            arrowEntity.setSecondsOnFire(100);
-        }
-        if (entity instanceof Player) {
-            arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
-        }
-        return arrowEntity;
+        return createArrow(level, stack, entity, entity.position());
     }
 
     @NotNull
     public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position) {
+        return createArrow(level, stack, null, position);
+    }
+
+    @NotNull
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, Position position) {
         CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack);
-        arrowEntity.setEffectsFromItem(stack);
-        arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
-        if (this.type == EnumArrowType.SPITFIRE) {
-            arrowEntity.setSecondsOnFire(100);
+        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * VampirismConfig.BALANCE.crossbowDamageMult.get());
+        this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
+        if (shooter instanceof Player || shooter == null) {
+            arrowEntity.pickup = this.behavior.pickupBehavior();
+        } else {
+            arrowEntity.pickup = AbstractArrow.Pickup.DISALLOWED;
         }
-        arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
         return arrowEntity;
     }
 
-    public EnumArrowType getType() {
-        return type;
+    public ICrossbowArrowBehavior getBehavior() {
+        return this.behavior;
     }
 
-    /**
-     * @return If an arrow of this type can be used in an infinite crossbow
-     */
+    public int tintIndex() {
+        return this.behavior.color();
+    }
+
     @Override
     public boolean isCanBeInfinite() {
-        return type == EnumArrowType.NORMAL || VampirismConfig.BALANCE.allowInfiniteSpecialArrows.get();
+        return this.behavior.canBeInfinite();
     }
 
-    /**
-     * Called when the {@link CrossbowArrowEntity} hits a block
-     *
-     * @param arrow          The itemstack of the shot arrow
-     * @param blockPos       The position of the hit block
-     * @param arrowEntity    The arrow entity
-     * @param shootingEntity The shooting entity. Can be the arrow entity itself
-     */
     @Override
     public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
-        CrossbowArrowEntity entity = (CrossbowArrowEntity) arrowEntity;
-        switch (type) {
-            case SPITFIRE -> {
-                for (int dx = -1; dx < 2; dx++) {
-                    for (int dy = -2; dy < 2; dy++) {
-                        for (int dz = -1; dz < 2; dz++) {
-                            BlockPos pos = blockPos.offset(dx, dy, dz);
-                            BlockState blockState = entity.getCommandSenderWorld().getBlockState(pos);
-                            if (blockState.canBeReplaced() && entity.getCommandSenderWorld().getBlockState(pos.below()).isFaceSturdy(entity.getCommandSenderWorld(), pos.below(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
-                                entity.getCommandSenderWorld().setBlockAndUpdate(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState());
-                            }
-                        }
-                    }
-                }
-            }
-            case TELEPORT -> {
-                if (shootingEntity != null) {
-                    if (!shootingEntity.level().isClientSide && shootingEntity.isAlive()) {
-                        if (shootingEntity instanceof ServerPlayer player) {
-                            if (player.connection.connection.isConnected() && player.level() == entity.level() && !player.isSleeping()) {
-
-                                if (player.isPassenger()) {
-                                    player.stopRiding();
-                                }
-
-                                player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                                player.fallDistance = 0.0F;
-                                DamageHandler.hurtVanilla(player, DamageSources::fall, 1);
-                            }
-                        } else {
-                            shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                            shootingEntity.fallDistance = 0.0F;
-                        }
-                    }
-                }
-            }
-        }
+        this.behavior.onHitBlock(arrow, blockPos, (AbstractArrow) arrowEntity, shootingEntity, Direction.UP);
     }
 
-    /**
-     * Called when the {@link CrossbowArrowEntity} hits an entity
-     *
-     * @param arrow          The itemstack of the shot arrow
-     * @param entity         The hit entity
-     * @param arrowEntity    The arrow entity
-     * @param shootingEntity The shooting entity. Can be the arrow entity itself
-     */
     @Override
-    public void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
-        if (type == EnumArrowType.VAMPIRE_KILLER) {
-            if (entity instanceof IVampireMob) {
-                float max = entity.getMaxHealth();
-                if (max < VampirismConfig.BALANCE.arrowVampireKillerMaxHealth.get()) {
-                    DamageHandler.hurtVanilla(entity, damageSources -> damageSources.arrow((AbstractArrow) arrowEntity, shootingEntity), max);
-
-                }
-            }
-        }
+    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity, @NotNull Direction direction) {
+        this.behavior.onHitBlock(arrow, blockPos, (AbstractArrow) arrowEntity, shootingEntity, direction);
     }
 
-
-    public enum EnumArrowType implements StringRepresentable {
-        NORMAL("normal", 2.0, 0xFFFFFF),
-        VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073),
-        SPITFIRE("spitfire", 0.5, 0xFF2211),
-        TELEPORT("teleport", 0.5, 0x0b4d42);
-
-        public final int color;
-        final String name;
-        final double baseDamage;
-
-        EnumArrowType(String name, double baseDamage, int color) {
-            this.name = name;
-            this.baseDamage = baseDamage;
-            this.color = color;
-        }
-
-        public @NotNull String getName() {
-            return this.getSerializedName();
-        }
-
-        @NotNull
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
+    @Override
+    public void onHitEntity(ItemStack arrow, LivingEntity shooter, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
+        this.behavior.onHitEntity(arrow, shooter, (AbstractArrow) arrowEntity, shootingEntity);
     }
 }
