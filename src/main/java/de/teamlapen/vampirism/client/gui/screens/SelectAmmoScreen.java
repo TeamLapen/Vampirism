@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
 
-    private static final ResourceLocation NO_RESTRICTION = new ResourceLocation("textures/gui/spectator_widgets.png");
+    private static final ResourceLocation NO_RESTRICTION = new ResourceLocation("spectator/close");
 
     public SelectAmmoScreen(Collection<AmmoType> ammoTypes) {
         super(getRadialMenu(ammoTypes), true);
@@ -52,7 +52,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
             graphics.renderItem(action.renderStack, posX, posY);
             graphics.renderItemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
         } else {
-            graphics.blit(NO_RESTRICTION, posX, posY, 128, 0, 16, 16, 256, 256);
+            graphics.blitSprite(NO_RESTRICTION, posX, posY, 16, 16);
         }
     }
 
