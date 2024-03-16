@@ -166,62 +166,36 @@ Provides abstract classes/default implementations/interfaces to simplify things 
 <summary>old / outdated</summary>
 
 
-If you would like to compile your own versions or even contribute to Vampirism's development you need to set up a dev environment.
-The following example instructions will set up IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#eclipse-or-other-ides).
-
-#### IntelliJ
-1. Make sure you have the Java **JDK** (minimum Java 8) as well as the IntelliJ IDE installed.
-2. If you want to contribute to the development (via pull requests), fork Vampirism on Github.
-3. (Optionally) Install Git, so you can clone the repository and push changes.
-4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/refs/heads/1.16.zip) Vampirism to a new "Vampirism" folder.
-5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
-6. After cloning is done IntelliJ offers you to import an unlinked Gradle Project. Click this.
-7. Refresh the gradle project  
-8. Run `genIntellijRuns` and edit the run config to use the correct module
-9. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
-10. You might have to modify the projects' compiler output path  
-
-
-That's it.
-
-#### Eclipse or other IDEs
-If you would like to set up Vampirism in another way or another IDE, you should pay regard to the following points.  
-1. Make sure `src/main/java`, `src/api/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
-2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
-3. Vampirism requires at least Java 8 
+If you would like to compile your own versions or even contribute to Vampirism's development, you need to set up the dev environment like any other mod.
 
 </details>  
 
 ## Code Style
-The code style used in this project is the IntelliJ default one.  
-For Eclipse, you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
+The code style used in this project is the IntelliJ default one.
 
-## Licence
-The source code and text in this repository is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/CODE_LICENCE) ***except*** for the following parts:
+## License
+The source code and text in this repository are licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/CODE_LICENSE) ***except*** for the following parts:
 
 ##### Textures
 Any textures included in this mod are licenced under the following terms:
-```
-Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
-If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
-```
+> Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
+> 
+> If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
 
 ##### Sounds
 The sounds used in this mod are individual licensed and may only be used outside Vampirism under the respective licensing terms if noted as such.
 
-###### Attribution
-This mod uses these sounds from freesound:  
-DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC
-Attribution  
-vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
-bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution  
-the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution  
-Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution  
-Pepper mill grinds pepper by Black_River_Phonogram https://freesound.org/people/Black_River_Phonogram/sounds/424605/ --
-Licence: CC0  
-Slimey by Nebulasnails https://freesound.org/people/nebulasnails/sounds/495116/ -- Licence: CC0
-blood_sucker by Bernuy https://freesound.org/people/Bernuy/sounds/268499/ -- Licence: CC Attribution
-Organ Ambience, Calm, A by InspectorJ https://freesound.org/people/InspectorJ/sounds/411991/ -- License CC Attribution
+| Sound                     | Creator               | Link                                                                           | License        |
+|---------------------------|-----------------------|--------------------------------------------------------------------------------|----------------|
+| DST-VampireMonk.mp3       | Striderjapan          | [freesound](http://www.freesound.org/people/Striderjapan/sounds/141368/)       | CC Attribution |
+| vampire bites             | Bernuy                | [freesound](http://www.freesound.org/people/Bernuy/sounds/268501/)             | CC Attribution |
+| bow02.ogg                 | Erdie                 | [freesound](https://www.freesound.org/people/Erdie/sounds/65734/)              | CC Attribution |
+| the swarm v31m3           | Setuniman             | [freesound](https://www.freesound.org/people/Setuniman/sounds/130695/)         | CC Attribution |
+| Boiling Towel             | unfa                  | [freesound](https://www.freesound.org/people/unfa/sounds/174499/)              | CC Attribution |
+| Pepper mill grinds pepper | Black_River_Phonogram | [freesound](https://freesound.org/people/Black_River_Phonogram/sounds/424605/) | CC0            |
+| Slimey                    | Nebulasnails          | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)          | CC0            |
+| blood_sucker              | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution |
+| Organ Ambience, Calm, A   | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution |
 
 ##### Sit functionality - `sit` package
 
