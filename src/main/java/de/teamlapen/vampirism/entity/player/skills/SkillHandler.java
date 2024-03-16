@@ -197,7 +197,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
-        for (ISkill<T> enabledSkill : this.enabledSkills) {
+        var enabledSkills = new ArrayList<>( this.enabledSkills);
+        for (ISkill<T> enabledSkill : enabledSkills) {
             if (enabledSkill.allowedSkillTrees().map(tree::is, tree::is)) {
                 this.disableSkill(enabledSkill);
             }
