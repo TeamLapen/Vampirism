@@ -52,7 +52,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     }
 
     private static <T extends IFactionPlayer<T>> ItemOrdering<IAction<?>> getOrdering(T player) {
-        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()), new ArrayList<>(), () -> ModRegistries.ACTIONS.stream().filter(action -> action.matchesFaction(player.getFaction())).collect(Collectors.toList()));
+        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(s -> s.showInSelectAction(player.asEntity())).toList(), new ArrayList<>(), () -> ModRegistries.ACTIONS.stream().filter(action -> action.matchesFaction(player.getFaction())).filter(s -> s.showInSelectAction(player.asEntity())).collect(Collectors.toList()));
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<IAction<?>> ordering) {

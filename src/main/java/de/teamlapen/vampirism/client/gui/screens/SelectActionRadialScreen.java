@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +57,8 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
     }
 
     private static RadialMenu<IAction<?>> getRadialMenu(List<IAction<?>> actions) {
-        List<IRadialMenuSlot<IAction<?>>> parts = actions.stream().map(a -> (IRadialMenuSlot<IAction<?>>)new RadialMenuSlot<IAction<?>>(a.getName(), a, Collections.emptyList())).toList();
+        Player player = Minecraft.getInstance().player;
+        List<IRadialMenuSlot<IAction<?>>> parts = actions.stream().filter(s -> s.showInSelectAction(player)).map(a -> (IRadialMenuSlot<IAction<?>>)new RadialMenuSlot<IAction<?>>(a.getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
             VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(parts.get(i).primarySlotIcon()), Minecraft.getInstance().hitResult));
         }, parts , SelectActionRadialScreen::drawActionPart,0);
