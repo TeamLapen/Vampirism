@@ -512,4 +512,9 @@ public class ModPlayerEventHandler {
             FactionPlayerHandler.getCurrentFactionPlayer(event.getEntity()).ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions());
         }
     }
+
+    @SubscribeEvent
+    public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        FactionPlayerHandler.get(event.getEntity()).checkSkillTreeLocks();
+    }
 }

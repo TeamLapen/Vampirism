@@ -401,7 +401,8 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         }
     }
 
-    private void checkSkillTreeLocks() {
+    @Override
+    public void checkSkillTreeLocks() {
         if (this.player.level() instanceof ServerLevel level) {
             Registry<ISkillTree> registryAccess = this.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE);
             getCurrentFactionPlayer().ifPresent(factionPlayer -> {
@@ -509,8 +510,6 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             } else {
                 currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
                 currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
-                this.checkSkillTreeLocks();
-                updateCache();
                 notifyFaction(null, 0);
             }
         }

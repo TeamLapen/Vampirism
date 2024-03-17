@@ -119,4 +119,12 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      * @param die Whether to attack the player with deadly damage
      */
     void leaveFaction(boolean die);
+
+    /**
+     * Checks which skill trees are unlocked.
+     * It locks and unlocks the skill trees accordingly.
+     * <p>
+     * It is called when the player level or lord level changes as well as when the player respawns. But it can be called at any time.
+     */
+    void checkSkillTreeLocks();
 }
