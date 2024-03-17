@@ -239,11 +239,9 @@ public class ModPlayerEventHandler {
             event.setCanceled(true);
         }
 
-        if ((event.getItemStack().getItem() instanceof ThrowablePotionItem || event.getItemStack().getItem() instanceof CrossbowItem)) {
-            if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
-                event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
-                event.setCanceled(true);
-            }
+        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
+            event.setCanceled(true);
         }
     }
 
