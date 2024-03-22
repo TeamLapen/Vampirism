@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -16,18 +17,24 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * @param actionId the id of the action that was toggled
  * @param target   The target the player was looking at when activating the action.
  */
 public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "toggle_action");
     public static final Codec<ServerboundToggleActionPacket> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     ResourceLocation.CODEC.fieldOf("action_id").forGetter(ServerboundToggleActionPacket::actionId),
-                    Codec.either(Codec.INT, BlockPos.CODEC).optionalFieldOf("target", null).forGetter(s -> s.target)
+                    ExtraCodecs.strictOptionalField(Codec.either(Codec.INT, BlockPos.CODEC),"target").forGetter(s -> Optional.ofNullable(s.target))
             ).apply(inst, ServerboundToggleActionPacket::new));
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private ServerboundToggleActionPacket(ResourceLocation action, Optional<Either<Integer, BlockPos>> target) {
+        this(action, target.orElse(null));
+    }
 
     public static @NotNull ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, @Nullable HitResult traceResult) {
         if (traceResult != null) {
