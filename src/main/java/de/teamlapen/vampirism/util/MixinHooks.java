@@ -42,7 +42,13 @@ public class MixinHooks {
 
     public static boolean checkStructures(@NotNull List<? super PoolElementStructurePiece> pieces, @NotNull StructurePoolElement jigsawPiece) {
         if (!onlyOneStructure.contains(jigsawPiece.toString())) return false;
-        return pieces.stream().anyMatch(structurePiece -> onlyOneStructure.stream().anyMatch(string -> ((PoolElementStructurePiece) structurePiece).getElement().toString().equals(string)));
+        return pieces.stream().anyMatch(structurePiece -> structurePiece instanceof PoolElementStructurePiece elem && equals(elem.getElement(), jigsawPiece));
+    }
+
+    private static boolean equals(StructurePoolElement first, StructurePoolElement second) {
+        if (first == second) return true;
+        if (first.getClass() != second.getClass()) return false;
+        return first.toString().equals(second.toString());
     }
 
     public static float calculateVampireSlayerEnchantments(Entity entity, @NotNull ItemStack item) {
