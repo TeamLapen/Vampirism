@@ -1,32 +1,37 @@
 package de.teamlapen.vampirism.api.util;
 
 import com.google.common.base.Preconditions;
+import com.google.errorprone.annotations.Immutable;
+import org.spongepowered.asm.mixin.Mutable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class ItemOrdering<T> {
-    private final List<T> ordering;
-    private final List<T> excluded;
+    private final List<T> ordering = new ArrayList<>();
+    private final List<T> excluded = new ArrayList<>();
     private final Supplier<Collection<T>> allItems;
 
-    public ItemOrdering(List<T> ordering, List<T> excluded, Supplier<Collection<T>> allItems) {
+    public ItemOrdering(Collection<T> ordering, Collection<T> excluded, Supplier<Collection<T>> allItems) {
         this.allItems = allItems;
-        this.ordering = ordering;
-        this.excluded = excluded;
+        this.ordering.addAll(ordering);
+        this.excluded.addAll(excluded);
         testAllItems();
     }
 
     private void testAllItems() {
         this.allItems.get().stream().filter(i -> !this.ordering.contains(i) && !this.excluded.contains(i)).forEach(this.excluded::add);
     }
+
     public List<T> getOrdering() {
-        return ordering;
+        return Collections.unmodifiableList(ordering);
     }
 
     public List<T> getExcluded() {
-        return excluded;
+        return Collections.unmodifiableList(excluded);
     }
 
     public void reset() {

@@ -49,7 +49,7 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
             } else {
                 return true;
             }
-        }).map(SelectMinionTaskRadialScreen.Entry::new), CUSTOM_ENTRIES.values().stream()).collect(Collectors.toList()));
+        }).map(SelectMinionTaskRadialScreen.Entry::new), CUSTOM_ENTRIES.values().stream()).toList());
     }
 
     private static void saveOrdering(FactionPlayerHandler player, ItemOrdering<SelectMinionTaskRadialScreen.Entry> ordering) {
