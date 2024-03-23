@@ -80,7 +80,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     private void resetKeyBindings() {
         ModKeys.ACTION_KEYS.keySet().forEach(key -> {
             FactionPlayerHandler.get(getMinecraft().player).setBoundAction(key, null, false, false);
-            VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(key, null));
+            VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(key));
         });
         this.keyBindingList.clearActions();
     }
@@ -158,7 +158,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
                 this.keyMapping = keyMapping;
                 this.stringWidget = new StringWidget(0,2,80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
                 this.imageButton = new ImageButton(115,2,16,16, REMOVE_ICON,(a) -> switchAction(null));
-                switchAction(action);
+                applyAction(action);
             }
 
             @Override
@@ -175,9 +175,13 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
             }
 
             private void switchAction(@Nullable IAction<?> action) {
-                this.action = action;
+                applyAction(action);
                 VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.index, this.action));
                 FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction(this.index, this.action, false, false);
+            }
+
+            private void applyAction(@Nullable IAction<?> action) {
+                this.action = action;
                 if (action != null) {
                     this.imageWidget = ImageWidget.texture(16, 16, getActionIcon(action), 16, 16);
                     this.imageWidget.setPosition(90, 2);
