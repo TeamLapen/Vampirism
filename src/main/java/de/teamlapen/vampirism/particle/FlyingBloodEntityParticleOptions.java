@@ -13,13 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 public record FlyingBloodEntityParticleOptions(int entity, boolean direct) implements ParticleOptions {
 
-    /**
-     * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
-     */
     public static final Codec<FlyingBloodEntityParticleOptions> CODEC = RecordCodecBuilder.create((p_239803_0_) -> p_239803_0_
             .group(
-                    Codec.INT.fieldOf("e").forGetter((p_239807_0_) -> p_239807_0_.entity),
-                    Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct))
+                    Codec.INT.fieldOf("entity").forGetter(FlyingBloodEntityParticleOptions::entity),
+                    Codec.BOOL.fieldOf("direct").forGetter(FlyingBloodEntityParticleOptions::direct))
             .apply(p_239803_0_, FlyingBloodEntityParticleOptions::new));
 
     @Deprecated
@@ -31,14 +28,13 @@ public record FlyingBloodEntityParticleOptions(int entity, boolean direct) imple
 
         @NotNull
         public FlyingBloodEntityParticleOptions fromNetwork(@NotNull ParticleType<FlyingBloodEntityParticleOptions> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
-            return new FlyingBloodEntityParticleOptions(buffer.readVarInt(), buffer.readBoolean());
+            return buffer.readJsonWithCodec(CODEC);
         }
     };
 
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
-        buffer.writeVarInt(entity);
-        buffer.writeBoolean(direct);
+        buffer.writeJsonWithCodec(CODEC, this);
     }
 
     @NotNull

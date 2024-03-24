@@ -14,19 +14,17 @@ import org.jetbrains.annotations.NotNull;
 
 public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture, float scale) implements ParticleOptions {
 
-    /**
-     * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
-     */
-    public static final Codec<FlyingBloodParticleOptions> CODEC = RecordCodecBuilder.create((p_239803_0_) -> p_239803_0_
+    public static final Codec<FlyingBloodParticleOptions> CODEC = RecordCodecBuilder.create((inst) -> inst
             .group(
-                    Codec.INT.fieldOf("a").forGetter((p_239807_0_) -> p_239807_0_.maxAge),
-                    Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct),
-                    Codec.DOUBLE.fieldOf("x").forGetter((p_239805_0_) -> p_239805_0_.targetX),
-                    Codec.DOUBLE.fieldOf("y").forGetter((p_239804_0_) -> p_239804_0_.targetY),
-                    Codec.DOUBLE.fieldOf("z").forGetter((p_239804_0_) -> p_239804_0_.targetZ),
-                    Codec.STRING.fieldOf("t").forGetter((p_239804_0_) -> p_239804_0_.texture.toString()),
-                    Codec.FLOAT.fieldOf("s").forGetter((p_239804_0_) -> p_239804_0_.scale)
-            ).apply(p_239803_0_, (a, d, x, y, z, t, s) -> new FlyingBloodParticleOptions(a, d, x, y, z, new ResourceLocation(t), s)));
+                    Codec.INT.fieldOf("maxAge").forGetter(FlyingBloodParticleOptions::maxAge),
+                    Codec.BOOL.fieldOf("direct").forGetter(FlyingBloodParticleOptions::direct),
+                    Codec.DOUBLE.fieldOf("targetX").forGetter(FlyingBloodParticleOptions::targetX),
+                    Codec.DOUBLE.fieldOf("targetY").forGetter(FlyingBloodParticleOptions::targetY),
+                    Codec.DOUBLE.fieldOf("targetZ").forGetter(FlyingBloodParticleOptions::targetZ),
+                    ResourceLocation.CODEC.fieldOf("texture").forGetter(FlyingBloodParticleOptions::texture),
+                    Codec.FLOAT.fieldOf("scale").forGetter(FlyingBloodParticleOptions::scale)
+            ).apply(inst, FlyingBloodParticleOptions::new));
+
 
     @Deprecated
     public static final ParticleOptions.Deserializer<FlyingBloodParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {
@@ -37,7 +35,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
 
         @NotNull
         public FlyingBloodParticleOptions fromNetwork(@NotNull ParticleType<FlyingBloodParticleOptions> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
-            return new FlyingBloodParticleOptions(buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation(), buffer.readFloat());
+            return buffer.readJsonWithCodec(CODEC);
         }
     };
 
@@ -59,13 +57,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
 
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
-        buffer.writeVarInt(maxAge);
-        buffer.writeBoolean(direct);
-        buffer.writeDouble(targetX);
-        buffer.writeDouble(targetY);
-        buffer.writeDouble(targetZ);
-        buffer.writeResourceLocation(texture);
-        buffer.writeFloat(scale);
+        buffer.writeJsonWithCodec(CODEC, this);
     }
 
     @NotNull
