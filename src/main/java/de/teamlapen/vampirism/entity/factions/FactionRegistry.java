@@ -350,9 +350,9 @@ public class FactionRegistry implements IFactionRegistry {
 
         protected final PlayableFactionBuilder<T> factionBuilder;
         protected int maxLevel = 0;
-        protected BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction = (a, b) -> Component.literal("Lord " + a);
+        protected ILordTitleProvider lordTitleFunction = (LordTitleProvider) (a, b) -> Component.literal("Lord " + a);
         protected boolean lordSkillsEnabled;
-        protected List<MinionBuilder<T,?>> minions = new ArrayList<>();
+        protected List<MinionBuilder<T, ?>> minions = new ArrayList<>();
 
         public LordPlayerBuilder(PlayableFactionBuilder<T> factionBuilder) {
             this.factionBuilder = factionBuilder;
@@ -366,6 +366,12 @@ public class FactionRegistry implements IFactionRegistry {
 
         @Override
         public @NotNull LordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction) {
+            this.lordTitleFunction = (LordTitleProvider) lordTitleFunction::apply;
+            return this;
+        }
+
+        @Override
+        public ILordPlayerBuilder<T> lordTitle(@NotNull ILordTitleProvider lordTitleFunction) {
             this.lordTitleFunction = lordTitleFunction;
             return this;
         }
@@ -443,6 +449,14 @@ public class FactionRegistry implements IFactionRegistry {
 
                 public record CommandEntry<Z extends IMinionData,T>(String name, T defaultValue, ArgumentType<T> type, BiConsumer<Z,T> setter, BiFunction<CommandContext<CommandSourceStack>, String, T> getter) implements ICommandEntry<Z,T> {
                 }
+            }
+        }
+
+        public interface LordTitleProvider extends ILordTitleProvider {
+
+            @Override
+            default Component getShort(int level, IPlayableFaction.TitleGender titleGender) {
+                return getLordTitle(level, titleGender);
             }
         }
     }

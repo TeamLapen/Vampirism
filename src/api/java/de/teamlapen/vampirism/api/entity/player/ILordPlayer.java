@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.api.entity.player;
 
+import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Interface for the player lord related data.
@@ -24,6 +27,12 @@ public interface ILordPlayer {
      */
     @Nullable
     Component getLordTitle();
+
+    /**
+     * @return Null, if level ==0
+     */
+    @Nullable
+    Component getLordTitleShort();
 
     @NotNull
     Player getPlayer();

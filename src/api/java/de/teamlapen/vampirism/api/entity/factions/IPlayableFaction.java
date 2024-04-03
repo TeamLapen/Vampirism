@@ -38,9 +38,16 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      * @param level  lord level
      * @param female Female version
      * @return A text component representing the title of the player at the given lord level. empty if level==0
+     * @deprecated Use {@link ILordTitleProvider#getLordTitle(int, TitleGender)} instead
      */
+    @Deprecated
     @NotNull
     Component getLordTitle(int level, TitleGender female);
+
+    /**
+     * Gets the lord title provider for this faction
+     */
+    ILordTitleProvider lordTiles();
 
     /**
      * @return The "<? extends IFactionPlayer>" of this faction for the given player

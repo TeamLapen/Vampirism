@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.factions;
 
+import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -22,7 +23,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final int highestLevel;
     private final int highestLordLevel;
     private final Supplier<AttachmentType<T>> playerCapabilitySupplier;
-    private final BiFunction<Integer, TitleGender, Component> lordTitleFunction;
+    private final ILordTitleProvider lordTitleFunction;
     private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
     private final boolean hasLordSkills;
 
@@ -59,8 +60,13 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     @NotNull
     @Override
     public Component getLordTitle(int level, TitleGender female) {
-        assert level <= highestLordLevel;
-        return lordTitleFunction.apply(level, female);
+        var title = lordTiles().getLordTitle(level, female);
+        return title == null ? Component.empty() : title;
+    }
+
+    @Override
+    public ILordTitleProvider lordTiles() {
+        return this.lordTitleFunction;
     }
 
     @Override

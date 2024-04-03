@@ -39,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class VampirismContainerScreen extends AbstractContainerScreen<VampirismMenu> implements ExtendedScreen {
@@ -134,12 +135,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         super.init();
         if (factionPlayer.getLevel() > 0) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
-            MutableComponent component;
-            if (handler.getLordLevel() > 0) {
-                component = handler.getLordTitle().copy().append(" (" + handler.getLordLevel() + ")");
-            } else {
-                component = Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel());
-            }
+            MutableComponent component = Optional.of(handler).filter(x -> x.getLordLevel() > 0).map(FactionPlayerHandler::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel()));
             this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
         } else {
             this.level = Component.empty();

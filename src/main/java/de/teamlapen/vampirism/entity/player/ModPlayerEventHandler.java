@@ -418,17 +418,15 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.@NotNull NameFormat event) {
-        if (event.getEntity() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
+        if (VampirismConfig.SERVER.factionColorInChat.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
             handler.getCurrentFactionPlayer().ifPresent(fp -> {
-                IFaction<?> f = fp.getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).flatMap(FactionPlayerHandler::getOpt).map(FactionPlayerHandler::getCurrentFaction).orElse(null));
+                IFaction<?> f = fp.getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getCurrentFaction).orElse(null));
                 if (f != null) {
                     MutableComponent displayName;
-                    if (handler.getLordLevel() > 0 && VampirismConfig.SERVER.lordPrefixInChat.get()) {
-                        displayName = Component.literal("[").append(handler.getLordTitle()).append("] ").append(event.getDisplayname());
-                    } else {
-                        displayName = event.getDisplayname().copy();
-                    }
+                    displayName = Optional.of(handler).filter(h -> h.getLordLevel() > 0).filter(x -> VampirismConfig.SERVER.lordPrefixInChat.get()).map(FactionPlayerHandler::getLordTitle)
+                            .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
+                            .orElseGet(() -> event.getDisplayname().copy());
                     event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
                 }
             });

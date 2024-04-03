@@ -21,14 +21,20 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
     ILordPlayerBuilder<T> lordLevel(int highestLordLevel);
 
     /**
+     * @deprecated use {@link #lordTitle(ILordTitleProvider)} instead
+     */
+    @Deprecated
+    ILordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction);
+
+    /**
      * Sets custom lord titles
      * <br>
      * Only relevant when lord level > 0
      *
-     * @param lordTitleFunction a function that return the title for a lord player based on level and gender
+     * @param lordTitleFunction an object that provides the title for a lord player
      * @return the builder
      */
-    ILordPlayerBuilder<T> lordTitle(@NotNull BiFunction<Integer, IPlayableFaction.TitleGender, Component> lordTitleFunction);
+    ILordPlayerBuilder<T> lordTitle(@NotNull ILordTitleProvider lordTitleFunction);
 
     /**
      * Enables this faction to have lord skills
@@ -40,4 +46,5 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
     <Z extends IMinionData> IMinionBuilder<T,Z> minion(ResourceLocation minionId, Supplier<Z> data);
 
     IPlayableFactionBuilder<T> build();
+
 }

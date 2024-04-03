@@ -8,10 +8,7 @@ import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
+import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
@@ -167,9 +164,17 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Nullable
     @Override
     public Component getLordTitle() {
-        return currentLordLevel == 0 || currentFaction == null ? null : currentFaction.getLordTitle(currentLordLevel, titleGender);
+        return lordTitles().map(titles -> titles.getLordTitle(currentLordLevel, titleGender)).orElse(null);
     }
 
+    @Override
+    public @Nullable Component getLordTitleShort() {
+        return lordTitles().map(titles -> titles.getShort(currentLordLevel, titleGender)).orElse(null);
+    }
+
+    public @NotNull Optional<ILordTitleProvider> lordTitles() {
+        return Optional.ofNullable(currentFaction).map(IPlayableFaction::lordTiles);
+    }
 
     public int getMaxMinions() {
         return currentLordLevel * VampirismConfig.BALANCE.miMinionPerLordLevel.get();
