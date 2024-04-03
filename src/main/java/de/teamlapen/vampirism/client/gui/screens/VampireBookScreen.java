@@ -44,8 +44,7 @@ public class VampireBookScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blit(pageTexture, guiLeft, guiTop, 0, 0, xSize, ySize);
-
+        super.render(graphics, mouseX, mouseY, partialTicks);
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
 
         if (pageNumber < content.size()) {
@@ -66,7 +65,12 @@ public class VampireBookScreen extends Screen {
         buttonPrev.visible = pageNumber != 0;
         buttonNext.visible = pageNumber != content.size() - 1 && !content.isEmpty();
 
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        pGuiGraphics.blit(pageTexture, guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
     @Override

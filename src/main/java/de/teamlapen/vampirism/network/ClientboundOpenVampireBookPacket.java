@@ -17,7 +17,7 @@ public record ClientboundOpenVampireBookPacket(String bookId) implements CustomP
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeUtf(bookId);
+        pBuffer.writeJsonWithCodec(CODEC, this);
     }
 
     @Override
