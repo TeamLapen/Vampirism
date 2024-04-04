@@ -1052,6 +1052,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         this.vision.unlockVision(vision);
     }
 
+    @SuppressWarnings("UnreachableCode")
     public void updateNaturalArmor(int lvl) {
         AttributeInstance armorAtt = player.getAttribute(Attributes.ARMOR);
         AttributeInstance toughnessAtt = player.getAttribute(Attributes.ARMOR_TOUGHNESS);

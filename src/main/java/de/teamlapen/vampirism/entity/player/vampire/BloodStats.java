@@ -179,11 +179,14 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
 
     @Override
     public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
-        if (nbt.contains("max_blood", Tag.TAG_INT)) {
+        if (nbt.contains("max_blood")) {
             setMaxBlood(nbt.getInt("max_blood"));
         }
-        if (nbt.contains("bloodLevel", Tag.TAG_INT)) {
+        if (nbt.contains("bloodLevel")) {
             setBloodLevel(nbt.getInt("bloodLevel"));
+        }
+        if (nbt.contains("bloodSaturation")) {
+            bloodSaturationLevel = nbt.getFloat("bloodSaturation");
         }
     }
 
@@ -222,6 +225,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("max_blood", maxBlood);
+        nbt.putFloat("bloodSaturation", bloodSaturationLevel);
         return nbt;
     }
 

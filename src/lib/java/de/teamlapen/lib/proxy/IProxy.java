@@ -43,8 +43,4 @@ public interface IProxy {
      */
     @Nullable
     Level getWorldFromKey(ResourceKey<Level> dimension);
-
-    default void handleUpdateEntityPacket(ClientboundUpdateEntityPacket msg) {
-    }
-
 }

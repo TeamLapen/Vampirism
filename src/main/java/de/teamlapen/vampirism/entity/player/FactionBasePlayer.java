@@ -119,7 +119,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     protected void syncProperty(@NotNull ISyncable object, boolean all) {
         CompoundTag tag = new CompoundTag();
         tag.put(object.nbtKey(), object.serializeUpdateNBT());
-        HelperLib.sync(tag, player, all);
+        HelperLib.sync(this, tag, player, all);
     }
 
     @MustBeInvokedByOverriders
