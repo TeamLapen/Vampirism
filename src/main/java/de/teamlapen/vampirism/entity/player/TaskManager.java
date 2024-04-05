@@ -384,7 +384,7 @@ public class TaskManager implements ITaskManager, ISavable {
                 neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
             }
             case ENTITY_TAG -> {
-                actualStat += BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().map(HolderSet.Named::unwrap).flatMap(s -> s.right().stream()).flatMap(Collection::stream).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()))).sum();
+                actualStat += BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().flatMap(HolderSet.ListBacked::stream).map(Holder::value).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum();
                 neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
             }
             case ITEMS -> {
@@ -524,7 +524,7 @@ public class TaskManager implements ITaskManager, ISavable {
             switch (requirement.getType()) {
                 case STATS -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
                 case ENTITY -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
-                case ENTITY_TAG -> reqStats.putIfAbsent(requirement.id(), BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().map(HolderSet.Named::unwrap).flatMap(s -> s.right().stream()).flatMap(Collection::stream).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type.value()))).sum());
+                case ENTITY_TAG -> reqStats.putIfAbsent(requirement.id(), BuiltInRegistries.ENTITY_TYPE.getTag((TagKey<EntityType<?>>)requirement.getStat(this.factionPlayer)).stream().flatMap(s -> s.stream()).map(s -> s.value()).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum());
                 default -> {
                 }
             }
