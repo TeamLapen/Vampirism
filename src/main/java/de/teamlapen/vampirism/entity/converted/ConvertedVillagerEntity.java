@@ -69,7 +69,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
-        return VampirismVillagerEntity.createAttributes().add(ModAttributes.SUNDAMAGE);
+        return VampirismVillagerEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE);
     }
 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
