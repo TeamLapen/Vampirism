@@ -50,7 +50,7 @@ public interface IVampirismEntityRegistry {
      * @return the overlay texture or {@code null} if there is none
      */
     @Nullable
-    ResourceLocation getConvertibleOverlay(String originalEntity);
+    ResourceLocation getConvertibleOverlay(@NotNull String originalEntity);
 
     /**
      * Get the {@link de.teamlapen.vampirism.api.datamaps.IEntityBlood} for the given creature.

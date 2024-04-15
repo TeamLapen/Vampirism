@@ -38,9 +38,11 @@ public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends Entit
             } else if(!checkIfRender && entity instanceof IConvertedCreature<?> converted) {
                 sourceId = converted.getSourceEntityId();
             }
-            ResourceLocation texture = VampirismAPI.entityRegistry().getConvertibleOverlay(sourceId);
-            if (texture != null) {
-                RenderLayerAccessor.renderColoredCutoutModel(this.getParentModel(), texture, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+            if (sourceId != null) {
+                ResourceLocation texture = VampirismAPI.entityRegistry().getConvertibleOverlay(sourceId);
+                if (texture != null) {
+                    RenderLayerAccessor.renderColoredCutoutModel(this.getParentModel(), texture, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+                }
             }
         }
 

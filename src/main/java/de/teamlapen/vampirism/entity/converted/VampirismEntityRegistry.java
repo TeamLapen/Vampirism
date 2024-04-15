@@ -45,7 +45,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     @Override
-    public @Nullable ResourceLocation getConvertibleOverlay(String originalEntity) {
+    public @Nullable ResourceLocation getConvertibleOverlay(@NotNull String originalEntity) {
         return BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, new ResourceLocation(originalEntity))).map(s -> s.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).flatMap(IConverterEntry::overlay).orElse(null);
     }
 
