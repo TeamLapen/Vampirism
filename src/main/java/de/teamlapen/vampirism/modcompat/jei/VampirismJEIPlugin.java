@@ -9,10 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
-import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
-import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
-import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
-import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
+import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
 import de.teamlapen.vampirism.core.*;
@@ -25,9 +22,11 @@ import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.modcompat.jei.categories.FogDiffuserRecipeCategory;
 import de.teamlapen.vampirism.modcompat.jei.categories.GarlicDiffuserRecipeCategory;
 import de.teamlapen.vampirism.modcompat.jei.recipes.FogDiffuserRecipe;
+import de.teamlapen.vampirism.modcompat.jei.recipes.GrinderRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.FogDiffuserRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.GarlicDiffuserRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GarlicDiffuserRecipeMaker;
+import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GrinderRecipeMaker;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -75,6 +74,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
     public static final RecipeType<GarlicDiffuserRecipe> GARLIC_DIFFUSER = RecipeType.create(REFERENCE.MODID, "garlic_diffuser", GarlicDiffuserRecipe.class);
     public static final RecipeType<FogDiffuserRecipe> FOG_DIFFUSER = RecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
+    public static final RecipeType<GrinderRecipe> GRINDER_RECIPE = RecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @NotNull
@@ -101,7 +101,8 @@ public class VampirismJEIPlugin implements IModPlugin {
                 new AlchemyTableRecipeCategory(helper),
                 new BlessingRecipeCategory(helper),
                 new GarlicDiffuserRecipeCategory(helper),
-                new FogDiffuserRecipeCategory(helper));
+                new FogDiffuserRecipeCategory(helper),
+                new GrinderRecipeCategory(helper));
     }
 
     @Override
@@ -113,6 +114,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeClickArea(AlchemyTableScreen.class, 104, 36, 32, 32, ALCHEMY_TABLE);
         registration.addRecipeClickArea(GarlicDiffuserScreen.class, 45, 55, 14, 14, GARLIC_DIFFUSER);
         registration.addRecipeClickArea(FogDiffuserScreen.class, 45, 55, 14, 14, FOG_DIFFUSER);
+        registration.addRecipeClickArea(BloodGrinderScreen.class, 80, 55, 16, 16, GRINDER_RECIPE);
     }
 
     @Override
@@ -158,6 +160,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes(world.registryAccess()));
         registration.addRecipes(GARLIC_DIFFUSER, GarlicDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(GRINDER_RECIPE, GrinderRecipeMaker.getRecipes(registration.getIngredientManager()));
     }
 
     @Override

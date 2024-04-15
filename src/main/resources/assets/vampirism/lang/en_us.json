@@ -128,6 +128,7 @@
   "gui.vampirism.jei.category.diffuser.burn_duration_seconds": "Burn Duration: %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_minutes": "Burn Duration: %sm %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_hours": "Burn Duration: %sh %sm %ss",
+  "gui.vampirism.jei.category.grinder.blood": "Produces blood: %smb",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",

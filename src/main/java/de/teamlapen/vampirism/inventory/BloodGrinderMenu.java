@@ -26,4 +26,9 @@ public class BloodGrinderMenu extends InventoryContainerMenu {
         super(ModMenus.BLOOD_GRINDER.get(), id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
+
+    public boolean hasItem() {
+        ItemStack item = this.inventory.getItem(0);
+        return !item.isEmpty();
+    }
 }
