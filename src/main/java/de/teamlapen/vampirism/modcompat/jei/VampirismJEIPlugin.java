@@ -21,8 +21,10 @@ import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.modcompat.jei.categories.FogDiffuserRecipeCategory;
 import de.teamlapen.vampirism.modcompat.jei.categories.GarlicDiffuserRecipeCategory;
+import de.teamlapen.vampirism.modcompat.jei.recipes.BloodSieveRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.FogDiffuserRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.GrinderRecipe;
+import de.teamlapen.vampirism.modcompat.jei.recipes.maker.BloodSieveRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.FogDiffuserRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.GarlicDiffuserRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GarlicDiffuserRecipeMaker;
@@ -75,6 +77,8 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final RecipeType<GarlicDiffuserRecipe> GARLIC_DIFFUSER = RecipeType.create(REFERENCE.MODID, "garlic_diffuser", GarlicDiffuserRecipe.class);
     public static final RecipeType<FogDiffuserRecipe> FOG_DIFFUSER = RecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
     public static final RecipeType<GrinderRecipe> GRINDER_RECIPE = RecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
+    public static final RecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = RecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
+
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @NotNull
@@ -102,7 +106,8 @@ public class VampirismJEIPlugin implements IModPlugin {
                 new BlessingRecipeCategory(helper),
                 new GarlicDiffuserRecipeCategory(helper),
                 new FogDiffuserRecipeCategory(helper),
-                new GrinderRecipeCategory(helper));
+                new GrinderRecipeCategory(helper),
+                new BloodSieveRecipeCategory(helper));
     }
 
     @Override
@@ -161,6 +166,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(GARLIC_DIFFUSER, GarlicDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GRINDER_RECIPE, GrinderRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(BLOOD_SIEVE_CONVERSION, BloodSieveRecipeMaker.getRecipes(registration.getIngredientManager()));
     }
 
     @Override
