@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.inventory.diffuser;
 
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.DiffuserBlockEntity;
-import de.teamlapen.vampirism.data.provider.SundamageProvider;
-import net.minecraft.network.FriendlyByteBuf;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,13 +10,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
-import java.util.function.Consumer;
 
 public abstract class DiffuserMenu extends PlayerOwnedMenu {
 
@@ -52,7 +46,7 @@ public abstract class DiffuserMenu extends PlayerOwnedMenu {
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (pIndex != 1 && pIndex != 0) {
@@ -89,22 +83,25 @@ public abstract class DiffuserMenu extends PlayerOwnedMenu {
     }
 
     public float getLitProgress() {
-        int i = this.pData.get(DiffuserBlockEntity.DATA_LITE_DURATION);
+        int i = this.pData.get(DiffuserBlockEntity.DATA_LIT_DURATION);
         if (i == 0) {
             i = 200;
         }
-        return Mth.clamp(this.pData.get(DiffuserBlockEntity.DATA_LITE_TIME) / (float)i, 0.0F, 1.0F);
+        return Mth.clamp(this.pData.get(DiffuserBlockEntity.DATA_LIT_TIME) / (float)i, 0.0F, 1.0F);
     }
 
     public boolean isLit() {
-        return this.pData.get(DiffuserBlockEntity.DATA_LITE_TIME) > 0;
+        return this.pData.get(DiffuserBlockEntity.DATA_LIT_TIME) > 0;
     }
 
     public abstract boolean isFuel(ItemStack pStack);
 
     public float getBootProgress() {
-        var timer = this.pData.get(DiffuserBlockEntity.DATA_LITE_BOOT_TIMER);
-        return Mth.clamp(1f - ((float) timer / DiffuserBlockEntity.MAX_BOOT_TIMER), 0f, 1f);
+        var timer = this.pData.get(DiffuserBlockEntity.DATA_BOOT_TIMER);
+        if (timer == 0) {
+            return 1f;
+        }
+        return Mth.clamp(1f - ((float) timer / (VampirismConfig.BALANCE.diffuserBootTime.get() * 20)), 0f, 1f);
     }
 
     protected static abstract class Factory<T extends DiffuserMenu> extends PlayerOwnedMenu.Factory<T> {

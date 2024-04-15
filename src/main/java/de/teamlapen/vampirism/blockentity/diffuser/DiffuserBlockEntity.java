@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blockentity.diffuser;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -15,24 +16,18 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
-    public static final int MAX_BOOT_TIMER = 5*20;
-    protected static final int SLOT_FUEL = 0;
-    public static final int DATA_LITE_TIME = 0;
-    public static final int DATA_LITE_DURATION = 1;
-    public static final int DATA_LITE_BOOT_TIMER = 2;
+    public static final int SLOT_FUEL = 0;
+    public static final int DATA_LIT_TIME = 0;
+    public static final int DATA_LIT_DURATION = 1;
+    public static final int DATA_BOOT_TIMER = 2;
     public static final int NUM_DATA_VALUES = 3;
     public static final int NUM_SLOTS = 1;
     protected NonNullList<ItemStack> items = NonNullList.withSize(NUM_SLOTS, ItemStack.EMPTY);
@@ -46,9 +41,9 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
         @Override
         public int get(int pIndex) {
             return switch (pIndex) {
-                case DATA_LITE_TIME -> DiffuserBlockEntity.this.litTime;
-                case DATA_LITE_DURATION -> DiffuserBlockEntity.this.litDuration;
-                case DATA_LITE_BOOT_TIMER -> DiffuserBlockEntity.this.bootTimer;
+                case DATA_LIT_TIME -> DiffuserBlockEntity.this.litTime;
+                case DATA_LIT_DURATION -> DiffuserBlockEntity.this.litDuration;
+                case DATA_BOOT_TIMER -> DiffuserBlockEntity.this.bootTimer;
                 default -> throw new IllegalArgumentException("Invalid index: " + pIndex);
             };
         }
@@ -56,9 +51,9 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
         @Override
         public void set(int pIndex, int pValue) {
             switch (pIndex) {
-                case DATA_LITE_TIME -> DiffuserBlockEntity.this.litTime = pValue;
-                case DATA_LITE_DURATION -> DiffuserBlockEntity.this.litDuration = pValue;
-                case DATA_LITE_BOOT_TIMER -> DiffuserBlockEntity.this.bootTimer = pValue;
+                case DATA_LIT_TIME -> DiffuserBlockEntity.this.litTime = pValue;
+                case DATA_LIT_DURATION -> DiffuserBlockEntity.this.litDuration = pValue;
+                case DATA_BOOT_TIMER -> DiffuserBlockEntity.this.bootTimer = pValue;
                 default -> throw new IllegalArgumentException("Invalid index: " + pIndex);
             }
         }
@@ -96,10 +91,6 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
         pTag.putInt("litTime", this.litTime);
         pTag.putInt("bootTimer", this.bootTimer);
         ContainerHelper.saveAllItems(pTag, this.items, pProvider);
-    }
-
-    public boolean isActive() {
-        return this.bootTimer == MAX_BOOT_TIMER;
     }
 
     @Override
@@ -175,17 +166,20 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
                 blockEntity.activateEffect(level, blockPos, blockState);
             }
         } else if (blockEntity.litTime == 0 && blockEntity.getBurnDuration(blockEntity.items.get(SLOT_FUEL)) > 0){
-            int burnDuration = blockEntity.getBurnDuration(blockEntity.items.get(SLOT_FUEL));
+            ItemStack fuelStack = blockEntity.items.get(SLOT_FUEL);
+            int burnDuration = blockEntity.getBurnDuration(fuelStack);
             blockEntity.litTime += burnDuration;
             blockEntity.litDuration = burnDuration;
-            blockEntity.items.get(SLOT_FUEL).shrink(1);
+            fuelStack.shrink(1);
+            blockEntity.items.set(SLOT_FUEL, fuelStack);
             blockEntity.setChanged();
         } else {
+            int maxBootTimer = VampirismConfig.BALANCE.diffuserBootTime.get() * 20;
             if (blockEntity.bootTimer == 0) {
                 blockEntity.deactivateEffect(level, blockPos, blockState);
-                blockEntity.bootTimer = MAX_BOOT_TIMER;
-            } else if (blockEntity.bootTimer != MAX_BOOT_TIMER) {
-                blockEntity.bootTimer = MAX_BOOT_TIMER;
+                blockEntity.bootTimer = maxBootTimer;
+            } else if (blockEntity.bootTimer != maxBootTimer) {
+                blockEntity.bootTimer = maxBootTimer;
             }
         }
     }
