@@ -3,7 +3,7 @@ title: Configured Skill Tree
 sidebar_position: 3
 ---
 
-When you have a [skill tree](./skilltree) and created a few [skill nodes](./skillnodes) you can create a configured skill tree assigning skill nodes to the skill tree.
+When you have a [skill tree](./skill_tree) and created a few [skill nodes](./skill_nodes) you can create a configured skill tree assigning skill nodes to the skill tree.
 
 ## Creating a configured skill tree
 
