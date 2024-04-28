@@ -29,5 +29,7 @@ public class VampirismDataComponents {
         public static final ResourceLocation VAMPIRE_SWORD = new ResourceLocation(VReference.MODID, "vampire_sword");
         public static final ResourceLocation TRAINING_CACHE = new ResourceLocation(VReference.MODID, "training_cache");
         public static final ResourceLocation SELECTED_AMMUNITION = new ResourceLocation(VReference.MODID, "selected_ammunition");
+        public static final ResourceLocation BLOOD_CHARGED = new ResourceLocation(VReference.MODID, "blood_charged");
+        public static final ResourceLocation BOTTLE_BLOOD = new ResourceLocation(VReference.MODID, "bottle_blood");
     }
 }

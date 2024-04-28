@@ -10,11 +10,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
@@ -91,7 +89,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
             possibleResults.sort((mix1, mix2) ->
                     mix1.efficient ? (mix2.efficient ? 0 : -1) : (mix2.efficient ? 1 : 0)
             );
-            ExtendedPotionMix mix = possibleResults.get(0);
+            ExtendedPotionMix mix = possibleResults.getFirst();
             return Optional.of(Triple.of(ItemDataUtils.setPotion(new ItemStack(item), mix.output), mix.reagent1Count, mix.reagent2Count));
 
         }

@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.util.ExtraCodecs;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
     }
 
     public boolean contains(ISkill<?> skill) {
-        if (root.value() == skill) {
+        if (root.value().containsSkill(skill)) {
             return true;
         }
         for (SkillTreeNodeConfiguration child : children) {
@@ -115,7 +114,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         }
 
         public boolean contains(ISkill<?> skill) {
-            if (node.value() == skill) {
+            if (node.value().containsSkill(skill)) {
                 return true;
             }
             for (SkillTreeNodeConfiguration child : children) {

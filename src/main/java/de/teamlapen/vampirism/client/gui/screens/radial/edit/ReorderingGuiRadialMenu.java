@@ -93,7 +93,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     private void addDummyMenuItems() {
-        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.get(0).primarySlotIcon().get() == null)) {
+        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.getFirst().primarySlotIcon().get() == null)) {
             for (int i = this.radialMenuSlots.size() - 1; i >= 0; i--) {
                 this.radialMenuSlots.add(i, new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled));
             }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.Util;
-import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +33,11 @@ public class ModArmorMaterials {
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ULTIMATE_SWIFTNESS = register("armor_of_swiftness_ultimate", createReduction(3, 8, 6, 3), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
 
 
+    static void register(IEventBus bus) {
+        ARMOR_MATERIALS.register(bus);
+    }
+
+
     private static DeferredHolder<ArmorMaterial, ArmorMaterial> register(String name, Map<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, float toughness, float knockbackResistance) {
         return ARMOR_MATERIALS.register(name, () -> {
             List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(new ResourceLocation(REFERENCE.MODID, name)));
@@ -41,11 +45,7 @@ public class ModArmorMaterials {
         });
     }
 
-    static void register(IEventBus bus) {
-        ARMOR_MATERIALS.register(bus);
-    }
-
-    public static EnumMap<ArmorItem.Type, Integer> createReduction(int helmet, int chestplate, int leggings, int boots) {
+    private static EnumMap<ArmorItem.Type, Integer> createReduction(int helmet, int chestplate, int leggings, int boots) {
         return Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
             map.put(ArmorItem.Type.BOOTS, boots);
             map.put(ArmorItem.Type.LEGGINGS, leggings);

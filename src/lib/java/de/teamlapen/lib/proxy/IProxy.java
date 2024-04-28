@@ -1,6 +1,5 @@
 package de.teamlapen.lib.proxy;
 
-import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;

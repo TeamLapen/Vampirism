@@ -4,7 +4,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;

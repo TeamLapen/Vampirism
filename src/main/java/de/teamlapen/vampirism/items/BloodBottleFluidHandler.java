@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.component.BottleBlood;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -78,7 +80,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem {
     }
 
     public int getBlood(@NotNull ItemStack stack) {
-        return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getDamageValue() * MULTIPLIER : 0;
+        return stack.getItem() == ModItems.BLOOD_BOTTLE.get() ? stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() * MULTIPLIER : 0;
     }
 
     @NotNull
@@ -109,6 +111,6 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem {
     }
 
     public void setBlood(@NotNull ItemStack stack, int amt) {
-        stack.setDamageValue(amt / MULTIPLIER);
+        stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(amt / MULTIPLIER));
     }
 }

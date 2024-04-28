@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.player.vampire;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ambient.Bat;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 
 import java.util.function.Function;

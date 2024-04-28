@@ -6,7 +6,7 @@
       "tag": "c:leather"
     },
     "Y": {
-      "tag": "forge:crops/garlic"
+      "tag": "c:crops/garlic"
     },
     "Z": {
       "item": "minecraft:potion"

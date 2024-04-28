@@ -32,8 +32,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -366,9 +368,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
             RenderTarget swap = this.blurShader.getTempTarget("swap");
 
             blit0 = blurShader.addPass("blit", swap, this.mc.getMainRenderTarget(), false);
-            blur1 = blurShader.addPass("blur", this.mc.getMainRenderTarget(), swap, false);
+            blur1 = blurShader.addPass("box_blur", this.mc.getMainRenderTarget(), swap, false);
             blur1.getEffect().safeGetUniform("BlurDir").set(1F, 0F);
-            blur2 = blurShader.addPass("blur", swap, this.mc.getMainRenderTarget(), false);
+            blur2 = blurShader.addPass("box_blur", swap, this.mc.getMainRenderTarget(), false);
             blur2.getEffect().safeGetUniform("BlurDir").set(0F, 1F);
 
             this.blurShader.resize(this.mc.getWindow().getWidth(), this.mc.getWindow().getHeight());

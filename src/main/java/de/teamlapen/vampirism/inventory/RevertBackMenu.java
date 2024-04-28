@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,7 +20,7 @@ public class RevertBackMenu extends AbstractContainerMenu {
     }
 
     public RevertBackMenu(int pContainerId, Inventory container, ContainerLevelAccess pAccess) {
-        super(ModContainer.REVERT_BACK.get(), pContainerId);
+        super(ModMenus.REVERT_BACK.get(), pContainerId);
         this.pAccess = pAccess;
         this.addSlot(new Slot(container, container.selected, 80, 35));
     }

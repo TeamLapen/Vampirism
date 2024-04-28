@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.converted.converter;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
@@ -12,7 +11,6 @@ import de.teamlapen.vampirism.entity.converted.SpecialConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;

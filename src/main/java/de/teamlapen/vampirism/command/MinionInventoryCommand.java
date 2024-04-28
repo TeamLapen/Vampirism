@@ -66,7 +66,7 @@ public class MinionInventoryCommand extends BasicCommand {
         getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
             List<ItemStack> itemStacks = minionInventory.getAllInventorys().stream().flatMap(Collection::stream).filter(s -> ItemStack.isSameItemSameComponents(s, itemStack)).toList();
             if (!itemStacks.isEmpty()) {
-                ItemStack stack = itemStacks.get(0).split(count);
+                ItemStack stack = itemStacks.getFirst().split(count);
                 player.addItem(stack.copy());
                 VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} removed {} {} from inventory of {}", player.getName().getString(), stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier);
                 source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.item_removed", stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier).withStyle(ChatFormatting.AQUA), false);

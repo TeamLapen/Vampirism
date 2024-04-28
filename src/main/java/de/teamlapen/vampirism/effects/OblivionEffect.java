@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;

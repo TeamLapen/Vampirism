@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
@@ -35,7 +35,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
     }
 
     public HunterBasicMenu(int id, @NotNull Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
-        super(ModContainer.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModMenus.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;

@@ -11,11 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,17 +75,15 @@ public class ModLootTables {
 
     static void onLootLoad(@NotNull LootTableLoadEvent event) {
         String prefix = "minecraft:chests/";
-        if (event.getName() != null) {
-            String name = event.getName().toString();
-            if (name.startsWith(prefix)) {
-                String file = name.substring(name.indexOf(prefix) + prefix.length());
-                if (INJECTION_TABLES.containsKey(file)) {
-                    try {
-                        ((LootTableAccessor) event.getTable()).getPools().add(getInjectPool(file));
-                        injected++;
-                    } catch (NullPointerException e) {
-                        LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
-                    }
+        String name = event.getName().toString();
+        if (name.startsWith(prefix)) {
+            String file = name.substring(name.indexOf(prefix) + prefix.length());
+            if (INJECTION_TABLES.containsKey(file)) {
+                try {
+                    ((LootTableAccessor) event.getTable()).getPools().add(getInjectPool(file));
+                    injected++;
+                } catch (NullPointerException e) {
+                    LOGGER.warn("Loottable {} is broken by some other mod. Cannot add Vampirism loot to it.", name);
                 }
             }
         }

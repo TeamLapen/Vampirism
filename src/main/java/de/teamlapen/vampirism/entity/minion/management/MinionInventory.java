@@ -2,17 +2,11 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 

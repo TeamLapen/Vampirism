@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.config.ServerConfig;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTags;
@@ -317,11 +318,11 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
-                VampirismConfig.Server.IMobOptions opt = VampirismConfig.SERVER.entityIMob.get();
+                ServerConfig.IMobOptions opt = VampirismConfig.SERVER.entityIMob.get();
                 if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
-                    convert = (opt == VampirismConfig.Server.IMobOptions.ALWAYS_IMOB) != current;
+                    convert = (opt == ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                 } else {
-                    if (opt == VampirismConfig.Server.IMobOptions.SMART) {
+                    if (opt == ServerConfig.IMobOptions.SMART) {
                         Player player = VampirismMod.proxy.getClientPlayer();
                         if (player != null && player.isAlive()) {
                             IPlayableFaction<?> f = VampirismPlayerAttributes.get(player).faction;
@@ -332,7 +333,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
                         }
                     } else {
-                        convert = (opt == VampirismConfig.Server.IMobOptions.ALWAYS_IMOB) != current;
+                        convert = (opt == ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                     }
                 }
                 if (convert) {

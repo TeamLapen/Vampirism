@@ -12,7 +12,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("deprecation")
-public class ModContainer {
+public class ModMenus {
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, REFERENCE.MODID);
 
     public static final DeferredHolder<MenuType<?>, MenuType<HunterTrainerMenu>> HUNTER_TRAINER = MENUS.register("hunter_trainer", () -> create(HunterTrainerMenu::new));

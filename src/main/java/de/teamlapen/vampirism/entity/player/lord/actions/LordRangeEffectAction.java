@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends DefaultAction<T> {
 

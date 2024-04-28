@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.datamaps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
-import net.minecraft.util.ExtraCodecs;
 
 public record FluidBloodConversion(float conversionRate) implements IFluidBloodConversion {
     public static final Codec<IFluidBloodConversion> NETWORK_CODEC = Codec.FLOAT.xmap(FluidBloodConversion::new, IFluidBloodConversion::conversionRate);

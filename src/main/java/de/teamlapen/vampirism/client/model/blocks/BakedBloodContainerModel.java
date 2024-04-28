@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
-import de.teamlapen.vampirism.blocks.BloodContainerBlock;
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.items.component.ContainedFluid;
 import net.minecraft.client.multiplayer.ClientLevel;

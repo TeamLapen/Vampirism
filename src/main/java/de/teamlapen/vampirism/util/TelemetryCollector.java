@@ -2,10 +2,14 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import net.minecraft.DetectedVersion;
+import net.minecraftforge.srgutils.MinecraftVersion;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.VersionChecker;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.internal.versions.neoform.NeoFormVersion;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,21 +37,21 @@ public class TelemetryCollector {
     }
 
     private static void send() {
-        try {
+        try(var http =HttpClient.newHttpClient()) {
             StringBuilder builder = new StringBuilder();
             builder.append(REFERENCE.SETTINGS_API);
             builder.append("/telemetry/basic");
 
             Map<String, String> params = new HashMap<>();
             params.put("mod_version", REFERENCE.VERSION.toString());
-            params.put("mc_version", NeoFormVersion.getMCVersion());
+            params.put("mc_version", DetectedVersion.BUILT_IN.getName());
             params.put("mod_count", Integer.toString(ModList.get().size()));
             params.put("side", (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server"));
 
             builder.append("?");
             builder.append(params.entrySet().stream().map(s -> s.getKey() + "=" + URLEncoder.encode(s.getValue(), StandardCharsets.UTF_8)).collect(Collectors.joining("&")));
 
-            HttpClient.newHttpClient().send(HttpRequest.newBuilder().uri(new URI(builder.toString())).build(), HttpResponse.BodyHandlers.ofString());
+            http.send(HttpRequest.newBuilder().uri(new URI(builder.toString())).build(), HttpResponse.BodyHandlers.ofString());
         } catch (URISyntaxException | IOException | InterruptedException e) {
             LOGGER.error("Failed to send telemetry data", e);
         }

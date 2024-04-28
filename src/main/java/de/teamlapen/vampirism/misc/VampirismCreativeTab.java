@@ -1,13 +1,10 @@
 package de.teamlapen.vampirism.misc;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.ItemDataUtils;
-import de.teamlapen.vampirism.util.OilUtils;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;

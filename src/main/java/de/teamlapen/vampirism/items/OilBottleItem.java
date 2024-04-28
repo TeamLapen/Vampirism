@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModDataComponents;
-import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.util.ItemDataUtils;

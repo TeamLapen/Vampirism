@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;

@@ -1,22 +1,16 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEnchantments;
-import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 public class MixinHooks {
     /**

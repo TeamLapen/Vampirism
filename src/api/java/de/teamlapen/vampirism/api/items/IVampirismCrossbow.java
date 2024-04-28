@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -16,13 +15,6 @@ import java.util.function.Predicate;
  * Used for crossbow enchantments
  */
 public interface IVampirismCrossbow extends ItemLike {
-
-    /**
-     * modded variant of {@link net.minecraft.world.item.CrossbowItem#performShooting(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand, net.minecraft.world.item.ItemStack, float, float)} that is not static
-     *
-     * @return true if the crossbow is empty
-     */
-    boolean performShootingMod(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle);
 
     /**
      * gets the required charge duration for the given crossbow

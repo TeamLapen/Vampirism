@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +23,7 @@ public class BloodGrinderMenu extends InventoryContainerMenu {
     }
 
     public BloodGrinderMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosIn) {
-        super(ModContainer.BLOOD_GRINDER.get(), id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
+        super(ModMenus.BLOOD_GRINDER.get(), id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 }

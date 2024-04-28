@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import com.mojang.datafixers.util.Function6;
 import com.mojang.datafixers.util.Function7;
 import com.mojang.datafixers.util.Function8;
 import com.mojang.datafixers.util.Function9;

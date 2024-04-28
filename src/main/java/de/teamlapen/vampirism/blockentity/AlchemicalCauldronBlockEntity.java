@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -31,8 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
-
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -108,7 +105,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     public int getLiquidColorClient() {
-        ItemStack liquidItem = this.items.get(0);
+        ItemStack liquidItem = this.items.getFirst();
         return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> {
             var color = liquidItem.getItemHolder().getData(ModDataMaps.LIQUID_COLOR_MAP);
             return color != null ? color : 0x00003B;
@@ -185,7 +182,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         if (level != null) {
             super.setChanged();
             BlockState old = level.getBlockState(this.worldPosition);
-            BlockState state = old.setValue(AbstractFurnaceBlock.LIT, this.isBurning()).setValue(AlchemicalCauldronBlock.LIQUID, this.items.get(0).isEmpty() ? 0 : this.isBurning() ? 2 : 1);
+            BlockState state = old.setValue(AbstractFurnaceBlock.LIT, this.isBurning()).setValue(AlchemicalCauldronBlock.LIQUID, this.items.getFirst().isEmpty() ? 0 : this.isBurning() ? 2 : 1);
             if (old.equals(state)) {
                 this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
             } else {

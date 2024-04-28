@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.world.loot;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.util.OilUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionSubPredicate;

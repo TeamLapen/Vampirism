@@ -28,8 +28,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 /**
  * Handles all events used in central parts of the mod
  */
@@ -78,10 +76,9 @@ public class GeneralEventHandler {
     @SubscribeEvent
     public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
-            level.getData(ModAttachments.LEVEL_FOG).clearCache();
-            LevelFog.getOpt(level).ifPresent(LevelFog::clearCache);
-            LevelGarlic.getOpt(level).ifPresent(LevelGarlic::clearCache);
-        }
+            LevelFog.get(level).clearCache();
+            LevelGarlic.get(level).clearCache();
+         }
     }
 
     @SubscribeEvent

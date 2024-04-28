@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModDataMaps;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.util.RegUtil;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -16,7 +15,6 @@ import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
-import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;

@@ -11,8 +11,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */

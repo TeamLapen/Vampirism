@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.converted.converter;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
@@ -10,7 +9,6 @@ import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

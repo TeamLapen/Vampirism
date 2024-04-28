@@ -12,7 +12,6 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.OptionalInt;
 
 public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {

@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;

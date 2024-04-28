@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;

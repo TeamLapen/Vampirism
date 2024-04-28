@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;

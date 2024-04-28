@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.mixin.client;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;

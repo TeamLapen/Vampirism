@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -20,7 +19,6 @@ import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

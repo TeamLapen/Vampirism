@@ -5,9 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.common.util.NonNullLazy;
-import net.neoforged.neoforge.common.util.NonNullSupplier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
@@ -41,7 +41,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     }
 
     public HunterTrainerMenu(int id, @NotNull Inventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()));
+        super(ModMenus.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()));
         this.player = playerInventory.player;
         this.entity = trainer;
         this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1);

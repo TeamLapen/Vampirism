@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
@@ -53,7 +53,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     private final Registry<Task> registry;
 
     public VampirismMenu(int id, @NotNull Inventory playerInventory) {
-        super(ModContainer.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
+        super(ModMenus.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
         this.factionColor = factionPlayer.getFaction().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();

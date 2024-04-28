@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.player.tasks.unlock;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -26,7 +26,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     }
 
     public AlchemyTableMenu(int containerId, Level level, @NotNull Inventory playerInventory, @NotNull Container inventory, @NotNull ContainerData data) {
-        super(ModContainer.ALCHEMICAL_TABLE.get(), containerId);
+        super(ModMenus.ALCHEMICAL_TABLE.get(), containerId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(data, 3);
         this.alchemyTable = inventory;

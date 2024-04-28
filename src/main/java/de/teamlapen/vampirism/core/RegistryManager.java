@@ -37,7 +37,7 @@ public class RegistryManager implements IInitListener {
         ModAttributes.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
-        ModContainer.register(eventBus);
+        ModMenus.register(eventBus);
         ModEffects.register(eventBus);
         ModEnchantments.register(eventBus);
         ModEntities.register(eventBus);
@@ -103,6 +103,7 @@ public class RegistryManager implements IInitListener {
         this.eventBus.addListener(ModItems::registerOtherCreativeTabItems);
         this.eventBus.addListener(ModRegistries::registerRegistries);
         this.eventBus.addListener(PackRepositories::registerPackRepository);
+        this.eventBus.addListener(ModRecipes::registerCategories);
     }
 
     public void registerForgeEventHandler() {

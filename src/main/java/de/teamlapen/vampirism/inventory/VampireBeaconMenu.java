@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.Container;
@@ -40,7 +40,7 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
     }
 
     public VampireBeaconMenu(int pContainerId, Container container, ContainerData beaconData, ContainerLevelAccess pLevelAccess) {
-        super(ModContainer.VAMPIRE_BEACON.get(), pContainerId, 1);
+        super(ModMenus.VAMPIRE_BEACON.get(), pContainerId, 1);
         this.beaconData = beaconData;
         this.access = pLevelAccess;
         this.paymentSlot = new PaymentSlot(this.beacon, 0, 136, 110);

@@ -128,7 +128,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             this.renderBackground(graphics, mc, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pPartialTick);
 
             //render name
-            Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.task.getTitle(), 131).get(0));
+            Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.task.getTitle(), 131).getFirst());
             text.ifPresent(t -> graphics.drawString(mc.font, t, pLeft + 2, pTop + 4, 3419941, false));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
             //render progress
@@ -184,7 +184,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             } else {
                 for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
                     if (requirements == null) continue;
-                    TaskRequirement.Type type = requirements.get(0).getType();
+                    TaskRequirement.Type type = requirements.getFirst().getType();
                     boolean completed = menu.areRequirementsCompleted(this.getItem(), type);
                     MutableComponent title = Component.translatable(type.getTranslationKey()).append(":");
 
@@ -309,7 +309,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             protected List<Component> renderItemTooltip(@NotNull ItemStack stack, Component text, Item.TooltipContext context, boolean strikeThrough, @Nullable String bonus) {
                 List<Component> tooltips = getTooltipFromItem2(context, stack, strikeThrough, bonus);
-                tooltips.add(0, text);
+                tooltips.addFirst(text);
                 return tooltips;
             }
 
@@ -318,7 +318,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 List<Component> list1 = Lists.newArrayList();
                 for (int i = 0; i < list.size(); i++) {
                     if (i == 0) {
-                        MutableComponent t = list.get(0).copy().append(" " + (bonus != null ? bonus : "") + itemStack.getCount());
+                        MutableComponent t = list.getFirst().copy().append(" " + (bonus != null ? bonus : "") + itemStack.getCount());
                         if (strikeThough) t.withStyle(ChatFormatting.STRIKETHROUGH);
                         list1.add(t);
                     } else {

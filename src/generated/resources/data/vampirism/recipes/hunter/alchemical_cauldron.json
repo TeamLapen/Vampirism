@@ -9,7 +9,7 @@
       "item": "minecraft:stone_bricks"
     },
     "Z": {
-      "tag": "forge:crops/garlic"
+      "tag": "c:crops/garlic"
     }
   },
   "pattern": [

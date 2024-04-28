@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
@@ -19,9 +18,9 @@ import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.neoforge.registries.*;
-
-import java.util.Collection;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import static de.teamlapen.vampirism.api.VampirismRegistries.Keys.*;
 
@@ -48,7 +47,7 @@ public class ModRegistries {
             .add(Registries.PROCESSOR_LIST, ModStructures::createStructureProcessorLists)
             .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates)
             .add(Registries.STRUCTURE_SET, ModStructures::createStructureSets)
-//            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
+//            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier) TODO readd this
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::createDamageTypes)
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)

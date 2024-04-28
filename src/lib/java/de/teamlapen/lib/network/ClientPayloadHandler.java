@@ -1,10 +1,8 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.storage.ISyncable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -14,8 +12,6 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Optional;
 
 public class ClientPayloadHandler {
     private static final Logger LOGGER = LogManager.getLogger();

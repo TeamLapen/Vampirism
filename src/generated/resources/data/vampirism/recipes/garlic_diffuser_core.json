@@ -2,7 +2,7 @@
   "type": "vampirism:alchemical_cauldron",
   "category": "misc",
   "fluid": {
-    "tag": "forge:crops/garlic"
+    "tag": "c:crops/garlic"
   },
   "ingredient": {
     "tag": "minecraft:wool"

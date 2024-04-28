@@ -369,12 +369,10 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
-            getLord().ifPresent(player -> {
-                player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler).ifPresent(s -> {
-                    if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
-                        i.deathCooldown *= (int) 0.8;
-                    }
-                });
+            getLord().flatMap(player -> player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler)).ifPresent(s -> {
+                if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
+                    i.deathCooldown *= (int) 0.8;
+                }
             });
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();

@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;

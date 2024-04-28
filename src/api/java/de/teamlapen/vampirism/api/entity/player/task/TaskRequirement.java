@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 

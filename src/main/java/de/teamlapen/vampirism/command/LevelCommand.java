@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public class LevelCommand extends BasicCommand {
 

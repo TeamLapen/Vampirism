@@ -24,18 +24,6 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob, RangedAttackM
         return true;
     }
 
-    @Override
-    default void performCrossbowAttack(@Nonnull LivingEntity entity, float speed) {
-        InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(entity, IVampirismCrossbow.class::isInstance);
-        ItemStack itemstack = entity.getItemInHand(hand);
-        if (itemstack.getItem() instanceof IVampirismCrossbow) {
-            if (CrossbowItem.isCharged(itemstack)){
-                ((IVampirismCrossbow) itemstack.getItem()).performShootingMod(entity.level(), entity, hand, itemstack, speed, (float) (14 - entity.level().getDifficulty().getId() * 4));
-                this.onCrossbowAttackPerformed();
-            }
-        }
-    }
-
     enum ArmPose {
         NEUTRAL, CROSSBOW_HOLD, CROSSBOW_CHARGE
     }

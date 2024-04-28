@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.items.component.BottleBlood;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -42,7 +44,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
 
     public static @NotNull ItemStack getStackWithDamage(int damage) {
         ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
-        stack.setDamageValue(damage);
+        stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(damage));
         return stack;
     }
 
@@ -50,7 +52,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(new Properties().durability(AMOUNT).setNoRepair());
+        super(new Properties());
     }
 
     @Override
@@ -80,14 +82,14 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
-            stack.setDamageValue(i);
+            stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(i));
             output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
         ItemStack stack0 = getDefaultInstance();
-        stack0.setDamageValue(0);
+        stack0.set(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY);
         output.accept(stack0, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
         ItemStack stack9 = getDefaultInstance();
-        stack9.setDamageValue(BloodBottleItem.AMOUNT);
+        stack9.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(BloodBottleItem.AMOUNT));
         output.accept(stack9, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 

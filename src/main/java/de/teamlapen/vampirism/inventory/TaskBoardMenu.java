@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -54,7 +54,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
     private final Registry<Task> registry;
 
     public TaskBoardMenu(int id, @NotNull Inventory playerInventory) {
-        super(ModContainer.TASK_MASTER.get(), id);
+        super(ModMenus.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.factionColor = this.factionPlayer.getFaction().getChatColor();
         this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);

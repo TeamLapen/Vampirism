@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.extensions.IEntity;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**

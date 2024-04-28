@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.mixin.accessor.ProcessorRuleAccessor;
 import net.minecraft.world.level.block.state.BlockState;

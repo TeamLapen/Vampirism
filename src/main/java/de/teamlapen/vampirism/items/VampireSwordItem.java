@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -20,6 +18,7 @@ import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.items.component.BloodCharged;
 import de.teamlapen.vampirism.items.component.SwordTraining;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
@@ -28,24 +27,18 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.FloatTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -58,7 +51,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,20 +58,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public abstract class VampirismVampireSwordItem extends VampirismSwordItem implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> { //TODO 1.20 rename to VampireSwordItem
+public abstract class VampireSwordItem extends VampirismSwordItem implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> {
 
-
-    public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
-    /**
-     * Minimal strength modifier
-     */
-    private static final float minStrength = 0.2f;
+    public static final UUID TRAINED = UUID.fromString("eb44ff1e-df04-44d4-930c-ba5ee3a9f640");
+    public static final UUID CHARGED = UUID.fromString("e992975e-8ae4-45d1-a3b2-98a068abc839");
     /**
      * Speed modifier on max training
      */
     private final float trainedAttackSpeedIncrease;
 
-    public VampirismVampireSwordItem(@NotNull VampireSwordMaterial material, int attackDamage, @NotNull Properties prop) {
+    public VampireSwordItem(@NotNull VampireSwordMaterial material, int attackDamage, @NotNull Properties prop) {
         super(material, attackDamage, material.getSpeed(), prop);
         this.trainedAttackSpeedIncrease = material.getTrainedSpeedIncrease();
     }
@@ -238,7 +226,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * @param value Is clamped between 0 and 1
      */
     public void setCharged(@NotNull ItemStack stack, float value) {
-        stack.set(ModDataComponents.VAMPIRE_SWORD, stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).charge(value));
+        stack.set(ModDataComponents.BLOOD_CHARGED, stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged(value));
     }
 
     /**
@@ -290,16 +278,8 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
-    @Override
-    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-        builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-        builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.getTier().getSpeed() + getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-        return builder.build();
-    }
-
     protected float getAttackDamageModifier(@NotNull ItemStack stack) {
-        return getChargePercentage(stack) > 0 ? 1f : minStrength;
+        return getChargePercentage(stack) > 0 ? 0.8f : 0;
     }
 
     protected float getSpeedModifier(@NotNull ItemStack stack) {
@@ -318,7 +298,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      */
     @Override
     public float getChargePercentage(@NotNull ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).charged();
+        return stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged();
     }
 
     /**

@@ -16,8 +16,13 @@ import java.util.Optional;
 
 public class LevelGarlic implements IGarlicChunkHandler {
 
+    @Deprecated
     public static Optional<LevelGarlic> getOpt(@NotNull Level level) {
-        return Optional.ofNullable(level.getData(ModAttachments.LEVEL_GARLIC));
+        return Optional.of(level.getData(ModAttachments.LEVEL_GARLIC));
+    }
+
+    public static LevelGarlic get(@NotNull Level level) {
+        return level.getData(ModAttachments.LEVEL_GARLIC);
     }
 
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();

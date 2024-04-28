@@ -1,28 +1,24 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.Maps;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.datamaps.EntityExistsCondition;
 import de.teamlapen.vampirism.recipes.*;
+import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RegisterRecipeBookCategoriesEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * Handles all recipe registrations and reference.
@@ -64,6 +60,12 @@ public class ModRecipes {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         CONDITION_CODECS.register(bus);
+    }
+
+    static void registerCategories(RegisterRecipeBookCategoriesEvent event) {
+        event.registerRecipeCategoryFinder(ALCHEMICAL_CAULDRON_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
+        event.registerRecipeCategoryFinder(ALCHEMICAL_TABLE_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
+        event.registerRecipeCategoryFinder(WEAPONTABLE_CRAFTING_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
     }
 
 }

@@ -23,11 +23,6 @@ public interface ISkillManager {
     <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction);
 
     /**
-     * Get all available {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType}s that are registered
-     */
-    Collection<ISkillType> getSkillTypes();
-
-    /**
      * Get a skill type registered to the given id
      *
      * @param id id of the registered {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType}

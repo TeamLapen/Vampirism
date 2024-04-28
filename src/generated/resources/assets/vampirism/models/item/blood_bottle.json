@@ -4,61 +4,61 @@
     {
       "model": "vampirism:item/blood_bottle_0",
       "predicate": {
-        "minecraft:damage": 0.0
+        "vampirism:blood": 0.0
       }
     },
     {
       "model": "vampirism:item/blood_bottle_1",
       "predicate": {
-        "minecraft:damage": 0.11
+        "vampirism:blood": 0.11
       }
     },
     {
       "model": "vampirism:item/blood_bottle_2",
       "predicate": {
-        "minecraft:damage": 0.22
+        "vampirism:blood": 0.22
       }
     },
     {
       "model": "vampirism:item/blood_bottle_3",
       "predicate": {
-        "minecraft:damage": 0.33
+        "vampirism:blood": 0.33
       }
     },
     {
       "model": "vampirism:item/blood_bottle_4",
       "predicate": {
-        "minecraft:damage": 0.44
+        "vampirism:blood": 0.44
       }
     },
     {
       "model": "vampirism:item/blood_bottle_5",
       "predicate": {
-        "minecraft:damage": 0.55
+        "vampirism:blood": 0.55
       }
     },
     {
       "model": "vampirism:item/blood_bottle_6",
       "predicate": {
-        "minecraft:damage": 0.66
+        "vampirism:blood": 0.66
       }
     },
     {
       "model": "vampirism:item/blood_bottle_7",
       "predicate": {
-        "minecraft:damage": 0.77
+        "vampirism:blood": 0.77
       }
     },
     {
       "model": "vampirism:item/blood_bottle_8",
       "predicate": {
-        "minecraft:damage": 0.88
+        "vampirism:blood": 0.88
       }
     },
     {
       "model": "vampirism:item/blood_bottle_9",
       "predicate": {
-        "minecraft:damage": 0.99
+        "vampirism:blood": 0.99
       }
     }
   ],

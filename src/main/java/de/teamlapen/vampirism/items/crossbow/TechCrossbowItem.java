@@ -6,9 +6,7 @@ import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static net.minecraft.world.item.CrossbowItem.isCharged;
-
 public class TechCrossbowItem extends VampirismCrossbowItem {
 
     public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier) {
@@ -48,68 +44,17 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
         return stack -> stack.getItem() instanceof IArrowContainer && !((IArrowContainer) stack.getItem()).getArrows(stack).isEmpty();
     }
 
-    /**
-     * same as {@link net.minecraft.world.item.CrossbowItem#use(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand)}
-     * <br>
-     * check comments
-     * TODO 1.19 recheck
-     */
-    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level p_77659_1_, Player p_77659_2_, @Nonnull InteractionHand p_77659_3_) {
-        ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
-        if (isCharged(itemstack)) {
-            if (!performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F)) {
-                p_77659_2_.getCooldowns().addCooldown(this, 10); // add cooldown if projectiles left
-            }
-            return InteractionResultHolder.consume(itemstack);
-        } else if (!p_77659_2_.getProjectile(itemstack).isEmpty()) {
-            if (!isCharged(itemstack)) {
-                ((CrossbowItemMixin) this).setStartSoundPlayed(false);
-                ((CrossbowItemMixin) this).setMidLoadSoundPlayer(false);
-                p_77659_2_.startUsingItem(p_77659_3_);
-            }
-
-            return InteractionResultHolder.consume(itemstack);
-        } else {
-            return InteractionResultHolder.fail(itemstack);
+    protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
+        super.onShoot(shooter, crossbow);
+        if (shooter instanceof Player player) {
+            player.getCooldowns().addCooldown(this, 10);
         }
-    }
-
-    /**
-     * same as {@link net.minecraft.world.item.CrossbowItem#performShooting(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand, net.minecraft.world.item.ItemStack, float, float)}
-     * <br>
-     * TODO 1.19 recheck
-     */
-    public boolean performShootingMod(Level p_220014_0_, LivingEntity p_220014_1_, InteractionHand p_220014_2_, ItemStack p_220014_3_, float p_220014_4_, float p_220014_5_) {
-        List<ItemStack> list = p_220014_3_.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems();
-
-        ItemStack itemstack = getProjectile(p_220014_1_, p_220014_3_, list); //delegate for easy usage and frugality
-        boolean flag = !(p_220014_1_ instanceof Player player) || player.getAbilities().instabuild;
-        if (!itemstack.isEmpty()) {
-            shootProjectileMod(p_220014_0_, p_220014_1_, p_220014_2_, p_220014_3_, itemstack, CrossbowItemMixin.getShotPitches(p_220014_1_.getRandom(), 0), flag, p_220014_4_, p_220014_5_); // do not shoot more than one projectile
-        }
-
-        onShot(p_220014_1_, p_220014_3_);
-        setChargedProjectiles(p_220014_3_, list); // set the loaded projectiles
-        return list.isEmpty();
-    }
-
-    private static void setChargedProjectiles(ItemStack p_220014_0_, List<ItemStack> p_220014_1_) {
-        p_220014_0_.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(p_220014_1_));
     }
 
     @Override
     public boolean isValidRepairItem(@Nonnull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.INGOTS_IRON);
-    }
-
-    private ItemStack getProjectile(LivingEntity entity, ItemStack crossbow, List<ItemStack> projectiles) {
-        int frugal = isFrugal(crossbow);
-        if (frugal > 0 && entity.getRandom().nextInt(Math.max(2, 4 - frugal)) == 0) {
-            return projectiles.get(0).copy();
-        }
-        return projectiles.remove(0);
     }
 
     @Override

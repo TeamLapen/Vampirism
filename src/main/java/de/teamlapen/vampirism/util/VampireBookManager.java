@@ -10,7 +10,6 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.VampireBookItem;
 import de.teamlapen.vampirism.items.component.VampireBookContents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;

@@ -4,14 +4,13 @@ import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +33,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
 
 
     public HunterTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable);
+        super(ModMenus.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable);
         int hunterLevel = FactionPlayerHandler.get(playerInventory.player).getCurrentLevel(VReference.HUNTER_FACTION);
         this.tableRequirement = HunterLeveling.getTrainerRequirement(hunterLevel + 1).map(HunterLeveling.HunterTrainerRequirement::tableRequirement);
     }

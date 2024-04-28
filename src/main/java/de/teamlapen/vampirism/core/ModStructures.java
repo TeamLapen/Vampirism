@@ -144,6 +144,7 @@ public class ModStructures {
         context.register(HUNTER_OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 25, RandomSpreadType.LINEAR, 36413509)));
     }
 
+    @SuppressWarnings("UnreachableCode")
     static void createStructures(BootstrapContext<Structure> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> lookup1 = context.lookup(Registries.TEMPLATE_POOL);

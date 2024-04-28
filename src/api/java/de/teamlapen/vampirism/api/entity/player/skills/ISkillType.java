@@ -9,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ISkillType {
 
-    Codec<ISkillType> CODEC = ResourceLocation.CODEC.xmap(s -> VampirismAPI.skillManager().getSkillType(s), ISkillType::getRegistryName);
-
     /**
      * Creates an id for this skill type depending on the faction id.
      * <br>

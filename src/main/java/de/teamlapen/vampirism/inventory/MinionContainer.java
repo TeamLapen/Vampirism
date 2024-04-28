@@ -6,14 +6,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.vampirism.network.ServerboundToggleMinionTaskLock;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -69,7 +68,7 @@ public class MinionContainer extends InventoryContainerMenu {
     private boolean taskLocked;
 
     public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
-        super(ModContainer.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()), inventory, selectorInfos);
+        super(ModMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction(), lord)).toArray(IMinionTask[]::new);

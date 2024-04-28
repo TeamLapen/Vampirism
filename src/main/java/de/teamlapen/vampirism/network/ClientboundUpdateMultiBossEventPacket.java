@@ -1,12 +1,9 @@
 package de.teamlapen.vampirism.network;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import de.teamlapen.vampirism.world.MultiBossEvent;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -14,14 +11,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public record ClientboundUpdateMultiBossEventPacket(Operation operation) implements CustomPacketPayload {
 

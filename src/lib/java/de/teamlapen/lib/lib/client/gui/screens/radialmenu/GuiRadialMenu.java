@@ -46,7 +46,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -213,7 +212,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
     public void drawSecondaryIcons(GuiGraphics graphics, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            drawSecondaryIcon(graphics, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
+            drawSecondaryIcon(graphics, secondarySlotIcons.getFirst(), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
         } else {
             SecondaryIconPosition currentSecondaryIconPosition = radialMenu.getSecondaryIconStartingPosition();
             for (T secondarySlotIcon : secondarySlotIcons) {

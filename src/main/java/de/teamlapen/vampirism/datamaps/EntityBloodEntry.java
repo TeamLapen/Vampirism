@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.datamaps;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
-import org.jetbrains.annotations.Nullable;
 
 public record EntityBloodEntry(int blood) implements IEntityBlood {
 

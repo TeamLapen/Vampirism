@@ -22,23 +22,11 @@ public class PackRepositories {
     public static final PackLocationInfo BUILTIN_COMPAT = new PackLocationInfo(BUILTIN_COMPAT_ID, Component.literal("Vampirism builtin mod compatibility data"), PackSource.DEFAULT, Optional.empty());
 
     public static void registerPackRepository(AddPackFindersEvent event) {
-        var supplier = new Pack.ResourcesSupplier() {
-
-            @Override
-            public @NotNull PackResources openPrimary(@NotNull PackLocationInfo info) {
-                return new PathPackResources(info, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + info.id()));
-            }
-
-            @Override
-            public @NotNull PackResources openFull(@NotNull PackLocationInfo info, Pack.@NotNull Metadata metadata) {
-                return openPrimary(info);
-            }
-        };
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-            event.addRepositorySource(s -> s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK, supplier, PackType.CLIENT_RESOURCES, new PackSelectionConfig(false, Pack.Position.TOP, false))));
+            event.addRepositorySource(s -> s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK, new PathPackResources.PathResourcesSupplier(ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID)), PackType.CLIENT_RESOURCES, new PackSelectionConfig(false, Pack.Position.TOP, false))));
         }
         if (event.getPackType() == PackType.SERVER_DATA) {
-            event.addRepositorySource(s -> s.accept(new Pack(BUILTIN_COMPAT, supplier, new Pack.Metadata(BUILTIN_COMPAT.title(), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of(), true), new PackSelectionConfig(false, Pack.Position.TOP, false))));
+            event.addRepositorySource(s -> s.accept(new Pack(BUILTIN_COMPAT, new PathPackResources.PathResourcesSupplier(ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + BUILTIN_COMPAT_ID)), new Pack.Metadata(BUILTIN_COMPAT.title(), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of(), true), new PackSelectionConfig(false, Pack.Position.TOP, false))));
         }
     }
 }

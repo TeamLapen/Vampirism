@@ -1,12 +1,8 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 

@@ -217,9 +217,9 @@ public class TotemHelper {
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
             return Component.translatable("command.vampirism.test.village.no_village");
         }
-        BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.get(0).getPos()));
+        BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.getFirst().getPos()));
         if (!(te instanceof TotemBlockEntity tile)) {
-            LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.get(0).getPos()));
+            LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.getFirst().getPos()));
             return Component.literal("");
         }
         tile.setForcedFaction(faction);

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.effect;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**

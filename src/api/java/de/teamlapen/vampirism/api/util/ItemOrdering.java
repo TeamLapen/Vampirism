@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.api.util;
 
 import com.google.common.base.Preconditions;
-import com.google.errorprone.annotations.Immutable;
-import org.spongepowered.asm.mixin.Mutable;
 
 import java.util.ArrayList;
 import java.util.Collection;

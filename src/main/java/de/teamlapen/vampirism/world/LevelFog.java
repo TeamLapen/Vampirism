@@ -17,8 +17,13 @@ import java.util.stream.Stream;
 
 public class LevelFog implements IFogHandler {
 
+    @Deprecated
     public static Optional<LevelFog> getOpt(@NotNull Level level) {
-        return Optional.ofNullable(level.getData(ModAttachments.LEVEL_FOG));
+        return Optional.of(level.getData(ModAttachments.LEVEL_FOG));
+    }
+
+    public static LevelFog get(@NotNull Level level) {
+        return level.getData(ModAttachments.LEVEL_FOG);
     }
 
     private final Map<BlockPos, BoundingBox> fogAreas = new ConcurrentHashMap<>();

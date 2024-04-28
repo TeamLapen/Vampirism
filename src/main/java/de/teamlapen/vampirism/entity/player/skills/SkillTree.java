@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.mixin;
 
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModLoot;

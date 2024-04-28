@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.storage.ISyncable;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -129,7 +128,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         }
         if (allCaps != null && !allCaps.isEmpty()) {
             for (AttachmentType<IAttachedSyncable> cap : allCaps) {
-                Optional.ofNullable(entity.getData(cap)).ifPresent(capsToSync::add);
+                Optional.of(entity.getData(cap)).ifPresent(capsToSync::add);
             }
         }
         if (!capsToSync.isEmpty()) {

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.config;
 
 
-import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.resources.ResourceLocation;

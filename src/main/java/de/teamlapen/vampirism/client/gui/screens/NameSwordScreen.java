@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
+import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.network.ServerboundNameItemPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class NameSwordScreen extends Screen {
@@ -48,13 +49,13 @@ public class NameSwordScreen extends Screen {
         this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
                 NameSwordScreen.this.sword.set(DataComponents.CUSTOM_NAME, Component.literal(nameField.getValue()));
-                VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(nameField.getValue()));
+                VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(Optional.of(nameField.getValue())));
             }
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));
         this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.no, (context) -> {
-            VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(VampirismVampireSwordItem.DO_NOT_NAME_STRING));
+            VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(Optional.empty()));
             this.minecraft.setScreen(null);
             this.minecraft.setWindowActive(true);
         }));
@@ -74,7 +75,7 @@ public class NameSwordScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
         graphics.drawCenteredString(this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
         for (FormattedCharSequence s : this.listLines) {
@@ -82,9 +83,6 @@ public class NameSwordScreen extends Screen {
             i += this.font.lineHeight;
         }
         this.nameField.render(graphics, mouseX, mouseY, partialTicks);
-
-
-        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

@@ -1,30 +1,17 @@
 package de.teamlapen.lib.proxy;
 
 
-import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.lib.storage.IAttachedSyncable;
-import de.teamlapen.lib.lib.storage.ISyncable;
-import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.SoundReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class ClientProxy extends CommonProxy {
 
@@ -48,7 +35,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public @NotNull String getActiveLanguage() {
-        return Minecraft.getInstance().getLanguageManager().getSelected().toString();
+        return Minecraft.getInstance().getLanguageManager().getSelected();
     }
 
     @Override

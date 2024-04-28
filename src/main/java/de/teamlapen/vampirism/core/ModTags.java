@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModTags {
     private static @NotNull ResourceLocation forge(@NotNull String resourceName) {
-        return new ResourceLocation("forge", resourceName);
+        return new ResourceLocation("c", resourceName);
     }
 
     private static @NotNull ResourceLocation vanilla(@NotNull String resourceName) {

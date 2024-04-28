@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
-import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;

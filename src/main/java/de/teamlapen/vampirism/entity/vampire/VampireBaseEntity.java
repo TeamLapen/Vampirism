@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;

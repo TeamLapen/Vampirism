@@ -25,7 +25,7 @@ import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.items.OblivionItem;
-import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
+import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -77,15 +77,17 @@ public class ServerPayloadHandler {
 
     public void handleNameItemPacket(ServerboundNameItemPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-                if (VampirismVampireSwordItem.DO_NOT_NAME_STRING.equals(msg.name())) {
+            msg.name().ifPresentOrElse(name -> {
+                if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                     ItemStack stack = context.player().getMainHandItem();
-                    if (stack.getItem() instanceof VampirismVampireSwordItem swordItem) {
-                        swordItem.doNotName(stack);
-                    }
-                } else if (!org.apache.commons.lang3.StringUtils.isBlank(msg.name())) {
-                    ItemStack stack = context.player().getMainHandItem();
-                    stack.set(DataComponents.CUSTOM_NAME, Component.literal(msg.name()).withStyle(ChatFormatting.AQUA));
+                    stack.set(DataComponents.CUSTOM_NAME, Component.literal(name).withStyle(ChatFormatting.AQUA));
                 }
+            }, () -> {
+                ItemStack stack = context.player().getMainHandItem();
+                if (stack.getItem() instanceof VampireSwordItem swordItem) {
+                    swordItem.doNotName(stack);
+                }
+            });
         });
     }
 

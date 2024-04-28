@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.ai.goals;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
-import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ChargedProjectiles;
 
@@ -74,7 +72,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
     public void stop() {
         super.stop();
         this.mob.setAggressive(false);
-        this.mob.setTarget((LivingEntity)null);
+        this.mob.setTarget(null);
         this.seeTime = 0;
         if (this.mob.isUsingItem()) {
             this.mob.stopUsingItem();

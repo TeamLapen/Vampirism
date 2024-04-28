@@ -19,8 +19,6 @@ import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Stores blood and other liquids in a {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank}
  * Tank is synced if the block is marked for update

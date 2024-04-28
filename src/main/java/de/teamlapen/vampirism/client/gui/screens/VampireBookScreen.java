@@ -190,7 +190,7 @@ public class VampireBookScreen extends Screen {
             copy.add(elements.get(i));
             copy.add(newLine);
         }
-        copy.add(elements.get(elements.size() - 1));
+        copy.add(elements.getLast());
         return FormattedText.composite(copy);
     }
 

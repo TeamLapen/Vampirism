@@ -3,7 +3,6 @@ package de.teamlapen.vampirism;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.serialization.Codec;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
@@ -13,13 +12,11 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
-import de.teamlapen.vampirism.blockentity.*;
+import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -27,7 +24,6 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
-import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -54,7 +50,7 @@ import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.mixin.accessor.ReloadableServerResourcesAccessor;
 import de.teamlapen.vampirism.mixin.accessor.TagManagerAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
+//import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
@@ -67,14 +63,11 @@ import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.*;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -85,12 +78,11 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -111,13 +103,15 @@ public class VampirismMod {
 
     private final @NotNull RegistryManager registryManager;
     private final IEventBus modBus;
+    private final ModContainer modContainer;
 
 
-    public VampirismMod(IEventBus modEventBus) {
+    public VampirismMod(IEventBus modEventBus, ModContainer modContainer) {
         instance = this;
         checkEnv();
 
         this.modBus = modEventBus;
+        this.modContainer = modContainer;
 
         this.registryManager = new RegistryManager(modEventBus);
 
@@ -144,7 +138,6 @@ public class VampirismMod {
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
         NeoForge.EVENT_BUS.addListener(this::onDataPackSyncEvent);
 
-        VampirismConfig.init();
         ShapedRecipePattern.setCraftingSize(4,4);
 
         prepareAPI();
@@ -188,7 +181,6 @@ public class VampirismMod {
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
-        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.GRINDER.get(), (o, side) -> o.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.BLOOD_PEDESTAL.get(), (o, side) -> o);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.SIEVE.get(), (o, side) -> o.getTank());
@@ -218,8 +210,9 @@ public class VampirismMod {
         }
     }
 
-    private void finalizeConfiguration(RegisterEvent event) {
-        VampirismConfig.finalizeAndRegisterConfig(this.modBus);
+    private void finalizeConfiguration(NewRegistryEvent event) {
+        VampirismConfig.buildBalanceConfig();
+        VampirismConfig.register(this.modContainer);
     }
 
     /**
@@ -231,9 +224,7 @@ public class VampirismMod {
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
-        VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
-        VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
+        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
             VampirismLogger.init();
         }
@@ -322,7 +313,8 @@ public class VampirismMod {
         SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
-        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
+        //TODO readd this
+//        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
 

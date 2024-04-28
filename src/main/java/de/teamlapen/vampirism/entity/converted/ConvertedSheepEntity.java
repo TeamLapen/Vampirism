@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import net.minecraft.core.BlockPos;

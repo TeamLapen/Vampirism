@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:crops/garlic"
+            "items": "#c:crops/garlic"
           }
         ]
       },

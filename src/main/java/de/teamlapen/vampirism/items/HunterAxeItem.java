@@ -7,23 +7,17 @@ import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -97,8 +91,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
 
     private float getVampireMult() {
         return switch (tier) {
-            case ULTIMATE -> 1.3F;
-            case ENHANCED -> 1.3F;
+            case ULTIMATE, ENHANCED -> 1.3F;
             default -> 1.2F;
         };
     }

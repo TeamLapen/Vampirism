@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.core.ModLoot;

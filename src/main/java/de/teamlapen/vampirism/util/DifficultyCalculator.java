@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Calculates a (local) difficulity based on the player faction levels

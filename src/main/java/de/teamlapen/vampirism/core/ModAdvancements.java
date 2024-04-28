@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.mixin.accessor.PlayerAdvancementsAccessor;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.PlayerAdvancements;
@@ -13,10 +12,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-/**
- * Actual advancements are loaded from assets (JSON)
- * Criteria are registered here
- */
 public class ModAdvancements {
     private static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, REFERENCE.MODID);
 

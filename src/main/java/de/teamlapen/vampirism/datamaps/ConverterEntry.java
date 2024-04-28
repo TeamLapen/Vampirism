@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.ai.attributes.Attribute;

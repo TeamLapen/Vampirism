@@ -1,11 +1,7 @@
 package de.teamlapen.vampirism.misc;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.*;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
@@ -15,7 +11,7 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 /**
- * logger for vampirism faction stuff that is only initialized for dedicated server and only woorking if {@link de.teamlapen.vampirism.config.VampirismConfig.Common#enableFactionLogging} is true<br>
+ * logger for vampirism faction stuff that is only initialized for dedicated server and only woorking if {@link de.teamlapen.vampirism.config.CommonConfig#enableFactionLogging} is true<br>
  * otherwise the logger does nothing
  */
 public class VampirismLogger {

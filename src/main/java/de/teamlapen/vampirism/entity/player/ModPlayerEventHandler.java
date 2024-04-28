@@ -57,7 +57,6 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -84,8 +83,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.StreamSupport;
-
-import static com.mojang.datafixers.TypeRewriteRule.orElse;
 
 /**
  * Event handler for player related events

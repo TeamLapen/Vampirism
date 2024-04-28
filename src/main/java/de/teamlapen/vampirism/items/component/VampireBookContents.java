@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.components.IVampireBookContent;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.util.VampireBookManager;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

@@ -5,14 +5,13 @@ import de.teamlapen.lib.lib.inventory.BooleanDataSlot;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.recipebook.ServerPlaceRecipe;
@@ -45,7 +44,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
 
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
-        super(ModContainer.WEAPON_TABLE.get(), id);
+        super(ModMenus.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.player = playerInventory.player;

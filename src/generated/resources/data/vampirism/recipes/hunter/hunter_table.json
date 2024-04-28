@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "W": {
-      "tag": "forge:crops/garlic"
+      "tag": "c:crops/garlic"
     },
     "X": {
       "item": "vampirism:vampire_fang"

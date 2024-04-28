@@ -126,7 +126,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             blockpos = new BlockPos(i, pBlockEntity.lastCheckY + 1, k);
         }
 
-        BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty() ? null : pBlockEntity.checkingBeamSections.get(pBlockEntity.checkingBeamSections.size() - 1);
+        BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty() ? null : pBlockEntity.checkingBeamSections.getLast();
         int l = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE, i, k);
 
         for(int i1 = 0; i1 < BLOCKS_CHECK_PER_TICK && blockpos.getY() <= l; ++i1) {

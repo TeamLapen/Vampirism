@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "forge:crops/garlic"
+      "tag": "c:crops/garlic"
     },
     {
       "item": "minecraft:bread"

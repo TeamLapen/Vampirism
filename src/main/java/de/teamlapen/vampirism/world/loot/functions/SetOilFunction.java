@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.ItemDataUtils;
-import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.core.Holder;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -17,7 +14,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

@@ -16,7 +16,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
+import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
 import de.teamlapen.vampirism.mixin.accessor.NearestAttackableTargetGoalAccessor;
@@ -249,8 +249,8 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
-        if (event.getTo().getItem() instanceof VampirismVampireSwordItem) {
-            ((VampirismVampireSwordItem) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntity());
+        if (event.getTo().getItem() instanceof VampireSwordItem) {
+            ((VampireSwordItem) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntity());
         }
     }
 

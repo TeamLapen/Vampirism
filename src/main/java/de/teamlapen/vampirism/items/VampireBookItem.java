@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.items.component.VampireBookContents;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringUtil;

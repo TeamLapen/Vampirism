@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -14,9 +13,7 @@ import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.items.component.EffectiveRefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
@@ -36,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public abstract class RefinementItem extends Item implements IRefinementItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -46,7 +42,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     public static @NotNull ItemStack getRandomRefinementItem(@NotNull IPlayableFaction<?> faction) {
         List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElseGet(() -> sets.get(0).data());
+        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElseGet(() -> sets.getFirst().data());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
             case 0 -> AccessorySlotType.OBI_BELT;
             case 1 -> AccessorySlotType.RING;

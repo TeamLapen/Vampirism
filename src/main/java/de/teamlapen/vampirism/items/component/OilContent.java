@@ -15,8 +15,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
-
 public record OilContent(Holder<IOil> oil) implements IOilContent {
     public static final OilContent EMPTY = new OilContent(ModOils.EMPTY);
     private static final Codec<OilContent> FULL_CODEC = RecordCodecBuilder.create(inst ->

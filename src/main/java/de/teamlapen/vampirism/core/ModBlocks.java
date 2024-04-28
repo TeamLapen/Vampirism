@@ -30,7 +30,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static de.teamlapen.lib.lib.util.RegisterHelper.*;
+import static de.teamlapen.lib.lib.util.RegisterHelper.flammable;
+import static de.teamlapen.lib.lib.util.RegisterHelper.potted;
 
 /**
  * Handles all block registrations and reference.

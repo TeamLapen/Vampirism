@@ -181,7 +181,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.get(0)) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem(level.registryAccess())).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
+            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.getFirst()) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem(level.registryAccess())).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 

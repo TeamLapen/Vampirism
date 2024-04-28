@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

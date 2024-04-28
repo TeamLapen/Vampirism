@@ -4,12 +4,11 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
-import de.teamlapen.vampirism.core.ModDataMaps;
-import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.core.ModDataMaps;
+import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,7 +22,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 

@@ -2,8 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.core.ModContainer;
-import net.minecraft.network.FriendlyByteBuf;
+import de.teamlapen.vampirism.core.ModMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -24,7 +23,7 @@ public class PotionTableMenu extends InventoryContainerMenu {
     private final @NotNull ContainerData syncedProperties;
 
     public PotionTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPos, @NotNull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
-        super(ModContainer.EXTENDED_POTION_TABLE.get(), id, playerInventory, worldPos, inventory, getSelectorInfos(playerInventory.player.level(), extended));
+        super(ModMenus.EXTENDED_POTION_TABLE.get(), id, playerInventory, worldPos, inventory, getSelectorInfos(playerInventory.player.level(), extended));
         assert inventory.getContainerSize() >= (extended ? 8 : 6);
         this.syncedProperties = syncedProperties == null ? new SimpleContainerData(2) : syncedProperties;
         addPlayerSlots(playerInventory);

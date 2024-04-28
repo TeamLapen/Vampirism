@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
-import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;

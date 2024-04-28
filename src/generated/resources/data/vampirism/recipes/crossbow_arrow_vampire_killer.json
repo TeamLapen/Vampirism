@@ -6,7 +6,7 @@
       "item": "minecraft:feather"
     },
     "X": {
-      "tag": "forge:crops/garlic"
+      "tag": "c:crops/garlic"
     },
     "Y": {
       "tag": "c:ingots/gold"

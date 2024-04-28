@@ -28,7 +28,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -271,7 +270,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     public static void tick(@NotNull Level level, BlockPos pos, BlockState state, @NotNull PotionTableBlockEntity blockEntity) {
-        ItemStack itemstack = blockEntity.brewingItemStacks.get(0);
+        ItemStack itemstack = blockEntity.brewingItemStacks.getFirst();
         if (blockEntity.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             blockEntity.fuel = 20;
             itemstack.shrink(1);

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import net.minecraft.commands.CommandSourceStack;

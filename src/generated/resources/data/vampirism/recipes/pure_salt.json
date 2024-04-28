@@ -7,7 +7,7 @@
     "id": "minecraft:water"
   },
   "ingredient": {
-    "tag": "forge:crops/garlic"
+    "tag": "c:crops/garlic"
   },
   "result": {
     "count": 4,

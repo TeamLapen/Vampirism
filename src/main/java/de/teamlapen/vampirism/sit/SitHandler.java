@@ -12,11 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
-
-import javax.management.Attribute;
 
 public class SitHandler {
     public static void startSitting(@NotNull Player player, @NotNull Level level, @NotNull BlockPos pos, double offset) {

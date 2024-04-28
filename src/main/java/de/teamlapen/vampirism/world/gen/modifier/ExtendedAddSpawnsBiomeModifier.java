@@ -4,10 +4,8 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.random.Weight;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -28,7 +26,7 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
             Biome.LIST_CODEC.fieldOf("excludedBiomes").forGetter(ExtendedAddSpawnsBiomeModifier::excludedBiomes),
             Codec.either(ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC.listOf(), ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC).xmap(
                     either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
-                    list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
+                    list -> list.size() == 1 ? Either.right(list.getFirst()) : Either.left(list) // convert list to singleton/list when encoding
             ).fieldOf("spawners").forGetter(ExtendedAddSpawnsBiomeModifier::spawners)
     ).apply(builder, ExtendedAddSpawnsBiomeModifier::new));
 

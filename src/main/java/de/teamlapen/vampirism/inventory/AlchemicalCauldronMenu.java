@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.mixin.accessor.AbstractContainerMenuAccessor;
 import de.teamlapen.vampirism.mixin.accessor.AbstractFurnaceMenuAccessor;
@@ -22,7 +22,7 @@ public class AlchemicalCauldronMenu extends AbstractFurnaceMenu {
     }
 
     public AlchemicalCauldronMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inv, @NotNull ContainerData data, ContainerLevelAccess worldPos) {
-        super(ModContainer.ALCHEMICAL_CAULDRON.get(), ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), RecipeBookType.FURNACE, id, playerInventory, inv, data);
+        super(ModMenus.ALCHEMICAL_CAULDRON.get(), ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), RecipeBookType.FURNACE, id, playerInventory, inv, data);
         setSlots(playerInventory);
     }
 

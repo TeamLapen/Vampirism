@@ -17,7 +17,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class ClientPayloadHandler {

@@ -4,12 +4,11 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.PedestalBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.items.VampirismVampireSwordItem;
+import de.teamlapen.vampirism.items.VampireSwordItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -37,9 +36,9 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     private static void takeItemPlayer(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack stack) {
         player.setItemInHand(hand, stack);
-        if (stack.getItem() instanceof VampirismVampireSwordItem) {
-            if (((VampirismVampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
-                ((VampirismVampireSwordItem) stack.getItem()).tryName(stack, player);
+        if (stack.getItem() instanceof VampireSwordItem) {
+            if (((VampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
+                ((VampireSwordItem) stack.getItem()).tryName(stack, player);
             }
         }
     }

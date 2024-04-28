@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.IntStream;
 

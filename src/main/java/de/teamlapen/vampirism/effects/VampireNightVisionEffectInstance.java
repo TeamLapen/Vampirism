@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;

@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModDataMaps;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.datamaps.ItemBlood;
 import net.minecraft.core.registries.BuiltInRegistries;

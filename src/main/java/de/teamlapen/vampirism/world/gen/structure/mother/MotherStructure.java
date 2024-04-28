@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.structure.mother;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.world.level.levelgen.structure.SinglePieceStructure;

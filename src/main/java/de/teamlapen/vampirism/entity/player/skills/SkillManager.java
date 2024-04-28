@@ -21,34 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * 1.12
- *
- * @author maxanier
- */
 public class SkillManager implements ISkillManager {
 
     private final static Logger LOGGER = LogManager.getLogger(SkillManager.class);
     private final Map<ResourceLocation, ISkillType> skillTypes = new HashMap<>();
-
-    /**
-     * Gets the root skill of the faction for the given skill type. The skill must be registered with an id that matches {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType#createIdForFaction(net.minecraft.resources.ResourceLocation)}
-     *
-     * @param faction the faction for which the skill should be returned
-     * @param type    the type of skill that is searched for
-     * @return th root skill for the parameters
-     * @throws java.lang.IllegalStateException when the faction can not have a skill for the given skill type or when there is no skill registered conforming to the skill type's naming scheme
-     */
-    @NotNull
-    public <T extends IFactionPlayer<T>> ISkill<T> getRootSkill(@NotNull IPlayableFaction<T> faction, @NotNull ISkillType type) {
-        if (!type.isForFaction(faction)) throw new IllegalStateException("The skilltype " + type + " is not applicable for the faction " + faction.getID());
-        ISkill skill = RegUtil.getSkill(type.createIdForFaction(faction.getID()));
-        if (skill == null) {
-            LOGGER.warn("No root skill exists for faction {}", faction.getID());
-            throw new IllegalStateException("You need to register a root skill for your faction " + faction.getID());
-        }
-        return skill;
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,20 +32,6 @@ public class SkillManager implements ISkillManager {
         return RegUtil.values(ModRegistries.SKILLS).stream().filter(action -> action.getFaction().map(f -> f == faction).orElse(true)).map(action -> (ISkill<T>) action).collect(Collectors.toList());
     }
 
-    @Override
-    public @NotNull Collection<ISkillType> getSkillTypes() {
-        return this.skillTypes.values();
-    }
-
-    /**
-     * For debug purpose only.
-     * Prints the skills of the given faction to the given sender
-     */
-    public void printSkills(IPlayableFaction<?> faction, @NotNull CommandSourceStack sender) {
-        for (ISkill<?> s : getSkillsForFaction(faction)) {
-            sender.sendSuccess(() -> Component.literal("ID: " + RegUtil.id(s) + " Skill: ").append(s.getName()), true);
-        }
-    }
 
     @Nullable
     @Override

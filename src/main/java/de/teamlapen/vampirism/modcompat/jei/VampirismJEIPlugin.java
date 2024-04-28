@@ -30,7 +30,6 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
@@ -98,9 +97,9 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModContainer.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
-        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModContainer.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
-        registration.addRecipeTransferHandler(WeaponTableMenu.class, ModContainer.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
+        registration.addRecipeTransferHandler(WeaponTableMenu.class, ModMenus.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
     }
 
     @Override

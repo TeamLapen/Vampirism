@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.util.ExtraCodecs;
 
 import java.util.function.Function;
 

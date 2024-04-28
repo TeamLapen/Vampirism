@@ -21,8 +21,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 /**
  * Add a button to the inventory screen that allows opening the skill menu from there
  */

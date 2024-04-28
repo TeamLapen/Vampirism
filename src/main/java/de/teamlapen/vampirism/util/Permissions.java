@@ -16,7 +16,6 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Permissions {
     public static final PermissionDynamicContextKey<IAction<?>> ACTION_CONTEXT = new PermissionDynamicContextKey<>((Class<IAction<?>>) (Object) IAction.class, "action", action -> RegUtil.id(action).toString());

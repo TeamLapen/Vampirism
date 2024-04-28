@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.feature.treedecorators;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blocks.DiagonalCursedBarkBlock;
 import de.teamlapen.vampirism.blocks.DirectCursedBarkBlock;
