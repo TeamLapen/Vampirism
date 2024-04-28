@@ -78,15 +78,15 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(hand);
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!stack.isEmpty()) {
             Optional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
                 AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
                 if (!player.isShiftKeyDown() && tileEntity != null) {
                     player.awardStat(ModStats.INTERACT_WITH_ALTAR_INSPIRATION.get());
-                    FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getDirection());
+                    FluidUtil.interactWithFluidHandler(player, InteractionHand.MAIN_HAND, worldIn, pos, hit.getDirection());
                 }
                 return InteractionResult.SUCCESS;
             }

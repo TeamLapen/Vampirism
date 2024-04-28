@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.mixin.accessor;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,5 +16,5 @@ public interface LivingEntityAccessor {
     int invoke_getExperiencePoints_vampirism();
 
     @Accessor("activeEffects")
-    Map<MobEffect, MobEffectInstance> getActiveEffects();
+    Map<Holder<MobEffect>, MobEffectInstance> getActiveEffects();
 }

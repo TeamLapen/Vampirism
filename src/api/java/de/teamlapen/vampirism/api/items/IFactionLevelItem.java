@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -23,13 +24,8 @@ import java.util.List;
  */
 public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFactionExclusiveItem {
 
-    @Deprecated(since = "1.9", forRemoval = true)
-    default void addFactionLevelToolTip(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
-        addFactionToolTips(stack, worldIn, tooltip, flagIn, player);
-    }
-
     @Override
-    default void addFactionToolTips(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
+    default void addFactionToolTips(@NotNull ItemStack stack, Item.@Nullable TooltipContext worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         IFactionPlayerHandler playerHandler = player != null ? VampirismAPI.factionPlayerHandler(player) : null;
 
         IFactionExclusiveItem.super.addFactionToolTips(stack, worldIn, tooltip, flagIn, player);

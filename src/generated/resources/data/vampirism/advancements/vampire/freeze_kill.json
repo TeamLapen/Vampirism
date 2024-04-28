@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:clock"
+      "count": 1,
+      "id": "minecraft:clock"
     },
     "title": {
       "translate": "advancement.vampirism.freeze_kill"

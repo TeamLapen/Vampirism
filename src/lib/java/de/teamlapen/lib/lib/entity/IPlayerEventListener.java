@@ -6,7 +6,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * Provides several event related methods, which should be called by a dedicated EventHandler.
@@ -49,5 +49,5 @@ public interface IPlayerEventListener {
      * Called at the beginning and at the end of {@link Player}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end
      */
-    void onUpdatePlayer(TickEvent.Phase phase);
+    void onUpdatePlayer(PlayerTickEvent event);
 }

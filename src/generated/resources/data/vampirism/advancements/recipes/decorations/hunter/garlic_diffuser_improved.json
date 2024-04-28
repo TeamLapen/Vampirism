@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:garlic_diffuser_normal"
-            ]
+            "items": "vampirism:garlic_diffuser_normal"
           }
         ]
       },

@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.VampireBookItem;
+import de.teamlapen.vampirism.items.component.VampireBookContents;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +25,7 @@ import java.util.Optional;
  */
 public class AddBookNbtFunction extends LootItemConditionalFunction {
 
-    public static final Codec<AddBookNbtFunction> CODEC = RecordCodecBuilder.create(inst -> commonFields(inst).apply(inst, AddBookNbtFunction::new));
+    public static final MapCodec<AddBookNbtFunction> CODEC = RecordCodecBuilder.mapCodec(inst -> commonFields(inst).apply(inst, AddBookNbtFunction::new));
     public static @NotNull Builder<?> builder() {
         return simpleBuilder(AddBookNbtFunction::new);
     }
@@ -34,7 +36,7 @@ public class AddBookNbtFunction extends LootItemConditionalFunction {
 
     @NotNull
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<AddBookNbtFunction> getType() {
         return ModLoot.ADD_BOOK_NBT.get();
     }
 
@@ -47,7 +49,7 @@ public class AddBookNbtFunction extends LootItemConditionalFunction {
             id = provider.getBookLootId();
         }
         VampireBookManager.BookContext bookContext = id.map(VampireBookManager.getInstance()::getBookContextById).orElseGet(() -> VampireBookManager.getInstance().getRandomBook(lootContext.getRandom()));
-        itemStack.setTag(VampireBookItem.createTagFromContext(bookContext));
+        VampireBookContents.addFromBook(itemStack, bookContext);
         return itemStack;
     }
 }

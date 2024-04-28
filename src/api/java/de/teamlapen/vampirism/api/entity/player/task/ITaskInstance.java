@@ -79,10 +79,4 @@ public interface ITaskInstance {
      */
     void startTask(long timeStamp);
 
-    /**
-     * saves this instance to nbt
-     *
-     * @return parameter compoundNBT
-     */
-    CompoundTag writeNBT(CompoundTag compoundNBT);
 }

@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:tombstone2"
-            ]
+            "items": "vampirism:tombstone2"
           }
         ]
       },

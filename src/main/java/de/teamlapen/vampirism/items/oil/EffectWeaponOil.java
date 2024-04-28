@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -20,22 +22,27 @@ import java.util.function.Supplier;
 public class EffectWeaponOil extends WeaponOil {
 
     @NotNull
-    private final MobEffect effect;
+    private final Holder<MobEffect> effect;
     private final @NotNull Supplier<Integer> effectDuration;
 
-    public EffectWeaponOil(@NotNull MobEffect effect, @NotNull Supplier<Integer> effectDuration, int maxDuration) {
-        super(effect.getColor(), maxDuration);
+    public EffectWeaponOil(@NotNull Holder<MobEffect> effect, @NotNull Supplier<Integer> effectDuration, int maxDuration) {
+        super(0, maxDuration);
         this.effect = Objects.requireNonNull(effect);
         this.effectDuration = Objects.requireNonNull(effectDuration);
     }
 
-    public EffectWeaponOil(@NotNull MobEffect effect, int effectDuration, int maxDuration) {
+    public EffectWeaponOil(@NotNull Holder<MobEffect> effect, int effectDuration, int maxDuration) {
         this(effect, () -> effectDuration, maxDuration);
+    }
+
+    @Override
+    public int getColor() {
+        return this.effect.value().getColor();
     }
 
     @NotNull
     public MobEffect getEffect() {
-        return effect;
+        return effect.value();
     }
 
     @NotNull
@@ -50,21 +57,21 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltips) {
         tooltips.add(Component.empty());
         tooltips.add(Component.translatable("text.vampirism.oil.effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.add(getEffectDescriptionWithDash(getEffectInstance(), level));
+        tooltips.add(getEffectDescriptionWithDash(getEffectInstance(), context));
     }
 
-    private @NotNull Component getEffectDescriptionWithDash(@NotNull MobEffectInstance instance, @Nullable Level level) {
+    private @NotNull Component getEffectDescriptionWithDash(@NotNull MobEffectInstance instance, @Nullable Item.TooltipContext context) {
         MutableComponent component = Component.translatable(instance.getDescriptionId());
         if (instance.getAmplifier() > 0) {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + instance.getAmplifier()));
         }
 
-        if (instance.getDuration() > 20 && level != null) {
-            component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1.0f, level.tickRateManager().tickrate()));
+        if (instance.getDuration() > 20 && context != null) {
+            component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1.0f, context.tickRate()));
         }
-        return Component.literal("- ").append(component).withStyle(effect.getCategory().getTooltipFormatting());
+        return Component.literal("- ").append(component).withStyle(getEffect().getCategory().getTooltipFormatting());
     }
 }

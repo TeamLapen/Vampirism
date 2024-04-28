@@ -18,12 +18,12 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -94,16 +94,16 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         this.addTierInformation(tooltip);
-        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
+        this.addFactionToolTips(stack, context, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean held) {
         if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8 && (living.getOffhandItem() == stack || living.getMainHandItem() == stack)) {
             if (Helper.isVampire(entity)) {
-                ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON.get(), 20, 1));
+                ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
                 if (entity instanceof Player player) {
                     player.getInventory().removeItem(stack);
                     player.drop(stack, true);
@@ -113,7 +113,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     protected boolean affectsEntity(@NotNull LivingEntity e) {
-        return e.getMobType() == MobType.UNDEAD || Helper.isVampire(e);
+        return e.getType().is(EntityTypeTags.UNDEAD) || Helper.isVampire(e);
     }
 
 

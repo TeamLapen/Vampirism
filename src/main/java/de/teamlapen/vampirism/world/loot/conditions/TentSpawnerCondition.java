@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class TentSpawnerCondition implements LootItemCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
-    public static final Codec<TentSpawnerCondition> CODEC = Codec.unit(INSTANCE);
+    public static final MapCodec<TentSpawnerCondition> CODEC = MapCodec.unit(INSTANCE);
 
     public static @NotNull Builder builder() {
         return () -> INSTANCE;

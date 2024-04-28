@@ -19,7 +19,8 @@
     "frame": "goal",
     "hidden": true,
     "icon": {
-      "item": "vampirism:vampire_fang"
+      "count": 1,
+      "id": "vampirism:vampire_fang"
     },
     "title": {
       "translate": "advancement.vampirism.max_level_vampire"

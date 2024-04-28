@@ -16,13 +16,13 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.world.LevelDamage;
 import de.teamlapen.vampirism.world.ModDamageSources;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +65,7 @@ public class DamageHandler {
     private static void affectVampireGarlic(@NotNull IVampire vampire, @NotNull EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.asEntity();
-        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC.get(), (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
@@ -120,7 +120,7 @@ public class DamageHandler {
     public static void affectEntityHolyWaterSplash(@NotNull LivingEntity entity, @NotNull EnumStrength strength, double distSq, boolean directHit, @Nullable LivingEntity source) {
         if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
-        if (entity.isAffectedByPotions() && (vampire || MobType.UNDEAD.equals(entity.getMobType()))) {
+        if (entity.isAffectedByPotions() && (vampire || entity.getType().is(EntityTypeTags.UNDEAD))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 

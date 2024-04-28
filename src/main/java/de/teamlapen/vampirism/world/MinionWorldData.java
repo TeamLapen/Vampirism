@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.world;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -33,7 +34,7 @@ public class MinionWorldData extends SavedData {
 
     @NotNull
     public static MinionWorldData getData(final @NotNull MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(() -> new MinionWorldData(server), (data) -> MinionWorldData.load(server, data)), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(() -> new MinionWorldData(server), (data, provider) -> MinionWorldData.load(server, data, provider)), ID);
     }
 
 
@@ -83,14 +84,14 @@ public class MinionWorldData extends SavedData {
         controllers.remove(lordID);
     }
 
-    public static @NotNull MinionWorldData load(@NotNull MinecraftServer server, @NotNull CompoundTag nbt) {
+    public static @NotNull MinionWorldData load(@NotNull MinecraftServer server, @NotNull CompoundTag nbt, HolderLookup.Provider provider) {
         MinionWorldData data = new MinionWorldData(server);
         ListTag all = nbt.getList("controllers", 10);
         for (Tag inbt : all) {
             CompoundTag tag = (CompoundTag) inbt;
             UUID id = tag.getUUID("uuid");
             PlayerMinionController c = new PlayerMinionController(server, id);
-            c.deserializeNBT(tag);
+            c.deserializeNBT(provider, tag);
             data.controllers.put(id, c);
         }
         return data;
@@ -105,11 +106,11 @@ public class MinionWorldData extends SavedData {
 
     @NotNull
     @Override
-    public CompoundTag save(@NotNull CompoundTag compound) {
+    public CompoundTag save(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
         ListTag all = new ListTag();
         controllers.object2ObjectEntrySet().fastForEach((entry) -> {
             if (entry.getValue().hasMinions()) {
-                CompoundTag tag = entry.getValue().serializeNBT();
+                CompoundTag tag = entry.getValue().serializeNBT(provider);
                 tag.putUUID("uuid", entry.getKey());
                 all.add(tag);
             }

@@ -1,16 +1,17 @@
 package de.teamlapen.lib.network;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.storage.ISyncable;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -33,22 +34,21 @@ import java.util.Optional;
 public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
 
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final ResourceLocation ID = new ResourceLocation(LIBREFERENCE.MODID, "update_entity");
-    public static final Codec<ClientboundUpdateEntityPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    Codec.INT.fieldOf("id").forGetter(ClientboundUpdateEntityPacket::getId),
-                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "data").forGetter(x -> Optional.ofNullable(x.getData())),
-                    ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "caps").forGetter(x -> Optional.ofNullable(x.getAttachments())),
-                    Codec.BOOL.optionalFieldOf("itself", false).forGetter(ClientboundUpdateEntityPacket::isPlayerItself)
-            ).apply(inst, ClientboundUpdateEntityPacket::new)
+    public static final Type<ClientboundUpdateEntityPacket> TYPE = new Type<>(new ResourceLocation(LIBREFERENCE.MODID, "update_entity"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdateEntityPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundUpdateEntityPacket::getId,
+            ByteBufCodecs.optional(ByteBufCodecs.COMPOUND_TAG), s -> Optional.ofNullable(s.data),
+            ByteBufCodecs.optional(ByteBufCodecs.COMPOUND_TAG), s -> Optional.ofNullable(s.attachments),
+            ByteBufCodecs.BOOL, ClientboundUpdateEntityPacket::isPlayerItself,
+            ClientboundUpdateEntityPacket::new
     );
 
 
     /**
      * Create a sync packet for the given capability instance.
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(@NotNull IAttachedSyncable cap) {
-        return create(cap, cap.serializeUpdateNBT());
+    public static @NotNull ClientboundUpdateEntityPacket create(HolderLookup.Provider provider, @NotNull IAttachedSyncable cap) {
+        return create(cap, cap.serializeUpdateNBT(provider));
     }
 
     /**
@@ -61,8 +61,8 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        ClientboundUpdateEntityPacket packet = create(caps);
-        packet.data = ((ISyncable) entity).serializeUpdateNBT();
+        ClientboundUpdateEntityPacket packet = create(entity.registryAccess(), caps);
+        packet.data = ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess());
         return packet;
     }
 
@@ -71,10 +71,10 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      *
      * @param caps Have to belong to the same entity
      */
-    public static @NotNull ClientboundUpdateEntityPacket create(IAttachedSyncable @NotNull ... caps) {
+    public static @NotNull ClientboundUpdateEntityPacket create(HolderLookup.Provider provider, IAttachedSyncable @NotNull ... caps) {
         CompoundTag capsTag = new CompoundTag();
         for (IAttachedSyncable cap : caps) {
-            capsTag.put(cap.getAttachedKey().toString(), cap.serializeUpdateNBT());
+            capsTag.put(cap.getAttachedKey().toString(), cap.serializeUpdateNBT(provider));
         }
         return new ClientboundUpdateEntityPacket(caps[0].asEntity().getId(), null, capsTag, false);
     }
@@ -99,7 +99,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).serializeUpdateNBT(), null, false);
+        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess()), null, false);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
             if (entity instanceof ISyncable) {
                 return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new IAttachedSyncable[0]));
             } else {
-                return ClientboundUpdateEntityPacket.create(capsToSync.toArray(new IAttachedSyncable[0]));
+                return ClientboundUpdateEntityPacket.create(entity.registryAccess(), capsToSync.toArray(new IAttachedSyncable[0]));
             }
         } else if (entity instanceof ISyncable) {
             return ClientboundUpdateEntityPacket.create(entity);
@@ -184,12 +184,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

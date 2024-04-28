@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:arrow"
+      "count": 1,
+      "id": "minecraft:arrow"
     },
     "title": {
       "translate": "advancement.vampirism.sniped"

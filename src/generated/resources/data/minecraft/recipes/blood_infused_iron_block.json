@@ -12,6 +12,7 @@
     "###"
   ],
   "result": {
-    "item": "vampirism:blood_infused_iron_block"
+    "count": 1,
+    "id": "vampirism:blood_infused_iron_block"
   }
 }

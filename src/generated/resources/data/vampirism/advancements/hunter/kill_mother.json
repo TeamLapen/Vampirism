@@ -22,7 +22,8 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "vampirism:mother_core"
+      "count": 1,
+      "id": "vampirism:mother_core"
     },
     "title": {
       "translate": "advancement.vampirism.hunter_kill_mother"

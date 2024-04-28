@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +30,7 @@ public interface IFactionVillageBuilder {
      * @param badOmenEffect bad omen effect
      * @return this builder
      */
-    IFactionVillageBuilder badOmenEffect(Supplier<MobEffect> badOmenEffect);
+    IFactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect);
 
     /**
      * Supply a banner item that is equipped by entities to add a faction bad omen effect to the killer
@@ -35,7 +38,7 @@ public interface IFactionVillageBuilder {
      * @param bannerItem the banner itemstack
      * @return this builder
      */
-    IFactionVillageBuilder banner(Supplier<ItemStack> bannerItem);
+    IFactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem);
 
     /**
      * Supply a list of {@link CaptureEntityEntry} for the faction that can participate in faction raids

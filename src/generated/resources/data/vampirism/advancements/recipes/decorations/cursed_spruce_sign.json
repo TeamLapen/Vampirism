@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:cursed_spruce_planks"
-            ]
+            "items": "vampirism:cursed_spruce_planks"
           }
         ]
       },

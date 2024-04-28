@@ -8,7 +8,7 @@
         },
         "id": "minecraft:gold_ingot",
         "item": {
-          "Count": 32,
+          "count": 32,
           "id": "minecraft:gold_ingot"
         }
       },
@@ -28,7 +28,7 @@
         },
         "id": "vampirism:pure_blood_4",
         "item": {
-          "Count": 5,
+          "count": 5,
           "id": "vampirism:pure_blood_4"
         }
       },

@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,14 +29,13 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-        if (itemInHand.is(ModTags.Items.PURE_BLOOD)) {
-            itemInHand.shrink(1);
+    public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+        if (stack.is(ModTags.Items.PURE_BLOOD)) {
+            stack.shrink(1);
             pLevel.setBlockAndUpdate(pPos, ModBlocks.CURSED_SPRUCE_SAPLING.get().defaultBlockState());
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            return ItemInteractionResult.sidedSuccess(pLevel.isClientSide);
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     public void advanceTree(@NotNull ServerLevel pLevel, @NotNull BlockPos pPos, BlockState pState, @NotNull RandomSource pRandom) {

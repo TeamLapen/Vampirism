@@ -57,7 +57,7 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
     @Override
     public void onUpdate(@NotNull T entity, int duration) {
         if (entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
-            entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+            entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;

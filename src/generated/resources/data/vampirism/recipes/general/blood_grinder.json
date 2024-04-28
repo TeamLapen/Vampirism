@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "D": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "tag": "minecraft:planks"
@@ -21,6 +21,7 @@
     "YXY"
   ],
   "result": {
-    "item": "vampirism:blood_grinder"
+    "count": 1,
+    "id": "vampirism:blood_grinder"
   }
 }

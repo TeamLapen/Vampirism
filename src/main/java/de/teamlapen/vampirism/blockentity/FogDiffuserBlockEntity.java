@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,16 +27,16 @@ public class FogDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.saveAdditional(pTag, provider);
         pTag.putString("state", this.state.name());
         pTag.putFloat("bootProgress", this.bootProgress);
         pTag.putBoolean("activated", this.activated);
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.loadAdditional(pTag, provider);
         this.state = State.valueOf(pTag.getString("state"));
         this.bootProgress = pTag.getFloat("bootProgress");
         this.activated = pTag.getBoolean("activated");

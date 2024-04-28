@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.network;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -11,17 +13,14 @@ import org.jetbrains.annotations.NotNull;
 
 
 public record ServerboundUnlockSkillPacket(ResourceLocation skillId) implements CustomPacketPayload {
-    private static final Logger LOGGER = LogManager.getLogger();
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "unlock_skill");
-    public static final Codec<ServerboundUnlockSkillPacket> CODEC = ResourceLocation.CODEC.xmap(ServerboundUnlockSkillPacket::new, msg -> msg.skillId);
+    public static final Type<ServerboundUnlockSkillPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "unlock_skill"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundUnlockSkillPacket> CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC, ServerboundUnlockSkillPacket::skillId,
+            ServerboundUnlockSkillPacket::new
+    );
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

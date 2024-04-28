@@ -6,7 +6,7 @@
       "item": "minecraft:cobblestone"
     },
     "Y": {
-      "tag": "forge:stone"
+      "tag": "c:stones"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     "XXX"
   ],
   "result": {
-    "item": "vampirism:tombstone2"
+    "count": 1,
+    "id": "vampirism:tombstone2"
   }
 }

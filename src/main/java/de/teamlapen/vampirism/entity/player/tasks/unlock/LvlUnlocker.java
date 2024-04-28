@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.unlock;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LvlUnlocker implements TaskUnlocker {
 
-    public static final Codec<LvlUnlocker> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<LvlUnlocker> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 Codec.INT.fieldOf("reqLevel").forGetter(i -> i.reqLevel),
                 Codec.INT.optionalFieldOf("maxLevel", -1).forGetter(i -> i.maxLevel)
@@ -48,7 +49,7 @@ public class LvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public Codec<? extends TaskUnlocker> codec() {
+    public MapCodec<? extends TaskUnlocker> codec() {
         return ModTasks.LEVEL_UNLOCKER.get();
     }
 }

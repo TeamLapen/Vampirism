@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "vampirism:heart"
+            "items": "#vampirism:heart"
           }
         ]
       },
@@ -21,9 +21,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:gray_wool"
-            ]
+            "items": "minecraft:gray_wool"
           }
         ]
       },

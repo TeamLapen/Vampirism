@@ -78,7 +78,7 @@ public class WeaponTableCraftingSlot extends Slot {
             if (!itemstack1.isEmpty()) {
                 if (itemstack.isEmpty()) {
                     this.craftMatrix.setItem(i, itemstack1);
-                } else if (ItemStack.isSameItem(itemstack, itemstack1) && ItemStack.isSameItemSameTags(itemstack, itemstack1)) {
+                } else if (ItemStack.isSameItem(itemstack, itemstack1) && ItemStack.isSameItemSameComponents(itemstack, itemstack1)) {
                     itemstack1.grow(itemstack.getCount());
                     this.craftMatrix.setItem(i, itemstack1);
                 } else if (!this.player.getInventory().add(itemstack1)) {

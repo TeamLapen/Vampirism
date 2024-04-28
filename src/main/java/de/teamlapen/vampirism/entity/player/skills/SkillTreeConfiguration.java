@@ -58,7 +58,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         public static final Codec<SkillTreeNodeConfiguration> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_NODE).fieldOf("node").forGetter(SkillTreeNodeConfiguration::node),
-                        ExtraCodecs.strictOptionalField(ExtraCodecs.lazyInitializedCodec(() -> SkillTreeNodeConfiguration.CODEC).listOf(), "children", List.of()).forGetter(SkillTreeNodeConfiguration::children)
+                        Codec.lazyInitialized(() -> SkillTreeNodeConfiguration.CODEC).listOf().optionalFieldOf( "children", List.of()).forGetter(SkillTreeNodeConfiguration::children)
                 ).apply(inst, SkillTreeNodeConfiguration::new)
         );
 

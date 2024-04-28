@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:holy_water_bottle_normal"
-            ]
+            "items": "vampirism:holy_water_bottle_normal"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:holy_water_bottle_enhanced"
-            ]
+            "items": "vampirism:holy_water_bottle_enhanced"
           }
         ]
       },
@@ -35,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": "#c:ingots/iron"
           }
         ]
       },
@@ -45,9 +41,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:stake"
-            ]
+            "items": "vampirism:stake"
           }
         ]
       },

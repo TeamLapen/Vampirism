@@ -2,13 +2,19 @@ package de.teamlapen.vampirism.recipes;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.StreamCodecExtension;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -64,6 +71,14 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return skills;
     }
 
+    public ItemStack result() {
+        return result;
+    }
+
+    public String group() {
+        return super.getGroup();
+    }
+
     @NotNull
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -78,40 +93,47 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         fluid.ifRight((ingredient1 -> {
             fluidMatch.set(false);
             Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.getItem(0));
-            stack.ifPresent((handlerItem) -> fluidMatch.set(ingredient1.isFluidEqual(handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
+            stack.ifPresent((handlerItem) -> fluidMatch.set(FluidStack.isSameFluidSameComponents(ingredient1, handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
         }));
         return match && fluidMatch.get();
     }
 
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
 
-        public static final Codec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.create(inst ->
+        public static final MapCodec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(inst ->
                 inst.group(
-                        ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
+                        Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
                         CookingBookCategory.CODEC.fieldOf("category").orElse(CookingBookCategory.MISC).forGetter(p_300828_ -> p_300828_.category),
                         Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
                         Codec.either(Ingredient.CODEC_NONEMPTY, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
-                        net.neoforged.neoforge.common.crafting.CraftingHelper.smeltingResultCodec().fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
-                        ExtraCodecs.strictOptionalField(ModRegistries.SKILLS.byNameCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.skills),
-                        ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.reqLevel),
-                        ExtraCodecs.strictOptionalField(Codec.INT, "cookTime", 200).forGetter(p -> p.cookingTime),
-                        ExtraCodecs.strictOptionalField(Codec.FLOAT, "experience", 0.2F).forGetter(p -> p.experience)
+                        ItemStack.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
+                        ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.skills),
+                        Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.reqLevel),
+                        Codec.INT.optionalFieldOf( "cookTime", 200).forGetter(p -> p.cookingTime),
+                        Codec.FLOAT.optionalFieldOf("experience", 0.2F).forGetter(p -> p.experience)
                 ).apply(inst, AlchemicalCauldronRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+                ByteBufCodecs.STRING_UTF8, AlchemicalCauldronRecipe::group,
+                NeoForgeStreamCodecs.enumCodec(CookingBookCategory.class), AlchemicalCauldronRecipe::category,
+                Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
+                ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStack.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,
+                ItemStack.STREAM_CODEC, AlchemicalCauldronRecipe::result,
+                ByteBufCodecs.registry(VampirismRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
+                ByteBufCodecs.INT, AlchemicalCauldronRecipe::getRequiredLevel,
+                ByteBufCodecs.INT, AlchemicalCauldronRecipe::getCookingTime,
+                ByteBufCodecs.FLOAT, AlchemicalCauldronRecipe::getExperience,
+                AlchemicalCauldronRecipe::new
+        );
+
         @Override
-        public @NotNull Codec<AlchemicalCauldronRecipe> codec() {
+        public @NotNull MapCodec<AlchemicalCauldronRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull AlchemicalCauldronRecipe fromNetwork(FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
-
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemicalCauldronRecipe recipe) {
-            buffer.writeJsonWithCodec(CODEC, recipe);
-        }
-
     }
 }

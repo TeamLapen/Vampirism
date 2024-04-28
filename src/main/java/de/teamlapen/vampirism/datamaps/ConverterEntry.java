@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public record ConverterEntry(Converter converter, Optional<ResourceLocation> overlay) implements IConverterEntry {
         public static final Codec<IConverterEntry> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
-                    ExtraCodecs.strictOptionalField(Converter.CODEC, "handler", new DefaultConverter()).forGetter(IConverterEntry::converter),
+                    Converter.CODEC.optionalFieldOf("handler", new DefaultConverter()).forGetter(IConverterEntry::converter),
                     ResourceLocation.CODEC.optionalFieldOf("overlay").forGetter(IConverterEntry::overlay)
             ).apply(inst, ConverterEntry::new);
         });
@@ -41,7 +42,7 @@ public record ConverterEntry(Converter converter, Optional<ResourceLocation> ove
         }
 
 
-        public record ConvertingAttributeModifier(Map<Attribute,  com.mojang.datafixers.util.Pair<FloatProvider, Double>> attributeModifier) {
+        public record ConvertingAttributeModifier(Map<Holder<Attribute>,  Pair<FloatProvider, Double>> attributeModifier) {
             public static ConvertingAttributeModifier DEFAULT = new ConvertingAttributeModifier(
                     Map.of(
                             Attributes.ATTACK_DAMAGE, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.3f), 1d),
@@ -50,13 +51,13 @@ public record ConverterEntry(Converter converter, Optional<ResourceLocation> ove
                             Attributes.MOVEMENT_SPEED, com.mojang.datafixers.util.Pair.of(ConstantFloat.of(1.2f), 1d)
             ));
 
-            public ConvertingAttributeModifier(List<Pair<Attribute, Pair<FloatProvider, Double>>> values) {
+            public ConvertingAttributeModifier(List<Pair<Holder<Attribute>, Pair<FloatProvider, Double>>> values) {
                 this(values.stream().collect(Collectors.toMap(com.mojang.datafixers.util.Pair::getFirst, com.mojang.datafixers.util.Pair::getSecond, (a, b) -> b)));
             }
 
-            private static final Codec<com.mojang.datafixers.util.Pair<Attribute, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst ->
+            private static final Codec<com.mojang.datafixers.util.Pair<Holder<Attribute>, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst ->
                     inst.group(
-                            BuiltInRegistries.ATTRIBUTE.byNameCodec().fieldOf("attribute").forGetter(Pair::getFirst),
+                            BuiltInRegistries.ATTRIBUTE.holderByNameCodec().fieldOf("attribute").forGetter(Pair::getFirst),
                             FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
                             Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
                     ).apply(inst, ((attribute, floatProvider, aDouble) -> Pair.of(attribute, Pair.of(floatProvider, aDouble)))));

@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -40,7 +42,7 @@ public class SundamageProvider implements DataProvider {
         Consumer consumer = new Consumer();
         this.registerNoSundamageBiomes(consumer);
 
-        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(false, LOGGER::error), pathProvider.json(new ResourceLocation(modId, "no_sun_damage")));
+        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(EncoderException::new), pathProvider.json(new ResourceLocation(modId, "no_sun_damage")));
     }
 
     @Override

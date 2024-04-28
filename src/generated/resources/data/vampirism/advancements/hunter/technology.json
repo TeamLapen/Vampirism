@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:enhanced_tech_crossbow"
-            ]
+            "items": "vampirism:enhanced_tech_crossbow"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:basic_tech_crossbow"
-            ]
+            "items": "vampirism:basic_tech_crossbow"
           }
         ]
       },
@@ -42,8 +38,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:basic_tech_crossbow",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "vampirism:basic_tech_crossbow"
     },
     "title": {
       "translate": "advancement.vampirism.technology"

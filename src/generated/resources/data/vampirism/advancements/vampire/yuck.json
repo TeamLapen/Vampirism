@@ -24,8 +24,13 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:potion",
-      "nbt": "{Potion:\"minecraft:poison\"}"
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:poison"
+        }
+      },
+      "count": 1,
+      "id": "minecraft:potion"
     },
     "title": {
       "translate": "advancement.vampirism.yuck"

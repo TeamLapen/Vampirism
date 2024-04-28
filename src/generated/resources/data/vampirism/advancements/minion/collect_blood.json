@@ -14,8 +14,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:blood_bottle",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "vampirism:blood_bottle"
     },
     "title": {
       "translate": "advancement.vampirism.collect_blood"

@@ -62,8 +62,9 @@ public class MinionInventoryCommand extends BasicCommand {
     }
 
     private static int removeItem(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier, ItemInput item, int count) throws CommandSyntaxException {
+        ItemStack itemStack = item.createItemStack(1, false);
         getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
-            List<ItemStack> itemStacks = minionInventory.getAllInventorys().stream().flatMap(Collection::stream).filter(item).toList();
+            List<ItemStack> itemStacks = minionInventory.getAllInventorys().stream().flatMap(Collection::stream).filter(s -> ItemStack.isSameItemSameComponents(s, itemStack)).toList();
             if (!itemStacks.isEmpty()) {
                 ItemStack stack = itemStacks.get(0).split(count);
                 player.addItem(stack.copy());

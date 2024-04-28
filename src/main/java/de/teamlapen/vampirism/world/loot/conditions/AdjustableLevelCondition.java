@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.core.ModLoot;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AdjustableLevelCondition implements LootItemCondition {
 
-    public static final Codec<AdjustableLevelCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+    public static final MapCodec<AdjustableLevelCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.INT.fieldOf("level").forGetter(l -> l.levelTest),
             LootContext.EntityTarget.CODEC.fieldOf("target").forGetter(l -> l.target)
     ).apply(inst, AdjustableLevelCondition::new));

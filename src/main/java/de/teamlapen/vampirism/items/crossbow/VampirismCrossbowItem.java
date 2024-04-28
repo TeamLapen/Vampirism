@@ -5,16 +5,23 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.items.*;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import de.teamlapen.vampirism.util.RegUtil;
+import io.netty.util.concurrent.BlockingOperationException;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,8 +29,8 @@ import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -33,10 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class VampirismCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
@@ -53,13 +57,13 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltips, flag);
-        this.addAmmunitionTypeHoverText(stack, level, tooltips, flag);
-        this.addFactionToolTips(stack, level, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltips, flag);
+        this.addAmmunitionTypeHoverText(stack, context, tooltips, flag);
+        this.addFactionToolTips(stack, context, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
     }
 
-    protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+    protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
         getAmmunition(stack).ifPresent(ammunition -> {
             tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY));
         });
@@ -71,12 +75,12 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     protected Collection<Enchantment> getCompatibleEnchantments() {
-        return Arrays.asList(Enchantments.INFINITY_ARROWS, Enchantments.PUNCH_ARROWS, Enchantments.POWER_ARROWS); // plus normal crossbow enchantments
+        return Arrays.asList(Enchantments.INFINITY, Enchantments.PUNCH, Enchantments.POWER); // plus normal crossbow enchantments
     }
 
     @Override
     public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
-        return repairItem.is(Tags.Items.STRING) || super.isValidRepairItem(crossbow, repairItem);
+        return repairItem.is(Tags.Items.STRINGS) || super.isValidRepairItem(crossbow, repairItem);
     }
 
     @Override
@@ -115,7 +119,6 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if (isCharged(itemstack)) {
             performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F); //call modded shoot function with shooting power
-            setUncharged(p_77659_2_, itemstack); //set uncharged with extra steps
             return InteractionResultHolder.consume(itemstack);
         } else if (!p_77659_2_.getProjectile(itemstack).isEmpty()) {
             if (!isCharged(itemstack)) {
@@ -136,20 +139,31 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
      * check comments for changes
      */
     public boolean performShootingMod(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle) {
-        List<ItemStack> list = CrossbowItemMixin.getChargedProjectiles(stack);
-        float[] afloat = CrossbowItemMixin.getShotPitches(shooter.getRandom());
+        List<ItemStack> list = stack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems();
 
+        List<ItemStack> consumed = new ArrayList<>();
         for(int i = 0; i < list.size(); ++i) {
             ItemStack itemstack = list.get(i);
             boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle);
+                shootProjectileMod(level, shooter, hand, stack, itemstack, CrossbowItemMixin.getShotPitches(shooter.getRandom(), i), flag, speed, angle);
+                consumed.add(itemstack);
                 break; // only shoot one projectile
             }
         }
 
-        CrossbowItemMixin.onCrossbowShot(level, shooter, stack);
+        list.removeAll(consumed);
+        stack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
+
+        onShot(shooter, stack);
         return list.isEmpty();
+    }
+
+    protected void onShot(LivingEntity shooter, ItemStack stack) {
+        if (shooter instanceof ServerPlayer player) {
+            CriteriaTriggers.SHOT_CROSSBOW.trigger(player, stack);
+            player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+        }
     }
 
     /**
@@ -160,25 +174,22 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     @SuppressWarnings("JavadocReference")
     protected void shootProjectileMod(Level p_220016_0_, LivingEntity p_220016_1_, InteractionHand p_220016_2_, ItemStack p_220016_3_, ItemStack p_220016_4_, float p_220016_5_, boolean p_220016_6_, float p_220016_7_, float p_220016_8_) {
         if (!p_220016_0_.isClientSide) {
+            ChargedProjectiles projectiles = p_220016_3_.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+            if (projectiles != null && !projectiles.isEmpty()) {
+            }
             AbstractArrow projectileentity;
-            projectileentity = modifyArrow(p_220016_3_, CrossbowItemMixin.getArrow(p_220016_0_, p_220016_1_, p_220016_3_, p_220016_4_)); // modify arrow
+            projectileentity = modifyArrow(p_220016_3_, null); // modify arrow
             if (p_220016_6_) {
                 projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
 
-            if (p_220016_1_ instanceof CrossbowAttackMob crossbowUser) {
-                crossbowUser.shootCrossbowProjectile(crossbowUser.getTarget(), p_220016_3_, projectileentity, (float) 0.0);
-            } else {
                 Vec3 vec31 = p_220016_1_.getUpVector(1.0F);
                 Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((float) 0.0 * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
                 Vec3 vec3 = p_220016_1_.getViewVector(1.0F);
                 Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
                 projectileentity.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_220016_7_, p_220016_8_);
-            }
 
-            p_220016_3_.hurtAndBreak(1, p_220016_1_, (p_220017_1_) -> {
-                p_220017_1_.broadcastBreakEvent(p_220016_2_);
-            });
+            p_220016_3_.hurtAndBreak(getUseDuration(p_220016_3_), p_220016_1_, LivingEntity.getSlotForHand(p_220016_2_));
 
             if (isInfinit(p_220016_3_)) {
                 projectileentity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -193,12 +204,12 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             ((IEntityCrossbowArrow)arrowEntity).setIgnoreHurtTimer();
         }
 
-        int j = stack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
+        int j = stack.getEnchantmentLevel(Enchantments.POWER);
         if (j > 0) {
             arrowEntity.setBaseDamage(arrowEntity.getBaseDamage() + (double) j * 0.2D + 0.2D);
         }
 
-        int k = stack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
+        int k = stack.getEnchantmentLevel(Enchantments.PUNCH);
 
         if (k > 0) {
             arrowEntity.setKnockback(k);
@@ -219,7 +230,6 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         int i = this.getUseDuration(p_77615_1_) - p_77615_4_;
         float f = getPowerForTimeMod(i, p_77615_1_);
         if (f >= 1.0F && !isCharged(p_77615_1_) && tryLoadProjectilesMod(p_77615_3_, p_77615_1_)) {
-            setCharged(p_77615_1_, true);
             SoundSource soundcategory = p_77615_3_ instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
             p_77615_2_.playSound(null, p_77615_3_.getX(), p_77615_3_.getY(), p_77615_3_.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (p_77615_2_.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
@@ -239,20 +249,12 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
     }
 
-    protected void setUncharged(Player player, ItemStack stack) {
-        int frugal = isFrugal(stack);
-        if (frugal > 0 && player.getRandom().nextInt(Math.max(2, 4- frugal)) == 0) {
-            return;
-        }
-        setCharged(stack, false);
-    }
-
     protected int isFrugal(ItemStack crossbow) {
-        return crossbow.getEnchantmentLevel(ModEnchantments.CROSSBOWFRUGALITY.get());
+        return crossbow.getEnchantmentLevel(ModEnchantments.ARROW_FRUGALITY.get());
     }
 
     protected boolean isInfinit(ItemStack crossbow) {
-        return crossbow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
+        return crossbow.getEnchantmentLevel(Enchantments.INFINITY) > 0;
     }
 
     protected boolean canBeInfinit(ItemStack crossbow) {
@@ -301,14 +303,14 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
                 itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.copy();
             }
 
+            List<ItemStack> loaded = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems();
             if (itemstack.getItem() instanceof IArrowContainer container) { // if arrow container use contents
                 Collection<ItemStack> projectiles = noConsume ? container.getArrows(projectile) : container.getAndRemoveArrows(projectile);
-                for (ItemStack arrow : projectiles) {
-                    CrossbowItemMixin.addChargedProjectile(crossbow, arrow);
-                }
+                loaded.addAll(projectiles);
             } else {
-                CrossbowItemMixin.addChargedProjectile(crossbow, itemstack);
+                loaded.add(itemstack);
             }
+            crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(loaded));
             return true;
         }
     }
@@ -320,20 +322,15 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
     @Override
     public Optional<Item> getAmmunition(ItemStack crossbow) {
-        return Optional.ofNullable(crossbow.getTag()).filter(a -> a.contains("ammunition")).map(a -> a.getString("ammunition")).map(ResourceLocation::new).map(BuiltInRegistries.ITEM::get);
+        return Optional.ofNullable(crossbow.get(ModDataComponents.SELECTED_AMMUNITION)).map(SelectedAmmunition::item);
     }
 
     @Override
     public void setAmmunition(ItemStack crossbow, @Nullable Item ammo) {
-        setAmmunition(crossbow, ammo == null ? null : RegUtil.id(ammo));
-    }
-
-    @Override
-    public void setAmmunition(ItemStack crossbow, @Nullable ResourceLocation ammo) {
         if (ammo == null) {
-            crossbow.getOrCreateTag().remove("ammunition");
+            crossbow.remove(ModDataComponents.SELECTED_AMMUNITION);
         } else {
-            crossbow.getOrCreateTag().putString("ammunition", ammo.toString());
+            crossbow.set(ModDataComponents.SELECTED_AMMUNITION, new SelectedAmmunition(ammo));
         }
     }
 

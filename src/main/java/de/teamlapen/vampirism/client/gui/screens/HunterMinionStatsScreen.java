@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntity.HunterMinionData, HunterMinionEntity> {
 
     private final MutableComponent inventoryLevel = Component.translatable("text.vampirism.minion.stats.inventory_level");
-    private final MutableComponent healthLevel = Component.translatable(Attributes.MAX_HEALTH.getDescriptionId());
-    private final MutableComponent strengthLevel = Component.translatable(Attributes.ATTACK_DAMAGE.getDescriptionId());
+    private final MutableComponent healthLevel = Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId());
+    private final MutableComponent strengthLevel = Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId());
     private final MutableComponent resourceLevel = Component.translatable("text.vampirism.minion.stats.resource_level");
 
     public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable Screen backScreen) {

@@ -53,7 +53,7 @@ public class PureBloodItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (level + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
@@ -63,7 +63,7 @@ public class PureBloodItem extends Item {
         if (entityLiving instanceof Player player) {
             VampirePlayer vampire = VampirePlayer.get(player);
             vampire.drinkBlood(50, 0.4f + (0.15f * getLevel()), false, new DrinkBloodContext(stack));
-            entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION.get()));
+            entityLiving.addEffect(new MobEffectInstance(ModEffects.SATURATION));
             stack.shrink(1);
         }
         return stack;

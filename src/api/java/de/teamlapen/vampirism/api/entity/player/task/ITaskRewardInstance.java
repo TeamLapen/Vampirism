@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ExtraCodecs;
@@ -9,7 +10,7 @@ import java.util.function.Function;
 
 public interface ITaskRewardInstance {
 
-    Codec<ITaskRewardInstance> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REWARD_INSTANCE.get().byNameCodec()).dispatch(ITaskRewardInstance::codec, Function.identity());
+    Codec<ITaskRewardInstance> CODEC = Codec.lazyInitialized(() -> VampirismRegistries.TASK_REWARD_INSTANCE.get().byNameCodec()).dispatch(ITaskRewardInstance::codec, Function.identity());
 
     /**
      * applies the reward to the player upon task completion
@@ -18,6 +19,6 @@ public interface ITaskRewardInstance {
      */
     void applyReward(IFactionPlayer<?> player);
 
-    Codec<? extends ITaskRewardInstance> codec();
+    MapCodec<? extends ITaskRewardInstance> codec();
 
 }

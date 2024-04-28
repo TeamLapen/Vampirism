@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.recipes;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.mixin.accessor.ShapedRecipeAccessor;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -12,6 +14,8 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 /**
  * This recipe copies the {@link net.minecraft.nbt.CompoundTag} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
@@ -26,7 +30,7 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull RegistryAccess registryAccess) {
+    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider provider) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.getWidth(); ++i) {
@@ -37,9 +41,9 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
                 }
             }
         }
-        ItemStack result = super.assemble(inv, registryAccess);
+        ItemStack result = super.assemble(inv, provider);
         if (stack != null) {
-            result.setTag(stack.getTag());
+            result.applyComponents(stack.getComponents());
             result.setDamageValue(0);
         }
         return result;
@@ -53,21 +57,12 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public static class Serializer extends ShapedRecipe.Serializer {
 
-        public static final Codec<ShapedRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(ShapedItemWithTierRepair::new, ShapedItemWithTierRepair::new);
+        public static final MapCodec<ShapedRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(ShapedItemWithTierRepair::new, ShapedItemWithTierRepair::new);
 
         @Override
-        public @NotNull Codec<ShapedRecipe> codec() {
+        public @NotNull MapCodec<ShapedRecipe> codec() {
             return CODEC;
         }
 
-        @Override
-        public @NotNull ShapedRecipe fromNetwork(FriendlyByteBuf p_44240_) {
-            return p_44240_.readJsonWithCodec(CODEC);
-        }
-
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapedRecipe recipe) {
-            buffer.writeJsonWithCodec(CODEC, recipe);
-        }
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -93,10 +94,11 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         return altarBase;
     }
 
+
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(hand);
+    public InteractionResult useWithoutItem(BlockState blockState, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+        ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         AltarInfusionBlockEntity te = (AltarInfusionBlockEntity) worldIn.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
         if (worldIn.isClientSide || te == null) return InteractionResult.SUCCESS;

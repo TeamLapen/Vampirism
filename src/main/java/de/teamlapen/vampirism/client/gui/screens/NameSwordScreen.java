@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +47,7 @@ public class NameSwordScreen extends Screen {
         super.init();
         this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.yes, (context) -> {
             if (!StringUtils.isBlank(nameField.getValue())) {
-                NameSwordScreen.this.sword.setHoverName(Component.literal(nameField.getValue()));
+                NameSwordScreen.this.sword.set(DataComponents.CUSTOM_NAME, Component.literal(nameField.getValue()));
                 VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(nameField.getValue()));
             }
             this.minecraft.setScreen(null);

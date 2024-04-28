@@ -119,6 +119,8 @@ public class MigrationData {
 
     private static void fixEnchantments(@NotNull Mapping mapping) {
         mapping.remap("vampirism:crossbowinfinite", "infinity");
+        mapping.remap("vampirism:crossbowfrugality", "vampirism:arrow_frugality");
+        mapping.remap("vampirism:vampireslayer", "vampirism:vampire_slayer");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

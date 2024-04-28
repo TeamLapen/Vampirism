@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -21,11 +22,11 @@ import java.util.Optional;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FactionCondition implements LootItemCondition {
 
-    public static final Codec<FactionCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+    public static final MapCodec<FactionCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(s -> s.type),
-            ExtraCodecs.strictOptionalField(IFaction.CODEC, "faction").forGetter(a -> a.faction),
-            ExtraCodecs.strictOptionalField(Codec.INT, "min_level").forGetter(a -> a.minLevel),
-            ExtraCodecs.strictOptionalField(Codec.INT, "max_level").forGetter(a -> a.maxLevel)
+            IFaction.CODEC.optionalFieldOf("faction").forGetter(a -> a.faction),
+            Codec.INT.optionalFieldOf( "min_level").forGetter(a -> a.minLevel),
+            Codec.INT.optionalFieldOf( "max_level").forGetter(a -> a.maxLevel)
     ).apply(inst, FactionCondition::new));
 
     private final @NotNull Type type;

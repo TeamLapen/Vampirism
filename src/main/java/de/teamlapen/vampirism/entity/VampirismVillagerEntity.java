@@ -56,7 +56,7 @@ public class VampirismVillagerEntity extends Villager {
         int i = 0;
 
         if (entity instanceof LivingEntity) {
-            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType());
+            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), entity.getType());
             i += EnchantmentHelper.getKnockbackBonus(this);
         }
 
@@ -71,7 +71,7 @@ public class VampirismVillagerEntity extends Villager {
             int j = EnchantmentHelper.getFireAspect(this);
 
             if (j > 0) {
-                entity.setSecondsOnFire(j * 4);
+                entity.igniteForTicks(j * 4);
             }
 
             this.doEnchantDamageEffects(this, entity);

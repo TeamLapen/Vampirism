@@ -23,7 +23,8 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "vampirism:pure_blood_0"
+      "count": 1,
+      "id": "vampirism:pure_blood_0"
     },
     "title": {
       "translate": "advancement.vampirism.regicide"

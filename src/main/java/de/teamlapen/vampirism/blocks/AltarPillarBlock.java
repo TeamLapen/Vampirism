@@ -6,7 +6,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -61,12 +60,12 @@ public class AltarPillarBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull BlockHitResult hit) {
         EnumPillarType type = state.getValue(TYPE_PROPERTY);
-        ItemStack heldItem = playerIn.getItemInHand(hand);
+        ItemStack heldItem = playerIn.getItemInHand(InteractionHand.MAIN_HAND);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
             if (!playerIn.getAbilities().instabuild) {
-                playerIn.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, new ItemStack(Item.byBlock(type.fillerBlock)));
+                playerIn.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(type.fillerBlock));
             }
 
             worldIn.setBlockAndUpdate(pos, state.setValue(TYPE_PROPERTY, EnumPillarType.NONE));

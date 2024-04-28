@@ -37,6 +37,18 @@ public class DataMapsProvider extends DataMapProvider {
         gatherFluidBloodConversion(builder(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP));
         gatherEntityBlood(builder(ModDataMaps.ENTITY_BLOOD_MAP));
         gatherEntityConverter(builder(ModDataMaps.ENTITY_CONVERTER_MAP));
+        gatherLiquidColors(builder(ModDataMaps.LIQUID_COLOR_MAP));
+    }
+
+    private void gatherLiquidColors(Builder<Integer, Item> builder) {
+        builder.add(ModTags.Items.HOLY_WATER, 0x6666FF, false);
+        builder.add(ModTags.Items.HOLY_WATER_SPLASH, 0x6666FF, false);
+        builder.add(ModItems.PURE_BLOOD_0, 0x7c0805, false);
+        builder.add(ModItems.PURE_BLOOD_1, 0x7d0503, false);
+        builder.add(ModItems.PURE_BLOOD_2, 0x830000, false);
+        builder.add(ModItems.PURE_BLOOD_3, 0x7e0e0e, false);
+        builder.add(ModItems.PURE_BLOOD_4, 0x8e0000, false);
+        builder.add(ModTags.Items.GARLIC, 0xBBBBBB, false);
     }
 
     protected void gatherCompostables(Builder<Compostable, Item> compostables) {

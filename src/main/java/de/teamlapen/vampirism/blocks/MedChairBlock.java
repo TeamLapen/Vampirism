@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -75,13 +76,11 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         WEST2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (player.isAlive()) {
-            ItemStack stack = player.getItemInHand(hand);
-            player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
             if (handleInjections(player, world, stack, pos)) {
+                player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
                 stack.shrink(1);
                 if (stack.isEmpty()) {
                     player.getInventory().removeItem(stack);
@@ -90,7 +89,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         } else if (world.isClientSide) {
             player.displayClientMessage(Component.translatable("text.vampirism.need_item_to_use", Component.translatable((new ItemStack(ModItems.INJECTION_GARLIC.get()).getDescriptionId()))), true);
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.sidedSuccess(world.isClientSide);
     }
 
     private boolean handleGarlicInjection(@NotNull Player player, @NotNull Level world, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
@@ -99,7 +98,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                 VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(VReference.HUNTER_FACTION);
-                player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 200, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.POISON, 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
@@ -145,7 +144,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
                     player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareEffect.addRandom(player, true, true);
-                    player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
+                    player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
                     return true;
                 }
             }
@@ -212,7 +211,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(BlockState p_60475_, PathComputationType p_60478_) {
         return false;
     }
 

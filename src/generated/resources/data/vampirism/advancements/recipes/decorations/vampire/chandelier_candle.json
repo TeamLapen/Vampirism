@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:item_candelabra"
-            ]
+            "items": "vampirism:item_candelabra"
           }
         ]
       },
@@ -17,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:candles"
+            "items": "#minecraft:candles"
           }
         ]
       },

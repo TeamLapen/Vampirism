@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted.converter;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -16,8 +17,8 @@ import java.util.Optional;
 
 public class DefaultConverter implements Converter {
 
-    public static final Codec<DefaultConverter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.strictOptionalField(ConverterEntry.ConvertingAttributeModifier.CODEC, "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
+    public static final MapCodec<DefaultConverter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ConverterEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf( "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, DefaultConverter::new));
 
     protected final ConverterEntry.ConvertingAttributeModifier helper;
@@ -41,7 +42,7 @@ public class DefaultConverter implements Converter {
     }
 
     @Override
-    public Codec<? extends Converter> codec() {
+    public MapCodec<? extends Converter> codec() {
         return ModEntities.DEFAULT_CONVERTER.get();
     }
 }

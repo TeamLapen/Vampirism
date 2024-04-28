@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:cursed_spruce_planks"
-            ]
+            "items": "vampirism:cursed_spruce_planks"
           }
         ]
       },
@@ -17,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:gems/diamond"
+            "items": "#c:gems/diamond"
           }
         ]
       },
@@ -27,9 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:mother_core"
-            ]
+            "items": "vampirism:mother_core"
           }
         ]
       },

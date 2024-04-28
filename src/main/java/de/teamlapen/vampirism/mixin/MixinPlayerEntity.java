@@ -34,7 +34,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
         return vampirismPlayerAttributes;
     }
 
-    @ModifyExpressionValue(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageBonus(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/MobType;)F"))
+    @ModifyExpressionValue(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageBonus(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EntityType;)F"))
     private float addVampireSlayerDamageBonus(float damageBonus, Entity target) {
         return damageBonus + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }

@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import de.teamlapen.vampirism.util.OilUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -20,15 +23,15 @@ import java.util.Optional;
 
 public class SetOilFunction extends LootItemConditionalFunction {
 
-    public static final Codec<SetOilFunction> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<SetOilFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst).and(
-                    ExtraCodecs.strictOptionalField(ModRegistries.OILS.byNameCodec(), "oil").forGetter(l -> Optional.ofNullable(l.oil))
+                    ModRegistries.OILS.holderByNameCodec().optionalFieldOf( "oil").forGetter(l -> Optional.ofNullable(l.oil))
             ).apply(inst, SetOilFunction::new));
-    private final IOil oil;
+    private final Holder<IOil> oil;
     private final boolean random;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    SetOilFunction(List<LootItemCondition> conditions, Optional<IOil> oil) {
+    SetOilFunction(List<LootItemCondition> conditions, Optional<Holder<IOil>> oil) {
         super(conditions);
         if (oil.isPresent()){
             this.oil = oil.get();
@@ -41,16 +44,15 @@ public class SetOilFunction extends LootItemConditionalFunction {
 
     @Override
     protected @NotNull ItemStack run(@NotNull ItemStack pStack, @NotNull LootContext pContext) {
-        IOil oil = this.oil;
+        Holder<IOil> oil = this.oil;
         if (this.random) {
-            Collection<IOil> values = ModRegistries.OILS.stream().toList();
+            List<Holder.Reference<IOil>> values = ModRegistries.OILS.holders().toList();
             oil = values.stream().skip((int) (values.size() * pContext.getRandom().nextDouble())).findFirst().orElseThrow(() -> new IllegalStateException("No oils registered"));
         }
-        OilUtils.setOil(pStack, oil);
-        return pStack;
+        return ItemDataUtils.setOil(pStack, oil);
     }
 
-    public static LootItemConditionalFunction.Builder<?> setOil(@NotNull IOil oil) {
+    public static LootItemConditionalFunction.Builder<?> setOil(@NotNull Holder<IOil> oil) {
         return simpleBuilder((conditions) -> new SetOilFunction(conditions, Optional.of(oil)));
     }
 
@@ -59,7 +61,7 @@ public class SetOilFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public @NotNull LootItemFunctionType getType() {
+    public @NotNull LootItemFunctionType<SetOilFunction> getType() {
         return ModLoot.SET_OIL.get();
     }
 }

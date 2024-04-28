@@ -1,30 +1,23 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "type": "neoforge:nbt",
-    "item": "vampirism:oil_bottle",
-    "strict": true,
-    "tag": "{oil:\"vampirism:vampire_blood\"}"
+    "item": "vampirism:oil_bottle"
   },
   "input": [
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:night_vision\"}"
+      "item": "minecraft:potion"
     },
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:long_night_vision\"}"
+      "item": "minecraft:potion"
     }
   ],
   "result": {
-    "Count": 1,
-    "id": "vampirism:oil_bottle",
-    "tag": {
-      "oil": "vampirism:night_vision"
-    }
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:night_vision"
+      }
+    },
+    "count": 1,
+    "id": "vampirism:oil_bottle"
   }
 }

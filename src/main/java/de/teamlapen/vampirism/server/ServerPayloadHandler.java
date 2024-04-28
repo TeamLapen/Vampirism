@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +38,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,79 +56,73 @@ public class ServerPayloadHandler {
     }
 
     public void handleActionBindingPacket(ServerboundActionBindingPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> context.player().ifPresent(player -> FactionPlayerHandler.get(player).setBoundAction(msg.actionBindingId(), msg.action(), false, false)));
+        context.enqueueWork(() -> FactionPlayerHandler.get(context.player()).setBoundAction(msg.actionBindingId(), msg.action(), false, false));
     }
 
     public void handleAppearancePacket(ServerboundAppearancePacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.level().map(s -> s.getEntity(msg.entityId())).ifPresent(entity -> {
-                if (entity instanceof Player player) {
-                    VampirePlayer.get(player).setSkinData(msg.data());
-                } else if (entity instanceof MinionEntity<?> minion) {
-                    minion.getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name(), msg.data()));
-                    HelperLib.sync(minion);
-                }
-            });
+        context.enqueueWork(() -> {
+            Entity entity1 = context.player().level().getEntity(msg.entityId());
+            if (entity1 instanceof Player player) {
+                VampirePlayer.get(player).setSkinData(msg.data());
+            } else if (entity1 instanceof MinionEntity<?> minion) {
+                minion.getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name(), msg.data()));
+                HelperLib.sync(minion);
+            }
         });
     }
 
     public void handleDeleteRefinementPacket(ServerboundDeleteRefinementPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> context.player().flatMap(FactionPlayerHandler::getCurrentFactionPlayer).ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(msg.slot())));
+        context.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(context.player()).ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(msg.slot())));
     }
 
     public void handleNameItemPacket(ServerboundNameItemPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
+        context.enqueueWork(() -> {
                 if (VampirismVampireSwordItem.DO_NOT_NAME_STRING.equals(msg.name())) {
-                    ItemStack stack = player.getMainHandItem();
+                    ItemStack stack = context.player().getMainHandItem();
                     if (stack.getItem() instanceof VampirismVampireSwordItem swordItem) {
                         swordItem.doNotName(stack);
                     }
                 } else if (!org.apache.commons.lang3.StringUtils.isBlank(msg.name())) {
-                    ItemStack stack = player.getMainHandItem();
-                    stack.setHoverName(Component.literal(msg.name()).withStyle(ChatFormatting.AQUA));
+                    ItemStack stack = context.player().getMainHandItem();
+                    stack.set(DataComponents.CUSTOM_NAME, Component.literal(msg.name()).withStyle(ChatFormatting.AQUA));
                 }
-            });
         });
     }
 
     public void handleSelectAmmoTypePacket(ServerboundSelectAmmoTypePacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
-                ItemStack stack = player.getMainHandItem();
+        context.enqueueWork(() -> {
+                ItemStack stack = context.player().getMainHandItem();
                 if (stack.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
                     crossbow.setAmmunition(stack, msg.ammoId());
                 }
-            });
         });
     }
 
     public void handleSelectMinionTaskPacket(ServerboundSelectMinionTaskPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
-                FactionPlayerHandler fp = FactionPlayerHandler.get(player);
-                PlayerMinionController controller = MinionWorldData.getData(player.level()).get().getOrCreateController(fp);
+        context.enqueueWork(() -> {
+                FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
+                PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
                 if (RECALL.equals(msg.taskID())) {
                     if (msg.minionID() < 0) {
                         Collection<Integer> ids = controller.recallMinions(false);
                         for (Integer id : ids) {
-                            controller.createMinionEntityAtPlayer(id, player);
+                            controller.createMinionEntityAtPlayer(id, context.player());
                         }
-                        printRecoveringMinions(((ServerPlayer) player), controller.getRecoveringMinionNames());
+                        printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
 
                     } else {
                         if (controller.recallMinion(msg.minionID())) {
-                            controller.createMinionEntityAtPlayer(msg.minionID(), player);
+                            controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                         } else {
-                            player.displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
+                            context.player().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID())) {
                     Collection<Integer> ids = controller.getUnclaimedMinions();
                     for (Integer id : ids) {
-                        controller.createMinionEntityAtPlayer(id, player);
+                        controller.createMinionEntityAtPlayer(id, context.player());
                     }
-                    printRecoveringMinions(((ServerPlayer) player), controller.getRecoveringMinionNames());
+                    printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
 
                 } else {
                     //noinspection unchecked
@@ -141,29 +135,23 @@ public class ServerPayloadHandler {
                         controller.activateTask(msg.minionID(), task);
                     }
                 }
-            });
         });
     }
 
     public void handleSetVampireBeaconPacket(ServerboundSetVampireBeaconPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
-                if (player.containerMenu instanceof VampireBeaconMenu beaconMenu && beaconMenu.stillValid(player)) {
+        context.enqueueWork(() -> {
+                if (context.player().containerMenu instanceof VampireBeaconMenu beaconMenu && beaconMenu.stillValid(context.player())) {
                     beaconMenu.updateEffects(msg.effect(), msg.amplifier());
                 }
-            });
         });
     }
 
     public void handleSimpleInputEvent(ServerboundSimpleInputEvent msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
-
-            });
-            ServerPlayer player = (ServerPlayer) context.player().get();
+        context.enqueueWork(() -> {
+            ServerPlayer player = (ServerPlayer) context.player();
             Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
             //Try to keep this simple
-            switch (msg.type()) {
+            switch (msg.event()) {
                 case FINISH_SUCK_BLOOD -> VampirePlayer.get(player).endFeeding(true);
                 case RESET_SKILLS -> {
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
@@ -195,23 +183,20 @@ public class ServerPayloadHandler {
     }
 
     public void handleStartFeedingPacket(ServerboundStartFeedingPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().map(VampirePlayer::get).ifPresent(vampire -> {
+        context.enqueueWork(() -> {
+            VampirePlayer vampire = VampirePlayer.get(context.player());
                 msg.target().ifLeft(vampire::biteEntity);
                 msg.target().ifRight(vampire::biteBlock);
-            });
         });
     }
 
     public void handleTaskActionPacket(ServerboundTaskActionPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().flatMap(player -> FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getTaskManager)).ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg));
-        });
+        context.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(context.player()).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg)));
     }
 
     public void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            Player player = context.player().get();
+        context.enqueueWork(() -> {
+            Player player = context.player();
             Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
             factionPlayerOpt.ifPresent(factionPlayer -> {
                 IAction.ActivationContext activationContext = msg.target() != null ? msg.target().map(entityId -> {
@@ -244,19 +229,17 @@ public class ServerPayloadHandler {
     }
 
     public void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> {
-                FactionPlayerHandler fp = FactionPlayerHandler.get(player);
-                PlayerMinionController controller = MinionWorldData.getData(player.level()).get().getOrCreateController(fp);
+        context.enqueueWork(() -> {
+                FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
+                PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
                 controller.contactMinionData(msg.minionID(), data -> data.setTaskLocked(!data.isTaskLocked()));
                 controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
-            });
         });
     }
 
     public void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-        Player player = context.player().get();
+        context.enqueueWork(() -> {
+        Player player = context.player();
         Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
         factionPlayerOpt.ifPresent(factionPlayer -> {
             ISkill skill = RegUtil.getSkill(msg.skillId());
@@ -268,7 +251,7 @@ public class ServerPayloadHandler {
                     if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
                         //does this cause problems with addons?
                         CompoundTag sync = new CompoundTag();
-                        sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT());
+                        sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess()));
                         HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
                     }
 
@@ -283,21 +266,19 @@ public class ServerPayloadHandler {
     }
 
     public void handleUpgradeMinionStatPacket(ServerboundUpgradeMinionStatPacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> {
-            Player player = context.player().get();
-            if (player != null) {
-                Entity entity = player.level().getEntity(msg.entityId());
-                if (entity instanceof MinionEntity) {
-                    if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId(), (MinionEntity<?>) entity)).orElse(false)) {
-                        HelperLib.sync((MinionEntity<?>) entity);
-                    }
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            Entity entity = player.level().getEntity(msg.entityId());
+            if (entity instanceof MinionEntity) {
+                if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId(), (MinionEntity<?>) entity)).orElse(false)) {
+                    HelperLib.sync((MinionEntity<?>) entity);
                 }
             }
         });
     }
 
-    public void handleRequestSkillTreePacket(ServerboundRequestSkillTreePacket msg, PlayPayloadContext context) {
-        context.replyHandler().send(ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations()));
+    public void handleRequestSkillTreePacket(ServerboundRequestSkillTreePacket msg, IPayloadContext context) {
+        context.reply(ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations()));
     }
 
 }

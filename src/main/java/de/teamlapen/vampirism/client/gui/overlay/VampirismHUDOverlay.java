@@ -49,10 +49,10 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -100,14 +100,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.@NotNull ClientTickEvent event) {
-
+    public void onClientTick(ClientTickEvent.Pre event) {
         if (mc.player == null || !mc.player.isAlive()) {
             renderFullTick = 0;
             screenPercentage = 0;
-            return;
-        }
-        if (event.phase == TickEvent.Phase.END) {
             return;
         }
 
@@ -137,9 +133,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderCrosshair(RenderGuiOverlayEvent.@NotNull Pre event) {
+    public void onRenderCrosshair(RenderGuiLayerEvent.@NotNull Pre event) {
 
-        if (event.getOverlay().id() != VanillaGuiOverlay.CROSSHAIR.id() || mc.player == null || !mc.player.isAlive()) {
+        if (event.getName() != VanillaGuiLayers.CROSSHAIR || mc.player == null || !mc.player.isAlive()) {
             return;
         }
 
@@ -218,13 +214,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderFoodBar(RenderGuiOverlayEvent.@NotNull Pre event) {
+    public void onRenderFoodBar(RenderGuiLayerEvent.@NotNull Pre event) {
         if (mc.player == null || !mc.player.isAlive() || !Helper.isVampire(mc.player)) return;
         //disable foodbar if bloodbar is rendered
-        if (event.getOverlay().id() == VanillaGuiOverlay.FOOD_LEVEL.id() && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience()) {
+        if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience()) {
             event.setCanceled(true);
         }
-        if (event.getOverlay().id().equals(VanillaGuiOverlay.AIR_LEVEL.id())) {
+        if (event.getName().equals(VanillaGuiLayers.AIR_LEVEL)) {
             event.setCanceled(true);
         }
     }
@@ -292,8 +288,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGuiOverlayEvent.@NotNull Post event) {
-        if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
+    public void onRenderHealthBarPost(RenderGuiLayerEvent.@NotNull Post event) {
+        if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
         if (addTempPoison) {
@@ -304,11 +300,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGuiOverlayEvent.@NotNull Pre event) {
-        if (event.getOverlay().id() != VanillaGuiOverlay.PLAYER_HEALTH.id()) {
+    public void onRenderHealthBarPre(RenderGuiLayerEvent.@NotNull Pre event) {
+        if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.POISON.get()) && !((LivingEntityAccessor) mc.player).getActiveEffects().containsKey(MobEffects.POISON);
+        addTempPoison = mc.player.hasEffect(ModEffects.POISON) && !((LivingEntityAccessor) mc.player).getActiveEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
@@ -341,7 +337,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            MobEffectInstance effect = mc.player.getEffect(ModEffects.SUNSCREEN.get());
+            MobEffectInstance effect = mc.player.getEffect(ModEffects.SUNSCREEN);
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;

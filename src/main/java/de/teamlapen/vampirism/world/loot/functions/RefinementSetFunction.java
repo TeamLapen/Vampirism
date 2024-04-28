@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
-    public static final Codec<RefinementSetFunction> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<RefinementSetFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst).and(IFaction.CODEC.fieldOf("faction").forGetter(l -> l.faction))
                     .apply(inst, RefinementSetFunction::new)
             );
@@ -41,7 +42,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
 
     @NotNull
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<RefinementSetFunction> getType() {
         return ModLoot.ADD_REFINEMENT_SET.get();
     }
 

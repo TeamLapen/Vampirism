@@ -78,6 +78,11 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     }
 
     @Override
+    protected ItemStack getDefaultPickupItem() {
+        return ModItems.CROSSBOW_ARROW_NORMAL.toStack();
+    }
+
+    @Override
     protected void onHitBlock(@NotNull BlockHitResult blockRayTraceResult) { //onHitBlock
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
@@ -87,5 +92,10 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     }
 
     public void setEffectsFromItem(ItemStack p_200887_2_) {
+    }
+
+    @Override
+    public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
+        super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
     }
 }

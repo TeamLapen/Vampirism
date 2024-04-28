@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -22,7 +23,7 @@ public interface IWeaponTableRecipe extends Recipe<CraftingContainer> {
      */
     @Override
     @NotNull
-    default ItemStack assemble(@NotNull CraftingContainer inv, @NotNull RegistryAccess access) {
+    default ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider access) {
         return getResultItem(access).copy();
     }
 

@@ -18,6 +18,8 @@ import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -161,13 +163,13 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+        return this.saveWithoutMetadata(lookupProvider);
     }
 
     @Override
-    public void load(@NotNull CompoundTag tagCompound) {
-        super.load(tagCompound);
+    public void loadAdditional(@NotNull CompoundTag tagCompound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tagCompound, lookupProvider);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
         if (tick > 0 && player == null && tagCompound.hasUUID("playerUUID")) {
@@ -181,16 +183,16 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         CompoundTag tag = pkt.getTag();
-        if (tag != null && this.hasLevel()) {
-            this.load(tag);
+        if (this.hasLevel()) {
+            this.loadCustomOnly(tag, lookupProvider);
         }
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
         compound.putInt("tick", runningTick);
         if (player != null) {
             compound.putUUID("playerUUID", player.getUUID());
@@ -270,11 +272,11 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
-                this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);
+                this.level.playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F, true);
                 this.level.addParticle(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 1.0D, 0.0D, 0.0D);
             }
 
-            player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
+            player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
         }
@@ -309,6 +311,16 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     @Override
     protected Component getDefaultName() {
         return Component.translatable("tile.vampirism.altar_infusion");
+    }
+
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.inventorySlots;
+    }
+
+    @Override
+    protected void setItems(@NotNull NonNullList<ItemStack> items) {
+        this.inventorySlots = items;
     }
 
     /**

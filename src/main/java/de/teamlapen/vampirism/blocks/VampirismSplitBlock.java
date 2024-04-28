@@ -81,7 +81,7 @@ public class VampirismSplitBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
+    protected boolean isPathfindable(BlockState p_60475_, PathComputationType p_60478_) {
         return false;
     }
 

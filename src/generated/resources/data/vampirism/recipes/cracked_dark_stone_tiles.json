@@ -6,5 +6,8 @@
   "ingredient": {
     "item": "vampirism:dark_stone_tiles"
   },
-  "result": "vampirism:cracked_dark_stone_tiles"
+  "result": {
+    "count": 1,
+    "id": "vampirism:cracked_dark_stone_tiles"
+  }
 }

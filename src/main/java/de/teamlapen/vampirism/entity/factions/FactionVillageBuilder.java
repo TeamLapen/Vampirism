@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,12 +19,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FactionVillageBuilder implements IFactionVillageBuilder {
 
-    Supplier<MobEffect> badOmenEffect = () -> null;
-    Supplier<ItemStack> bannerStack = () -> new ItemStack(Items.WHITE_BANNER);
+    Holder<MobEffect> badOmenEffect = null;
+    Function<HolderLookup.Provider, ItemStack> bannerStack = (provider) -> new ItemStack(Items.WHITE_BANNER);
     List<CaptureEntityEntry<?>> captureEntities = Collections.emptyList();
     Supplier<VillagerProfession> factionVillageProfession = () -> VillagerProfession.NONE;
     Class<? extends Mob> guardSuperClass = Mob.class;
@@ -31,13 +34,13 @@ public class FactionVillageBuilder implements IFactionVillageBuilder {
     Supplier<? extends Block> craftedTotem = () -> Blocks.AIR;
 
     @Override
-    public @NotNull IFactionVillageBuilder badOmenEffect(Supplier<MobEffect> badOmenEffect) {
+    public @NotNull IFactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect) {
         this.badOmenEffect = badOmenEffect;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder banner(Supplier<ItemStack> bannerItem) {
+    public @NotNull IFactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem) {
         this.bannerStack = bannerItem;
         return this;
     }

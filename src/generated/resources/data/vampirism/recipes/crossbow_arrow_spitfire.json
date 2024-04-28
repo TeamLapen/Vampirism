@@ -18,6 +18,6 @@
   "lava": 1,
   "result": {
     "count": 3,
-    "item": "vampirism:crossbow_arrow_spitfire"
+    "id": "vampirism:crossbow_arrow_spitfire"
   }
 }

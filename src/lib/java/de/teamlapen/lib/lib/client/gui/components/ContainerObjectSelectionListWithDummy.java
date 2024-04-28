@@ -17,7 +17,10 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     public ContainerObjectSelectionListWithDummy(Minecraft minecraft, int width, int height, int y0, int itemHeight, Supplier<List<Z>> itemSupplier) {
         super(minecraft, width, height, y0, itemHeight);
         this.itemSupplier = itemSupplier;
-        this.setRenderBackground(false);
+    }
+
+    @Override
+    protected void renderListBackground(GuiGraphics p_331297_) {
     }
 
     @Override

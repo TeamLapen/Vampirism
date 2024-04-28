@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirehut;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 public class VampireHutStructure extends Structure {
 
-    public static final Codec<VampireHutStructure> CODEC = simpleCodec(VampireHutStructure::new);
+    public static final MapCodec<VampireHutStructure> CODEC = simpleCodec(VampireHutStructure::new);
 
     public VampireHutStructure(Structure.StructureSettings settings) {
         super(settings);

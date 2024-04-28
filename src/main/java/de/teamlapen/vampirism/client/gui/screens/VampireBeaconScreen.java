@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -37,7 +38,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable
-    private MobEffect primary;
+    private Holder<MobEffect> primary;
     private int amplifier;
     private boolean isUpgraded;
 
@@ -81,7 +82,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             int k = j * 22 + (j - 1) * 2;
 
             for(int l = 0; l < j; ++l) {
-                MobEffect mobeffect = VampireBeaconBlockEntity.BEACON_EFFECTS[i][l];
+                Holder<MobEffect> mobeffect = VampireBeaconBlockEntity.BEACON_EFFECTS[i][l];
                 int amplifier = VampireBeaconBlockEntity.BEACON_EFFECTS_AMPLIFIER[i][l];
                 BeaconPowerButton beaconscreen$beaconpowerbutton = new BeaconPowerButton(this.leftPos + 76 + 62 + l * 24 - k / 2, this.topPos + 22 + i * 25, mobeffect, amplifier, i);
                 beaconscreen$beaconpowerbutton.active = false;
@@ -161,18 +162,18 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     @OnlyIn(Dist.CLIENT)
     class BeaconPowerButton extends BeaconScreenButton {
         protected final int tier;
-        private MobEffect effect;
+        private Holder<MobEffect> effect;
         private int effectAmplifier;
         private TextureAtlasSprite sprite;
 
-        public BeaconPowerButton(int pX, int pY, MobEffect pEffect, int effectAmplifier, int pTier) {
+        public BeaconPowerButton(int pX, int pY, Holder<MobEffect> pEffect, int effectAmplifier, int pTier) {
             super(pX, pY);
             this.effectAmplifier = effectAmplifier;
             this.tier = pTier;
             this.setEffect(pEffect, effectAmplifier);
         }
 
-        protected void setEffect(MobEffect pEffect, int effectAmplifier) {
+        protected void setEffect(Holder<MobEffect> pEffect, int effectAmplifier) {
             this.effect = pEffect;
             this.effectAmplifier = effectAmplifier;
             this.sprite = Minecraft.getInstance().getMobEffectTextures().get(pEffect);
@@ -183,8 +184,8 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             this.setTooltip(Tooltip.create(this.createEffectDescription(this.effect, this.effectAmplifier), null));
         }
 
-        protected MutableComponent createEffectDescription(MobEffect pEffect, int amplifier) {
-            MutableComponent component = Component.translatable(pEffect.getDescriptionId());
+        protected MutableComponent createEffectDescription(Holder<MobEffect> pEffect, int amplifier) {
+            MutableComponent component = Component.translatable(pEffect.value().getDescriptionId());
             if (!VampireBeaconBlockEntity.NO_AMPLIFIER_EFFECTS.contains(pEffect)) {
                 amplifier += VampireBeaconScreen.this.menu.isUpgraded() ? 1 : 0;
             }

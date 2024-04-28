@@ -79,18 +79,18 @@ public class PotionTableBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide && player instanceof ServerPlayer) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
-            if (tile instanceof PotionTableBlockEntity) {
-                if (((PotionTableBlockEntity) tile).canOpen(player)) {
-                    player.openMenu((PotionTableBlockEntity) tile, buffer -> buffer.writeBoolean(((PotionTableBlockEntity) tile).isExtended()));
+            if (tile instanceof PotionTableBlockEntity potionTable) {
+                if (potionTable.canOpen(player)) {
+                    player.openMenu(potionTable, buffer -> buffer.writeBoolean(potionTable.isExtended()));
                     player.awardStat(ModStats.INTERACT_WITH_POTION_TABLE.get());
                 }
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(worldIn.isClientSide);
     }
 
     @Override

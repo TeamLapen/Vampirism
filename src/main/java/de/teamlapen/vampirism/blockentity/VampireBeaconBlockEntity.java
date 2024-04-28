@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionyMixin;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -48,10 +50,10 @@ import static net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound
 
 public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvider, Nameable {
     private static final int MAX_LEVELS = 3;
-    public static final MobEffect[][] BEACON_EFFECTS = new MobEffect[][] {{MobEffects.MOVEMENT_SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION}};
+    public static final Holder<MobEffect>[][] BEACON_EFFECTS = new Holder[][] {{MobEffects.MOVEMENT_SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION}};
     public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 1}};
-    public static final Set<MobEffect> NO_AMPLIFIER_EFFECTS = Set.of(MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING);
-    private static final Set<MobEffect> VALID_EFFECTS = Arrays.stream(BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
+    public static final Set<Holder<MobEffect>> NO_AMPLIFIER_EFFECTS = Set.of(MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING);
+    private static final Set<Holder<MobEffect>> VALID_EFFECTS = Arrays.stream(BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
     public static final int DATA_LEVELS = 0;
     public static final int DATA_PRIMARY = 1;
     public static final int DATA_AMPLIFIER = 2;
@@ -64,7 +66,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     private int levels;
     private int lastCheckY;
     @Nullable
-    private MobEffect primaryPower;
+    private Holder<MobEffect> primaryPower;
     private int effectAmplifier;
     private boolean isUpgraded;
     @Nullable
@@ -191,7 +193,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
 
     }
 
-    protected void applyEffects(Level level, BlockPos pos, int levels, @Nullable MobEffect power, int effectAmplifier) {
+    protected void applyEffects(Level level, BlockPos pos, int levels, @Nullable Holder<MobEffect> power, int effectAmplifier) {
         if (!level.isClientSide && power != null) {
             if (NO_AMPLIFIER_EFFECTS.contains(power)) {
                 effectAmplifier = 0;
@@ -254,22 +256,22 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return this.saveWithoutMetadata(provider);
     }
 
     @Nullable
-    static MobEffect getValidEffectById(int pEffectId) {
-        MobEffect mobeffect = BeaconMenu.decodeEffect(pEffectId);
+    static Holder<MobEffect> getValidEffectById(int pEffectId) {
+        Holder<MobEffect> mobeffect = BeaconMenu.decodeEffect(pEffectId);
         return VALID_EFFECTS.contains(mobeffect) ? mobeffect : null;
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.loadAdditional(pTag, provider);
         this.primaryPower = getValidEffectById(pTag.getInt("Primary"));
         if (pTag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
+            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"), provider);
         }
         this.effectAmplifier = pTag.getInt("Amplifier");
 
@@ -278,12 +280,12 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.saveAdditional(pTag, provider);
         pTag.putInt("Primary", BeaconMenu.encodeEffect(this.primaryPower));
         pTag.putInt("Levels", this.levels);
         if (this.name != null) {
-            pTag.putString("CustomName", Component.Serializer.toJson(this.name));
+            pTag.putString("CustomName", Component.Serializer.toJson(this.name, provider));
         }
         pTag.putInt("Amplifier", this.effectAmplifier);
 

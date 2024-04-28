@@ -10,7 +10,7 @@ import java.util.List;
 @Mixin(OrePlacements.class)
 public interface OrePlacementAccessor {
 
-    @Invoker("commonOrePlacement(ILnet/minecraft/world/level/levelgen/placement/PlacementModifier;)Ljava/util/List;")
+    @Invoker("commonOrePlacement")
     static List<PlacementModifier> commonOrePlacement(int pCount, PlacementModifier pHeightRange) {
         throw new IllegalStateException("Mixin failed to apply");
     }

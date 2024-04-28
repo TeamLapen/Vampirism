@@ -316,26 +316,27 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(TYPE, 0);
-        this.getEntityData().define(NAME, "none");
-        this.getEntityData().define(TEXTURE, "none");
-        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LEVEL, -1);
+        builder.define(TYPE, 0);
+        builder.define(NAME, "none");
+        builder.define(TEXTURE, "none");
+        builder.define(IS_CHARGING_CROSSBOW, false);
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
         Supporter supporter = SupporterManager.getRandomHunter(random);
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
         this.lootBookId = supporter.bookId();
         applyCustomisationItems(supporter);
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
+
 
     private void applyCustomisationItems(Supporter supporter) {
         Map<String, String> appearance = supporter.appearance();
@@ -430,11 +431,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public void setChargingCrossbow(boolean pChargingCrossbow) {
         this.getEntityData().set(IS_CHARGING_CROSSBOW, pChargingCrossbow);
-    }
-
-    @Override
-    public void shootCrossbowProjectile(@NotNull LivingEntity pTarget, @NotNull ItemStack pCrossbowStack, @NotNull Projectile pProjectile, float pProjectileAngle) {
-        this.shootCrossbowProjectile(this, pTarget, pProjectile, pProjectileAngle, 1.6f);
     }
 
     @Override

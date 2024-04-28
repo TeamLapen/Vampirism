@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:blood_container"
-            ]
+            "items": "vampirism:blood_container"
           }
         ]
       },
@@ -30,7 +28,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:blood_container"
+      "count": 1,
+      "id": "vampirism:blood_container"
     },
     "title": {
       "translate": "advancement.vampirism.extra_storage"

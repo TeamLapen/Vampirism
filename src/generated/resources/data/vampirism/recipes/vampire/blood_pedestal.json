@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "X": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidians"
     },
     "Y": {
       "tag": "minecraft:planks"
@@ -21,6 +21,7 @@
     "XXX"
   ],
   "result": {
-    "item": "vampirism:blood_pedestal"
+    "count": 1,
+    "id": "vampirism:blood_pedestal"
   }
 }

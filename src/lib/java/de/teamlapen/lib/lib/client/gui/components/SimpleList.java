@@ -19,7 +19,10 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
 
     public SimpleList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pItemHeight) {
         super(pMinecraft, pWidth, pHeight, pY0, pItemHeight);
-        this.setRenderBackground(false);
+    }
+
+    @Override
+    protected void renderListBackground(GuiGraphics guiGraphics) {
     }
 
     @Override

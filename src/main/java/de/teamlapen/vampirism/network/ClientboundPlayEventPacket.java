@@ -4,28 +4,25 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record ClientboundPlayEventPacket(int type, BlockPos pos, int stateId) implements CustomPacketPayload {
+public record ClientboundPlayEventPacket(int event, BlockPos pos, int stateId) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "play_event");
-    public static final Codec<ClientboundPlayEventPacket> CODEC = RecordCodecBuilder.create(inst
-            -> inst.group(
-            Codec.INT.fieldOf("type").forGetter(ClientboundPlayEventPacket::type),
-            BlockPos.CODEC.fieldOf("pos").forGetter(ClientboundPlayEventPacket::pos),
-            Codec.INT.fieldOf("state_id").forGetter(ClientboundPlayEventPacket::stateId)
-    ).apply(inst, ClientboundPlayEventPacket::new));
-
-    @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
+    public static final Type<ClientboundPlayEventPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "play_event"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundPlayEventPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundPlayEventPacket::event,
+            BlockPos.STREAM_CODEC, ClientboundPlayEventPacket::pos,
+            ByteBufCodecs.VAR_INT, ClientboundPlayEventPacket::stateId,
+            ClientboundPlayEventPacket::new
+    );
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

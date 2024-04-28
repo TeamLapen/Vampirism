@@ -6,6 +6,7 @@
 package de.teamlapen.vampirism.sit;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -14,6 +15,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
+
+import javax.management.Attribute;
 
 public class SitHandler {
     public static void startSitting(@NotNull Player player, @NotNull Level level, @NotNull BlockPos pos, double offset) {
@@ -54,7 +57,7 @@ public class SitHandler {
     private static boolean isPlayerInRange(@NotNull Player player, BlockPos pos) {
         Vec3 playerPos = player.position();
         Vec3 blockPos = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-        double blockReachDistance = player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue();
+        double blockReachDistance = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue();
 
 //        if(blockReachDistance == 0) //player has to stand on top of the block
 //            return playerPos.getY() - blockPos.getY() <= 1 && playerPos.getX() - blockPos.getX() == 0 && playerPos.getZ() - blockPos.getZ() == 0;

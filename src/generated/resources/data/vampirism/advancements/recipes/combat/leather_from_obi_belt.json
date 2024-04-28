@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:obi_belt"
-            ]
+            "items": "vampirism:obi_belt"
           }
         ]
       },

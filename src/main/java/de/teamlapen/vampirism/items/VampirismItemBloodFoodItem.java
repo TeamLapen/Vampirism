@@ -30,10 +30,10 @@ public class VampirismItemBloodFoodItem extends Item {
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player player) {
             //Don't shrink stack before retrieving food
-            VampirePlayer.get(player).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), new DrinkBloodContext(stack));
+            VampirePlayer.get(player).drinkBlood(vampireFood.nutrition(), vampireFood.saturation(), new DrinkBloodContext(stack));
         }
         if (entityLiving instanceof IVampire) {
-            ((IVampire) entityLiving).drinkBlood(vampireFood.getNutrition(), vampireFood.getSaturationModifier(), new DrinkBloodContext(stack));
+            ((IVampire) entityLiving).drinkBlood(vampireFood.nutrition(), vampireFood.saturation(), new DrinkBloodContext(stack));
             stack.shrink(1);
         } else {
             entityLiving.eat(worldIn, stack); //Shrinks stack and applies human food effects

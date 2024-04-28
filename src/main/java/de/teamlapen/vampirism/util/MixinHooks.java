@@ -3,12 +3,14 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEnchantments;
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import org.jetbrains.annotations.NotNull;
@@ -54,9 +56,9 @@ public class MixinHooks {
     public static float calculateVampireSlayerEnchantments(Entity entity, @NotNull ItemStack item) {
         if (!(entity instanceof Player)) return 0;
         if (!Helper.isVampire(entity)) return 0;
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(item);
-        if (!enchantments.containsKey(ModEnchantments.VAMPIRESLAYER.get())) return 0;
-        return ModEnchantments.VAMPIRESLAYER.get().getDamageBonus(enchantments.get(ModEnchantments.VAMPIRESLAYER.get()), VReference.VAMPIRE_CREATURE_ATTRIBUTE);
+        int enchantmentLevel = item.getEnchantmentLevel(ModEnchantments.VAMPIRE_SLAYER.get());
+        if (enchantmentLevel == 0) return 0;
+        return ModEnchantments.VAMPIRE_SLAYER.get().getDamageBonus(enchantmentLevel, entity.getType());
     }
 
     private static @NotNull String singleJigsawString(@NotNull ResourceLocation resourceLocation) {

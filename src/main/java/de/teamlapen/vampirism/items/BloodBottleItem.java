@@ -50,7 +50,7 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(new Properties().defaultDurability(AMOUNT).setNoRepair());
+        super(new Properties().durability(AMOUNT).setNoRepair());
     }
 
     @Override

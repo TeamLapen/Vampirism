@@ -77,16 +77,15 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
         float f6 = 0.0F;
         PoseStack.Pose matrixstack$entry = matrixStack.last();
         Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
 
         for (int j = 1; j <= 8; ++j) {
             float f7 = Mth.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f8 = Mth.cos((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f9 = (float) j / 8.0F;
-            ivertexbuilder.vertex(matrix4f, f4, f5, 0.0F).color(75, 0, 0, 255).uv(f6, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).color(255, 0, 0, 255).uv(f6, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).color(255, 0, 0, 255).uv(f9, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f7, f8, 0.0F).color(75, 0, 0, 255).uv(f9, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.vertex(matrix4f, f4, f5, 0.0F).color(75, 0, 0, 255).uv(f6, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.vertex(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).color(255, 0, 0, 255).uv(f6, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.vertex(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).color(255, 0, 0, 255).uv(f9, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.vertex(matrix4f, f7, f8, 0.0F).color(75, 0, 0, 255).uv(f9, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
             f4 = f7;
             f5 = f8;
             f6 = f9;

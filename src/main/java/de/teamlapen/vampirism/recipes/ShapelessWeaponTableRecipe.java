@@ -2,15 +2,21 @@ package de.teamlapen.vampirism.recipes;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.FactionCodec;
+import de.teamlapen.vampirism.util.StreamCodecExtension;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -49,7 +55,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull RegistryAccess registryAccess) {
+    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider registryAccess) {
         return this.recipeOutput.copy();
     }
 
@@ -72,7 +78,7 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     @NotNull
     @Override
-    public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
+    public ItemStack getResultItem(@NotNull HolderLookup.Provider registryAccess) {
         return recipeOutput;
     }
 
@@ -133,9 +139,9 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
     public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
 
-        public static final Codec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.create(inst -> {
+        public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
             return inst.group(
-                    ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_301127_ -> p_301127_.group),
+                    Codec.STRING.optionalFieldOf( "group", "").forGetter(p_301127_ -> p_301127_.group),
                     CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
                     Ingredient.CODEC_NONEMPTY
                             .listOf()
@@ -155,27 +161,32 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
                                     DataResult::success
                             )
                             .forGetter(p_300975_ -> p_300975_.recipeItems),
-                    ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
-                    ExtraCodecs.strictOptionalField(Codec.INT, "level", 1).forGetter(p -> p.requiredLevel),
-                    ExtraCodecs.strictOptionalField(Codec.INT, "lava", 0).forGetter(p -> p.requiredLava),
-                    ExtraCodecs.strictOptionalField(FactionCodec.<IHunterPlayer>skillCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+                    ItemStack.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
+                    Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.requiredLevel),
+                    Codec.INT.optionalFieldOf( "lava", 0).forGetter(p -> p.requiredLava),
+                    FactionCodec.<IHunterPlayer>skillCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
             ).apply(inst, ShapelessWeaponTableRecipe::new);
         });
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+                ByteBufCodecs.STRING_UTF8, s -> s.group,
+                CraftingBookCategory.STREAM_CODEC, s -> s.category,
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).map(s -> NonNullList.of(Ingredient.EMPTY, s.toArray(Ingredient[]::new)), l -> l), s -> s.recipeItems,
+                ItemStack.STREAM_CODEC, s -> s.recipeOutput,
+                ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
+                ByteBufCodecs.VAR_INT, s -> s.requiredLava,
+                FactionCodec.<RegistryFriendlyByteBuf,IHunterPlayer>skillStreamCodec().apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+                ShapelessWeaponTableRecipe::new
+        );
+
         @Override
-        public @NotNull Codec<ShapelessWeaponTableRecipe> codec() {
+        public @NotNull MapCodec<ShapelessWeaponTableRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull ShapelessWeaponTableRecipe fromNetwork(FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
-
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull ShapelessWeaponTableRecipe recipe) {
-            buffer.writeJsonWithCodec(CODEC, recipe);
-        }
-
     }
 }

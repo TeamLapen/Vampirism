@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player.refinements;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -15,14 +16,14 @@ import java.util.function.BiFunction;
 
 public class Refinement implements IRefinement {
 
-    private final @Nullable Attribute attribute;
+    private final @Nullable Holder<Attribute> attribute;
     private final @Nullable BiFunction<UUID, Double, AttributeModifier> modifier;
     private final @Nullable UUID uuid;
     private final double baseValue;
     private boolean detrimental = false;
     private MutableComponent description;
 
-    public Refinement(Attribute attribute, UUID uuid, double baseValue, BiFunction<UUID, Double, AttributeModifier> modifier) {
+    public Refinement(Holder<Attribute> attribute, UUID uuid, double baseValue, BiFunction<UUID, Double, AttributeModifier> modifier) {
         this.attribute = attribute;
         this.modifier = modifier;
         this.uuid = uuid;
@@ -43,7 +44,7 @@ public class Refinement implements IRefinement {
 
     @Nullable
     @Override
-    public Attribute getAttribute() {
+    public Holder<Attribute> getAttribute() {
         return this.attribute;
     }
 

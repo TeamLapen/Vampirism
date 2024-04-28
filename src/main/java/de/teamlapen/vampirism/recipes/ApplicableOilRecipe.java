@@ -6,8 +6,10 @@ import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.util.OilUtils;
-import net.minecraft.core.RegistryAccess;
+import de.teamlapen.vampirism.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.items.component.OilContent;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -31,9 +33,9 @@ public class ApplicableOilRecipe extends CustomRecipe {
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof IOilItem) {
                     if (oil != null) return false;
-                    IOil oil1 = ((IOilItem) stack.getItem()).getOil(stack);
-                    if (oil1 instanceof IApplicableOil) {
-                        oil = ((IApplicableOil) oil1);
+                    Holder<IOil> oil1 = ((IOilItem) stack.getItem()).getOil(stack);
+                    if (oil1.value() instanceof IApplicableOil applicableOil) {
+                        oil = applicableOil;
                     }
                 } else {
                     if (tool != null) return false;
@@ -46,7 +48,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inventory, @NotNull RegistryAccess registryAccess) {
+    public ItemStack assemble(@NotNull CraftingContainer inventory, @NotNull HolderLookup.Provider registryAccess) {
         ItemStack oilStack = ItemStack.EMPTY;
         ItemStack toolStack = ItemStack.EMPTY;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -61,9 +63,9 @@ public class ApplicableOilRecipe extends CustomRecipe {
         }
         ItemStack result = toolStack.copy();
         if (oilStack.isEmpty() || toolStack.isEmpty()) return result;
-        IOil oil = ((IOilItem) oilStack.getItem()).getOil(oilStack);
-        if (oil instanceof IApplicableOil) {
-            OilUtils.setAppliedOil(result, ((IApplicableOil) oil));
+        Holder<IOil> oil = OilContent.getOil(oilStack);
+        if (oil.value() instanceof IApplicableOil) {
+            AppliedOilContent.apply(result, ((Holder<IApplicableOil>) (Object) oil));
         }
         return result;
     }

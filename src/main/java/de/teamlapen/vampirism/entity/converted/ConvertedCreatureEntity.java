@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import de.teamlapen.vampirism.mixin.accessor.WalkAnimationStateAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -17,8 +18,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,6 +35,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -129,9 +133,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.registerConvertingData(this);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        this.registerConvertingData(builder);
     }
 
     @Override
@@ -213,7 +217,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider,@NotNull CompoundTag nbt) {
         if (nbt.contains("entity_old", Tag.TAG_COMPOUND)) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
@@ -287,11 +291,8 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public ItemEntity spawnAtLocation(@NotNull ItemStack stack, float offsetY) {
         ItemStack actualDrop = stack;
-        Item item = stack.getItem();
-        if (item.isEdible()) {
-            if (item.getFoodProperties(stack, this).isMeat()) {
-                actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
-            }
+        if (stack.is(ItemTags.MEAT)) {
+            actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
         }
         return super.spawnAtLocation(actualDrop, offsetY);
     }
@@ -303,7 +304,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         writeOldEntityToNBT(tag);
         return tag;
@@ -329,7 +330,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @NotNull
     @Override
-    protected ResourceLocation getDefaultLootTable() {
+    protected ResourceKey<LootTable> getDefaultLootTable() {
         return this.entityCreature.map(Mob::getLootTable).orElseGet(super::getDefaultLootTable);
     }
 

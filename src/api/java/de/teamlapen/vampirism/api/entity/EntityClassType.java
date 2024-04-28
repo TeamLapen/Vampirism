@@ -48,9 +48,9 @@ public enum EntityClassType {
     private final @NotNull AttributeModifier speedModifier;
 
     EntityClassType(double healthModifier, double damageModifier, double speedModifier) {
-        this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.MULTIPLY_BASE);
-        this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, AttributeModifier.Operation.MULTIPLY_BASE);
-        this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, AttributeModifier.Operation.MULTIPLY_BASE);
+        this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 
     public @NotNull AttributeModifier getDamageModifier() {

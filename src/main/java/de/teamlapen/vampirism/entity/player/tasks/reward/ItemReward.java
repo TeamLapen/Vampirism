@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.reward;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class ItemReward implements TaskReward {
 
-    public static final Codec<ItemReward> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<ItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(ItemStack.CODEC.fieldOf("item").forGetter(i -> i.reward)
         ).apply(inst, ItemReward::new);
     });
@@ -37,7 +38,7 @@ public class ItemReward implements TaskReward {
     }
 
     @Override
-    public Codec<? extends TaskReward> codec() {
+    public MapCodec<? extends TaskReward> codec() {
         return ModTasks.ITEM_REWARD.get();
     }
 
@@ -48,7 +49,7 @@ public class ItemReward implements TaskReward {
 
     public record Instance(ItemStack reward) implements ITaskRewardInstance {
 
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> {
+        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> {
             return inst.group(ItemStack.CODEC.fieldOf("item").forGetter(i -> i.reward)).apply(inst, Instance::new);
         });
 
@@ -64,7 +65,7 @@ public class ItemReward implements TaskReward {
         }
 
         @Override
-        public Codec<? extends ITaskRewardInstance> codec() {
+        public MapCodec<? extends ITaskRewardInstance> codec() {
             return ModTasks.ITEM_REWARD_INSTANCE.get();
         }
     }

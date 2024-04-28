@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageEffects;
@@ -26,7 +26,7 @@ public class ModDamageTypes {
         return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));
     }
 
-    public static void createDamageTypes(BootstapContext<DamageType> context) {
+    static void createDamageTypes(BootstrapContext<DamageType> context) {
         context.register(SUN_DAMAGE, new DamageType("sun", 0.1F));
         context.register(VAMPIRE_ON_FIRE, new DamageType("vampire_on_fire", 0.1F, DamageEffects.BURNING));
         context.register(VAMPIRE_IN_FIRE, new DamageType("vampire_in_fire", 0.1F, DamageEffects.BURNING));

@@ -23,8 +23,8 @@ public class FactionSubPredicate implements EntitySubPredicate {
     public static final MapCodec<FactionSubPredicate> CODEC = RecordCodecBuilder.mapCodec(inst ->
         inst.group(
                 IPlayableFaction.CODEC.optionalFieldOf("faction", null).forGetter(p -> p.faction),
-                ExtraCodecs.strictOptionalField(Codec.INT, "level").forGetter(p -> p.level),
-                ExtraCodecs.strictOptionalField(Codec.INT, "lord_level").forGetter(p -> p.lordLevel)
+                Codec.INT.optionalFieldOf( "level").forGetter(p -> p.level),
+                Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
         ).apply(inst, FactionSubPredicate::new)
     );
 
@@ -78,7 +78,7 @@ public class FactionSubPredicate implements EntitySubPredicate {
     }
 
     @Override
-    public @NotNull Type type() {
-        return ModAdvancements.FACTION;
+    public @NotNull MapCodec<? extends EntitySubPredicate> codec() {
+        return CODEC;
     }
 }

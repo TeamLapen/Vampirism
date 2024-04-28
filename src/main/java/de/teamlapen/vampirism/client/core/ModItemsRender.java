@@ -6,19 +6,16 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import de.teamlapen.vampirism.util.OilUtils;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.IItemDecorator;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import org.jetbrains.annotations.NotNull;
@@ -44,14 +41,14 @@ public class ModItemsRender {
     static void registerColors(RegisterColorHandlersEvent.@NotNull Item event) {
         // Swiftness armor
         event.register((stack, tintIndex) -> {
-            return tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack);
+            return tintIndex > 0 ? -1 : DyedItemColor.getOrDefault(stack, -1);
         }, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get());
         //Crossbow arrow
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 return ((CrossbowArrowItem) stack.getItem()).getType().color;
             }
-            return 0xFFFFFF;
+            return -1;
         }, ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get());
         event.register((state, tintIndex) -> {
             return 0x1E1F1F;
@@ -61,18 +58,17 @@ public class ModItemsRender {
                 if (stack.getItem() instanceof IRefinementItem) {
                     IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
                     if (set != null) {
-                        return set.getColor();
+                        return set.getColor() | 0xFF000000;
                     }
                 }
             }
-            return 0xFFFFFF;
+            return -1;
         }, ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
         event.register((stack, tintIndex) -> {
             if (tintIndex == 1) {
-                IOil oil = OilUtils.getOil(stack);
-                return oil.getColor();
+                return OilContent.getOil(stack).value().getColor() | 0xFF000000;
             }
-            return 0xFFFFFF;
+            return -1;
         }, ModItems.OIL_BOTTLE.get());
     }
 

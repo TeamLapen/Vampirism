@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.functions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.core.ModLoot;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
 
-    public static final Codec<SetItemBloodChargeFunction> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<SetItemBloodChargeFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst)
             .and(NumberProviders.CODEC.fieldOf("charge").forGetter(l -> l.charge))
             .apply(inst, SetItemBloodChargeFunction::new));
@@ -43,7 +44,7 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
 
     @NotNull
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<SetItemBloodChargeFunction> getType() {
         return ModLoot.SET_ITEM_BLOOD_CHARGE.get();
     }
 

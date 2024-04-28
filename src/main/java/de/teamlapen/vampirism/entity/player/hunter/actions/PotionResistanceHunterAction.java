@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,8 +18,8 @@ import java.util.Collection;
 
 public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
-    public static boolean shouldRemove(MobEffect effect) {
-        return effect == MobEffects.BLINDNESS || effect == MobEffects.CONFUSION || effect == MobEffects.HUNGER || effect == MobEffects.POISON || effect == ModEffects.FREEZE.get();
+    public static boolean shouldRemove(Holder<MobEffect> effect) {
+        return effect.is(ModTags.Effects.HUNTER_POTION_RESISTANCE);
     }
 
     @Override

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:purple_stone_tiles"
-            ]
+            "items": "vampirism:purple_stone_tiles"
           }
         ]
       },

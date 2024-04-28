@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.recipes;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
@@ -47,7 +48,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull Container inventory, @NotNull RegistryAccess registryAccess) {
+    public ItemStack assemble(@NotNull Container inventory, HolderLookup.@NotNull Provider lookupProvider) {
         return this.result.copy();
     }
 
@@ -58,7 +59,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     @NotNull
     @Override
-    public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
+    public ItemStack getResultItem(HolderLookup.@NotNull Provider lookupProvider) {
         return this.result;
     }
 

@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.structure.pools.EmptyPoolElement;
@@ -27,7 +27,7 @@ public class HunterOutpostPools {
     public static final ResourceKey<StructureTemplatePool> ALCHEMY = createTemplatePool("hunter_outpost/alchemy");
     public static final ResourceKey<StructureTemplatePool> FLAG = createTemplatePool("hunter_outpost/flag");
 
-    public static void bootstrap(BootstapContext<StructureTemplatePool> context) {
+    public static void bootstrap(BootstrapContext<StructureTemplatePool> context) {
         PlainsHunterOutpostPools.bootstrap(context);
         DesertHunterOutpostPools.bootstrap(context);
         VampireForestHunterOutpostPools.bootstrap(context);

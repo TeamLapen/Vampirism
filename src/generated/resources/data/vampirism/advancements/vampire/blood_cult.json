@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:altar_infusion"
+      "count": 1,
+      "id": "vampirism:altar_infusion"
     },
     "title": {
       "translate": "advancement.vampirism.blood_cult"

@@ -134,7 +134,7 @@ public class SkillsTabScreen {
         this.root.draw(graphics, 0, 0);
         pose.popPose();
 
-        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) {
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION) != null) {
             pose.pushPose();
             pose.translate(0.0F, 0.0F, 200.0F);
             graphics.fill(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);

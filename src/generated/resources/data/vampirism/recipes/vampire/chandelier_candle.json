@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "B": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "vampirism:item_candelabra"
@@ -21,6 +21,7 @@
     "BAB"
   ],
   "result": {
-    "item": "vampirism:chandelier"
+    "count": 1,
+    "id": "vampirism:chandelier"
   }
 }

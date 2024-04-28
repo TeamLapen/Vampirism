@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -241,7 +242,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
@@ -257,7 +258,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         for (Tag n : data) {
             CompoundTag tag = (CompoundTag) n;
             int id = tag.getInt("id");
-            MinionData d = MinionData.fromNBT(tag);
+            MinionData d = MinionData.fromNBT(provider, tag);
             if (d == null) {
                 removedData.add(id);
                 continue;
@@ -411,7 +412,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
@@ -419,7 +420,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         }
         ListTag data = new ListTag();
         for (MinionInfo i : minions) {
-            CompoundTag d = i.data.serializeNBT();
+            CompoundTag d = i.data.serializeNBT(provider);
             d.putInt("death_timer", i.deathCooldown);
             d.putInt("id", i.minionID);
             if (i.minionType != null) d.putString("entity_type", RegUtil.id(i.minionType).toString());

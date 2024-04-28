@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.unlock;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
 
-    public static final Codec<ParentUnlocker> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<ParentUnlocker> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 Task.HOLDER_CODEC.fieldOf("parent").forGetter(i -> i.parent)
         ).apply(inst, ParentUnlocker::new);
@@ -29,7 +30,7 @@ public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
     }
 
     @Override
-    public Codec<? extends TaskUnlocker> codec() {
+    public MapCodec<? extends TaskUnlocker> codec() {
         return ModTasks.PARENT_UNLOCKER.get();
     }
 }

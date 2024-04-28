@@ -12,7 +12,7 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "Y": {
       "item": "minecraft:rotten_flesh"
@@ -23,6 +23,7 @@
     " X "
   ],
   "result": {
-    "item": "vampirism:blood_bottle"
+    "count": 1,
+    "id": "vampirism:blood_bottle"
   }
 }

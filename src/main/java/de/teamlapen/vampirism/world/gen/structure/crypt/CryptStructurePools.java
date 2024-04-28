@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -20,7 +20,7 @@ public class CryptStructurePools {
     public static final ResourceKey<StructureTemplatePool> STAIRS_2 = createTemplatePool("crypt/stairs2");
     public static final ResourceKey<StructureTemplatePool> STAIRS_BASE = createTemplatePool("crypt/stairs_base");
 
-    public static void bootstrap(BootstapContext<StructureTemplatePool> context) {
+    public static void bootstrap(BootstrapContext<StructureTemplatePool> context) {
         HolderGetter<StructureTemplatePool> templatePools = context.lookup(Registries.TEMPLATE_POOL);
         Holder<StructureTemplatePool> end = templatePools.getOrThrow(END);
         Holder<StructureTemplatePool> empty = templatePools.getOrThrow(Pools.EMPTY);

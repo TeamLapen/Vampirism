@@ -174,8 +174,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     if (fph.getCurrentFaction() == this.getFaction()) {
                         boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE.get())).orElse(false);
                         HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
-                        data.updateEntityCaps(this.serializeAttachments());
-                        CompoundTag compoundTag = saveWithoutId(new CompoundTag());
+                        data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
                         int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                         if (id < 0) {
                             LOGGER.error("Failed to get minion slot");
@@ -251,14 +250,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
         if (!(reason == MobSpawnType.SPAWN_EGG || reason == MobSpawnType.BUCKET || reason == MobSpawnType.CONVERSION || reason == MobSpawnType.COMMAND) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner());
+            this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner(worldIn.registryAccess()));
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
         randomEquipments();
 
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
 
     protected void randomEquipments() {
@@ -348,7 +347,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
             this.setLeftHanded(true);
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(ModItems.BASIC_CROSSBOW.get()));
+            this.setItemSlot(EquipmentSlot.MAINHAND, ModItems.BASIC_CROSSBOW.toStack());
         } else {
             this.setLeftHanded(false);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -389,12 +388,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(WATCHED_ID, 0);
-        this.getEntityData().define(TYPE, -1);
-        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LEVEL, -1);
+        builder.define(WATCHED_ID, 0);
+        builder.define(TYPE, -1);
+        builder.define(IS_CHARGING_CROSSBOW, false);
     }
 
     @Override
@@ -462,11 +461,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void setChargingCrossbow(boolean p_213671_1_) {
         this.getEntityData().set(IS_CHARGING_CROSSBOW, p_213671_1_);
-    }
-
-    @Override
-    public void shootCrossbowProjectile(@NotNull LivingEntity p_230284_1_, @NotNull ItemStack p_230284_2_, @NotNull Projectile p_230284_3_, float p_230284_4_) {
-        this.shootCrossbowProjectile(this, p_230284_1_, p_230284_3_, p_230284_4_, 1.6f);
     }
 
     @Override

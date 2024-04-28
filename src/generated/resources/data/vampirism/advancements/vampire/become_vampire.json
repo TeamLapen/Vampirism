@@ -18,7 +18,8 @@
       "translate": "advancement.vampirism.become_vampire.desc"
     },
     "icon": {
-      "item": "vampirism:vampire_fang"
+      "count": 1,
+      "id": "vampirism:vampire_fang"
     },
     "title": {
       "translate": "advancement.vampirism.become_vampire"

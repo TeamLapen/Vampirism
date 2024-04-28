@@ -32,7 +32,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:human_heart"
+      "count": 1,
+      "id": "vampirism:human_heart"
     },
     "title": {
       "translate": "advancement.vampirism.betrayal"

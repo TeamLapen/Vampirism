@@ -7,10 +7,12 @@
     "item": "minecraft:wheat_seeds"
   },
   "result": {
-    "Count": 1,
-    "id": "vampirism:oil_bottle",
-    "tag": {
-      "oil": "vampirism:plant"
-    }
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:plant"
+      }
+    },
+    "count": 1,
+    "id": "vampirism:oil_bottle"
   }
 }

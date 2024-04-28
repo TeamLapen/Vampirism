@@ -19,7 +19,8 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "vampirism:vampire_minion_upgrade_special"
+      "count": 1,
+      "id": "vampirism:vampire_minion_upgrade_special"
     },
     "title": {
       "translate": "advancement.vampirism.max_lord_vampire"

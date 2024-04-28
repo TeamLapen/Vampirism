@@ -6,5 +6,8 @@
   "ingredient": {
     "item": "vampirism:cobbled_dark_stone"
   },
-  "result": "vampirism:dark_stone"
+  "result": {
+    "count": 1,
+    "id": "vampirism:dark_stone"
+  }
 }

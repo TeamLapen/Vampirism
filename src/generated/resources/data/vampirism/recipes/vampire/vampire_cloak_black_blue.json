@@ -12,7 +12,7 @@
       "item": "minecraft:black_wool"
     },
     "Z": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     }
   },
   "pattern": [
@@ -21,6 +21,7 @@
     "Y Y"
   ],
   "result": {
-    "item": "vampirism:vampire_cloak_black_blue"
+    "count": 1,
+    "id": "vampirism:vampire_cloak_black_blue"
   }
 }

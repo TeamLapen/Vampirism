@@ -3,16 +3,13 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     },
     "Y": {
       "tag": "forge:crops/garlic"
     },
     "Z": {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:swiftness\"}"
+      "item": "minecraft:potion"
     }
   },
   "lava": 1,
@@ -23,6 +20,7 @@
     "XXXX"
   ],
   "result": {
-    "item": "vampirism:armor_of_swiftness_chest_normal"
+    "count": 1,
+    "id": "vampirism:armor_of_swiftness_chest_normal"
   }
 }

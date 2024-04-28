@@ -62,7 +62,7 @@ minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/
 
 runs {
     configureEach {
-        systemProperty 'forge.logging.console.level', 'debug'
+        systemProperty 'forge.logging.console.level', 'warn'
 
         modSources = [project.sourceSets.api, project.sourceSets.lib, project.sourceSets.main]
     }

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.Difficulty;
@@ -120,7 +121,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == Difficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == Difficulty.NORMAL) {
-                    this.player.addEffect(new MobEffectInstance(ModEffects.NO_BLOOD.get(), 150, 0));
+                    this.player.addEffect(new MobEffectInstance(ModEffects.NO_BLOOD, 150, 0));
                 }
 
                 this.bloodTimer = 0;
@@ -136,7 +137,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("bloodLevel")) {
             bloodLevel = nbt.getInt("bloodLevel");
             if (nbt.contains("bloodTimer")) {
@@ -172,13 +173,13 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
      */
     void addExhaustion(float amount, @SuppressWarnings("SameParameterValue") boolean ignoreModifier) {
         if (!ignoreModifier) {
-            amount *= (float) player.getAttributeValue(ModAttributes.BLOOD_EXHAUSTION.get());
+            amount *= (float) player.getAttributeValue(ModAttributes.BLOOD_EXHAUSTION);
         }
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("max_blood")) {
             setMaxBlood(nbt.getInt("max_blood"));
         }
@@ -203,7 +204,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         writeNBTBlood(nbt);
         nbt.putInt("bloodTimer", bloodTimer);
@@ -221,7 +222,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("max_blood", maxBlood);

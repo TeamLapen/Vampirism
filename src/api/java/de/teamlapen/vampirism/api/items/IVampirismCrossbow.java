@@ -52,14 +52,6 @@ public interface IVampirismCrossbow extends ItemLike {
     void setAmmunition(ItemStack crossbow, Item ammo);
 
     /**
-     * sets the selected ammunition for the crossbow
-     *
-     * @param crossbow the crossbow
-     * @param ammo     the registry name if the ammunition item
-     */
-    void setAmmunition(ItemStack crossbow, ResourceLocation ammo);
-
-    /**
      * gets a predicate to test all projectiles supported by the crossbow
      *
      * @param crossbow the crossbow

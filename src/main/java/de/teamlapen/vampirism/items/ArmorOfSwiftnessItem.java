@@ -1,62 +1,51 @@
 package de.teamlapen.vampirism.items;
 
+import com.google.common.base.Suppliers;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.util.ArmorMaterial;
-import net.minecraft.nbt.CompoundTag;
+import de.teamlapen.vampirism.mixin.accessor.ArmorItemAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
-public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier, DyeableLeatherItem {
-
-    public static final SwiftnessArmorMaterial NORMAL = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_normal", TIER.NORMAL, 15, ArmorMaterial.createReduction(1, 3,2, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.035f);
-    public static final SwiftnessArmorMaterial ENHANCED = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_enhanced", TIER.ENHANCED, 20, ArmorMaterial.createReduction(2, 6,5, 2), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.075f);
-    public static final SwiftnessArmorMaterial ULTIMATE = new SwiftnessArmorMaterial("vampirism:armor_of_swiftness_ultimate", TIER.ULTIMATE, 25, ArmorMaterial.createReduction(3, 8,6, 3), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Tags.Items.LEATHER), 0.1f);
+public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier {
 
     private final @NotNull TIER tier;
 
-    private static @NotNull Map<Attribute, Tuple<Double, AttributeModifier.Operation>> getModifiers(@NotNull ArmorItem.Type type, @NotNull SwiftnessArmorMaterial tier) {
-        HashMap<Attribute, Tuple<Double, AttributeModifier.Operation>> map = new HashMap<>();
-        map.put(Attributes.MOVEMENT_SPEED, new Tuple<>(tier.getSpeedReduction(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        return map;
+    private static float getSpeedReduction(TIER tier) {
+        return switch (tier) {
+            case NORMAL -> 0.035f;
+            case ENHANCED -> 0.075f;
+            case ULTIMATE -> 0.1f;
+        };
     }
 
-    public ArmorOfSwiftnessItem(@NotNull ArmorItem.Type type, @NotNull SwiftnessArmorMaterial material) {
-        super(material, type, new Item.Properties(), getModifiers(type, material));
-        this.tier = material.getTier();
+    public ArmorOfSwiftnessItem(@NotNull Holder<net.minecraft.world.item.ArmorMaterial> material, @NotNull ArmorItem.Type type, @NotNull TIER tier) {
+        super(material, type, new Item.Properties());
+        this.tier = tier;
+        Supplier<ItemAttributeModifiers> defaultModifiers = ((ArmorItemAccessor) this).getDefaultModifiers();
+        defaultModifiers = Suppliers.compose( (ItemAttributeModifiers modifiers) -> modifiers.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier("Vampirism armor modifier", getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),  EquipmentSlotGroup.bySlot(type.getSlot())), defaultModifiers::get);
+        ((ArmorItemAccessor) this).setDefaultModifiers(defaultModifiers);
     }
 
     @Override
-    public int getColor(ItemStack stack) {
-        CompoundTag compoundtag = stack.getTagElement("display");
-        return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : -1;
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
     @Override
@@ -107,17 +96,4 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlot.LEGS ? 2 : 1);
     }
 
-    public static class SwiftnessArmorMaterial extends ArmorMaterial.Tiered {
-
-        private final double speedReduction;
-
-        public SwiftnessArmorMaterial(String name, @NotNull TIER tier, int maxDamageFactor, EnumMap<ArmorItem.Type, Integer> damageReduction, int enchantability, SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial, double speedReduction) {
-            super(name, tier, maxDamageFactor, damageReduction, enchantability, soundEvent, toughness, knockbackResistance, repairMaterial);
-            this.speedReduction = speedReduction;
-        }
-
-        public double getSpeedReduction() {
-            return speedReduction;
-        }
-    }
 }

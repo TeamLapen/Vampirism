@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.level.Level;
@@ -40,8 +41,8 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
-        super.load(nbt);
+    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.Provider provider) {
+        super.loadAdditional(nbt, provider);
         if (nbt.contains("spawner_logic_1")) {
             spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
         }
@@ -55,8 +56,8 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         CompoundTag logic1 = new CompoundTag();
         CompoundTag logic2 = new CompoundTag();
         this.spawnerLogicHunter.writeToNbt(logic1);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.task;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -120,7 +121,7 @@ public class TaskRequirement {
 
     public interface Requirement<T> {
 
-        Codec<Requirement<?>> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.TASK_REQUIREMENT.get().byNameCodec()).dispatch(Requirement::codec, Function.identity());
+        Codec<Requirement<?>> CODEC = Codec.lazyInitialized(() -> VampirismRegistries.TASK_REQUIREMENT.get().byNameCodec()).dispatch(Requirement::codec, Function.identity());
 
         /**
          * @return the needed amount of the {@link #getStat(IFactionPlayer)} to complete this requirement
@@ -153,7 +154,7 @@ public class TaskRequirement {
         default void removeRequirement(IFactionPlayer<?> player) {
         }
 
-        Codec<? extends Requirement<?>> codec();
+        MapCodec<? extends Requirement<?>> codec();
 
         Component description();
 

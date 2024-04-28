@@ -17,7 +17,7 @@
         },
         "id": "minecraft:gold_ingot",
         "item": {
-          "Count": 2,
+          "count": 2,
           "id": "minecraft:gold_ingot"
         }
       }

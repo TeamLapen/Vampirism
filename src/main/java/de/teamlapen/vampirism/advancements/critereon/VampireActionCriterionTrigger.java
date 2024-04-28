@@ -51,7 +51,7 @@ public class VampireActionCriterionTrigger extends SimpleCriterionTrigger<Vampir
     public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Action action) implements SimpleCriterionTrigger.SimpleInstance {
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 StringRepresentable.fromEnum(Action::values).fieldOf("action").forGetter(TriggerInstance::action)
         ).apply(inst, TriggerInstance::new));
 

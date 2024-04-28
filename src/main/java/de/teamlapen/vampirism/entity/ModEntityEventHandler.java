@@ -52,6 +52,7 @@ import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -254,7 +255,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.@NotNull LivingTickEvent event) {
+    public void onLivingUpdate(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof PathfinderMob) {
             event.getEntity().getCommandSenderWorld().getProfiler().push("vampirism_extended_creature");
             ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);

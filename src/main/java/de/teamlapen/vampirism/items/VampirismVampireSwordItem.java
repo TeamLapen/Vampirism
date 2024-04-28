@@ -14,17 +14,20 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.items.component.SwordTraining;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
@@ -32,12 +35,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -45,11 +51,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,14 +85,14 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
         tooltip.add(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
 
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        this.addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
+        super.appendHoverText(stack, context, tooltip, flagIn);
+        this.addFactionToolTips(stack, context, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Override
@@ -112,7 +121,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * Prevent the player from being asked to name this item
      */
     public void doNotName(@NotNull ItemStack stack) {
-        stack.addTagElement("dont_name", ByteTag.valueOf(Byte.MAX_VALUE));
+        stack.set(ModDataComponents.DO_NOT_NAME, Unit.INSTANCE);
     }
 
     @Nullable
@@ -229,7 +238,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * @param value Is clamped between 0 and 1
      */
     public void setCharged(@NotNull ItemStack stack, float value) {
-        stack.addTagElement("charged", FloatTag.valueOf(Mth.clamp(value, 0f, 1f)));
+        stack.set(ModDataComponents.VAMPIRE_SWORD, stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).charge(value));
     }
 
     /**
@@ -238,15 +247,14 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * @param value Clamped between 0 and 1
      */
     public void setTrained(@NotNull ItemStack stack, @NotNull LivingEntity player, float value) {
-        CompoundTag nbt = stack.getOrCreateTagElement("trained");
-        nbt.putFloat(player.getUUID().toString(), Mth.clamp(value, 0f, 1f));
+        stack.set(ModDataComponents.VAMPIRE_SWORD, stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).addTraining(player.getUUID(), value));
     }
 
     /**
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
     public void tryName(@NotNull ItemStack stack, @NotNull Player player) {
-        if (!stack.hasCustomHoverName() && player.level().isClientSide() && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
+        if (!stack.has(DataComponents.CUSTOM_NAME) && player.level().isClientSide() && !stack.has(ModDataComponents.DO_NOT_NAME)) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
             player.level().playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1f, 1f, false);
         }
@@ -261,7 +269,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         float cached = getTrained(stack);
         float trained = getTrained(stack, player);
         if (cached != trained) {
-            stack.addTagElement("trained-cache", FloatTag.valueOf(trained));
+            stack.set(ModDataComponents.TRAINING_CACHE, trained);
             return true;
         }
         return false;
@@ -283,13 +291,11 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.getDamage() + getAttackDamageModifier(stack), AttributeModifier.Operation.ADDITION));
-            multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.getTier().getSpeed() + getSpeedModifier(stack) , AttributeModifier.Operation.ADDITION));
-        }
-        return multimap;
+    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+        builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.getTier().getSpeed() + getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        return builder.build();
     }
 
     protected float getAttackDamageModifier(@NotNull ItemStack stack) {
@@ -312,10 +318,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      */
     @Override
     public float getChargePercentage(@NotNull ItemStack stack) {
-        if (stack.hasTag()) {
-            return stack.getTag().getFloat("charged");
-        }
-        return 0.0f;
+        return stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).charged();
     }
 
     /**
@@ -329,13 +332,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      * @return Value between 0 and 1. Defaults to 0
      */
     protected float getTrained(@NotNull ItemStack stack) {
-        if (stack.hasTag()) {
-            CompoundTag nbt = stack.getTag();
-            if (nbt.contains("trained-cache")) {
-                return nbt.getFloat("trained-cache");
-            }
-        }
-        return 0.0f;
+        return stack.getOrDefault(ModDataComponents.TRAINING_CACHE, 0f);
     }
 
     /**
@@ -345,14 +342,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
      */
     protected float getTrained(@NotNull ItemStack stack, @Nullable LivingEntity player) {
         if (player == null) return getTrained(stack);
-        UUID id = player.getUUID();
-        CompoundTag nbt = stack.getTagElement("trained");
-        if (nbt != null) {
-            if (nbt.contains(id.toString())) {
-                return nbt.getFloat(id.toString());
-            }
-        }
-        return 0f;
+        return stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).training().getOrDefault(player.getUUID(), 0f);
     }
 
     private void spawnChargedParticle(@NotNull LivingEntity player, boolean mainHand) {
@@ -375,8 +365,8 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
 
         private final float trainedSpeedIncrease;
 
-        public VampireSwordMaterial(IItemWithTier.TIER tier, int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient, float trainedSpeedIncrease) {
-            super(tier, level, uses, speed, damage, enchantmentValue, repairIngredient);
+        public VampireSwordMaterial(IItemWithTier.TIER tier, TagKey<Block> incorrectTier, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient, float trainedSpeedIncrease) {
+            super(tier, incorrectTier, uses, speed, damage, enchantmentValue, repairIngredient);
             this.trainedSpeedIncrease = trainedSpeedIncrease;
         }
 

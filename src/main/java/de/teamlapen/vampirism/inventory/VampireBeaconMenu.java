@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.effect.MobEffect;
@@ -77,7 +78,7 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
     }
 
     @Nullable
-    public MobEffect getPrimaryEffect() {
+    public Holder<MobEffect> getPrimaryEffect() {
         return BeaconMenu.decodeEffect(this.beaconData.get(VampireBeaconBlockEntity.DATA_PRIMARY));
     }
 
@@ -90,7 +91,7 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public void updateEffects(Optional<MobEffect> primaryEffect, Optional<Integer> amplifier) {
+    public void updateEffects(Optional<Holder<MobEffect>> primaryEffect, Optional<Integer> amplifier) {
         if (this.paymentSlot.hasItem()) {
             this.beaconData.set(VampireBeaconBlockEntity.DATA_PRIMARY, primaryEffect.map(BeaconMenu::encodeEffect).orElse(-1));
             this.beaconData.set(VampireBeaconBlockEntity.DATA_AMPLIFIER, amplifier.orElse(0));

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:holy_water_bottle_enhanced"
-            ]
+            "items": "vampirism:holy_water_bottle_enhanced"
           }
         ]
       },

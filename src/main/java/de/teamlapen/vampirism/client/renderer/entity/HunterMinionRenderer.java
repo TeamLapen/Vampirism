@@ -59,10 +59,10 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void renderNameTag(@NotNull HunterMinionEntity pEntity, @NotNull Component pDisplayName, @NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    protected void renderNameTag(@NotNull HunterMinionEntity pEntity, @NotNull Component pDisplayName, @NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, float partialTicks) {
         pMatrixStack.pushPose();
         pMatrixStack.translate(0, 0.4f, 0);
-        super.renderNameTag(pEntity, pDisplayName, pMatrixStack, pBuffer, pPackedLight);
+        super.renderNameTag(pEntity, pDisplayName, pMatrixStack, pBuffer, pPackedLight, partialTicks);
         pMatrixStack.popPose();
     }
 }

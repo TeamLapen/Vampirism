@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.serialization.Codec;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
@@ -12,6 +13,7 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillType;
@@ -25,6 +27,7 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
+import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -64,7 +67,11 @@ import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -131,7 +138,6 @@ public class VampirismMod {
         NeoForge.EVENT_BUS.register(Permissions.class);
         NeoForge.EVENT_BUS.register(SitHandler.class);
         NeoForge.EVENT_BUS.register(new GeneralEventHandler());
-        NeoForge.EVENT_BUS.addListener(this::onCommandsRegister);
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onServerStarting);
         NeoForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
@@ -143,7 +149,8 @@ public class VampirismMod {
 
         prepareAPI();
         this.registryManager.setupRegistries();
-        this.modBus.addListener(ModItems::registerOtherCreativeTabItems);
+        this.registryManager.registerModEventHandler();
+        this.registryManager.registerForgeEventHandler();
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -153,11 +160,7 @@ public class VampirismMod {
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
         event.addListener(new SingleJigsawReloadListener());
         event.addListener(new SundamageReloadListener(((TagManagerAccessor) ((ReloadableServerResourcesAccessor) event.getServerResources()).getTagManager()).getRegistryAccess()));
-        event.addListener(new SkillTreeReloadListener(event.getConditionContext(), event.getRegistryAccess()));
-    }
-
-    public void onCommandsRegister(@NotNull RegisterCommandsEvent event) {
-        ModCommands.registerCommands(event.getDispatcher(), event.getBuildContext());
+        event.addListener(new SkillTreeReloadListener());
     }
 
     private void checkEnv() {
@@ -228,7 +231,7 @@ public class VampirismMod {
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
+//        event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         VampirismAPI.skillManager().registerSkillType(SkillType.LEVEL);
         VampirismAPI.skillManager().registerSkillType(SkillType.LORD);
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
@@ -315,14 +318,13 @@ public class VampirismMod {
         NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
         NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
-        NeoForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
 
         SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
-//        VanillaStructureModifications.addVillageStructures(RegistryAccess.EMPTY);
         event.enqueueWork(ModStats::registerFormatter);
+        event.enqueueWork(CodecModifications::changeMobEffectCodec);
 
         TelemetryCollector.execute();
     }

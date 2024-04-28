@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModLoot;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OilItemCondition implements LootItemCondition {
 
-    public static final Codec<OilItemCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(ModRegistries.OILS.byNameCodec().fieldOf("oil").forGetter(condition -> condition.oil)).apply(inst, OilItemCondition::new));
+    public static final MapCodec<OilItemCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(ModRegistries.OILS.byNameCodec().fieldOf("oil").forGetter(condition -> condition.oil)).apply(inst, OilItemCondition::new));
     private final @NotNull IOil oil;
 
     public OilItemCondition(@NotNull IOil oil) {

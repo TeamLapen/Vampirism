@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "minecraft:iron_nugget"
@@ -14,6 +14,7 @@
     "YYY"
   ],
   "result": {
-    "item": "vampirism:candle_stick"
+    "count": 1,
+    "id": "vampirism:candle_stick"
   }
 }

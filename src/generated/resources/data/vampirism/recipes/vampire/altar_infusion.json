@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "Y": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "Z": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidians"
     }
   },
   "pattern": [
@@ -14,6 +14,7 @@
     "ZZZ"
   ],
   "result": {
-    "item": "vampirism:altar_infusion"
+    "count": 1,
+    "id": "vampirism:altar_infusion"
   }
 }

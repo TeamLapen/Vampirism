@@ -17,20 +17,6 @@ import java.util.Optional;
 public class FluidLib {
 
 
-    /**
-     * Checks if either both stacks are null or if they are equal. DOES NOT CHECK AMOUNTS
-     */
-    public static boolean areFluidStacksEqual(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
-        return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidEqual(stackB));
-    }
-
-    /**
-     * Checks if either both stacks are null or if they are identical. DOES  CHECK AMOUNTS
-     */
-    public static boolean areFluidStacksIdentical(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
-        return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidStackIdentical(stackB));
-    }
-
 
     public static @NotNull Optional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
         return Optional.ofNullable(stack.getCapability(Capabilities.FluidHandler.ITEM, null));

@@ -27,8 +27,8 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "RETURN", ordinal = 1))
     private void handleTotemOfUndying(DamageSource damageSourceIn, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
-            this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), 800, 5));
-            this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 800, 4));
+            this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, 800, 5));
+            this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 800, 4));
         }
     }
 }

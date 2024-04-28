@@ -11,11 +11,11 @@ public class ServerPayloadHandler {
     }
 
     public void handleRequestPlayerUpdatePacket(ServerboundRequestPlayerUpdatePacket msg, IPayloadContext context) {
-        context.player().ifPresent(player -> {
-            ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(player);
+        context.enqueueWork(() -> {
+            ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(context.player());
             if (update != null) {
                 update.markAsPlayerItself();
-                context.replyHandler().send(update);
+                context.reply(update);
             }
         });
     }

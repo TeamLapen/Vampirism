@@ -71,7 +71,7 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
-                    ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                    EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                     StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(TriggerInstance::type),
                     IPlayableFaction.CODEC.optionalFieldOf("faction").forGetter(p -> Optional.ofNullable(p.faction())),
                     ExtraCodecs.POSITIVE_INT.fieldOf("level").forGetter(TriggerInstance::level)

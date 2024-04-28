@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:crossbow_arrow_normal"
-            ]
+            "items": "vampirism:crossbow_arrow_normal"
           }
         ]
       },

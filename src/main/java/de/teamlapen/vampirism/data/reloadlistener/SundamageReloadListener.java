@@ -7,6 +7,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -60,7 +61,7 @@ public class SundamageReloadListener implements PreparableReloadListener {
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
-                    files.add(RawFile.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(false, LOGGER::error));
+                    files.add(RawFile.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(DecoderException::new));
                 } catch (Exception e) {
                     LOGGER.error("Could not read single jigsaw pieces file {} from {}", resourceName, resource.sourcePackId(), e);
                 }

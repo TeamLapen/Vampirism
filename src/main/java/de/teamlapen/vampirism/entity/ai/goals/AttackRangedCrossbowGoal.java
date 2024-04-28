@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ChargedProjectiles;
 
 import java.util.EnumSet;
 
@@ -77,7 +79,7 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
         if (this.mob.isUsingItem()) {
             this.mob.stopUsingItem();
             this.mob.setChargingCrossbow(false);
-//            CrossbowItem.setCharged(this.mob.getUseItem(), false);
+            this.mob.getUseItem().set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
         }
     }
 
@@ -140,13 +142,15 @@ public class AttackRangedCrossbowGoal<T extends PathfinderMob & RangedAttackMob 
             } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && flag) {
                 this.mob.performRangedAttack(livingentity, 1.0F);
                 ItemStack itemstack1 = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance));
-                if (CrossbowItemMixin.getChargedProjectiles(itemstack1).isEmpty()) {
-                    CrossbowItem.setCharged(itemstack1, false);
-                    this.crossbowState = CrossbowState.UNCHARGED;
-                } else {
+                ChargedProjectiles projectiles = itemstack1.get(DataComponents.CHARGED_PROJECTILES);
+                if (projectiles != null && projectiles.isEmpty()) {
                     var delay = getAttackDelay(itemstack1);
                     this.attackDelay = delay + this.mob.getRandom().nextInt(delay);
                     this.crossbowState = CrossbowState.CHARGED;
+
+                } else {
+                    itemstack1.remove(DataComponents.CHARGED_PROJECTILES);
+                    this.crossbowState = CrossbowState.UNCHARGED;
                 }
             }
 

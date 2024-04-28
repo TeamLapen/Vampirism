@@ -9,7 +9,7 @@
       "item": "vampirism:holy_water_bottle_normal"
     },
     "Y": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Z": {
       "item": "vampirism:holy_water_bottle_enhanced"
@@ -23,7 +23,8 @@
     "XYYX"
   ],
   "result": {
-    "item": "vampirism:crucifix_enhanced"
+    "count": 1,
+    "id": "vampirism:crucifix_enhanced"
   },
   "skill": [
     "vampirism:crucifix_wielder"

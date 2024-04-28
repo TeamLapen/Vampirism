@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(ObjectiveCriteria.class)
 public interface ObjectiveCriteriaAccessor {
 
-    @Invoker("registerCustom(Ljava/lang/String;)Lnet/minecraft/world/scores/criteria/ObjectiveCriteria")
+    @Invoker("registerCustom")
     static ObjectiveCriteria registerCustom(String name) {
         throw new IllegalStateException("Mixin failed to apply");
     }

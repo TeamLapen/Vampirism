@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record SkillTree(@NotNull IPlayableFaction<?> faction, @NotNull EntityPredicate unlockPredicate, @NotNull ItemStack display, @NotNull Component name) implements ISkillTree {
 
-    public static final Codec<ISkillTree> CODEC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(inst ->
+    public static final Codec<ISkillTree> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(inst ->
             inst.group(
                     IPlayableFaction.CODEC.fieldOf("faction").forGetter(ISkillTree::faction),
                     EntityPredicate.CODEC.fieldOf("unlock_predicate").forGetter(ISkillTree::unlockPredicate),

@@ -16,7 +16,7 @@ public interface EntityAccessor {
     @Accessor("eyeHeight")
     void setEyeHeight(float eyeHeight);
 
-    @Invoker("collide(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3")
+    @Invoker("collide")
     Vec3 invoke_collide(Vec3 pVec);
 
     @Accessor("dimensions")

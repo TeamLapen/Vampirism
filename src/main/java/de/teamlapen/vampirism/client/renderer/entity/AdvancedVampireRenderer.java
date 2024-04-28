@@ -47,10 +47,10 @@ public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampire
 
 
     @Override
-    protected void renderNameTag(@NotNull AdvancedVampireEntity entityIn, @NotNull Component displayNameIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
+    protected void renderNameTag(@NotNull AdvancedVampireEntity entityIn, @NotNull Component displayNameIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, float partialTicks) {
         double dist = this.entityRenderDispatcher.distanceToSqr(entityIn);
         if (dist <= 256) {
-            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn, packedLightIn);
         }
     }
 }

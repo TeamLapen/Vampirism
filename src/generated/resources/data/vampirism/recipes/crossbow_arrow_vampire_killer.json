@@ -9,10 +9,10 @@
       "tag": "forge:crops/garlic"
     },
     "Y": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "Z": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "lava": 1,
@@ -24,6 +24,6 @@
   ],
   "result": {
     "count": 3,
-    "item": "vampirism:crossbow_arrow_vampire_killer"
+    "id": "vampirism:crossbow_arrow_vampire_killer"
   }
 }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
+import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -7,17 +8,16 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 
-public class ActionCooldownOverlay implements IGuiOverlay {
+public class ActionCooldownOverlay implements LayeredDraw.Layer {
 
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
+    public void render(@NotNull GuiGraphics graphics, float partialTicks) {
         if (this.mc.player != null) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();

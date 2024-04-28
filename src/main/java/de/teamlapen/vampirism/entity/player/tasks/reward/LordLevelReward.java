@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.reward;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
-    public static final Codec<LordLevelReward> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<LordLevelReward> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
                     ComponentSerialization.FLAT_CODEC.fieldOf("description").forGetter(i -> i.description)
@@ -50,7 +51,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public Codec<LordLevelReward> codec() {
+    public MapCodec<LordLevelReward> codec() {
         return ModTasks.LORD_LEVEL_REWARD.get();
     }
 

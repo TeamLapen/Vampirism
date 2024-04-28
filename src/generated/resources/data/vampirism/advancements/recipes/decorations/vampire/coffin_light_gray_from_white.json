@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:coffin_white"
-            ]
+            "items": "vampirism:coffin_white"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:light_gray_dye"
-            ]
+            "items": "minecraft:light_gray_dye"
           }
         ]
       },

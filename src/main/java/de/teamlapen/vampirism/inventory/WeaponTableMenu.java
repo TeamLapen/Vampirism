@@ -11,7 +11,9 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
@@ -239,7 +241,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     public static class Factory implements IContainerFactory<WeaponTableMenu> {
 
         @Override
-        public @NotNull WeaponTableMenu create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
+        public @NotNull WeaponTableMenu create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new WeaponTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
         }
@@ -289,7 +291,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
             for (int i = 0; i < this.inventory.items.size(); ++i) {
                 ItemStack itemstack = this.inventory.items.get(i);
                 //    do not check for nbt tag here    //
-                if (!this.inventory.items.get(i).isEmpty() && p_36044_.is(itemstack.getItem()) && !this.inventory.items.get(i).isDamaged() && !itemstack.isEnchanted() && !itemstack.hasCustomHoverName()) {
+                if (!this.inventory.items.get(i).isEmpty() && p_36044_.is(itemstack.getItem()) && !this.inventory.items.get(i).isDamaged() && !itemstack.isEnchanted() && !itemstack.has(DataComponents.CUSTOM_NAME)) {
                     return i;
                 }
             }

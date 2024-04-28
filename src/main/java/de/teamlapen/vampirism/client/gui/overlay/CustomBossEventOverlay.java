@@ -8,11 +8,10 @@ import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CustomBossEventOverlay implements IGuiOverlay {
+public class CustomBossEventOverlay implements LayeredDraw.Layer {
     private static final ResourceLocation BAR_PROGRESS_SPRITE = new ResourceLocation("boss_bar/white_progress");
     private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
@@ -34,17 +33,20 @@ public class CustomBossEventOverlay implements IGuiOverlay {
     }
 
     public void read(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
-        if (packet.operation() == ClientboundUpdateMultiBossEventPacket.OperationType.ADD) {
-            this.bossInfoMap.put(packet.uniqueId(), new MultiBossEvent(packet));
-        } else if (packet.operation() == ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE) {
-            this.bossInfoMap.remove(packet.uniqueId());
-        } else {
-            this.bossInfoMap.get(packet.uniqueId()).updateFromPackage(packet);
+        switch (packet.operation()) {
+            case ClientboundUpdateMultiBossEventPacket.AddOperation operation:
+                this.bossInfoMap.put(operation.uniqueId(), new MultiBossEvent(operation));
+                break;
+            case ClientboundUpdateMultiBossEventPacket.RemoveOperation operation:
+                this.bossInfoMap.remove(operation.uniqueId());
+                break;
+            default:
+                this.bossInfoMap.get(packet.operation().uniqueId()).updateFromPackage(packet.operation());
         }
     }
 
     @Override
-    public void render(ExtendedGui gui, @NotNull GuiGraphics graphics, float partialTicks, int width, int height) {
+    public void render(GuiGraphics graphics, float partialTicks) {
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {

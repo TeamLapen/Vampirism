@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record BooleanRequirement(@NotNull ResourceLocation id, @NotNull FactionPlayerBooleanSupplier function, @NotNull Component description) implements TaskRequirement.Requirement<Boolean> {
 
-    public static final Codec<BooleanRequirement> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<BooleanRequirement> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                     FactionPlayerBooleanSupplier.CODEC.fieldOf("function").forGetter(i -> i.function),
@@ -31,7 +32,7 @@ public record BooleanRequirement(@NotNull ResourceLocation id, @NotNull FactionP
     }
 
     @Override
-    public Codec<? extends TaskRequirement.Requirement<?>> codec() {
+    public MapCodec<? extends TaskRequirement.Requirement<?>> codec() {
         return ModTasks.BOOLEAN_REQUIREMENT.get();
     }
 }

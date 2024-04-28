@@ -11,6 +11,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -87,6 +88,16 @@ public class ModTags {
         public static final TagKey<Item> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Item> VAMPIRE_SPAWN = tag("vampire_spawn");
         public static final TagKey<Item> VAMPIRE_BEACON_PAYMENT_ITEM = tag("vampire_beacon_payment_item");
+        public static final TagKey<Item> HEART_SEEKER = tag("swords/heart_seeker");
+        public static final TagKey<Item> HEART_STRIKER = tag("swords/heart_striker");
+        public static final TagKey<Item> VAMPIRE_SLAYER_ITEMS = tag("enchantable/vampire_slayer");
+        public static final TagKey<Item> CROSSBOW_ENCHANTABLE = tag("enchantable/crossbow");
+        public static final TagKey<Item> SINGLE_CROSSBOWS = tag("crossbows/single");
+        public static final TagKey<Item> DOUBLE_CROSSBOWS = tag("crossbows/double");
+        public static final TagKey<Item> TECH_CROSSBOWS = tag("crossbows/tech");
+        public static final TagKey<Item> BASIC_CROSSBOWS = tag("crossbows/basic");
+        public static final TagKey<Item> ENHANCED_CROSSBOWS = tag("crossbows/enhanced");
+        public static final TagKey<Item> CROSSBOWS = tag("crossbows");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);
@@ -114,6 +125,7 @@ public class ModTags {
          * Both advanced vampire mobs (normal + _imob)
          */
         public static final TagKey<EntityType<?>> ADVANCED_VAMPIRE = tag("advanced_vampire");
+        public static final TagKey<EntityType<?>> CONVERTED_CREATURES = tag("converted_creatures");
 
         /**
          * Vanilla zombies
@@ -243,6 +255,15 @@ public class ModTags {
 
         private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
             return TagKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, name));
+        }
+
+    }
+
+    public static class Effects {
+        public static final TagKey<MobEffect> HUNTER_POTION_RESISTANCE = tag("hunter_potion_resistance");
+
+        private static @NotNull TagKey<MobEffect> tag(@NotNull String name) {
+            return TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(REFERENCE.MODID, name));
         }
 
     }

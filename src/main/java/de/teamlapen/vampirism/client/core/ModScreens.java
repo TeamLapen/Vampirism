@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModContainer;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 
 public class ModScreens {
@@ -30,10 +30,10 @@ public class ModScreens {
         event.register(ModContainer.REVERT_BACK.get(), InjectionChairRevertBackScreen::new);
     }
 
-    static void registerScreenOverlays(@NotNull RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), VIngameOverlays.FACTION_LEVEL_ID, VIngameOverlays.FACTION_LEVEL_ELEMENT);
-        event.registerAbove(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), VIngameOverlays.FACTION_RAID_BAR_ID, VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
-        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), VIngameOverlays.BLOOD_BAR_ID, VIngameOverlays.BLOOD_BAR_ELEMENT);
+    static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, VIngameOverlays.FACTION_LEVEL_ID, VIngameOverlays.FACTION_LEVEL_ELEMENT);
+        event.registerAbove(VanillaGuiLayers.BOSS_OVERLAY, VIngameOverlays.FACTION_RAID_BAR_ID, VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
+        event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VIngameOverlays.BLOOD_BAR_ID, VIngameOverlays.BLOOD_BAR_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID, VIngameOverlays.ACTION_COOLDOWN_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_DURATION_ID, VIngameOverlays.ACTION_DURATION_ELEMENT);
     }

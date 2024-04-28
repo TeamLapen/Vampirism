@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.TotemHelper;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
@@ -32,10 +34,10 @@ public abstract class BadOmenEffect extends MobEffect {
     public static void handlePotentialBannerKill(@Nullable Entity offender, @NotNull IFactionEntity victim) {
         if (offender instanceof Player player) {
             IFaction<?> faction = victim.getFaction();
-            if (faction.getVillageData().isBanner(victim.asEntity().getItemBySlot(EquipmentSlot.HEAD))) {
+            if (faction.getVillageData().isBanner(victim.asEntity().getItemBySlot(EquipmentSlot.HEAD), offender.registryAccess())) {
                 IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
                 if (playerFaction != null && playerFaction != faction) {
-                    MobEffect badOmen = faction.getVillageData().getBadOmenEffect();
+                    Holder<MobEffect> badOmen = faction.getVillageData().badOmenEffect();
                     if (badOmen != null) {
                         MobEffectInstance inst = player.getEffect(badOmen);
                         int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;
@@ -55,21 +57,17 @@ public abstract class BadOmenEffect extends MobEffect {
     public abstract IFaction<?> getFaction();
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof ServerPlayer playerEntity && !entityLivingBaseIn.isSpectator()) {
             ServerLevel serverWorld = playerEntity.serverLevel();
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
-                return;
+                return true;
             }
-            TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.blockPosition(), true).ifPresent(totem -> {
-                if (totem.getControllingFaction() != getFaction()) {
-                    int level = Math.min(amplifier, 4);
-                    if (totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, level + 1, 0)) {
-                        entityLivingBaseIn.removeEffect(this);
-                    }
-                }
-            });
+            return !TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.blockPosition(), true).filter(s -> s.getControllingFaction() != getFaction()).map(totem -> {
+                return totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, Math.min(amplifier, 4) + 1, 0);
+            }).orElse(false);
         }
+        return true;
     }
 
     @Override

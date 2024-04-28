@@ -19,10 +19,10 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,17 +70,15 @@ public class GeneralEventHandler {
     }
 
     @SubscribeEvent
-    public void onServerTick(TickEvent.@NotNull ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) return;
+    public void onServerTick(ServerTickEvent.Pre event) {
         MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
-
     }
 
 
     @SubscribeEvent
     public void onWorldUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof Level level) {
-            Optional.ofNullable(level.getData(ModAttachments.LEVEL_FOG)).ifPresent(LevelFog::clearCache);
+            level.getData(ModAttachments.LEVEL_FOG).clearCache();
             LevelFog.getOpt(level).ifPresent(LevelFog::clearCache);
             LevelGarlic.getOpt(level).ifPresent(LevelGarlic::clearCache);
         }

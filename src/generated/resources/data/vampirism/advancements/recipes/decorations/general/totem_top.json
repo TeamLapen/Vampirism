@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/diamond"
+            "items": "#c:storage_blocks/diamond"
           }
         ]
       },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:obsidian"
+            "items": "#c:obsidians"
           }
         ]
       },

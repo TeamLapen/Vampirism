@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModTasks;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record ItemRequirement(@NotNull ResourceLocation id, @NotNull ItemStack stack, @NotNull Component description) implements TaskRequirement.Requirement<Item> {
 
-    public static final Codec<ItemRequirement> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<ItemRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(i -> java.util.Optional.of(i.id)),
                 ItemStack.CODEC.fieldOf("item").forGetter(i -> i.stack),
@@ -60,11 +59,11 @@ public record ItemRequirement(@NotNull ResourceLocation id, @NotNull ItemStack s
      */
     @Override
     public void removeRequirement(@NotNull IFactionPlayer<?> player) {
-        player.asEntity().getInventory().clearOrCountMatchingItems(itemStack -> ItemStackUtil.areStacksEqualIgnoreAmount(itemStack, this.stack), getAmount(player), player.asEntity().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
+        player.asEntity().getInventory().clearOrCountMatchingItems(itemStack -> ItemStack.isSameItemSameComponents(itemStack, this.stack), getAmount(player), player.asEntity().inventoryMenu.getCraftSlots() /*Not sure if the crafting container is correct here*/);
     }
 
     @Override
-    public Codec<? extends TaskRequirement.Requirement<?>> codec() {
+    public MapCodec<? extends TaskRequirement.Requirement<?>> codec() {
         return ModTasks.ITEM_REQUIREMENT.get();
     }
 }

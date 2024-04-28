@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "vampirism:pure_blood"
+            "items": "#vampirism:pure_blood"
           }
         ]
       },

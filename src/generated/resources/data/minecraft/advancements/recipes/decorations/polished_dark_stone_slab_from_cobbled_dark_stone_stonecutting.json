@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:cobbled_dark_stone"
-            ]
+            "items": "vampirism:cobbled_dark_stone"
           }
         ]
       },

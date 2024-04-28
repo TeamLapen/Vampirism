@@ -2,17 +2,6 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:item",
-        "description": {
-          "translate": "item.minecraft.gold_ingot"
-        },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "Count": 5,
-          "id": "minecraft:gold_ingot"
-        }
-      },
-      {
         "type": "vampirism:entity_type",
         "amount": 10,
         "description": {
@@ -20,13 +9,24 @@
         },
         "entityType": "vampirism:advanced_hunter",
         "id": "vampirism:advanced_hunter"
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 5,
+          "id": "minecraft:gold_ingot"
+        }
       }
     ]
   },
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "vampirism:feeding_adapter"
     }
   },

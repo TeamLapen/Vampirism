@@ -6,10 +6,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,23 +47,18 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
         return Optional.empty();
     }
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "request_minion_select");
-    public static final Codec<ClientboundRequestMinionSelectPacket> CODEC = RecordCodecBuilder.create(inst
-            -> inst.group(
-                    StringRepresentable.fromEnum(Action::values).fieldOf("action").forGetter(ClientboundRequestMinionSelectPacket::action),
-                    Codec.pair(Codec.INT, ComponentSerialization.CODEC).listOf().fieldOf("minions").forGetter(ClientboundRequestMinionSelectPacket::minions)
-    ).apply(inst, ClientboundRequestMinionSelectPacket::new));
+    public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "request_minion_select"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRequestMinionSelectPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8.map(Action::valueOf, s -> s.name), ClientboundRequestMinionSelectPacket::action,
+            ByteBufferCodecUtil.pair(ByteBufCodecs.VAR_INT, ComponentSerialization.STREAM_CODEC).apply(ByteBufCodecs.collection(i -> new ArrayList<>())), ClientboundRequestMinionSelectPacket::minions,
+            ClientboundRequestMinionSelectPacket::new
+    );
+
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
-    }
-
 
     public enum Action implements StringRepresentable {
         CALL("call");

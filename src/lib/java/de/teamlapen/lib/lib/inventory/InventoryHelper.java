@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.inventory;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -78,38 +77,9 @@ public class InventoryHelper {
         return Optional.empty();
     }
 
-    /**
-     * Write the given inventory as new ListNBT "inventory" to given tag
-     */
-    public static void writeInventoryToTag(@NotNull CompoundTag tag, @NotNull SimpleContainer inventory) {
-        ListTag listTag = new ListTag();
-
-        for (int i = 0; i < inventory.getContainerSize(); ++i) {
-            ItemStack itemstack = inventory.getItem(i);
-            if (!itemstack.isEmpty()) {
-                listTag.add(itemstack.save(new CompoundTag()));
-            }
-        }
-        tag.put("inventory", listTag);
-    }
-
-    /**
-     * Write the given inventory from ListNBT "inventory" in the given tag
-     */
-    public static void readInventoryFromTag(@NotNull CompoundTag tag, @NotNull SimpleContainer inventory) {
-        ListTag list = tag.getList("inventory", 10);
-
-        for (int i = 0; i < list.size(); ++i) {
-            ItemStack itemstack = ItemStack.of(list.getCompound(i));
-            if (!itemstack.isEmpty()) {
-                inventory.addItem(itemstack);
-            }
-        }
-
-    }
 
     public static boolean canMergeStacks(@NotNull ItemStack stack1, @NotNull ItemStack stack2, int invLimit) {
-        return !stack1.isEmpty() && ItemStackUtil.stackEqualExact(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
+        return !stack1.isEmpty() && ItemStack.isSameItemSameComponents(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
     }
 
     /**
@@ -133,9 +103,7 @@ public class InventoryHelper {
             //If stack in inventory is empty, add a 0 count stack with the item and nbt information. It will be grown afterwards
             existingStack = addStack.copy();
             existingStack.setCount(0);
-            if (addStack.hasTag()) {
-                existingStack.setTag(addStack.getTag().copy());
-            }
+            existingStack.applyComponents(addStack.getComponents());
 
             inv.setItem(slot, existingStack);
         }

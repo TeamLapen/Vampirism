@@ -177,8 +177,8 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(TYPE_PARAMETER, VARIANT.NONE.name());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(TYPE_PARAMETER, VARIANT.NONE.name());
     }
 
     @NotNull

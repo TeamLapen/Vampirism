@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -14,12 +16,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FactionVillage implements IFactionVillage {
 
-    private final Supplier<MobEffect> badOmenEffect;
-    private final Supplier<ItemStack> bannerStack;
+    private final Holder<MobEffect> badOmenEffect;
+    private final Function<HolderLookup.Provider, ItemStack> bannerStack;
     private final @NotNull ImmutableList<CaptureEntityEntry<?>> captureEntities;
     private final Supplier<VillagerProfession> factionVillageProfession;
     private final Class<? extends Mob> guardSuperClass;
@@ -41,13 +44,18 @@ public class FactionVillage implements IFactionVillage {
     @Nullable
     @Override
     public MobEffect getBadOmenEffect() {
-        return this.badOmenEffect.get();
+        return this.badOmenEffect != null ? this.badOmenEffect.value() : null;
+    }
+
+    @Override
+    public @Nullable Holder<MobEffect> badOmenEffect() {
+        return this.badOmenEffect;
     }
 
     @NotNull
     @Override
-    public ItemStack getBanner() {
-        return this.bannerStack.get().copy();
+    public ItemStack getBanner(HolderLookup.Provider provider) {
+        return this.bannerStack.apply(provider).copy();
     }
 
     @Override
@@ -80,7 +88,7 @@ public class FactionVillage implements IFactionVillage {
     }
 
     @Override
-    public boolean isBanner(@NotNull ItemStack stack) {
-        return ItemStack.matches(this.bannerStack.get(), stack);
+    public boolean isBanner(@NotNull ItemStack stack, HolderLookup.Provider provider) {
+        return ItemStack.matches(this.bannerStack.apply(provider), stack);
     }
 }

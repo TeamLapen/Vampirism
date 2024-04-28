@@ -25,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -47,7 +48,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.I18nExtension;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -103,7 +103,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof ServerPlayer) {
-            distance = player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() - 0.5f;
+            distance = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue() - 0.5f;
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -203,7 +203,7 @@ public class UtilLib {
      */
     private static void onInitialSpawn(@NotNull ServerLevel level, Entity e, @NotNull MobSpawnType reason) {
         if (e instanceof Mob mob) {
-            mob.finalizeSpawn(level, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null, null);
+            mob.finalizeSpawn(level, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null);
         }
     }
 
@@ -235,7 +235,7 @@ public class UtilLib {
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
             if (world.noCollision(new AABB(c))) {
-                if (world.isAreaLoaded(c, 5) && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(e.getType()), world, c, e.getType())) {//I see no other way
+                if (world.isAreaLoaded(c, 5) && SpawnPlacements.isSpawnPositionOk(e.getType(), world, c)) {//I see no other way
                     e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
                     if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
                         backupPos = c; //Store the location in case we do not find a better one
@@ -643,19 +643,6 @@ public class UtilLib {
         return StructureStart.INVALID_START;
     }
 
-
-    /**
-     * Makes sure the given stack has a NBT Tag Compound
-     *
-     * @return The stacks NBT Tag
-     */
-    public static @Nullable CompoundTag checkNBT(@NotNull ItemStack stack) {
-        if (!stack.hasTag()) {
-            stack.setTag(new CompoundTag());
-        }
-        return stack.getTag();
-    }
-
     public static float[] getColorComponents(int color) {
         int i = (color & 16711680) >> 16;
         int j = (color & 65280) >> 8;
@@ -731,13 +718,7 @@ public class UtilLib {
     }
 
     public static boolean matchesItem(@NotNull Ingredient ingredient, @NotNull ItemStack searchStack) {
-        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> {
-            if (!ItemStack.isSameItem(stack, searchStack)) return false;
-            if (stack.getTag() != null) {
-                return ItemStack.isSameItemSameTags(stack, searchStack);
-            }
-            return true;
-        });
+        return Arrays.stream(ingredient.getItems()).anyMatch(stack -> ItemStack.isSameItemSameComponents(stack, searchStack));
     }
 
     public enum RotationAmount {
@@ -746,12 +727,12 @@ public class UtilLib {
         TWO_HUNDRED_SEVENTY
     }
 
-    public static int countItemWithNBT(@NotNull Inventory inventory, @NotNull ItemStack stack) {
+    public static int countItemWithComponent(@NotNull Inventory inventory, @NotNull ItemStack stack) {
         int i = 0;
 
         for (int j = 0; j < inventory.getContainerSize(); ++j) {
             ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.isSameItem(itemstack, stack) && ItemStack.isSameItemSameTags(itemstack, stack)) {
+            if (ItemStack.isSameItemSameComponents(itemstack, stack)) {
                 i += itemstack.getCount();
             }
         }

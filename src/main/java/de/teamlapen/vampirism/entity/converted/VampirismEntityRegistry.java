@@ -67,7 +67,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public record DefaultHelper(ConverterEntry.ConvertingAttributeModifier attributes) implements IConvertingHandler.IDefaultHelper {
 
         @Override
-        public Map<Attribute, Pair<FloatProvider, Double>> getAttributeModifier() {
+        public Map<Holder<Attribute>, Pair<FloatProvider, Double>> getAttributeModifier() {
             return this.attributes.attributeModifier();
         }
     }

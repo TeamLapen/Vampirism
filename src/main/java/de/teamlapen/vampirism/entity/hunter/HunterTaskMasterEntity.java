@@ -63,8 +63,8 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
+        SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
         this.setItemSlot(EquipmentSlot.HEAD, ModItems.HUNTER_HAT_HEAD_0.get().getDefaultInstance());
         return data;
@@ -93,9 +93,9 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getDefaultKey().toString());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getDefaultKey().toString());
     }
 
     @NotNull

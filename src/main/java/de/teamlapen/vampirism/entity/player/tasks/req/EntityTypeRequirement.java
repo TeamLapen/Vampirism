@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Range;
 public record EntityTypeRequirement(@NotNull ResourceLocation id, @NotNull TagKey<EntityType<?>> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount,
                                     @NotNull Component description) implements TaskRequirement.Requirement<TagKey<EntityType<?>>> {
 
-    public static final Codec<EntityTypeRequirement> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<EntityTypeRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                 TagKey.codec(Registries.ENTITY_TYPE).fieldOf("entityType").forGetter(i -> i.entityType),
@@ -51,7 +52,7 @@ public record EntityTypeRequirement(@NotNull ResourceLocation id, @NotNull TagKe
     }
 
     @Override
-    public Codec<? extends TaskRequirement.Requirement<?>> codec() {
+    public MapCodec<? extends TaskRequirement.Requirement<?>> codec() {
         return ModTasks.ENTITY_TYPE_REQUIREMENT.get();
     }
 }

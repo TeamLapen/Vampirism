@@ -3,19 +3,18 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.OilUtils;
-import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.items.component.OilContent;
+import de.teamlapen.vampirism.util.ItemDataUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,37 +27,36 @@ public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGener
     @NotNull
     @Override
     public ItemStack getDefaultInstance() {
-        return OilUtils.setOil(super.getDefaultInstance(), ModOils.EMPTY.get());
+        ItemStack itemStack = new ItemStack(this);
+        itemStack.set(ModDataComponents.OIL, OilContent.EMPTY);
+        return itemStack;
     }
 
     @Override
-    public @NotNull ItemStack withOil(@NotNull IOil oil) {
-        return OilUtils.setOil(getDefaultInstance(), oil);
+    public @NotNull ItemStack withOil(@NotNull Holder<IOil> oil) {
+        return ItemDataUtils.createOil(this, oil);
     }
 
     @NotNull
     @Override
     public Component getName(@NotNull ItemStack stack) {
-        ResourceLocation oil = RegUtil.id(OilUtils.getOil(stack));
-        return Component.translatable("oil." + oil.getNamespace() + "." + oil.getPath()).append(" ").append(Component.translatable(this.getDescriptionId(stack)));
+        OilContent oilContents = stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY);
+        return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.location().getNamespace() + "." + s.location().getPath()).append(" ")).orElse(Component.empty()).append(Component.translatable(this.getDescriptionId(stack)));
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
-        OilUtils.getOil(stack).getDescription(stack, level, tooltips);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
+        OilContent.getOil(stack).value().getDescription(stack, context, tooltips);
     }
 
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        for (IOil value : RegUtil.values(ModRegistries.OILS)) {
-            if (value == ModOils.EMPTY.get()) continue;
-            output.accept(OilUtils.setOil(new ItemStack(this), value));
-        }
+        ModRegistries.OILS.holders().map(l -> ItemDataUtils.createOil(this, l)).forEach(output::accept);
     }
 
     @NotNull
     @Override
-    public IOil getOil(@NotNull ItemStack stack) {
-        return OilUtils.getOil(stack);
+    public Holder<IOil> getOil(@NotNull ItemStack stack) {
+        return stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY).oil();
     }
 }

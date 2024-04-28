@@ -25,8 +25,8 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "vampirism:stake",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "vampirism:stake"
     },
     "title": {
       "translate": "advancement.vampirism.stake"

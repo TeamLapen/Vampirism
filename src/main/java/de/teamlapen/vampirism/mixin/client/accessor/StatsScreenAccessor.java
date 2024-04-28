@@ -12,12 +12,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(StatsScreen.class)
 public interface StatsScreenAccessor {
 
-    @Invoker("getColumnX")
-    int invoke_getColumnX(int index);
-
-    @Invoker("blitSlotIcon")
-    void invoke_blitSlotIcon(GuiGraphics pGuiGraphics, int pX, int pY, ResourceLocation pSprite);
-
     @Accessor("stats")
     StatsCounter getStats();
 

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -94,8 +95,8 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return this.saveWithoutMetadata(provider);
     }
 
     public boolean hasStack() {
@@ -123,10 +124,10 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
+    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
         if (compound.contains("item")) {
-            this.internalStack = ItemStack.of(compound.getCompound("item"));
+            this.internalStack = ItemStack.parseOptional(provider, compound.getCompound("item"));
         } else {
             this.internalStack = ItemStack.EMPTY;
         }
@@ -135,8 +136,8 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
-        if (hasLevel()) handleUpdateTag(pkt.getTag());
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
+        if (hasLevel()) handleUpdateTag(pkt.getTag(), provider);
     }
 
     @NotNull
@@ -147,10 +148,10 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         if (hasStack()) {
-            compound.put("item", this.internalStack.save(new CompoundTag()));
+            compound.put("item", this.internalStack.save(provider, new CompoundTag()));
         }
         compound.putInt("blood_stored", bloodStored);
         compound.putInt("charging_ticks", chargingTicks);

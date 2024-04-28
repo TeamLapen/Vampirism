@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -46,7 +47,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("active", isActive());
         return nbt;
@@ -58,23 +59,21 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        tank.readFromNBT(tag);
+    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+        tank.readFromNBT(provider, tag);
         cooldownProcess = tag.getInt("cooldown_process");
         cooldownPull = tag.getInt("cooldown_pull");
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
         CompoundTag tag = pkt.getTag();
-        if (tag != null) {
-            boolean old = active;
-            active = tag.getBoolean("active");
-            if (active != old && level != null) {
-                this.requestModelDataUpdate();
-                this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-            }
+        boolean old = active;
+        active = tag.getBoolean("active");
+        if (active != old && level != null) {
+            this.requestModelDataUpdate();
+            this.level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
     }
 
@@ -87,9 +86,9 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
-        tank.writeToNBT(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
+        tank.writeToNBT(provider, compound);
         compound.putInt("cooldown_process", this.cooldownProcess);
         compound.putInt("cooldown_pull", this.cooldownPull);
     }

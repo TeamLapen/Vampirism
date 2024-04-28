@@ -143,7 +143,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 MobEffectInstance fireResistance = this.removeEffectNoUpdate(MobEffects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onEffectRemoved(fireResistance);
-                this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -169,7 +169,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     if (fph.getCurrentFaction() == this.getFaction()) {
                         boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
                         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
-                        data.updateEntityCaps(this.serializeAttachments());
+                        data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
                         int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                         if (id < 0) {
                             LOGGER.error("Failed to get minion slot");
@@ -269,13 +269,13 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner());
+            this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner(worldIn.registryAccess()));
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
 
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
 
     @Override
@@ -406,7 +406,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        MobEffectInstance protection = this.getEffect(ModEffects.FIRE_PROTECTION.get());
+        MobEffectInstance protection = this.getEffect(ModEffects.FIRE_PROTECTION);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -415,10 +415,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(LEVEL, -1);
-        getEntityData().define(TYPE, -1);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LEVEL, -1);
+        builder.define(TYPE, -1);
     }
 
     @Override

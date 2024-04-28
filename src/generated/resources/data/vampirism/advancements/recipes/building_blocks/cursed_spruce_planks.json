@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "vampirism:cursed_spruce_log"
+            "items": "#vampirism:cursed_spruce_log"
           }
         ]
       },

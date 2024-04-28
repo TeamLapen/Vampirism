@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -35,7 +36,7 @@ public class SingleJigsawPiecesProvider implements DataProvider {
         Set<ResourceLocation> set = Sets.newHashSet();
         this.registerSingleJigsawPieces(set::add);
 
-        return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(false, LOGGER::error), pathProvider.json(new ResourceLocation(modId, "single_jigsaw_pieces")));
+        return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(DecoderException::new), pathProvider.json(new ResourceLocation(modId, "single_jigsaw_pieces")));
     }
 
     @Override

@@ -115,7 +115,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());

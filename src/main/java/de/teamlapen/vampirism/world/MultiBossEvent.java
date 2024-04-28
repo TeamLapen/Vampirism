@@ -27,12 +27,12 @@ public class MultiBossEvent {
         this.entries = new HashMap<>();
     }
 
-    public MultiBossEvent(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
-        this.uniqueId = packet.uniqueId();
-        this.name = packet.name();
-        this.colors = packet.colors();
-        this.entries = packet.entries();
-        this.overlay = packet.overlay();
+    public MultiBossEvent(@NotNull ClientboundUpdateMultiBossEventPacket.AddOperation operation) {
+        this.uniqueId = operation.uniqueId();
+        this.name = operation.name();
+        this.colors = operation.colors();
+        this.entries = operation.entries();
+        this.overlay = operation.overlay();
     }
 
     public void clear() {
@@ -86,11 +86,13 @@ public class MultiBossEvent {
         }
     }
 
-    public void updateFromPackage(@NotNull ClientboundUpdateMultiBossEventPacket packet) {
-        switch (packet.operation()) {
-            case UPDATE_NAME -> this.name = packet.name();
-            case UPDATE_PROGRESS -> this.entries = packet.entries();
-            case UPDATE_STYLE -> this.overlay = packet.overlay();
+    public void updateFromPackage(ClientboundUpdateMultiBossEventPacket.Operation packet) {
+        switch (packet) {
+            case ClientboundUpdateMultiBossEventPacket.UpdateNameOperation operation -> this.name = operation.name();
+            case ClientboundUpdateMultiBossEventPacket.UpdateProgressOperation operation -> this.entries = operation.entries();
+            case ClientboundUpdateMultiBossEventPacket.UpdateStyle operation -> this.overlay = operation.overlay();
+            default -> {
+            }
         }
     }
 }

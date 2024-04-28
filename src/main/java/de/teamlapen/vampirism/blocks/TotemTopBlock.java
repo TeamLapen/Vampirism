@@ -139,7 +139,7 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (world.isClientSide) return InteractionResult.SUCCESS;
         TotemBlockEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
@@ -147,7 +147,7 @@ public class TotemTopBlock extends BaseEntityBlock {
             t.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }
-        return super.use(state, world, pos, player, hand, hit);
+        return InteractionResult.PASS;
     }
 
     @Override

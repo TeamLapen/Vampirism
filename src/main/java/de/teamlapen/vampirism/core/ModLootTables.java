@@ -5,10 +5,14 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.mixin.accessor.LootTableAccessor;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
-import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,51 +31,51 @@ import java.util.Set;
  */
 public class ModLootTables {
     private final static Logger LOGGER = LogManager.getLogger();
-    private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
+    private static final Set<ResourceKey<LootTable>> LOOT_TABLES = Sets.newHashSet();
     //chests
-    public static final ResourceLocation CHEST_HUNTER_TRAINER = register("chests/village/hunter_trainer");
-    public static final ResourceLocation CHEST_VAMPIRE_DUNGEON = register("chests/dungeon/vampire_dungeon");
-    public static final ResourceLocation CHEST_VAMPIRE_HUT = register("chests/vampire_hut");
-    public static final ResourceLocation CHEST_VAMPIRE_ALTAR = register("chests/vampire_altar");
-    public static final ResourceLocation CHEST_CRYPT = register("chests/crypt");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_SMITH = register("chests/hunter_outpost_smith");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_TENT = register("chests/hunter_outpost_tent");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_ALCHEMY = register("chests/hunter_outpost_alchemy");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_TOWER_FOOD = register("chests/hunter_outpost_tower_food");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_TOWER_BASIC = register("chests/hunter_outpost_tower_basic");
-    public static final ResourceLocation CHEST_HUNTER_OUTPOST_TOWER_SPECIAL = register("chests/hunter_outpost_tower_special");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_TRAINER = register("chests/village/hunter_trainer");
+    public static final ResourceKey<LootTable> CHEST_VAMPIRE_DUNGEON = register("chests/dungeon/vampire_dungeon");
+    public static final ResourceKey<LootTable> CHEST_VAMPIRE_HUT = register("chests/vampire_hut");
+    public static final ResourceKey<LootTable> CHEST_VAMPIRE_ALTAR = register("chests/vampire_altar");
+    public static final ResourceKey<LootTable> CHEST_CRYPT = register("chests/crypt");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_SMITH = register("chests/hunter_outpost_smith");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TENT = register("chests/hunter_outpost_tent");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_ALCHEMY = register("chests/hunter_outpost_alchemy");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_FOOD = register("chests/hunter_outpost_tower_food");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_BASIC = register("chests/hunter_outpost_tower_basic");
+    public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_SPECIAL = register("chests/hunter_outpost_tower_special");
 
-    private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
+    private static final Map<String, ResourceKey<LootTable>> INJECTION_TABLES = Maps.newHashMap();
     //inject
-    public static final ResourceLocation ABANDONED_MINESHAFT = registerInject("abandoned_mineshaft");
-    public static final ResourceLocation JUNGLE_TEMPLE = registerInject("jungle_temple");
-    public static final ResourceLocation STRONGHOLD_CORRIDOR = registerInject("stronghold_corridor");
-    public static final ResourceLocation DESERT_PYRAMID = registerInject("desert_pyramid");
-    public static final ResourceLocation STRONGHOLD_LIBRARY = registerInject("stronghold_library");
+    public static final ResourceKey<LootTable> ABANDONED_MINESHAFT = registerInject("abandoned_mineshaft");
+    public static final ResourceKey<LootTable> JUNGLE_TEMPLE = registerInject("jungle_temple");
+    public static final ResourceKey<LootTable> STRONGHOLD_CORRIDOR = registerInject("stronghold_corridor");
+    public static final ResourceKey<LootTable> DESERT_PYRAMID = registerInject("desert_pyramid");
+    public static final ResourceKey<LootTable> STRONGHOLD_LIBRARY = registerInject("stronghold_library");
     private static int injected = 0;
 
-    static @NotNull ResourceLocation registerInject(String resourceName) {
-        ResourceLocation registryName = register("inject/" + resourceName);
+    static @NotNull ResourceKey<LootTable> registerInject(String resourceName) {
+        ResourceKey<LootTable> registryName = register("inject/" + resourceName);
         INJECTION_TABLES.put(resourceName, registryName);
         return registryName;
     }
 
-    static @NotNull ResourceLocation register(@NotNull String resourceName) {
+    static @NotNull ResourceKey<LootTable> register(@NotNull String resourceName) {
         return register(new ResourceLocation(REFERENCE.MODID, resourceName));
     }
 
-    static @NotNull ResourceLocation register(@NotNull ResourceLocation resourceLocation) {
-        LOOT_TABLES.add(resourceLocation);
-        return resourceLocation;
+    static @NotNull ResourceKey<LootTable> register(@NotNull ResourceLocation resourceLocation) {
+        ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
+        LOOT_TABLES.add(key);
+        return key;
     }
 
-    public static @NotNull Set<ResourceLocation> getLootTables() {
+    public static @NotNull Set<ResourceKey<LootTable>> getLootTables() {
         return ImmutableSet.copyOf(LOOT_TABLES);
     }
 
 
-    @SubscribeEvent
-    public static void onLootLoad(@NotNull LootTableLoadEvent event) {
+    static void onLootLoad(@NotNull LootTableLoadEvent event) {
         String prefix = "minecraft:chests/";
         if (event.getName() != null) {
             String name = event.getName().toString();
@@ -90,7 +94,7 @@ public class ModLootTables {
     }
 
     private static @NotNull LootPool getInjectPool(String entryName) {
-        LootPoolEntryContainer.Builder<?> entryBuilder = LootTableReference.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
+        LootPoolEntryContainer.Builder<?> entryBuilder = NestedLootTable.lootTableReference(INJECTION_TABLES.get(entryName)).setWeight(1);
         return LootPool.lootPool().setBonusRolls(UniformGenerator.between(0, 1)).setRolls(ConstantValue.exactly(1)).add(entryBuilder).build();
     }
 

@@ -4,8 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,15 +20,14 @@ import java.util.List;
 
 
 public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation taskID) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "select_minion_task");
-    public static final Codec<ServerboundSelectMinionTaskPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-            Codec.INT.fieldOf("minion_id").forGetter(ServerboundSelectMinionTaskPacket::minionID),
-            ResourceLocation.CODEC.fieldOf("task_id").forGetter(s -> s.taskID)
-    ).apply(inst, ServerboundSelectMinionTaskPacket::new));
+    public static final Type<ServerboundSelectMinionTaskPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "select_minion_task"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSelectMinionTaskPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ServerboundSelectMinionTaskPacket::minionID,
+            ResourceLocation.STREAM_CODEC, ServerboundSelectMinionTaskPacket::taskID,
+            ServerboundSelectMinionTaskPacket::new
+    );
     public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
@@ -41,12 +43,7 @@ public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation t
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

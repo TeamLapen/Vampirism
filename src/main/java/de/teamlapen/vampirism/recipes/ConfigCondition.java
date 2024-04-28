@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.recipes;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -14,7 +15,7 @@ import java.util.function.Function;
  */
 public record ConfigCondition(@NotNull String option, @NotNull Function<IContext, Boolean> tester) implements ICondition {
 
-    public static final Codec<ConfigCondition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+    public static final MapCodec<ConfigCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.STRING.fieldOf("option").forGetter(c -> c.option)
     ).apply(inst, ConfigCondition::new));
 
@@ -23,12 +24,12 @@ public record ConfigCondition(@NotNull String option, @NotNull Function<IContext
     }
 
     @Override
-    public boolean test(IContext context) {
+    public boolean test(@NotNull IContext context) {
         return tester.apply(context);
     }
 
     @Override
-    public Codec<? extends ICondition> codec() {
+    public @NotNull MapCodec<? extends ICondition> codec() {
         return CODEC;
     }
 

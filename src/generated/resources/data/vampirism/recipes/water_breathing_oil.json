@@ -1,30 +1,23 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "type": "neoforge:nbt",
-    "item": "vampirism:oil_bottle",
-    "strict": true,
-    "tag": "{oil:\"vampirism:vampire_blood\"}"
+    "item": "vampirism:oil_bottle"
   },
   "input": [
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:water_breathing\"}"
+      "item": "minecraft:potion"
     },
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:long_water_breathing\"}"
+      "item": "minecraft:potion"
     }
   ],
   "result": {
-    "Count": 1,
-    "id": "vampirism:oil_bottle",
-    "tag": {
-      "oil": "vampirism:water_breathing"
-    }
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:water_breathing"
+      }
+    },
+    "count": 1,
+    "id": "vampirism:oil_bottle"
   }
 }

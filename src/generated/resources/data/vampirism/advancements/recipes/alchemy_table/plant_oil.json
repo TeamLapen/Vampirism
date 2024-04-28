@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:glass_bottle"
-            ]
+            "items": "minecraft:glass_bottle"
           }
         ]
       },
@@ -23,9 +21,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:wheat_seeds"
-            ]
+            "items": "minecraft:wheat_seeds"
           }
         ]
       },

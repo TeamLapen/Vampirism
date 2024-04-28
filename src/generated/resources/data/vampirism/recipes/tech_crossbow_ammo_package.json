@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "L": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     },
     "P": {
       "tag": "minecraft:planks"
@@ -19,6 +19,7 @@
     "ILLI"
   ],
   "result": {
-    "item": "vampirism:tech_crossbow_ammo_package"
+    "count": 1,
+    "id": "vampirism:tech_crossbow_ammo_package"
   }
 }

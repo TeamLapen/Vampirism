@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.BloodGrinderMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -57,15 +58,15 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tagCompound) {
-        super.load(tagCompound);
+    public void loadAdditional(@NotNull CompoundTag tagCompound, HolderLookup.Provider provider) {
+        super.loadAdditional(tagCompound, provider);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
     }

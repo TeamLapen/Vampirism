@@ -6,14 +6,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,12 +26,12 @@ import java.util.Optional;
  * @param target   The target the player was looking at when activating the action.
  */
 public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "toggle_action");
-    public static final Codec<ServerboundToggleActionPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    ResourceLocation.CODEC.fieldOf("action_id").forGetter(ServerboundToggleActionPacket::actionId),
-                    ExtraCodecs.strictOptionalField(Codec.either(Codec.INT, BlockPos.CODEC),"target").forGetter(s -> Optional.ofNullable(s.target))
-            ).apply(inst, ServerboundToggleActionPacket::new));
+    public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "toggle_action"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundToggleActionPacket> CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC, ServerboundToggleActionPacket::actionId,
+            NeoForgeStreamCodecs.lazy(() -> ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> pkt.target,
+            ServerboundToggleActionPacket::new
+    );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ServerboundToggleActionPacket(ResourceLocation action, Optional<Either<Integer, BlockPos>> target) {
@@ -60,12 +62,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
     }
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

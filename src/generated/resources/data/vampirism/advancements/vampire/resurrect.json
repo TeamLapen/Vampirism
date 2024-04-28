@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:soul_orb_vampire"
+      "count": 1,
+      "id": "vampirism:soul_orb_vampire"
     },
     "title": {
       "translate": "advancement.vampirism.resurrect"

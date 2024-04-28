@@ -2,20 +2,15 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
-import de.teamlapen.vampirism.util.ArmorMaterial;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
@@ -39,15 +34,11 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
         return IItemWithTier.TIER.values()[minLevel];
     }
 
-    public static final ArmorMaterial.Tiered NORMAL = new ArmorMaterial.Tiered("vampirism:hunter_coat", TIER.NORMAL, 17, ArmorMaterial.createReduction(2, 6,5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ENHANCED = new ArmorMaterial.Tiered("vampirism:hunter_coat_enhanced", TIER.ENHANCED, 25, ArmorMaterial.createReduction(3, 8,6, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ArmorMaterial.Tiered ULTIMATE = new ArmorMaterial.Tiered("vampirism:hunter_coat_ultimate", TIER.ULTIMATE, 33, ArmorMaterial.createReduction(3, 9, 9, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
-
     private final @NotNull TIER tier;
 
-    public HunterCoatItem(@NotNull ArmorItem.Type type, @NotNull ArmorMaterial.Tiered material) {
-        super(material, type, new Properties(), new HashMap<>());
-        this.tier = material.getTier();
+    public HunterCoatItem(@NotNull Holder<net.minecraft.world.item.ArmorMaterial> material, @NotNull ArmorItem.Type type, @NotNull TIER tier) {
+        super(material, type, new Properties());
+        this.tier = tier;
     }
 
     @Override
@@ -56,8 +47,8 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, context, tooltip, flagIn);
     }
 }

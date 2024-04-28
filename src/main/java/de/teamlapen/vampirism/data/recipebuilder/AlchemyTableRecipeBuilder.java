@@ -4,12 +4,13 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
+import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
-import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -18,12 +19,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
@@ -31,16 +30,11 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
         return new AlchemyTableRecipeBuilder(stack);
     }
 
-    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull IOil oilStack) {
-        return new AlchemyTableRecipeBuilder(OilUtils.createOilItem(oilStack));
-    }
-
-    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull Supplier<? extends IOil> oilStack) {
-        return builder(oilStack.get());
+    public static @NotNull AlchemyTableRecipeBuilder builder(@NotNull Holder<IOil> oilStack) {
+        return new AlchemyTableRecipeBuilder(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oilStack));
     }
 
     protected final @NotNull ItemStack result;
-    protected final @NotNull IOil resultOil;
     protected String group;
     protected Ingredient ingredient;
     protected final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
@@ -49,14 +43,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
     public AlchemyTableRecipeBuilder(@NotNull ItemStack result) {
-        this(result, OilUtils.getOil(result));
-    }
-
-    public AlchemyTableRecipeBuilder(@NotNull ItemStack result, @NotNull IOil resultOil) {
-        Objects.requireNonNull(result);
-        Objects.requireNonNull(resultOil);
         this.result = result;
-        this.resultOil = resultOil;
     }
 
     public @NotNull AlchemyTableRecipeBuilder group(@Nullable String group) {
@@ -69,17 +56,17 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull IOil oil) {
-        this.ingredient = NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(oil));
+    public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull Holder<IOil> oil) {
+        this.ingredient = Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil));
         return this;
     }
 
     public AlchemyTableRecipeBuilder plantOilIngredient() {
-        return ingredient(NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(ModOils.PLANT.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), ModOils.PLANT))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
-        return ingredient(NBTIngredient.of(true, ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get()))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
+        return ingredient(Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), ModOils.VAMPIRE_BLOOD))).unlockedBy("has_bottles", has(ModItems.OIL_BOTTLE.get()));
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {

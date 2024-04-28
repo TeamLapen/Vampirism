@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(RecipeProvider.class)
 public interface RecipeProviderAccessor {
 
-    @Invoker("chestBoat(Lnet/minecraft/data/recipes/RecipeOutput;Lnet/minecraft/world/level/ItemLike;Lnet/minecraft/world/level/ItemLike;)V")
+    @Invoker("chestBoat")
     static void chestBoat(RecipeOutput pRecipeOutput, ItemLike pBoat, ItemLike pMaterial) {
         throw new IllegalStateException("Mixin failed to apply");
     }

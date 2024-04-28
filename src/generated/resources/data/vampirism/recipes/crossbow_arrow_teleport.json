@@ -6,14 +6,12 @@
       "item": "vampirism:crossbow_arrow_normal"
     },
     {
-      "type": "neoforge:nbt",
-      "item": "vampirism:oil_bottle",
-      "strict": true,
-      "tag": "{oil:\"vampirism:teleport\"}"
+      "item": "vampirism:oil_bottle"
     }
   ],
   "lava": 1,
   "result": {
-    "item": "vampirism:crossbow_arrow_teleport"
+    "count": 1,
+    "id": "vampirism:crossbow_arrow_teleport"
   }
 }

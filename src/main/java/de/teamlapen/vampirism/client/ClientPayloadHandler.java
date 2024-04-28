@@ -16,60 +16,61 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.Objects;
 import java.util.Set;
 
 public class ClientPayloadHandler {
 
-    public static void handleBossEventSound(ClientboundBossEventSoundPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> VampirismMod.proxy.addBossEventSound(msg.bossEventUuid(), msg.sound()));
+    public static void handleBossEventSound(ClientboundBossEventSoundPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismMod.proxy.addBossEventSound(msg.bossEventUuid(), msg.sound()));
     }
 
-    public static void handleVampireBookPacket(ClientboundOpenVampireBookPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> openScreen(new VampireBookScreen(VampireBookManager.getInstance().getBookById(msg.bookId()))));
+    public static void handleVampireBookPacket(ClientboundOpenVampireBookPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> openScreen(new VampireBookScreen(VampireBookManager.getInstance().getBookById(msg.bookId()))));
     }
 
-    public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> {
-            if (msg.type() == 1) {
-                VampirismMod.proxy.spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
-            }
-            else if(msg.type() == 2){
-                Minecraft.getInstance().getMusicManager().stopPlaying();
+    public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            switch (msg.event()) {
+                case 1:
+                    VampirismMod.proxy.spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
+                    break;
+                case 2:
+                    Minecraft.getInstance().getMusicManager().stopPlaying();
+                    break;
             }
         });
     }
 
-    public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
+    public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
     }
 
     public static void handleSundamageData(ClientboundSundamagePacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyNetworkData(msg));
+        context.enqueueWork(() -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyNetworkData(msg));
     }
 
-    public static void handleTaskPacket(ClientboundTaskPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> {
-            AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
+    public static void handleTaskPacket(ClientboundTaskPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            AbstractContainerMenu container = context.player().containerMenu;
             if (msg.containerId() == container.containerId && container instanceof VampirismMenu) {
                 ((VampirismMenu) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
             }
         });
     }
 
-    public static void handleTaskStatusPacket(ClientboundTaskStatusPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> {
-            AbstractContainerMenu container = Objects.requireNonNull(Minecraft.getInstance().player).containerMenu;
+    public static void handleTaskStatusPacket(ClientboundTaskStatusPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            AbstractContainerMenu container = context.player().containerMenu;
             if (msg.containerId() == container.containerId && container instanceof TaskBoardMenu) {
                 ((TaskBoardMenu) container).init((Set<ITaskInstance>) msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
             }
         });
     }
 
-    public static void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
+    public static void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
     }
 
     private static void openScreen(Screen screen) {
@@ -77,6 +78,6 @@ public class ClientPayloadHandler {
     }
 
     public static void handleSkillTreePacket(ClientboundSkillTreePacket msg, IPayloadContext context) {
-        context.workHandler().execute(() -> ClientSkillTreeData.init(msg.skillTrees()));
+        context.enqueueWork(() -> ClientSkillTreeData.init(msg.skillTrees()));
     }
 }

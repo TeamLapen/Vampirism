@@ -33,27 +33,27 @@ import java.util.function.Consumer;
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
     public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item) {
-        return new ShapedWeaponTableRecipeBuilder(category, item, 1, null);
+        return new ShapedWeaponTableRecipeBuilder(category, item, 1);
     }
 
     public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count) {
-        return new ShapedWeaponTableRecipeBuilder(category, item, count, null);
+        return new ShapedWeaponTableRecipeBuilder(category, item, count);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @NotNull Consumer<ItemStack> nbt) {
-        ItemStack itemStack = new ItemStack(item, count);
-        nbt.accept(itemStack);
-        return new ShapedWeaponTableRecipeBuilder(category, item, count, itemStack.getTag());
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(@NotNull RecipeCategory category, @NotNull ItemStack stack) {
+        return new ShapedWeaponTableRecipeBuilder(category, stack);
     }
 
-    private final @Nullable CompoundTag extraNbt;
     private int lava = 1;
     private final List<ISkill<IHunterPlayer>> skills = new LinkedList<>();
     private int level = 1;
 
-    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count, @Nullable CompoundTag extraNbt) {
+    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count) {
         super(category, item, count);
-        this.extraNbt = extraNbt;
+    }
+
+    public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemStack itemStack) {
+        super(category, itemStack);
     }
 
     @NotNull
@@ -109,7 +109,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), shapedRecipePattern, new ItemStack(result, count, extraNbt), level, skills, lava);
+        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
         output.accept(recipeId, recipe, advancement.build(recipeId.withPrefix("recipes/weapontable/")));
     }
 

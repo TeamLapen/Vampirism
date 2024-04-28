@@ -90,8 +90,8 @@ public class VampirismBoatEntity extends Boat implements IVampirismBoat {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_ID_TYPE, IVampirismBoat.BoatType.DARK_SPRUCE.ordinal());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ID_TYPE, IVampirismBoat.BoatType.DARK_SPRUCE.ordinal());
     }
 }

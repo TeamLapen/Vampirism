@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -35,8 +36,8 @@ public class DarkStoneBlock extends VampirismBlock {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
-        super.appendHoverText(stack, world, tooltip, advanced);
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
+        super.appendHoverText(stack, context, tooltip, advanced);
         if (stack.is(ModTags.Items.NO_SPAWN)) {
             tooltip.add(Component.translatable("block.vampirism.castle_block.no_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
         } else if (stack.is(ModTags.Items.VAMPIRE_SPAWN)) {

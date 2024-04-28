@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.items.component.VampireBookContents;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
@@ -22,26 +24,15 @@ import java.util.List;
 
 public class VampireBookItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static boolean validBookTagContents(@NotNull CompoundTag nbt) {
-        if (!WritableBookItem.makeSureTagIsValid(nbt)) {
-            return false;
-        } else if (!nbt.contains("title")) {
-            return false;
-        } else {
-            String s = nbt.getString("title");
-            return s.length() <= 32 && nbt.contains("author");
-        }
-    }
-
     public VampireBookItem() {
         super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        if (stack.hasTag()) {
-            CompoundTag compoundnbt = stack.getTag();
-            String s = compoundnbt.getString("author");
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        VampireBookContents contents = stack.get(ModDataComponents.VAMPIRE_BOOK);
+        if (contents != null) {
+            String s = contents.author();
             if (!StringUtil.isNullOrEmpty(s)) {
                 tooltip.add((Component.translatable("book.byAuthor", s)).withStyle(ChatFormatting.GRAY));
             }
@@ -60,18 +51,17 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
 
     public ItemStack contentInstance(VampireBookManager.BookContext context) {
         ItemStack stack = getDefaultInstance();
-        stack.setTag(VampireBookItem.createTagFromContext(context));
+        VampireBookContents.addFromBook(stack, context);
         return stack;
     }
 
     @NotNull
     @Override
     public Component getName(@NotNull ItemStack stack) {
-        if (stack.hasTag()) {
-            CompoundTag nbttagcompound = stack.getTag();
-            String s = nbttagcompound.getString("title");
-            if (!StringUtil.isNullOrEmpty(s)) {
-                return Component.literal(s);
+        VampireBookContents contents = stack.get(ModDataComponents.VAMPIRE_BOOK);
+        if (contents != null) {
+            if (!StringUtil.isNullOrEmpty(contents.title())) {
+                return Component.literal(contents.title());
             }
         }
         return super.getName(stack);
@@ -86,20 +76,9 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
-            String id = VampireBookManager.OLD_ID;
-            if (stack.hasTag()) {
-                id = stack.getTag().getString("id");
-            }
-            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(id));
+            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(VampireBookContents.get(stack).id()));
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
-    public static @NotNull CompoundTag createTagFromContext(VampireBookManager.@NotNull BookContext context) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("id", context.id());
-        nbt.putString("author", context.book().author());
-        nbt.putString("title", context.book().title());
-        return nbt;
-    }
 }

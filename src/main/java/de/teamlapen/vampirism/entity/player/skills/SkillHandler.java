@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.data.ISkillTreeData;
 import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
@@ -32,12 +33,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -71,7 +74,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public @NotNull Result canSkillBeEnabled(@NotNull ISkill<T> skill) {
-        if (player.asEntity().getEffect(ModEffects.OBLIVION.get()) != null) {
+        if (player.asEntity().getEffect(ModEffects.OBLIVION) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
         if (isSkillEnabled(skill)) {
@@ -113,8 +116,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
             int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().asEntity().getRandom().nextInt(60);
-            Integer unbreakingLevel = EnchantmentHelper.getEnchantments(stack).get(Enchantments.UNBREAKING);
-            if (unbreakingLevel != null) {
+            int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
+            if (unbreakingLevel > 0) {
                 damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
             }
             stack.setDamageValue(stack.getDamageValue() + damage);
@@ -276,7 +279,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
                 //noinspection unchecked
@@ -312,7 +315,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.of(stackNbt);
+                ItemStack stack = ItemStack.parseOptional(provider, stackNbt);
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
                     IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
                     if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
@@ -331,7 +334,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
             //noinspection unchecked
@@ -361,7 +364,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.of(stackNbt);
+                ItemStack stack = ItemStack.parseOptional(provider, stackNbt);
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
                     IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
                     if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
@@ -389,7 +392,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
@@ -402,7 +405,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             if (!stack.isEmpty()) {
                 CompoundTag stackNbt = new CompoundTag();
                 stackNbt.putInt("slot", i);
-                stack.save(stackNbt);
+                stack.save(provider, stackNbt);
                 refinements.add(stackNbt);
             }
         }
@@ -416,7 +419,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (ISkill<T> skill : enabledSkills) {
@@ -429,7 +432,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             if (!stack.isEmpty()) {
                 CompoundTag stackNbt = new CompoundTag();
                 stackNbt.putInt("slot", i);
-                stack.save(stackNbt);
+                stack.save(provider, stackNbt);
                 refinementItems.add(stackNbt);
             }
         }
@@ -456,7 +459,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                         AttributeModifier t = attributeInstance.getModifier(x.getUUID());
                         if (t != null) {
                             attributeInstance.removeModifier(x.getUUID());
-                            value += t.getAmount();
+                            value += t.amount();
                         }
                         t = x.createAttributeModifier(x.getUUID(), value);
                         this.refinementModifier.put(x, t);
@@ -480,9 +483,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                             AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(x);
                             ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                            double value = t.getAmount() - x.getModifierValue();
+                            double value = t.amount() - x.getModifierValue();
                             if (value != 0) {
-                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.getId(), value));
+                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.id(), value));
                                 this.refinementModifier.put(x, t);
                                 this.activeRefinements.add(x);
                             }

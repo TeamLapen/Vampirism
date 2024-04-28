@@ -20,6 +20,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -44,11 +45,11 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> textComponents, TooltipFlag tooltipFlag) {
-        switch (type) {
-            case SPITFIRE -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
-            case VAMPIRE_KILLER -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
-            case TELEPORT -> textComponents.add(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+        switch (this.type) {
+            case SPITFIRE -> components.add(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
+            case VAMPIRE_KILLER -> components.add(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
+            case TELEPORT -> components.add(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -59,7 +60,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         arrowEntity.setEffectsFromItem(stack);
         arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
-            arrowEntity.setSecondsOnFire(100);
+            arrowEntity.igniteForSeconds(100);
         }
         if (entity instanceof Player) {
             arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
@@ -73,7 +74,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         arrowEntity.setEffectsFromItem(stack);
         arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
-            arrowEntity.setSecondsOnFire(100);
+            arrowEntity.igniteForSeconds(100);
         }
         arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
         return arrowEntity;
@@ -161,12 +162,11 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         }
     }
 
-
     public enum EnumArrowType implements StringRepresentable {
-        NORMAL("normal", 2.0, 0xFFFFFF),
-        VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073),
-        SPITFIRE("spitfire", 0.5, 0xFF2211),
-        TELEPORT("teleport", 0.5, 0x0b4d42);
+        NORMAL("normal", 2.0, 0xFFFFFFFF),
+        VAMPIRE_KILLER("vampire_killer", 0.5, 0xFF7A0073),
+        SPITFIRE("spitfire", 0.5, 0xFFFF2211),
+        TELEPORT("teleport", 0.5, 0xFF0b4d42);
 
         public final int color;
         final String name;

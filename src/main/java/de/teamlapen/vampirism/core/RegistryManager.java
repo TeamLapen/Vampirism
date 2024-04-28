@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.data.PackRepositories;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
@@ -12,8 +13,8 @@ import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,6 @@ public class RegistryManager implements IInitListener {
     }
 
     public void setupRegistries() {
-        ModRegistries.init(eventBus);
         ModAttributes.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
@@ -70,30 +70,17 @@ public class RegistryManager implements IInitListener {
         ModAdvancements.register(eventBus);
         ModStats.register(eventBus);
         ModSkills.init();
-    }
-
-    @SubscribeEvent
-    public void onBuildRegistries(NewRegistryEvent event) {
-        this.eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
-        this.eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
-        this.eventBus.addListener(ModEntities::onRegisterSpawns);
+        ModDataComponents.register(eventBus);
+        ModArmorMaterials.register(eventBus);
     }
 
     @Override
     public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         switch (step) {
             case COMMON_SETUP:
-                ModEntities.registerCustomExtendedCreatures();
-                ModItems.registerCraftingRecipes();
-                event.enqueueWork(() -> {
-                    ModPotions.registerPotionMixes();
-                    ModVillage.villagerTradeSetup();
-                });
-                ModTiles.registerTileExtensionsUnsafe();
+                event.enqueueWork(ModVillage::villagerTradeSetup);
+                event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
                 event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
-            case LOAD_COMPLETE:
-                ModRecipes.registerDefaultLiquidColors();
-                break;
             default:
                 break;
         }
@@ -107,5 +94,22 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
         ModDataMaps.registerDataMaps(event);
+    }
+
+    public void registerModEventHandler() {
+        this.eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
+        this.eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
+        this.eventBus.addListener(ModEntities::onRegisterSpawns);
+        this.eventBus.addListener(ModItems::registerOtherCreativeTabItems);
+        this.eventBus.addListener(ModRegistries::registerRegistries);
+        this.eventBus.addListener(PackRepositories::registerPackRepository);
+    }
+
+    public void registerForgeEventHandler() {
+        IEventBus eventBus = NeoForge.EVENT_BUS;
+        eventBus.addListener(ModItems::registerCraftingRecipes);
+        eventBus.addListener(ModCommands::registerCommands);
+        eventBus.addListener(ModLootTables::onLootLoad);
+        eventBus.addListener(ModPotions::registerPotionMixes);
     }
 }

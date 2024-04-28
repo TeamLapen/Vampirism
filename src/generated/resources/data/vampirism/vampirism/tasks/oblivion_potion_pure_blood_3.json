@@ -8,11 +8,13 @@
         },
         "id": "minecraft:potion",
         "item": {
-          "Count": 1,
-          "id": "minecraft:potion",
-          "tag": {
-            "Potion": "minecraft:poison"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:poison"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:potion"
         }
       },
       {
@@ -22,7 +24,7 @@
         },
         "id": "vampirism:pure_blood_2",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "vampirism:pure_blood_2"
         }
       }
@@ -31,7 +33,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "vampirism:oblivion_potion"
     }
   },

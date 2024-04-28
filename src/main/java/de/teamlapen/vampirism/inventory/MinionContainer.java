@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.vampirism.network.ServerboundToggleMinionTaskLock;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -153,7 +154,7 @@ public class MinionContainer extends InventoryContainerMenu {
 
         @Nullable
         @Override
-        public MinionContainer create(int windowId, @NotNull Inventory inv, @Nullable FriendlyByteBuf data) {
+        public MinionContainer create(int windowId, @NotNull Inventory inv, @Nullable RegistryFriendlyByteBuf data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
             Entity e = inv.player.level() == null ? null : inv.player.level().getEntity(entityId);

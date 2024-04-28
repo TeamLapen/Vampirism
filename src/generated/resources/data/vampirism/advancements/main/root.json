@@ -4,9 +4,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:vampire_fang"
-            ]
+            "items": "vampirism:vampire_fang"
           }
         ]
       },
@@ -16,9 +14,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:item_garlic"
-            ]
+            "items": "vampirism:item_garlic"
           }
         ]
       },
@@ -32,7 +28,8 @@
       "translate": "advancement.vampirism.desc"
     },
     "icon": {
-      "item": "vampirism:vampire_fang"
+      "count": 1,
+      "id": "vampirism:vampire_fang"
     },
     "show_toast": false,
     "title": {

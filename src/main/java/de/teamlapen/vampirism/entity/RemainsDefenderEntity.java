@@ -108,10 +108,10 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_ATTACH_FACE_ID, Direction.DOWN);
-        this.entityData.define(DATA_LIGHT_TICKS_REMAINING, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ATTACH_FACE_ID, Direction.DOWN);
+        builder.define(DATA_LIGHT_TICKS_REMAINING, 0);
     }
 
     @Override

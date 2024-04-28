@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.NeoForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +54,6 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
             boolean first = tryLoadProjectilesMod(p_77615_3_, p_77615_1_);
             boolean second = tryLoadProjectilesMod(p_77615_3_, p_77615_1_);
             if (first || second) { //load two projectiles or only one
-                setCharged(p_77615_1_, true);
                 SoundSource soundcategory = p_77615_3_ instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
                 p_77615_2_.playSound((Player) null, p_77615_3_.getX(), p_77615_3_.getY(), p_77615_3_.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (p_77615_2_.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
             }
@@ -65,18 +67,17 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
      * TODO 1.19 recheck
      */
     public boolean performShootingMod(Level level, LivingEntity shooter, InteractionHand hand, ItemStack stack, float speed, float angle) {
-        List<ItemStack> list = CrossbowItemMixin.getChargedProjectiles(stack);
-        float[] afloat = CrossbowItemMixin.getShotPitches(shooter.getRandom());
+        List<ItemStack> list = stack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems();
 
         for(int i = 0; i < list.size() && i < 2; ++i) { // only shoot a maximum of 2 arrows
             ItemStack itemstack = list.get(i);
             boolean flag = !(shooter instanceof Player player) || player.getAbilities().instabuild;
             if (!itemstack.isEmpty()) {
-                shootProjectileMod(level, shooter, hand, stack, itemstack, afloat[i], flag, speed, angle); // only one arrow per projectile
+                shootProjectileMod(level, shooter, hand, stack, itemstack, CrossbowItemMixin.getShotPitches(shooter.getRandom(), i), flag, speed, angle); // only one arrow per projectile
             }
         }
 
-        CrossbowItemMixin.onCrossbowShot(level, shooter, stack);
+        onShot(shooter, stack);
         return list.isEmpty();
     }
 }

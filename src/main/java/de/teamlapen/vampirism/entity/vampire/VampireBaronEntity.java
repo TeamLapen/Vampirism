@@ -175,12 +175,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
         if (reason == MobSpawnType.COMMAND || reason == MobSpawnType.SPAWN_EGG) {
             this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
         }
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
 
     /**
@@ -319,11 +319,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(LEVEL, -1);
-        getEntityData().define(ENRAGED, false);
-        getEntityData().define(LADY, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LEVEL, -1);
+        builder.define(ENRAGED, false);
+        builder.define(LADY, false);
     }
 
     @Override

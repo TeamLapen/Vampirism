@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
-import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.MotherTrophyItem;
 import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import de.teamlapen.vampirism.world.gen.ModTreeGrower;
@@ -101,8 +99,8 @@ public class ModBlocks {
     public static final DeferredBlock<DoorBlock> CURSED_SPRUCE_DOOR = registerWithItem("cursed_spruce_door", () -> new DoorBlock(BlockSetType.SPRUCE, BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_HYPHAE).ignitedByLava().strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final DeferredBlock<TrapDoorBlock> DARK_SPRUCE_TRAPDOOR = registerWithItem("dark_spruce_trapdoor", () -> new TrapDoorBlock(BlockSetType.SPRUCE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).ignitedByLava().strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
     public static final DeferredBlock<TrapDoorBlock> CURSED_SPRUCE_TRAPDOOR = registerWithItem("cursed_spruce_trapdoor", () -> new TrapDoorBlock(BlockSetType.SPRUCE, BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_HYPHAE).ignitedByLava().strength(3.0F).sound(SoundType.WOOD).noOcclusion().isValidSpawn((p_61031_, p_61032_, p_61033_, p_61034_) -> false)));
-    public static final DeferredBlock<StairBlock> DARK_SPRUCE_STAIRS = registerWithItem("dark_spruce_stairs", () -> new StairBlock(() -> DARK_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_SPRUCE_PLANKS.get())));
-    public static final DeferredBlock<StairBlock> CURSED_SPRUCE_STAIRS = registerWithItem("cursed_spruce_stairs", () -> new StairBlock(() -> CURSED_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(CURSED_SPRUCE_PLANKS.get())));
+    public static final DeferredBlock<StairBlock> DARK_SPRUCE_STAIRS = registerWithItem("dark_spruce_stairs", () -> new StairBlock(DARK_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_SPRUCE_PLANKS.get())));
+    public static final DeferredBlock<StairBlock> CURSED_SPRUCE_STAIRS = registerWithItem("cursed_spruce_stairs", () -> new StairBlock(CURSED_SPRUCE_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(CURSED_SPRUCE_PLANKS.get())));
     public static final DeferredBlock<LogBlock> STRIPPED_DARK_SPRUCE_WOOD = registerWithItem("stripped_dark_spruce_wood", () -> new LogBlock(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
     public static final DeferredBlock<LogBlock> STRIPPED_CURSED_SPRUCE_WOOD = registerWithItem("stripped_cursed_spruce_wood", () -> new LogBlock(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<LogBlock> DARK_SPRUCE_WOOD = registerWithItem("dark_spruce_wood", () -> new StrippableLogBlock(MapColor.COLOR_BLACK, MapColor.COLOR_BLACK, STRIPPED_DARK_SPRUCE_WOOD));
@@ -147,25 +145,25 @@ public class ModBlocks {
     public static final DeferredBlock<WallHangingSignBlock> CURSED_SPRUCE_WALL_HANGING_SIGN = BLOCKS.register("cursed_spruce_wall_hanging_sign", () -> new WallHangingSignBlock(LogBlock.CURSED_SPRUCE, BlockBehaviour.Properties.of().mapColor(CURSED_SPRUCE_LOG.get().defaultMapColor()).ignitedByLava().noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(CURSED_SPRUCE_HANGING_SIGN)));
     public static final DeferredBlock<CursedEarthPathBlock> CURSED_EARTH_PATH = registerWithItem("cursed_earth_path", () -> new CursedEarthPathBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIRT).strength(0.65F).sound(SoundType.GRASS).isViewBlocking(UtilLib::always).isSuffocating(UtilLib::always)));
     public static final DeferredBlock<DarkStoneBlock> DARK_STONE = registerWithItem("dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
-    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_STAIRS = registerWithItem("dark_stone_stairs", () -> new DarkStoneStairsBlock(() -> DARK_STONE.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_STONE.get())));
+    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_STAIRS = registerWithItem("dark_stone_stairs", () -> new DarkStoneStairsBlock(DARK_STONE, BlockBehaviour.Properties.ofFullCopy(DARK_STONE.get())));
     public static final DeferredBlock<DarkStoneSlabBlock> DARK_STONE_SLAB = registerWithItem("dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE.get())));
     public static final DeferredBlock<WallBlock> DARK_STONE_WALL = registerWithItem("dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE.get()).forceSolidOn()));
     public static final DeferredBlock<DarkStoneBlock> DARK_STONE_BRICKS = registerWithItem("dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
-    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_BRICK_STAIRS = registerWithItem("dark_stone_brick_stairs", () -> new DarkStoneStairsBlock(() -> DARK_STONE_BRICKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get())));
+    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_BRICK_STAIRS = registerWithItem("dark_stone_brick_stairs", () -> new DarkStoneStairsBlock(DARK_STONE_BRICKS, BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get())));
     public static final DeferredBlock<DarkStoneSlabBlock> DARK_STONE_BRICK_SLAB = registerWithItem("dark_stone_brick_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get())));
     public static final DeferredBlock<WallBlock> DARK_STONE_BRICK_WALL = registerWithItem("dark_stone_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get()).forceSolidOn()));
     public static final DeferredBlock<Block> CRACKED_DARK_STONE_BRICKS = registerWithItem("cracked_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get())));
     public static final DeferredBlock<DarkStoneBlock> COBBLED_DARK_STONE = registerWithItem("cobbled_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(2.5f, 10f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
-    public static final DeferredBlock<DarkStoneStairsBlock> COBBLED_DARK_STONE_STAIRS = registerWithItem("cobbled_dark_stone_stairs", () -> new DarkStoneStairsBlock(() -> ModBlocks.COBBLED_DARK_STONE.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get())));
+    public static final DeferredBlock<DarkStoneStairsBlock> COBBLED_DARK_STONE_STAIRS = registerWithItem("cobbled_dark_stone_stairs", () -> new DarkStoneStairsBlock(ModBlocks.COBBLED_DARK_STONE, BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get())));
     public static final DeferredBlock<DarkStoneSlabBlock> COBBLED_DARK_STONE_SLAB = registerWithItem("cobbled_dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get())));
     public static final DeferredBlock<WallBlock> COBBLED_DARK_STONE_WALL = registerWithItem("cobbled_dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get()).forceSolidOn()));
     public static final DeferredBlock<DarkStoneBlock> POLISHED_DARK_STONE = registerWithItem("polished_dark_stone", () -> new DarkStoneBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get())));
-    public static final DeferredBlock<DarkStoneStairsBlock> POLISHED_DARK_STONE_STAIRS = registerWithItem("polished_dark_stone_stairs", () -> new DarkStoneStairsBlock(() -> POLISHED_DARK_STONE.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_DARK_STONE.get())));
+    public static final DeferredBlock<DarkStoneStairsBlock> POLISHED_DARK_STONE_STAIRS = registerWithItem("polished_dark_stone_stairs", () -> new DarkStoneStairsBlock(POLISHED_DARK_STONE, BlockBehaviour.Properties.ofFullCopy(POLISHED_DARK_STONE.get())));
     public static final DeferredBlock<DarkStoneSlabBlock> POLISHED_DARK_STONE_SLAB = registerWithItem("polished_dark_stone_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_DARK_STONE.get())));
     public static final DeferredBlock<WallBlock> POLISHED_DARK_STONE_WALL = registerWithItem("polished_dark_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_DARK_STONE.get()).forceSolidOn()));
     public static final DeferredBlock<DarkStoneBlock> DARK_STONE_TILES = registerWithItem("dark_stone_tiles", () -> new DarkStoneBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_DARK_STONE.get())));
     public static final DeferredBlock<DarkStoneBlock> CRACKED_DARK_STONE_TILES = registerWithItem("cracked_dark_stone_tiles", () -> new DarkStoneBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_TILES.get())));
-    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_TILES_STAIRS = registerWithItem("dark_stone_tiles_stairs", () -> new DarkStoneStairsBlock(() -> ModBlocks.DARK_STONE_TILES.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_STONE_TILES.get())));
+    public static final DeferredBlock<DarkStoneStairsBlock> DARK_STONE_TILES_STAIRS = registerWithItem("dark_stone_tiles_stairs", () -> new DarkStoneStairsBlock(ModBlocks.DARK_STONE_TILES, BlockBehaviour.Properties.ofFullCopy(DARK_STONE_TILES.get())));
     public static final DeferredBlock<DarkStoneSlabBlock> DARK_STONE_TILES_SLAB = registerWithItem("dark_stone_tiles_slab", () -> new DarkStoneSlabBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_TILES.get())));
     public static final DeferredBlock<WallBlock> DARK_STONE_TILES_WALL = registerWithItem("dark_stone_tiles_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_TILES.get()).forceSolidOn()));
     public static final DeferredBlock<DarkStoneBlock> CHISELED_DARK_STONE_BRICKS = registerWithItem("chiseled_dark_stone_bricks", () -> new DarkStoneBlock(BlockBehaviour.Properties.ofFullCopy(DARK_STONE_BRICKS.get())));
@@ -190,11 +188,11 @@ public class ModBlocks {
     public static final DeferredBlock<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = registerWithItem("blood_infused_enhanced_iron_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(6.5F, 8.0F).sound(SoundType.METAL)));
     public static final DeferredBlock<VampireBeaconBlock> VAMPIRE_BEACON = registerWithItem("vampire_beacon", () -> new VampireBeaconBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).instrument(NoteBlockInstrument.HAT).strength(3.0F).lightLevel((p_50828_) -> 15).noOcclusion().isRedstoneConductor(UtilLib::never)), new Item.Properties().rarity(Rarity.RARE));
     public static final DeferredBlock<Block> PURPLE_STONE_BRICKS = registerWithItem("purple_stone_bricks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
-    public static final DeferredBlock<StairBlock> PURPLE_STONE_BRICK_STAIRS = registerWithItem("purple_stone_brick_stairs", () -> new StairBlock(() -> PURPLE_STONE_BRICKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_BRICKS.get())));
+    public static final DeferredBlock<StairBlock> PURPLE_STONE_BRICK_STAIRS = registerWithItem("purple_stone_brick_stairs", () -> new StairBlock(PURPLE_STONE_BRICKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_BRICKS.get())));
     public static final DeferredBlock<SlabBlock> PURPLE_STONE_BRICK_SLAB = registerWithItem("purple_stone_brick_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_BRICKS.get())));
     public static final DeferredBlock<WallBlock> PURPLE_STONE_BRICK_WALL = registerWithItem("purple_stone_brick_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_BRICKS.get()).forceSolidOn()));
     public static final DeferredBlock<Block> PURPLE_STONE_TILES = registerWithItem("purple_stone_tiles", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).requiresCorrectToolForDrops().strength(2f, 10f).sound(SoundType.STONE)));
-    public static final DeferredBlock<StairBlock> PURPLE_STONE_TILES_STAIRS = registerWithItem("purple_stone_tiles_stairs", () -> new StairBlock(() -> PURPLE_STONE_TILES.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_TILES.get())));
+    public static final DeferredBlock<StairBlock> PURPLE_STONE_TILES_STAIRS = registerWithItem("purple_stone_tiles_stairs", () -> new StairBlock(PURPLE_STONE_TILES.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_TILES.get())));
     public static final DeferredBlock<SlabBlock> PURPLE_STONE_TILES_SLAB = registerWithItem("purple_stone_tiles_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_TILES.get())));
     public static final DeferredBlock<WallBlock> PURPLE_STONE_TILES_WALL = registerWithItem("purple_stone_tiles_wall", () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(PURPLE_STONE_TILES.get()).forceSolidOn()));
     public static final DeferredBlock<StandingCandleStickBlock> CANDLE_STICK = BLOCKS.register("candle_stick", () -> new StandingCandleStickBlock(null, () -> null, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).noOcclusion().strength(0.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY)));
@@ -277,7 +275,7 @@ public class ModBlocks {
         return block;
     }
 
-    public static void register(IEventBus bus) {
+    static void register(IEventBus bus) {
         BLOCKS.register(bus);
     }
 }

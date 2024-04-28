@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "biome": "vampirism:vampire_forest"
+                "biomes": "vampirism:vampire_forest"
               }
             }
           }
@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:oak_log"
+      "count": 1,
+      "id": "minecraft:oak_log"
     },
     "title": {
       "translate": "advancement.vampirism.vampire_forest"

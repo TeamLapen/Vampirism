@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.items.component.ContainedProjectiles;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +15,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +36,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
         getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.add(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
     }
 
@@ -49,52 +47,47 @@ public class ArrowContainer extends Item implements IArrowContainer {
 
     @Override
     public Collection<ItemStack> getArrows(ItemStack container) {
-        ListTag arrows = container.getOrCreateTag().getList("arrows", Tag.TAG_COMPOUND);
-        return arrows.stream().map(t -> ItemStack.of((CompoundTag)t)).collect(Collectors.toList());
+        return container.getOrDefault(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.EMPTY).getProjectiles();
     }
 
     @Override
     public boolean addArrow(ItemStack container, ItemStack arrow) {
-        CompoundTag tag = container.getOrCreateTag();
-        ListTag arrows = tag.getList("arrows", Tag.TAG_COMPOUND);
+        ArrayList<ItemStack> arrows = new ArrayList<>(getArrows(container));
         if (arrows.size() >= maxCount) return false;
-        arrows.add(arrow.save(new CompoundTag()));
-        tag.put("arrows", arrows);
+        arrows.add(arrow);
+        container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));
         return true;
     }
 
     @Override
     public void addArrows(ItemStack container, Collection<ItemStack> arrowStacks) {
-        CompoundTag tag = container.getOrCreateTag();
-        ListTag arrows = tag.getList("arrows", Tag.TAG_COMPOUND);
+        ArrayList<ItemStack> arrows = new ArrayList<>(getArrows(container));
         for (ItemStack arrowStack : arrowStacks) {
             if (arrows.size() >= maxCount) break;
-            arrows.add(arrowStack.save(new CompoundTag()));
+            arrows.add(arrowStack);
         }
-        tag.put("arrows", arrows);
+        container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));
     }
 
     @Override
     public Collection<ItemStack> getAndRemoveArrows(ItemStack container) {
-        Collection<ItemStack> arrows = getArrows(container);
-        //noinspection ConstantConditions
-        container.getTag().remove("arrows");
-        return arrows;
+        var projectiles =container.remove(ModDataComponents.CONTAINED_PROJECTILES);
+        return projectiles != null ? projectiles.getProjectiles() : List.of();
     }
 
     @Override
     public void removeArrows(ItemStack container) {
-        container.getOrCreateTag().remove("arrows");
+        container.remove(ModDataComponents.CONTAINED_PROJECTILES);
     }
 
     @Override
     public boolean removeArrow(ItemStack container, ItemStack arrow) {
-        CompoundTag tag = container.getOrCreateTag();
-        ListTag arrows = tag.getList("arrows", Tag.TAG_COMPOUND);
+        ContainedProjectiles containedProjectiles = container.getOrDefault(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.EMPTY);
+        List<ItemStack> arrows = containedProjectiles.getProjectiles();
         for (int i = 0; i < arrows.size(); i++) {
-            if (ItemStack.of((CompoundTag) arrows.get(i)).equals(arrow)) {
+            if (ItemStack.matches(arrows.get(i), arrow)) {
                 arrows.remove(i);
-                tag.put("arrows", arrows);
+                container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));
                 return true;
             }
         }

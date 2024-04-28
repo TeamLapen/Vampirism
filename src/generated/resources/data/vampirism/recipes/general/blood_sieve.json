@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "Q": {
-      "tag": "forge:storage_blocks/quartz"
+      "item": "minecraft:quartz_bricks"
     },
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "tag": "minecraft:planks"
@@ -21,6 +21,7 @@
     "YXY"
   ],
   "result": {
-    "item": "vampirism:blood_sieve"
+    "count": 1,
+    "id": "vampirism:blood_sieve"
   }
 }

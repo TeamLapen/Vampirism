@@ -15,6 +15,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,10 @@ public class ModCommands {
     }
 
 
-    public static void registerCommands(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
+    static void registerCommands(@NotNull RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        CommandBuildContext buildContext = event.getBuildContext();
+
         List<String> vampirism = Lists.newArrayList("vampirism");
         List<String> test = Lists.newArrayList("vampirism-test");
         if (VampirismMod.inDev) {

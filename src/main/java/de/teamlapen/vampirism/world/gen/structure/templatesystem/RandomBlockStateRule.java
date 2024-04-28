@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.mixin.accessor.ProcessorRuleAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +36,7 @@ public class RandomBlockStateRule extends ProcessorRule {
         })).apply(instance, ImmutablePair::new);
     });
     @SuppressWarnings("CodeBlock2Expr")
-    public static final Codec<RandomBlockStateRule> CODEC = RecordCodecBuilder.create((instance) -> {
+    public static final Codec<RandomBlockStateRule> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(RuleTest.CODEC.fieldOf("input_predicate").forGetter((getter) -> {
             return ((ProcessorRuleAccessor) getter).getInputPredicate();
         }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {

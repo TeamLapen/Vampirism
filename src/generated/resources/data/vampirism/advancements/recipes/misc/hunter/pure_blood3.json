@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:pure_blood_4"
-            ]
+            "items": "vampirism:pure_blood_4"
           }
         ]
       },

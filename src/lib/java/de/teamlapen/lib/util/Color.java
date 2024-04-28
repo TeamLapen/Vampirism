@@ -1,6 +1,9 @@
 package de.teamlapen.lib.util;
 
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +15,7 @@ import java.util.Arrays;
 public class Color {
 
     public static final Codec<Color> CODEC = Codec.STRING.xmap(s -> new Color(Integer.parseInt(s)), l -> String.valueOf(l.getRGB()));
+    public static final StreamCodec<ByteBuf, Color> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(s -> new Color(Integer.parseInt(s)), l -> String.valueOf(l.getRGB()));
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color BLUE = new Color(0, 0, 255);
     public static final Color MAGENTA = new Color(255, 0, 255);

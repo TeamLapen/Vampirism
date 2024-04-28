@@ -5,10 +5,13 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +64,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTrace) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult rayTrace) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -76,16 +79,6 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
             }
 
             return InteractionResult.CONSUME;
-        }
-    }
-
-    @Override
-    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof AlchemyTableBlockEntity) {
-                ((AlchemyTableBlockEntity) tileentity).setCustomName(stack.getHoverName());
-            }
         }
     }
 

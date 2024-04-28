@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.recipes;
 
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.util.OilUtils;
+import de.teamlapen.vampirism.items.component.AppliedOilContent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +30,7 @@ public class CleanOilRecipe extends CustomRecipe {
                     if (paper == null) {
                         paper = stack;
                     }
-                } else if(OilUtils.hasAppliedOil(stack)) {
+                } else if(AppliedOilContent.getAppliedOil(stack).isPresent()) {
                     if (tool != null) return false;
                     tool = stack;
                 } else {
@@ -41,17 +42,17 @@ public class CleanOilRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(CraftingContainer inventory, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(CraftingContainer inventory, @NotNull HolderLookup.Provider provider) {
         ItemStack tool = ItemStack.EMPTY;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
-            if (!stack.isEmpty() && OilUtils.hasAppliedOil(stack)) {
+            if (!stack.isEmpty() && AppliedOilContent.getAppliedOil(stack).isPresent()) {
                 tool = stack;
                 break;
             }
         }
         ItemStack result = tool.copy();
-        OilUtils.removeAppliedOil(result);
+        AppliedOilContent.remove(result);
         return result;
     }
 

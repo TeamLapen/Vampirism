@@ -3,13 +3,13 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     {
       "item": "vampirism:pure_blood_4"
@@ -17,6 +17,6 @@
   ],
   "result": {
     "count": 3,
-    "item": "vampirism:blood_infused_enhanced_iron_ingot"
+    "id": "vampirism:blood_infused_enhanced_iron_ingot"
   }
 }

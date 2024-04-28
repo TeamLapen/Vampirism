@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -83,19 +84,17 @@ public class AltarInspirationBlockEntity extends BlockEntity implements FluidTan
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+        return this.saveWithoutMetadata(lookupProvider);
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
         if (!hasLevel()) return;
         FluidStack old = tank.getFluid();
         CompoundTag tag = pkt.getTag();
-        if (tag != null) {
-            this.load(tag);
-        }
-        if (!old.isFluidStackIdentical(tank.getFluid())) {
+        this.loadCustomOnly(tag, lookupProvider);
+        if (!FluidStack.isSameFluidSameComponents(old, tank.getFluid())) {
             updateModelData(true);
         }
     }

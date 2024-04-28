@@ -30,15 +30,6 @@ public class ColoredVampireClothingItem extends VampireClothingItem {
         consumer.accept(ItemExtensions.VAMPIRE_CLOAK);
     }
 
-
-
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s.png", baseName, baseName,
-                color.getName());
-    }
-
     public enum EnumModel {
         CLOAK
     }

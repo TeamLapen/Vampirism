@@ -29,7 +29,8 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "item": "vampirism:hunter_minion_upgrade_special"
+      "count": 1,
+      "id": "vampirism:hunter_minion_upgrade_special"
     },
     "title": {
       "translate": "advancement.vampirism.max_lord_hunter"

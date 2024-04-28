@@ -3,15 +3,15 @@
   "category": "misc",
   "cookTime": 1200,
   "fluid": {
-    "Amount": 1,
-    "FluidName": "minecraft:water"
+    "amount": 1,
+    "id": "minecraft:water"
   },
   "ingredient": {
     "tag": "forge:crops/garlic"
   },
   "result": {
     "count": 4,
-    "item": "vampirism:pure_salt"
+    "id": "vampirism:pure_salt"
   },
   "skill": [
     "vampirism:basic_alchemy"

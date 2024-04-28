@@ -15,7 +15,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 10,
+      "count": 10,
       "id": "minecraft:emerald"
     }
   },

@@ -12,28 +12,25 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.OilUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
+import net.minecraft.server.packs.*;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -58,9 +55,6 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-    private static final String VAMPIRISM_2D_PACK_ID = "vampirism2dtextures";
-    private static final String BUILTIN_COMPAT = "modcompat";
-
 
     static void onModelBakeRequest(ModelEvent.RegisterAdditional event){
 
@@ -145,13 +139,13 @@ public class ClientEventHandler {
                 return;
             }
             //removes speed buffs, add speed buffs without the vampire speed
-            event.setNewFovModifier((float) (((double) (event.getFovModifier()) * ((vampirespeed.getAmount() + 1) * (double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue())) / ((vampirespeed.getAmount() + 1) * ((double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue()))));
+            event.setNewFovModifier((float) (((double) (event.getFovModifier()) * ((vampirespeed.amount() + 1) * (double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue())) / ((vampirespeed.amount() + 1) * ((double) (event.getPlayer().getAbilities().getWalkingSpeed()) + speed.getValue()))));
         }
     }
 
     @SubscribeEvent
     public void onToolTip(@NotNull ItemTooltipEvent event) {
-        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)).orElse(false) && (event.getEntity() == null || !Helper.isHunter(event.getEntity()))) {
+        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (event.getEntity() == null || !Helper.isHunter(event.getEntity()))) {
             event.getToolTip().add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
 
@@ -176,15 +170,14 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onItemToolTip(@NotNull ItemTooltipEvent event) {
         if (event.getItemStack().getItem() instanceof IFactionExclusiveItem) return;
-        OilUtils.getAppliedOilStatus(event.getItemStack()).ifPresent(oil -> {
+        AppliedOilContent.getAppliedOil(event.getItemStack()).ifPresent(oil ->  {
             List<Component> toolTips = event.getToolTip();
             int position = 1;
-            int flags = getHideFlags(event.getItemStack());
-            if (shouldShowInTooltip(flags, ItemStack.TooltipPart.ADDITIONAL)) {
+            if (!event.getItemStack().has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)) {
                 ArrayList<Component> additionalComponents = new ArrayList<>();
-                event.getItemStack().getItem().appendHoverText(event.getItemStack(), Minecraft.getInstance().player == null ? null : Minecraft.getInstance().player.level(), additionalComponents, event.getFlags());
+                event.getItemStack().getItem().appendHoverText(event.getItemStack(), event.getContext(), additionalComponents, event.getFlags());
                 position += additionalComponents.size();
-                Optional<Component> oilTooltip = oil.getKey().getToolTipLine(event.getItemStack(), oil.getKey(), oil.getValue(), event.getFlags());
+                Optional<Component> oilTooltip = oil.oil().value().getToolTipLine(event.getItemStack(), oil.oil().value(), oil.duration(), event.getFlags());
                 if (oilTooltip.isPresent()) {
                     toolTips.add(position++, oilTooltip.get());
                 }
@@ -205,42 +198,6 @@ public class ClientEventHandler {
         ClientProxy.get().registerBlockEntityItemRenderer();
     }
 
-    private static boolean shouldShowInTooltip(int p_242394_0_, @NotNull ItemStack.TooltipPart p_242394_1_) {
-        return (p_242394_0_ & p_242394_1_.getMask()) == 0;
-    }
-
-    private int getHideFlags(@NotNull ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains("HideFlags", 99) ? stack.getTag().getInt("HideFlags") : 0;
-    }
-
-    public static void registerPackRepository(AddPackFindersEvent event) {
-        if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-            event.addRepositorySource(s -> s.accept(Pack.readMetaAndCreate(VAMPIRISM_2D_PACK_ID, Component.literal("Vanilla Style Vampirism"), false, new Pack.ResourcesSupplier() {
-                @Override
-                public @NotNull PackResources openPrimary(@NotNull String pId) {
-                    return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + VAMPIRISM_2D_PACK_ID), false);
-                }
-
-                @Override
-                public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
-                    return openPrimary(pId);
-                }
-            }, PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN)));
-        }
-        if (event.getPackType() == PackType.SERVER_DATA) {
-            event.addRepositorySource(s -> s.accept(Pack.create(BUILTIN_COMPAT, Component.literal("Vampirism builtin mod compatibility data"), true,  new Pack.ResourcesSupplier() {
-                @Override
-                public @NotNull PackResources openPrimary(@NotNull String pId) {
-                    return new PathPackResources(pId, ModList.get().getModFileById(REFERENCE.MODID).getFile().findResource("packs/" + BUILTIN_COMPAT), true);
-                }
-
-                @Override
-                public @NotNull PackResources openFull(@NotNull String pId, Pack.@NotNull Info pInfo) {
-                    return openPrimary(pId);
-                }
-            }, new Pack.Info(Component.literal("Vampirism builtin mod compatibility data"), PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), List.of(), true), Pack.Position.TOP, true, PackSource.DEFAULT)));
-        }
-    }
 
     @SubscribeEvent
     public void onJoined(ClientPlayerNetworkEvent.LoggingOut event) {

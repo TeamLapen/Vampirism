@@ -3,39 +3,33 @@ package de.teamlapen.vampirism.particle;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 
 public record FlyingBloodEntityParticleOptions(int entity, boolean direct) implements ParticleOptions {
 
-    public static final Codec<FlyingBloodEntityParticleOptions> CODEC = RecordCodecBuilder.create((p_239803_0_) -> p_239803_0_
+    public static final MapCodec<FlyingBloodEntityParticleOptions> CODEC = RecordCodecBuilder.mapCodec((p_239803_0_) -> p_239803_0_
             .group(
                     Codec.INT.fieldOf("entity").forGetter(FlyingBloodEntityParticleOptions::entity),
                     Codec.BOOL.fieldOf("direct").forGetter(FlyingBloodEntityParticleOptions::direct))
             .apply(p_239803_0_, FlyingBloodEntityParticleOptions::new));
 
-    @Deprecated
-    public static final ParticleOptions.Deserializer<FlyingBloodEntityParticleOptions> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @NotNull
-        public FlyingBloodEntityParticleOptions fromCommand(@NotNull ParticleType<FlyingBloodEntityParticleOptions> particleTypeIn, @NotNull StringReader reader) throws CommandSyntaxException {
-            return new FlyingBloodEntityParticleOptions(reader.readInt(), reader.readBoolean());
-        }
-
-        @NotNull
-        public FlyingBloodEntityParticleOptions fromNetwork(@NotNull ParticleType<FlyingBloodEntityParticleOptions> particleTypeIn, @NotNull FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
-        }
-    };
-
-    @Override
-    public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
-        buffer.writeJsonWithCodec(CODEC, this);
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, FlyingBloodEntityParticleOptions> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, FlyingBloodEntityParticleOptions::entity,
+            ByteBufCodecs.BOOL, FlyingBloodEntityParticleOptions::direct,
+            FlyingBloodEntityParticleOptions::new);
 
     @NotNull
     @Override
@@ -43,9 +37,4 @@ public record FlyingBloodEntityParticleOptions(int entity, boolean direct) imple
         return ModParticles.FLYING_BLOOD_ENTITY.get();
     }
 
-    @NotNull
-    @Override
-    public String writeToString() {
-        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + entity + direct;
-    }
 }

@@ -8,10 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
@@ -75,15 +72,16 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
     public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
         return new SimpleMenuProvider((id, playerInventory, playerEntity) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(worldIn, pos)), name);
     }
+    
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (!world.isClientSide) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
             if (!Helper.isHunter(player)) {
                 player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
+
             int fluid = world.getBlockState(pos).getValue(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getItemInHand(hand);
@@ -107,16 +105,22 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                     return false;
                 }).orElse(false);
             }
-            if (!flag) {
-
-                if (canUse(player) && player instanceof ServerPlayer) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
-                } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
-                }
+            if (flag) {
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.sidedSuccess(world.isClientSide);
+
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (canUse(player) && player instanceof ServerPlayer) {
+            player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
+        } else {
+            player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

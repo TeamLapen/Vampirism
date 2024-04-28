@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:crops/garlic"
+            "items": "#forge:crops/garlic"
           }
         ]
       },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/gold"
+            "items": "#c:ingots/gold"
           }
         ]
       },
@@ -25,7 +25,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:leather"
+            "items": "#c:leather"
           }
         ]
       },

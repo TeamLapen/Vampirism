@@ -8,7 +8,7 @@
         },
         "id": "minecraft:diamond",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:diamond"
         }
       },
@@ -19,7 +19,7 @@
         },
         "id": "minecraft:obsidian",
         "item": {
-          "Count": 32,
+          "count": 32,
           "id": "minecraft:obsidian"
         }
       },
@@ -37,7 +37,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "vampirism:totem_top_crafted"
     }
   },

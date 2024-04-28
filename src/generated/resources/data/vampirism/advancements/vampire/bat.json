@@ -24,7 +24,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:feather"
+      "count": 1,
+      "id": "minecraft:feather"
     },
     "title": {
       "translate": "advancement.vampirism.bat"

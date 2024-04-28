@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
-      "tag": "forge:storage_blocks/iron"
+      "tag": "c:storage_blocks/iron"
     }
   },
   "pattern": [
@@ -14,6 +14,7 @@
     "XYX"
   ],
   "result": {
-    "item": "vampirism:altar_tip"
+    "count": 1,
+    "id": "vampirism:altar_tip"
   }
 }

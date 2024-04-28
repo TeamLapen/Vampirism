@@ -22,29 +22,9 @@ public interface CrossbowItemMixin {
     @Accessor("startSoundPlayed")
     void setStartSoundPlayed(boolean value);
 
-    @NotNull
-    @Invoker("getChargedProjectiles")
-    static List<ItemStack> getChargedProjectiles(ItemStack p_40942_) {
+    @Invoker("getShotPitch")
+    static float getShotPitches(RandomSource p_220024_, int w){
         throw new IllegalStateException("Mixin not applied");
     }
 
-    @Invoker("getShotPitches")
-    static float @NotNull [] getShotPitches(RandomSource p_220024_){
-        throw new IllegalStateException("Mixin not applied");
-    }
-
-    @Invoker("onCrossbowShot")
-    static void onCrossbowShot(Level p_40906_, LivingEntity p_40907_, ItemStack p_40908_){
-        throw new IllegalStateException("Mixin not applied");
-    }
-
-    @Invoker("getArrow")
-    static AbstractArrow getArrow(Level p_40915_, LivingEntity p_40916_, ItemStack p_40917_, ItemStack p_40918_) {
-        throw new IllegalStateException("Mixin not applied");
-    }
-
-    @Invoker("addChargedProjectile")
-    static void addChargedProjectile(ItemStack p_40929_, ItemStack p_40930_){
-        throw new IllegalStateException("Mixin not applied");
-    }
 }

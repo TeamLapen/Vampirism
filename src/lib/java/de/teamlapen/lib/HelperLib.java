@@ -49,7 +49,7 @@ public class HelperLib {
      */
     public static void sync(@NotNull IAttachedSyncable cap, @NotNull Entity entity, boolean all) {
         if (!entity.getCommandSenderWorld().isClientSide) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap);
+            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity.registryAccess(), cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
@@ -65,7 +65,7 @@ public class HelperLib {
 
     public static void sync(Object object, Entity entity, boolean all) {
         if (!entity.level().isClientSide() && object instanceof IAttachedSyncable cap) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap);
+            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity.registryAccess(), cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {

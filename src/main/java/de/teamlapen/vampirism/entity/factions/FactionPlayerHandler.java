@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -198,7 +199,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         IPlayableFaction<?> old = currentFaction;
         int oldLevel = currentLevel;
         if (nbt.contains("faction", Tag.TAG_STRING)) {
@@ -358,7 +359,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
@@ -488,7 +489,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getID().toString());
@@ -502,7 +503,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -528,18 +529,18 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, FactionPlayerHandler> {
 
         @Override
-        public FactionPlayerHandler read(IAttachmentHolder holder, CompoundTag tag) {
+        public @NotNull FactionPlayerHandler read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
             if (holder instanceof Player player) {
                 FactionPlayerHandler handler = new FactionPlayerHandler(player);
-                handler.deserializeNBT(tag);
+                handler.deserializeNBT(provider, tag);
                 return handler;
             }
             throw new IllegalStateException("Cannot deserialize FactionPlayerHandler for non player entity");
         }
 
         @Override
-        public CompoundTag write(FactionPlayerHandler attachment) {
-            return attachment.serializeNBT();
+        public CompoundTag write(FactionPlayerHandler attachment, HolderLookup.@NotNull Provider provider) {
+            return attachment.serializeNBT(provider);
         }
     }
 

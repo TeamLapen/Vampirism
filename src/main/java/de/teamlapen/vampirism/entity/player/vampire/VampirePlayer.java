@@ -49,6 +49,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -85,7 +86,7 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -208,7 +209,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        double dist = player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() + 1;
+        double dist = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1;
         if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
@@ -237,12 +238,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             return;
         }
         if (e instanceof LivingEntity) {
-            if (e.distanceTo(player) <= player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() + 1) {
+            if (e.distanceTo(player) <= player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 player.awardStat(ModStats.AMOUNT_BITTEN.get());
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
-                        player.addEffect(new MobEffectInstance(ModEffects.POISON.get(), 60));
+                        player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
                         if (player instanceof ServerPlayer) {
                             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.POISONOUS_BITE);
                         }
@@ -271,7 +272,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        MobEffectInstance protection = player.getEffect(ModEffects.FIRE_PROTECTION.get());
+        MobEffectInstance protection = player.getEffect(ModEffects.FIRE_PROTECTION);
         if (protection != null) {
             int amplifier = protection.getAmplifier();
             protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
@@ -402,7 +403,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     public int getDbnoDuration() {
-        return (int) player.getAttributeValue(ModAttributes.DBNO_DURATION.get());
+        return (int) player.getAttributeValue(ModAttributes.DBNO_DURATION);
     }
 
     public int getDbnoTimer() {
@@ -539,12 +540,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
-        super.deserializeNBT(nbt);
-        this.bloodStats.deserializeNBT(nbt.getCompound(this.bloodStats.nbtKey()));
-        this.actionHandler.deserializeNBT(nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeNBT(nbt.getCompound(this.skillHandler.nbtKey()));
-        this.vision.deserializeNBT(nbt.getCompound(KEY_VISION));
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+        super.deserializeNBT(provider, nbt);
+        this.bloodStats.deserializeNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
+        this.actionHandler.deserializeNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
+        this.vision.deserializeNBT(provider, nbt.getCompound(KEY_VISION));
         if (nbt.getBoolean(KEY_WAS_DBNO)) {
             this.wasDBNO = true;
         }
@@ -557,7 +558,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public boolean canBeInfected(IVampire vampire) {
-        return !player.hasEffect(ModEffects.SANGUINARE.get()) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
+        return !player.hasEffect(ModEffects.SANGUINARE) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
     }
 
     @Override
@@ -608,7 +609,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public boolean onDeadlyHit(@NotNull DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL.get()) && !Helper.canKillVampires(source)) {
+        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
             int dbnoTime = Math.max(1, getDbnoDuration()-timePreviouslySpentInPlayerRevive);
             this.setDBNOTimer(dbnoTime);
@@ -621,7 +622,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
             CompoundTag nbt = new CompoundTag();
             nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
-            if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
+            if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, this.asEntity().registryAccess()));
             HelperLib.sync(this, nbt, player, true);
             return true;
         }
@@ -691,8 +692,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 400, 4, false, false));
-                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION.get(), VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 400, 4, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION, VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
                 requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
@@ -744,7 +745,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onPlayerLoggedIn() {
         if (getLevel() > 0 && !player.level().isClientSide) {
-            player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 200, 4, true, false));
+            player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 200, 4, true, false));
         }
     }
 
@@ -836,17 +837,17 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
                 if (player.tickCount % 9 == 3 && VampirismConfig.BALANCE.vpFireResistanceReplace.get() && player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
                     MobEffectInstance fireResistance = player.getEffect(MobEffects.FIRE_RESISTANCE);
-                    player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION.get(), fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(MobEffects.FIRE_RESISTANCE);
                 }
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
-                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
+                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(asEntity().level().registryAccess()));
                 }
                 if (skillHandler.isDirty()) {
                     sync = true;
-                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
+                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(asEntity().level().registryAccess()));
                 }
 
                 if (sync) {
@@ -881,7 +882,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getId() != feed_victim) {
-                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
+                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FINISH_SUCK_BLOOD));
                     feedBiteTickCounter = 0;
                     feed_victim = -1;
                     return;
@@ -901,8 +902,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void onUpdatePlayer(TickEvent.Phase phase) {
-        if (phase == TickEvent.Phase.END) {
+    public void onUpdatePlayer(PlayerTickEvent event) {
+        if (event instanceof PlayerTickEvent.Post) {
             //update sleeping pose
             if (getLevel() > 0) {
                 VampirismMod.proxy.handleSleepClient(player);
@@ -927,15 +928,15 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
-        var nbt =  super.serializeNBT();
-        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeNBT());
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+        var nbt =  super.serializeNBT(provider);
+        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeNBT(provider));
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT());
-        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT());
-        nbt.put(this.vision.nbtKey(), this.vision.serializeNBT());
+        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT(provider));
+        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT(provider));
+        nbt.put(this.vision.nbtKey(), this.vision.serializeNBT(provider));
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
         return nbt;
     }
@@ -982,17 +983,21 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return true;
     }
 
-    public void setSkinData(int @NotNull ... data) {
-        if (data.length > 0) {
-            this.setFangType(data[0]);
-            if (data.length > 1) {
-                this.setEyeType(data[1]);
-                if (data.length > 2) {
-                    this.setGlowingEyes(data[2] > 0);
-                    if (data.length > 3) {
-                        FactionPlayerHandler.get(this.player).setTitleGender(data[3] > 0);
-                    }
-                }
+    public void setSkinData(@NotNull List<Integer> data) {
+        for (int i = 0; i < data.size(); i++) {
+            switch (i) {
+                case 0:
+                    setFangType(data.get(i));
+                    break;
+                case 1:
+                    setEyeType(data.get(i));
+                    break;
+                case 2:
+                    setGlowingEyes(data.get(i) > 0);
+                    break;
+                case 3:
+                    FactionPlayerHandler.get(this.player).setTitleGender(data.get(i) > 0);
+                    break;
             }
         }
     }
@@ -1013,8 +1018,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
             this.sync(true);
-            int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION.get());
-            this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL.get(), duration));
+            int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION);
+            this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL, duration));
             this.player.awardStat(ModStats.RESURRECTED.get());
             if (this.player instanceof ServerPlayer serverPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.RESURRECT);
@@ -1064,28 +1069,28 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
                 AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
-                MobEffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION.get());
+                MobEffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION);
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
                 Collection<UUID> armorItemModifiers = ArmorItemAccessor.getModifierUUID_vampirism().values();
-                double baseArmor = armorAtt.getModifiers(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getId())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
-                double baseToughness = toughnessAtt.getModifiers(AttributeModifier.Operation.ADDITION).stream().filter(m -> armorItemModifiers.contains(m.getId())).map(AttributeModifier::getAmount).mapToDouble(Double::doubleValue).sum();
+                double baseArmor = ((AttributeInstanceAccessor) armorAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> armorItemModifiers.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = ((AttributeInstanceAccessor)toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> armorItemModifiers.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
-                if (modArmor != null && targetArmor != modArmor.getAmount()) {
+                if (modArmor != null && targetArmor != modArmor.amount()) {
                     ((AttributeInstanceAccessor) armorAtt).invoke_removeModifier(modArmor);
                     modArmor = null;
                 }
                 if (targetArmor != 0 && modArmor == null) {
-                    armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor", targetArmor, AttributeModifier.Operation.ADDITION));
+                    armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor", targetArmor, AttributeModifier.Operation.ADD_VALUE));
                 }
-                if (modToughness != null && targetToughness != modToughness.getAmount()) {
+                if (modToughness != null && targetToughness != modToughness.amount()) {
                     ((AttributeInstanceAccessor) toughnessAtt).invoke_removeModifier(modToughness);
                     modToughness = null;
                 }
                 if (targetToughness != 0 && modToughness == null) {
-                    toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor Toughness", targetToughness, AttributeModifier.Operation.ADDITION));
+                    toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor Toughness", targetToughness, AttributeModifier.Operation.ADD_VALUE));
                 }
                 applyLevelModifiersB(lvl, VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
 
@@ -1104,8 +1109,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
-        super.deserializeUpdateNBT(nbt);
+    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+        super.deserializeUpdateNBT(provider, nbt);
         if (nbt.contains(KEY_EYE)) {
             setEyeType(nbt.getInt(KEY_EYE));
         }
@@ -1133,7 +1138,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         }
         if (nbt.contains(KEY_DBNO_MSG)) {
-            dbnoMessage = Component.Serializer.fromJson(nbt.getString(KEY_DBNO_MSG));
+            dbnoMessage = Component.Serializer.fromJson(nbt.getString(KEY_DBNO_MSG), provider);
         }
         if (nbt.contains(KEY_DBNO_TIMER)) {
             boolean wasDBNOClient = isDBNO();
@@ -1148,58 +1153,58 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         }
 
-        this.bloodStats.deserializeUpdateNBT(nbt.getCompound(this.bloodStats.nbtKey()));
-        this.actionHandler.deserializeUpdateNBT(nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeUpdateNBT(nbt.getCompound(this.skillHandler.nbtKey()));
+        this.bloodStats.deserializeUpdateNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
+        this.actionHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
+        this.skillHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
         if (nbt.contains(this.vision.nbtKey(), CompoundTag.TAG_COMPOUND)) {
-            this.vision.deserializeNBT(nbt.getCompound(this.vision.nbtKey()));
+            this.vision.deserializeNBT(provider, nbt.getCompound(this.vision.nbtKey()));
         }
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
-        var nbt = super.serializeUpdateNBT();
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+        var nbt = super.serializeUpdateNBT(provider);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT());
-        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT());
-        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT());
-        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT());
+        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(provider));
+        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(provider));
+        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(provider));
+        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT(provider));
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
-        if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage));
+        if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, provider));
         return nbt;
     }
 
     private void applyEntityAttributes() {
-        player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
-        player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
-        player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(VampirismConfig.BALANCE.vpBloodExhaustionFactor.get());
+        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(VampirismConfig.BALANCE.vpNeonatalDuration.get() * 20);
+        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(VampirismConfig.BALANCE.vpDbnoDuration.get() * 20);
     }
 
     private void removeEntityAttributes() {
-        player.getAttribute(ModAttributes.SUNDAMAGE.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.NEONATAL_DURATION.get()).setBaseValue(0);
-        player.getAttribute(ModAttributes.DBNO_DURATION.get()).setBaseValue(0);
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(0);
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(0);
+        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(0);
+        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(0);
     }
 
     /**
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersA(int level) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     /**
      * Apply the armor affected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersB(int level, boolean heavyArmor) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
-        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState blockState, @Nullable BlockEntity tileEntity) {
@@ -1264,7 +1269,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (blood > 0) {
             drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
             CompoundTag updatePacket = new CompoundTag();
-            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT());
+            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(entity.registryAccess()));
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);
             if (player instanceof ServerPlayer) {
@@ -1288,7 +1293,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
      * Handle sun damage
      */
     private void handleSunDamage(boolean isRemote) {
-        MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN.get());
+        MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;
@@ -1310,7 +1315,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
-            float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE.get()).getValue());
+            float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
             if (damage > 0) {
                 DamageHandler.hurtModded(player, ModDamageSources::sunDamage, damage);
             }
@@ -1339,7 +1344,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         AABB axisalignedbb = (new AABB(player.blockPosition())).inflate(32.0D, 10.0D, 32.0D);
         player.level().getEntitiesOfClass(Mob.class, axisalignedbb).forEach(e -> {
             if (e.getTarget() == player) {
-                e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
+                e.targetSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
             }
             if (e instanceof NeutralMob) {
                 ((NeutralMob) e).playerDied(player);
@@ -1395,7 +1400,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             endFeeding(true);
         }
 
-        if (!(e.distanceTo(player) <= player.getAttribute(NeoForgeMod.BLOCK_REACH.value()).getValue() + 1) || e.getHealth() == 0f) {
+        if (!(e.distanceTo(player) <= player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1) || e.getHealth() == 0f) {
             endFeeding(true);
         }
     }
@@ -1489,13 +1494,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
             if (!isRemote() && player.isAddedToWorld()) {
                 CompoundTag tag = new CompoundTag();
-                tag.put(KEY_VISION, serializeUpdateNBT());
+                tag.put(KEY_VISION, serializeUpdateNBT(VampirePlayer.this.asEntity().registryAccess()));
                 VampirePlayer.this.sync(tag, false);
             }
         }
 
         @Override
-        public @NotNull CompoundTag serializeNBT() {
+        public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
             CompoundTag tag = new CompoundTag();
             if (this.visionId == null) {
                 tag.putBoolean("hasVision", false);
@@ -1507,7 +1512,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         @Override
-        public void deserializeNBT(@NotNull CompoundTag tag) {
+        public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
             if (tag.getBoolean("hasVision")) {
                 if (tag.contains("vision", Tag.TAG_STRING)) {
                     this.activate(VampirismAPI.vampireVisionRegistry().getVision(new ResourceLocation(tag.getString("vision"))));
@@ -1523,13 +1528,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         @Override
-        public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
-            deserializeNBT(nbt);
+        public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+            deserializeNBT(provider, nbt);
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT() {
-            return serializeNBT();
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+            return serializeNBT(provider);
         }
 
         @Override
@@ -1541,18 +1546,19 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, VampirePlayer> {
 
         @Override
-        public VampirePlayer read(IAttachmentHolder holder, CompoundTag tag) {
+        public @NotNull VampirePlayer read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
             if (holder instanceof Player player) {
                 var vampire = new VampirePlayer(player);
-                vampire.deserializeNBT(tag);
+                vampire.deserializeNBT(provider, tag);
                 return vampire;
             }
             throw new IllegalArgumentException("Holder is not a player");
         }
 
+
         @Override
-        public CompoundTag write(VampirePlayer attachment) {
-            return attachment.serializeNBT();
+        public CompoundTag write(VampirePlayer attachment, HolderLookup.@NotNull Provider provider) {
+            return attachment.serializeNBT(provider);
         }
     }
 

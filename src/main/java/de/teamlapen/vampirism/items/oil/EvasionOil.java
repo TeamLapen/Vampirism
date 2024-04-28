@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltips) {
         tooltips.add(Component.translatable("oil.vampirism.evasion.desc").withStyle(ChatFormatting.GRAY));
     }
 

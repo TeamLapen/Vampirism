@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(AreaEffectCloud.class)
 public abstract class AreaEffectCloudMixin extends Entity {
 
-    @Shadow private Potion potion;
+    @Shadow private PotionContents potionContents;
 
     @Deprecated
     private AreaEffectCloudMixin(EntityType<?> pEntityType, Level pLevel) {
@@ -28,7 +29,7 @@ public abstract class AreaEffectCloudMixin extends Entity {
 
     @ModifyVariable(method = "tick", at = @At(value = "STORE", ordinal = 1))
     private MobEffectInstance l(MobEffectInstance e, @Local(ordinal = 0) LivingEntity entity) {
-        if (this.potion instanceof VampirismPotion.HunterPotion && Helper.isVampire(entity)) {
+        if (this.potionContents.potion().get().value() instanceof VampirismPotion.HunterPotion && Helper.isVampire(entity)) {
             return VampirismPoisonEffect.createEffectCloudEffect();
         } else {
             return e;

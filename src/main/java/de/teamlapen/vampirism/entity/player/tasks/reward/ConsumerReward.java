@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.reward;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.FactionPlayerConsumer;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ConsumerReward implements TaskReward, ITaskRewardInstance {
 
-    public static final Codec<ConsumerReward> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<ConsumerReward> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     FactionPlayerConsumer.CODEC.fieldOf("consumer").forGetter(i -> i.consumer),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
@@ -33,7 +34,7 @@ public class ConsumerReward implements TaskReward, ITaskRewardInstance {
     }
 
     @Override
-    public Codec<ConsumerReward> codec() {
+    public MapCodec<ConsumerReward> codec() {
         return ModTasks.CONSUMER.get();
     }
 

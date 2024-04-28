@@ -29,8 +29,8 @@ public abstract class VampirismHunterWeaponItem extends VampirismSwordItem imple
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        addFactionToolTips(stack, worldIn, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        addFactionToolTips(stack, context, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
     @Nullable

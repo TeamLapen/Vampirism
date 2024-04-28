@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:vampire_book"
-            ]
+            "items": "vampirism:vampire_book"
           }
         ]
       },
@@ -20,7 +18,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "vampirism:vampire_book"
+      "count": 1,
+      "id": "vampirism:vampire_book"
     },
     "title": {
       "translate": "advancement.vampirism.ancient_knowledge"

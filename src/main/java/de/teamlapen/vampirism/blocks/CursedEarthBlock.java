@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,24 +27,18 @@ public class CursedEarthBlock extends VampirismBlock implements HolyWaterEffectC
 
     }
 
-//    @Override
-//    public boolean canSustainPlant(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull IPlantable plantable) {
-//        return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
-//    }
-
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
-        ItemStack heldItemStack = player.getItemInHand(handIn);
-        Item heldItem = heldItemStack.getItem();
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+        Item heldItem = stack.getItem();
         if (heldItem instanceof HolyWaterBottleItem && !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
-                heldItemStack.setCount(heldItemStack.getCount() - 1);
+                stack.setCount(stack.getCount() - 1);
             }
             worldIn.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override

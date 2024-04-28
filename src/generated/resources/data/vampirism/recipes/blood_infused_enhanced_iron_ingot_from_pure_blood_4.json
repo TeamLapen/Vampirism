@@ -9,5 +9,8 @@
   "ingredient": {
     "item": "minecraft:iron_block"
   },
-  "result": "vampirism:blood_infused_enhanced_iron_block"
+  "result": {
+    "count": 1,
+    "id": "vampirism:blood_infused_enhanced_iron_block"
+  }
 }

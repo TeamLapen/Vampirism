@@ -31,7 +31,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ARMOR_TOUGHNESS, 5).add(Attributes.ATTACK_DAMAGE, 6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.FLYING_SPEED, 0.3).add(NeoForgeMod.ENTITY_REACH.value(), 1);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.ARMOR, 15).add(Attributes.ARMOR_TOUGHNESS, 5).add(Attributes.ATTACK_DAMAGE, 6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.FLYING_SPEED, 0.3).add(Attributes.ENTITY_INTERACTION_RANGE, 1);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         if (pState.isAir()) {
             AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);
             if (attribute != null && attribute.getModifier(SPEED_MODIFIER) == null) {
-                attribute.addTransientModifier(new AttributeModifier(SPEED_MODIFIER, "free movement", 0.2, AttributeModifier.Operation.ADDITION));
+                attribute.addTransientModifier(new AttributeModifier(SPEED_MODIFIER, "free movement", 0.2, AttributeModifier.Operation.ADD_VALUE));
             }
         } else {
             AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);
@@ -130,7 +130,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     @Override
-    public float getPathfindingMalus(@NotNull BlockPathTypes pNodeType) {
+    public float getPathfindingMalus(PathType type) {
         return 0;
     }
 

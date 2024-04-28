@@ -5,11 +5,13 @@ import com.mojang.math.Axis;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -39,16 +41,11 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
 
     @Override
     public void render(@NotNull CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
-        this.renderBlock(tile, partialTicks, matrixStack, iRenderTypeBuffer, i, i1);
-    }
-
-    public void renderBlock(@NotNull CoffinBlockEntity tile, float partialTicks, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, int i1) {
-        assert tile.getLevel() != null;
         BlockState state = tile.getBlockState();
         Direction direction = state.getValue(HORIZONTAL_FACING);
 
         if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
-
+        Material material = ModBlocksRender.COFFIN_TEXTURES[tile.color.getId()];
         matrixStack.pushPose();
         boolean vertical = state.getValue(CoffinBlock.VERTICAL);
         switch (direction) {
@@ -88,7 +85,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
         ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), material.buffer(iRenderTypeBuffer, RenderType::entitySolid), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
         }
 
         matrixStack.pushPose();

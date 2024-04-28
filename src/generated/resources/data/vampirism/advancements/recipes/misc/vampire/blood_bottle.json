@@ -14,7 +14,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:glass"
+            "items": "#c:glass_blocks"
           }
         ]
       },

@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -108,7 +109,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
     public static class Factory implements IContainerFactory<HunterTableMenu> {
 
         @Override
-        public @NotNull HunterTableMenu create(int windowId, @NotNull Inventory inv, @NotNull FriendlyByteBuf data) {
+        public @NotNull HunterTableMenu create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new HunterTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
         }

@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.VampireBookItem;
+import de.teamlapen.vampirism.items.component.VampireBookContents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
@@ -60,7 +61,7 @@ public class VampireBookManager {
 
     public @NotNull ItemStack getRandomBookItem(@NotNull RandomSource rng) {
         ItemStack book = new ItemStack(ModItems.VAMPIRE_BOOK.get(), 1);
-        book.setTag(VampireBookItem.createTagFromContext(getRandomBook(rng)));
+        VampireBookContents.addFromBook(book, getRandomBook(rng));
         return book;
     }
 
@@ -75,7 +76,7 @@ public class VampireBookManager {
             }
             try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
                 JsonElement jsonElement = JsonParser.parseReader(reader);
-                List<BookContext> books = Lists.newArrayList(BookContext.CODEC.listOf().parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error));
+                List<BookContext> books = Lists.newArrayList(BookContext.CODEC.listOf().parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow());
                 idToBook.clear();
                 idToBook.put(OLD_ID, OLD);
                 for (BookContext b : books) {

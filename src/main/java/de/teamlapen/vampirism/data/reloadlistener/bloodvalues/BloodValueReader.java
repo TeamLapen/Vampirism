@@ -48,7 +48,7 @@ public class BloodValueReader {
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
-                    BloodValueFile file = BloodValueFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow(false, LOGGER::error);
+                    BloodValueFile file = BloodValueFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement)).getOrThrow();
                     values.computeIfAbsent(resourceName.getPath(), (id) -> new BloodValueBuilder()).addFromFile(new BloodValueBuilder.BuilderEntries(file.values().stream().map(a -> new BloodValueBuilder.Proxy(a, resource.sourcePackId())).toList(), file.replace()));
                 } catch (Exception e) {
                     LOGGER.error("Couldn't read {} blood values {} from {}", this.name, resourceName, resource.sourcePackId(), e);

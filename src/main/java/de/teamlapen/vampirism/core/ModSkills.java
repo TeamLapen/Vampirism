@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceLocation;
 
 public class ModSkills {
@@ -34,12 +34,12 @@ public class ModSkills {
 
     public static void init() {}
 
-    public static void createSkillNodes(BootstapContext<ISkillNode> context) {
+    static void createSkillNodes(BootstrapContext<ISkillNode> context) {
         HunterSkills.Nodes.createSkillNodes(context);
         VampireSkills.Nodes.createSkillNodes(context);
     }
 
-    public static void createSkillTrees(BootstapContext<ISkillTree> context) {
+    static void createSkillTrees(BootstrapContext<ISkillTree> context) {
         HunterSkills.Trees.createSkillTrees(context);
         VampireSkills.Trees.createSkillTrees(context);
     }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:injection_empty"
-            ]
+            "items": "vampirism:injection_empty"
           }
         ]
       },

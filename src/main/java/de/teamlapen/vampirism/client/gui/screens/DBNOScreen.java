@@ -83,7 +83,7 @@ public class DBNOScreen extends Screen {
     protected void init() {
         this.enableButtonsTimer = 0;
         dieButton = this.addRenderableWidget(new ExtendedButton(this.width / 2 - 100, this.height / 4 + 72, 200, 20, Component.translatable("gui.vampirism.dbno.die"), (p_213021_1_) -> {
-            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.GIVE_UP));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.GIVE_UP));
             this.minecraft.setScreen(null);
         }));
         dieButton.active = false;
@@ -91,7 +91,7 @@ public class DBNOScreen extends Screen {
             if (this.minecraft.player != null) {
                 VampirePlayer.get(this.minecraft.player).tryResurrect();
             }
-            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESURRECT));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.RESURRECT));
             this.minecraft.setScreen(null);
         }));
         resurrectButton.updateState(1f);

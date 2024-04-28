@@ -9,7 +9,7 @@
       "item": "vampirism:item_alchemical_fire"
     },
     "Y": {
-      "tag": "forge:storage_blocks/gold"
+      "tag": "c:storage_blocks/gold"
     },
     "Z": {
       "item": "vampirism:holy_water_bottle_enhanced"
@@ -23,7 +23,8 @@
     "XYYX"
   ],
   "result": {
-    "item": "vampirism:crucifix_ultimate"
+    "count": 1,
+    "id": "vampirism:crucifix_ultimate"
   },
   "skill": [
     "vampirism:ultimate_crucifix"

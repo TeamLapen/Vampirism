@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.feature.treedecorators;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blocks.DiagonalCursedBarkBlock;
 import de.teamlapen.vampirism.blocks.DirectCursedBarkBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TrunkCursedVineDecorator extends TreeDecorator {
     public static final TrunkCursedVineDecorator INSTANCE = new TrunkCursedVineDecorator();
-    public static final Codec<TrunkCursedVineDecorator> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<TrunkCursedVineDecorator> CODEC = MapCodec.unit(() -> INSTANCE);
 
     @NotNull
     @Override

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted.converter;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -20,9 +21,9 @@ import java.util.function.Supplier;
 
 public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob & ICurableConvertedCreature<T>> implements Converter {
 
-    public static final Codec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<SpecialConverter<?, ?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("converted_type").forGetter(i -> i.convertedType),
-            ExtraCodecs.strictOptionalField(ConverterEntry.ConvertingAttributeModifier.CODEC, "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
+            ConverterEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, SpecialConverter::new));
 
     private final EntityType<Z> convertedType;
@@ -50,7 +51,7 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
     }
 
     @Override
-    public Codec<? extends Converter> codec() {
+    public MapCodec<? extends Converter> codec() {
         return ModEntities.SPECIAL_CONVERTER.get();
     }
 }

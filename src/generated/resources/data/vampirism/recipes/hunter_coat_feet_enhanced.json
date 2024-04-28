@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "Z": {
       "tag": "forge:crops/garlic"
@@ -20,7 +20,8 @@
     "XYYX"
   ],
   "result": {
-    "item": "vampirism:hunter_coat_feet_enhanced"
+    "count": 1,
+    "id": "vampirism:hunter_coat_feet_enhanced"
   },
   "skill": [
     "vampirism:enhanced_armor"

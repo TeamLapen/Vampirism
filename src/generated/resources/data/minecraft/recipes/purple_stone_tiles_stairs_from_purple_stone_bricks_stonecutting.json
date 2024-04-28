@@ -1,8 +1,10 @@
 {
   "type": "minecraft:stonecutting",
-  "count": 1,
   "ingredient": {
     "item": "vampirism:purple_stone_bricks"
   },
-  "result": "vampirism:purple_stone_tiles_stairs"
+  "result": {
+    "count": 1,
+    "id": "vampirism:purple_stone_tiles_stairs"
+  }
 }

@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(EffectRenderingInventoryScreen.class)
 public interface EffectRenderingInventoryScreenAccessor {
 
-    @Invoker("getEffectName(Lnet/minecraft/world/effect/MobEffectInstance;)Lnet/minecraft/network/chat/Component;")
+    @Invoker("getEffectName")
     Component invoke_getEffectName(MobEffectInstance pEffect);
 }

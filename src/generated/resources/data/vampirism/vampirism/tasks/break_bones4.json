@@ -15,11 +15,8 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:chainmail_helmet",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:chainmail_helmet"
     }
   },
   "title": {

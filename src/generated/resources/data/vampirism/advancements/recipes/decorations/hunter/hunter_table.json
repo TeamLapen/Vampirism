@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:vampire_fang"
-            ]
+            "items": "vampirism:vampire_fang"
           }
         ]
       },

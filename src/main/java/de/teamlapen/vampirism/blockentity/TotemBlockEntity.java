@@ -39,6 +39,7 @@ import de.teamlapen.vampirism.world.ServerMultiBossEvent;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -245,8 +246,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return this.saveWithoutMetadata(provider);
     }
 
     /**
@@ -259,8 +260,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag) {
-        this.load(tag);
+    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+        this.loadCustomOnly(tag, provider);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -324,8 +325,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
+    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
         this.badOmenLevel = compound.getInt("badOmenTriggered");
         this.isDisabled = compound.getBoolean("isDisabled");
         this.isComplete = compound.getBoolean("isComplete");
@@ -412,10 +413,10 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
         CompoundTag tag = pkt.getTag();
-        if (tag != null && hasLevel()) {
-            this.handleUpdateTag(tag);
+        if (hasLevel()) {
+            this.handleUpdateTag(tag, provider);
         }
     }
 
@@ -439,8 +440,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         compound.putBoolean("isDisabled", this.isDisabled);
         compound.putBoolean("isComplete", this.isComplete);
         compound.putBoolean("isInsideVillage", this.isInsideVillage);
@@ -1220,8 +1221,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
             for (Villager villager : villagerEntities) {
-                if (villager.hasEffect(ModEffects.SANGUINARE.get())) {
-                    villager.removeEffect(ModEffects.SANGUINARE.get());
+                if (villager.hasEffect(ModEffects.SANGUINARE)) {
+                    villager.removeEffect(ModEffects.SANGUINARE);
                 }
                 if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {

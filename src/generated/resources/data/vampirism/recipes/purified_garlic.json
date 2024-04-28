@@ -9,7 +9,7 @@
   },
   "result": {
     "count": 2,
-    "item": "vampirism:purified_garlic"
+    "id": "vampirism:purified_garlic"
   },
   "skill": [
     "vampirism:purified_garlic"

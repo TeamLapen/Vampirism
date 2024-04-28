@@ -12,7 +12,7 @@
       "tag": "minecraft:wool"
     },
     "A": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     },
     "B": {
       "item": "vampirism:vampire_orchid"
@@ -24,6 +24,7 @@
     " A "
   ],
   "result": {
-    "item": "vampirism:umbrella"
+    "count": 1,
+    "id": "vampirism:umbrella"
   }
 }

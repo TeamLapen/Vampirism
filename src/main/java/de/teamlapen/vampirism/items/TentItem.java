@@ -62,7 +62,7 @@ public class TentItem extends Item {
     }
 
     private static boolean canPlaceAt(@NotNull BlockState state, @NotNull Block block, @NotNull LevelAccessor world, int x, int y, int z) {
-        return block.canSurvive(state, world, new BlockPos(x, y, z));
+        return state.canSurvive(world, new BlockPos(x, y, z));
     }
 
     private final boolean spawner;
@@ -73,8 +73,8 @@ public class TentItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         if (spawner) {
             tooltip.add(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
         }

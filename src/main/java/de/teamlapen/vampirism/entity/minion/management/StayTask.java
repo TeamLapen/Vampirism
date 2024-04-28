@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +28,8 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
     }
 
     @Override
-    public @NotNull Desc readFromNBT(@NotNull CompoundTag nbt) {
-        BlockPos pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
+    public @NotNull Desc readFromNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+        BlockPos pos = NbtUtils.readBlockPos(nbt, "pos").orElseThrow();
         return new Desc(pos);
     }
 

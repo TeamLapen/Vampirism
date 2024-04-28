@@ -90,7 +90,8 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
         graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
-        graphics.blit(BACKGROUND_LOCATION, this.width - 140, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
+        //TODO change texture
+        graphics.blit(MENU_BACKGROUND, this.width - 140, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);
@@ -100,10 +101,13 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
         public KeyBindingList(int x, int y, int pWidth, int pHeight) {
             super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
-            this.setRenderBackground(false);
             this.setX(x);
             FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
             replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), handler.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.index)).toList());
+        }
+
+        @Override
+        protected void renderListBackground(GuiGraphics p_331297_) {
         }
 
         @Override

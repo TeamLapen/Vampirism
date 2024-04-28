@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
@@ -35,7 +34,7 @@ public class ConvertedCamelEntity extends Camel implements CurableConvertedCreat
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return AbstractHorse.createBaseHorseAttributes()
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
-                .add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+                .add(ModAttributes.SUNDAMAGE, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     public static boolean checkConvertedCamelSpawnRules(EntityType<? extends Animal> pGoat, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -99,12 +98,6 @@ public class ConvertedCamelEntity extends Camel implements CurableConvertedCreat
 
     @NotNull
     @Override
-    public MobType getMobType() {
-        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
-    }
-
-    @NotNull
-    @Override
     protected Component getTypeName() {
         return this.getNameC(EntityType.CAMEL::getDescription);
     }
@@ -133,9 +126,9 @@ public class ConvertedCamelEntity extends Camel implements CurableConvertedCreat
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.registerConvertingData(this);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        this.registerConvertingData(builder);
     }
 
     @Override

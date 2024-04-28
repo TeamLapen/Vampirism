@@ -73,7 +73,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag tag) {
         tag.putString("Type", this.getBType().getName());
-        this.addChestVehicleSaveData(tag);
+        this.addChestVehicleSaveData(tag, this.registryAccess());
     }
 
     @Override
@@ -81,7 +81,7 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
         if (tag.contains("Type", 8)) {
             this.setType(BoatType.byName(tag.getString("Type")));
         }
-        this.readChestVehicleSaveData(tag);
+        this.readChestVehicleSaveData(tag, this.registryAccess());
     }
 
     @NotNull
@@ -91,8 +91,8 @@ public class VampirismChestBoatEntity extends ChestBoat implements IVampirismBoa
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_ID_TYPE, IVampirismBoat.BoatType.DARK_SPRUCE.ordinal());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ID_TYPE, IVampirismBoat.BoatType.DARK_SPRUCE.ordinal());
     }
 }

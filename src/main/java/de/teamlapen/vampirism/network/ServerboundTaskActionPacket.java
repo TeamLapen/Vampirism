@@ -4,10 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.inventory.TaskMenu;
+import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -15,22 +19,16 @@ import java.util.UUID;
 public record ServerboundTaskActionPacket(UUID task, UUID entityId,
                                           TaskMenu.TaskAction action) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "task_action");
-    public static final Codec<ServerboundTaskActionPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    ClientboundTaskPacket.UUID_CODEC.fieldOf("task").forGetter(ServerboundTaskActionPacket::task),
-                    ClientboundTaskPacket.UUID_CODEC.fieldOf("entityId").forGetter(ServerboundTaskActionPacket::entityId),
-                    StringRepresentable.fromEnum(TaskMenu.TaskAction::values).fieldOf("action").forGetter(ServerboundTaskActionPacket::action)
-            ).apply(inst, ServerboundTaskActionPacket::new));
-
-
-    @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
+    public static final Type<ServerboundTaskActionPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "task_action"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTaskActionPacket> CODEC = StreamCodec.composite(
+            ByteBufferCodecUtil.UUID, ServerboundTaskActionPacket::task,
+            ByteBufferCodecUtil.UUID, ServerboundTaskActionPacket::entityId,
+            NeoForgeStreamCodecs.enumCodec(TaskMenu.TaskAction.class), ServerboundTaskActionPacket::action,
+            ServerboundTaskActionPacket::new
+    );
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISavable;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -21,11 +22,7 @@ import de.teamlapen.vampirism.network.ClientboundTaskPacket;
 import de.teamlapen.vampirism.network.ClientboundTaskStatusPacket;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
 import de.teamlapen.vampirism.util.CodecUtil;
-import de.teamlapen.vampirism.util.OilUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -42,10 +39,8 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -220,20 +215,12 @@ public class TaskManager implements ITaskManager, ISavable {
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag compoundNBT) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compoundNBT) {
         if (compoundNBT.contains("taskWrapper")) {
             ListTag infos = compoundNBT.getList("taskWrapper", 10);
             for (int i = 0; i < infos.size(); i++) {
                 CompoundTag nbt = infos.getCompound(i);
                 var decode = TaskWrapper.CODEC.decode(NbtOps.INSTANCE, nbt).map(com.mojang.datafixers.util.Pair::getFirst).result();
-                if (decode.isEmpty()) {
-                    try {
-                        TaskWrapper w = TaskWrapper.readLegacy(nbt);
-                        decode = Optional.of(w);
-                    } catch (Exception e) {
-                        LogManager.getLogger().error("Failed to read task wrapper from nbt", e);
-                    }
-                }
                 decode.ifPresent(wrapper -> this.taskWrapperMap.put(wrapper.id, wrapper));
             }
         }
@@ -311,7 +298,7 @@ public class TaskManager implements ITaskManager, ISavable {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag compoundNBT = new CompoundTag();
         //completed tasks
         if (!this.completedTasks.isEmpty()) {
@@ -327,7 +314,7 @@ public class TaskManager implements ITaskManager, ISavable {
             ListTag infos = new ListTag();
             this.taskWrapperMap.forEach((a, b) -> {
                 DataResult<Tag> result = TaskWrapper.CODEC.encodeStart(NbtOps.INSTANCE, b);
-                infos.add(result.getOrThrow(false, error -> LogManager.getLogger().error(error)));
+                infos.add(result.getOrThrow());
             });
             compoundNBT.put("taskWrapper", infos);
         }
@@ -390,7 +377,7 @@ public class TaskManager implements ITaskManager, ISavable {
             case ITEMS -> {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
-                actualStat = countItem(this.player.getInventory(), stack);
+                actualStat = UtilLib.countItemWithComponent(this.player.getInventory(), stack);
             }
             case BOOLEAN -> {
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
@@ -478,26 +465,6 @@ public class TaskManager implements ITaskManager, ISavable {
         });
     }
 
-    private static int countItem(Inventory inventory, ItemStack stack) {
-        int i = 0;
-
-        for(int j = 0; j < inventory.getContainerSize(); ++j) {
-            ItemStack itemstack = inventory.getItem(j);
-            if (ItemStack.isSameItem(itemstack, stack) && checkPotionEqual(itemstack, stack) && checkOilEqual(itemstack, stack)) {
-                i += itemstack.getCount();
-            }
-        }
-
-        return i;
-    }
-
-    public static boolean checkPotionEqual(ItemStack stack1, ItemStack stack2) {
-        return PotionUtils.getPotion(stack1) == PotionUtils.getPotion(stack2);
-    }
-
-    public static boolean checkOilEqual(ItemStack stack1, ItemStack stack2) {
-        return OilUtils.getOil(stack1) == OilUtils.getOil(stack2);
-    }
 
     // save/load -------------------------------------------------------------------------------------------------------
 
@@ -545,30 +512,6 @@ public class TaskManager implements ITaskManager, ISavable {
                 Codec.unboundedMap(CodecUtil.UUID, TaskInstance.CODEC).fieldOf("tasksSize").forGetter(i -> (Map<UUID, TaskInstance>) (Object) i.tasks),
                 BlockPos.CODEC.optionalFieldOf("lastSeenPos").forGetter(i -> Optional.ofNullable(i.lastSeenPos))
         ).apply(instance, TaskWrapper::new));
-
-        /**
-         * used for backwards compatibility
-         */
-        @Deprecated
-        public static @NotNull TaskWrapper readLegacy(@NotNull CompoundTag nbt) {
-            UUID id = nbt.getUUID("id");
-            int lessTasks = nbt.getInt("lessTasks");
-            int taskAmount = nbt.getInt("taskAmount");
-            Map<UUID, TaskInstance> tasks = new HashMap<>();
-            BlockPos taskBoardInfo = null;
-            if (nbt.contains("pos")) {
-                ListTag pos = nbt.getList("pos", 6);
-                taskBoardInfo = new BlockPos((int) pos.getDouble(0), (int) pos.getDouble(1), (int) pos.getDouble(2));
-            }
-
-            int taskSize = nbt.getInt("tasksSize");
-            ListTag tasksNBT = nbt.getList("tasks", 10);
-            for (int i = 0; i < taskSize; i++) {
-                TaskInstance ins = TaskInstance.readLegacy(tasksNBT.getCompound(i));
-                tasks.put(ins.getId(), ins);
-            }
-            return new TaskWrapper(id, lessTasks, taskAmount, tasks, Optional.ofNullable(taskBoardInfo));
-        }
 
         private final UUID id;
         @NotNull

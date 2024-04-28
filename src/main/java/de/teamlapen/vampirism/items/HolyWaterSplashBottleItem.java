@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -41,7 +42,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (!remote) {
             impactEntities(entity, stack, result, remote);
             impactBlocks(entity, stack, result, remote);
-            entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), PotionUtils.getColor(Potions.MUNDANE));
+            entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), PotionContents.getColor(Potions.MUNDANE));
         }
     }
 

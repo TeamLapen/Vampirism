@@ -31,24 +31,12 @@
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{splash:1b}"
-            }
-          ],
-          "name": "vampirism:holy_water_bottle_enhanced",
+          "name": "vampirism:holy_water_splash_bottle_enhanced",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{splash:1b}"
-            }
-          ],
-          "name": "vampirism:holy_water_bottle_ultimate"
+          "name": "vampirism:holy_water_splash_bottle_ultimate"
         },
         {
           "type": "minecraft:item",

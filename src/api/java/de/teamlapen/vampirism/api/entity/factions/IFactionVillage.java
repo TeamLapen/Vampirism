@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -21,8 +23,11 @@ public interface IFactionVillage {
     @Nullable
     MobEffect getBadOmenEffect();
 
+    @Nullable
+    Holder<MobEffect> badOmenEffect();
+
     @NotNull
-    ItemStack getBanner();
+    ItemStack getBanner(HolderLookup.Provider provider);
 
     List<CaptureEntityEntry<?>> getCaptureEntries();
 
@@ -38,7 +43,7 @@ public interface IFactionVillage {
     @NotNull
     Block getTotemTopBlock(boolean crafted);
 
-    boolean isBanner(@NotNull ItemStack stack);
+    boolean isBanner(@NotNull ItemStack stack, HolderLookup.Provider provider);
 
     /**
      * @deprecated internal use only

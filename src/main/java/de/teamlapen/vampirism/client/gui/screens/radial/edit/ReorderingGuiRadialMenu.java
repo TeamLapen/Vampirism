@@ -66,7 +66,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
-        graphics.blit(BACKGROUND_LOCATION, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
+        //TODO CHECK TEXTURE
+        graphics.blit(MENU_BACKGROUND, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 

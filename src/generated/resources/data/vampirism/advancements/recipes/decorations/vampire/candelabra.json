@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/gold"
+            "items": "#c:ingots/gold"
           }
         ]
       },
@@ -15,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:honeycomb"
-            ]
+            "items": "minecraft:honeycomb"
           }
         ]
       },
@@ -27,7 +25,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": "#c:ingots/iron"
           }
         ]
       },
@@ -37,9 +35,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:string"
-            ]
+            "items": "minecraft:string"
           }
         ]
       },

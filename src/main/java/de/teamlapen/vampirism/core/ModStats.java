@@ -72,8 +72,7 @@ public class ModStats {
         return holder;
     }
 
-    @ApiStatus.Internal
-    public static void register(IEventBus eventBus) {
+    static void register(IEventBus eventBus) {
         CUSTOM_STAT.register(eventBus);
         STAT_TYPES.register(eventBus);
     }

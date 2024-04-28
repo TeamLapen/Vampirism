@@ -5,16 +5,18 @@ import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,10 +83,10 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_level");
             AdvancementHolder technology = Advancement.Builder.advancement()
-                    .display(ModItems.BASIC_TECH_CROSSBOW.get(), Component.translatable("advancement.vampirism.technology"), Component.translatable("advancement.vampirism.technology.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModItems.BASIC_TECH_CROSSBOW, Component.translatable("advancement.vampirism.technology"), Component.translatable("advancement.vampirism.technology.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_hunter)
-                    .addCriterion("basic", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.BASIC_TECH_CROSSBOW.get()))
-                    .addCriterion("advanced", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ENHANCED_TECH_CROSSBOW.get()))
+                    .addCriterion("basic", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.BASIC_TECH_CROSSBOW))
+                    .addCriterion("advanced", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ENHANCED_TECH_CROSSBOW))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .requirements(AdvancementRequirements.Strategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
@@ -109,7 +111,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
             AdvancementHolder kill_resurrected_vampire = Advancement.Builder.advancement()
                     .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire").append("\n").append(Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc")), null, AdvancementType.TASK, true, true, true)
                     .parent(become_hunter)//TODO readd
-                    .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL.get())).subPredicate(FactionSubPredicate.faction(VReference.VAMPIRE_FACTION))))
+                    .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL)).subPredicate(FactionSubPredicate.faction(VReference.VAMPIRE_FACTION))))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_resurrected_vampire");
         }
@@ -120,10 +122,11 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
         @SuppressWarnings("unused")
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+            HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = holderProvider.lookupOrThrow(Registries.BIOME);
             AdvancementHolder vampire_forest = Advancement.Builder.advancement()
                     .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
-                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inBiome(ModBiomes.VAMPIRE_FOREST)))
+                    .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inBiome(biomeRegistryLookup.getOrThrow(ModBiomes.VAMPIRE_FOREST))))
                     .requirements(AdvancementRequirements.Strategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/vampire_forest");
             AdvancementHolder ancient_knowledge = Advancement.Builder.advancement()
@@ -196,10 +199,8 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.SNIPED_IN_BAT))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.VAMPIRE_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/sniped");
-            var potion = new ItemStack(Items.POTION);
-            PotionUtils.setPotion(potion, Potions.POISON);
             AdvancementHolder yuck = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(potion, Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemDataUtils.createPotion(Potions.POISON), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.POISONOUS_BITE))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.VAMPIRE_FACTION, 1))

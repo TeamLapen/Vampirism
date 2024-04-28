@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.blockentity;
 
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
+import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -10,10 +12,7 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.mixin.accessor.AbstractFurnaceBlockEntityAccessor;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -110,7 +109,10 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     public int getLiquidColorClient() {
         ItemStack liquidItem = this.items.get(0);
-        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> ModRecipes.getLiquidColor(liquidItem));
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack)).orElseGet(() -> {
+            var color = liquidItem.getItemHolder().getData(ModDataMaps.LIQUID_COLOR_MAP);
+            return color != null ? color : 0x00003B;
+        });
     }
 
     public @NotNull Component getOwnerName() {
@@ -135,40 +137,40 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag compound = super.getUpdateTag();
+    public CompoundTag getUpdateTag(HolderLookup.Provider holderProvider) {
+        CompoundTag compound = super.getUpdateTag(holderProvider);
         if (ownerID != null) compound.putUUID("owner", ownerID);
         if (ownerName != null) compound.putString("owner_name", ownerName);
-        ContainerHelper.saveAllItems(compound, this.items);
+        ContainerHelper.saveAllItems(compound, this.items, holderProvider);
         return compound;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag compound) {
-        super.handleUpdateTag(compound);
+    public void handleUpdateTag(@NotNull CompoundTag compound, HolderLookup.Provider holderProvider) {
+        super.handleUpdateTag(compound, holderProvider);
         ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        ContainerHelper.loadAllItems(compound, this.items);
+        ContainerHelper.loadAllItems(compound, this.items, holderProvider);
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider holderProvider) {
+        super.loadAdditional(compound, holderProvider);
         ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        super.load(compound);
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider holderProvider) {
         CompoundTag nbt = pkt.getTag();
-        if (nbt != null && hasLevel()) {
-            handleUpdateTag(nbt);
+        if (hasLevel()) {
+            handleUpdateTag(nbt, holderProvider);
         }
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider holderProvider) {
+        super.saveAdditional(compound, holderProvider);
         if (ownerID != null) {
             compound.putUUID("owner", ownerID);
         }
@@ -196,7 +198,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     public void setItem(int index, @NotNull ItemStack stack) {
         super.setItem(index, stack);
         ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && ItemStack.isSameItem(stack, itemstack) && ItemStack.isSameItemSameTags(stack, itemstack);
+        boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack);
         if (flag) {
             this.setChanged();
         }

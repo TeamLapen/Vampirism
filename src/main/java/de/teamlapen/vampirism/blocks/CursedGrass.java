@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -145,20 +146,18 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
-        ItemStack heldItemStack = player.getItemInHand(handIn);
-        Item heldItem = heldItemStack.getItem();
+    public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+        Item heldItem = stack.getItem();
         if (heldItem instanceof HolyWaterBottleItem&& !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
-                heldItemStack.setCount(heldItemStack.getCount() - 1);
+                stack.setCount(stack.getCount() - 1);
             }
             worldIn.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }
 
     @Override

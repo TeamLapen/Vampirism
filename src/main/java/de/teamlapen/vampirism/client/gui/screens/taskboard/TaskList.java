@@ -305,16 +305,16 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             }
 
-            protected abstract List<Component> createTooltip();
+            protected abstract List<Component> createTooltip(Item.TooltipContext tooltipContext);
 
-            protected List<Component> renderItemTooltip(@NotNull ItemStack stack, Component text, boolean strikeThrough, @Nullable String bonus) {
-                List<Component> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
+            protected List<Component> renderItemTooltip(@NotNull ItemStack stack, Component text, Item.TooltipContext context, boolean strikeThrough, @Nullable String bonus) {
+                List<Component> tooltips = getTooltipFromItem2(context, stack, strikeThrough, bonus);
                 tooltips.add(0, text);
                 return tooltips;
             }
 
-            protected @NotNull List<Component> getTooltipFromItem2(@NotNull ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
-                List<Component> list = itemStack.getTooltipLines(Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
+            protected @NotNull List<Component> getTooltipFromItem2(Item.TooltipContext context,  @NotNull ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
+                List<Component> list = itemStack.getTooltipLines(context, Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
                 List<Component> list1 = Lists.newArrayList();
                 for (int i = 0; i < list.size(); i++) {
                     if (i == 0) {
@@ -339,19 +339,20 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 super(pX, pY, rewardInstance.getReward() instanceof ItemReward.Instance items ? items.reward() : PAPER);
                 this.rewardInstance = rewardInstance;
                 this.reward = Component.translatable(Util.makeDescriptionId("task", rewardInstance.getTask().location()) + ".reward");
-                this.setTooltip(new MultilineTooltip(createTooltip()));
+                this.setTooltip(new MultilineTooltip(createTooltip(Item.TooltipContext.of(Minecraft.getInstance().level))));
             }
 
             @Override
-            protected List<Component> createTooltip() {
+            protected List<Component> createTooltip(Item.TooltipContext tooltipContext) {
+                Item.TooltipContext context = Item.TooltipContext.of(Minecraft.getInstance().level);
                 if (this.rewardInstance.getReward() instanceof ItemReward.Instance item) {
-                    return this.renderItemTooltip(item.reward(), REWARD, false, null);
+                    return this.renderItemTooltip(item.reward(), REWARD, context,false, null);
                 } else {
-                    return this.renderItemTooltip();
+                    return this.renderItemTooltip(context);
                 }
             }
 
-            private List<Component> renderItemTooltip() {
+            private List<Component> renderItemTooltip(Item.TooltipContext context) {
                 List<Component> tooltips = Lists.newArrayList(REWARD);
                 tooltips.add(this.reward);
                 return tooltips;
@@ -375,16 +376,16 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 });
                 this.requirement = requirement;
                 this.instance = instance;
-                this.setTooltip(new MultilineTooltip(createTooltip()));
+                this.setTooltip(new MultilineTooltip(createTooltip(Item.TooltipContext.of(Minecraft.getInstance().level))));
             }
 
             @Override
-            protected List<Component> createTooltip() {
+            protected List<Component> createTooltip(Item.TooltipContext tooltipContext) {
                 boolean notAccepted = menu.isTaskNotAccepted(this.instance);
                 boolean completed = menu.isRequirementCompleted(this.instance, this.requirement);
                 int completedAmount = menu.getRequirementStatus(this.instance, this.requirement);
                 return switch (this.requirement.getType()) {
-                    case ITEMS -> this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), (completed ? REQUIREMENT_STRIKE : REQUIREMENT), completed, notAccepted ? null : (completedAmount + "/"));
+                    case ITEMS -> this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), (completed ? REQUIREMENT_STRIKE : REQUIREMENT), tooltipContext, completed, notAccepted ? null : (completedAmount + "/"));
                     case STATS, ENTITY_TAG, ENTITY ->
                             this.renderGenericRequirementTooltip(this.requirement.getType(), this.requirement.description().plainCopy().append((notAccepted ? " " : (" " + (completedAmount + "/"))) + requirement.getAmount(factionPlayer)), completed);
                     default -> this.renderDefaultRequirementToolTip(this.instance, requirement, completed);

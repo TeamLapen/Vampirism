@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -66,7 +67,7 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
         }
     }
 
-    public void removePotionEffect(@NotNull T player, @NotNull MobEffect effect) {
+    public void removePotionEffect(@NotNull T player, @NotNull Holder<MobEffect> effect) {
         MobEffectInstance ins = player.asEntity().getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);

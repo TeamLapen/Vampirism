@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "O": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidians"
     },
     "X": {
       "tag": "minecraft:planks"
     },
     "Y": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "Z": {
       "item": "vampirism:garlic_diffuser_core"
@@ -21,6 +21,7 @@
     "OOO"
   ],
   "result": {
-    "item": "vampirism:garlic_diffuser_normal"
+    "count": 1,
+    "id": "vampirism:garlic_diffuser_normal"
   }
 }

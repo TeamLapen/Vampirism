@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:leather"
+      "tag": "c:leather"
     },
     "Y": {
       "tag": "forge:crops/garlic"
     },
     "Z": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   },
   "lava": 3,
@@ -19,7 +19,8 @@
     "XZZX"
   ],
   "result": {
-    "item": "vampirism:armor_of_swiftness_head_enhanced"
+    "count": 1,
+    "id": "vampirism:armor_of_swiftness_head_enhanced"
   },
   "skill": [
     "vampirism:enhanced_armor"

@@ -30,7 +30,7 @@ public class HissingAction extends DefaultVampireAction {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
         player.getCommandSenderWorld().getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(10, 10, 10)).forEach(e -> {
             if (e.getTarget() == player) {
-                e.targetSelector.getRunningGoals().filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
+                e.targetSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).forEach(WrappedGoal::stop);
                 e.setTarget(null);
             }
         });

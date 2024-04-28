@@ -6,7 +6,7 @@
       "tag": "minecraft:logs"
     },
     "Y": {
-      "tag": "forge:storage_blocks/coal"
+      "tag": "c:storage_blocks/coal"
     }
   },
   "pattern": [
@@ -14,6 +14,7 @@
     "XYX"
   ],
   "result": {
-    "item": "vampirism:fire_place"
+    "count": 1,
+    "id": "vampirism:fire_place"
   }
 }

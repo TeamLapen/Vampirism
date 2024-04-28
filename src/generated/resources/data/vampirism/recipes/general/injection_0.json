@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "Y": {
-      "tag": "forge:glass_panes"
+      "tag": "c:glass_panes"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     " Y "
   ],
   "result": {
-    "item": "vampirism:injection_empty"
+    "count": 1,
+    "id": "vampirism:injection_empty"
   }
 }

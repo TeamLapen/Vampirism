@@ -15,7 +15,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -68,7 +70,7 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter world, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
+    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
             tooltip.add(Component.translatable(getDescriptionId() + "." + type.getSerializedName()).withStyle(ChatFormatting.AQUA));
         }
@@ -144,35 +146,37 @@ public class GarlicDiffuserBlock extends VampirismBlockContainer {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(hand);
-        player.awardStat(ModStats.INTERACT_WITH_GARLIC_DIFFUSER.get());
-        if (!heldItem.isEmpty() && ModItems.PURIFIED_GARLIC.get() == heldItem.getItem()) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!stack.isEmpty() && ModItems.PURIFIED_GARLIC.get() == stack.getItem()) {
             if (!world.isClientSide) {
+                player.awardStat(ModStats.INTERACT_WITH_GARLIC_DIFFUSER.get());
                 GarlicDiffuserBlockEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
                         player.sendSystemMessage(Component.translatable("block.vampirism.garlic_diffuser.already_fueled"));
                     } else {
                         t.onFueled();
-                        if (!player.isCreative()) heldItem.shrink(1);
+                        if (!player.isCreative()) stack.shrink(1);
                         player.sendSystemMessage(Component.translatable("block.vampirism.garlic_diffuser.successfully_fueled"));
                     }
 
                 }
             }
-            return InteractionResult.SUCCESS;
-        } else {
-            if (world.isClientSide) {
-                GarlicDiffuserBlockEntity t = getTile(world, pos);
-                if (t != null) {
-                    VampirismMod.proxy.displayGarlicBeaconScreen(t, getName());
-                }
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
+        }
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide) {
+            GarlicDiffuserBlockEntity t = getTile(world, pos);
+            if (t != null) {
+                VampirismMod.proxy.displayGarlicBeaconScreen(t, getName());
             }
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(world.isClientSide);
     }
 
     @Override

@@ -154,7 +154,7 @@ public class ModKeys {
     private void endSuck() {
         if (suckKeyDown) {
             suckKeyDown = false;
-            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.FINISH_SUCK_BLOOD));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FINISH_SUCK_BLOOD));
         }
     }
 
@@ -165,7 +165,7 @@ public class ModKeys {
     }
 
     private void openVampirismMenu() {
-        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.VAMPIRISM_MENU));
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.VAMPIRISM_MENU));
     }
 
     private void openSkillScreen() {
@@ -175,7 +175,7 @@ public class ModKeys {
     }
 
     private void switchVision() {
-        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TOGGLE_VAMPIRE_VISION));
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.TOGGLE_VAMPIRE_VISION));
     }
 
     private void openMinionTaskMenu() {

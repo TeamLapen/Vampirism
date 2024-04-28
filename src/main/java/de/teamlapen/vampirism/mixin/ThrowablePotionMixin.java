@@ -3,12 +3,13 @@ package de.teamlapen.vampirism.mixin;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,7 +34,7 @@ public abstract class ThrowablePotionMixin extends ThrowableItemProjectile {
 
     @ModifyVariable(method = "applySplash", at = @At(value = "STORE", ordinal = 0))
     private MobEffectInstance l(MobEffectInstance e) {
-        if (PotionUtils.getPotion(this.getItemRaw()) instanceof VampirismPotion.HunterPotion && Helper.isVampire(tick_local_entityLiving)) {
+        if (this.getItem().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && Helper.isVampire(tick_local_entityLiving)) {
             return VampirismPoisonEffect.createThrowableEffect();
         } else {
             return e;

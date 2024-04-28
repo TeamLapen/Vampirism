@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,14 +62,14 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
     @Override
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathfindingMalus(BlockPathTypes.WATER);
-        this.entity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(PathType.WATER);
+        this.entity.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
     public void stop() {
         this.navigator.stop();
-        this.entity.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        this.entity.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
     @Override

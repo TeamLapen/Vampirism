@@ -19,7 +19,7 @@ import de.teamlapen.vampirism.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.entity.player.skills.VampirismSkill;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -50,13 +50,13 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     //Config null, so cannot get method ref
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, false).registerAttributeModifier(Attributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     //Config null, so cannot get method ref
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED_ADVANCED = SKILLS.register("hunter_attack_speed_advanced", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED_ADVANCED = SKILLS.register("hunter_attack_speed_advanced", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     //Config null, so cannot get method ref
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADDITION));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, false).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<>(HunterActions.DISGUISE_HUNTER, Trees.LEVEL, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(2, true));
@@ -137,7 +137,7 @@ public class HunterSkills {
             return ResourceKey.create(VampirismRegistries.Keys.SKILL_NODE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
         }
 
-        public static void createSkillNodes(BootstapContext<ISkillNode> context) {
+        public static void createSkillNodes(BootstrapContext<ISkillNode> context) {
             context.register(LEVEL_ROOT, new SkillNode(HunterSkills.LEVEL_ROOT));
             context.register(SKILL2, new SkillNode(STAKE1));
             context.register(SKILL3, new SkillNode(WEAPON_TABLE));
@@ -181,7 +181,7 @@ public class HunterSkills {
             return ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
         }
 
-        public static void createSkillTrees(BootstapContext<ISkillTree> context) {
+        public static void createSkillTrees(BootstrapContext<ISkillTree> context) {
             HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.Keys.SKILL_NODE);
             context.register(LEVEL, new SkillTree(VReference.HUNTER_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(VReference.HUNTER_FACTION)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level")));
             context.register(LORD, new SkillTree(VReference.HUNTER_FACTION, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.lord(VReference.HUNTER_FACTION)).build(), new ItemStack(ModItems.HUNTER_MINION_EQUIPMENT.get()), Component.translatable("text.vampirism.skills.lord")));

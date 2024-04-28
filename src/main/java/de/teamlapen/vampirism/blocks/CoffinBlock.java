@@ -126,7 +126,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull PathComputationType type) {
+    protected boolean isPathfindable(BlockState p_60475_, PathComputationType p_60478_) {
         return false;
     }
 
@@ -187,7 +187,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
 
         if (worldIn.isClientSide) {
             return InteractionResult.SUCCESS;

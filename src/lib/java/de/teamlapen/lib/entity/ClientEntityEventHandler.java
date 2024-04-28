@@ -13,14 +13,14 @@ public class ClientEntityEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedInClient(ClientPlayerNetworkEvent.LoggingIn event) {
         if (!HelperRegistry.getSyncablePlayerCaps().isEmpty()) {
-            event.getPlayer().connection.send(new ServerboundRequestPlayerUpdatePacket());
+            event.getPlayer().connection.send(ServerboundRequestPlayerUpdatePacket.INSTANCE);
         }
     }
 
     @SubscribeEvent
     public void onPlayerRespawnedClient(ClientPlayerNetworkEvent.Clone event) {
         if (!HelperRegistry.getSyncablePlayerCaps().isEmpty()) {
-            event.getPlayer().connection.send(new ServerboundRequestPlayerUpdatePacket());
+            event.getPlayer().connection.send(ServerboundRequestPlayerUpdatePacket.INSTANCE);
         }
     }
 }

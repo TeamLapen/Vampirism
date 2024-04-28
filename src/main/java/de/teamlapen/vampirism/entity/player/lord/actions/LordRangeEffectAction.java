@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,9 +20,9 @@ import java.util.function.Supplier;
 
 public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends DefaultAction<T> {
 
-    private final Supplier<MobEffect> effect;
+    private final Holder<MobEffect> effect;
 
-    public LordRangeEffectAction(Supplier<MobEffect> effect) {
+    public LordRangeEffectAction(Holder<MobEffect> effect) {
         this.effect = effect;
     }
 
@@ -33,7 +34,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
             if (entity instanceof Player && FactionPlayerHandler.get(((Player) entity)).getLordLevel() >= lordLevel) {
                 continue;
             }
-            entity.addEffect(new MobEffectInstance(effect.get(), getEffectDuration(player), getEffectAmplifier(player)));
+            entity.addEffect(new MobEffectInstance(effect, getEffectDuration(player), getEffectAmplifier(player)));
         }
         return !entitiesOfClass.isEmpty();
     }

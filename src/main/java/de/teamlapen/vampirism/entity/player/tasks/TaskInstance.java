@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,32 +45,6 @@ public class TaskInstance implements ITaskInstance {
                 Codec.LONG.fieldOf("taskTimer").forGetter(t -> t.taskTimeStamp)
         ).apply(inst, TaskInstance::new);
     });
-
-    @Deprecated
-    @NotNull
-    public static TaskInstance readLegacy(@NotNull CompoundTag nbt) {
-        ResourceKey<Task> task = ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(nbt.getString("task")));
-        UUID id = nbt.getUUID("id");
-        UUID insId = nbt.getUUID("insId");
-        boolean accepted = nbt.getBoolean("accepted");
-        long taskTimer = nbt.getLong("taskTimer");
-        CompoundTag statsNBT = nbt.getCompound("stats");
-        Map<ResourceLocation, Integer> stats = new HashMap<>();
-        statsNBT.getAllKeys().forEach(name -> stats.put(new ResourceLocation(name), statsNBT.getInt(name)));
-        ResourceLocation rewardId = new ResourceLocation(nbt.getString("rewardId"));
-        ITaskRewardInstance reward = createReward(rewardId, nbt);
-        long taskDuration = nbt.getLong("taskDuration");
-        return new TaskInstance(id, task, insId, stats, reward, taskDuration, accepted, taskTimer);
-    }
-
-    private static ITaskRewardInstance createReward(ResourceLocation id, CompoundTag tag) {
-        return switch (id.toString()) {
-            case "vampirism:item" -> new ItemReward.Instance(ItemStack.of(tag.getCompound("reward")));
-            case "vampirism:lord_level_reward" -> new LordLevelReward(tag.getInt("targetLevel"));
-            default -> throw new IllegalArgumentException("Unknown reward id " + id);
-        };
-    }
-
 
     @NotNull
     private final UUID taskGiver;
@@ -183,11 +158,5 @@ public class TaskInstance implements ITaskInstance {
     public void startTask(long timestamp) {
         this.taskTimeStamp = timestamp;
         this.accepted = true;
-    }
-
-    public @NotNull CompoundTag writeNBT(@NotNull CompoundTag nbt) {
-        DataResult<Tag> result = CODEC.encodeStart(NbtOps.INSTANCE, this);
-        nbt.put("instance", result.getOrThrow(false, (message) -> LogManager.getLogger().error(message)));
-        return nbt;
     }
 }

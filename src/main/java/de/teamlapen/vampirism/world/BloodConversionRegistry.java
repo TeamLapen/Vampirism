@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.datamaps.ItemBlood;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +46,8 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
         }
         if (data == null) {
             FoodProperties food = stack.getFoodProperties(null);
-            if (food != null && food.isMeat() && !id(stack.getItem()).getPath().contains("cooked")) {
-                data = new ItemBlood(food.getNutrition() * 10);
+            if (food != null && stack.is(ItemTags.MEAT) && !id(stack.getItem()).getPath().contains("cooked")) {
+                data = new ItemBlood(food.nutrition() * 10);
             } else {
                 data = EMPTY;
             }

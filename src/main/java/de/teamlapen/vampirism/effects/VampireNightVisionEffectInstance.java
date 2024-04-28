@@ -24,12 +24,6 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance {
         return object == this;
     }
 
-    @NotNull
-    @Override
-    public CompoundTag save(@NotNull CompoundTag nbt) {
-        return nbt;
-    }
-
     @Override
     public boolean tick(@NotNull LivingEntity entityIn, @NotNull Runnable p_76455_2_) {
         return true;

@@ -14,8 +14,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:shield",
-      "nbt": "{Damage:0}"
+      "count": 1,
+      "id": "minecraft:shield"
     },
     "title": {
       "translate": "advancement.vampirism.protect_lord"

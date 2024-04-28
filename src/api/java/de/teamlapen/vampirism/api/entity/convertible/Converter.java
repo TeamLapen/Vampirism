@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -13,7 +14,7 @@ import java.util.function.Function;
  */
 public interface Converter {
 
-    Codec<Converter> CODEC = ExtraCodecs.lazyInitializedCodec(() -> VampirismRegistries.ENTITY_CONVERTER.get().byNameCodec()).dispatch(Converter::codec, Function.identity());
+    Codec<Converter> CODEC = Codec.lazyInitialized(() -> VampirismRegistries.ENTITY_CONVERTER.get().byNameCodec().dispatch(Converter::codec, Function.identity()));
 
     /**
      * Creates the actual converting handler that does the converting
@@ -26,5 +27,5 @@ public interface Converter {
     /**
      * @return Codec for this converter
      */
-    Codec<? extends Converter> codec();
+    MapCodec<? extends Converter> codec();
 }

@@ -86,7 +86,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     private static void callSingle() {
-        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.SHOW_MINION_CALL_SELECTION));
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.SHOW_MINION_CALL_SELECTION));
     }
 
     private static void sendTask(IMinionTask<?, ?> task) {

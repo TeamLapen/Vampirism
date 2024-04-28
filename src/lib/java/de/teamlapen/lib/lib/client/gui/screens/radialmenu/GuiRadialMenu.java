@@ -45,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 import java.util.Optional;
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public abstract class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
     protected static final int MAX_SLOTS = 30;

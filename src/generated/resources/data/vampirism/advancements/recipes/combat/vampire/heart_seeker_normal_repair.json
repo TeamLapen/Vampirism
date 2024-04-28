@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:heart_seeker_normal"
-            ]
+            "items": "vampirism:heart_seeker_normal"
           }
         ]
       },

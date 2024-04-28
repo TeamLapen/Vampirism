@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.Holder;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -32,6 +34,6 @@ public interface IConvertingHandler<T extends PathfinderMob> {
      */
     interface IDefaultHelper {
 
-        Map<Attribute, com.mojang.datafixers.util.Pair<FloatProvider,Double>> getAttributeModifier();
+        Map<Holder<Attribute>, Pair<FloatProvider,Double>> getAttributeModifier();
     }
 }

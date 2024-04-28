@@ -44,7 +44,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
             for (Player player : list) {
                 if (player.isAlive() && blockEntity.selector.test(player)) {
                     if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
-                        player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 160, 5, true, false));
+                        player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 160, 5, true, false));
                     }
                 }
             }

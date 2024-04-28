@@ -32,7 +32,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VampirePlayer>> VAMPIRE_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_PLAYER.getPath(), () -> AttachmentType.builder(new VampirePlayer.Factory()).serialize(new VampirePlayer.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
 
-    public static void register(IEventBus bus) {
+    static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
     }
 }

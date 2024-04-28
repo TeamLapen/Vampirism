@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -67,8 +68,8 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
+    public @NotNull InteractionResult useWithoutItem(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull BlockHitResult pHit) {
+        ItemStack stack = pPlayer.getItemInHand(InteractionHand.MAIN_HAND);
         Item item = stack.getItem();
         if (isEmpty()) {
             Block orDefault = this.fullHolderByContent.getOrDefault(BuiltInRegistries.ITEM.getKey(item), () -> Blocks.AIR).get();
@@ -79,7 +80,7 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
                 }
                 return InteractionResult.sidedSuccess(pLevel.isClientSide);
             }
-        } else if (pPlayer.getAbilities().mayBuild && pPlayer.getItemInHand(pHand).isEmpty()) {
+        } else if (pPlayer.getAbilities().mayBuild && pPlayer.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             if (pState.getValue(LIT)) {
                 extinguish(pPlayer, pState, pLevel, pPos);
                 return InteractionResult.sidedSuccess(pLevel.isClientSide);

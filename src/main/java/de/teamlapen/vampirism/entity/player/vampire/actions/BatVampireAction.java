@@ -141,11 +141,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
 
             if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
-                armorAttributeInst.addPermanentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                armorAttributeInst.addPermanentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
             AttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
             if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
-                armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
 
             player.getAbilities().mayfly = true;
@@ -178,7 +178,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         //Entity size is hacked in via {@link ASMHooks}
         player.refreshDimensions();
         if (bat) {
-            player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getZ());
+            player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height()), player.getZ());
         }
     }
 

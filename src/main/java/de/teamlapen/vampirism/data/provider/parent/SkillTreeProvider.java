@@ -2,13 +2,18 @@ package de.teamlapen.vampirism.data.provider.parent;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.data.DataCommands;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,7 +36,7 @@ public abstract class SkillTreeProvider implements DataProvider {
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput pOutput) {
-        return this.lookupProvider.thenCompose(provider -> {
+        return this.lookupProvider.thenApply(provider -> {
             Set<ResourceLocation> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);
@@ -39,10 +44,7 @@ public abstract class SkillTreeProvider implements DataProvider {
                 if (!set.add(id)) {
                     throw new IllegalStateException("Duplicate skill tree " + id);
                 } else {
-
-                    JsonElement orThrow = SkillTreeConfiguration.CODEC.encodeStart(ops, skillTree).getOrThrow(false, (s) -> {
-                    });
-                    list.add(DataProvider.saveStable(pOutput, orThrow, pathProvider.json(id)));
+                    list.add(DataProvider.saveStable(pOutput, provider, SkillTreeConfiguration.CODEC, skillTree, pathProvider.json(id)));
                 }
                 return id;
             });

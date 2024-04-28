@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.util.MixinHooks;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -47,7 +48,7 @@ public class SingleJigsawReloadListener implements PreparableReloadListener {
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
-                    List<ResourceLocation> newLocations = CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(false, LOGGER::error);
+                    List<ResourceLocation> newLocations = CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(DecoderException::new);
                     locations.addAll(newLocations);
                 } catch (Exception e) {
                     LOGGER.error("Could not read single jigsaw pieces file {} from {}", resourceName, resource.sourcePackId(), e);

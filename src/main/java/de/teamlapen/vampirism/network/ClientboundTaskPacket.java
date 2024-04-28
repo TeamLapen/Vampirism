@@ -5,7 +5,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.entity.player.TaskManager;
+import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -17,36 +21,17 @@ public record ClientboundTaskPacket(int containerId,
                                     Map<UUID, Set<UUID>> completableTasks,
                                     Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "task");
-    public static final Codec<UUID> UUID_CODEC = Codec.STRING.comapFlatMap(s -> {
-        try {
-            return DataResult.success(UUID.fromString(s));
-        } catch (Exception e){
-            return DataResult.error(() -> "Invalid UUID: " + s);
-        }
-    }, UUID::toString).stable();
-    private static final Codec<Set<UUID>> SET_CODEC = UUID_CODEC.listOf().comapFlatMap(s -> {
-        try {
-            return DataResult.success((Set<UUID>)new HashSet<>(s));
-        } catch (Exception e) {
-            return DataResult.error(() -> "Invalid List");
-        }
-    }, ArrayList::new).stable();
-    public static final Codec<ClientboundTaskPacket> CODEC = RecordCodecBuilder.create(func ->
-            func.group(
-                    Codec.INT.fieldOf("containerId").forGetter(ClientboundTaskPacket::containerId),
-                    Codec.unboundedMap(UUID_CODEC, TaskManager.TaskWrapper.CODEC).fieldOf("taskWrappers").forGetter(ClientboundTaskPacket::taskWrappers),
-                    Codec.unboundedMap(UUID_CODEC, SET_CODEC).fieldOf("completableTasks").forGetter(ClientboundTaskPacket::completableTasks),
-                    Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(UUID_CODEC, Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT))).fieldOf("completedRequirements").forGetter(ClientboundTaskPacket::completedRequirements)
-            ).apply(func, ClientboundTaskPacket::new));
+    public static final Type<ClientboundTaskPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "task"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTaskPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ClientboundTaskPacket::containerId,
+            ByteBufCodecs.map(i -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufCodecs.fromCodec(TaskManager.TaskWrapper.CODEC)), ClientboundTaskPacket::taskWrappers,
+            ByteBufCodecs.map(i -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufferCodecUtil.UUID.apply(ByteBufCodecs.collection(s -> new HashSet<>()))), ClientboundTaskPacket::completableTasks,
+            ByteBufCodecs.map(i -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufCodecs.map(i -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufCodecs.map(i -> new HashMap<>(), ResourceLocation.STREAM_CODEC, ByteBufCodecs.INT))), ClientboundTaskPacket::completedRequirements,
+            ClientboundTaskPacket::new
+    );
 
     @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
-
-    @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

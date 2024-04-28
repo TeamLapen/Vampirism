@@ -35,7 +35,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         super.addAdditionalSaveData(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
-            compound.put("thrownItem", stack.save(new CompoundTag()));
+            compound.put("thrownItem", stack.save(this.registryAccess(), new CompoundTag()));
         }
     }
 
@@ -64,7 +64,7 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        ItemStack stack = ItemStack.of(compound.getCompound("thrownItem"));
+        ItemStack stack = ItemStack.parseOptional(this.registryAccess(), compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
             this.discard();
         } else {
@@ -73,12 +73,13 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(ITEM, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(ITEM, ItemStack.EMPTY);
     }
 
-    protected float getGravity() {
-        return 0.05F;
+    @Override
+    protected double getDefaultGravity() {
+        return 0.05;
     }
 
     @Override

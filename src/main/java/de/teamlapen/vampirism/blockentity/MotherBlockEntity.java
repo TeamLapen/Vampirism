@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.network.ClientboundBossEventSoundPacket;
 import de.teamlapen.vampirism.network.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -155,8 +156,8 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
         this.destructionTimer = tag.getInt("destruction_timer");
         this.isFrozen = tag.getBoolean("is_frozen");
         this.freezeTimer = tag.getInt("freeze_timer");
@@ -200,8 +201,8 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return saveWithoutMetadata(provider);
     }
 
     @Nullable
@@ -239,8 +240,8 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putInt("destruction_timer", this.destructionTimer);
         tag.putBoolean("is_frozen", this.isFrozen);
         tag.putInt("freeze_timer", this.freezeTimer);

@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -41,6 +42,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -126,20 +128,21 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        return !stack.isEdible() || !fullHealth || stack.getItem().getFoodProperties(stack, this).canAlwaysEat();
+        FoodProperties foodProperties = stack.getFoodProperties(this);
+        return foodProperties == null || !fullHealth || foodProperties.canAlwaysEat();
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(RAISED_ARM, false);
-        this.getEntityData().define(IS_CHARGING_CROSSBOW, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(RAISED_ARM, false);
+        builder.define(IS_CHARGING_CROSSBOW, false);
 
     }
 
     @Override
-    protected void onMinionDataReceived(@NotNull HunterMinionData data) {
-        super.onMinionDataReceived(data);
+    protected void onMinionDataReceived(HolderLookup.Provider provider, @NotNull HunterMinionData data) {
+        super.onMinionDataReceived(provider, data);
         this.updateAttackGoal();
         this.updateAttributes();
     }
@@ -186,11 +189,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     public void setChargingCrossbow(boolean p_213671_1_) {
         this.getEntityData().set(IS_CHARGING_CROSSBOW, p_213671_1_);
-    }
-
-    @Override
-    public void shootCrossbowProjectile(LivingEntity p_32328_, ItemStack p_32329_, Projectile p_32330_, float p_32331_) {
-        this.shootCrossbowProjectile(this, p_32328_, p_32330_, p_32331_, 1.6f);
     }
 
     @Override
@@ -282,8 +280,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void deserializeNBT(@NotNull CompoundTag nbt) {
-            super.deserializeNBT(nbt);
+        public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+            super.deserializeNBT(provider, nbt);
             type = nbt.getInt("hunter_type");
             hat = nbt.getInt("hunter_hat");
             level = nbt.getInt("level");
@@ -332,13 +330,17 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, int @NotNull ... data) {
+        public void handleMinionAppearanceConfig(String newName, @NotNull List<Integer> data) {
             this.setName(newName);
-            if (data.length >= 3) {
-                type = data[0];
-                hat = data[1];
-                this.useLordSkin = (data[2] & 0b1) == 1;
-                this.minionSkin = (data[2] & 0b10) == 0b10;
+            for (int i = 0; i < data.size(); i++) {
+                switch (i) {
+                    case 0 -> this.type = data.get(i);
+                    case 1 -> this.hat = data.get(i);
+                    case 2 -> {
+                        this.useLordSkin = (data.get(i) & 0b1) == 1;
+                        this.minionSkin = (data.get(i) & 0b10) == 0b10;
+                    }
+                }
             }
         }
 
@@ -360,8 +362,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void serializeNBT(@NotNull CompoundTag tag) {
-            super.serializeNBT(tag);
+        public void serializeNBT(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+            super.serializeNBT(tag, provider);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
             tag.putInt("level", level);

@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -118,7 +119,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     protected void syncProperty(@NotNull ISyncable object, boolean all) {
         CompoundTag tag = new CompoundTag();
-        tag.put(object.nbtKey(), object.serializeUpdateNBT());
+        tag.put(object.nbtKey(), object.serializeUpdateNBT(this.asEntity().registryAccess()));
         HelperLib.sync(this, tag, player, all);
     }
 
@@ -142,27 +143,27 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
-        tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT());
+        tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT(provider));
         return tag;
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
-        this.taskManager.deserializeNBT(nbt.getCompound(this.taskManager.nbtKey()));
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+        this.taskManager.deserializeNBT(provider, nbt.getCompound(this.taskManager.nbtKey()));
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
 
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         return new CompoundTag();
     }
 }

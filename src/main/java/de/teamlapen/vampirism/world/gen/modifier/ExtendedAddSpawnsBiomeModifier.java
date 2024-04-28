@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen.modifier;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.core.Holder;
@@ -22,10 +23,10 @@ import java.util.function.Function;
 
 public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, List<ExtendedSpawnData> spawners) implements BiomeModifier {
 
-    public static final Codec<ExtendedAddSpawnsBiomeModifier> CODEC = RecordCodecBuilder.create(builder -> builder.group(
+    public static final MapCodec<ExtendedAddSpawnsBiomeModifier> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
             Biome.LIST_CODEC.fieldOf("biomes").forGetter(ExtendedAddSpawnsBiomeModifier::biomes),
             Biome.LIST_CODEC.fieldOf("excludedBiomes").forGetter(ExtendedAddSpawnsBiomeModifier::excludedBiomes),
-            new ExtraCodecs.EitherCodec<>(ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC.listOf(), ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC).xmap(
+            Codec.either(ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC.listOf(), ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData.CODEC).xmap(
                     either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
                     list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
             ).fieldOf("spawners").forGetter(ExtendedAddSpawnsBiomeModifier::spawners)
@@ -46,8 +47,8 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
     }
 
     @Override
-    public @NotNull Codec<? extends BiomeModifier> codec() {
-        return ModBiomes.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get();
+    public @NotNull MapCodec<? extends BiomeModifier> codec() {
+        return CODEC;
     }
 
     public static class ExtendedSpawnData extends MobSpawnSettings.SpawnerData {

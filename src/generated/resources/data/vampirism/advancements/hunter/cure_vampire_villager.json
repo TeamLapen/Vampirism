@@ -21,7 +21,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:golden_apple"
+      "count": 1,
+      "id": "minecraft:golden_apple"
     },
     "title": {
       "translate": "advancement.vampirism.cure_vampire_villager"

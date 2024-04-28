@@ -11,5 +11,8 @@
       "item": "vampirism:ring"
     }
   ],
-  "result": "minecraft:gold_nugget"
+  "result": {
+    "count": 1,
+    "id": "minecraft:gold_nugget"
+  }
 }

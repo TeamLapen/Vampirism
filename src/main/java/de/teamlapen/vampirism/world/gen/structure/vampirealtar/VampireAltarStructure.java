@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirealtar;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.core.ModStructures;
 import de.teamlapen.vampirism.world.gen.structure.StructureEx;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public class VampireAltarStructure extends StructureEx {
 
-    public static final Codec<VampireAltarStructure> CODEC = simpleCodec(VampireAltarStructure::new);
+    public static final MapCodec<VampireAltarStructure> CODEC = simpleCodec(VampireAltarStructure::new);
 
     public VampireAltarStructure(StructureSettings settings) {
         super(settings);

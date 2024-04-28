@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.core.ModOils;
@@ -24,7 +25,7 @@ import java.util.stream.Collector;
 
 public class SmeltItemLootModifier extends LootModifier {
 
-    public static final Codec<SmeltItemLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, SmeltItemLootModifier::new));
+    public static final MapCodec<SmeltItemLootModifier> CODEC = RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, SmeltItemLootModifier::new));
 
     /**
      * Constructs a LootModifier.
@@ -57,7 +58,7 @@ public class SmeltItemLootModifier extends LootModifier {
     }
 
     @Override
-    public @NotNull Codec<? extends IGlobalLootModifier> codec() {
-        return ModLoot.SMELTING.get();
+    public @NotNull MapCodec<? extends IGlobalLootModifier> codec() {
+        return CODEC;
     }
 }

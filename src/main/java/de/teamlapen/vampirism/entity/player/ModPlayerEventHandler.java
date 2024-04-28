@@ -34,6 +34,8 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -56,7 +58,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -81,6 +83,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.StreamSupport;
+
+import static com.mojang.datafixers.TypeRewriteRule.orElse;
 
 /**
  * Event handler for player related events
@@ -278,9 +283,9 @@ public class ModPlayerEventHandler {
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
-                Potion p = PotionUtils.getPotion(stack);
-                if (p instanceof VampirismPotion.HunterPotion && p.getEffects().stream().map(MobEffectInstance::getEffect).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON.get(), Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                if (contents.potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && StreamSupport.stream(contents.getAllEffects().spliterator(), false).map(MobEffectInstance::getEffect).map(Holder::value).anyMatch(MobEffect::isBeneficial)) {
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
@@ -401,7 +406,7 @@ public class ModPlayerEventHandler {
             world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
-            event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC.get()));
+            event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC));
         } else if (state.getBlock() instanceof MotherBlock) {
             //BlockEntity blockEntity = event.getEntity().level().getBlockEntity(pos);
             //if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeBroken()) {

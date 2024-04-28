@@ -18,13 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MobEffectInstance.class)
 public abstract class MixinMobEffectInstance implements EffectInstanceWithSource {
 
-    @Inject(method = "loadSpecifiedEffect(Lnet/minecraft/world/effect/MobEffect;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/effect/MobEffectInstance;", at = @At("RETURN"))
-    private static void readInternal_vampirism(MobEffect effect, @NotNull CompoundTag nbt, @NotNull CallbackInfoReturnable<MobEffectInstance> cir) {
-        if (nbt.contains("source")) {
-            ((EffectInstanceWithSource) cir.getReturnValue()).setSource(new ResourceLocation(nbt.getString("source")));
-        }
-    }
-
     @Shadow
     private int duration;
     @Shadow
@@ -70,10 +63,4 @@ public abstract class MixinMobEffectInstance implements EffectInstanceWithSource
         this.source = ((EffectInstanceWithSource) other).getSource();
     }
 
-    @Inject(method = "writeDetailsTo(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
-    private void writeInternal_vampirism(@NotNull CompoundTag nbt, CallbackInfo ci) {
-        if (source != null) {
-            nbt.putString("source", source.toString());
-        }
-    }
 }

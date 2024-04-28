@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -158,7 +159,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
@@ -192,7 +193,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * Attention: nbt is modified in the process
      **/
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         /*
          * This happens client side
          * We want to:
@@ -287,7 +288,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         tag.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
@@ -449,8 +450,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
-        return serializeNBT();
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+        return serializeNBT(provider);
     }
 
     private boolean isActionAllowedPermission(IAction<T> action) {

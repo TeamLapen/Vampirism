@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.convertible;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -144,13 +145,13 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     }
 
     /**
-     * call in {@link Entity#defineSynchedData()}
+     * call in {@link Entity#defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder)}
      *
      * @param entity the entity that extends this interface
      */
-    default void registerConvertingData(@NotNull PathfinderMob entity) {
-        entity.getEntityData().define(this.getConvertingDataParam(), false);
-        getSourceEntityDataParamOpt().ifPresent(s -> entity.getEntityData().define(s, ""));
+    default void registerConvertingData(@NotNull SynchedEntityData.Builder builder) {
+        builder.define(this.getConvertingDataParam(), false);
+        getSourceEntityDataParamOpt().ifPresent(s -> builder.define(s, ""));
     }
 
     /**

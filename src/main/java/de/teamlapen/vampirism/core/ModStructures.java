@@ -23,7 +23,7 @@ import de.teamlapen.vampirism.world.gen.structure.vampirehut.VampireHutStructure
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -107,13 +107,13 @@ public class ModStructures {
         return ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation(REFERENCE.MODID, name));
     }
 
-    public static void register(IEventBus bus) {
+    static void register(IEventBus bus) {
         STRUCTURE_TYPES.register(bus);
         STRUCTURE_PIECES.register(bus);
         STRUCTURE_PROCESSOR_TYPES.register(bus);
     }
 
-    public static void createStructurePoolTemplates(BootstapContext<StructureTemplatePool> context) {
+    static void createStructurePoolTemplates(BootstrapContext<StructureTemplatePool> context) {
         HolderGetter<StructureTemplatePool> holderGetter = context.lookup(Registries.TEMPLATE_POOL);
         HolderGetter<StructureProcessorList> processorList = context.lookup(Registries.PROCESSOR_LIST);
 
@@ -124,14 +124,14 @@ public class ModStructures {
         HunterOutpostPools.bootstrap(context);
     }
 
-    public static void createStructureProcessorLists(BootstapContext<StructureProcessorList> context) {
+    static void createStructureProcessorLists(BootstrapContext<StructureProcessorList> context) {
         StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), (VampirismConfig.COMMON.villageTotemFactionChance.getDefault()).floatValue()), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
         StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
 
         context.register(TOTEM_FACTION, new StructureProcessorList(ImmutableList.of(factionProcessor, biomeTopBlockProcessor)));
     }
 
-    public static void createStructureSets(BootstapContext<StructureSet> context) {
+    static void createStructureSets(BootstrapContext<StructureSet> context) {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
         var villageSet = structureSetLookup.getOrThrow(BuiltinStructureSets.VILLAGES);
@@ -144,7 +144,7 @@ public class ModStructures {
         context.register(HUNTER_OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 25, RandomSpreadType.LINEAR, 36413509)));
     }
 
-    public static void createStructures(BootstapContext<Structure> context) {
+    static void createStructures(BootstrapContext<Structure> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> lookup1 = context.lookup(Registries.TEMPLATE_POOL);
 

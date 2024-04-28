@@ -2,21 +2,26 @@ package de.teamlapen.vampirism.recipes;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
@@ -51,28 +56,32 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<AlchemyTableRecipe> {
-        private static final Codec<Ingredient> INGREDIENT_CODEC = Codec.either(NBTIngredient.CODEC_NONEMPTY, Ingredient.CODEC_NONEMPTY).xmap(either -> either.map(l -> l, r -> r), x -> x instanceof NBTIngredient nbt ? Either.left(nbt) : Either.right(x));
-        public static final Codec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(p_300832_ -> p_300832_.group),
+        public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
                 Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
                 Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
                 ItemStack.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
-                ExtraCodecs.strictOptionalField(ModRegistries.SKILLS.byNameCodec().listOf(), "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
-                ).apply(inst, AlchemyTableRecipe::new));
+                ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+        ).apply(inst, AlchemyTableRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
+                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
+                Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
+                ItemStack.STREAM_CODEC, s -> s.result,
+                ByteBufCodecs.registry(VampirismRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+                AlchemyTableRecipe::new
+        );
 
         @Override
-        public @NotNull Codec<AlchemyTableRecipe> codec() {
+        public @NotNull MapCodec<AlchemyTableRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull AlchemyTableRecipe fromNetwork(FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull AlchemyTableRecipe recipe) {
-            buffer.writeJsonWithCodec(CODEC, recipe);
-        }
     }
 }

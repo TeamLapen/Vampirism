@@ -21,6 +21,7 @@
     "Z Z"
   ],
   "result": {
-    "item": "vampirism:hunter_table"
+    "count": 1,
+    "id": "vampirism:hunter_table"
   }
 }

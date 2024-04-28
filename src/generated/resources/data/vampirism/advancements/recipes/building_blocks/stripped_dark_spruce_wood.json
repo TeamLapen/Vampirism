@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:stripped_dark_spruce_log"
-            ]
+            "items": "vampirism:stripped_dark_spruce_log"
           }
         ]
       },

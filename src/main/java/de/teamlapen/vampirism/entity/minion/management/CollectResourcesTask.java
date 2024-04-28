@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.Util;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -76,7 +77,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
 
     @Override
-    public @NotNull Desc<Q> readFromNBT(@NotNull CompoundTag nbt) {
+    public @NotNull Desc<Q> readFromNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUUID("lordid") : null);
     }
 
@@ -85,7 +86,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * VampirismConfig.BALANCE.miResourceCooldownOfflineMult.get());
-            WeightedRandom.getRandomItem(rng, resources).map(WeightedEntry.Wrapper::getData).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
+            WeightedRandom.getRandomItem(rng, resources).map(WeightedEntry.Wrapper::data).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
             if (!stacks.isEmpty()) {
                 ItemStack stack = stacks.get(rng.nextInt(stacks.size()));

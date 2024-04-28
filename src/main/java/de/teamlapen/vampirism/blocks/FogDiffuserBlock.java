@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.world.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -49,14 +50,16 @@ public class FogDiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-        getBlockEntity(pLevel, pPos).ifPresent(blockEntity -> {
+    public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+        return getBlockEntity(pLevel, pPos).filter(s -> s.interact(stack)).map(blockEntity -> {
             pPlayer.awardStat(ModStats.INTERACT_WITH_FOG_DIFFUSER.get());
-            if(!blockEntity.interact(itemInHand)) {
-                VampirismMod.proxy.displayFogDiffuserScreen(blockEntity, getName());
-            }
-        });
+            return ItemInteractionResult.sidedSuccess(pLevel.isClientSide);
+        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
+        getBlockEntity(pLevel, pPos).ifPresent(diffuser -> VampirismMod.proxy.displayFogDiffuserScreen(diffuser, getName()));
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
     }
 

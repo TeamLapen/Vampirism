@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:blood_infused_iron_ingot"
-            ]
+            "items": "vampirism:blood_infused_iron_ingot"
           }
         ]
       },

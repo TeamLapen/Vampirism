@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -73,8 +74,8 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return this.saveWithoutMetadata(provider);
     }
 
     /**
@@ -85,8 +86,8 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
+    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrength(compound.getInt("strength"));
         bootTimer = compound.getInt("boot_timer");
@@ -95,10 +96,10 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
         if (hasLevel()) {
             CompoundTag nbt = pkt.getTag();
-            handleUpdateTag(nbt);
+            handleUpdateTag(nbt, provider);
             if (isActive()) {
                 register(); //Register in case we weren't active before. Shouldn't have an effect when already registered
             }
@@ -118,8 +119,8 @@ public class GarlicDiffuserBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());
         compound.putInt("fueled", fueled);

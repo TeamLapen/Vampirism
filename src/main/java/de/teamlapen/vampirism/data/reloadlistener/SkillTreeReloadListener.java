@@ -8,6 +8,7 @@ import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeHolder;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
@@ -28,17 +29,17 @@ public class SkillTreeReloadListener extends SimpleJsonResourceReloadListener {
     private static final String DIRECTORY = "vampirism/configured_skill_tree";
     private Map<ResourceLocation, SkillTreeHolder> configuration = ImmutableMap.of();
 
-    public SkillTreeReloadListener(ICondition.IContext conditionContext, RegistryAccess registryAccess) {
+    public SkillTreeReloadListener() {
         super(GSON, DIRECTORY);
-        injectContext(conditionContext, registryAccess);
+//        injectContext(conditionContext, registryAccess); TODO check if needed
     }
 
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> pObject, @NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
         ImmutableMap.Builder<ResourceLocation, SkillTreeHolder> builder = ImmutableMap.builder();
-        RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, getRegistryLookup());
         for (Map.Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()) {
-            builder.put(entry.getKey(), new SkillTreeHolder(entry.getKey(), SkillTreeConfiguration.CODEC.decode(registryOps, entry.getValue()).getOrThrow(false, LOGGER::error).getFirst()));
+            builder.put(entry.getKey(), new SkillTreeHolder(entry.getKey(), SkillTreeConfiguration.CODEC.decode(registryOps, entry.getValue()).getOrThrow(DecoderException::new).getFirst()));
         }
         this.configuration = builder.build();
         ServerSkillTreeData.init(this.configuration.values().stream().map(SkillTreeHolder::configuration).toList());

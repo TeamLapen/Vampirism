@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "tag": "forge:crops/garlic"
     },
     "Z": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "lava": 5,
@@ -20,6 +20,7 @@
     "  Z "
   ],
   "result": {
-    "item": "vampirism:hunter_axe_normal"
+    "count": 1,
+    "id": "vampirism:hunter_axe_normal"
   }
 }

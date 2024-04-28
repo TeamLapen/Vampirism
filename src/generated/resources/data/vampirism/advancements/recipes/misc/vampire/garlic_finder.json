@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:blood_infused_iron_ingot"
-            ]
+            "items": "vampirism:blood_infused_iron_ingot"
           }
         ]
       },
@@ -17,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:crops/garlic"
+            "items": "#forge:crops/garlic"
           }
         ]
       },
@@ -27,7 +25,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:dusts/redstone"
+            "items": "#c:dusts/redstone"
           }
         ]
       },

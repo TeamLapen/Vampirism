@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.mixin.accessor;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
@@ -13,7 +14,7 @@ import javax.annotation.Nullable;
 public interface BeaconBlockEntityMixin {
 
     @Invoker("applyEffects")
-    static void applyEffects(Level pLevel, BlockPos pPos, int pLevels, @Nullable MobEffect pPrimary, @Nullable MobEffect pSecondary) {
+    static void applyEffects(Level pLevel, BlockPos pPos, int pLevels, @Nullable Holder<MobEffect> pPrimary, @Nullable Holder<MobEffect> pSecondary) {
         throw new IllegalStateException("Mixin was not applied");
     }
 }

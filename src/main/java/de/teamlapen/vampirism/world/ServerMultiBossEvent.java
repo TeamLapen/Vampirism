@@ -23,7 +23,7 @@ public class ServerMultiBossEvent extends MultiBossEvent {
 
     public void addPlayer(ServerPlayer player) {
         if (this.players.add(player) && this.visible) {
-            player.connection.send(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.ADD, this));
+            player.connection.send(new ClientboundUpdateMultiBossEventPacket(new ClientboundUpdateMultiBossEventPacket.AddOperation(this)));
         }
     }
 
@@ -46,14 +46,14 @@ public class ServerMultiBossEvent extends MultiBossEvent {
             this.visible = visible;
 
             for (ServerPlayer player : this.players) {
-                player.connection.send(new ClientboundUpdateMultiBossEventPacket(visible ? ClientboundUpdateMultiBossEventPacket.OperationType.ADD : ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this));
+                player.connection.send(new ClientboundUpdateMultiBossEventPacket(visible ? new ClientboundUpdateMultiBossEventPacket.AddOperation(this) : new ClientboundUpdateMultiBossEventPacket.RemoveOperation(this)));
             }
         }
     }
 
     public void removePlayer(ServerPlayer player) {
         if (this.players.remove(player) && this.visible) {
-            player.connection.send(new ClientboundUpdateMultiBossEventPacket(ClientboundUpdateMultiBossEventPacket.OperationType.REMOVE, this));
+            player.connection.send(new ClientboundUpdateMultiBossEventPacket(new ClientboundUpdateMultiBossEventPacket.RemoveOperation(this)));
         }
     }
 
@@ -82,14 +82,21 @@ public class ServerMultiBossEvent extends MultiBossEvent {
     }
 
     @Override
-    public void setPercentage(float... perc) {
+    public void setPercentage(float @NotNull ... perc) {
         super.setPercentage(perc);
         this.sendUpdate(ClientboundUpdateMultiBossEventPacket.OperationType.UPDATE_PROGRESS);
     }
 
     private void sendUpdate(ClientboundUpdateMultiBossEventPacket.OperationType operation) {
         if (this.visible) {
-            ClientboundUpdateMultiBossEventPacket packet = new ClientboundUpdateMultiBossEventPacket(operation, this);
+            var op = switch (operation) {
+                case ADD -> new ClientboundUpdateMultiBossEventPacket.AddOperation(this);
+                case REMOVE -> new ClientboundUpdateMultiBossEventPacket.RemoveOperation(this);
+                case UPDATE_PROGRESS -> new ClientboundUpdateMultiBossEventPacket.UpdateProgressOperation(this);
+                case UPDATE_NAME -> new ClientboundUpdateMultiBossEventPacket.UpdateNameOperation(this);
+                case UPDATE_STYLE -> new ClientboundUpdateMultiBossEventPacket.UpdateStyle(this);
+            };
+            ClientboundUpdateMultiBossEventPacket packet = new ClientboundUpdateMultiBossEventPacket(op);
 
             for (ServerPlayer player : this.players) {
                 player.connection.send(packet);

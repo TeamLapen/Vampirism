@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:item_alchemical_fire"
-            ]
+            "items": "vampirism:item_alchemical_fire"
           }
         ]
       },
@@ -17,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:storage_blocks/gold"
+            "items": "#c:storage_blocks/gold"
           }
         ]
       },
@@ -33,9 +31,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:holy_water_bottle_enhanced"
-            ]
+            "items": "vampirism:holy_water_bottle_enhanced"
           }
         ]
       },
@@ -45,9 +41,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:stake"
-            ]
+            "items": "vampirism:stake"
           }
         ]
       },

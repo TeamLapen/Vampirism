@@ -274,7 +274,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public boolean hurt(@NotNull DamageSource damageSource, float amount) {
         boolean flag = super.hurt(damageSource, amount);
         if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
-            this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN.get(), 150, 2));
+            this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 150, 2));
         }
         return flag;
     }
@@ -327,24 +327,23 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(LEVEL, -1);
-        this.getEntityData().define(TYPE, 0);
-        this.getEntityData().define(NAME, "none" );
-        this.getEntityData().define(TEXTURE, "none" );
-
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LEVEL, -1);
+        builder.define(TYPE, 0);
+        builder.define(NAME, "none" );
+        builder.define(TEXTURE, "none" );
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
         Supporter supporter = SupporterManager.getRandomVampire(random);
         lootBookId = supporter.bookId();
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
     private static int createCustomisationFlag(Supporter supporter) {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.tasks.req;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Range;
 
 public record StatRequirement(@NotNull ResourceLocation id, @NotNull ResourceLocation stat, @Range(from = 0, to = Integer.MAX_VALUE) int amount, @NotNull Component description) implements TaskRequirement.Requirement<ResourceLocation> {
 
-    public static final Codec<StatRequirement> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<StatRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                 BuiltInRegistries.CUSTOM_STAT.byNameCodec().fieldOf("stat").forGetter(i -> i.stat),
@@ -54,7 +55,7 @@ public record StatRequirement(@NotNull ResourceLocation id, @NotNull ResourceLoc
     }
 
     @Override
-    public Codec<? extends TaskRequirement.Requirement<?>> codec() {
+    public MapCodec<? extends TaskRequirement.Requirement<?>> codec() {
         return ModTasks.STAT_REQUIREMENT.get();
     }
 }

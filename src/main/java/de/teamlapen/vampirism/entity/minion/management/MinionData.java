@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -34,13 +35,13 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     protected final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static <T extends MinionData> T fromNBT(@NotNull CompoundTag nbt) {
+    public static <T extends MinionData> T fromNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(IFactionRegistry.IMinionEntry::data).map(Supplier::get).map(s-> {
             try {
                 @SuppressWarnings("unchecked")
                 T t = (T)s;
-                t.deserializeNBT(nbt);
+                t.deserializeNBT(provider, nbt);
                 return t;
             } catch (ClassCastException ex) {
                 return null;
@@ -71,8 +72,8 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
-        inventory.read(nbt.getList("inv", 10));
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+        inventory.read(provider, nbt.getList("inv", 10));
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
         name = nbt.getString("name");
@@ -83,7 +84,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
             //noinspection unchecked
             IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(id);
             if (activeTask != null) {
-                activeTaskDesc = activeTask.readFromNBT(task);
+                activeTaskDesc = activeTask.readFromNBT(provider, task);
             } else {
                 LOGGER.error("Saved minion task does not exist anymore {}", id);
             }
@@ -138,7 +139,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
         this.name = name;
     }
 
-    public void handleMinionAppearanceConfig(String name, int... data) {
+    public void handleMinionAppearanceConfig(String name, List<Integer> data) {
     }
 
     public boolean hasUsedSkillPoints() {
@@ -167,15 +168,15 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     }
 
     @Override
-    public final @NotNull CompoundTag serializeNBT() {
+    public final @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
-        serializeNBT(tag);
+        serializeNBT(tag, provider);
         return tag;
     }
 
-    public void serializeNBT(@NotNull CompoundTag tag) {
+    public void serializeNBT(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
         tag.putInt("inv_size", inventory.getAvailableSize());
-        tag.put("inv", inventory.write(new ListTag()));
+        tag.put("inv", inventory.write(provider, new ListTag()));
         tag.putFloat("health", health);
         tag.putString("name", name);
         tag.putString("data_type", getDataType().toString());

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.tasks.reward;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class RefinementItemReward extends ItemReward {
 
-    public static final Codec<RefinementItemReward> CODEC = RecordCodecBuilder.create(inst -> {
+    public static final MapCodec<RefinementItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         //noinspection RedundantCast,unchecked
         return inst.group(BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item.get()).map(IRefinementItem::asItem)),
                 IFaction.CODEC.optionalFieldOf("faction").forGetter(i -> (Optional<IFaction<?>>) (Object) Optional.ofNullable(i.faction)),
@@ -109,7 +110,7 @@ public class RefinementItemReward extends ItemReward {
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
-            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::getData).ifPresent(set -> item.applyRefinementSet(stack, set));
+            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).ifPresent(set -> item.applyRefinementSet(stack, set));
         }
         return stack;
     }
@@ -126,7 +127,7 @@ public class RefinementItemReward extends ItemReward {
     }
 
     @Override
-    public Codec<? extends TaskReward> codec() {
+    public MapCodec<? extends TaskReward> codec() {
         return CODEC;
     }
 

@@ -38,7 +38,6 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -120,9 +119,8 @@ public class RenderHandler implements ResourceManagerReloadListener {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.@NotNull ClientTickEvent event) {
+    public void onClientTick(ClientTickEvent.Pre event) {
         if (mc.level == null || mc.player == null || !mc.player.isAlive()) return;
-        if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(mc.player);
         if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level())) {
@@ -367,10 +365,10 @@ public class RenderHandler implements ResourceManagerReloadListener {
             this.blurShader = new PostChain(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getMainRenderTarget(), resourcelocationBlur);
             RenderTarget swap = this.blurShader.getTempTarget("swap");
 
-            blit0 = blurShader.addPass("blit", swap, this.mc.getMainRenderTarget());
-            blur1 = blurShader.addPass("blur", this.mc.getMainRenderTarget(), swap);
+            blit0 = blurShader.addPass("blit", swap, this.mc.getMainRenderTarget(), false);
+            blur1 = blurShader.addPass("blur", this.mc.getMainRenderTarget(), swap, false);
             blur1.getEffect().safeGetUniform("BlurDir").set(1F, 0F);
-            blur2 = blurShader.addPass("blur", swap, this.mc.getMainRenderTarget());
+            blur2 = blurShader.addPass("blur", swap, this.mc.getMainRenderTarget(), false);
             blur2.getEffect().safeGetUniform("BlurDir").set(0F, 1F);
 
             this.blurShader.resize(this.mc.getWindow().getWidth(), this.mc.getWindow().getHeight());

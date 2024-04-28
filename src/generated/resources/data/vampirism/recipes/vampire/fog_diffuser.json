@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "O": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidians"
     },
     "X": {
       "item": "vampirism:cursed_spruce_planks"
     },
     "Y": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "Z": {
       "item": "vampirism:mother_core"
@@ -21,6 +21,7 @@
     "OOO"
   ],
   "result": {
-    "item": "vampirism:fog_diffuser"
+    "count": 1,
+    "id": "vampirism:fog_diffuser"
   }
 }

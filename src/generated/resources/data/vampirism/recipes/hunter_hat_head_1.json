@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "minecraft:black_wool"
@@ -15,6 +15,7 @@
     "XXXX"
   ],
   "result": {
-    "item": "vampirism:hunter_hat_head_1"
+    "count": 1,
+    "id": "vampirism:hunter_hat_head_1"
   }
 }

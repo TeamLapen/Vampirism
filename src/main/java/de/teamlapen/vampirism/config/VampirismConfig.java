@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig;
@@ -108,11 +109,11 @@ public class VampirismConfig {
         }
         balanceBuilder = null;
 
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, balanceSpec, "vampirism-balance.toml");
+        ModContainer activeContainer = ModLoadingContext.get().getActiveContainer();
+        activeContainer.registerConfig(ModConfig.Type.COMMON, commonSpec);
+        activeContainer.registerConfig(ModConfig.Type.CLIENT, clientSpec);
+        activeContainer.registerConfig(ModConfig.Type.SERVER, serverSpec);
+        activeContainer.registerConfig(ModConfig.Type.SERVER, balanceSpec, "vampirism-balance.toml");
         modBus.register(VampirismConfig.class);
     }
 

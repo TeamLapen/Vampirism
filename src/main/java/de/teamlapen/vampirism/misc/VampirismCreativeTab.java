@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.network.chat.Component;
@@ -115,10 +116,7 @@ public class VampirismCreativeTab {
             addItem(DARK_SPRUCE_CHEST_BOAT);
             addItem(CURSED_SPRUCE_CHEST_BOAT);
 
-            for (IOil value : RegUtil.values(ModRegistries.OILS)) {
-                if (value == ModOils.EMPTY.get()) continue;
-                add(OilUtils.setOil(OIL_BOTTLE.get().getDefaultInstance(), value));
-            }
+            ModRegistries.OILS.holders().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
         }
 
         private void addBlocks() {

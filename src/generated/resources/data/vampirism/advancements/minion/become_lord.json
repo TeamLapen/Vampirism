@@ -15,7 +15,8 @@
     },
     "hidden": true,
     "icon": {
-      "item": "minecraft:paper"
+      "count": 1,
+      "id": "minecraft:paper"
     },
     "title": {
       "translate": "advancement.vampirism.become_lord"

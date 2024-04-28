@@ -15,7 +15,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 5,
+      "count": 5,
       "id": "minecraft:gold_ingot"
     }
   },

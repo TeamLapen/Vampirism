@@ -22,11 +22,12 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, Math.max(1,amplifier));
         if (damage > 0) {
             DamageHandler.hurtVanilla(entityLivingBaseIn, DamageSources::magic, damage);
         }
+        return true;
     }
 
     @Override
@@ -45,10 +46,10 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     public static MobEffectInstance createThrowableEffect() {
-        return new MobEffectInstance(ModEffects.POISON.get(), 40, 1);
+        return new MobEffectInstance(ModEffects.POISON, 40, 1);
     }
 
     public static MobEffectInstance createEffectCloudEffect() {
-        return new MobEffectInstance(ModEffects.POISON.get(), 60, 1);
+        return new MobEffectInstance(ModEffects.POISON, 60, 1);
     }
 }

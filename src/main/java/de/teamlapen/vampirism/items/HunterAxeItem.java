@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -25,9 +27,9 @@ import java.util.Map;
 
 public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL,2, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED,2, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
-    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE,2, 2031, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
+    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE, BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
 
     private final TIER tier;
 
@@ -37,10 +39,10 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()).withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
     @Override
@@ -58,9 +60,7 @@ public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWit
      */
     public @NotNull ItemStack getEnchantedStack() {
         ItemStack stack = new ItemStack(this);
-        Map<Enchantment, Integer> map = new HashMap<>();
-        map.put(Enchantments.KNOCKBACK, getKnockback());
-        EnchantmentHelper.setEnchantments(map, stack);
+        stack.enchant(Enchantments.KNOCKBACK, getKnockback());
         return stack;
     }
 

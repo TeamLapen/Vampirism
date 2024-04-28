@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:glass"
+            "items": "#c:glass_blocks"
           }
         ]
       },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:glass_panes"
+            "items": "#c:glass_panes"
           }
         ]
       },

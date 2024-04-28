@@ -503,7 +503,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.TOTEM_TOP_CRAFTED.get(), ModBlocks.TOTEM_TOP.get()).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.TOTEM_BASE.get()).recipes("general/totem_base").setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top_crafted"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         helper.info(ModBlocks.POTION_TABLE.get()).recipes("hunter/potion_table").customPages(generatePotionMixes()).build(entries);
-        ItemStack activatedOil = ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD.get());
+        ItemStack activatedOil = ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD);
         helper.info(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
 
         List<IPage> decorativeBlocks = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "decorative.text"), ModItems.ITEM_CANDELABRA.get()));

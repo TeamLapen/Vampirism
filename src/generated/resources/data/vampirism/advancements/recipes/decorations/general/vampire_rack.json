@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:book"
-            ]
+            "items": "minecraft:book"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "vampirism:vampire_fang"
-            ]
+            "items": "vampirism:vampire_fang"
           }
         ]
       },
@@ -29,9 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:honeycomb"
-            ]
+            "items": "minecraft:honeycomb"
           }
         ]
       },
@@ -41,7 +35,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:planks"
+            "items": "#minecraft:planks"
           }
         ]
       },
@@ -51,9 +45,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:glass_bottle"
-            ]
+            "items": "minecraft:glass_bottle"
           }
         ]
       },

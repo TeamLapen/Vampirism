@@ -114,7 +114,7 @@ public class SkillsScreen extends Screen {
             boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
 
             resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("text.vampirism.skill.resetall"), (context) -> {
-                VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.RESET_SKILLS));
+                VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.RESET_SKILLS));
                 InventoryHelper.removeItemFromInventory(factionPlayer.asEntity().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
                 if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(ModItems.OBLIVION_POTION.get()) <= 1) && !test) {
                     context.active = false;
@@ -184,7 +184,7 @@ public class SkillsScreen extends Screen {
     }
 
     public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) != null) return;
+        if (this.minecraft.player.getEffect(ModEffects.OBLIVION) != null) return;
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
             PoseStack pose = graphics.pose();
@@ -224,7 +224,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null && this.isMouseOverContent(pMouseX, pMouseY)) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION) == null && this.isMouseOverContent(pMouseX, pMouseY)) {
             return this.selectedTab.mouseScrolled(pMouseX-9-guiLeft, pMouseY-18-guiTop, pScrollX, pScrollY);
         }
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
@@ -250,7 +250,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
         this.scrolling = true;
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION.get()) == null && isMouseOverContent(mouseX, mouseY)) {
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION) == null && isMouseOverContent(mouseX, mouseY)) {
             this.selectedTab.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
         }
         return super.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);

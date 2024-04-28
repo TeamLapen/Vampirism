@@ -48,7 +48,7 @@ public class SanguinareEffect extends VampirismEffect {
 
     public SanguinareEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
-        addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
+        addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override
@@ -57,14 +57,15 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-        if (entity.level().isClientSide || !entity.isAlive()) return;
+    public boolean applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
+        if (entity.level().isClientSide || !entity.isAlive()) return true;
         if (entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
         if (entity instanceof Player player) {
             VampirePlayer.get(player).onSanguinareFinished();
         }
+        return false;
     }
 
     @Override

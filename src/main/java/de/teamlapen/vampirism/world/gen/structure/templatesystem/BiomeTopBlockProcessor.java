@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.templatesystem;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BiomeTopBlockProcessor extends StructureProcessor {
-    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
+    public static final MapCodec<BiomeTopBlockProcessor> CODEC = BlockState.CODEC.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock);
     private static final Map<Block, Block> streetBlocks = new HashMap<>() {{
         put(Blocks.SAND, Blocks.SMOOTH_SANDSTONE);
         put(Blocks.GRASS_BLOCK, Blocks.DIRT_PATH);

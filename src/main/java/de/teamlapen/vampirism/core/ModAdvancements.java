@@ -28,8 +28,6 @@ public class ModAdvancements {
     public static final DeferredHolder<CriterionTrigger<?>, CuredVampireVillagerCriterionTrigger> TRIGGER_CURED_VAMPIRE_VILLAGER = TRIGGERS.register("cured_vampire_villager", CuredVampireVillagerCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_MOTHER_WIN = TRIGGERS.register("mother_win", PlayerTrigger::new);
 
-    public static final EntitySubPredicate.Type FACTION = new EntitySubPredicate.Type(FactionSubPredicate.CODEC);
-
     static void register(IEventBus bus) {
         TRIGGERS.register(bus);
     }

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -57,7 +58,7 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+    public @NotNull InteractionResult useWithoutItem(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             if (pPlayer instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_ANCIENT_BEACON.get());
@@ -81,7 +82,7 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
 
     @Override
     public void setPlacedBy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (pStack.hasCustomHoverName() && pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockEntity) {
+        if (pStack.has(DataComponents.CUSTOM_NAME) && pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockEntity) {
             blockEntity.setCustomName(pStack.getHoverName());
         }
     }

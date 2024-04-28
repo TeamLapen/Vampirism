@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.PotionTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,15 +115,25 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.brewingItemStacks;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> p_332640_) {
+        this.brewingItemStacks = p_332640_;
+    }
+
+    @Override
     public boolean canPlaceItem(int index, @NotNull ItemStack stack) {
         if (index == 2) {
-            return net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry.isValidIngredient(stack);
+            return this.level.potionBrewing().isIngredient(stack);
         } else {
             Item item = stack.getItem();
             if (index == 0) {
                 return item == Items.BLAZE_POWDER;
             } else {
-                return net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry.isValidInput(stack) && this.getItem(index).isEmpty();
+                return this.level.potionBrewing().isInput(stack) && this.getItem(index).isEmpty();
             }
         }
     }
@@ -198,15 +210,15 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
+    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
         this.brewingItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.brewingItemStacks);
+        ContainerHelper.loadAllItems(compound, this.brewingItemStacks, provider);
         this.brewTime = compound.getShort("BrewTime");
         this.fuel = compound.getByte("Fuel");
         this.config.fromByte(compound.getByte("config"));
         this.ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
-        this.ownerName = compound.contains("owner_name") ? Component.Serializer.fromJsonLenient(compound.getString("owner_name")) : null;
+        this.ownerName = compound.contains("owner_name") ? Component.Serializer.fromJsonLenient(compound.getString("owner_name"), provider) : null;
     }
 
     @NotNull
@@ -222,15 +234,15 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
         compound.putShort("BrewTime", (short) this.brewTime);
-        ContainerHelper.saveAllItems(compound, this.brewingItemStacks);
+        ContainerHelper.saveAllItems(compound, this.brewingItemStacks, provider);
         compound.putByte("Fuel", (byte) this.fuel);
         compound.putByte("config", this.config.toByte());
         if (ownerID != null) {
             compound.putUUID("owner", ownerID);
-            compound.putString("owner_name", Component.Serializer.toJson(ownerName));
+            compound.putString("owner_name", Component.Serializer.toJson(ownerName, provider));
         }
     }
 
@@ -311,7 +323,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         ItemStack ingredientStack = this.brewingItemStacks.get(2);
         ItemStack extraIngredient = this.brewingItemStacks.get(1);
 
-        boolean brewed = VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, true);
+        boolean brewed = VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(this.level, brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, true);
 
         if (!brewed) {
             NonNullList<ItemStack> copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
@@ -323,7 +335,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
                 this.brewingItemStacks.set(0, copiedBrewingItemStack.get(4));
                 return;
             }
-            VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, false);
+            VampirismAPI.extendedBrewingRecipeRegistry().brewPotions(this.level, brewingItemStacks, ingredientStack, extraIngredient, this.config, this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS, false);
             copiedBrewingItemStack = NonNullList.of(ItemStack.EMPTY, this.brewingItemStacks.get(3).copy(), this.brewingItemStacks.get(4).copy(), this.brewingItemStacks.get(5).copy(), this.brewingItemStacks.get(2).copy(), this.brewingItemStacks.get(0).copy());
             net.neoforged.neoforge.event.EventHooks.onPotionBrewed(brewingItemStacks);
             this.brewingItemStacks.set(3, copiedBrewingItemStack.get(0));
@@ -363,7 +375,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         ItemStack extraStack = this.brewingItemStacks.get(1);
         ItemStack ingredientStack = this.brewingItemStacks.get(2);
         if (!ingredientStack.isEmpty()) {
-            return VampirismAPI.extendedBrewingRecipeRegistry().canBrew(brewingItemStacks, ingredientStack, extraStack, this.config, config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS); // divert to VanillaBrewingRegistry
+            return VampirismAPI.extendedBrewingRecipeRegistry().canBrew(this.level, brewingItemStacks, ingredientStack, extraStack, this.config, config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS); // divert to VanillaBrewingRegistry
         }
 
         return false;

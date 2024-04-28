@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = REFERENCE.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientConfigHelper {
 
     public static final Gson GSON = new GsonBuilder()

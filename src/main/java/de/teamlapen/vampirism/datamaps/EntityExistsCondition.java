@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.datamaps;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +9,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityExistsCondition implements ICondition {
-    public static Codec<EntityExistsCondition> CODEC = RecordCodecBuilder.create(
+    public static MapCodec<EntityExistsCondition> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder
                     .group(
                             ResourceLocation.CODEC.fieldOf("entity_type").forGetter(EntityExistsCondition::getEntityType))
@@ -34,7 +35,7 @@ public class EntityExistsCondition implements ICondition {
     }
 
     @Override
-    public Codec<? extends ICondition> codec() {
+    public @NotNull MapCodec<? extends ICondition> codec() {
         return CODEC;
     }
 

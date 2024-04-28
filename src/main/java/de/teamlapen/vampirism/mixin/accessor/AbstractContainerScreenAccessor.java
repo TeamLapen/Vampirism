@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
 
-    @Invoker("isHovering(Lnet/minecraft/world/inventory/Slot;DD)Z")
+    @Invoker("isHovering")
     boolean invoke_isHovering(Slot pSlot, double pMouseX, double pMouseY);
 
     @Accessor("draggingItem")

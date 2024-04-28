@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.entity.minion.management;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.DamageTypeTags;
@@ -57,27 +59,6 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
     }
 
-    public void damageArmor(@NotNull DamageSource source, float damage, @NotNull MinionEntity<?> entity) {
-        if (damage > 0) {
-            damage = damage / 6.0F;
-            if (damage < 1.0F && damage >= 0.5f) {
-                damage = 1.0F;
-            }
-            if (damage >= 1) {
-                for (int i = 0; i < this.inventoryArmor.size(); ++i) {
-                    ItemStack itemstack = this.inventoryArmor.get(i);
-                    if ((!source.is(DamageTypeTags.IS_FIRE) || !itemstack.getItem().isFireResistant()) && itemstack.getItem() instanceof ArmorItem) {
-                        final int i_final = i;
-                        itemstack.hurtAndBreak((int) damage, entity, (e) -> {
-                            e.broadcastBreakEvent(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i_final));
-                        });
-                    }
-                }
-            }
-
-        }
-    }
-
     @Override
     public int getContainerSize() {
         return 6 + availableSize;
@@ -123,7 +104,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(@NotNull ListTag nbtTagListIn) {
+    public void read(HolderLookup.Provider provider,  @NotNull ListTag nbtTagListIn) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
@@ -131,7 +112,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         for (int i = 0; i < nbtTagListIn.size(); ++i) {
             CompoundTag compoundnbt = nbtTagListIn.getCompound(i);
             int j = compoundnbt.getByte("Slot") & 255;
-            ItemStack itemstack = ItemStack.of(compoundnbt);
+            ItemStack itemstack = ItemStack.parseOptional(provider, compoundnbt);
             if (!itemstack.isEmpty()) {
                 if (j < this.inventoryHands.size()) {
                     this.inventoryHands.set(j, itemstack);
@@ -206,12 +187,12 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return true;
     }
 
-    public ListTag write(@NotNull ListTag nbt) {
+    public ListTag write(HolderLookup.Provider provider, @NotNull ListTag nbt) {
         for (int i = 0; i < this.inventoryHands.size(); ++i) {
             if (!this.inventoryHands.get(i).isEmpty()) {
                 CompoundTag compoundnbt = new CompoundTag();
                 compoundnbt.putByte("Slot", (byte) i);
-                this.inventoryHands.get(i).save(compoundnbt);
+                this.inventoryHands.get(i).save(provider, compoundnbt);
                 nbt.add(compoundnbt);
             }
         }
@@ -220,7 +201,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
             if (!this.inventoryArmor.get(j).isEmpty()) {
                 CompoundTag compoundnbt1 = new CompoundTag();
                 compoundnbt1.putByte("Slot", (byte) (j + 10));
-                this.inventoryArmor.get(j).save(compoundnbt1);
+                this.inventoryArmor.get(j).save(provider, compoundnbt1);
                 nbt.add(compoundnbt1);
             }
         }
@@ -229,7 +210,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
             if (!this.inventory.get(k).isEmpty()) {
                 CompoundTag compoundnbt2 = new CompoundTag();
                 compoundnbt2.putByte("Slot", (byte) (k + 20));
-                this.inventory.get(k).save(compoundnbt2);
+                this.inventory.get(k).save(provider, compoundnbt2);
                 nbt.add(compoundnbt2);
             }
         }

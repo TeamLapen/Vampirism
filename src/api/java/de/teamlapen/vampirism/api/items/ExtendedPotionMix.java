@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
@@ -12,18 +13,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 public class ExtendedPotionMix {
-    public final Supplier<? extends Potion> input;
+    public final Holder<Potion> input;
     public final Supplier<Ingredient> reagent1;
     public final int reagent1Count;
     public final Supplier<Ingredient> reagent2;
     public final int reagent2Count;
-    public final Supplier<? extends Potion> output;
+    public final Holder<Potion> output;
     public final boolean durable;
     public final boolean concentrated;
     public final boolean master;
     public final boolean efficient;
 
-    private ExtendedPotionMix(Supplier<? extends Potion> inputIn, Supplier<Ingredient> reagentIn1, int count1, Supplier<Ingredient> reagentIn2, int count2, Supplier<? extends Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
+    private ExtendedPotionMix(Holder<Potion> inputIn, Supplier<Ingredient> reagentIn1, int count1, Supplier<Ingredient> reagentIn2, int count2, Holder<Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
         this.input = inputIn;
         this.reagent1 = reagentIn1;
         this.reagent1Count = count1;
@@ -44,8 +45,8 @@ public class ExtendedPotionMix {
     public static class Builder {
         private final static Supplier<Ingredient> EMPTY_SUPPLIER = () -> Ingredient.EMPTY;
         private static final Supplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(BuiltInRegistries.ITEM.get(new ResourceLocation("vampirism", "vampire_blood_bottle")));
-        private final Supplier<? extends Potion> input;
-        private final Supplier<? extends Potion> output;
+        private final Holder<Potion> input;
+        private final Holder<Potion> output;
         private @NotNull Supplier<Ingredient> reagent1 = EMPTY_SUPPLIER;
         private int reagent1Count = 0;
         private int reagent1CountReduced = -1;
@@ -56,7 +57,7 @@ public class ExtendedPotionMix {
         private boolean concentrated = false;
         private boolean master = false;
 
-        public Builder(Supplier<? extends Potion> input, Supplier<? extends Potion> output) {
+        public Builder(Holder<Potion> input, Holder<Potion> output) {
             this.input = input;
             this.output = output;
         }

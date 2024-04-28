@@ -4,8 +4,9 @@ import de.teamlapen.vampirism.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
-import de.teamlapen.vampirism.util.OilUtils;
+import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -66,6 +67,16 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     @NotNull
     protected Component getDefaultName() {
         return Component.translatable("container.vampirism.alchemy_table");
+    }
+
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        this.items = items;
     }
 
     @NotNull
@@ -170,7 +181,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.get(0)) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem(level.registryAccess())).map(s -> OilUtils.getOil(s).getColor()).findAny().orElse(0xffffff);
+            blockEntity.productColor = level.getRecipeManager().getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.get(0)) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem(level.registryAccess())).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 
@@ -268,19 +279,19 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items);
+        ContainerHelper.loadAllItems(tag, this.items, lookupProvider);
         this.brewTime = tag.getShort("BrewTime");
         this.fuel = tag.getByte("Fuel");
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         tag.putShort("BrewTime", (short) this.brewTime);
-        ContainerHelper.saveAllItems(tag, this.items);
+        ContainerHelper.saveAllItems(tag, this.items, lookupProvider);
         tag.putByte("Fuel", (byte) this.fuel);
     }
 }

@@ -12,16 +12,19 @@ import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
 import de.teamlapen.vampirism.world.loot.functions.SetOilFunction;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SplashPotionItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -44,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -54,14 +58,14 @@ public class LootTablesProvider {
      */
     public static final float[] DEFAULT_SAPLING_DROP_RATES = new float[] {0.025F, 0.03125f, 0.041666668f, 0.05f};
 
-    public static LootTableProvider getProvider(PackOutput output) {
+    public static LootTableProvider getProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProviderFuture) {
         return new LootTableProvider(output, ModLootTables.getLootTables(),
                 List.of(
                         new LootTableProvider.SubProviderEntry(ModEntityLootTables::new, LootContextParamSets.ENTITY),
                         new LootTableProvider.SubProviderEntry(ModChestLootTables::new, LootContextParamSets.CHEST),
                         new LootTableProvider.SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK),
-                        new LootTableProvider.SubProviderEntry(InjectLootTables::new, LootContextParamSets.CHEST))
-        );
+                        new LootTableProvider.SubProviderEntry(InjectLootTables::new, LootContextParamSets.CHEST)),
+                lookupProviderFuture);
     }
 
     private static class ModEntityLootTables extends EntityLootSubProvider {
@@ -85,8 +89,8 @@ public class LootTablesProvider {
                             .setRolls(UniformGenerator.between(0, 1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(4))
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(4).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1))))
-                            .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).setWeight(3).apply(SetNbtFunction.setTag(splash)))
-                            .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setWeight(1).apply(SetNbtFunction.setTag(splash)))
+                            .add(LootItem.lootTableItem(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get()).setWeight(3))
+                            .add(LootItem.lootTableItem(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get()).setWeight(1))
                             .add(LootItem.lootTableItem(ModItems.PURE_SALT_WATER.get()).setWeight(4).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1))).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
                     .withPool(LootPool.lootPool().when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1f, 0.015f)).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(AddBookNbtFunction.builder())));
@@ -159,8 +163,9 @@ public class LootTablesProvider {
     }
 
     private static class ModChestLootTables implements LootTableSubProvider {
+
         @Override
-        public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void generate(HolderLookup.@NotNull Provider holderProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.CHEST_HUNTER_TRAINER, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 9))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(40))
@@ -276,7 +281,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_HUNTER_OUTPOST_ALCHEMY, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(2, 5))
                             .add(LootItem.lootTableItem(ModItems.OIL_BOTTLE.get()).setWeight(20).apply(SetOilFunction.random()))
-                            .add(LootItem.lootTableItem(ModItems.OIL_BOTTLE.get()).setWeight(20).apply(SetOilFunction.setOil(ModOils.VAMPIRE_BLOOD.get())))
+                            .add(LootItem.lootTableItem(ModItems.OIL_BOTTLE.get()).setWeight(20).apply(SetOilFunction.setOil(ModOils.VAMPIRE_BLOOD)))
                             .add(LootItem.lootTableItem(Items.GLASS_BOTTLE).setWeight(10)))
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 6))
                             .add(LootItem.lootTableItem(Items.BLAZE_ROD).setWeight(20))
@@ -429,7 +434,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get())))
                     .withPool(LootPool.lootPool()
                             .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3))))));
+                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.FORTUNE, 0.5714286F, 3))))));
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
@@ -590,7 +595,7 @@ public class LootTablesProvider {
 
     private static class InjectLootTables implements LootTableSubProvider {
         @Override
-        public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        public void generate(HolderLookup.@NotNull Provider holderProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
             consumer.accept(ModLootTables.ABANDONED_MINESHAFT, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))

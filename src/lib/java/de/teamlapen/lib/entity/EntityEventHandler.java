@@ -9,12 +9,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -74,10 +75,10 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.@NotNull LivingTickEvent event) {
+    public void onLivingUpdate(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> listener : listeners) {
-                Optional.ofNullable(event.getEntity().getData(listener)).ifPresent(IPlayerEventListener::onUpdate);
+                event.getEntity().getData(listener).onUpdate();
             }
         }
     }
@@ -85,21 +86,21 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners) {
-            Optional.ofNullable(event.getEntity().getData(listener)).ifPresent(IPlayerEventListener::onPlayerLoggedIn);
+            event.getEntity().getData(listener).onPlayerLoggedIn();
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.@NotNull PlayerLoggedOutEvent event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners) {
-            Optional.ofNullable(event.getEntity().getData(listener)).ifPresent(IPlayerEventListener::onPlayerLoggedOut);
+            event.getEntity().getData(listener).onPlayerLoggedOut();
         }
     }
 
     @SubscribeEvent
-    public void onPlayerUpdate(TickEvent.@NotNull PlayerTickEvent event) {
+    public void onPlayerUpdate(PlayerTickEvent.Post event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners) {
-            Optional.ofNullable(event.player.getData(listener)).ifPresent(cap -> cap.onUpdatePlayer(event.phase));
+            event.getEntity().getData(listener).onUpdatePlayer(event);
         }
     }
 

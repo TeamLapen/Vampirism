@@ -6,10 +6,10 @@
       "tag": "minecraft:planks"
     },
     "Y": {
-      "tag": "forge:obsidian"
+      "tag": "c:obsidians"
     },
     "Z": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "ZZZ"
   ],
   "result": {
-    "item": "vampirism:totem_base"
+    "count": 1,
+    "id": "vampirism:totem_base"
   }
 }

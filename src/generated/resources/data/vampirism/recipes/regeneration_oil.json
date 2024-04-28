@@ -1,36 +1,26 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "type": "neoforge:nbt",
-    "item": "vampirism:oil_bottle",
-    "strict": true,
-    "tag": "{oil:\"vampirism:vampire_blood\"}"
+    "item": "vampirism:oil_bottle"
   },
   "input": [
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:regeneration\"}"
+      "item": "minecraft:potion"
     },
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:long_regeneration\"}"
+      "item": "minecraft:potion"
     },
     {
-      "type": "neoforge:nbt",
-      "item": "minecraft:potion",
-      "strict": true,
-      "tag": "{Potion:\"minecraft:strong_regeneration\"}"
+      "item": "minecraft:potion"
     }
   ],
   "result": {
-    "Count": 1,
-    "id": "vampirism:oil_bottle",
-    "tag": {
-      "oil": "vampirism:regeneration"
-    }
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:regeneration"
+      }
+    },
+    "count": 1,
+    "id": "vampirism:oil_bottle"
   }
 }

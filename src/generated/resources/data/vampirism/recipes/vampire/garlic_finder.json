@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "X": {
       "item": "vampirism:blood_infused_iron_ingot"
@@ -21,6 +21,7 @@
     "ZAZ"
   ],
   "result": {
-    "item": "vampirism:garlic_finder"
+    "count": 1,
+    "id": "vampirism:garlic_finder"
   }
 }

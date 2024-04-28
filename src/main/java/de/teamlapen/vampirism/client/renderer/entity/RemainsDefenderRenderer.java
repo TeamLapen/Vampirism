@@ -37,7 +37,7 @@ public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, 
     }
 
     @Override
-    protected void setupRotations(RemainsDefenderEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
+    protected void setupRotations(RemainsDefenderEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks, float scale) {
         pMatrixStack.translate(0, 0.5d,0);
         pMatrixStack.mulPose(pEntityLiving.getAttachFace().getOpposite().getRotation());
         pMatrixStack.translate(0,-0.5,0);

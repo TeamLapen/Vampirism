@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "lava": 1,
@@ -17,6 +17,7 @@
     " Y "
   ],
   "result": {
-    "item": "vampirism:pitchfork"
+    "count": 1,
+    "id": "vampirism:pitchfork"
   }
 }

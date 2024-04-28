@@ -99,7 +99,7 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
         Component name = Component.translatable("text.vampirism.level_up");
         int buttonWidth = this.font.width(name) + 10;
         this.addRenderableWidget(this.buttonLevelup = new ExtendedButton(this.leftPos + imageWidth - buttonWidth - 6, this.topPos + 45, buttonWidth, 20, name, (context) -> {
-            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Type.TRAINER_LEVELUP));
+            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.TRAINER_LEVELUP));
             Player player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getCommandSenderWorld(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
             player.playSound(SoundEvents.NOTE_BLOCK_HARP.value(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);

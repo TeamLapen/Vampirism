@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.world.ModDamageSources;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -159,7 +160,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public void deserializeUpdateNBT(@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -187,7 +188,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
 
     @Override
     public boolean canBeInfected(IVampire vampire) {
-        return canBecomeVampire && !hasPoisonousBlood() && !entity.hasEffect(ModEffects.SANGUINARE.get());
+        return canBecomeVampire && !hasPoisonousBlood() && !entity.hasEffect(ModEffects.SANGUINARE);
     }
 
     @Override
@@ -260,7 +261,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
              * Make sure all entities with no blood die
              * check for sanguinare as the entity might be converting instead of dying
              */
-            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE.get()) == null) {
+            if (blood == 0 && entity.tickCount % 20 == 10 && entity.getEffect(ModEffects.SANGUINARE) == null) {
                 DamageHandler.hurtModded(entity, ModDamageSources::noBlood, 1000);
             }
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
@@ -290,7 +291,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT() {
+    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         var nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, blood);
         nbt.putInt(KEY_MAX_BLOOD, maxBlood);
@@ -304,7 +305,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag compound) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
@@ -317,7 +318,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT() {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
@@ -338,18 +339,18 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ExtendedCreature> {
 
         @Override
-        public ExtendedCreature read(IAttachmentHolder holder, CompoundTag tag) {
+        public @NotNull ExtendedCreature read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
             if (holder instanceof PathfinderMob mob) {
                 var creature = new ExtendedCreature(mob);
-                creature.deserializeNBT(tag);
+                creature.deserializeNBT(provider, tag);
                 return creature;
             }
             throw new IllegalArgumentException("Expected PathfinderMob, got " + holder.getClass().getSimpleName());
         }
 
         @Override
-        public CompoundTag write(ExtendedCreature attachment) {
-            return attachment.serializeNBT();
+        public CompoundTag write(ExtendedCreature attachment, HolderLookup.@NotNull Provider provider) {
+            return attachment.serializeNBT(provider);
         }
     }
 

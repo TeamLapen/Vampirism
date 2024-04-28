@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -17,6 +18,8 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Stores blood and other liquids in a {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank}
@@ -59,38 +62,36 @@ public class BloodContainerBlockEntity extends BlockEntity implements FluidTankW
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.saveAdditional(pTag, provider);
         CompoundTag tag = new CompoundTag();
-        tank.writeToNBT(tag);
+        tank.writeToNBT(provider, tag);
         pTag.put("tank", tag);
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
-        tank.readFromNBT(pTag.getCompound("tank"));
+    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.loadAdditional(pTag, provider);
+        tank.readFromNBT(provider, pTag.getCompound("tank"));
         setChanged();
     }
 
     @NotNull
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = this.saveWithoutMetadata();
-        tank.writeToNBT(tag);
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag tag = this.saveWithoutMetadata(provider);
+        tank.writeToNBT(provider, tag);
         return tag;
     }
 
     @Override
-    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
+        super.onDataPacket(net, pkt, provider);
         int oldAmount = tank.getFluid().getAmount();
         Fluid fluid = tank.getFluid().getFluid();
-        if (pkt.getTag() != null) {
-            tank.readFromNBT(pkt.getTag());
-            if (oldAmount != tank.getFluid().getAmount() || fluid != tank.getFluid().getFluid()) {
-                setChanged();
-            }
+        tank.readFromNBT(provider, pkt.getTag());
+        if (oldAmount != tank.getFluid().getAmount() || fluid != tank.getFluid().getFluid()) {
+            setChanged();
         }
     }
 

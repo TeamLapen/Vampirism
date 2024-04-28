@@ -9,7 +9,7 @@ public class VampirismSwordItem extends SwordItem {
 
 
     public VampirismSwordItem(@NotNull Tier material, int attackDamageIn, float attackSpeedIn, @NotNull Properties builder) {
-        super(material, attackDamageIn, attackSpeedIn, builder);
+        super(material, builder.attributes(SwordItem.createAttributes(material, attackDamageIn, attackSpeedIn)));
     }
 
     @NotNull

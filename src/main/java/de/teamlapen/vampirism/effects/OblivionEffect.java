@@ -37,11 +37,11 @@ public class OblivionEffect extends VampirismEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
             if (entityLivingBaseIn instanceof Player player) {
-                entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null, Optional.empty()));
-                FactionPlayerHandler.getCurrentFactionPlayer(((Player) entityLivingBaseIn)).ifPresent(factionPlayer -> {
+                entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
+                return FactionPlayerHandler.getCurrentFactionPlayer(((Player) entityLivingBaseIn)).map(factionPlayer -> {
                     ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                     Optional<ISkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {
@@ -50,15 +50,17 @@ public class OblivionEffect extends VampirismEffect {
                             skillHandler.disableSkill((ISkill)element.value());
                             player.awardStat(ModStats.SKILL_FORGOTTEN.get().get(element.value()));
                         }
+                        return true;
                     } else {
-                        entityLivingBaseIn.removeEffect(ModEffects.OBLIVION.get());
                         ((Player) entityLivingBaseIn).displayClientMessage(Component.translatable("text.vampirism.skill.skills_reset"), true);
                         LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
                         VampirismLogger.info(VampirismLogger.SKILLS, "Skills were reset for {}", entityLivingBaseIn.getName().getString());
+                        return false;
                     }
-                });
+                }).orElse(true);
             }
         }
+        return true;
     }
 
     @Override

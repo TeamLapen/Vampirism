@@ -34,7 +34,7 @@ public class OblivionItem extends Item {
             return;
         }
         boolean test = VampirismMod.inDev || REFERENCE.VERSION.isTestVersion();
-        player.addEffect(new MobEffectInstance(ModEffects.OBLIVION.get(), Integer.MAX_VALUE, test ? 100 : 4));
+        player.addEffect(new MobEffectInstance(ModEffects.OBLIVION, Integer.MAX_VALUE, test ? 100 : 4));
         if (factionPlayer instanceof IAttachedSyncable syncable) {
             HelperLib.sync(syncable, player, false);
         }
@@ -45,8 +45,8 @@ public class OblivionItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("text.vampirism.oblivion_potion.resets_skills").withStyle(ChatFormatting.GRAY));
     }
 

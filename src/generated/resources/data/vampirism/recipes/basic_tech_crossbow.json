@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "minecraft:string"
     },
     "Z": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     }
   },
   "lava": 5,
@@ -20,7 +20,8 @@
     " XX "
   ],
   "result": {
-    "item": "vampirism:basic_tech_crossbow"
+    "count": 1,
+    "id": "vampirism:basic_tech_crossbow"
   },
   "skill": [
     "vampirism:tech_weapons"

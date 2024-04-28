@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
+import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
@@ -9,7 +10,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -25,7 +25,7 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
 
     @Override
     public int getDuration(@NotNull ItemStack stack) {
-        return OilUtils.getAppliedOilStatus(stack).filter(p -> p.getLeft() == this).map(Pair::getRight).orElse(0);
+        return AppliedOilContent.getAppliedOil(stack).filter(s -> s.oil().value() == this).map(AppliedOilContent::duration).orElse(0);
     }
 
     @Override

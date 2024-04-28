@@ -1,7 +1,7 @@
 {
   "values": [
     "#vampirism:has_faction",
-    "#forge:is_underground",
-    "#forge:is_mushroom"
+    "#c:is_underground",
+    "#c:is_mushroom"
   ]
 }

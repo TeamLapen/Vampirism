@@ -2,31 +2,35 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.sun.jna.platform.win32.WinDef;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
 
-public record ServerboundAppearancePacket(int entityId, String name, int... data) implements CustomPacketPayload {
+public record ServerboundAppearancePacket(int entityId, String name, List<Integer> data) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "appearance");
-    public static final Codec<ServerboundAppearancePacket> CODEC = RecordCodecBuilder.create(inst ->
-    inst.group(
-            Codec.INT.fieldOf("entityId").forGetter(ServerboundAppearancePacket::entityId),
-            Codec.STRING.fieldOf("name").forGetter(ServerboundAppearancePacket::name),
-            Codec.INT.listOf().fieldOf("data").xmap(s -> s.stream().mapToInt(l -> l).toArray(), s -> Arrays.stream(s).boxed().toList()).forGetter(s -> s.data)
-    ).apply(inst, ServerboundAppearancePacket::new));
+    public static final Type<ServerboundAppearancePacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "appearance"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundAppearancePacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ServerboundAppearancePacket::entityId,
+            ByteBufCodecs.STRING_UTF8, ServerboundAppearancePacket::name,
+            ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()), ServerboundAppearancePacket::data,
+            ServerboundAppearancePacket::new
+    );
 
-    @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
+    public ServerboundAppearancePacket(int entityId, String name, int... data) {
+        this(entityId, name, Arrays.stream(data).boxed().toList());
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

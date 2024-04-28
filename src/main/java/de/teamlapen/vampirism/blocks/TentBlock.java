@@ -304,7 +304,7 @@ public class TentBlock extends VampirismBlock {
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState blockState, @NotNull Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTraceResult) {
+    public InteractionResult useWithoutItem(@NotNull BlockState blockState, @NotNull Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);

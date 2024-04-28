@@ -1,10 +1,10 @@
 {
   "values": [
-    "#forge:is_wasteland",
-    "#forge:is_plateau",
-    "#forge:is_rare",
-    "#forge:is_spooky",
-    "#forge:is_swamp",
+    "#c:is_wasteland",
+    "#c:is_plateau",
+    "#c:is_rare",
+    "#c:is_spooky",
+    "#c:is_swamp",
     "#vampirism:has_faction/vampire"
   ]
 }

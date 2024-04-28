@@ -8,7 +8,7 @@
         },
         "id": "minecraft:diamond_block",
         "item": {
-          "Count": 8,
+          "count": 8,
           "id": "minecraft:diamond_block"
         }
       },
@@ -28,7 +28,7 @@
         },
         "id": "vampirism:vampire_blood_bottle",
         "item": {
-          "Count": 32,
+          "count": 32,
           "id": "vampirism:vampire_blood_bottle"
         }
       },
@@ -39,7 +39,7 @@
         },
         "id": "vampirism:vampire_book",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "vampirism:vampire_book"
         }
       }
@@ -48,7 +48,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "vampirism:hunter_minion_upgrade_special"
     }
   },

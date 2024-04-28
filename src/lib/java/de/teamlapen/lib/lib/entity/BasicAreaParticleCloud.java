@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.entity;
 
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -70,7 +71,7 @@ public class BasicAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntityDimensions(radius * 2.0F, getBbHeight(), this.dimensions.fixed);
+        this.dimensions = EntityDimensions.fixed(radius * 2.0F, getBbHeight());
         this.setPos(d0, d1, d2);
 
         if (!this.level().isClientSide) {
@@ -112,7 +113,7 @@ public class BasicAreaParticleCloud extends Entity {
         double d0 = this.getX();
         double d1 = this.getY();
         double d2 = this.getZ();
-        this.dimensions = new EntityDimensions(getRadius() * 2, height, this.dimensions.fixed);
+        this.dimensions = EntityDimensions.fixed(getRadius() * 2, height);
         this.setPos(d0, d1, d2);
 
         if (!this.level().isClientSide) {
@@ -171,12 +172,12 @@ public class BasicAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.getEntityData().define(COLOR, 0);
-        this.getEntityData().define(RADIUS, 0.5F);
-        this.getEntityData().define(HEIGHT, 0.5F);
-        this.getEntityData().define(PARTICLE, ParticleTypes.ENTITY_EFFECT);
-        this.getEntityData().define(SPAWN_RATE, 1F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(COLOR, 0);
+        builder.define(RADIUS, 0.5F);
+        builder.define(HEIGHT, 0.5F);
+        builder.define(PARTICLE, ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, -1));
+        builder.define(SPAWN_RATE, 1F);
 
     }
 

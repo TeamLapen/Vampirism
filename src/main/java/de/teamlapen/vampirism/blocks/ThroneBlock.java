@@ -27,18 +27,18 @@ public class ThroneBlock extends VampirismSplitBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, BlockPos pos, Player player, InteractionHand p_225533_5_, BlockHitResult traceResult) {
+    public @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level world, BlockPos pos, Player player, BlockHitResult traceResult) {
         Part part = state.getValue(PART);
         Direction oppFacing = state.getValue(FACING).getOpposite();
         player.awardStat(ModStats.INTERACT_WITH_THRONE.get());
         if (part == Part.MAIN && (traceResult.getDirection() == Direction.UP || traceResult.getDirection() == oppFacing)) {
             SitHandler.startSitting(player, world, pos, 0.5);
-            return InteractionResult.SUCCESS;
+            return InteractionResult.sidedSuccess(world.isClientSide);
         } else if (part == Part.SUB && traceResult.getDirection() == oppFacing && world.getBlockState(pos.below()).is(this)) {
             SitHandler.startSitting(player, world, pos.below(), 0.5);
-            return InteractionResult.SUCCESS;
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
-        return super.use(state, world, pos, player, p_225533_5_, traceResult);
+        return InteractionResult.PASS;
     }
 
     @Override

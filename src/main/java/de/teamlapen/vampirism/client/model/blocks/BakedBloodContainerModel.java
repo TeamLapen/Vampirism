@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.items.component.ContainedFluid;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -129,11 +132,9 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         @Override
         public BakedModel resolve(@NotNull BakedModel originalModel, @NotNull ItemStack stack, ClientLevel world, LivingEntity entity, int p) {
             if (originalModel instanceof BakedBloodContainerModel) {
-                if (stack.hasTag() && stack.getTag().contains("fluid")) {
-                    FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));
-                    if (!fluid.isEmpty()) {
-                        return new BakedBloodContainerModel(originalModel, fluid);
-                    }
+                FluidStack fluidStack = ContainedFluid.get(stack);
+                if (!fluidStack.isEmpty()) {
+                    return new BakedBloodContainerModel(originalModel, fluidStack);
                 }
             }
             return originalModel;

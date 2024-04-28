@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SanguinareEffectInstance extends MobEffectInstance {
     public SanguinareEffectInstance(int effectDuration) {
-        super(ModEffects.SANGUINARE.get(), effectDuration, 0, false, true);
+        super(ModEffects.SANGUINARE, effectDuration, 0, false, true);
     }
 
     @Override

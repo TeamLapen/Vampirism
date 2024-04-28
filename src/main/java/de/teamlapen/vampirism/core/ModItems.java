@@ -13,18 +13,16 @@ import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
 import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -33,12 +31,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,25 +59,25 @@ public class ModItems {
     public static final EffectCure GARLIC_CURE = EffectCure.get("vampirism:garlic");
 
     //Items
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.NORMAL));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.ENHANCED));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.CHESTPLATE, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.NORMAL));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.ENHANCED));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.BOOTS, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.NORMAL));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.ENHANCED));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.HELMET, ArmorOfSwiftnessItem.ULTIMATE));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.NORMAL));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.ENHANCED));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(ArmorItem.Type.LEGGINGS, ArmorOfSwiftnessItem.ULTIMATE));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = register("armor_of_swiftness_chest_normal", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = register("armor_of_swiftness_chest_enhanced", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = register("armor_of_swiftness_chest_ultimate", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = register("armor_of_swiftness_feet_normal", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorItem.Type.BOOTS, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = register("armor_of_swiftness_feet_enhanced", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorItem.Type.BOOTS, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = register("armor_of_swiftness_feet_ultimate", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorItem.Type.BOOTS, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = register("armor_of_swiftness_head_normal", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorItem.Type.HELMET, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = register("armor_of_swiftness_head_enhanced", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorItem.Type.HELMET, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = register("armor_of_swiftness_head_ultimate", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorItem.Type.HELMET, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = register("armor_of_swiftness_legs_normal", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = register("armor_of_swiftness_legs_enhanced", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = register("armor_of_swiftness_legs_ultimate", () -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ULTIMATE));
 
-    public static final DeferredItem<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(props().defaultDurability(465), 1, 20, Tiers.WOOD));
+    public static final DeferredItem<SingleCrossbowItem> BASIC_CROSSBOW = register("basic_crossbow", () -> new SingleCrossbowItem(props().durability(465), 1, 20, Tiers.WOOD));
     public static final DeferredItem<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(props().durability(465), 1, 20, Tiers.WOOD));
     public static final DeferredItem<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(props().durability(930), 1.6F, 40, Tiers.DIAMOND));
 
     public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
-    public static final DeferredItem<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.BLOOD.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<Item> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", () -> new Item(props()));
     public static final DeferredItem<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = register("blood_infused_enhanced_iron_ingot", () -> new Item(props()));
 
@@ -122,18 +119,18 @@ public class ModItems {
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ENHANCED = register("hunter_axe_enhanced", () -> new HunterAxeItem(HunterAxeItem.ENHANCED));
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ULTIMATE = register("hunter_axe_ultimate", () -> new HunterAxeItem(HunterAxeItem.ULTIMATE));
 
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = register("hunter_coat_chest_normal", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.NORMAL));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.ENHANCED));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(ArmorItem.Type.CHESTPLATE, HunterCoatItem.ULTIMATE));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = register("hunter_coat_feet_normal", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.NORMAL));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.ENHANCED));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(ArmorItem.Type.BOOTS, HunterCoatItem.ULTIMATE));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = register("hunter_coat_head_normal", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.NORMAL));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = register("hunter_coat_head_enhanced", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.ENHANCED));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = register("hunter_coat_head_ultimate", () -> new HunterCoatItem(ArmorItem.Type.HELMET, HunterCoatItem.ULTIMATE));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = register("hunter_coat_legs_normal", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.NORMAL));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.ENHANCED));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(ArmorItem.Type.LEGGINGS, HunterCoatItem.ULTIMATE));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = register("hunter_coat_chest_normal", () -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = register("hunter_coat_chest_enhanced", () -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = register("hunter_coat_chest_ultimate", () -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorItem.Type.CHESTPLATE, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = register("hunter_coat_feet_normal", () -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorItem.Type.BOOTS, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = register("hunter_coat_feet_enhanced", () -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorItem.Type.BOOTS, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = register("hunter_coat_feet_ultimate", () -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorItem.Type.BOOTS, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = register("hunter_coat_head_normal", () -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorItem.Type.HELMET, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = register("hunter_coat_head_enhanced", () -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorItem.Type.HELMET, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = register("hunter_coat_head_ultimate", () -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorItem.Type.HELMET, IItemWithTier.TIER.ULTIMATE));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = register("hunter_coat_legs_normal", () -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.NORMAL));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ENHANCED));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ULTIMATE));
 
     public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_1));
     public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_2));
@@ -149,13 +146,13 @@ public class ModItems {
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_8 = register("hunter_intel_8", () -> new HunterIntelItem(8));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_9 = register("hunter_intel_9", () -> new HunterIntelItem(9));
 
-    public static final DeferredItem<VampirismItemBloodFoodItem> HUMAN_HEART = register("human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(20).saturationMod(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationMod(1f).build()));
+    public static final DeferredItem<VampirismItemBloodFoodItem> HUMAN_HEART = register("human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(20).saturationModifier(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()));
 
     public static final DeferredItem<InjectionItem> INJECTION_EMPTY = register("injection_empty", () -> new InjectionItem(InjectionItem.TYPE.EMPTY));
     public static final DeferredItem<InjectionItem> INJECTION_GARLIC = register("injection_garlic", () -> new InjectionItem(InjectionItem.TYPE.GARLIC));
     public static final DeferredItem<InjectionItem> INJECTION_SANGUINARE = register("injection_sanguinare", () -> new InjectionItem(InjectionItem.TYPE.SANGUINARE));
 
-    public static final DeferredItem<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.IMPURE_BLOOD, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.IMPURE_BLOOD.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<GarlicItem> ITEM_GARLIC = register("item_garlic", GarlicItem::new);
     public static final DeferredItem<GarlicBreadItem> GARLIC_BREAD = register("garlic_bread", GarlicBreadItem::new);
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = register("item_alchemical_fire", AlchemicalFireItem::new);
@@ -178,10 +175,10 @@ public class ModItems {
     public static final DeferredItem<StakeItem> STAKE = register("stake", StakeItem::new);
     public static final DeferredItem<ArrowContainer> ARROW_CLIP = register("tech_crossbow_ammo_package", () -> new ArrowContainer(props().stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())) {
         @Override
-        public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
+        public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
             texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
             texts.add(Component.empty());
-            super.appendHoverText(stack, level, texts, flag);
+            super.appendHoverText(stack, context, texts, flag);
         }
 
     });
@@ -195,7 +192,7 @@ public class ModItems {
     public static final DeferredItem<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", VampireBloodBottleItem::new);
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = register("vampire_fang", VampireFangItem::new);
-    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(10).saturationMod(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationMod(1f).build()));
+    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(10).saturationModifier(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()));
 
     public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = register("vampire_spawn_egg", CreativeModeTabs.SPAWN_EGGS, () -> new DeferredSpawnEggItem(ModEntities.VAMPIRE, 0x8B15A3, 0xa735e3, new Item.Properties()));
     public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = register("vampire_hunter_spawn_egg", CreativeModeTabs.SPAWN_EGGS, () -> new DeferredSpawnEggItem(ModEntities.HUNTER, 0x2d05f2, 0x2600e0, new Item.Properties()));
@@ -249,25 +246,26 @@ public class ModItems {
     public static final DeferredItem<Item> MOTHER_CORE = register("mother_core", () -> new Item(props().rarity(Rarity.UNCOMMON)));
     public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK = register("candle_stick", () -> new StandingAndWallBlockItem(ModBlocks.CANDLE_STICK.get(), ModBlocks.WALL_CANDLE_STICK.get(), new Item.Properties(), Direction.DOWN));
 
-    static void registerCraftingRecipes() {
+    static void registerCraftingRecipes(RegisterBrewingRecipesEvent event) {
+        PotionBrewing.Builder builder = event.getBuilder();
         // Brewing
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));
+        builder.addRecipe(Ingredient.of(ItemDataUtils.createPotion(Potions.WATER)), Ingredient.of(new ItemStack(PURE_SALT.get())), new ItemStack(PURE_SALT_WATER.get()));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
+        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
             @Override
             public boolean isInput(@NotNull ItemStack stack) {
 
                 return HOLY_WATER_BOTTLE_NORMAL.get().equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ENHANCED.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get())) {
+        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ENHANCED.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get())) {
             @Override
             public boolean isInput(@NotNull ItemStack stack) {
 
                 return HOLY_WATER_BOTTLE_ENHANCED.get().equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ULTIMATE.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get())) {
+        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ULTIMATE.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get())) {
             @Override
             public boolean isInput(@NotNull ItemStack stack) {
                 return HOLY_WATER_BOTTLE_ULTIMATE.get().equals(stack.getItem());
@@ -290,7 +288,7 @@ public class ModItems {
     }
 
 
-    public static void register(IEventBus bus) {
+    static void register(IEventBus bus) {
         CREATIVE_TABS.register(bus);
         ITEMS.register(bus);
         if (VampirismMod.inDataGen) {
@@ -305,8 +303,7 @@ public class ModItems {
         return new Item.Properties();
     }
 
-    @ApiStatus.Internal
-    public static void registerOtherCreativeTabItems(BuildCreativeModeTabContentsEvent event) {
+    static void registerOtherCreativeTabItems(BuildCreativeModeTabContentsEvent event) {
         CREATIVE_TAB_ITEMS.forEach((tab, items) -> {
             if (event.getTabKey() == tab) {
                 items.forEach(item -> event.accept(item.get()));
@@ -317,14 +314,9 @@ public class ModItems {
     public static void registerDispenserBehaviourUnsafe() {
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
         DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
-        AbstractProjectileDispenseBehavior crossbowArrowBehaviour = new AbstractProjectileDispenseBehavior() {
-            protected @NotNull Projectile getProjectile(@NotNull Level level, @NotNull Position position, @NotNull ItemStack stack) {
-                return ((CrossbowArrowItem) stack.getItem()).createArrow(level, stack, position);
-            }
-        };
-        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get(), crossbowArrowBehaviour);
-        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get(), crossbowArrowBehaviour);
-        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get(), crossbowArrowBehaviour);
-        DispenserBlock.registerBehavior(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), crossbowArrowBehaviour);
+        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get());
     }
 }

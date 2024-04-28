@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -21,7 +22,7 @@ import java.util.function.Supplier;
  */
 public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
 
-    private final Map<Attribute, AttributeHolder> attributeModifierMap = new HashMap<>();
+    private final Map<Holder<Attribute>, AttributeHolder> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)
     private final int skillPointCost;
     private String translationId;
@@ -66,12 +67,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
 
-    public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, double amount, AttributeModifier.@NotNull Operation operation) {
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull String uuid, double amount, AttributeModifier.@NotNull Operation operation) {
         this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), () -> amount, operation));
         return this;
     }
 
-    public @NotNull DefaultSkill<T> registerAttributeModifier(Attribute attribute, @NotNull String uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull String uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
         this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), amountSupplier, operation));
         return this;
     }
@@ -101,7 +102,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void applyAttributesModifiersToEntity(@NotNull Player player) {
-        for (Map.Entry<Attribute, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Holder<Attribute>, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
             if (instance != null) {
@@ -123,7 +124,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void removeAttributesModifiersFromEntity(@NotNull Player player) {
-        for (Map.Entry<Attribute, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Holder<Attribute>, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
             if (attribute != null) {
@@ -143,12 +144,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     protected class AttributeHolder {
-        public final Attribute attribute;
+        public final Holder<Attribute> attribute;
         public final @NotNull UUID uuid;
         public final @NotNull Supplier<Double> amountSupplier;
         public final AttributeModifier.@NotNull Operation operation;
 
-        private AttributeHolder(Attribute attribute, @NotNull UUID uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+        private AttributeHolder(Holder<Attribute> attribute, @NotNull UUID uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
             this.attribute = attribute;
             this.uuid = uuid;
             this.amountSupplier = amountSupplier;

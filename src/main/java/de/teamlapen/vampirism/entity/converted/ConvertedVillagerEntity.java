@@ -69,7 +69,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
-        return VampirismVillagerEntity.createAttributes().add(ModAttributes.SUNDAMAGE.get());
+        return VampirismVillagerEntity.createAttributes().add(ModAttributes.SUNDAMAGE);
     }
 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
@@ -241,9 +241,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.registerConvertingData(this);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        this.registerConvertingData(builder);
     }
 
     /**

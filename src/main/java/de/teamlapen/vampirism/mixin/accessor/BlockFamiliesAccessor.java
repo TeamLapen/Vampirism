@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(BlockFamilies.class)
 public interface BlockFamiliesAccessor {
 
-    @Invoker("familyBuilder(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder")
+    @Invoker("familyBuilder")
     static BlockFamily.Builder familyBuilder(Block pBaseBlock) {
         throw new IllegalStateException("Mixin failed to apply");
     }

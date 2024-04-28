@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -118,7 +119,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
         if (!level().isClientSide) {
             if (isGettingSundamage(level()) && tickCount % 40 == 11) {
-                double dmg = getAttribute(ModAttributes.SUNDAMAGE.get()).getValue();
+                double dmg = getAttribute(ModAttributes.SUNDAMAGE).getValue();
                 if (dmg > 0) {
                     DamageHandler.hurtModded(this, ModDamageSources::sunDamage, (float) dmg);
                 }
@@ -152,7 +153,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.hasEffect(ModEffects.SUNSCREEN.get());
+        return this.hasEffect(ModEffects.SUNSCREEN);
     }
 
     @Override
@@ -193,9 +194,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     protected boolean canConsume(@NotNull ItemStack stack) {
         if (!super.canConsume(stack)) return false;
-        if ((stack.isEdible() && !(stack.getItem() instanceof VampirismItemBloodFoodItem))) return false;
+        if ((stack.getFoodProperties(this) != null && !(stack.getItem() instanceof VampirismItemBloodFoodItem))) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        if (fullHealth && (stack.isEdible() && stack.getItem() instanceof VampirismItemBloodFoodItem)) return false;
+        if (fullHealth && (stack.getFoodProperties(this) != null && stack.getItem() instanceof VampirismItemBloodFoodItem)) return false;
         if (stack.getItem() instanceof BloodBottleItem && stack.getDamageValue() == 0) return false;
         return !fullHealth || !(stack.getItem() instanceof BloodBottleItem);
     }
@@ -222,8 +223,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void onMinionDataReceived(@NotNull VampireMinionData data) {
-        super.onMinionDataReceived(data);
+    protected void onMinionDataReceived(HolderLookup.Provider provider, @NotNull VampireMinionData data) {
+        super.onMinionDataReceived(provider, data);
         updateAttributes();
     }
 
@@ -278,8 +279,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void deserializeNBT(@NotNull CompoundTag nbt) {
-            super.deserializeNBT(nbt);
+        public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+            super.deserializeNBT(provider, nbt);
             type = nbt.getInt("vampire_type");
             level = nbt.getInt("level");
             useLordSkin = nbt.getBoolean("use_lord_skin");
@@ -327,12 +328,16 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, int @NotNull ... data) {
+        public void handleMinionAppearanceConfig(String newName, @NotNull List<Integer> data) {
             this.setName(newName);
-            if (data.length >= 2) {
-                this.type = data[0];
-                this.useLordSkin = (data[1] & 0b1) == 1;
-                this.minionSkin = (data[1] & 0b10) == 0b10;
+            for (int i = 0; i < data.size(); i++) {
+                switch (i) {
+                    case 0 -> this.type = data.get(i);
+                    case 1 ->  {
+                        this.useLordSkin = (data.get(i) & 0b1) == 1;
+                        this.minionSkin = (data.get(i) & 0b10) == 0b10;
+                    }
+                }
             }
         }
 
@@ -354,8 +359,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(@NotNull CompoundTag tag) {
-            super.serializeNBT(tag);
+        public void serializeNBT(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+            super.serializeNBT(tag, provider);
             tag.putInt("vampire_type", type);
             tag.putInt("level", level);
             tag.putBoolean("use_lord_skin", useLordSkin);

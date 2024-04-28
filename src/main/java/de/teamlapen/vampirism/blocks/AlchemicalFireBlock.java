@@ -74,9 +74,9 @@ public class AlchemicalFireBlock extends VampirismBlock {
     @Override
     public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entityIn) {
         if (!entityIn.fireImmune()) {
-            entityIn.setRemainingFireTicks(entityIn.getRemainingFireTicks() + 1);
+            entityIn.igniteForSeconds(entityIn.getRemainingFireTicks() + 1);
             if (entityIn.getRemainingFireTicks() == 0) {
-                entityIn.setSecondsOnFire(8);
+                entityIn.igniteForSeconds(8);
             }
 
             DamageHandler.hurtVanilla(entityIn, DamageSources::inFire, 1);

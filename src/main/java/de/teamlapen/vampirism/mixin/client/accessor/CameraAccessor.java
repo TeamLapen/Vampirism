@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Camera.class)
 public interface CameraAccessor {
 
-    @Invoker("move(DDD)V")
+    @Invoker("move")
     void invoke_move(double pDistanceOffset, double pVerticalOffset, double pHorizontalOffset);
 }

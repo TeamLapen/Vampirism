@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
-import de.teamlapen.vampirism.util.OilUtils;
+import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ public class ItemMixin {
 
     @Inject(method = "isFoil", at = @At("RETURN"), cancellable = true)
     private void hasOil(@NotNull ItemStack stack, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        if (OilUtils.hasAppliedOil(stack)) {
+        if (AppliedOilContent.getAppliedOil(stack).isPresent()) {
             cir.setReturnValue(true);
         }
     }

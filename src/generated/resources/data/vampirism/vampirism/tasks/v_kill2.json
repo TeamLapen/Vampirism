@@ -15,7 +15,7 @@
   "rewards": {
     "type": "vampirism:item",
     "item": {
-      "Count": 8,
+      "count": 8,
       "id": "vampirism:human_heart"
     }
   },

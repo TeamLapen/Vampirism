@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "minecraft:string"
@@ -20,7 +20,8 @@
     " ZZ "
   ],
   "result": {
-    "item": "vampirism:basic_double_crossbow"
+    "count": 1,
+    "id": "vampirism:basic_double_crossbow"
   },
   "skill": [
     "vampirism:double_crossbow"

@@ -69,7 +69,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
         }
         this.renderTooltip(graphics, mouseX, mouseY);
         this.recipeBookGui.renderTooltip(graphics, this.leftPos, this.topPos, mouseX, mouseY);
-        this.magicalSpecialHackyFocus(this.recipeBookGui);
+        this.setInitialFocus(this.recipeBookGui);
     }
 
     @Override

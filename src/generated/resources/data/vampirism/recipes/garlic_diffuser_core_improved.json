@@ -8,7 +8,10 @@
   "ingredient": {
     "item": "vampirism:garlic_diffuser_core"
   },
-  "result": "vampirism:garlic_diffuser_core_improved",
+  "result": {
+    "count": 1,
+    "id": "vampirism:garlic_diffuser_core_improved"
+  },
   "skill": [
     "vampirism:garlic_diffuser_improved"
   ]

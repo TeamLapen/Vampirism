@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "X": {
       "item": "minecraft:string"
@@ -12,7 +12,7 @@
       "item": "minecraft:honeycomb"
     },
     "Z": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
@@ -21,6 +21,7 @@
     "ZAZ"
   ],
   "result": {
-    "item": "vampirism:item_candelabra"
+    "count": 1,
+    "id": "vampirism:item_candelabra"
   }
 }

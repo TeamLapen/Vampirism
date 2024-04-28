@@ -28,12 +28,13 @@ public class VampirismEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         if (this == ModEffects.ARMOR_REGENERATION.get()) {
             if (entityLivingBaseIn instanceof Player player && entityLivingBaseIn.isAlive()) {
                 VampirePlayer.get(player).requestNaturalArmorUpdate();
             }
         }
+        return true;
     }
 
     @Override

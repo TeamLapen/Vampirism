@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.items.StakeItem;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class StakeCondition implements LootItemCondition {
 
-    public static final Codec<StakeCondition> CODEC = RecordCodecBuilder.create(inst ->
+    public static final MapCodec<StakeCondition> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     LootContext.EntityTarget.CODEC.fieldOf("target").forGetter(l -> l.target)
             ).apply(inst, StakeCondition::new));

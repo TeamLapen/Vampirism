@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:crops/garlic"
+            "items": "#forge:crops/garlic"
           }
         ]
       },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": "#c:ingots/iron"
           }
         ]
       },

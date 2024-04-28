@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "Y": {
       "item": "minecraft:coal"
@@ -15,6 +15,7 @@
     "XYX"
   ],
   "result": {
-    "item": "vampirism:grave_cage"
+    "count": 1,
+    "id": "vampirism:grave_cage"
   }
 }

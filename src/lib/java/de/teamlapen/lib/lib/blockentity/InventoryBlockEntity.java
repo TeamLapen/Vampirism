@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.blockentity;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
@@ -25,7 +26,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 64;
-    protected final @NotNull NonNullList<ItemStack> inventorySlots;
+    protected @NotNull NonNullList<ItemStack> inventorySlots;
     protected InventoryContainerMenu.SelectorInfo[] selectors;
 
     public InventoryBlockEntity(@NotNull BlockEntityType<?> tileEntityTypeIn, @NotNull BlockPos pos, @NotNull BlockState state, ItemCombinerMenuSlotDefinition slotDefinition) {
@@ -69,10 +70,20 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void load(@NotNull CompoundTag tagCompound) {
-        super.load(tagCompound);
+    protected void setItems(NonNullList<ItemStack> newInventory) {
+        this.inventorySlots = newInventory;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.inventorySlots;
+    }
+
+    @Override
+    public void loadAdditional(@NotNull CompoundTag tagCompound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tagCompound, lookupProvider);
         inventorySlots.clear();
-        ContainerHelper.loadAllItems(tagCompound, this.inventorySlots);
+        ContainerHelper.loadAllItems(tagCompound, this.inventorySlots, lookupProvider);
 
     }
 
@@ -89,9 +100,9 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        ContainerHelper.saveAllItems(pTag, inventorySlots);
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        ContainerHelper.saveAllItems(pTag, inventorySlots, lookupProvider);
     }
 
     @Override

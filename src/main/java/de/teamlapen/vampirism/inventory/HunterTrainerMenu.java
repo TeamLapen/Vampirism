@@ -100,7 +100,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
             this.lvlRequirement.ifPresent(req -> {
                 FactionPlayerHandler.get(this.player).setFactionLevel(VReference.HUNTER_FACTION, req.targetLevel());
                 InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
-                this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION.get(), 400, 2));
+                this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
             });
         }

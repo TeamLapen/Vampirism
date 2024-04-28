@@ -16,6 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.*;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
@@ -46,6 +48,7 @@ public class TagProvider {
         gen.addProvider(event.includeServer(), new ModTasksProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModStructuresProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModSkillTreeProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModEffectTypeProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -192,7 +195,7 @@ public class TagProvider {
             tag(ModTags.Blocks.PURPLE_STONE_TILES).add(ModBlocks.PURPLE_STONE_TILES.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
             tag(ModTags.Blocks.NO_SPAWN).addTag(ModTags.Blocks.DARK_STONE);
             tag(ModTags.Blocks.VAMPIRE_SPAWN).addTags(ModTags.Blocks.DARK_STONE_BRICKS, ModTags.Blocks.COBBLED_DARK_STONE, ModTags.Blocks.POLISHED_DARK_STONE, ModTags.Blocks.DARK_STONE_TILES);
-            tag(Tags.Blocks.STONE).add(ModBlocks.DARK_STONE.get(), ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE.get());
+            tag(Tags.Blocks.STONES).add(ModBlocks.DARK_STONE.get(), ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE.get());
             tag(BlockTags.WALLS).add(ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
             tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
             tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get());
@@ -263,6 +266,18 @@ public class TagProvider {
             tag(ModTags.Items.HUNTER_COAT).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(),ModItems.HUNTER_COAT_HEAD_ENHANCED.get(),ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(),ModItems.HUNTER_COAT_CHEST_ENHANCED.get(),ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(),ModItems.HUNTER_COAT_LEGS_ENHANCED.get(),ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(),ModItems.HUNTER_COAT_FEET_ENHANCED.get(),ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
             tag(ItemTags.FREEZE_IMMUNE_WEARABLES).addTag(ModTags.Items.HUNTER_COAT);
             tag(ModTags.Items.VAMPIRE_BEACON_PAYMENT_ITEM).addTags(ModTags.Items.PURE_BLOOD, ModTags.Items.HEART).add(ModItems.SOUL_ORB_VAMPIRE.get());
+            tag(ModTags.Items.HEART_SEEKER).add(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get());
+            tag(ModTags.Items.HEART_STRIKER).add(ModItems.HEART_STRIKER_NORMAL.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get());
+            tag(ItemTags.SWORDS).addTags(ModTags.Items.HEART_STRIKER, ModTags.Items.HEART_SEEKER);
+            tag(ModTags.Items.VAMPIRE_SLAYER_ITEMS).addTag(ItemTags.SWORDS).add(ModItems.PITCHFORK.get());
+            tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
+            tag(ModTags.Items.CROSSBOW_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
+            tag(ModTags.Items.CROSSBOWS).addTags(ModTags.Items.BASIC_CROSSBOWS, ModTags.Items.ENHANCED_CROSSBOWS, ModTags.Items.SINGLE_CROSSBOWS, ModTags.Items.DOUBLE_CROSSBOWS, ModTags.Items.TECH_CROSSBOWS);
+            tag(ModTags.Items.BASIC_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
+            tag(ModTags.Items.ENHANCED_CROSSBOWS).add(ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
+            tag(ModTags.Items.SINGLE_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get());
+            tag(ModTags.Items.DOUBLE_CROSSBOWS).add(ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get());
+            tag(ModTags.Items.TECH_CROSSBOWS).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         }
     }
 
@@ -274,11 +289,12 @@ public class TagProvider {
         @Override
         protected void addTags(HolderLookup.Provider holderLookup) {
             tag(ModTags.Entities.HUNTER).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get(), ModEntities.HUNTER_TRAINER.get(), ModEntities.HUNTER_TRAINER.get(), ModEntities.HUNTER_TRAINER_DUMMY.get(), ModEntities.TASK_MASTER_HUNTER.get());
-            tag(ModTags.Entities.VAMPIRE).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.VAMPIRE_BARON.get(), ModEntities.TASK_MASTER_VAMPIRE.get());
+            tag(ModTags.Entities.VAMPIRE).addTag(ModTags.Entities.CONVERTED_CREATURES).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get(), ModEntities.VAMPIRE_BARON.get(), ModEntities.TASK_MASTER_VAMPIRE.get());
             tag(ModTags.Entities.ADVANCED_HUNTER).add(ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
             tag(ModTags.Entities.ADVANCED_VAMPIRE).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
             tag(ModTags.Entities.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
             tag(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER).add(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), ModEntities.GHOST.get());
+            tag(ModTags.Entities.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CAMEL.get(), ModEntities.CONVERTED_COW.get(), ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.CONVERTED_DONKEY.get(), ModEntities.CONVERTED_FOX.get(), ModEntities.CONVERTED_GOAT.get(), ModEntities.CONVERTED_HORSE.get(), ModEntities.CONVERTED_MULE.get(), ModEntities.CONVERTED_SHEEP.get(), ModEntities.VILLAGER_CONVERTED.get());
         }
     }
 
@@ -320,7 +336,7 @@ public class TagProvider {
             tag(ModTags.Biomes.HasStructure.HUNTER_OUTPOST_BADLANDS).addTags(BiomeTags.IS_BADLANDS);
             tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
             tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
-            tag(Tags.Biomes.IS_DENSE_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
+            tag(Tags.Biomes.IS_DENSE_VEGETATION_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
             tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST);
             tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST);
             tag(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD);
@@ -478,6 +494,18 @@ public class TagProvider {
             this.tag(ModTags.SkillTrees.VAMPIRE).add(VampireSkills.Trees.LEVEL, VampireSkills.Trees.LORD);
             this.tag(ModTags.SkillTrees.LEVEL).add(HunterSkills.Trees.LEVEL, VampireSkills.Trees.LEVEL);
             this.tag(ModTags.SkillTrees.LORD).add(HunterSkills.Trees.LORD, VampireSkills.Trees.LORD);
+        }
+    }
+
+    public static class ModEffectTypeProvider extends TagsProvider<MobEffect> {
+
+        public ModEffectTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.MOB_EFFECT, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(ModTags.Effects.HUNTER_POTION_RESISTANCE).add(MobEffects.BLINDNESS.unwrapKey().orElseThrow(),MobEffects.CONFUSION.unwrapKey().orElseThrow(),MobEffects.HUNGER.unwrapKey().orElseThrow(),MobEffects.POISON.unwrapKey().orElseThrow(),ModEffects.FREEZE.getKey());
         }
     }
 }

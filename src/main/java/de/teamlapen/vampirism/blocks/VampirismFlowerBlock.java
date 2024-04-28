@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
@@ -26,13 +27,13 @@ public class VampirismFlowerBlock extends FlowerBlock {
 
 
     public enum TYPE implements StringRepresentable {
-        ORCHID("vampire_orchid", () -> MobEffects.BLINDNESS, 7);
+        ORCHID("vampire_orchid", MobEffects.BLINDNESS, 7);
 
         private final String name;
-        private final Supplier<MobEffect> effect;
+        private final Holder<MobEffect> effect;
         private final int duration;
 
-        TYPE(String name, Supplier<MobEffect> effect, int duration) {
+        TYPE(String name, Holder<MobEffect> effect, int duration) {
             this.name = name;
             this.effect = effect;
             this.duration = duration;
