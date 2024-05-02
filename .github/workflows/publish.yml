@@ -65,7 +65,7 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'adopt'
         cache: 'gradle'
     - name: Determine Crowdin branch
@@ -92,7 +92,7 @@ jobs:
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'adopt'
         cache: 'gradle'
     - name: Install Crowdin CLI
