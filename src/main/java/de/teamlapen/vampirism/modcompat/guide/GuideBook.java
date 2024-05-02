@@ -19,6 +19,7 @@ import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -51,7 +52,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +82,7 @@ public class GuideBook implements IGuideBook {
         categories.add(new CategoryItemStack(buildItems(helper), translateComponent("guide.vampirism.items.title"), new ItemStack(Items.APPLE)));
         categories.add(new CategoryItemStack(buildBlocks(helper), translateComponent("guide.vampirism.blocks.title"), new ItemStack(ModBlocks.DARK_STONE_BRICKS.get())));
         categories.add(new CategoryItemStack(buildChangelog(helper), translateComponent("guide.vampirism.changelog.title"), new ItemStack(Items.WRITABLE_BOOK)));
-        MinecraftForge.EVENT_BUS.post(new VampirismGuideBookCategoriesEvent(categories));
+        NeoForge.EVENT_BUS.post(new VampirismGuideBookCategoriesEvent(categories));
         helper.registerLinkablePages(categories);
         LOGGER.debug("Built content in {} ms", System.currentTimeMillis() - start);
     }
@@ -238,14 +239,14 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "dbno"), new EntryText(dbnoPages, translateComponent(base + "dbno")));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription().getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, true).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), true).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription().getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title", "text.vampirism.title");
-        lordTitleBuilder.addLine(1, VReference.VAMPIRE_FACTION.getLordTitle(1, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, true).getString());
-        lordTitleBuilder.addLine(2, VReference.VAMPIRE_FACTION.getLordTitle(2, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(2, true).getString());
-        lordTitleBuilder.addLine(3, VReference.VAMPIRE_FACTION.getLordTitle(3, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(3, true).getString());
-        lordTitleBuilder.addLine(4, VReference.VAMPIRE_FACTION.getLordTitle(4, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(4, true).getString());
-        lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5, false).getString(), VReference.VAMPIRE_FACTION.getLordTitle(5, true).getString());
+        lordTitleBuilder.addLine(1, VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(2, VReference.VAMPIRE_FACTION.getLordTitle(2,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(3, VReference.VAMPIRE_FACTION.getLordTitle(3,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(4, VReference.VAMPIRE_FACTION.getLordTitle(4,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(4, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.FEMALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.VAMPIRE_MINION_BINDING.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.vampire_minion_binding")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
@@ -334,15 +335,15 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "vamp_slayer"), new EntryText(vampSlayerPages, translateComponent(base + "vamp_slayer")));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), VReference.HUNTER_FACTION.getLordTitle(1, false).getString(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), false).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
         lordTitleBuilder.setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title");
-        lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, false).getString());
-        lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, false).getString());
-        lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, false).getString());
-        lordTitleBuilder.addLine(4, VReference.HUNTER_FACTION.getLordTitle(4, false).getString());
-        lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, false).getString());
+        lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(4, VReference.HUNTER_FACTION.getLordTitle(4, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.MALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.hunter_minion_equipment")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
@@ -461,19 +462,19 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.INJECTION_EMPTY.get(), ModItems.INJECTION_GARLIC.get(), ModItems.INJECTION_SANGUINARE.get()).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
         helper.info(ModItems.HUNTER_INTEL_0.get()).setLinks(new ResourceLocation("guide.vampirism.blocks.hunter_table")).setFormats(loc(ModBlocks.HUNTER_TABLE.get())).build(entries);
         helper.info(ModItems.ITEM_GARLIC.get()).build(entries);
-        helper.info(ModItems.PURIFIED_GARLIC.get()).setFormats(loc(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_diffuser")).recipes("alchemical_cauldron/purified_garlic").build(entries);
-        helper.info(ModItems.PITCHFORK.get()).recipes("weapontable/pitchfork").build(entries);
+        helper.info(ModItems.PURIFIED_GARLIC.get()).setFormats(loc(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())).setLinks(new ResourceLocation("guide.vampirism.blocks.garlic_diffuser")).recipes("purified_garlic").build(entries);
+        helper.info(ModItems.PITCHFORK.get()).recipes("pitchfork").build(entries);
         helper.info(ModItems.STAKE.get()).setFormats(((int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100)) + "%").recipes("hunter/stake").build(entries);
-        helper.info(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).setFormats(loc(ModItems.CROSSBOW_ARROW_NORMAL.get()), loc(ModItems.ARROW_CLIP.get())).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("weapontable/basic_crossbow", "weapontable/enhanced_crossbow", "weapontable/basic_double_crossbow", "weapontable/enhanced_double_crossbow", "weapontable/basic_tech_crossbow", "weapontable/enhanced_tech_crossbow", "weapontable/tech_crossbow_ammo_package").useCustomEntryName().setKeyName("crossbows").build(entries);
-        helper.info(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get()).recipes("hunter/crossbow_arrow_normal", "weapontable/crossbow_arrow_spitfire", "weapontable/crossbow_arrow_vampire_killer").build(entries);
+        helper.info(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).setFormats(loc(ModItems.CROSSBOW_ARROW_NORMAL.get()), loc(ModItems.ARROW_CLIP.get())).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("basic_crossbow", "enhanced_crossbow", "basic_double_crossbow", "enhanced_double_crossbow", "basic_tech_crossbow", "enhanced_tech_crossbow", "tech_crossbow_ammo_package").useCustomEntryName().setKeyName("crossbows").build(entries);
+        helper.info(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get()).recipes("hunter/crossbow_arrow_normal", "crossbow_arrow_spitfire", "crossbow_arrow_vampire_killer").build(entries);
         helper.info(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get()).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.pure_salt")).setFormats(loc(ModItems.PURE_SALT_WATER.get()), loc(ModItems.PURE_SALT_WATER.get()), loc(ModItems.PURE_SALT.get())).brewingItems(ModItems.PURE_SALT_WATER.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get()).setKeyName("holy_water_bottle").build(entries);
         helper.info(ModItems.PURE_SALT.get()).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(loc(ModItems.PURE_SALT.get()), loc(ModItems.PURE_SALT.get()), loc(ModBlocks.ALCHEMICAL_CAULDRON.get())).recipes("alchemical_cauldron/pure_salt").build(entries);
-        helper.info(ModItems.ITEM_ALCHEMICAL_FIRE.get()).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("alchemical_cauldron/alchemical_fire_4", "alchemical_cauldron/alchemical_fire_5", "alchemical_cauldron/alchemical_fire_6").build(entries);
-        helper.info(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()).recipes("weapontable/armor_of_swiftness_chest_normal", "weapontable/armor_of_swiftness_legs_normal", "weapontable/armor_of_swiftness_head_normal", "weapontable/armor_of_swiftness_feet_normal", "weapontable/armor_of_swiftness_chest_enhanced", "weapontable/armor_of_swiftness_legs_enhanced", "weapontable/armor_of_swiftness_head_enhanced", "weapontable/armor_of_swiftness_feet_enhanced").build(entries);
-        helper.info(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()).recipes("weapontable/hunter_coat_chest_normal", "weapontable/hunter_coat_legs_normal", "weapontable/hunter_coat_head_normal", "weapontable/hunter_coat_feet_normal", "weapontable/hunter_coat_chest_enhanced", "weapontable/hunter_coat_legs_enhanced", "weapontable/hunter_coat_head_enhanced", "weapontable/hunter_coat_feet_enhanced").build(entries);
-        helper.info(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get()).recipes("weapontable/hunter_axe_normal", "weapontable/hunter_axe_enhanced").build(entries);
+        helper.info(ModItems.ITEM_ALCHEMICAL_FIRE.get()).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow_normal")).recipes("alchemical_fire_4", "alchemical_fire_5", "alchemical_fire_6").build(entries);
+        helper.info(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()).recipes("armor_of_swiftness_chest_normal", "armor_of_swiftness_legs_normal", "armor_of_swiftness_head_normal", "armor_of_swiftness_feet_normal", "armor_of_swiftness_chest_enhanced", "armor_of_swiftness_legs_enhanced", "armor_of_swiftness_head_enhanced", "armor_of_swiftness_feet_enhanced").build(entries);
+        helper.info(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()).recipes("hunter_coat_chest_normal", "hunter_coat_legs_normal", "hunter_coat_head_normal", "hunter_coat_feet_normal", "hunter_coat_chest_enhanced", "hunter_coat_legs_enhanced", "hunter_coat_head_enhanced", "hunter_coat_feet_enhanced").build(entries);
+        helper.info(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get()).setKeyName("hunter_axe").recipes("hunter_axe_normal", "hunter_axe_enhanced").build(entries);
         helper.info(ModItems.HUNTER_MINION_EQUIPMENT.get(), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get(), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get(), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()).setFormats(loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get().getMaxLevel() + 1, loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()), ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMinLevel() + 1, ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get().getMaxLevel() + 1, translate(ModEntities.TASK_MASTER_HUNTER.get().getDescriptionId())).setLinks(new ResourceLocation("guide.vampirism.entity.taskmaster"), new ResourceLocation("guide.vampirism.hunter.lord")).build(entries);
-        helper.info(ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get()).setKeyName("crucifix").recipes("hunter/crucifix","weapontable/crucifix_enhanced", "weapontable/crucifix_ultimate").build(entries);
+        helper.info(ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get()).setKeyName("crucifix").recipes("hunter/crucifix","crucifix_enhanced", "crucifix_ultimate").build(entries);
         return entries;
     }
 

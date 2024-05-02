@@ -39,13 +39,13 @@ public class PageTaskItemStack extends PageItemStack {
     }
 
     private void setupTask(RegistryAccess access) {
-        access.registry(VampirismRegistries.TASK_ID).flatMap(registry -> registry.getHolder(this.taskKey)).ifPresent(holder -> {
-            var task = holder.get();
+        access.registry(VampirismRegistries.Keys.TASK).flatMap(registry -> registry.getHolder(this.taskKey)).ifPresent(holder -> {
+            var task = holder.value();
             this.ingredient = Ingredient.of(((ItemReward) task.getReward()).getAllPossibleRewards().stream());
             List<FormattedText> text = new ArrayList<>();
             Component newLine = Component.literal("\n");
             if (holder.is(ModTags.Tasks.HAS_FACTION)) {
-                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", Arrays.stream(VampirismAPI.factionRegistry().getFactions()).filter(x -> x.getTag(VampirismRegistries.TASK_ID).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
+                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", Arrays.stream(VampirismAPI.factionRegistry().getFactions()).filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
             } else {
                 text.add(Component.translatable("text.vampirism.task.reward_obtain_all"));
             }

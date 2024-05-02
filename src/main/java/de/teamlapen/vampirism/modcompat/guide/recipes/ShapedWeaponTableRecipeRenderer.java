@@ -20,11 +20,11 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
     @Override
     public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
         super.draw(guiGraphics, registryAccess, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
-        for (int y = 0; y < recipe.getRecipeHeight(); y++) {
-            for (int x = 0; x < recipe.getRecipeWidth(); x++) {
+        for (int y = 0; y < recipe.getHeight(); y++) {
+            for (int x = 0; x < recipe.getWidth(); x++) {
                 int stackX = (x + 1) * 17 + (guiLeft + 49);
                 int stackY = (y + 1) * 17 + (guiTop + 30);
-                int i = y * recipe.getRecipeWidth() + x;
+                int i = y * recipe.getWidth() + x;
                 if (i < recipe.getIngredients().size()) {
                     ingredientCycler.getCycledIngredientStack(recipe.getIngredients().get(i), i).ifPresent(itemStack -> {
                         GuiHelper.drawItemStack(guiGraphics, itemStack, stackX, stackY);

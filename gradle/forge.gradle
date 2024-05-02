@@ -16,6 +16,10 @@ repositories {
     maven {
         name = "Maxanier"
         url = "https://maven.maxanier.de/releases"
+        content {
+            includeGroupAndSubgroups "de.teamlapen"
+            includeGroupAndSubgroups "de.maxanier"
+        }
     }
     maven {
         url "https://www.cursemaven.com"
@@ -68,13 +72,17 @@ runs {
     }
     client {
         systemProperty 'vampirism_target', 'dev'
+        systemProperty 'guideapi_target', 'dev'
         jvmArgument '-XX:+AllowEnhancedClassRedefinition'
+        jvmArgument '-XX:+IgnoreUnrecognizedVMOptions'
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         systemProperty 'mixin.debug.export', 'true'
     }
 
     server {
         systemProperty 'vampirism_target', 'dev'
+        jvmArgument '-XX:+AllowEnhancedClassRedefinition'
+        jvmArgument '-XX:+IgnoreUnrecognizedVMOptions'
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         programArgument '--nogui'
     }

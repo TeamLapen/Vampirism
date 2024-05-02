@@ -67,7 +67,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
             guiGraphics.drawString(fontRenderer, level, guiLeft + 40, y, Color.GRAY.getRGB(), false);
             y += fontRenderer.lineHeight + 2;
         }
-        if (recipe.getRequiredSkills().length > 0) {
+        if (!recipe.getRequiredSkills().isEmpty()) {
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
             skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));

@@ -16,8 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -125,10 +124,10 @@ public class PagePotionTableMix extends Page {
     }
 
     private void deriveItemStacks(@NotNull ExtendedPotionMix recipe) {
-        input = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.input.get());
-        output = PotionUtils.setPotion(new ItemStack(Items.POTION), recipe.output.get());
-        ingredients1 = recipe.reagent1.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 = recipe.reagent2.map(Ingredient::getItems).stream().flatMap(Arrays::stream).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        input = PotionContents.createItemStack(Items.POTION, recipe.input);
+        output = PotionContents.createItemStack(Items.POTION, recipe.output);
+        ingredients1 = Arrays.stream(recipe.reagent1.get().getItems()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
+        ingredients2 =  Arrays.stream(recipe.reagent2.get().getItems()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
             ingredients1 = new ItemStack[]{ItemStack.EMPTY};
         }
