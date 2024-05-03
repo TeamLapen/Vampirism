@@ -53,6 +53,11 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
+    protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {
+        return List.of(availableProjectiles.removeFirst());
+    }
+
+    @Override
     public boolean isValidRepairItem(@Nonnull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.INGOTS_IRON);
     }

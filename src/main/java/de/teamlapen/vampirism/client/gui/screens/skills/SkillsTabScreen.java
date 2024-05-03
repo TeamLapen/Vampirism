@@ -32,7 +32,7 @@ import java.util.Map;
 public class SkillsTabScreen {
 
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
-    public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 47;
+    public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 46;
     private final Minecraft minecraft;
     private final SkillsScreen screen;
     private final Holder<ISkillTree> skillTree;

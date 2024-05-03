@@ -18,14 +18,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -110,12 +113,32 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
-                List<ItemStack> arrows = List.of(chargedprojectiles.getItems().getFirst());
+                List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
+                List<ItemStack> arrows = getShootingProjectiles(crossbow, availableProjectiles);
                 this.shoot(level, shooter, hand, crossbow, arrows, speed, angle, shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
-                crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(chargedprojectiles.getItems().stream().filter(s -> !arrows.contains(s)).toList()));
+                crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
             }
         }
+    }
+
+    @Override
+    protected void shoot(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, List<ItemStack> projectiles, float speed, float inaccuracy, boolean isPlayer, @Nullable LivingEntity p_331167_) {
+        for (int i = 0; i < projectiles.size(); i++) {
+            ItemStack itemstack = projectiles.get(i);
+            if (!itemstack.isEmpty()) {
+                crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, LivingEntity.getSlotForHand(hand));
+                Projectile projectile = this.createProjectile(level, shooter, crossbowStack, itemstack, isPlayer);
+                this.shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, p_331167_);
+                level.addFreshEntity(projectile);
+            }
+        }
+    }
+
+    protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {
+        List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
+        availableProjectiles.clear();
+        return shootingProjectiles;
     }
 
     protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
@@ -137,15 +160,11 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         return false;
     }
 
-    public float getShootingPowerMod(ItemStack crossbow) {
-        return 3.15F * this.arrowVelocity;
-    }
-
     @Override
     public void releaseUsing(@NotNull ItemStack p_77615_1_, @NotNull Level p_77615_2_, @NotNull LivingEntity p_77615_3_, int p_77615_4_) {
         int i = this.getUseDuration(p_77615_1_) - p_77615_4_;
         float f = getPowerForTimeMod(i, p_77615_1_);
-        if (f >= 1.0F && !isCharged(p_77615_1_) && tryLoadProjectilesMod(p_77615_3_, p_77615_1_)) {
+        if (f >= 1.0F && !isCharged(p_77615_1_) && tryLoadProjectiles(p_77615_3_, p_77615_1_)) {
             SoundSource soundcategory = p_77615_3_ instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
             p_77615_2_.playSound(null, p_77615_3_.getX(), p_77615_3_.getY(), p_77615_3_.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory, 1.0F, 1.0F / (p_77615_2_.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
@@ -177,57 +196,47 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         return true;
     }
 
-    /**
-     * from {@link net.minecraft.world.item.CrossbowItem#tryLoadProjectiles(net.minecraft.world.entity.LivingEntity, net.minecraft.world.item.ItemStack)}
-     * <br>
-     * see comments for change
-     */
-    @SuppressWarnings("JavadocReference")
-    protected boolean tryLoadProjectilesMod(LivingEntity entity, ItemStack crossbow) {
-        boolean flag = entity instanceof Player && ((Player)entity).getAbilities().instabuild;
-        ItemStack projectile = entity.getProjectile(crossbow);
-
-        if ((projectile.isEmpty() || projectile.getItem() == Items.ARROW) && flag) {
-            projectile = getAmmunition(crossbow).orElse(ModItems.CROSSBOW_ARROW_NORMAL.get()).getDefaultInstance();
+    protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
+        List<ItemStack> list = drawMod(pCrossbowStack, pShooter.getProjectile(pCrossbowStack), pShooter);
+        if (!list.isEmpty()) {
+            ArrayList<ItemStack> itemStacks = new ArrayList<>(pCrossbowStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems());
+            itemStacks.addAll(list);
+            pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(itemStacks));
+            return true;
+        } else {
+            return false;
         }
-
-        if (canBeInfinit(crossbow) && isInfinit(crossbow) && projectile.getItem() instanceof IVampirismCrossbowArrow<?> && ((IVampirismCrossbowArrow<?>) projectile.getItem()).isCanBeInfinite()) {
-            projectile = projectile.copy(); // do not consume arrow if infinite
-        }
-
-        return loadProjectileMod(entity, crossbow, projectile, false, flag);
     }
 
-    /**
-     * from {@link net.minecraft.world.item.CrossbowItem#loadProjectile(net.minecraft.world.entity.LivingEntity, net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack, boolean, boolean)}
-     * <br>
-     * changes at comments
-     */
-    @SuppressWarnings("JavadocReference")
-    protected boolean loadProjectileMod(LivingEntity entity, ItemStack crossbow, ItemStack projectile, boolean p_220023_3_, boolean noConsume) {
-        if (projectile.isEmpty()) {
-            return false;
+    protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
+        if (projectileStack.getItem() instanceof IArrowContainer container) {
+            return container.getAndRemoveArrows(projectileStack).stream().toList();
         } else {
-            boolean flag = noConsume && projectile.getItem() instanceof ArrowItem;
-            ItemStack itemstack;
-            if (!flag && !noConsume && !p_220023_3_) {
-                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.split(1);
-                if (projectile.isEmpty() && entity instanceof Player) {
-                    ((Player)entity).getInventory().removeItem(projectile);
-                }
-            } else {
-                itemstack = projectile.getItem() instanceof IArrowContainer ? projectile : projectile.copy();
+            return List.of(projectileStack);
+        }
+    }
+
+    protected List<ItemStack> drawMod(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
+        if (projectileStack.isEmpty()) {
+            return List.of();
+        } else {
+            return getLoadingProjectiles(crossbowStack, projectileStack, shooter).stream().map(projectile -> useAmmo(crossbowStack, projectile, shooter, false)).toList();
+        }
+    }
+
+    protected static ItemStack useAmmo(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter, boolean infinite) {
+        boolean flag = !infinite && !(shooter.hasInfiniteMaterials() || (projectileStack.getItem() instanceof ArrowItem && ((ArrowItem)projectileStack.getItem()).isInfinite(projectileStack, crossbowStack, shooter)));
+        if (!flag) {
+            ItemStack itemstack1 = projectileStack.copyWithCount(1);
+            itemstack1.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+            return itemstack1;
+        } else {
+            ItemStack itemstack = projectileStack.split(1);
+            if (projectileStack.isEmpty() && shooter instanceof Player player) {
+                player.getInventory().removeItem(projectileStack);
             }
 
-            List<ItemStack> loaded = new ArrayList<>(crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems());
-            if (itemstack.getItem() instanceof IArrowContainer container) { // if arrow container use contents
-                Collection<ItemStack> projectiles = noConsume ? container.getArrows(projectile) : container.getAndRemoveArrows(projectile);
-                loaded.addAll(projectiles);
-            } else {
-                loaded.add(itemstack);
-            }
-            crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(loaded));
-            return true;
+            return itemstack;
         }
     }
 

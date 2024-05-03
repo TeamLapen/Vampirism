@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -73,12 +74,12 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        inventory.read(provider, nbt.getList("inv", 10));
+        inventory.read(provider, nbt.getList("inv", Tag.TAG_COMPOUND));
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
         name = nbt.getString("name");
         taskLocked = nbt.getBoolean("locked");
-        if (nbt.contains("task", 10)) {
+        if (nbt.contains("task", Tag.TAG_COMPOUND)) {
             CompoundTag task = nbt.getCompound("task");
             ResourceLocation id = new ResourceLocation(task.getString("id"));
             //noinspection unchecked

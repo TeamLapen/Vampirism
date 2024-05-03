@@ -6,6 +6,7 @@
     "AreaEffectCloudMixin",
     "ItemMixin",
     "MixinBellBlock",
+    "MixinCrossbowItem",
     "MixinEntity",
     "MixinEntityPredicate",
     "MixinJigsawPlacer",

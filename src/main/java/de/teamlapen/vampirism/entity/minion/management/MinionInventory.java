@@ -104,9 +104,9 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         this.inventoryHands.clear();
 
         for (int i = 0; i < nbtTagListIn.size(); ++i) {
-            CompoundTag compoundnbt = nbtTagListIn.getCompound(i);
-            int j = compoundnbt.getByte("Slot") & 255;
-            ItemStack itemstack = ItemStack.parseOptional(provider, compoundnbt);
+            CompoundTag compoundTag = nbtTagListIn.getCompound(i);
+            int j = compoundTag.getByte("Slot") & 255;
+            ItemStack itemstack = ItemStack.parse(provider, compoundTag).orElse(ItemStack.EMPTY);
             if (!itemstack.isEmpty()) {
                 if (j < this.inventoryHands.size()) {
                     this.inventoryHands.set(j, itemstack);
@@ -182,30 +182,28 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     public ListTag write(HolderLookup.Provider provider, @NotNull ListTag nbt) {
-        for (int i = 0; i < this.inventoryHands.size(); ++i) {
+        for (int i = 0; i < this.inventoryHands.size(); i++) {
             if (!this.inventoryHands.get(i).isEmpty()) {
-                CompoundTag compoundnbt = new CompoundTag();
-                compoundnbt.putByte("Slot", (byte) i);
-                this.inventoryHands.get(i).save(provider, compoundnbt);
-                nbt.add(compoundnbt);
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.putByte("Slot", (byte)i);
+                nbt.add(this.inventoryHands.get(i).save(provider, compoundTag));
             }
         }
 
-        for (int j = 0; j < this.inventoryArmor.size(); ++j) {
-            if (!this.inventoryArmor.get(j).isEmpty()) {
-                CompoundTag compoundnbt1 = new CompoundTag();
-                compoundnbt1.putByte("Slot", (byte) (j + 10));
-                this.inventoryArmor.get(j).save(provider, compoundnbt1);
-                nbt.add(compoundnbt1);
+        for (int i = 0; i < this.inventoryArmor.size(); ++i) {
+            if (!this.inventoryArmor.get(i).isEmpty()) {
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.putByte("Slot", (byte) (i + 10));
+                nbt.add(this.inventoryArmor.get(i).save(provider, compoundTag));
+
             }
         }
 
-        for (int k = 0; k < this.inventory.size(); ++k) {
-            if (!this.inventory.get(k).isEmpty()) {
-                CompoundTag compoundnbt2 = new CompoundTag();
-                compoundnbt2.putByte("Slot", (byte) (k + 20));
-                this.inventory.get(k).save(provider, compoundnbt2);
-                nbt.add(compoundnbt2);
+        for (int i = 0; i < this.inventory.size(); ++i) {
+            if (!this.inventory.get(i).isEmpty()) {
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.putByte("Slot", (byte) (i + 20));
+                nbt.add(this.inventory.get(i).save(provider, compoundTag));
             }
         }
         return nbt;

@@ -19,7 +19,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -394,7 +394,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(2, new AttackRangedCrossbowGoal<>(this, 0.8, 100));
+        this.goalSelector.addGoal(2, new RangedHunterCrossbowAttackGoal<>(this, 0.8, 100));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
 
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7, 50));

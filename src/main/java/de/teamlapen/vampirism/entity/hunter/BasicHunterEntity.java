@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.ai.goals.AttackRangedCrossbowGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
@@ -497,7 +497,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
-        this.goalSelector.addGoal(3, new AttackRangedCrossbowGoal<>(this, 0.6, 60));
+        this.goalSelector.addGoal(3, new RangedHunterCrossbowAttackGoal<>(this, 0.6, 60));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.7, 50));
