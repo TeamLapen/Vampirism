@@ -43,8 +43,8 @@ import java.util.function.Supplier;
 
 public class VampirismContainerScreen extends AbstractContainerScreen<VampirismMenu> implements ExtendedScreen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu.png");
-    private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampirism_menu_refinements.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampirism_menu.png");
+    private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampirism_menu_refinements.png");
     private static final WidgetSprites APPEARANCE = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/appearance"), new ResourceLocation(REFERENCE.MODID, "widget/appearance_highlighted"));
     private static final WidgetSprites SKILLS = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/skills"), new ResourceLocation(REFERENCE.MODID, "widget/skills_highlighted"));
     private static final WidgetSprites SETTINGS = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/settings"), new ResourceLocation(REFERENCE.MODID, "widget/settings_highlighted"));

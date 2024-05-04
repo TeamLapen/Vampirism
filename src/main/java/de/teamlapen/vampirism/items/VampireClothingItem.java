@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModArmorMaterials;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -32,8 +34,8 @@ import java.util.function.Consumer;
 
 public class VampireClothingItem extends ArmorItem implements IFactionExclusiveItem {
 
-    public VampireClothingItem(@NotNull ArmorItem.Type type) {
-        super(ModArmorMaterials.VAMPIRE_CLOTH, type, new Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(15)));
+    public VampireClothingItem(@NotNull ArmorItem.Type type, Holder<ArmorMaterial> material) {
+        super(material, type, new Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(15)));
     }
 
     @Override

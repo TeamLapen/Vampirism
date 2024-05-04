@@ -11,8 +11,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.BeaconScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
@@ -35,6 +37,12 @@ import java.util.Optional;
 
 public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> {
     private static final ResourceLocation BEACON_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampire_beacon.png");
+    static final ResourceLocation BUTTON_DISABLED_SPRITE = new ResourceLocation("container/beacon/button_disabled");
+    static final ResourceLocation BUTTON_SELECTED_SPRITE = new ResourceLocation("container/beacon/button_selected");
+    static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = new ResourceLocation("container/beacon/button_highlighted");
+    static final ResourceLocation BUTTON_SPRITE = new ResourceLocation("container/beacon/button");
+    static final ResourceLocation CONFIRM_SPRITE = new ResourceLocation("container/beacon/confirm");
+    static final ResourceLocation CANCEL_SPRITE = new ResourceLocation("container/beacon/cancel");
     private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable
@@ -132,7 +140,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
 
     class BeaconCancelButton extends BeaconSpriteScreenButton {
         public BeaconCancelButton(int pX, int pY) {
-            super(pX, pY, 112, 220, CommonComponents.GUI_CANCEL);
+            super(pX, pY, CANCEL_SPRITE, CommonComponents.GUI_CANCEL);
         }
 
         public void onPress() {
@@ -146,7 +154,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     @OnlyIn(Dist.CLIENT)
     class BeaconConfirmButton extends BeaconSpriteScreenButton {
         public BeaconConfirmButton(int pX, int pY) {
-            super(pX, pY, 90, 220, CommonComponents.GUI_DONE);
+            super(pX, pY, CONFIRM_SPRITE, CommonComponents.GUI_DONE);
         }
 
         public void onPress() {
@@ -231,17 +239,18 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         public void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            int i = 219;
-            int j = 0;
+            ResourceLocation resourcelocation;
             if (!this.active) {
-                j += this.width * 2;
+                resourcelocation = BUTTON_DISABLED_SPRITE;
             } else if (this.selected) {
-                j += this.width;
+                resourcelocation = BUTTON_SELECTED_SPRITE;
             } else if (this.isHoveredOrFocused()) {
-                j += this.width * 3;
+                resourcelocation = BUTTON_HIGHLIGHTED_SPRITE;
+            } else {
+                resourcelocation = BUTTON_SPRITE;
             }
 
-            pGuiGraphics.blit(BEACON_LOCATION, this.getX(), this.getY(), j, 219, this.width, this.height);
+            pGuiGraphics.blitSprite(resourcelocation, this.getX(), this.getY(), this.width, this.height);
             this.renderIcon(pGuiGraphics);
         }
 
@@ -262,17 +271,16 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
 
     @OnlyIn(Dist.CLIENT)
     abstract static class BeaconSpriteScreenButton extends BeaconScreenButton {
-        private final int iconX;
-        private final int iconY;
+        private final ResourceLocation sprite;
 
-        protected BeaconSpriteScreenButton(int p_169663_, int p_169664_, int p_169665_, int p_169666_, Component p_169667_) {
-            super(p_169663_, p_169664_, p_169667_);
-            this.iconX = p_169665_;
-            this.iconY = p_169666_;
+        protected BeaconSpriteScreenButton(int pX, int pY, ResourceLocation pSprite, Component pMessage) {
+            super(pX, pY, pMessage);
+            this.sprite = pSprite;
+
         }
 
-        protected void renderIcon(GuiGraphics p_283624_) {
-            p_283624_.blit(BEACON_LOCATION, this.getX() + 2, this.getY() + 2, this.iconX, this.iconY, 18, 18);
+        protected void renderIcon(GuiGraphics pGuiGraphics) {
+            pGuiGraphics.blitSprite(this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
         }
     }
 

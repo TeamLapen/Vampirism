@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
@@ -66,6 +67,10 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
     @Override
     protected DummyEntry createDummy(ITaskInstance item) {
         return new DummyEntry(item);
+    }
+
+    @Override
+    protected void renderListSeparators(GuiGraphics p_331248_) {
     }
 
     @Override

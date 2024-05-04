@@ -22,14 +22,12 @@ import java.util.Collection;
 import java.util.Map;
 
 public class SkillTreeReloadListener extends SimpleJsonResourceReloadListener {
-    private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String DIRECTORY = "vampirism/configured_skill_tree";
     private Map<ResourceLocation, SkillTreeHolder> configuration = ImmutableMap.of();
 
     public SkillTreeReloadListener() {
         super(GSON, DIRECTORY);
-//        injectContext(conditionContext, registryAccess); TODO check if needed
     }
 
     @Override

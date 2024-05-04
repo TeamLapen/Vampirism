@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.client.gui.components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,6 +54,18 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     @Override
     protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
         super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
+    }
+
+    @Nullable
+    @Override
+    protected Entry<Z> getEntryAtPosition(double pMouseX, double pMouseY) {
+        int i = this.getRowWidth() / 2;
+        int j = this.getX() + this.width / 2;
+        int k = j - i;
+        int l = j + i;
+        int i1 = Mth.floor(pMouseY - (double)this.getY()) - this.headerHeight + (int)this.getScrollAmount() - 4;
+        int j1 = i1 / this.itemHeight;
+        return pMouseX >= (double)k && pMouseX <= (double)l -6 && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.children().get(j1) : null;
     }
 
     @Override

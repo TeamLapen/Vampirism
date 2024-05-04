@@ -131,8 +131,8 @@ public class ModItems {
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", () -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ENHANCED));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", () -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorItem.Type.LEGGINGS, IItemWithTier.TIER.ULTIMATE));
 
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_1));
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_2));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_1, ModArmorMaterials.HUNTER_HAT_0));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", () -> new HunterHatItem(HunterHatItem.HatType.TYPE_2, ModArmorMaterials.HUNTER_HAT_1));
 
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_0 = register("hunter_intel_0", () -> new HunterIntelItem(0));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_1 = register("hunter_intel_1", () -> new HunterIntelItem(1));
@@ -182,11 +182,11 @@ public class ModItems {
 
     });
 
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = register("vampire_cloak_black_blue", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = register("vampire_cloak_black_red", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = register("vampire_cloak_black_white", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = register("vampire_cloak_red_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumModel.CLOAK, "vampire_cloak", ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
+    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = register("vampire_cloak_black_blue", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE));
+    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = register("vampire_cloak_black_red", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKRED));
+    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = register("vampire_cloak_black_white", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE));
+    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = register("vampire_cloak_red_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.REDBLACK));
+    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", () -> new ColoredVampireClothingItem(ArmorItem.Type.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK));
 
     public static final DeferredItem<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", VampireBloodBottleItem::new);
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
@@ -218,10 +218,10 @@ public class ModItems {
     public static final DeferredItem<RefinementItem> RING = register("ring", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.RING));
     public static final DeferredItem<RefinementItem> OBI_BELT = register("obi_belt", () -> new VampireRefinementItem(props(), IRefinementItem.AccessorySlotType.OBI_BELT));
 
-    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
-    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(ArmorItem.Type.LEGGINGS));
-    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(ArmorItem.Type.BOOTS));
-    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(ArmorItem.Type.HELMET));
+    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = register("vampire_clothing_crown", () -> new VampireClothingItem(ArmorItem.Type.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_CROWN));
+    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = register("vampire_clothing_legs", () -> new VampireClothingItem(ArmorItem.Type.LEGGINGS, ModArmorMaterials.VAMPIRE_CLOTH_LEGS));
+    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = register("vampire_clothing_boots", () -> new VampireClothingItem(ArmorItem.Type.BOOTS, ModArmorMaterials.VAMPIRE_CLOTH_BOOTS));
+    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_HAT = register("vampire_clothing_hat", () -> new VampireClothingItem(ArmorItem.Type.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_HAT));
 
     public static final DeferredItem<Item> GARLIC_FINDER = register("garlic_finder", () -> new Item(props().rarity(Rarity.RARE)));
 

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe, IShapedRecipe<CraftingContainer> {
+public class ShapedWeaponTableRecipe implements Recipe<CraftingContainer>, IWeaponTableRecipe, IShapedRecipe<CraftingContainer> {
     protected final static int MAX_WIDTH = 4;
     protected final static int MAX_HEIGHT = 4;
 
@@ -115,11 +115,6 @@ public class ShapedWeaponTableRecipe implements CraftingRecipe, IWeaponTableReci
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return this.pattern.ingredients();
-    }
-
-    @Override
-    public @NotNull CraftingBookCategory category() {
-        return this.category;
     }
 
     public static class Serializer implements RecipeSerializer<ShapedWeaponTableRecipe> {

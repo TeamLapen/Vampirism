@@ -196,37 +196,33 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * TODO 1.21
      */
     @Override
-    public boolean doHurtTarget(@NotNull Entity entityIn) {
-        float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float f1 = (float) this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        if (entityIn instanceof LivingEntity) {
-            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), entityIn.getType());
-            f1 += (float) EnchantmentHelper.getKnockbackBonus(this);
+    public boolean doHurtTarget(Entity pEntity) {
+        float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float f1 = (float)this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        if (pEntity instanceof LivingEntity) {
+            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), pEntity.getType());
+            f1 += (float)EnchantmentHelper.getKnockbackBonus(this);
         }
 
         int i = EnchantmentHelper.getFireAspect(this);
         if (i > 0) {
-            entityIn.igniteForSeconds(i * 4);
+            pEntity.igniteForSeconds(i * 4);
         }
 
-        boolean flag = DamageHandler.hurtModded(entityIn, s -> s.minion(this), f);
+        boolean flag = DamageHandler.hurtModded(this, s -> s.minion(this), f);
         if (flag) {
-            if (f1 > 0.0F && entityIn instanceof LivingEntity) {
-                ((LivingEntity) entityIn).knockback(f1 * 0.5F, Mth.sin(this.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(this.getYRot() * ((float) Math.PI / 180F)));
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
-            }
-            ItemStack itemstack = this.getMainHandItem();
-
-            //Usually only players call the hurt enemy method on the itemstack
-            if (!this.level().isClientSide && !itemstack.isEmpty() && entityIn instanceof LivingEntity) {
-                itemstack.getItem().hurtEnemy(itemstack, (LivingEntity) entityIn, this);
-                if (itemstack.isEmpty()) {
-                    this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                }
+            if (f1 > 0.0F && pEntity instanceof LivingEntity) {
+                ((LivingEntity)pEntity)
+                        .knockback(
+                                (double)(f1 * 0.5F),
+                                (double)Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
+                                (double)(-Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)))
+                        );
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
 
-            this.doEnchantDamageEffects(this, entityIn);
-            this.setLastHurtMob(entityIn);
+            this.doEnchantDamageEffects(this, pEntity);
+            this.setLastHurtMob(pEntity);
         }
 
         return flag;

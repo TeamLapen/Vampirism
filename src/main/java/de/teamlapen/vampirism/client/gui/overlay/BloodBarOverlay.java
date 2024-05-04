@@ -9,13 +9,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay implements LayeredDraw.Layer {
-    private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
+    public static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "blood_bar/background");
+    public static final ResourceLocation QUARTER = new ResourceLocation(REFERENCE.MODID, "blood_bar/quarter");
+    public static final ResourceLocation HALF = new ResourceLocation(REFERENCE.MODID, "blood_bar/half");
+    public static final ResourceLocation THREE_QUARTER = new ResourceLocation(REFERENCE.MODID, "blood_bar/three_quarter");
+    public static final ResourceLocation FULL = new ResourceLocation(REFERENCE.MODID, "blood_bar/full");
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(GuiGraphics graphics, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, float partialTicks) {
         if (this.mc.player != null && Helper.isVampire(this.mc.player) && !IMCHandler.requestedToDisableBloodbar) {
             if (this.mc.gameMode.hasExperience() && this.mc.player.isAlive()) {
                 IBloodStats stats = VampirePlayer.get(this.mc.player).getBloodStats();
@@ -31,15 +36,15 @@ public class BloodBarOverlay implements LayeredDraw.Layer {
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    graphics.blit(icons, x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
+                    graphics.blitSprite(BACKGROUND, x, top, 9,9);
 
                     if (idx < blood) {
-                        graphics.blit(icons, x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
+                        graphics.blitSprite( idx < blood2 ? FULL : HALF, x, top, 9,9);
                         if (idx == blood2) {
-                            graphics.blit(icons, x, top, 18, 9, 9, 9);
+                            graphics.blitSprite(THREE_QUARTER, x, top, 9,9);
                         }
                     } else if (idx == blood) {
-                        graphics.blit(icons, x, top, 18, 0, 9, 9);
+                        graphics.blitSprite(QUARTER, x, top, 9,9);
                     }
                 }
             }

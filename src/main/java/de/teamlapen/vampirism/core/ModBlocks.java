@@ -15,7 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static de.teamlapen.lib.lib.util.RegisterHelper.flammable;
@@ -40,7 +43,7 @@ import static de.teamlapen.lib.lib.util.RegisterHelper.potted;
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(REFERENCE.MODID);
 
-    public static final DeferredBlock<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON = registerWithItem("alchemical_cauldron", () -> new AlchemicalCauldronBlock(Block.Properties.of().mapColor(MapColor.METAL).strength(4f).noOcclusion()));
+    public static final DeferredBlock<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON = registerWithItem("alchemical_cauldron", () -> new AlchemicalCauldronBlock(Block.Properties.of().mapColor(MapColor.METAL).strength(4f).lightLevel(litBlockEmission(13)).noOcclusion()));
     public static final DeferredBlock<AlchemicalFireBlock> ALCHEMICAL_FIRE = BLOCKS.register("alchemical_fire", AlchemicalFireBlock::new);
     public static final DeferredBlock<AltarInfusionBlock> ALTAR_INFUSION = registerWithItem("altar_infusion", () -> new AltarInfusionBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5).noOcclusion()));
     public static final DeferredBlock<AltarInspirationBlock> ALTAR_INSPIRATION = registerWithItem("altar_inspiration", () -> new AltarInspirationBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2f, 3f).noOcclusion()));
@@ -274,6 +277,10 @@ public class ModBlocks {
     private static <T extends WallCandleStickBlock> T wallMountedCandle(T block, ResourceLocation candle) {
         WALL_CANDLE_STICK.get().addCandle(candle, () -> block);
         return block;
+    }
+
+    private static ToIntFunction<BlockState> litBlockEmission(int pLightValue) {
+        return state -> state.getValue(BlockStateProperties.LIT) ? pLightValue : 0;
     }
 
     static void register(IEventBus bus) {

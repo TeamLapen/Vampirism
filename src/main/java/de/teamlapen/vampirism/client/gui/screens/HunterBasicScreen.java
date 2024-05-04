@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> {
-    private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_basic.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/basic_hunter.png");
 
     private Button buttonLevelup;
     private int missing = 0;

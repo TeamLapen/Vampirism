@@ -76,7 +76,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (world.isClientSide) {
+        if (!world.isClientSide) {
             if (!Helper.isHunter(player)) {
                 player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 return ItemInteractionResult.CONSUME;
@@ -115,10 +115,12 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (canUse(player) && player instanceof ServerPlayer) {
-            player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
-        } else {
-            player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+        if (!level.isClientSide) {
+            if (canUse(player)) {
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), name), pos);
+            } else {
+                player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+            }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

@@ -110,7 +110,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
             AdvancementHolder kill_resurrected_vampire = Advancement.Builder.advancement()
                     .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire").append("\n").append(Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc")), null, AdvancementType.TASK, true, true, true)
-                    .parent(become_hunter)//TODO readd
+                    .parent(become_hunter)
                     .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL)).subPredicate(FactionSubPredicate.faction(VReference.VAMPIRE_FACTION))))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_resurrected_vampire");

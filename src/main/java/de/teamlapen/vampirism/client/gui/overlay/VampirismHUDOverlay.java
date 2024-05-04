@@ -65,8 +65,13 @@ import java.util.Optional;
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
-    private static final ResourceLocation ICONS = new ResourceLocation(REFERENCE.MODID, "textures/gui/icons.png");
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    protected static final ResourceLocation CROSSHAIR_SPRITE = new ResourceLocation("hud/crosshair");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_full");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_background");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_progress");
+    public static final ResourceLocation FANG_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/fang");
+    public static final ResourceLocation PROGRESS_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/progress_background");
+    public static final ResourceLocation PROGRESS_FOREGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/progress_foreground");
 
     private int screenColor = 0;
     private int screenPercentage = 0;
@@ -206,8 +211,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     int l = (int) (progress * 14.0F) + 2;
 
-                    event.getGuiGraphics().blit(ICONS, x, y, 0, 19, 16, 2);
-                    event.getGuiGraphics().blit(ICONS, x, y, 16, 19, l, 2);
+                    event.getGuiGraphics().blitSprite(PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
+                    event.getGuiGraphics().blitSprite(PROGRESS_FOREGROUND_SPRITE, 16, 2, 0,0, x, y, l, 2);
                 }
             }
         }
@@ -376,25 +381,41 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int top = height / 2 - 4;
         RenderSystem.enableBlend();
         graphics.setColor(1f, 1f, 1f, 0.7F);
-        graphics.blit(ICONS, left, top, 27, 0, 16, 10);
+        graphics.blitSprite(FANG_SPRITE, left, top, 16, 10);
         RenderSystem.setShaderColor(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
-        graphics.blit(ICONS, left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
+        graphics.blitSprite(FANG_SPRITE, 16, 10, 0,10-percHeight, left, top + (10 - percHeight), 16, percHeight);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.disableBlend();
 
     }
 
     private void renderStakeInstantKill(@NotNull GuiGraphics graphics, int width, int height) {
+        RenderSystem.enableBlend();
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR.value, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
+            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             graphics.setColor(158f / 256, 0, 0, 1);
-            graphics.blit(GUI_ICONS_LOCATION, (width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
-            int j = height / 2 - 7 + 16;
-            int k = width / 2 - 8;
-            graphics.blit(GUI_ICONS_LOCATION, k, j, 68, 94, 16, 16);
-            graphics.blit(GUI_ICONS_LOCATION, k, j, 36, 94, 16, 4);
-            graphics.blit(GUI_ICONS_LOCATION, k, j, 52, 94, 17, 4);
+            graphics.blitSprite(CROSSHAIR_SPRITE, (graphics.guiWidth() - 15) / 2, (graphics.guiHeight() - 15) / 2, 15, 15);
+
+            float f = this.mc.player.getAttackStrengthScale(0.0F);
+            boolean flag = false;
+            if (this.mc.crosshairPickEntity != null && this.mc.crosshairPickEntity instanceof LivingEntity && f >= 1.0F) {
+                flag = this.mc.player.getCurrentItemAttackStrengthDelay() > 5.0F;
+                flag &= this.mc.crosshairPickEntity.isAlive();
+            }
+
+            int j = graphics.guiHeight() / 2 - 7 + 16;
+            int k = graphics.guiWidth() / 2 - 8;
+            if (flag) {
+                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, k, j, 16, 16);
+            } else if (f < 1.0F) {
+                int l = (int)(f * 17.0F);
+                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, k, j, 16, 4);
+                graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, k, j, l, 4);
+            }
+            graphics.setColor(1,1,1,1);
+            RenderSystem.defaultBlendFunc();
         }
+        RenderSystem.disableBlend();
     }
 }

@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableRecipe {
+public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IWeaponTableRecipe {
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
 
@@ -127,11 +127,6 @@ public class ShapelessWeaponTableRecipe implements CraftingRecipe, IWeaponTableR
 
         return i == this.recipeItems.size() && (isSimple ? recipeitemhelper.canCraft(this, null) : net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(inputs, this.recipeItems) != null);
 
-    }
-
-    @Override
-    public @NotNull CraftingBookCategory category() {
-        return this.category;
     }
 
     public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {

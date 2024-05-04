@@ -1,17 +1,41 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "item": "vampirism:oil_bottle"
+    "type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:vampire_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
   },
   "input": [
     {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:poison"
+        }
+      },
+      "items": "minecraft:potion"
     },
     {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:long_poison"
+        }
+      },
+      "items": "minecraft:potion"
     },
     {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_poison"
+        }
+      },
+      "items": "minecraft:potion"
     }
   ],
   "result": {

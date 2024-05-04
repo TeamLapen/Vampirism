@@ -31,7 +31,13 @@ import java.util.stream.Collectors;
 
 @NonnullDefault
 public class SkillNodeScreen {
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/widgets.png");
+    private static final ResourceLocation SKILL_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/node");
+    private static final ResourceLocation START_SKILL_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/start_node");
+    private static final ResourceLocation TITLE_RED_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_red");
+    private static final ResourceLocation TITLE_BLUE_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_blue");
+    private static final ResourceLocation TITLE_GREEN_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_green");
+    private static final ResourceLocation DESCRIPTION_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/description");
+
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
     private final Minecraft minecraft;
     private final SkillsTabScreen tab;
@@ -139,7 +145,7 @@ public class SkillNodeScreen {
         int x = i + getNodeStart();
         //draw skill background
         if (this.skillNode.elementCount() > 1) {
-            graphics.blitWithBorder(WIDGETS_LOCATION, x, this.y + j, 200, 0, width, 26, 26, 26, 3);
+            graphics.blitSprite(SKILL_BACKGROUND_SPRITE, x, this.y + j, width, 26);
         }
 
         //draw skills
@@ -149,7 +155,7 @@ public class SkillNodeScreen {
             } else {
                 graphics.setColor(1, 1, 1, 1);
             }
-            graphics.blit(WIDGETS_LOCATION, x, this.y + j, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
+            graphics.blitSprite(skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, x, this.y + j, 26, 26);
 
 
             graphics.setColor(1, 1, 1, 1);
@@ -242,7 +248,7 @@ public class SkillNodeScreen {
                     lockingSkills.stream().map(a -> a.getName().copy().withStyle(ChatFormatting.DARK_RED)).forEach(text::add);
                 }
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
-                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, 0, 81, width + 8, 10 + text.size() * 10, 200, 20, 3);
+                graphics.blitSprite(DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, width + 8, 10 + text.size() * 10);
                 int fontY = scrollY + this.y + 1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
@@ -258,7 +264,7 @@ public class SkillNodeScreen {
                 int width = Math.min(this.width[hoveredSkillIndex], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
 
                 int yOffset = description.isEmpty() ? 15 : 24;
-                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, 0, 81, width + 8, text.size() * 10 + yOffset, 200, 20, 3);
+                graphics.blitSprite(DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, width + 8, 10 + text.size() * 10 + yOffset);
                 int fontY = scrollY + this.y + 3 + yOffset + 8 + description.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
@@ -267,20 +273,18 @@ public class SkillNodeScreen {
 
             //draw description
             if (!description.isEmpty()) {
-                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x - 5, scrollY + this.y + 3, 0, 81, this.width[hoveredSkillIndex], 30 + description.size() * 9, 200, 20, 3);
+                graphics.blitSprite(DESCRIPTION_SPRITE, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 30 + description.size() * 9);
                 for (int i = 0; i < description.size(); i++) {
                     graphics.drawString(this.minecraft.font, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1, true);
                 }
             }
 
             //draw title
-            int wid = this.width[hoveredSkillIndex] / 2;
-            int titleTextureY = state.titleTextureY;
+            ResourceLocation texture = state.sprite;
             if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
-                titleTextureY = SkillNodeState.LOCKED.titleTextureY;
+                texture = SkillNodeState.LOCKED.sprite;
             }
-            graphics.blit(WIDGETS_LOCATION, scrollX + x - 5, scrollY + this.y + 3, 0, titleTextureY, wid, 22);
-            graphics.blit(WIDGETS_LOCATION, scrollX + x - 5 + wid, scrollY + this.y + 3, 200 - wid, titleTextureY, wid, 22);
+            graphics.blitSprite(texture, scrollX + x - 5, scrollY + this.y+3, this.width[hoveredSkillIndex], 20);
             graphics.drawString(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
 
             //draw skill point cost
@@ -288,13 +292,13 @@ public class SkillNodeScreen {
                 int cost = hoveredSkill.value().getSkillPointCost();
                 int costWidth = this.minecraft.font.width(String.valueOf(cost));
                 int costHeight = this.minecraft.font.lineHeight;
-                graphics.blitWithBorder(WIDGETS_LOCATION, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, 0, 81, costWidth + 5, costHeight + 4, 200, 20, 3);
+                graphics.blitSprite(DESCRIPTION_SPRITE, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, costWidth + 5, costHeight + 4);
                 graphics.drawString(this.minecraft.font, Component.literal(String.valueOf(cost)), scrollX + x + 27, (int) (scrollY + this.y + ((26 - costHeight) / 2f) + 1), -1, true);
             }
 
             //draw skill
             graphics.setColor(1f, 1f, 1f, 1);
-            graphics.blit(WIDGETS_LOCATION, scrollX + x, scrollY + this.y, skillNode.isRoot() ? 226 : 200, 0, 26, 26);
+            graphics.blitSprite(skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, scrollX + x, scrollY + this.y, 26, 26);
             RenderSystem.enableBlend();
             graphics.blit(getSkillIconLocation(hoveredSkill.value()), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
         }
@@ -397,28 +401,28 @@ public class SkillNodeScreen {
         /**
          * Rendered and unlockable
          */
-        AVAILABLE(3, 0xffa7a7a7, -1),
+        AVAILABLE(TITLE_BLUE_SPRITE, 0xffa7a7a7, -1),
         /**
          * Not rendered
          */
-        HIDDEN(0, 0, 0),
+        HIDDEN(null, 0, 0),
         /**
          * Rendered but not able to unlock (blocked)
          */
-        LOCKED(55, 0xffcf0000, 0xff6a0000),
+        LOCKED(TITLE_RED_SPRITE, 0xffcf0000, 0xff6a0000),
         /**
          * Rendered and unlocked
          */
-        UNLOCKED(29, 0xff008711, 0xff005304),
+        UNLOCKED(TITLE_GREEN_SPRITE, 0xff008711, 0xff005304),
         /**
          * Rendered but not unlockable
          */
-        VISIBLE(3, 0xff222222, 0xff3f3f3f);
+        VISIBLE(TITLE_BLUE_SPRITE, 0xff222222, 0xff3f3f3f);
 
         /**
          * texture y offset for the tooltip title back rendering
          */
-        public final int titleTextureY;
+        public final ResourceLocation sprite;
         /**
          * connectivity inner color
          */
@@ -428,8 +432,8 @@ public class SkillNodeScreen {
          */
         public final int outerColor;
 
-        SkillNodeState(int titleTextureY, int innerColor, int outerColor) {
-            this.titleTextureY = titleTextureY;
+        SkillNodeState(ResourceLocation sprite, int innerColor, int outerColor) {
+            this.sprite = sprite;
             this.outerColor = outerColor;
             this.innerColor = innerColor;
         }

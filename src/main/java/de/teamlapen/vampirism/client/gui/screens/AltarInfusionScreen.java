@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/altar_of_infusion.png");
     private static final ResourceLocation EMPTY_PURE_BLOOD = new ResourceLocation(REFERENCE.MODID, "item/empty_pure_blood");
     private static final ResourceLocation EMPTY_HUMAN_HEART = new ResourceLocation(REFERENCE.MODID, "item/empty_human_heart");
     private static final ResourceLocation EMPTY_VAMPIRE_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_book");

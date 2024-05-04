@@ -3,13 +3,19 @@
   "category": "equipment",
   "key": {
     "X": {
-      "tag": "c:leather"
+      "tag": "c:leathers"
     },
     "Y": {
       "tag": "c:crops/garlic"
     },
     "Z": {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:swiftness"
+        }
+      },
+      "items": "minecraft:potion"
     }
   },
   "lava": 1,

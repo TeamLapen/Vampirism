@@ -81,6 +81,7 @@ public class RegistryManager implements IInitListener {
                 event.enqueueWork(ModVillage::villagerTradeSetup);
                 event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
                 event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
+                ModRecipes.Categories.init();
             default:
                 break;
         }

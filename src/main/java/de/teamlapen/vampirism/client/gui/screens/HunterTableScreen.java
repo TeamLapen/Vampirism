@@ -22,7 +22,7 @@ import java.util.Optional;
  * Gui for the hunter table
  */
 public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/hunter_table.png");
     private static final ResourceLocation EMPTY_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_book");
     private static final ResourceLocation EMPTY_FANG = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_fang");
     private static final ResourceLocation EMPTY_PURE_BLOOD = new ResourceLocation(REFERENCE.MODID, "item/empty_pure_blood");

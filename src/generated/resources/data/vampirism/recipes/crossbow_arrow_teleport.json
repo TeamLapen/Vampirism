@@ -6,7 +6,14 @@
       "item": "vampirism:crossbow_arrow_normal"
     },
     {
-      "item": "vampirism:oil_bottle"
+      "type": "neoforge:components",
+      "components": {
+        "vampirism:oil_contents": {
+          "oil": "vampirism:teleport"
+        }
+      },
+      "items": "vampirism:oil_bottle",
+      "strict": true
     }
   ],
   "lava": 1,

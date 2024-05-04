@@ -68,10 +68,10 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     protected void init() {
         super.init();
 
-        this.keyBindingList = this.addRenderableWidget(new KeyBindingList(this.width - 140, 20, 140, this.height - 60));
+        this.keyBindingList = this.addRenderableWidget(new KeyBindingList(this.width - 140+4, 20, 140-8, this.height - 60));
 
-        this.addRenderableWidget(new ResetButton(this.width - 140, this.height - 40, 140, 20, (context) -> this.resetKeyBindings()));
-        this.addRenderableWidget(new ExtendedButton(this.width - 140, this.height - 20, 140, 20, Component.translatable("text.vampirism.open_settings"), (context) -> {
+        this.addRenderableWidget(new ResetButton(this.width - 140+4, this.height - 45, 140-8, 20, (context) -> this.resetKeyBindings()));
+        this.addRenderableWidget(new ExtendedButton(this.width - 140+4, this.height - 24, 140-8, 20, Component.translatable("text.vampirism.open_settings"), (context) -> {
             Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options));
         }));
     }
@@ -87,10 +87,8 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
-        graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
-        int i = 32;
-        //TODO change texture
-        graphics.blit(MENU_BACKGROUND, this.width - 140, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
+        graphics.setColor(0.5F, 0.5F, 0.5F, 1.0F);
+        graphics.blitSprite(BACKGROUND, this.width - 140,0, 140, this.height);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);

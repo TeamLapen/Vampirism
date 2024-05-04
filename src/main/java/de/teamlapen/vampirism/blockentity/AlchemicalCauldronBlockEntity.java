@@ -17,6 +17,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,8 +25,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -60,11 +63,13 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private String ownerName;
     private @Nullable AlchemicalCauldronRecipe recipeChecked;
 
-    private static boolean warnedRecipeType = false;
+    private final RecipeManager.CachedCheck<Container, AlchemicalCauldronRecipe> quickCheck;
+
 
     public AlchemicalCauldronBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
+        this.quickCheck = RecipeManager.createCheck(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
     }
 
 
@@ -203,7 +208,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
     public void setOwnerID(@NotNull Player player) {
         ownerID = player.getUUID();
-        ownerName = player.getName().getString();
+        ownerName = player.getGameProfile().getName();
         this.setChanged();
     }
 
@@ -220,16 +225,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
 
         ItemStack itemstackFuel = blockEntity.items.get(3);
         if (blockEntity.isBurning() || !itemstackFuel.isEmpty() && !blockEntity.items.get(0).isEmpty() && !blockEntity.items.get(1).isEmpty()) {
-            RecipeHolder<AlchemicalCauldronRecipe> cauldronRecipe = null;
-            Optional<RecipeHolder<AlchemicalCauldronRecipe>> irecipe = level.getRecipeManager().getRecipeFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get(), blockEntity, level);
-            if (irecipe.isPresent()) {
-                cauldronRecipe = irecipe.get();
-            } else {
-                if (!warnedRecipeType) {
-                    LOGGER.error("Got an unexpected/illegal recipe for recipe type {}. This might break the AlchemicalCauldron and is caused by another mod", ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
-                    warnedRecipeType = true;
-                }
-            }
+            RecipeHolder<AlchemicalCauldronRecipe> cauldronRecipe = blockEntity.quickCheck.getRecipeFor(blockEntity, level).orElse(null);
 
             if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).invoke_canBurn(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize()) && blockEntity.canPlayerCook(cauldronRecipe.value())) {
                 blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time

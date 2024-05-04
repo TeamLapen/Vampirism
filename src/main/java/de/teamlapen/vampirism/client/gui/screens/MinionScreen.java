@@ -20,7 +20,8 @@ import java.util.*;
 
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
-    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/minion_inventory.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/minion_inventory.png");
+    private static final ResourceLocation LOCKED_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/minion_inventory/locked");
     private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/settings"), new ResourceLocation(REFERENCE.MODID, "widget/settings_highlighted"));
     private static final WidgetSprites STATS_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/skill_points"), new ResourceLocation(REFERENCE.MODID, "widget/skill_points_highlighted"));
     private final int extraSlots;
@@ -69,11 +70,10 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        graphics.blit(GUI_TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
         for (int k = extraSlots; k < 15; k++) {
-            graphics.blit(GUI_TEXTURE, i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3), 236, 80, 13, 13);
+            graphics.blitSprite(LOCKED_SPRITE,i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3),13,13);
         }
-
     }
 
     @Override

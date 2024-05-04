@@ -78,6 +78,7 @@ public class AlchemicalCauldronMenu extends AbstractFurnaceMenu {
 
     private void setSlots(@NotNull Inventory playerInv) {
         this.slots.clear();
+        this.remoteSlots.clear();
         ((AbstractContainerMenuAccessor) this).getLastSlots().clear();
         //Keep order
         this.addSlot(new Slot(((AbstractFurnaceMenuAccessor) this).getContainer(), 0, 44, 17));
@@ -95,5 +96,8 @@ public class AlchemicalCauldronMenu extends AbstractFurnaceMenu {
         for (i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInv, i, 8 + i * 18, 142));
         }
+
+        this.addDataSlots(this.data);
+
     }
 }

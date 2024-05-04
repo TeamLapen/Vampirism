@@ -13,8 +13,11 @@ import org.jetbrains.annotations.NotNull;
 public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> {
 
     private static final int[] BUBBLELENGTHS = new int[]{29, 24, 20, 16, 11, 6, 0};
-    private final ResourceLocation TABLE_GUI_TEXTURES_EXTENDED = new ResourceLocation(REFERENCE.MODID, "textures/gui/potion_table_extended.png");
-    private final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/potion_table.png");
+    private final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/potion_table.png");
+    private final ResourceLocation BACKGROUND_EXTENDED = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/potion_table_extended.png");
+    private final ResourceLocation FUEL_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/fuel");
+    private final ResourceLocation PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/progress");
+    private final ResourceLocation BUBBLES_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/bubbles");
 
 
     public PotionTableScreen(@NotNull PotionTableMenu screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
@@ -24,7 +27,6 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> 
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
 
@@ -33,7 +35,7 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ResourceLocation texture = this.menu.isExtendedTable() ? TABLE_GUI_TEXTURES_EXTENDED : TABLE_GUI_TEXTURES;
+        ResourceLocation texture = this.menu.isExtendedTable() ? BACKGROUND_EXTENDED : BACKGROUND;
 
         int cX = (this.width - this.imageWidth) / 2;
         int cY = (this.height - this.imageHeight) / 2;
@@ -41,19 +43,19 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> 
         int fuelTime = this.menu.getFuelTime();
         int fuelIconWidth = Mth.clamp((18 * fuelTime + 20 - 1) / 20, 0, 18);
         if (fuelIconWidth > 0) {
-            graphics.blit(texture, cX + 66, cY + 41, 176, 29, fuelIconWidth, 4);
+            graphics.blitSprite(FUEL_SPRITE, 18,4, 0,0, cX+66, cY+41, fuelIconWidth, 4);
         }
 
         int brewTime = this.menu.getBrewTime();
         if (brewTime > 0) {
             int brewIconHeight = (int) (28.0F * (1.0F - (float) brewTime / 400.0F));
             if (brewIconHeight > 0) {
-                graphics.blit(texture, cX + 145, cY + 17, 176, 0, 9, brewIconHeight);
+                graphics.blitSprite(PROGRESS_SPRITE, 9, 28, 0,0, cX + 145, cY + 17, 12, brewIconHeight);
             }
 
             brewIconHeight = BUBBLELENGTHS[brewTime / 2 % 7];
             if (brewIconHeight > 0) {
-                graphics.blit(texture, cX + 69, cY + 14 + 26 - brewIconHeight, 185, 29 - brewIconHeight, 12, brewIconHeight);
+                graphics.blitSprite(BUBBLES_SPRITE, 12, 29, 0, 29 - brewIconHeight, cX + 69, cY + 14 + 26 - brewIconHeight , 12, brewIconHeight);
             }
         }
     }

@@ -32,14 +32,9 @@ public class GarlicDiffuserScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-
-        this.renderGuiBackground(graphics);
-
-        this.drawTitle(graphics);
-
         super.render(graphics, mouseX, mouseY, partialTicks);
 
+        this.drawTitle(graphics);
     }
 
     private void updateProgress() {
@@ -74,8 +69,11 @@ public class GarlicDiffuserScreen extends Screen {
         updateProgress();
     }
 
-    protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        graphics.blit(BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 256, 256);
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        pGuiGraphics.blit(BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 256, 256);
+
     }
 
     private void drawTitle(@NotNull GuiGraphics graphics) {

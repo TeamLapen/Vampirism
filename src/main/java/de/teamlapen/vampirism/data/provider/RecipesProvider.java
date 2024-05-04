@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.data.provider;
 
+import com.ibm.icu.text.SpoofChecker;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModOils;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -20,6 +18,7 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -32,6 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -45,6 +45,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -184,7 +185,7 @@ public class RecipesProvider extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).define('Z', diamond).unlockedBy("has_iron", has(iron_ingot)).save(output);
         ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 3).lava(1).requires(crossbow_arrow_normal, 3).requires(alchemical_fire).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 3).lava(1).pattern(" X ").pattern("XYX").pattern(" Z ").pattern(" W ").define('X', garlic).unlockedBy("has_garlic", has(garlic)).define('Y', gold_ingot).unlockedBy("has_garlic", has(garlic)).define('Z', stick).define('W', feather).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(output);
-        ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT.get(), 1).lava(1).requires(crossbow_arrow_normal).requires(Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), ModOils.TELEPORT))).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(output);
+        ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT.get(), 1).lava(1).requires(crossbow_arrow_normal).requires(DataComponentIngredient.of(true, ModDataComponents.OIL, new OilContent(ModOils.TELEPORT), ModItems.OIL_BOTTLE.get())).unlockedBy("has_crossbow_arrow_normal", has(crossbow_arrow_normal)).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_CROSSBOW.get()).lava(2).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).define('Y', string).unlockedBy("has_iron", has(iron_ingot)).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).lava(3).skills(HunterSkills.DOUBLE_CROSSBOW.get(), HunterSkills.ENHANCED_WEAPONS.get()).pattern("YXXY").pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', string).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.TECH_WEAPONS.get()).pattern("YXXY").pattern("XZZX").pattern("XZZX").pattern(" XX ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', string).define('Z', diamond).save(output);
@@ -473,11 +474,11 @@ public class RecipesProvider extends RecipeProvider {
 
     @SafeVarargs
     private @NotNull Ingredient potion(Holder<Potion> @NotNull ... potion) {
-        return CompoundIngredient.of(Arrays.stream(potion).map(ItemDataUtils::createPotion).map(Ingredient::of).toArray(Ingredient[]::new));
+        return CompoundIngredient.of(Arrays.stream(potion).map(PotionContents::new).map(s -> DataComponentIngredient.of(false, DataComponents.POTION_CONTENTS, s, Items.POTION)).toArray(Ingredient[]::new));
     }
 
     private @NotNull Ingredient potion(@NotNull Holder<Potion> potion) {
-        return Ingredient.of(ItemDataUtils.createPotion(potion));
+        return DataComponentIngredient.of(false, DataComponents.POTION_CONTENTS, new PotionContents(potion), Items.POTION);
     }
 
     protected void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, ResourceLocation path) {

@@ -79,14 +79,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     int getTicksInSun();
 
     /**
-     * TODO should this method be used somewhere?
-     *
-     * @return Whether automatically filling blood into bottles is enabled or not.
-     */
-    @SuppressWarnings("SameReturnValue")
-    boolean isAutoFillEnabled();
-
-    /**
      * @return Whether the player is in DBNO state (invulnerable to most damage, but unable to do things)
      */
     boolean isDBNO();

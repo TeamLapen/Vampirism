@@ -1,14 +1,32 @@
 {
   "type": "vampirism:alchemical_table",
   "ingredient": {
-    "item": "vampirism:oil_bottle"
+    "type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:vampire_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
   },
   "input": [
     {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:slow_falling"
+        }
+      },
+      "items": "minecraft:potion"
     },
     {
-      "item": "minecraft:potion"
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:long_slow_falling"
+        }
+      },
+      "items": "minecraft:potion"
     }
   ],
   "result": {

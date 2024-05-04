@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
@@ -24,6 +26,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
+
+    protected static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "widget/background");
 
     protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;
@@ -47,9 +51,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new ResetButton(0, this.height - 40, 140, 20, (context) -> this.reset()));
-        this.addRenderableWidget(new ExtendedButton(0, this.height - 20, 140, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
-        this.excludedList = this.addRenderableWidget(new ExcludedItemList(0, 20, 140, this.height - 70));
+        this.addRenderableWidget(new ResetButton(3, this.height - 45, 140-4, 20, (context) -> this.reset()));
+        this.addRenderableWidget(new ExtendedButton(3, this.height - 24, 140-4, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
+        this.excludedList = this.addRenderableWidget(new ExcludedItemList(3, 20, 140-3, this.height - 70));
 
         if (this.wasGuiHidden == null) {
             this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
@@ -64,10 +68,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
      */
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
-        graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
-        int i = 32;
-        //TODO CHECK TEXTURE
-        graphics.blit(MENU_BACKGROUND, 0, 0, 0, 0.0F, 0.0F, 140, this.height, i, i);
+        graphics.setColor(0.5F, 0.5F, 0.5F, 1.0F);
+        graphics.blitSprite(BACKGROUND, 0,0, 143, this.height);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 

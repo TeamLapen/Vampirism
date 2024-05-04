@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HunterAxeItem extends VampirismHunterWeaponItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
+public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
     public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderMenu> {
 
-    private static final ResourceLocation background = new ResourceLocation(REFERENCE.MODID, "textures/gui/grinder.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/blood_grinder.png");
 
     public BloodGrinderScreen(@NotNull BloodGrinderMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);
@@ -26,6 +26,6 @@ public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderMenu
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
         graphics.setColor(1, 1, 1, 1);
-        graphics.blit(background, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

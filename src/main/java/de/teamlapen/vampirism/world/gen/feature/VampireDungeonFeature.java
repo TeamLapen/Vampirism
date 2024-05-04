@@ -37,7 +37,7 @@ public class VampireDungeonFeature extends MonsterRoomFeature {
 
     /**
      * TODO 1.20 recheck
-     * copied from {@link MonsterRoomFeature#pldddddace(FeaturePlaceContext)}
+     * copied from {@link MonsterRoomFeature#place(FeaturePlaceContext)}
      * <p>
      * - changed {@link Blocks#MOSSY_COBBLESTONE} to {@link ModBlocks#DARK_STONE_BRICKS} and {@link ModBlocks#BLOODY_DARK_STONE_BRICKS}
      * - changed {@link Blocks#COBBLESTONE} to {@link Blocks#SPRUCE_PLANKS}

@@ -29,7 +29,7 @@ import java.util.Optional;
  * Gui for the Hunter Trainer interaction
  */
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_trainer.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/hunter_trainer.png");
     private static final ResourceLocation EMPTY_INGOT = new ResourceLocation("item/empty_slot_ingot");
     private static final ResourceLocation EMPTY_INTEL = new ResourceLocation(REFERENCE.MODID, "item/empty_hunter_intel");
 

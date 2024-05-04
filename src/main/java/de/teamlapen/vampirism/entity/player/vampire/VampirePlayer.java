@@ -502,11 +502,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public boolean isAutoFillEnabled() {
-        return false;
-    }
-
-    @Override
     public boolean isDBNO() {
         return this.dbnoTimer >= 0;
     }

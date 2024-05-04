@@ -24,6 +24,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.IContainerFactory;
@@ -35,13 +36,14 @@ import java.util.Optional;
 /**
  * Container to handle crafting in the hunter weapon crafting table
  */
-public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
+public class WeaponTableMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess worldPos;
     private final @NotNull HunterPlayer hunterPlayer;
     private final @NotNull Player player;
     private final CraftingContainer craftMatrix = new TransientCraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
+    private final RecipeManager.CachedCheck<CraftingContainer, IWeaponTableRecipe> quickCheck;
 
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.WEAPON_TABLE.get(), id);
@@ -66,8 +68,9 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
             this.addSlot(new Slot(playerInventory, l, 18 + l * 18, 165));
         }
 
-        this.slotsChanged(this.craftMatrix);
         this.addDataSlot(missingLava);
+        this.quickCheck = RecipeManager.createCheck(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get());
+        this.slotsChanged(this.craftMatrix);
     }
 
     /**
@@ -76,59 +79,6 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
      */
     public boolean canTakeItemForPickAll(@NotNull ItemStack stack, @NotNull Slot slotIn) {
         return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
-    }
-
-    @Override
-    public void clearCraftingContent() {
-        craftMatrix.clearContent();
-        craftResult.clearContent();
-    }
-
-    @Override
-    public void fillCraftSlotsStackedContents(@NotNull StackedContents recipeItemHelper) {
-        craftMatrix.fillStackedContents(recipeItemHelper);
-    }
-
-    @Override
-    public int getGridHeight() {
-        return craftMatrix.getHeight();
-    }
-
-    @Override
-    public int getGridWidth() {
-        return craftMatrix.getWidth();
-    }
-
-    @NotNull
-    @Override
-    public RecipeBookType getRecipeBookType() {
-        return RecipeBookType.CRAFTING;
-    }
-
-    @Override
-    public boolean shouldMoveToInventory(int p_150635_) {
-        return p_150635_ != getResultSlotIndex();
-    }
-
-    @Override
-    public int getResultSlotIndex() {
-        return 0;
-    }
-
-    @Override
-    public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
-        new NBTServerPlaceRecipe<>(this).recipeClicked(pPlayer, (RecipeHolder<? extends Recipe<CraftingContainer>>)pRecipe, pPlaceAll);
-    }
-
-    @NotNull
-    @Override
-    public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.UNKNOWN);
-    }
-
-    @Override
-    public int getSize() {
-        return 17;
     }
 
     public boolean hasLava() {
@@ -185,11 +135,6 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public boolean recipeMatches(@NotNull RecipeHolder<? extends Recipe<CraftingContainer>> recipeIn) {
-        return recipeIn.value().matches(craftMatrix, this.player.level());
-    }
-
-    @Override
     public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
@@ -217,7 +162,7 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
 
     private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingContainer craftMatrixIn, @NotNull ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
-            Optional<RecipeHolder<IWeaponTableRecipe>> optional = worldIn.getServer() == null ? Optional.empty() : worldIn.getServer().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn);
+            Optional<RecipeHolder<IWeaponTableRecipe>> optional = quickCheck.getRecipeFor(craftMatrixIn, worldIn);
             this.missingLava.set(false);
             craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
@@ -243,59 +188,6 @@ public class WeaponTableMenu extends RecipeBookMenu<CraftingContainer> {
         public @NotNull WeaponTableMenu create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new WeaponTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
-        }
-    }
-
-    /**
-     * no good implementation but since it's usage is limited a functional fix for ignoring the nbt data for itemstacks
-     * TODO 1.19 recheck
-     */
-    static class NBTServerPlaceRecipe<C extends Container> extends ServerPlaceRecipe<C> {
-
-        public NBTServerPlaceRecipe(@NotNull RecipeBookMenu<C> p_135431_) {
-            super(p_135431_);
-        }
-
-        /**
-         * same as super method but {@link #findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)} is called instead of {@link net.minecraft.world.entity.player.Inventory#findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)}
-         */
-        @Override
-        protected void moveItemToGrid(Slot p_135439_, ItemStack p_135440_) {
-            int i = findSlotMatchingUnusedItem(p_135440_);
-            if (i != -1) {
-                ItemStack itemstack = this.inventory.getItem(i).copy();
-                if (!itemstack.isEmpty()) {
-                    if (itemstack.getCount() > 1) {
-                        this.inventory.removeItem(i, 1);
-                    } else {
-                        this.inventory.removeItemNoUpdate(i);
-                    }
-
-                    itemstack.setCount(1);
-                    if (p_135439_.getItem().isEmpty()) {
-                        p_135439_.set(itemstack);
-                    } else {
-                        p_135439_.getItem().grow(1);
-                    }
-
-                }
-            }
-        }
-
-        /**
-         * Copied from {@link net.minecraft.world.entity.player.Inventory#findSlotMatchingUnusedItem(net.minecraft.world.item.ItemStack)}
-         * but nbt check removed
-         */
-        public int findSlotMatchingUnusedItem(@NotNull ItemStack p_36044_) {
-            for (int i = 0; i < this.inventory.items.size(); ++i) {
-                ItemStack itemstack = this.inventory.items.get(i);
-                //    do not check for nbt tag here    //
-                if (!this.inventory.items.get(i).isEmpty() && p_36044_.is(itemstack.getItem()) && !this.inventory.items.get(i).isDamaged() && !itemstack.isEnchanted() && !itemstack.has(DataComponents.CUSTOM_NAME)) {
-                    return i;
-                }
-            }
-
-            return -1;
         }
     }
 }

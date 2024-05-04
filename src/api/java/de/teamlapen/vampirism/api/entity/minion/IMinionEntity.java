@@ -36,7 +36,6 @@ public interface IMinionEntity extends IFactionEntity {
      * DON't call as slot is not freed
      * Called to remove entity from world on call from lord.
      * Does checkin minion
-     * TODO clarify deprecation
      */
     @Deprecated
     void recallMinion();

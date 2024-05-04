@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.recipes.*;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -29,9 +30,9 @@ public class ModRecipes {
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, REFERENCE.MODID);
     private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, REFERENCE.MODID);
 
-    public static final DeferredHolder<RecipeType<?>, RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapontable_crafting", () -> new RecipeType<>() {
+    public static final DeferredHolder<RecipeType<?>, RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapon_table", () -> new RecipeType<>() {
         public @NotNull String toString() {
-            return "weapontable_crafting";
+            return "weapon_table";
         }
     });
     public static final DeferredHolder<RecipeType<?>, RecipeType<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON_TYPE = RECIPE_TYPES.register("alchemical_cauldron", () -> new RecipeType<>() {
@@ -56,6 +57,14 @@ public class ModRecipes {
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<EntityExistsCondition>> ENTITY_EXISTS_CONDITION = CONDITION_CODECS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
+    public static class Categories {
+        public static final RecipeBookCategories WEAPON_TABLE = RecipeBookCategories.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString(), new ItemStack(ModBlocks.WEAPON_TABLE));
+        public static final RecipeBookType WEAPON_TABLE_TYPE = RecipeBookType.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString());
+        public static void init() {
+
+        }
+    }
+
     static void register(@NotNull IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
@@ -65,7 +74,7 @@ public class ModRecipes {
     static void registerCategories(RegisterRecipeBookCategoriesEvent event) {
         event.registerRecipeCategoryFinder(ALCHEMICAL_CAULDRON_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
         event.registerRecipeCategoryFinder(ALCHEMICAL_TABLE_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
-        event.registerRecipeCategoryFinder(WEAPONTABLE_CRAFTING_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
+        event.registerRecipeCategoryFinder(WEAPONTABLE_CRAFTING_TYPE.get(), holder -> Categories.WEAPON_TABLE);
     }
 
 }
