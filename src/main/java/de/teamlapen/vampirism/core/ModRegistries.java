@@ -19,6 +19,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
@@ -47,7 +48,7 @@ public class ModRegistries {
             .add(Registries.PROCESSOR_LIST, ModStructures::createStructureProcessorLists)
             .add(Registries.TEMPLATE_POOL, ModStructures::createStructurePoolTemplates)
             .add(Registries.STRUCTURE_SET, ModStructures::createStructureSets)
-//            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier) TODO readd this
+            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::createDamageTypes)
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)

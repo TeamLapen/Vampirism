@@ -5,7 +5,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.accessor.MultiNoiseBiomeSourceParameterListPresetAccessor;
-//import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
+//import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
+import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -53,11 +54,10 @@ public class OverworldModifications {
      * Add our biomes to the overworld biome source preset
      */
     public static void addBiomesToOverworldUnsafe() {
-        // TODO readd this
-//        if (TerraBlenderCompat.areBiomesAddedViaTerraBlender()) { //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
-//            LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
-//            return;
-//        }
+        if (TerraBlenderCompat.areBiomesAddedViaTerraBlender()) { //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
+            LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
+            return;
+        }
         if (!VampirismConfig.COMMON.addVampireForestToOverworld.get()) {
             return;
         }
@@ -68,7 +68,6 @@ public class OverworldModifications {
          */
         final MultiNoiseBiomeSourceParameterList.Preset.SourceProvider originalParameterSourceFunction = ((MultiNoiseBiomeSourceParameterListPresetAccessor) (Object) MultiNoiseBiomeSourceParameterList.Preset.OVERWORLD).getProvider();
 
-        // TODO readd this
         MultiNoiseBiomeSourceParameterList.Preset.SourceProvider wrapperParameterSourceFunction = new MultiNoiseBiomeSourceParameterList.Preset.SourceProvider() {
             @Override
             public <T> Climate.ParameterList<T> apply(Function<ResourceKey<Biome>, T> p_275485_) {

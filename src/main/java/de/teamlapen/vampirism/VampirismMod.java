@@ -50,7 +50,8 @@ import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.mixin.accessor.ReloadableServerResourcesAccessor;
 import de.teamlapen.vampirism.mixin.accessor.TagManagerAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
-//import de.teamlapen.vampirism.modcompat.terrablender.TerraBlenderCompat;
+//import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
+import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
@@ -313,8 +314,7 @@ public class VampirismMod {
         SupporterManager.init();
         VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
-        //TODO readd this
-//        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
+        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
 
