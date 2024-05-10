@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -60,18 +61,20 @@ public class ArrowContainer extends Item implements IArrowContainer {
     }
 
     @Override
-    public void addArrows(ItemStack container, Collection<ItemStack> arrowStacks) {
+    public void addArrows(ItemStack container, List<ItemStack> arrowStacks) {
         ArrayList<ItemStack> arrows = new ArrayList<>(getArrows(container));
-        for (ItemStack arrowStack : arrowStacks) {
+        Iterator<ItemStack> iterator = arrowStacks.iterator();
+        for(var stack = iterator.next(); iterator.hasNext();) {
             if (arrows.size() >= maxCount) break;
-            arrows.add(arrowStack);
+            arrows.add(stack);
+            iterator.remove();
         }
         container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));
     }
 
     @Override
     public Collection<ItemStack> getAndRemoveArrows(ItemStack container) {
-        var projectiles =container.remove(ModDataComponents.CONTAINED_PROJECTILES);
+        var projectiles = container.remove(ModDataComponents.CONTAINED_PROJECTILES);
         return projectiles != null ? projectiles.getProjectiles() : List.of();
     }
 

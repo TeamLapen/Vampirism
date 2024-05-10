@@ -29,18 +29,8 @@ public class VampireSlayerEnchantment extends DamageEnchantment {
     }
 
     @Override
-    public void doPostAttack(@NotNull LivingEntity user, @NotNull Entity target, int level) {
-        super.doPostAttack(user, target, level);
-        //TODO check if mixin is no longer required
-        //Cannot damage players until https://github.com/MinecraftForge/MinecraftForge/pull/4052
-    }
-
-    @Override
-    public float getDamageBonus(int p_44635_, @Nullable EntityType<?> p_320019_) {
-        if (this.targets.isEmpty()) {
-            return 1.0F + (float)Math.max(0, p_44635_ - 1) * 0.5F;
-        } else {
-            return p_320019_ != null && p_320019_.is(this.targets.get()) ? 2f + (float)p_44635_ * 1F : 0.0F;
-        }
+    public float getDamageBonus(int level, @Nullable EntityType<?> entityType) {
+        boolean effective = entityType != null && (this.targets.map(entityType::is).orElse(false));
+        return effective ? 2f + (float) level : 0.0F;
     }
 }

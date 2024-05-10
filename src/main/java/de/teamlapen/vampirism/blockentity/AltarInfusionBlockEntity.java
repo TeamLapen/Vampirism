@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigg
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.AltarTipBlock;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -249,7 +250,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isLocalPlayer()) {
-                    VampirismMod.proxy.renderScreenFullColor(DURATION_TICK - 250, 50, 0xFF0000);
+                    VampirismModClient.getINSTANCE().getOverlay().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
         }

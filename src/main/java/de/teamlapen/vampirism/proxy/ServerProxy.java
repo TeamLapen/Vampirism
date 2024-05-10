@@ -43,10 +43,4 @@ public class ServerProxy extends CommonProxy {
         }
     }
 
-    @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-
-    }
-
-
 }

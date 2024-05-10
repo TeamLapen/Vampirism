@@ -69,7 +69,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> VampirismMod.proxy.handleUpdateMultiBossInfoPacket(msg));
+        context.enqueueWork(() -> VampirismModClient.getINSTANCE().getBossInfoOverlay().read(msg));
     }
 
     private static void openScreen(Screen screen) {

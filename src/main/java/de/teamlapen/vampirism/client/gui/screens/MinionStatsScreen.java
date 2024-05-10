@@ -137,7 +137,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected void renderStatRow(@NotNull GuiGraphics graphics, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
         graphics.drawString(this.font, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040, false);
         graphics.drawString(this.font, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040, false);
-        graphics.drawString(this.font, UtilLib.translate("text.vampirism.level_short") + ": " + currentLevel + "/" + maxLevel, guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
+        graphics.drawString(this.font, Component.translatable("text.vampirism.level_short").append(": " + currentLevel + "/" + maxLevel), guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
     }
 
     protected void renderStats(GuiGraphics graphics, T data) {

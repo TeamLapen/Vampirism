@@ -463,7 +463,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                                 if (!player.getAbilities().instabuild) heldItem.shrink(1);
                             }
                         } else if (freeSlot) {
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", UtilLib.translate(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                         }
                         return InteractionResult.SUCCESS;
                     }

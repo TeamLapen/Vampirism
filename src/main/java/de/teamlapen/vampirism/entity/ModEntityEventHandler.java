@@ -100,7 +100,7 @@ public class ModEntityEventHandler {
     private boolean warnAboutGolem = true;
 
     @SubscribeEvent
-    public void onFinalizeSpawn(@NotNull MobSpawnEvent.FinalizeSpawn event) {
+    public void onFinalizeSpawn(@NotNull FinalizeSpawnEvent event) {
         BlockPos pos = new BlockPos((int) (event.getX() - 0.6f), (int) event.getY(), (int) (event.getZ() - 0.6f)).below();
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);

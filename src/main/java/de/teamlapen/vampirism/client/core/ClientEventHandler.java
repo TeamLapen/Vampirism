@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -146,7 +147,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onWorldClosed(LevelEvent.Unload event) {
-        ((ClientProxy) VampirismMod.proxy).clearBossBarOverlay();
+        VampirismModClient.getINSTANCE().clearBossBarOverlay();
     }
 
     static void onModelRegistry(@NotNull ModelEvent.RegisterAdditional event) {

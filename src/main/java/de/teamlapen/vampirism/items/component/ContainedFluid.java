@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.components.IContainedFluid;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +14,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 
-public record ContainedFluid(FluidStack fluid) {
+public record ContainedFluid(FluidStack fluid) implements IContainedFluid {
 
     public static final ContainedFluid EMPTY = new ContainedFluid(FluidStack.EMPTY);
     public static final Codec<ContainedFluid> CODEC = RecordCodecBuilder.create(instance -> instance.group(

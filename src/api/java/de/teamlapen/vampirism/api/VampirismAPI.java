@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api;
 
+import de.teamlapen.vampirism.api.components.IContainedFluid;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 

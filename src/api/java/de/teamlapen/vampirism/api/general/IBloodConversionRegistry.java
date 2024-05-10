@@ -20,8 +20,8 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
  * <br>
  *
  * Values are loaded using <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * {@link VampirismRegistries#ITEM_BLOOD_MAP}<br>
- * {@link VampirismRegistries#FLUID_BLOOD_CONVERSION_MAP}
+ * {@link de.teamlapen.vampirism.api.VampirismDataMaps#ITEM_BLOOD}<br>
+ * {@link de.teamlapen.vampirism.api.VampirismDataMaps#FLUID_BLOOD_CONVERSION}
  * <br>
  * <br>
  * Entity blood values are handled by {@link de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry}
@@ -46,7 +46,7 @@ public interface IBloodConversionRegistry {
      * Gets a blood representation of the given item. This returns an instance of {@link IItemBlood} which can be used to get the blood value of the item.
      * If an explicit conversion exists, that will be used. Otherwise, it tries to create a calculated value.
      *
-     * @implNote the calculation is limited by checking the {@link net.minecraft.world.food.FoodProperties#isMeat()} method and checking for {@code "cooked"} in the item's registry name
+     * @implNote the calculation is limited by checking the {@link net.minecraft.tags.ItemTags#MEAT} method and checking for {@code "cooked"} in the item's registry name
      * @param stack the item for which the blood representation should be returned
      * @return an {@link IItemBlood} object for the given item
      */

@@ -59,26 +59,10 @@ public interface IProxy extends IInitListener {
      */
     void handleSleepClient(Player player);
 
-    default void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg) {
-    }
-
-    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
-
     /**
      * Shows a DBNO state with the given death message if the passed player is the client player
      */
     default void showDBNOScreen(Player player, @Nullable Component deathMessage) {
-    }
-
-    default void setupAPIClient() {
-    }
-
-    default void endBloodVisionBatch() {
-
-    }
-
-    default void applyConvertibleOverlays(Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay) {
-
     }
 
     default Collection<Player> getServerPlayers() {

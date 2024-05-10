@@ -95,8 +95,6 @@ import org.jetbrains.annotations.Nullable;
 @Mod(value = REFERENCE.MODID)
 public class VampirismMod {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public static VampirismMod instance;
     public static final IProxy proxy = FMLEnvironment.dist == Dist.CLIENT ? VampirismModClient.getProxy() : new ServerProxy();
     public static boolean inDev = false;
@@ -126,10 +124,6 @@ public class VampirismMod {
         this.modBus.register(ModPacketDispatcher.class);
         this.modBus.register(MigrationData.class);
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            this.modBus.register(new VampirismModClient(modEventBus, this.registryManager));
-        }
-
         NeoForge.EVENT_BUS.register(Permissions.class);
         NeoForge.EVENT_BUS.register(SitHandler.class);
         NeoForge.EVENT_BUS.register(new GeneralEventHandler());
@@ -145,10 +139,6 @@ public class VampirismMod {
         this.registryManager.setupRegistries();
         this.registryManager.registerModEventHandler();
         this.registryManager.registerForgeEventHandler();
-
-        if (OptifineHandler.isOptifineLoaded()) {
-            LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
-        }
     }
 
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
@@ -238,9 +228,6 @@ public class VampirismMod {
     private void prepareAPI() {
 
         VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry() : new VampirismEntityRegistry(), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ActionManagerEntity(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API), new BloodConversionRegistry());
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            proxy.setupAPIClient();
-        }
 
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(VReference.VAMPIRE_FACTION_ID, IVampirePlayer.class, () -> (AttachmentType<IVampirePlayer>)(Object) ModAttachments.VAMPIRE_PLAYER.get())
@@ -308,7 +295,6 @@ public class VampirismMod {
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
-
         NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
 
         SupporterManager.init();
@@ -317,12 +303,14 @@ public class VampirismMod {
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
-
+        event.enqueueWork(ModVillage::villagerTradeSetup);
+        event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
+        event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
+        ModRecipes.Categories.init();
         TelemetryCollector.execute();
     }
 
     private void onInitStep(IInitListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {
-        registryManager.onInitStep(step, event);
         proxy.onInitStep(step, event);
     }
 

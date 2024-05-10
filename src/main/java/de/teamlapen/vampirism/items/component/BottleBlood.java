@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.components.IBottleBlood;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record BottleBlood(int blood) {
+public record BottleBlood(int blood) implements IBottleBlood {
 
     public static final BottleBlood EMPTY = new BottleBlood(0);
     public static final Codec<BottleBlood> CODEC = RecordCodecBuilder.create(instance -> instance.group(

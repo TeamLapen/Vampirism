@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -49,6 +50,7 @@ public class TagProvider {
         gen.addProvider(event.includeServer(), new ModStructuresProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModSkillTreeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModEffectTypeProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModEnchantmentProvider(output, future, existingFileHelper));
     }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
@@ -308,6 +310,7 @@ public class TagProvider {
             tag(ModTags.Entities.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
             tag(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER).add(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), ModEntities.GHOST.get());
             tag(ModTags.Entities.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CAMEL.get(), ModEntities.CONVERTED_COW.get(), ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.CONVERTED_DONKEY.get(), ModEntities.CONVERTED_FOX.get(), ModEntities.CONVERTED_GOAT.get(), ModEntities.CONVERTED_HORSE.get(), ModEntities.CONVERTED_MULE.get(), ModEntities.CONVERTED_SHEEP.get(), ModEntities.VILLAGER_CONVERTED.get());
+            tag(Tags.EntityTypes.BOATS).add(ModEntities.BOAT.get(), ModEntities.CHEST_BOAT.get());
         }
     }
 
@@ -364,6 +367,7 @@ public class TagProvider {
             tag(ModTags.Biomes.HasStructure.VAMPIRE_HUT).addTags(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.HasStructure.MOTHER).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
             tag(ModTags.Biomes.HasStructure.CRYPT).addTag(ModTags.Biomes.IS_VAMPIRE_BIOME);
+            tag(Tags.Biomes.NO_DEFAULT_MONSTERS).add(ModBiomes.VAMPIRE_FOREST);
         }
     }
 
@@ -519,6 +523,18 @@ public class TagProvider {
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
             this.tag(ModTags.Effects.HUNTER_POTION_RESISTANCE).add(MobEffects.BLINDNESS.unwrapKey().orElseThrow(),MobEffects.CONFUSION.unwrapKey().orElseThrow(),MobEffects.HUNGER.unwrapKey().orElseThrow(),MobEffects.POISON.unwrapKey().orElseThrow(),ModEffects.FREEZE.getKey());
+        }
+    }
+
+    public static class ModEnchantmentProvider extends TagsProvider<Enchantment> {
+
+        public ModEnchantmentProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.ENCHANTMENT, provider, REFERENCE.MODID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+            this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER.getKey());
         }
     }
 }

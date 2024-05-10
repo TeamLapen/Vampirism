@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.components.IAppliedOilContent;
-import de.teamlapen.vampirism.api.components.IOilContent;
-import de.teamlapen.vampirism.api.components.IVampireBookContent;
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.components.*;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
@@ -16,6 +19,15 @@ public class VampirismDataComponents {
     public static final Supplier<DataComponentType<IOilContent>> OIL_CONTENT = supplyDataComponent(VampirismDataComponents.Keys.OIL_CONTENTS);
     public static final Supplier<DataComponentType<IAppliedOilContent>> APPLIED_OIL = supplyDataComponent(VampirismDataComponents.Keys.APPLIED_OIL);
     public static final Supplier<DataComponentType<IVampireBookContent>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
+    public static final Supplier<DataComponentType<IContainedFluid>> BLOOD_CONTAINER = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CONTAINER);
+    public static final Supplier<DataComponentType<IContainedProjectiles>> CONTAINED_PROJECTILES = supplyDataComponent(VampirismDataComponents.Keys.CONTAINED_PROJECTILES);
+    public static final Supplier<DataComponentType<IEffectiveRefinementSet>> REFINEMENT_SET = supplyDataComponent(VampirismDataComponents.Keys.REFINEMENT_SET);
+    public static final Supplier<DataComponentType<Unit>> DO_NOT_NAME = supplyDataComponent(VampirismDataComponents.Keys.DO_NOT_NAME);
+    public static final Supplier<DataComponentType<ISwordTraining>> VAMPIRE_SWORD = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_SWORD);
+    public static final Supplier<DataComponentType<IBloodCharged>> BLOOD_CHARGED = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CHARGED);
+    public static final Supplier<DataComponentType<Float>> TRAINING_CACHE = supplyDataComponent(VampirismDataComponents.Keys.TRAINING_CACHE);
+    public static final Supplier<DataComponentType<ISelectedAmmunition>> SELECTED_AMMUNITION = supplyDataComponent(VampirismDataComponents.Keys.SELECTED_AMMUNITION);
+    public static final Supplier<DataComponentType<IBottleBlood>> BOTTLE_BLOOD = supplyDataComponent(VampirismDataComponents.Keys.BOTTLE_BLOOD);
 
 
     public static class Keys {

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModItemsRender;
@@ -63,26 +64,10 @@ import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
  * Clientside Proxy
  */
 public class ClientProxy extends CommonProxy {
-    private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
-    private VampirismHUDOverlay overlay;
-    private CustomBossEventOverlay bossInfoOverlay;
-    private RenderHandler renderHandler;
     private Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
     private ModBlockEntityItemRenderer blockEntityItemRenderer;
 
     public ClientProxy() {
-        //Minecraft.instance is null during runData.
-        //noinspection ConstantConditions
-        Minecraft instance = Minecraft.getInstance();
-        if (instance != null) {
-            this.renderHandler = new RenderHandler(instance);
-            NeoForge.EVENT_BUS.register(this.renderHandler);
-            ((ReloadableResourceManager) instance.getResourceManager()).registerReloadListener(this.renderHandler); // Must be added before initial resource manager load
-        }
-    }
-
-    public void clearBossBarOverlay() {
-        this.bossInfoOverlay.clear();
     }
 
     @Override
@@ -158,38 +143,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleUpdateMultiBossInfoPacket(@NotNull ClientboundUpdateMultiBossEventPacket msg) {
-        this.bossInfoOverlay.read(msg);
-    }
-
-    @Override
-    public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
-        super.onInitStep(step, event);
-        switch (step) {
-            case CLIENT_SETUP -> {
-                Minecraft instance = Minecraft.getInstance();
-                this.overlay = new VampirismHUDOverlay(instance);
-                registerSubscriptions();
-                ModBlocksRender.register();
-                event.enqueueWork(() -> {
-                    Sheets.addWoodType(LogBlock.DARK_SPRUCE);
-                    Sheets.addWoodType(LogBlock.CURSED_SPRUCE);
-                });
-            }
-            case LOAD_COMPLETE -> {
-                event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
-            }
-            default -> {
-            }
-        }
-    }
-
-    @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
-    }
-
-    @Override
     public void showDBNOScreen(@NotNull Player playerEntity, @Nullable Component deathMessage) {
         if (playerEntity == Minecraft.getInstance().player && !playerEntity.isDeadOrDying()) {
             openScreen(new DBNOScreen(deathMessage));
@@ -199,22 +152,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void sendToServer(CustomPacketPayload packetPayload) {
         Minecraft.getInstance().getConnection().send(packetPayload);
-    }
-
-    private void registerSubscriptions() {
-        NeoForge.EVENT_BUS.register(this.overlay);
-        NeoForge.EVENT_BUS.register(new ClientEventHandler());
-        NeoForge.EVENT_BUS.register(new ScreenEventHandler());
-        NeoForge.EVENT_BUS.register(new ModKeys());
-    }
-
-    @Override
-    public void setupAPIClient() {
-        VIngameOverlays.FACTION_RAID_BAR_ELEMENT = this.bossInfoOverlay = new CustomBossEventOverlay();
-        VIngameOverlays.BLOOD_BAR_ELEMENT = new BloodBarOverlay();
-        VIngameOverlays.FACTION_LEVEL_ELEMENT = new FactionLevelOverlay();
-        VIngameOverlays.ACTION_COOLDOWN_ELEMENT = new ActionCooldownOverlay();
-        VIngameOverlays.ACTION_DURATION_ELEMENT = new ActionDurationOverlay();
     }
 
     /**
@@ -247,11 +184,6 @@ public class ClientProxy extends CommonProxy {
             }
 
         });
-    }
-
-    @Override
-    public void endBloodVisionBatch() {
-        this.renderHandler.endBloodVisionBatch();
     }
 
     public static void runOnRenderThread(Runnable runnable) {

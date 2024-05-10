@@ -32,7 +32,7 @@ public abstract class ModDisplayItemGenerator implements CreativeModeTab.Display
     protected abstract void addItemsToOutput();
 
     protected void add(ItemLike item) {
-        this.items.remove(item);
+        this.items.remove(item.asItem());
         output.accept(item);
     }
 
@@ -55,7 +55,7 @@ public abstract class ModDisplayItemGenerator implements CreativeModeTab.Display
     }
 
     protected  <T extends Block & CreativeTabItemProvider> void addBlockGen(DeferredHolder<Block, T> item) {
-        this.items.remove(item.get());
+        this.items.remove(item.get().asItem());
         item.get().generateCreativeTab(this.parameters, this.output);
     }
 

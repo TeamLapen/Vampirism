@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items.component;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.components.ISelectedAmmunition;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -8,7 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 
-public record SelectedAmmunition(Item item) {
+public record SelectedAmmunition(Item item) implements ISelectedAmmunition {
 
     public static final SelectedAmmunition EMPTY = new SelectedAmmunition(null);
 

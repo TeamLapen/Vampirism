@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * dependent things
  */
 @ApiStatus.Internal
-public class RegistryManager implements IInitListener {
+public class RegistryManager {
 
     private final IEventBus eventBus;
 
@@ -72,19 +72,6 @@ public class RegistryManager implements IInitListener {
         ModSkills.init();
         ModDataComponents.register(eventBus);
         ModArmorMaterials.register(eventBus);
-    }
-
-    @Override
-    public void onInitStep(@NotNull Step step, @NotNull ParallelDispatchEvent event) {
-        switch (step) {
-            case COMMON_SETUP:
-                event.enqueueWork(ModVillage::villagerTradeSetup);
-                event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
-                event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
-                ModRecipes.Categories.init();
-            default:
-                break;
-        }
     }
 
     @SubscribeEvent

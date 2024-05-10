@@ -10,8 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
-import de.teamlapen.vampirism.api.util.NonnullSupplier;
-import de.teamlapen.vampirism.api.util.NullableSupplier;
 import de.teamlapen.vampirism.entity.player.tasks.req.*;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ConsumerReward;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
@@ -113,15 +111,6 @@ public class TaskBuilder {
         return this.addRequirement(new StatRequirement(stat, amount, Component.translatable(Util.makeDescriptionId("stat", stat))));
     }
 
-    /**
-     * @deprecated Use {@link #addRequirement(String, ItemStack)}
-     */
-    @Deprecated(forRemoval = true)
-    @NotNull
-    public TaskBuilder addRequirement(@NotNull String name, NonnullSupplier<ItemStack> itemStack) {
-        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack.get(), requirementDescription(name)));
-    }
-
     @Deprecated
     public TaskBuilder addRequirement(@NotNull String name, ItemStack itemStack) {
         return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack, requirementDescription(name)));
@@ -211,16 +200,6 @@ public class TaskBuilder {
         return this;
     }
 
-    /**
-     * @deprecated Use {@link #setReward(ItemStack)}
-     */
-    @Deprecated(forRemoval = true)
-    @NotNull
-    public TaskBuilder setReward(NonnullSupplier<ItemStack> reward) {
-        this.reward = new ItemReward(reward.get());
-        return this;
-    }
-
     @NotNull
     public TaskBuilder setReward(ItemStack reward) {
         this.reward = new ItemReward(reward);
@@ -238,27 +217,9 @@ public class TaskBuilder {
         return setReward(new ConsumerReward(reward, description));
     }
 
-    /**
-     * @deprecated Use {@link de.teamlapen.vampirism.core.ModTags.Tasks#IS_UNIQUE}
-     */
-    @Deprecated(forRemoval = true)
-    @NotNull
-    public TaskBuilder setUnique() {
-        return this;
-    }
-
     @NotNull
     public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
         this.unlocker.add(unlocker);
-        return this;
-    }
-
-    /**
-     * @deprecated Use faction tags, like {@link de.teamlapen.vampirism.core.ModTags.Tasks#IS_VAMPIRE}
-     */
-    @Deprecated(forRemoval = true)
-    @NotNull
-    public TaskBuilder withFaction(@NotNull NullableSupplier<IPlayableFaction<?>> faction) {
         return this;
     }
 

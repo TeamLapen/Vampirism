@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items.component;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.components.ISwordTraining;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record SwordTraining(Map<UUID, Float> training) {
+public record SwordTraining(Map<UUID, Float> training) implements ISwordTraining {
 
     public static final SwordTraining EMPTY = new SwordTraining(ImmutableMap.of());
 

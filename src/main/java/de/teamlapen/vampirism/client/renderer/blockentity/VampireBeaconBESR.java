@@ -56,6 +56,6 @@ public class VampireBeaconBESR extends VampirismBESR<VampireBeaconBlockEntity> {
 
     @Override
     public @NotNull AABB getRenderBoundingBox(@NotNull VampireBeaconBlockEntity blockEntity) {
-        return INFINITE_EXTENT_AABB;
+        return AABB.INFINITE;
     }
 }

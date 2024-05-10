@@ -96,6 +96,6 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
     @Override
     public AABB getRenderBoundingBox(AltarInfusionBlockEntity blockEntity) {
-        return INFINITE_EXTENT_AABB;
+        return AABB.INFINITE;
     }
 }

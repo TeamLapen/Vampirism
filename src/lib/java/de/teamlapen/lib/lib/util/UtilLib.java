@@ -12,6 +12,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +47,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.I18nExtension;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
@@ -477,21 +477,21 @@ public class UtilLib {
         return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
-    public static @Nullable String translate(String key, Object @NotNull ... format) {
-        String pattern = I18nExtension.getPattern(key, () -> key);
-        if (format.length == 0) {
-            return pattern;
-        } else {
-            try {
-                pattern = replaceDeprecatedFormatter(pattern);
-                return I18nExtension.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component component ? component.getString() : o).toArray());
-            } catch (IllegalArgumentException e) {
-                LOGGER.error("Illegal format found `{}`", pattern);
-                return pattern;
-            }
-        }
-
-    }
+//    public static @Nullable String translate(String key, Object @NotNull ... format) {
+//        String pattern = I18nExtension.getPattern(key, () -> key);
+//        if (format.length == 0) {
+//            return pattern;
+//        } else {
+//            try {
+//                pattern = replaceDeprecatedFormatter(pattern);
+//                return I18nExtension.parseFormat(pattern, Arrays.stream(format).map(o -> o instanceof Component component ? component.getString() : o).toArray());
+//            } catch (IllegalArgumentException e) {
+//                LOGGER.error("Illegal format found `{}`", pattern);
+//                return pattern;
+//            }
+//        }
+//
+//    }
 
     private static @NotNull String replaceDeprecatedFormatter(@NotNull String text) {
         StringBuilder sb = null;

@@ -70,6 +70,6 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
 
     @Override
     public @NotNull AABB getRenderBoundingBox(@NotNull TotemBlockEntity blockEntity) {
-        return INFINITE_EXTENT_AABB;
+        return AABB.INFINITE;
     }
 }

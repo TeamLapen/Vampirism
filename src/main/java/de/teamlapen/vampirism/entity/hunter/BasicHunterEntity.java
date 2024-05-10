@@ -443,7 +443,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
                             }
                         }
                     } else {

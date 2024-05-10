@@ -141,7 +141,6 @@ public class VampirismCreativeTab {
             addBlock(POTION_TABLE);
             addBlock(MED_CHAIR);
             addBlock(ALCHEMY_TABLE);
-            addBlock(VAMPIRE_BEACON);
 
             addBuildingBlocks();
             addPlantBlocks();

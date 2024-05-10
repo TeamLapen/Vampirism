@@ -11,13 +11,13 @@ import net.minecraft.world.level.Level;
 
 public class RevertBackScreen extends ConfirmScreen {
 
-    protected static String getDescription() {
-        String s = UtilLib.translate("gui.vampirism.revertback.desc");
+    protected static Component getDescription() {
+        var text = Component.translatable("gui.vampirism.revertback.desc");
         Level w = Minecraft.getInstance().level;
         if (w != null && w.getLevelData().isHardcore()) {
-            s += " You won't die in hardcore mode.";
+            text = text.append(" You won't die in hardcore mode.");
         }
-        return s;
+        return text;
     }
 
     public RevertBackScreen() {
@@ -26,6 +26,6 @@ public class RevertBackScreen extends ConfirmScreen {
                 VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.REVERT_BACK));
             }
             Minecraft.getInstance().setScreen(null);
-        }, Component.translatable("gui.vampirism.revertback.head"), Component.literal(getDescription()));
+        }, Component.translatable("gui.vampirism.revertback.head"), getDescription());
     }
 }
