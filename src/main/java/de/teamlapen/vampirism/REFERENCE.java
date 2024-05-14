@@ -33,7 +33,8 @@ public class REFERENCE {
     public static final int REFRESH_SUNDAMAGE_TICKS = 8;
 
     // links
-    public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
+    public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire";
+    public static final String MODRINTH_LINK = "https://modrinth.com/mod/vampirism";
     public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final String SETTINGS_API = "https://api.vampirism.dev/api/v1";

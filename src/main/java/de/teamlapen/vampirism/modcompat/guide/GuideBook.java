@@ -57,6 +57,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mutable;
 
 import java.net.URI;
 import java.util.*;
@@ -126,19 +127,20 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> troublePages = new ArrayList<>();
         troublePages.addAll(PageHelper.pagesForLongText(translateComponent(base + "trouble.text")));
-        helper.addLinks(troublePages, new PageHolderWithLinks.URLLink(translateComponent(base + "trouble"), URI.create("https://github.com/TeamLapen/Vampirism/wiki/Troubleshooting")));
+        helper.addLinks(troublePages, new PageHolderWithLinks.URLLink(translateComponent(base + "trouble"), URI.create("https://wiki.vampirism.dev/docs/wiki/troubleshooting")));
         entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, translateComponent(base + "trouble")));
 
         List<IPage> devPages = new ArrayList<>();
-        PageHolderWithLinks.URLLink helpLink = new PageHolderWithLinks.URLLink(Component.literal("How to help"), URI.create("https://github.com/TeamLapen/Vampirism/wiki#how-you-can-help"));
+        PageHolderWithLinks.URLLink helpLink = new PageHolderWithLinks.URLLink(Component.literal("How to help"), URI.create("https://wiki.vampirism.dev/docs/wiki/intro"));
         devPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "dev.text")), helpLink));
         entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, translateComponent(base + "dev")));
 
         List<IPage> supportPages = new ArrayList<>();
         supportPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "support.text")));
         PageHolderWithLinks.URLLink linkCurseForge = new PageHolderWithLinks.URLLink("CurseForge", URI.create(REFERENCE.CURSEFORGE_LINK));
+        PageHolderWithLinks.URLLink linkModrinth = new PageHolderWithLinks.URLLink("Modrinth", URI.create(REFERENCE.MODRINTH_LINK));
 
-        helper.addLinks(supportPages, linkCurseForge, new ResourceLocation(base + "dev"));
+        helper.addLinks(supportPages, linkCurseForge, linkModrinth, new ResourceLocation(base + "dev"));
         entries.put(new ResourceLocation(base + "support"), new EntryText(supportPages, translateComponent(base + "support")));
 
         List<IPage> creditsPages = new ArrayList<>();
@@ -149,12 +151,12 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static String loc(@NotNull Block b) {
-        return UtilLib.translate(b.getDescriptionId());
+    private static Component loc(@NotNull Block b) {
+        return b.getName();
     }
 
-    private static String loc(@NotNull Item i) {
-        return UtilLib.translate(i.getDescriptionId());
+    private static Component loc(@NotNull Item i) {
+        return i.getDescription();
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
@@ -168,46 +170,46 @@ public class GuideBook implements IGuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.zombie")));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.blood", Component.translatable(ModKeys.SUCK.saveString()))));
         gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.infecting", VampireActions.INFECT.get().getName())));
-        gettingStarted.addAll(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "getting_started.level"), translateComponent(base + "getting_started.level2"))));
+        gettingStarted.addAll(PageHelper.pagesForLongText(translateComponent(base + "getting_started.level").append(translateComponent(base + "getting_started.level2"))));
 
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, translateComponent(base + "getting_started")));
 
         List<IPage> bloodPages = new ArrayList<>();
         bloodPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "blood.text", loc(ModItems.BLOOD_BOTTLE.get()), loc(Items.GLASS_BOTTLE))));
         bloodPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "blood.storage", loc(ModBlocks.BLOOD_CONTAINER.get()))), new ResourceLocation("guide.vampirism.blocks.blood_container")));
-        bloodPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "blood.biteable_creatures")), new PageHolderWithLinks.URLLink("Biteable Creatures", URI.create("https://github.com/TeamLapen/Vampirism/wiki/Biteable-Creatures"))));
+        bloodPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "blood.biteable_creatures")), new PageHolderWithLinks.URLLink("Biteable Creatures", URI.create("https://wiki.vampirism.dev/docs/wiki/content/entities/bitten_animal"))));
         entries.put(new ResourceLocation(base + "blood"), new EntryText(bloodPages, translateComponent(base + "blood")));
 
         List<IPage> levelingPages = new ArrayList<>();
         levelingPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "leveling.intro")));
-        String altarOfInspiration = "§l" + loc(ModBlocks.ALTAR_INSPIRATION.get()) + "§r\n§o" + translate(base + "leveling.inspiration.reach") + "§r\n";
-        altarOfInspiration += translate(base + "leveling.inspiration.text") + "\n";
-        altarOfInspiration += translate(base + "leveling.inspiration.requirements", Arrays.stream(VampireLeveling.getInspirationRequirements()).map(VampireLeveling.AltarInspirationRequirement::bloodAmount).toArray());
-        levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.literal(altarOfInspiration)), new ResourceLocation("guide.vampirism.blocks.altar_inspiration")));
+        MutableComponent altarOfInspiration = Component.literal("§l").append(loc(ModBlocks.ALTAR_INSPIRATION.get())).append("§r\n§o").append(translate(base + "leveling.inspiration.reach")).append("§r\n");
+        altarOfInspiration = altarOfInspiration.append(translate(base + "leveling.inspiration.text")).append( "\n");
+        altarOfInspiration = altarOfInspiration.append(translate(base + "leveling.inspiration.requirements", Arrays.stream(VampireLeveling.getInspirationRequirements()).map(VampireLeveling.AltarInspirationRequirement::bloodAmount).toArray()));
+        levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(altarOfInspiration), new ResourceLocation("guide.vampirism.blocks.altar_inspiration")));
 
-        String altarOfInfusion = "§l" + loc(ModBlocks.ALTAR_INFUSION.get()) + "§r\n§o" + translate(base + "leveling.infusion.reach") + "§r\n";
-        altarOfInfusion += translate(base + "leveling.infusion.intro", loc(ModBlocks.ALTAR_INFUSION.get()), loc(ModBlocks.ALTAR_PILLAR.get()), loc(ModBlocks.ALTAR_TIP.get()));
-        levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.literal(altarOfInfusion)), new ResourceLocation("guide.vampirism.blocks.altar_infusion")));
+        MutableComponent altarOfInfusion = Component.literal("§l").append(loc(ModBlocks.ALTAR_INFUSION.get())).append("§r\n§o").append(translate(base + "leveling.infusion.reach")).append("§r\n");
+        altarOfInfusion = altarOfInfusion.append(translate(base + "leveling.infusion.intro", loc(ModBlocks.ALTAR_INFUSION.get()), loc(ModBlocks.ALTAR_PILLAR.get()), loc(ModBlocks.ALTAR_TIP.get())));
+        levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(altarOfInfusion), new ResourceLocation("guide.vampirism.blocks.altar_infusion")));
         StringBuilder blocks = new StringBuilder();
         for (AltarPillarBlock.EnumPillarType t : AltarPillarBlock.EnumPillarType.values()) {
             if (t == AltarPillarBlock.EnumPillarType.NONE) continue;
             blocks.append(translate(t.fillerBlock.getDescriptionId())).append("(").append(t.getValue()).append("),");
         }
         levelingPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "leveling.infusion.structure", blocks.toString())));
-        String items = loc(ModItems.HUMAN_HEART.get()) + ", " + loc(ModItems.PURE_BLOOD_0.get()) + ", " + loc(ModItems.VAMPIRE_BOOK.get());
+        Component items = loc(ModItems.HUMAN_HEART.get()).copy().append(", ").append(loc(ModItems.PURE_BLOOD_0.get())).append(", ").append(loc(ModItems.VAMPIRE_BOOK.get()));
         levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "leveling.infusion.items", items)), new ResourceLocation("guide.vampirism.items.human_heart"), new ResourceLocation("guide.vampirism.items.pure_blood_0"), new ResourceLocation("guide.vampirism.items.vampire_book")));
         PageTable.Builder requirementsBuilder = new PageTable.Builder(5);
-        requirementsBuilder.addUnlocLine("text.vampirism.level_short", base + "leveling.infusion.req.structure_points", ModItems.PURE_BLOOD_0.get().getDescriptionId(), base + "leveling.infusion.req.heart", base + "leveling.infusion.req.book");
-        requirementsBuilder.addLine("5", VampireLeveling.getInfusionRequirement(5).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "0", "5", "1");
-        requirementsBuilder.addLine("6", VampireLeveling.getInfusionRequirement(6).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(1)", "5", "1");
-        requirementsBuilder.addLine("7", VampireLeveling.getInfusionRequirement(7).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(1)", "10", "1");
-        requirementsBuilder.addLine("8", VampireLeveling.getInfusionRequirement(8).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(2)", "10", "1");
-        requirementsBuilder.addLine("9", VampireLeveling.getInfusionRequirement(9).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(2)", "10", "1");
-        requirementsBuilder.addLine("10", VampireLeveling.getInfusionRequirement(10).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(3)", "15", "1");
-        requirementsBuilder.addLine("11", VampireLeveling.getInfusionRequirement(11).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(3)", "15", "1");
-        requirementsBuilder.addLine("12", VampireLeveling.getInfusionRequirement(12).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "1 Purity(4)", "20", "1");
-        requirementsBuilder.addLine("13", VampireLeveling.getInfusionRequirement(13).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "2 Purity(4)", "20", "1");
-        requirementsBuilder.addLine("14", VampireLeveling.getInfusionRequirement(14).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).get(), "2 Purity(5)", "25", "1");
+        requirementsBuilder.addLine(Component.translatable("text.vampirism.level_short"), Component.translatable(base + "leveling.infusion.req.structure_points"), ModItems.PURE_BLOOD_0.get().getDescription(), Component.translatable(base + "leveling.infusion.req.heart"),Component.translatable(base + "leveling.infusion.req.book"));
+        requirementsBuilder.addLine("5", VampireLeveling.getInfusionRequirement(5).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "0", "5", "1");
+        requirementsBuilder.addLine("6", VampireLeveling.getInfusionRequirement(6).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(1)", "5", "1");
+        requirementsBuilder.addLine("7", VampireLeveling.getInfusionRequirement(7).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(1)", "10", "1");
+        requirementsBuilder.addLine("8", VampireLeveling.getInfusionRequirement(8).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(2)", "10", "1");
+        requirementsBuilder.addLine("9", VampireLeveling.getInfusionRequirement(9).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(2)", "10", "1");
+        requirementsBuilder.addLine("10", VampireLeveling.getInfusionRequirement(10).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(3)", "15", "1");
+        requirementsBuilder.addLine("11", VampireLeveling.getInfusionRequirement(11).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(3)", "15", "1");
+        requirementsBuilder.addLine("12", VampireLeveling.getInfusionRequirement(12).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "1 Purity(4)", "20", "1");
+        requirementsBuilder.addLine("13", VampireLeveling.getInfusionRequirement(13).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "2 Purity(4)", "20", "1");
+        requirementsBuilder.addLine("14", VampireLeveling.getInfusionRequirement(14).map(VampireLeveling.AltarInfusionRequirements::getRequiredStructurePoints).orElseThrow(), "2 Purity(5)", "25", "1");
         requirementsBuilder.setHeadline(translateComponent(base + "leveling.infusion.req"));
         PageHolderWithLinks requirementTable = new PageHolderWithLinks(helper, requirementsBuilder.build());
         requirementTable.addLink(new ResourceLocation("guide.vampirism.items.human_heart"));
@@ -226,7 +228,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.text")), new ResourceLocation(base + "vampirism_menu")));
-        skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions", UtilLib.translate(ModKeys.ACTION.saveString()))));
+        skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions", ModKeys.ACTION.getTranslatedKeyMessage())));
         skillPages.addAll(PageHelper.pagesForLongText(translateComponent("guide.vampirism.skills.bind_action")));
         skillPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "skills.actions2")));
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.refinements")), new ResourceLocation("guide.vampirism.items.accessories")));
@@ -241,7 +243,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> lordPages = new ArrayList<>();
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription().getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
-        lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title", "text.vampirism.title");
+        lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), Component.translatable("text.vampirism.title"), Component.translatable("text.vampirism.title"));
         lordTitleBuilder.addLine(1, VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString());
         lordTitleBuilder.addLine(2, VReference.VAMPIRE_FACTION.getLordTitle(2,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.FEMALE).getString());
         lordTitleBuilder.addLine(3, VReference.VAMPIRE_FACTION.getLordTitle(3,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.FEMALE).getString());
@@ -249,11 +251,11 @@ public class GuideBook implements IGuideBook {
         lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.FEMALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.VAMPIRE_MINION_BINDING.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.vampire_minion_binding")));
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", ModKeys.MINION.getTranslatedKeyMessage(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, Component.translatable(base + "lord")));
 
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translateComponent(ModKeys.VAMPIRISM_MENU.saveString())).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", ModKeys.VAMPIRISM_MENU.getTranslatedKeyMessage()).append(translateComponent("guide.vampirism.overview.vampirism_menu.text_vampire", translateComponent("guide.vampirism.items.accessories"))))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
 
@@ -286,7 +288,7 @@ public class GuideBook implements IGuideBook {
         train2 += translate(base + "leveling.train2.text", loc(ModBlocks.HUNTER_TABLE.get()), loc(ModBlocks.WEAPON_TABLE.get()), loc(ModBlocks.POTION_TABLE.get()), loc(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         levelingPages.addAll(helper.addLinks(PageHelper.pagesForLongText(Component.translatable(train2)), new ResourceLocation("guide.vampirism.blocks.hunter_table"), new ResourceLocation("guide.vampirism.blocks.weapon_table"), new ResourceLocation("guide.vampirism.blocks.alchemical_cauldron"), new ResourceLocation("guide.vampirism.blocks.potion_table")));
         PageTable.Builder builder = new PageTable.Builder(4);
-        builder.addUnlocLine("text.vampirism.level", base + "leveling.train2.fang", loc(ModItems.PURE_BLOOD_0.get()), loc(ModItems.VAMPIRE_BOOK.get()));
+        builder.addLine(Component.translatable("text.vampirism.level"), base + "leveling.train2.fang", loc(ModItems.PURE_BLOOD_0.get()), loc(ModItems.VAMPIRE_BOOK.get()));
         HunterLeveling.getTrainerRequirements().forEach(requirement -> {
             var tableReq = requirement.tableRequirement();
             String pure = "";
@@ -308,7 +310,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro")), new ResourceLocation(base + "vampirism_menu")));
         String disguise = String.format("§l%s§r\n", HunterActions.DISGUISE_HUNTER.get().getName().getString());
-        disguise += translate(base + "skills.disguise.text", ModKeys.ACTION.saveString());
+        disguise += translate(base + "skills.disguise.text", ModKeys.ACTION.getTranslatedKeyMessage());
         skillPages.addAll(PageHelper.pagesForLongText(Component.literal(disguise)));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.WEAPON_TABLE.get()));
         weaponTable += translate(base + "skills.weapon_table.text");
@@ -338,7 +340,7 @@ public class GuideBook implements IGuideBook {
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
         lordTitleBuilder.setHeadline(translateComponent(base + "lord.titles"));
-        lordTitleBuilder.addUnlocLine("text.vampirism.level", "text.vampirism.title");
+        lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), "text.vampirism.title");
         lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString());
         lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.MALE).getString());
         lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.MALE).getString());
@@ -346,10 +348,10 @@ public class GuideBook implements IGuideBook {
         lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.MALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.hunter_minion_equipment")));
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", translate(ModKeys.MINION.saveString()), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", ModKeys.MINION.getTranslatedKeyMessage(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
         entries.put(new ResourceLocation(base + "lord"), new EntryText(lordPages, Component.translatable(base + "lord")));
 
-        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", translate(ModKeys.VAMPIRISM_MENU.saveString())))); //Lang key shared with vampires
+        List<IPage> vampirismMenu = new ArrayList<>(PageHelper.pagesForLongText(translateComponent("guide.vampirism.overview.vampirism_menu.text", ModKeys.VAMPIRISM_MENU.getTranslatedKeyMessage()))); //Lang key shared with vampires
         entries.put(new ResourceLocation(base + "vampirism_menu"), new EntryText(vampirismMenu, translateComponent("guide.vampirism.overview.vampirism_menu")));
 
         List<IPage> unHunterPages = new ArrayList<>();
@@ -624,12 +626,12 @@ public class GuideBook implements IGuideBook {
     }
 
     public static @NotNull MutableComponent translateComponent(String key, Object... format) {
-        String result = UtilLib.translate(key, format);
+        String result = Component.translatable(key, format).getString();
         return Component.literal(result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"))); //Fix legacy newlines. //Probably shouldn't use new StringTextComponent here, but don't want to rewrite everything
     }
 
     public static @NotNull String translate(String key, Object... format) {
-        String result = UtilLib.translate(key, format);
+        String result = Component.translatable(key, format).getString();
         return result.replaceAll("\\\\n", Matcher.quoteReplacement("\n"));
     }
 

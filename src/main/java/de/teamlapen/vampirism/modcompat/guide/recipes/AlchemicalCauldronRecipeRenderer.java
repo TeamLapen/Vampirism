@@ -39,8 +39,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font font, @NotNull IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(guiGraphics, guiLeft + 60, guiTop + 42);
-        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, UtilLib.translate(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + font.lineHeight, 0);
+        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, ModBlocks.ALCHEMICAL_CAULDRON.get().getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, Component.literal("§o").append(Component.translatable("guideapi.text.crafting.shaped")).append("§r"), guiLeft + baseScreen.xSize / 2, guiTop + 14 + font.lineHeight, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;

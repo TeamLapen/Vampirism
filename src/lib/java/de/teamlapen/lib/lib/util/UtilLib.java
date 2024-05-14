@@ -478,7 +478,7 @@ public class UtilLib {
     }
 
 //    public static @Nullable String translate(String key, Object @NotNull ... format) {
-//        String pattern = I18nExtension.getPattern(key, () -> key);
+//        String pattern = Component.translatable(key).getString();
 //        if (format.length == 0) {
 //            return pattern;
 //        } else {

@@ -13,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -21,6 +22,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,14 +31,14 @@ import java.util.List;
  * @author Maxanier
  */
 public class PageTable extends Page {
-    private final List<String[]> lines;
+    private final List<Component[]> lines;
     /**
      * Max char count in one cell for each column
      */
     private final int[] width;
     private final MutableComponent headline;
 
-    private PageTable(List<String[]> lines, int[] width, MutableComponent headline) {
+    private PageTable(List<Component[]> lines, int[] width, MutableComponent headline) {
         this.lines = lines;
         this.width = width;
         this.headline = headline;
@@ -54,7 +56,7 @@ public class PageTable extends Page {
             y += font.lineHeight;
         }
         drawLine(guiGraphics, x, y + font.lineHeight, x + (guiBase.xSize * 3F / 5F), y + font.lineHeight, 0);
-        for (String[] l : lines) {
+        for (Component[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
@@ -90,7 +92,7 @@ public class PageTable extends Page {
 
     public static class Builder {
         int columns;
-        List<String[]> lines;
+        List<Component[]> lines;
         MutableComponent headline;
 
         public Builder(int columns) {
@@ -98,32 +100,27 @@ public class PageTable extends Page {
             lines = new ArrayList<>();
         }
 
-        public @NotNull Builder addLine(Object @NotNull ... objects) {
+        public @NotNull Builder addLine(Component @NotNull ... objects) {
             if (objects.length != columns) {
                 throw new IllegalArgumentException("Every added line as to contain one String for every column");
             }
-            String[] l = new String[objects.length];
-            for (int i = 0; i < objects.length; i++) {
-                l[i] = String.valueOf(objects[i]);
-            }
-            lines.add(l);
+            lines.add(objects);
             return this;
         }
 
-        public Builder addUnlocLine(String @NotNull ... strings) {
-            String[] loc = new String[strings.length];
-            for (int i = 0; i < strings.length; i++) {
-                loc[i] = UtilLib.translate(strings[i]);
-            }
-            return addLine((Object[]) loc);
+        public @NotNull Builder addLine(Object @NotNull ... objects) {
+            return addLine(Arrays.stream(objects).map(object -> {
+                if (object instanceof Component comp) return comp;
+                return Component.literal(String.valueOf(object));
+            }).toArray(Component[]::new));
         }
 
         public @NotNull PageTable build() {
             int[] width = new int[columns];
             for (int i = 0; i < columns; i++) {
                 int max = 0;
-                for (String[] s : lines) {
-                    int w = s[i].length();
+                for (Component[] s : lines) {
+                    int w = s[i].getString().length();
                     if (w > max) max = w;
                 }
                 width[i] = max;
