@@ -74,14 +74,6 @@ public class GeneralEventHandler {
 
 
     @SubscribeEvent
-    public void onWorldUnload(LevelEvent.@NotNull Unload event) {
-        if (event.getLevel() instanceof Level level) {
-            LevelFog.get(level).clearCache();
-            LevelGarlic.get(level).clearCache();
-         }
-    }
-
-    @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         int missing = ModLootTables.checkAndResetInsertedAll();
         if (missing > 0) {

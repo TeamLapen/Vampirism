@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.fog;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.sun.jna.platform.win32.WinDef;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.world.IFogHandler;
 import de.teamlapen.vampirism.core.ModAttachments;
@@ -9,6 +10,9 @@ import de.teamlapen.vampirism.util.CodecUtil;
 import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import de.teamlapen.vampirism.world.garlic.GarlicServerLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -124,6 +128,12 @@ public class FogLevel implements IFogHandler {
                         CodecUtil.AABB.fieldOf("box").forGetter(s -> s.box),
                         Codec.BOOL.fieldOf("temp").forGetter(s -> s.temp)
                 ).apply(inst, Emitter::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Emitter> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, Emitter::totemPos,
+                ByteBufCodecs.DOUBLE.apply(ByteBufCodecs.list(6)).map(s -> new AABB(s.get(0), s.get(1), s.get(2), s.get(3), s.get(4), s.get(5)), s -> List.of(s.minX, s.minY, s.minZ, s.maxX, s.maxY, s.maxZ)), Emitter::box,
+                ByteBufCodecs.BOOL, Emitter::temp,
+                Emitter::new
         );
     }
 

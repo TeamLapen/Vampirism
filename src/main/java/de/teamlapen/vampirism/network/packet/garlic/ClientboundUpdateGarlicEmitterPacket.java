@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.world.garlic.GarlicLevel;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -12,19 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public record ClientboundUpdateGarlicEmitterPacket(List<GarlicLevel.Emitter> emitters) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "update_garlic_emitter");
-    public static final Codec<ClientboundUpdateGarlicEmitterPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    Codec.list(GarlicLevel.Emitter.CODEC).fieldOf("emitters").forGetter(ClientboundUpdateGarlicEmitterPacket::emitters)
-            ).apply(inst, ClientboundUpdateGarlicEmitterPacket::new)
+    public static final Type<ClientboundUpdateGarlicEmitterPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "update_garlic_emitter"));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdateGarlicEmitterPacket> CODEC = StreamCodec.composite(
+            GarlicLevel.Emitter.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundUpdateGarlicEmitterPacket::emitters,
+            ClientboundUpdateGarlicEmitterPacket::new
     );
-    @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

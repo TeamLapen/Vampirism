@@ -4,26 +4,24 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record ClientboundRemoveFogEmitterPacket(BlockPos position, boolean tmp) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "remove_fog_emitter");
-    public static final Codec<ClientboundRemoveFogEmitterPacket> CODEC = RecordCodecBuilder.create(inst ->
-            inst.group(
-                    BlockPos.CODEC.fieldOf("position").forGetter(ClientboundRemoveFogEmitterPacket::position),
-                    Codec.BOOL.fieldOf("tmp").forGetter(ClientboundRemoveFogEmitterPacket::tmp)
-            ).apply(inst, ClientboundRemoveFogEmitterPacket::new)
+    public static final Type<ClientboundRemoveFogEmitterPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "remove_fog_emitter"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRemoveFogEmitterPacket> CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, ClientboundRemoveFogEmitterPacket::position,
+            ByteBufCodecs.BOOL, ClientboundRemoveFogEmitterPacket::tmp,
+            ClientboundRemoveFogEmitterPacket::new
     );
-    @Override
-    public void write(FriendlyByteBuf pBuffer) {
-        pBuffer.writeJsonWithCodec(CODEC, this);
-    }
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return ID;
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

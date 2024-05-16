@@ -3,10 +3,17 @@ package de.teamlapen.vampirism.blockentity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.inventory.diffuser.PlayerOwnedMenu;
+import de.teamlapen.vampirism.util.StreamCodecExtension;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -15,6 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,8 +58,8 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.saveAdditional(pTag, provider);
         if (this.lockDataHolder.owner != null) {
             pTag.putUUID("owner", this.lockDataHolder.owner);
             pTag.putString("lockStatus", this.lockDataHolder.lockStatus.getSerializedName());
@@ -58,8 +67,8 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
+        super.loadAdditional(pTag, provider);
         if (pTag.hasUUID("owner")) {
             this.lockDataHolder.owner = pTag.getUUID("owner");
             this.lockDataHolder.lockStatus = Lock.get(pTag.getString("lockStatus"));
@@ -83,6 +92,11 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
                         Codec.STRING.xmap(UUID::fromString, UUID::toString).optionalFieldOf("owner").forGetter(l -> java.util.Optional.ofNullable(l.owner)),
                         StringRepresentable.fromEnum(Lock::values).fieldOf("lockStatus").forGetter(LockDataHolder::getLockStatus)
                 ).apply(inst, LockDataHolder::new)
+        );
+        public static final StreamCodec<FriendlyByteBuf, LockDataHolder> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), o -> Optional.ofNullable(o.getOwner()),
+                NeoForgeStreamCodecs.enumCodec(Lock.class), LockDataHolder::getLockStatus,
+                LockDataHolder::new
         );
 
         private @Nullable UUID owner;

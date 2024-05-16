@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.ClientPayloadHandler;
+import de.teamlapen.vampirism.common.CommonPayloadHandler;
 import de.teamlapen.vampirism.network.packet.fog.ClientboundAddFogEmitterPacket;
 import de.teamlapen.vampirism.network.packet.fog.ClientboundRemoveFogEmitterPacket;
 import de.teamlapen.vampirism.network.packet.fog.ClientboundUpdateFogEmitterPacket;
@@ -33,30 +34,30 @@ public class ModPacketDispatcher {
         registrar.commonToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
         registrar.playToClient(ClientboundBossEventSoundPacket.TYPE, ClientboundBossEventSoundPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context));
         registrar.playToClient(ClientboundSkillTreePacket.TYPE, ClientboundSkillTreePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSkillTreePacket(msg, context));
-        registrar.play(ClientboundUpdateGarlicEmitterPacket.ID, jsonReader(ClientboundUpdateGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context)));
-        registrar.play(ClientboundAddGarlicEmitterPacket.ID, jsonReader(ClientboundAddGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddGarlicEmitterPacket(msg, context)));
-        registrar.play(ClientboundRemoveGarlicEmitterPacket.ID, jsonReader(ClientboundRemoveGarlicEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveGarlicEmitterPacket(msg, context)));
-        registrar.play(ClientboundUpdateFogEmitterPacket.ID, jsonReader(ClientboundUpdateFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context)));
-        registrar.play(ClientboundAddFogEmitterPacket.ID, jsonReader(ClientboundAddFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context)));
-        registrar.play(ClientboundRemoveFogEmitterPacket.ID, jsonReader(ClientboundRemoveFogEmitterPacket.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context)));
+        registrar.playToClient(ClientboundUpdateGarlicEmitterPacket.TYPE, ClientboundUpdateGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundAddGarlicEmitterPacket.TYPE, ClientboundAddGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddGarlicEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundRemoveGarlicEmitterPacket.TYPE, ClientboundRemoveGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRemoveGarlicEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundUpdateFogEmitterPacket.TYPE, ClientboundUpdateFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundAddFogEmitterPacket.TYPE, ClientboundAddFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundRemoveFogEmitterPacket.TYPE, ClientboundRemoveFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context));
 
-        registrar.playToServer(ServerboundSelectMinionTaskPacket.TYPE, ServerboundSelectMinionTaskPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSelectMinionTaskPacket(msg, context));
-        registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleAppearancePacket(msg, context));
-        registrar.playToServer(ServerboundTaskActionPacket.TYPE, ServerboundTaskActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleTaskActionPacket(msg, context));
-        registrar.playToServer(ServerboundUpgradeMinionStatPacket.TYPE, ServerboundUpgradeMinionStatPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleUpgradeMinionStatPacket(msg, context));
-        registrar.playToServer(ServerboundActionBindingPacket.TYPE, ServerboundActionBindingPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleActionBindingPacket(msg, context));
-        registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSimpleInputEvent(msg, context));
-        registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleStartFeedingPacket(msg, context));
-        registrar.playToServer(ServerboundToggleActionPacket.TYPE, ServerboundToggleActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleToggleActionPacket(msg, context));
-        registrar.playToServer(ServerboundUnlockSkillPacket.TYPE, ServerboundUnlockSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleUnlockSkillPacket(msg, context));
-        registrar.playToServer(ServerboundNameItemPacket.TYPE, ServerboundNameItemPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleNameItemPacket(msg, context));
-        registrar.playToServer(ServerboundToggleMinionTaskLock.TYPE, ServerboundToggleMinionTaskLock.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleToggleMinionTaskLock(msg, context));
-        registrar.playToServer(ServerboundDeleteRefinementPacket.TYPE, ServerboundDeleteRefinementPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleDeleteRefinementPacket(msg, context));
-        registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSelectAmmoTypePacket(msg, context));
-        registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleSetVampireBeaconPacket(msg, context));
-        registrar.playToServer(ServerboundRequestSkillTreePacket.TYPE, ServerboundRequestSkillTreePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleRequestSkillTreePacket(msg, context));
-
-        registrar.play(PlayerOwnedBlockEntityLockPacket.ID, jsonReader(PlayerOwnedBlockEntityLockPacket.CODEC), handler -> handler.client(ClientPayloadHandler::handlePlayerOwnedBlockEntityLockPacket).server(ServerPayloadHandler.getInstance()::handlePlayerOwnedBlockEntityLockPacket));
+        registrar.playToServer(ServerboundSelectMinionTaskPacket.TYPE, ServerboundSelectMinionTaskPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSelectMinionTaskPacket(msg, context));
+        registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
+        registrar.playToServer(ServerboundTaskActionPacket.TYPE, ServerboundTaskActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleTaskActionPacket(msg, context));
+        registrar.playToServer(ServerboundUpgradeMinionStatPacket.TYPE, ServerboundUpgradeMinionStatPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUpgradeMinionStatPacket(msg, context));
+        registrar.playToServer(ServerboundActionBindingPacket.TYPE, ServerboundActionBindingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleActionBindingPacket(msg, context));
+        registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));
+        registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));
+        registrar.playToServer(ServerboundToggleActionPacket.TYPE, ServerboundToggleActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleActionPacket(msg, context));
+        registrar.playToServer(ServerboundUnlockSkillPacket.TYPE, ServerboundUnlockSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUnlockSkillPacket(msg, context));
+        registrar.playToServer(ServerboundNameItemPacket.TYPE, ServerboundNameItemPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleNameItemPacket(msg, context));
+        registrar.playToServer(ServerboundToggleMinionTaskLock.TYPE, ServerboundToggleMinionTaskLock.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleMinionTaskLock(msg, context));
+        registrar.playToServer(ServerboundDeleteRefinementPacket.TYPE, ServerboundDeleteRefinementPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleDeleteRefinementPacket(msg, context));
+        registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSelectAmmoTypePacket(msg, context));
+        registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));
+        registrar.playToServer(ServerboundRequestSkillTreePacket.TYPE, ServerboundRequestSkillTreePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleRequestSkillTreePacket(msg, context));
+        
+        registrar.playBidirectional(PlayerOwnedBlockEntityLockPacket.TYPE, PlayerOwnedBlockEntityLockPacket.CODEC, (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context));
 
     }
 

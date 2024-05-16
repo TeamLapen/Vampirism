@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Handles garlic in world
  */
@@ -23,7 +25,12 @@ public interface IGarlicChunkHandler {
      * @param pos      All affected chunk pos. Cannot be null
      * @return A unique hash which is required to remove the registration again
      */
-    int registerGarlicBlock(EnumStrength strength, ChunkPos... pos);
+    int registerGarlicBlock(EnumStrength strength, List<ChunkPos> pos);
+
+    @Deprecated(forRemoval = true)
+    default int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
+        return registerGarlicBlock(strength, List.of(pos));
+    }
 
     /**
      * Removes a garlic "emitter" registration

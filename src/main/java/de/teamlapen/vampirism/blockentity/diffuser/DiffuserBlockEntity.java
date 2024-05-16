@@ -92,7 +92,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider pProvider) {
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, pProvider);
         pTag.putInt("litTime", this.litTime);
         pTag.putInt("bootTimer", this.bootTimer);
         ContainerHelper.saveAllItems(pTag, this.items, pProvider);
@@ -196,5 +196,15 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
 
+    }
+
+    @Override
+    protected @NotNull NonNullList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    @Override
+    protected void setItems(@NotNull NonNullList<ItemStack> pItems) {
+        this.items = pItems;
     }
 }

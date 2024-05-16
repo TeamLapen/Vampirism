@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.garlic;
 
 import com.google.common.collect.Maps;
+import com.ibm.icu.impl.duration.impl.DataRecord;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -8,13 +9,18 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.util.CodecUtil;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -43,7 +49,7 @@ public class GarlicLevel implements IGarlicChunkHandler {
     }
 
     @Override
-    public int registerGarlicBlock(EnumStrength strength, ChunkPos @NotNull ... pos) {
+    public int registerGarlicBlock(EnumStrength strength, @NotNull List<ChunkPos> pos) {
         for (ChunkPos p : pos) {
             if (p == null) {
                 throw new IllegalArgumentException("Garlic emitter position should not be null");
@@ -116,12 +122,17 @@ public class GarlicLevel implements IGarlicChunkHandler {
         notifyClear();
     }
 
-    public record Emitter(EnumStrength strength, ChunkPos[] pos) {
+    public record Emitter(EnumStrength strength, List<ChunkPos> pos) {
         public static Codec<Emitter> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         StringRepresentable.fromEnum(EnumStrength::values).fieldOf("strength").forGetter(s -> s.strength),
-                        CodecUtil.CHUNK_POS.listOf().xmap(x -> x.toArray(ChunkPos[]::new), Arrays::asList).fieldOf("pos").forGetter(x -> x.pos)
+                        CodecUtil.CHUNK_POS.listOf().fieldOf("pos").forGetter(x -> x.pos)
                 ).apply(inst, Emitter::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Emitter> STREAM_CODEC = StreamCodec.composite(
+                NeoForgeStreamCodecs.enumCodec(EnumStrength.class), Emitter::strength,
+                NeoForgeStreamCodecs.CHUNK_POS.apply(ByteBufCodecs.list()), Emitter::pos,
+                Emitter::new
         );
     }
 

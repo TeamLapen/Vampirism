@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
@@ -102,14 +103,14 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
                     chunks[i++] = new ChunkPos(x + baseX, z + baseZ);
                 }
             }
-            this.emitterId = GarlicLevel.getOpt(level).map(l -> l.registerGarlicBlock(this.strength, chunks)).orElse(0);
+            this.emitterId = GarlicLevel.get(level).registerGarlicBlock(this.strength, List.of(chunks));
         }
     }
 
     @Override
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.emitterId != 0) {
-            GarlicLevel.getOpt(level).ifPresent(x -> x.removeGarlicBlock(this.emitterId));
+            GarlicLevel.get(level).removeGarlicBlock(this.emitterId);
             this.emitterId = 0;
         }
     }

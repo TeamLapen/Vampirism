@@ -2,10 +2,11 @@ package de.teamlapen.vampirism.inventory.diffuser;
 
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
-import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
@@ -18,11 +19,11 @@ import java.util.function.Consumer;
 
 public class FogDiffuserMenu extends DiffuserMenu {
     public FogDiffuserMenu(int pContainerId, Inventory playerInventory, PlayerOwnedBlockEntity.LockDataHolder lockData) {
-        super(ModContainer.FOG_DIFFUSER.get(), pContainerId, playerInventory, lockData);
+        super(ModMenus.FOG_DIFFUSER.get(), pContainerId, playerInventory, lockData);
     }
 
     public FogDiffuserMenu(int pContainerId, Inventory playerInventory, Container pContainer, ContainerData pData, PlayerOwnedBlockEntity.LockDataHolder lockData) {
-        super(ModContainer.FOG_DIFFUSER.get(), pContainerId, playerInventory, pContainer, pData, lockData);
+        super(ModMenus.FOG_DIFFUSER.get(), pContainerId, playerInventory, pContainer, pData, lockData);
     }
 
     @Override
@@ -36,5 +37,6 @@ public class FogDiffuserMenu extends DiffuserMenu {
         public FogDiffuserMenu create(int windowId, Inventory inv, PlayerOwnedBlockEntity.LockDataHolder lockData) {
             return new FogDiffuserMenu(windowId, inv, lockData);
         }
+
     }
 }

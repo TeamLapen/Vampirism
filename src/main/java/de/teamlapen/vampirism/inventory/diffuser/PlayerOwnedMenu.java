@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.inventory.diffuser;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.network.PlayerOwnedBlockEntityLockPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -58,8 +59,9 @@ public abstract class PlayerOwnedMenu extends AbstractContainerMenu {
     }
 
     protected static abstract class Factory<T extends PlayerOwnedMenu> implements IContainerFactory<T> {
+
         @Override
-        public T create(int windowId, Inventory inv, FriendlyByteBuf data) {
+        public @NotNull T create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
             return create(windowId, inv, PlayerOwnedBlockEntity.LockDataHolder.createFromBuffer(data));
         }
 

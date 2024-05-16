@@ -93,35 +93,27 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> ClientSkillTreeData.init(msg.skillTrees()));
     }
 
-    public static void handlePlayerOwnedBlockEntityLockPacket(PlayerOwnedBlockEntityLockPacket msg, PlayPayloadContext context) {
-        context.player().ifPresent(player -> {
-            if (player.containerMenu instanceof PlayerOwnedMenu menu && player.containerMenu.containerId == msg.menuId()) {
-                menu.setLockStatus(msg.lockData().getLockStatus());
-            }
-        });
+    public static void handleRemoveGarlicEmitterPacket(ClientboundRemoveGarlicEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> GarlicLevel.get(context.player().level()).removeGarlicBlock(msg.emitterId()));
     }
 
-    public static void handleRemoveGarlicEmitterPacket(ClientboundRemoveGarlicEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.removeGarlicBlock(msg.emitterId())));
+    public static void handleAddGarlicEmitterPacket(ClientboundAddGarlicEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> GarlicLevel.get(context.player().level()).registerGarlicBlock(msg.emitter().strength(), msg.emitter().pos()));
     }
 
-    public static void handleAddGarlicEmitterPacket(ClientboundAddGarlicEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.registerGarlicBlock(msg.emitter().strength(), msg.emitter().pos())));
+    public static void handleUpdateGarlicEmitterPacket(ClientboundUpdateGarlicEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> GarlicLevel.get(context.player().level()).fill(msg.emitters()));
     }
 
-    public static void handleUpdateGarlicEmitterPacket(ClientboundUpdateGarlicEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(GarlicLevel::get).ifPresent(s -> s.fill(msg.emitters())));
+    public static void handleUpdateFogEmitterPacket(ClientboundUpdateFogEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> FogLevel.get(context.player().level()).fill(msg.emitters(), msg.emittersTmp()));
     }
 
-    public static void handleUpdateFogEmitterPacket(ClientboundUpdateFogEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.fill(msg.emitters(), msg.emittersTmp())));
+    public static void handleAddFogEmitterPacket(ClientboundAddFogEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> FogLevel.get(context.player().level()).add(msg.emitter()));
     }
 
-    public static void handleAddFogEmitterPacket(ClientboundAddFogEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.add(msg.emitter())));
-    }
-
-    public static void handleRemoveFogEmitterPacket(ClientboundRemoveFogEmitterPacket msg, PlayPayloadContext context) {
-        context.workHandler().execute(() -> context.player().map(Entity::level).map(FogLevel::get).ifPresent(s -> s.remove(msg.position(), msg.tmp())));
+    public static void handleRemoveFogEmitterPacket(ClientboundRemoveFogEmitterPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> FogLevel.get(context.player().level()).remove(msg.position(), msg.tmp()));
     }
 }
