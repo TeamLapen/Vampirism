@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.extensions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.items.HunterHatItem;
-import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.mixin.client.accessor.ItemInHandRendererAccessor;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -74,9 +74,9 @@ public class ItemExtensions {
 
             InteractionHand hand = entity.getMainArm() == arm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
             ItemStack itemInHand = entity.getItemInHand(hand);
-            if (itemInHand.getItem() instanceof VampirismCrossbowItem crossbow) {
+            if (itemInHand.getItem() instanceof HunterCrossbowItem crossbow) {
                 ItemStack otherItemStack = entity.getItemInHand(entity.getMainArm() == arm ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                if (otherItemStack.getItem() instanceof IVampirismCrossbow otherCrossbow) {
+                if (otherItemStack.getItem() instanceof IHunterCrossbow otherCrossbow) {
                     int combinedUseDuration = crossbow.getCombinedUseDuration(itemInHand, entity, hand);
                     int itemUseDuration = crossbow.getUseDuration(itemInHand);
                     int combinedChargeDurationMod = crossbow.getCombinedChargeDurationMod(itemInHand, entity, hand);
@@ -136,9 +136,9 @@ public class ItemExtensions {
         @Nullable
         @Override
         public HumanoidModel.ArmPose getArmPose(@NotNull LivingEntity entityLiving, @NotNull InteractionHand hand, ItemStack itemStack) {
-            if (itemStack.getItem() instanceof VampirismCrossbowItem crossbow) {
+            if (itemStack.getItem() instanceof HunterCrossbowItem crossbow) {
                 ItemStack otherStack = entityLiving.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                if (crossbow.canUseDoubleCrossbow(entityLiving) && otherStack.getItem() instanceof IVampirismCrossbow) {
+                if (crossbow.canUseDoubleCrossbow(entityLiving) && otherStack.getItem() instanceof IHunterCrossbow) {
                     if (entityLiving.getUseItemRemainingTicks() > 0) {
                         if (CrossbowItem.isCharged(otherStack)) {
                             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
@@ -170,7 +170,7 @@ public class ItemExtensions {
         public boolean applyForgeHandTransform(@NotNull PoseStack pPoseStack, LocalPlayer pPlayer, @NotNull HumanoidArm humanoidarm, ItemStack pStack, float pPartialTicks, float pEquippedProgress, float pSwingProgress) {
             boolean flag = humanoidarm == pPlayer.getMainArm();
             InteractionHand pHand = flag ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-            if (pStack.getItem() instanceof VampirismCrossbowItem) {
+            if (pStack.getItem() instanceof HunterCrossbowItem) {
                 applyCrossbowTransform(pPoseStack, pPlayer, humanoidarm, pStack, pPartialTicks, pEquippedProgress, pSwingProgress, flag, !flag && pPlayer.isUsingItem() && pPlayer.getUsedItemHand() != pHand);
             }
             return true;
@@ -182,7 +182,7 @@ public class ItemExtensions {
             boolean flag2 = humanoidarm == HumanoidArm.RIGHT;
             int i = flag2 ? 1 : -1;
 
-            VampirismCrossbowItem item = (VampirismCrossbowItem) pStack.getItem();
+            HunterCrossbowItem item = (HunterCrossbowItem) pStack.getItem();
             int totalDuration = item.getCombinedUseDuration(pStack, pPlayer, pHand);
             int itemDuration = item.getUseDuration(pStack);
             float itemUseDuration = pPlayer.getUseItemRemainingTicks();
@@ -220,7 +220,7 @@ public class ItemExtensions {
                 pPoseStack.translate((float)i * f, f1, f2);
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmAttackTransform(pPoseStack, humanoidarm, pSwingProgress);
-                if (flag1 && pSwingProgress < 0.001F && isMainArm && (!(pPlayer.getOffhandItem().getItem() instanceof VampirismCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
+                if (flag1 && pSwingProgress < 0.001F && isMainArm && (!(pPlayer.getOffhandItem().getItem() instanceof HunterCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
                     pPoseStack.translate((float)i * -0.641864F, 0.0F, 0.0F);
                     pPoseStack.mulPose(Axis.YP.rotationDegrees((float)i * 10.0F));
                 }

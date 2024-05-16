@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class SingleCrossbowItem extends VampirismCrossbowItem {
+public class SingleCrossbowItem extends HunterCrossbowItem {
 
     public SingleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, Supplier<ISkill<IHunterPlayer>> requiredSkill) {
         super(properties, arrowVelocity, chargeTime, itemTier, requiredSkill);

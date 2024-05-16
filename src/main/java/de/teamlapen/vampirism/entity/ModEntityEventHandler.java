@@ -22,7 +22,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.HunterAxeItem;
 import de.teamlapen.vampirism.items.VampireSwordItem;
-import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
 import de.teamlapen.vampirism.mixin.accessor.NearestAttackableTargetGoalAccessor;
@@ -254,7 +254,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onItemStartUsing(LivingEntityUseItemEvent.Start event) {
-        if (event.getItem().getItem() instanceof VampirismCrossbowItem crossbowItem) {
+        if (event.getItem().getItem() instanceof HunterCrossbowItem crossbowItem) {
             event.setDuration(crossbowItem.getCombinedUseDuration(event.getItem(), event.getEntity(), event.getEntity().getUsedItemHand()));
         }
     }

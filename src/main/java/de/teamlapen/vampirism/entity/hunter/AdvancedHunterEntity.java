@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -383,7 +383,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nonnull
     @Override
     public ItemStack getProjectile(ItemStack stack) {
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof IHunterCrossbow) {
             return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
         }
         return super.getProjectile(stack);
@@ -419,7 +419,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Override
     public boolean isHoldingCrossbow() {
-        return this.isHolding(stack -> stack.getItem() instanceof IVampirismCrossbow);
+        return this.isHolding(stack -> stack.getItem() instanceof IHunterCrossbow);
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.world.item.Tier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class DoubleCrossbowItem extends VampirismCrossbowItem {
+public class DoubleCrossbowItem extends HunterCrossbowItem {
 
     public DoubleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, Supplier<ISkill<IHunterPlayer>> requiredSkill) {
         super(properties, arrowVelocity, chargeTime, itemTier, requiredSkill);

@@ -28,7 +28,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.GarlicBreadItem;
-import de.teamlapen.vampirism.items.crossbow.VampirismCrossbowItem;
+import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -256,7 +256,7 @@ public class ModPlayerEventHandler {
             if (!checkItemUsePerm(event.getItem(), player)) {
                 event.setCanceled(true);
             }
-            if (event.getItem().getItem() instanceof VampirismCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE)) {
+            if (event.getItem().getItem() instanceof HunterCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE)) {
                 event.setDuration((int)(event.getDuration() * 0.5f));
             }
         }

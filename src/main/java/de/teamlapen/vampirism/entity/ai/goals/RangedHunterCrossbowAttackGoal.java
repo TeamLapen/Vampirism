@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
-import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.CrossbowItem;
@@ -29,11 +27,11 @@ public class RangedHunterCrossbowAttackGoal<T extends PathfinderMob & RangedAtta
 
     private boolean canUseCrossbow() {
         ItemStack stack = this.mob.getMainHandItem();
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof IHunterCrossbow) {
             return this.mob.canUseCrossbow(stack);
         }
         stack = this.mob.getOffhandItem();
-        if (stack.getItem() instanceof IVampirismCrossbow) {
+        if (stack.getItem() instanceof IHunterCrossbow) {
             return this.mob.canUseCrossbow(stack);
         }
         return false;
@@ -71,7 +69,7 @@ public class RangedHunterCrossbowAttackGoal<T extends PathfinderMob & RangedAtta
             this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             if (this.crossbowState == RangedCrossbowAttackGoal.CrossbowState.UNCHARGED) {
                 if (!flag2) {
-                    this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance)); // IVampirismCrossbow
+                    this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, IHunterCrossbow.class::isInstance)); // IVampirismCrossbow
                     this.crossbowState = RangedCrossbowAttackGoal.CrossbowState.CHARGING;
                     this.mob.setChargingCrossbow(true);
                 }
@@ -95,7 +93,7 @@ public class RangedHunterCrossbowAttackGoal<T extends PathfinderMob & RangedAtta
                 }
             } else if (this.crossbowState == RangedCrossbowAttackGoal.CrossbowState.READY_TO_ATTACK && flag) {
                 this.mob.performRangedAttack(livingentity, 1.0F);
-                ItemStack itemInHand = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, IVampirismCrossbow.class::isInstance)); // set state depending on still loaded projectiles
+                ItemStack itemInHand = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, IHunterCrossbow.class::isInstance)); // set state depending on still loaded projectiles
                 ChargedProjectiles projectiles = itemInHand.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
                 if (!projectiles.isEmpty()) {
                     var delay = getAttackDelay(itemInHand);

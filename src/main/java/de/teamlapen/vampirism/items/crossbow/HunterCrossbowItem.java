@@ -8,17 +8,12 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
-import de.teamlapen.vampirism.core.ModEnchantments;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.mixin.accessor.CrossbowItemMixin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -34,16 +28,12 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,14 +44,14 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class VampirismCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
+public abstract class HunterCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IHunterCrossbow {
 
     protected final Tier itemTier;
     private final Supplier<ISkill<IHunterPlayer>> requiredSkill;
     protected final float arrowVelocity;
     protected final int chargeTime;
 
-    public VampirismCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, @NotNull Supplier<@Nullable ISkill<IHunterPlayer>> requiredSkill) {
+    public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, @NotNull Supplier<@Nullable ISkill<IHunterPlayer>> requiredSkill) {
         super(properties);
         this.arrowVelocity = arrowVelocity;
         this.chargeTime = chargeTime;
@@ -129,7 +119,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
     public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
         ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-        if (otherItemStack.getItem() instanceof VampirismCrossbowItem otherItem && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
+        if (otherItemStack.getItem() instanceof HunterCrossbowItem otherItem && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
             return this.getUseDuration(stack) + otherItem.getUseDuration(otherItemStack);
         }
         return this.getUseDuration(stack);
@@ -168,7 +158,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
                 if (hand == InteractionHand.MAIN_HAND) {
                     ItemStack otherStack = shooter.getItemInHand(InteractionHand.OFF_HAND);
-                    if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof VampirismCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
+                    if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
                         otherCrossbow.use(level, player, InteractionHand.OFF_HAND);
                     }
                 }
@@ -225,7 +215,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         }
         if ((float)chargingDuration/ getChargeDurationMod(itemStack) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
             ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-            if (canUseDoubleCrossbow(entity)&& (float)combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof VampirismCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
+            if (canUseDoubleCrossbow(entity)&& (float)combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
                 tryLoadProjectiles(entity, otherStack);
             }
             SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
@@ -235,7 +225,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
 
     public int getCombinedChargeDurationMod(ItemStack crossbow, LivingEntity entity, InteractionHand hand) {
         ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-        if (otherItemStack.getItem() instanceof VampirismCrossbowItem other && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
+        if (otherItemStack.getItem() instanceof HunterCrossbowItem other && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
             return this.getChargeDurationMod(crossbow) + other.getChargeDurationMod(otherItemStack);
         }
         return this.getChargeDurationMod(crossbow);

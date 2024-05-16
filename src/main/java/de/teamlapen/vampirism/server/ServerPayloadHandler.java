@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -24,7 +24,6 @@ import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
-import de.teamlapen.vampirism.inventory.diffuser.PlayerOwnedMenu;
 import de.teamlapen.vampirism.items.OblivionItem;
 import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.network.*;
@@ -95,11 +94,11 @@ public class ServerPayloadHandler {
     public static void handleSelectAmmoTypePacket(ServerboundSelectAmmoTypePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
                 ItemStack stack = context.player().getMainHandItem();
-                if (stack.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
+                if (stack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
                     crossbow.setAmmunition(stack, msg.ammoId());
                 }
                 ItemStack offhand = context.player().getOffhandItem();
-                if (offhand.getItem() instanceof IVampirismCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
+                if (offhand.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
                     crossbow.setAmmunition(offhand, msg.ammoId());
                 }
         });
