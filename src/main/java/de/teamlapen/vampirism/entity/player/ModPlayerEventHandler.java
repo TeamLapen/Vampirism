@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -55,10 +56,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -470,7 +469,7 @@ public class ModPlayerEventHandler {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IFaction<?> usingFaction = factionItem.getExclusiveFaction(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
+            if (usingFaction != null && !handler.isInFaction(usingFaction) && checkExceptions(player, handler.getCurrentFaction(), stack)) {
                 if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
                 }
@@ -495,6 +494,10 @@ public class ModPlayerEventHandler {
             }
         }
         return true;
+    }
+
+    private boolean checkExceptions(@NotNull Player player, IPlayableFaction<?> currentFaction, @NotNull ItemStack stack) { // stupid implementation. Otherwise we would need a better IFactionExclusiveItem#getExclusiveFaction method.
+        return !stack.is(ModItems.GARLIC_BREAD) || currentFaction != null;
     }
 
 
