@@ -147,6 +147,7 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vaFreezeCooldown;
     public final ModConfigSpec.BooleanValue vaFreezeEnabled;
     public final ModConfigSpec.IntValue vaFreezeDuration;
+    public final ModConfigSpec.DoubleValue vaFreezeAttackSpeedModifier;
     public final ModConfigSpec.IntValue vaInvisibilityDuration;
     public final ModConfigSpec.IntValue vaInvisibilityCooldown;
     public final ModConfigSpec.BooleanValue vaInvisibilityEnabled;
@@ -372,7 +373,8 @@ public class BalanceConfig {
         //Vampire actions
         builder.category("vampireActions", "va");
         vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
-        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 3, 1, 30);
+        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 5, 1, 30);
+        vaFreezeAttackSpeedModifier = builder.comment("How much should the attack speed be reduced when effected by freeze").defineInRange("freezeAttackSpeedModifier", 0.3, 0, 1);
         vaFreezeEnabled = builder.define("freezeEnabled", true);
         vaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
         vaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);

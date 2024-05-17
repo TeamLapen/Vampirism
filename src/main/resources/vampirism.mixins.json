@@ -18,6 +18,7 @@
     "NearestAttackableTargetGoalMixin",
     "NoiseGeneratorSettingsMixin",
     "ThrowablePotionMixin",
+    "ThrowableProjectileMixin",
     "accessor.AbstractContainerMenuAccessor",
     "accessor.AbstractFurnaceBlockEntityAccessor",
     "accessor.AbstractFurnaceMenuAccessor",

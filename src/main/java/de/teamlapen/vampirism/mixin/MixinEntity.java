@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -24,5 +26,13 @@ public class MixinEntity {
             }
         }
 
+    }
+
+    @ModifyReturnValue(method = "getTicksRequiredToFreeze", at = @At("RETURN"))
+    private int ticks(int ticks) {
+        if (Helper.isVampire((Entity) (Object) this)) {
+            return ticks * 10;
+        }
+        return ticks;
     }
 }
