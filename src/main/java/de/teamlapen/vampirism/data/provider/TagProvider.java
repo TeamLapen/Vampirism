@@ -279,7 +279,6 @@ public class TagProvider {
             tag(ModTags.Items.SINGLE_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get());
             tag(ModTags.Items.DOUBLE_CROSSBOWS).add(ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get());
             tag(ModTags.Items.TECH_CROSSBOWS).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
-            tag(ItemTags.DYEABLE).addTag(ModTags.Items.ARMOR_OF_SWIFTNESS);
             tag(ModTags.Items.ARMOR_OF_SWIFTNESS).addTags(ModTags.Items.ARMOR_OF_SWIFTNESS_NORMAL, ModTags.Items.ARMOR_OF_SWIFTNESS_ENHANCED, ModTags.Items.ARMOR_OF_SWIFTNESS_ULTIMATE);
             tag(ModTags.Items.ARMOR_OF_SWIFTNESS_NORMAL).add(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get());
             tag(ModTags.Items.ARMOR_OF_SWIFTNESS_ENHANCED).add(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get());

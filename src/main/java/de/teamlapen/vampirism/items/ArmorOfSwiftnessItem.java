@@ -94,9 +94,4 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
-
-    private String getTextureLocationLeather(EquipmentSlot slot) {
-        return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlot.LEGS ? 2 : 1);
-    }
-
 }

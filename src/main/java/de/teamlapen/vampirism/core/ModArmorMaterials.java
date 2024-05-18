@@ -38,9 +38,9 @@ public class ModArmorMaterials {
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> NORMAL_HUNTER_COAT = register("hunter_coat", createReduction(2, 6, 5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(Tags.Items.INGOTS_IRON), 2, 0);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ENHANCED_HUNTER_COAT = register("hunter_coat_enhanced", createReduction(3, 8, 6, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(Tags.Items.INGOTS_IRON), 2, 0);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ULTIMATE_HUNTER_COAT = register("hunter_coat_ultimate", createReduction(3, 9, 9, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND), 2, 0);
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> NORMAL_SWIFTNESS = registerWithOverlay("armor_of_swiftness_normal", createReduction(1, 3, 2, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ENHANCED_SWIFTNESS = registerWithOverlay("armor_of_swiftness_enhanced", createReduction(2, 6, 5, 2), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ULTIMATE_SWIFTNESS = registerWithOverlay("armor_of_swiftness_ultimate", createReduction(3, 8, 6, 3), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> NORMAL_SWIFTNESS = register("armor_of_swiftness_normal", createReduction(1, 3, 2, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ENHANCED_SWIFTNESS = register("armor_of_swiftness_enhanced", createReduction(2, 6, 5, 2), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> ULTIMATE_SWIFTNESS = register("armor_of_swiftness_ultimate", createReduction(3, 8, 6, 3), 12, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(Tags.Items.LEATHERS), 0, 0);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> HUNTER_HAT_0 = copyWithNewLayer("hunter_hat_head_0", ArmorMaterials.IRON);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> HUNTER_HAT_1 = copyWithNewLayer("hunter_hat_head_1", ArmorMaterials.IRON);
 

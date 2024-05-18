@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "vampirism:item/armor_of_swiftness_feet_ultimate",
-    "layer1": "vampirism:item/armor_of_swiftness_feet_ultimate_overlay"
+    "layer0": "vampirism:item/armor_of_swiftness_feet_ultimate"
   }
 }
