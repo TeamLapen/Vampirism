@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.util;
 
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;

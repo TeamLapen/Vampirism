@@ -293,6 +293,7 @@ public class TagProvider {
             tag(ItemTags.FOOT_ARMOR).add(ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
             tag(ModTags.Items.VAMPIRE_CLOTHING).addTag(ModTags.Items.VAMPIRE_CLOAK);
             tag(ModTags.Items.HUNTER_ARMOR).addTags(ModTags.Items.ARMOR_OF_SWIFTNESS, ModTags.Items.HUNTER_COAT);
+            tag(ModTags.Items.ADVANCED_HUNTER_CROSSBOW_ARROWS).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_GARLIC.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
         }
     }
 

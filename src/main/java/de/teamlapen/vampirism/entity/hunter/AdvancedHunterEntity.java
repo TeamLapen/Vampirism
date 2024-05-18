@@ -12,21 +12,27 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.mixin.accessor.HolderSetLookup;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerModelType;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -49,6 +55,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -58,6 +65,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -70,6 +78,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Item> SPECIAL_ARROW = SynchedEntityData.defineId(AdvancedHunterEntity.class, ModEntities.ITEM_DATA.get());
 
     private static final int MAX_LEVEL = 1;
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
@@ -131,6 +140,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (lootBookId != null) {
             nbt.putString("lootBookId", lootBookId);
         }
+        nbt.putString("specialArrow", RegUtil.id(getEntityData().get(SPECIAL_ARROW)).toString());
     }
 
     @Override
@@ -281,6 +291,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("lootBookId")) {
             this.lootBookId = tagCompund.getString("lootBookId");
         }
+        if (tagCompund.contains("specialArrow")) {
+            Item specialArrow = RegUtil.getItem(new ResourceLocation(tagCompund.getString("specialArrow")));
+            this.getEntityData().set(SPECIAL_ARROW, specialArrow);
+        }
     }
 
     @Override
@@ -322,6 +336,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         builder.define(NAME, "none");
         builder.define(TEXTURE, "none");
         builder.define(IS_CHARGING_CROSSBOW, false);
+        builder.define(SPECIAL_ARROW, ModItems.CROSSBOW_ARROW_NORMAL.get());
     }
 
     @Nullable
@@ -331,6 +346,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
+        List<Holder<Item>> contents = ((HolderSetLookup<Item>) BuiltInRegistries.ITEM.getOrCreateTag(ModTags.Items.ADVANCED_HUNTER_CROSSBOW_ARROWS)).getContents();
+        this.getEntityData().set(SPECIAL_ARROW, UtilLib.getRandomElementOr(contents, () -> ModItems.CROSSBOW_ARROW_NORMAL).value());
         this.lootBookId = supporter.bookId();
         applyCustomisationItems(supporter);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
@@ -384,7 +401,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
-            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+            Item item = ModItems.CROSSBOW_ARROW_NORMAL.get();
+            if (random.nextFloat() < 0.2) {
+                item = getEntityData().get(SPECIAL_ARROW);
+            }
+            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, item.getDefaultInstance());
         }
         return super.getProjectile(stack);
     }

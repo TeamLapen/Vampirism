@@ -113,6 +113,8 @@ public class ModTags {
 
         public static final TagKey<Item> HUNTER_ARMOR = tag("armors/hunter_armor");
 
+        public static final TagKey<Item> ADVANCED_HUNTER_CROSSBOW_ARROWS = tag("advanced_hunter_crossbow_arrows");
+
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);

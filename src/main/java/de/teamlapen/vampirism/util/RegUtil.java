@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -133,6 +134,10 @@ public class RegUtil {
         return level.registryAccess().registryOrThrow(Registries.BIOME).containsValue(biome);
     }
 
+
+    public static Item getItem(@NotNull ResourceLocation id) {
+        return BuiltInRegistries.ITEM.get(id);
+    }
 
     public static IAction<?> getAction(@NotNull ResourceLocation id) {
         return ModRegistries.ACTIONS.get(id);

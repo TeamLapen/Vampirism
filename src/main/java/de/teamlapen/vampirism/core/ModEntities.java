@@ -17,8 +17,11 @@ import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.sit.SitEntity;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
@@ -27,6 +30,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -40,6 +44,7 @@ public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends Converter>> CONVERTING_HELPER = DeferredRegister.create(VampirismRegistries.Keys.ENTITY_CONVERTER, REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, REFERENCE.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZER = DeferredRegister.create(NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, REFERENCE.MODID);
 
     public static final DeferredHolder<EntityType<?>, EntityType<BasicHunterEntity>> HUNTER = prepareEntityType("hunter", () -> EntityType.Builder.of(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
     public static final DeferredHolder<EntityType<?>, EntityType<HunterTrainerEntity>> HUNTER_TRAINER = prepareEntityType("hunter_trainer", () -> EntityType.Builder.of(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).sized(0.6F, 1.95F), true);
@@ -88,10 +93,13 @@ public class ModEntities {
 
     public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>,MapCodec<? extends EntitySubPredicate>> FACTION_SUB_PREDICATE = ENTITY_SUB_PREDICATES.register("faction", () -> FactionSubPredicate.CODEC);
 
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Item>> ITEM_DATA = DATA_SERIALIZER.register("item", () -> (EntityDataSerializer.ForValueType<Item>)(() -> ByteBufCodecs.registry(Registries.ITEM)));
+
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
         CONVERTING_HELPER.register(bus);
         ENTITY_SUB_PREDICATES.register(bus);
+        DATA_SERIALIZER.register(bus);
     }
 
     static void onRegisterSpawns(@NotNull SpawnPlacementRegisterEvent event) {

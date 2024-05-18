@@ -59,6 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -798,5 +799,18 @@ public class UtilLib {
             d += fontRenderer.lineHeight;
         }
         return d;
+    }
+
+    public static <T> T getRandomElement(List<T> list) {
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
+    }
+
+    public static  <T> T getRandomElementOr(List<T> list, Supplier<T> ifEmpty) {
+        if (list.isEmpty()) {
+            return ifEmpty.get();
+        }
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
     }
 }
