@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_lantern",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "lantern": "vampirism:block/vampire_soul_lantern"
+  }
+}

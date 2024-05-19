@@ -572,6 +572,7 @@ public class LootTablesProvider {
             this.dropMountedCandle(ModBlocks.CANDLE_STICK_GREEN.get());
             this.dropMountedCandle(ModBlocks.CANDLE_STICK_RED.get());
             this.dropMountedCandle(ModBlocks.CANDLE_STICK_BLACK.get());
+            this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         }
 
         @NotNull

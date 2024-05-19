@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.ModVillage;
+import de.teamlapen.vampirism.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -140,6 +142,11 @@ public class ModEntityEventHandler {
                     }
                 }
             }
+
+            if (event.getEntity() instanceof Creeper creeper) {
+                creeper.goalSelector.addGoal(3, new AvoidBlockGoal(creeper, ModVillage.CREEPER_REPELLENT, 6, 1.0));
+            }
+
 
             //------------------------------------------
             //  Individual entity class changes below. Will return once processed

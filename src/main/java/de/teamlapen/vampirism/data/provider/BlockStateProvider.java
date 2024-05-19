@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blocks.*;
@@ -7,12 +9,16 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.data.models.model.TexturedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -21,10 +27,13 @@ import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class BlockStateProvider extends net.neoforged.neoforge.client.model.generators.BlockStateProvider {
@@ -293,6 +302,10 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
         simpleBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
         simpleBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         simpleBlock(ModBlocks.VAMPIRE_BEACON.get(), models().withExistingParent("vampire_beacon", mcLoc("block/beacon")).texture("beacon", modLoc("block/vampire_beacon")).renderType(cutout));
+
+        var vampire_soul_lantern = models().withExistingParent("vampire_soul_lantern", mcLoc("block/template_lantern")).renderType(cutout).texture("lantern", modLoc("block/vampire_soul_lantern"));
+        var hanging_vampire_soul_lantern = models().withExistingParent("vampire_soul_lantern_hanging", mcLoc("block/template_lantern")).renderType(cutout).texture("lantern", modLoc("block/vampire_soul_lantern"));
+        getVariantBuilder(ModBlocks.VAMPIRE_SOUL_LANTERN.get()).forAllStates(state ->  ConfiguredModel.builder().modelFile(state.getValue(LanternBlock.HANGING) ? hanging_vampire_soul_lantern : vampire_soul_lantern).build());
     }
 
     private void createWoodStates() {

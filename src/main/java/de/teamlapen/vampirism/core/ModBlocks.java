@@ -237,6 +237,17 @@ public class ModBlocks {
     public static final DeferredBlock<WallCandleStickBlock> WALL_CANDLE_STICK_RED = BLOCKS.register("wall_candle_stick_red", () -> wallMountedCandle(new WallCandleStickBlock(WALL_CANDLE_STICK, () -> Items.RED_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_STICK_RED.get()).lootFrom(CANDLE_STICK_RED)), new ResourceLocation("red_candle")));
     public static final DeferredBlock<StandingCandleStickBlock> CANDLE_STICK_BLACK = BLOCKS.register("candle_stick_black", () -> mountedCandle(new StandingCandleStickBlock(CANDLE_STICK, () -> Items.BLACK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_STICK.get()).lightLevel(CandleStickBlock.LIGHT_EMISSION)), new ResourceLocation("black_candle")));
     public static final DeferredBlock<WallCandleStickBlock> WALL_CANDLE_STICK_BLACK = BLOCKS.register("wall_candle_stick_black", () -> wallMountedCandle(new WallCandleStickBlock(WALL_CANDLE_STICK, () -> Items.BLACK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_STICK_BLACK.get()).lootFrom(CANDLE_STICK_BLACK)), new ResourceLocation("black_candle")));
+    public static final DeferredBlock<LanternBlock> VAMPIRE_SOUL_LANTERN = registerWithItem("vampire_soul_lantern", () -> new LanternBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .forceSolidOn()
+                            .requiresCorrectToolForDrops()
+                            .strength(3.5F)
+                            .sound(SoundType.LANTERN)
+                            .lightLevel(p_187431_ -> 12)
+                            .noOcclusion()
+                            .pushReaction(PushReaction.DESTROY)
+            ));
 
     /**
      * TUTORIAL:

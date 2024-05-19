@@ -190,6 +190,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
             put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
             put(ModItems.MOTHER_CORE.get(), modLoc("item/mother_core"));
+            put(ModBlocks.VAMPIRE_SOUL_LANTERN.asItem(), modLoc("item/vampire_soul_lantern"));
         }};
 
         blocks.forEach(this::block);

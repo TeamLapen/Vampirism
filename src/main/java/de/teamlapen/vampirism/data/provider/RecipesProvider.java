@@ -468,6 +468,7 @@ public class RecipesProvider extends RecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES.get());
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK.get()).pattern(" X ").pattern("YYY").define('X', iron_ingot).define('Y', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(output, vampire("candle_stick"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN.get()).requires(ModItems.SOUL_ORB_VAMPIRE).requires(Items.SOUL_LANTERN).unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE)).unlockedBy("has_soul_lantern", has(Items.SOUL_LANTERN)).save(output);
     }
 
     private void enchantment(ItemStack stack, int level, @NotNull Enchantment enchantment) {

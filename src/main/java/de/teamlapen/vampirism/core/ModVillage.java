@@ -34,6 +34,7 @@ public class ModVillage {
     public static final DeferredHolder<PoiType, PoiType> VAMPIRE_TOTEM = POI_TYPES.register("vampire_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1));
     public static final DeferredHolder<PoiType, PoiType> NO_FACTION_TOTEM = POI_TYPES.register("no_faction_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP.get(), ModBlocks.TOTEM_TOP_CRAFTED.get()), 1, 1));
     public static final DeferredHolder<PoiType, PoiType> ALTAR_CLEANSING = POI_TYPES.register("church_altar", () -> new PoiType(getAllStates(ModBlocks.ALTAR_CLEANSING.get()), 1, 1));
+    public static final DeferredHolder<PoiType, PoiType> CREEPER_REPELLENT = POI_TYPES.register("creeper_repellent", () -> new PoiType(getAllStates(ModBlocks.VAMPIRE_SOUL_LANTERN.get()), 1, 1));
 
     public static final DeferredHolder<Schedule, Schedule> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () ->
             new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());

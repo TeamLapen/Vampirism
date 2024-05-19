@@ -54,6 +54,7 @@ public class ModTags {
         public static final TagKey<Block> MOTHER_GROWS_ON = tag("mother_grows_on");
         public static final TagKey<Block> VAMPIRE_BEACON_BASE_BLOCKS = tag("vampire_beacon_base_blocks");
         public static final TagKey<Block> VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS = tag("vampire_beacon_base_enhanced_blocks");
+        public static final TagKey<Block> CREEPER_REPELLENT = tag("creeper_repellent");
 
         private static @NotNull TagKey<Block> tag(@NotNull ResourceLocation resourceLocation) {
             return BlockTags.create(resourceLocation);

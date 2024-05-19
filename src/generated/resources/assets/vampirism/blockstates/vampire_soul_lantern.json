@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "hanging=false,waterlogged=false": {
+      "model": "vampirism:block/vampire_soul_lantern"
+    },
+    "hanging=false,waterlogged=true": {
+      "model": "vampirism:block/vampire_soul_lantern"
+    },
+    "hanging=true,waterlogged=false": {
+      "model": "vampirism:block/vampire_soul_lantern_hanging"
+    },
+    "hanging=true,waterlogged=true": {
+      "model": "vampirism:block/vampire_soul_lantern_hanging"
+    }
+  }
+}
