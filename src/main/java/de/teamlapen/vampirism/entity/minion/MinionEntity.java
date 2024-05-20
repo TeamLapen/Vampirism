@@ -56,6 +56,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -226,6 +227,17 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
 
         return flag;
+    }
+
+    @Nullable
+    @Override
+    public PlayerTeam getTeam() {
+        return getLordOpt().map(s -> s.getPlayer().getTeam()).orElseGet(super::getTeam);
+    }
+
+    @Override
+    public boolean isAlliedTo(@NotNull Entity pEntity) {
+        return getLordOpt().map(s -> s.getPlayer() == pEntity).orElseGet(() -> super.isAlliedTo(pEntity));
     }
 
     @NotNull
