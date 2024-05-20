@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.inventory.TaskMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
-import de.teamlapen.vampirism.mixin.accessor.AbstractContainerScreenAccessor;
+import de.teamlapen.vampirism.mixin.client.accessor.AbstractContainerScreenAccessor;
 import de.teamlapen.vampirism.network.ServerboundDeleteRefinementPacket;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;

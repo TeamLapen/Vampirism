@@ -57,9 +57,14 @@ public class ModRecipes {
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<EntityExistsCondition>> ENTITY_EXISTS_CONDITION = CONDITION_CODECS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
+    public static class Types {
+        public static final RecipeBookType WEAPON_TABLE_TYPE = RecipeBookType.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString());
+        public static void init() {
+
+        }
+    }
     public static class Categories {
         public static final RecipeBookCategories WEAPON_TABLE = RecipeBookCategories.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString(), new ItemStack(ModBlocks.WEAPON_TABLE));
-        public static final RecipeBookType WEAPON_TABLE_TYPE = RecipeBookType.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString());
         public static void init() {
 
         }

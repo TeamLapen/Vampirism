@@ -25,7 +25,7 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
     public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "toggle_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundToggleActionPacket> CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, ServerboundToggleActionPacket::actionId,
-            NeoForgeStreamCodecs.lazy(() -> ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> pkt.target,
+            ByteBufCodecs.optional(ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> Optional.ofNullable(pkt.target),
             ServerboundToggleActionPacket::new
     );
 

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.mixin.accessor;
+package de.teamlapen.vampirism.mixin.client.accessor;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
