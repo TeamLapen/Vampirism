@@ -46,5 +46,7 @@ public class ModScreens {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.DISGUISE, new DisguiseOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.SUN, new SunOverlay());
+        event.registerAboveAll(VIngameOverlays.BLOOD_CHARGED, new BloodChargedOverlay());
+        event.registerAboveAll(VIngameOverlays.TECH_CROSSBOW_CHARGED, new TechCrossbowChargedOverlay());
     }
 }
