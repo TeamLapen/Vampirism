@@ -90,6 +90,14 @@ public interface IActionHandler<T extends IFactionPlayer<T>> {
     void deactivateAction(ILastingAction<T> action);
 
     /**
+     * Lasting actions are deactivated here, which fires the {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionDeactivatedEvent}
+     * @param action - The lasting action being deactivated
+     * @param ignoreCooldown - Whether the cooldown is ignored for the action
+     * @param fullCooldown - Whether the lasting action should get the full or reduced cooldown
+     */
+    void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown);
+
+    /**
      * Unlock the given actions. The given action have to belong to the players faction and have to be registered
      */
     void unlockActions(Collection<IAction<T>> actions);

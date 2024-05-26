@@ -85,10 +85,10 @@ public class VampirismEventFactory {
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
-    public static int fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown) {
-        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration, cooldown);
+    public static ActionEvent.ActionDeactivatedEvent fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration, cooldown, ignoreCooldown, fullCooldown);
         NeoForge.EVENT_BUS.post(event);
-        return event.getCooldown();
+        return event;
     }
 
     public static ActionEvent.ActionUpdateEvent fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull ILastingAction<?> action, int remainingDuration) {

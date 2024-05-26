@@ -83,11 +83,15 @@ public abstract class ActionEvent extends Event {
     public static class ActionDeactivatedEvent extends ActionEvent {
         private final int remainingDuration;
         private int cooldown;
+        private boolean ignoreCooldown;
+        private boolean fullCooldown;
 
-        public ActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown) {
+        public ActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
             this.cooldown = cooldown;
+            this.ignoreCooldown = ignoreCooldown;
+            this.fullCooldown = fullCooldown;
         }
 
         /**
@@ -109,6 +113,34 @@ public abstract class ActionEvent extends Event {
          */
         public void setCooldown(int cooldown) {
             this.cooldown = cooldown;
+        }
+
+        /**
+         * @return If true, the action will skip the cooldown
+         */
+        public boolean ignoreCooldown() {
+            return this.ignoreCooldown;
+        }
+
+        /**
+         * @param ignoreCooldown If true, the action will skip the cooldown
+         */
+        public void setIgnoreCooldown(boolean ignoreCooldown) {
+            this.ignoreCooldown = ignoreCooldown;
+        }
+
+        /**
+         * @return If true, the action will have a full cooldown instead of considering the remaining duration to reduce the cooldown
+         */
+        public boolean fullCooldown() {
+            return this.fullCooldown;
+        }
+
+        /**
+         * @param fullCooldown If true, the action will have a full cooldown instead of considering the remaining duration to reduce the cooldown
+         */
+        public void setFullCooldown(boolean fullCooldown) {
+            this.fullCooldown = fullCooldown;
         }
     }
 

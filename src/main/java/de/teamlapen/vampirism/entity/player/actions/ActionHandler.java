@@ -347,29 +347,26 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             }
         }
     }
+
     @Override
     public void deactivateAction(@NotNull ILastingAction<T> action) {
         deactivateAction(action, false);
     }
+
     public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
         deactivateAction(action, false, false);
     }
 
-    /**
-     * Lasting actions are deactivated here, which fires the {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionDeactivatedEvent}
-     * @param action - The lasting action being deactivated
-     * @param ignoreCooldown - Whether the cooldown is ignored for the action
-     * @param fullCooldown - Whether the lasting action should get the full or reduced cooldown
-     */
+
     public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown) {
         ResourceLocation id = RegUtil.id(action);
         if (activeTimers.containsKey(id)) {
-            int cooldown = expectedCooldownTimes.getInt(id);
             int leftTime = activeTimers.getInt(id);
             int duration = expectedDurations.getInt(id);
-            cooldown = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, cooldown);
-            if(!ignoreCooldown && !cooldownTimers.containsKey(id)) {
-                if(!fullCooldown) {
+            var event = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, expectedCooldownTimes.getInt(id), ignoreCooldown, fullCooldown);
+            int cooldown = event.getCooldown();
+            if(!event.ignoreCooldown() && !cooldownTimers.containsKey(id)) {
+                if(!event.fullCooldown()) {
                     cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
                     expectedCooldownTimes.put(id, cooldown);
