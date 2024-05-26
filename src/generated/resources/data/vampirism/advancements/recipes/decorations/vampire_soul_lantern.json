@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_soul_lantern": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:soul_lantern"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_soul_orb": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:soul_orb_vampire"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:vampire_soul_lantern"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_soul_orb",
+      "has_soul_lantern"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire_soul_lantern"
+    ]
+  }
+}

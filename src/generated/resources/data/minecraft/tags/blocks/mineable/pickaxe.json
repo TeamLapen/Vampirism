@@ -30,6 +30,7 @@
     "#vampirism:dark_stone_bricks",
     "#vampirism:dark_brick_tiles",
     "#vampirism:polished_dark_brick",
-    "#vampirism:cobbled_dark_brick"
+    "#vampirism:cobbled_dark_brick",
+    "vampirism:vampire_soul_lantern"
   ]
 }

@@ -304,7 +304,7 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
         simpleBlock(ModBlocks.VAMPIRE_BEACON.get(), models().withExistingParent("vampire_beacon", mcLoc("block/beacon")).texture("beacon", modLoc("block/vampire_beacon")).renderType(cutout));
 
         var vampire_soul_lantern = models().withExistingParent("vampire_soul_lantern", mcLoc("block/template_lantern")).renderType(cutout).texture("lantern", modLoc("block/vampire_soul_lantern"));
-        var hanging_vampire_soul_lantern = models().withExistingParent("vampire_soul_lantern_hanging", mcLoc("block/template_lantern")).renderType(cutout).texture("lantern", modLoc("block/vampire_soul_lantern"));
+        var hanging_vampire_soul_lantern = models().withExistingParent("vampire_soul_lantern_hanging", mcLoc("block/template_hanging_lantern")).renderType(cutout).texture("lantern", modLoc("block/vampire_soul_lantern"));
         getVariantBuilder(ModBlocks.VAMPIRE_SOUL_LANTERN.get()).forAllStates(state ->  ConfiguredModel.builder().modelFile(state.getValue(LanternBlock.HANGING) ? hanging_vampire_soul_lantern : vampire_soul_lantern).build());
     }
 
