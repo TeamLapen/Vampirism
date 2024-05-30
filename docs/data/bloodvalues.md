@@ -12,7 +12,7 @@ Item blood values are used by the [Grinder](../wiki/content/blocks#grinder) to d
 A configured value of `20` means that the grinder will produce 20mb impure blood when grinding the item.
 
 ### Schema
-```json title="data/vampirism/data_maps/item/item_blood_value.json"
+```json title="data/vampirism/data_maps/item/item_blood.json"
 {
   "replace": false,
   "values": {
@@ -38,7 +38,7 @@ A configured value of `10` means that the creature can fill 10 half-blood / 5 bl
 A value of `0` means that the creature cannot be bitten.
 
 ### Schema
-```json title="data/vampirism/data_maps/item/entity_blood_value.json"
+```json title="data/vampirism/data_maps/entity_type/entity_blood.json"
 {
   "replace": false,
   "values": {
