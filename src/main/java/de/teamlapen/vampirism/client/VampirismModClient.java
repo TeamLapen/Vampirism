@@ -4,15 +4,15 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import net.minecraft.client.Minecraft;
@@ -21,15 +21,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @Mod(value = REFERENCE.MODID, dist = Dist.CLIENT)
@@ -54,6 +53,7 @@ public class VampirismModClient {
         this.modEventBus.register(this);
 
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
         NeoForge.EVENT_BUS.register(this.overlay);
         NeoForge.EVENT_BUS.register(this.renderHandler);
         NeoForge.EVENT_BUS.register(new ClientEventHandler());
@@ -90,6 +90,10 @@ public class VampirismModClient {
     @SubscribeEvent
     public void commonEvent(FMLCommonSetupEvent event) {
         ModRecipes.Categories.init();
+    }
+
+    public void onDataMapsUpdated(DataMapsUpdatedEvent event) {
+        ((VampirismClientEntityRegistry)VampirismAPI.entityRegistry()).syncOverlays();
     }
 
     public static IProxy getProxy() {
