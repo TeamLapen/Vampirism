@@ -229,10 +229,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public int getLeftSkillPoints() {
-        int level = player.getLevel();
         int remainingSkillPoints = this.maxSkillpoints - enabledSkills.stream().mapToInt(ISkill::getSkillPointCost).sum();
-        if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
-            return Math.max(remainingSkillPoints, 1);
+        if (VampirismConfig.SERVER.unlockAllSkills.get()) {
+            if(FactionPlayerHandler.getOpt(this.player.getRepresentingPlayer()).filter(s -> s.getCurrentLevel() == s.getCurrentFaction().getHighestReachableLevel()).filter(s -> s.getCurrentFaction().getHighestLordLevel() == 0 || s.getLordLevel() == s.getCurrentFaction().getHighestLordLevel()).isPresent()){
+                return Integer.MAX_VALUE;
+            }
         }
         return remainingSkillPoints;
     }

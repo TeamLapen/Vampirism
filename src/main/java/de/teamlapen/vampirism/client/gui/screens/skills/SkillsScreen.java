@@ -171,7 +171,8 @@ public class SkillsScreen extends Screen {
             }
         }
         if (this.selectedTab != null) {
-            Component remainingPoints = Component.translatable("text.vampirism.skills.points_left", String.valueOf(this.selectedTab.getRemainingPoints()));
+            int remaining = this.selectedTab.getRemainingPoints();
+            Component remainingPoints = Component.translatable("text.vampirism.skills.points_left", remaining == Integer.MAX_VALUE ? "∞" :String.valueOf(remaining));
             graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752, false);
         }
         graphics.drawString(this.font, TITLE, x + 8, y + 6, 4210752, false);
