@@ -296,6 +296,7 @@ public class TagProvider {
             tag(ModTags.Items.VAMPIRE_CLOTHING).addTag(ModTags.Items.VAMPIRE_CLOAK);
             tag(ModTags.Items.HUNTER_ARMOR).addTags(ModTags.Items.ARMOR_OF_SWIFTNESS, ModTags.Items.HUNTER_COAT);
             tag(ModTags.Items.ADVANCED_HUNTER_CROSSBOW_ARROWS).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_GARLIC.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
+            tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
         }
     }
 
