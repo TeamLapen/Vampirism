@@ -56,6 +56,6 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
                 graphics.blit(BREWING_STAND_LOCATION, i + 104, j + 36, 176, 13, (int) (j1 * 32), 32);
             }
         }
-
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }
