@@ -60,6 +60,6 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
                 graphics.setColor(1,1,1,1);
             }
         }
-
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }
