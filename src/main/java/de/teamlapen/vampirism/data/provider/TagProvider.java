@@ -312,7 +312,7 @@ public class TagProvider {
             tag(ModTags.Entities.ADVANCED_VAMPIRE).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
             tag(ModTags.Entities.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
             tag(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER).add(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), ModEntities.GHOST.get());
-            tag(ModTags.Entities.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CAMEL.get(), ModEntities.CONVERTED_COW.get(), ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.CONVERTED_DONKEY.get(), ModEntities.CONVERTED_FOX.get(), ModEntities.CONVERTED_GOAT.get(), ModEntities.CONVERTED_HORSE.get(), ModEntities.CONVERTED_MULE.get(), ModEntities.CONVERTED_SHEEP.get(), ModEntities.VILLAGER_CONVERTED.get());
+            tag(ModTags.Entities.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CAMEL.get(), ModEntities.CONVERTED_COW.get(), ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.CONVERTED_DONKEY.get(), ModEntities.CONVERTED_FOX.get(), ModEntities.CONVERTED_GOAT.get(), ModEntities.CONVERTED_HORSE.get(), ModEntities.CONVERTED_MULE.get(), ModEntities.CONVERTED_SHEEP.get(), ModEntities.VILLAGER_CONVERTED.get(), ModEntities.CONVERTED_CAT.get());
             tag(Tags.EntityTypes.BOATS).add(ModEntities.BOAT.get(), ModEntities.CHEST_BOAT.get());
         }
     }

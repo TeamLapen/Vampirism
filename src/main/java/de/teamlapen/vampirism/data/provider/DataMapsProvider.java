@@ -141,12 +141,12 @@ public class DataMapsProvider extends DataMapProvider {
         entityValues.add(holder.apply(EntityType.FOX), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_FOX), overlay.apply("fox")), false);
         entityValues.add(holder.apply(EntityType.GOAT), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_GOAT), overlay.apply("goat")), false);
         entityValues.add(holder.apply(EntityType.CAMEL), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_CAMEL), overlay.apply("camel")), false);
+        entityValues.add(holder.apply(EntityType.CAT), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_CAT), overlay.apply("cat")), false);
         entityValues.add(holder.apply(EntityType.PIG), new ConverterEntry(overlay.apply("pig")), false);
         entityValues.add(holder.apply(EntityType.RABBIT), new ConverterEntry(overlay.apply("rabbit")), false);
         entityValues.add(holder.apply(EntityType.LLAMA), new ConverterEntry(overlay.apply("llama")), false);
         entityValues.add(holder.apply(EntityType.POLAR_BEAR), new ConverterEntry(overlay.apply("polarbear")), false);
         entityValues.add(holder.apply(EntityType.PANDA), new ConverterEntry(overlay.apply("panda")), false);
-        entityValues.add(holder.apply(EntityType.CAT), new ConverterEntry(overlay.apply("cat")), false);
     }
 
 }

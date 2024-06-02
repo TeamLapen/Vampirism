@@ -94,6 +94,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.REMAINS_DEFENDER.get(), RemainsDefenderRenderer::new);
         event.registerEntityRenderer(ModEntities.GHOST.get(), GhostRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CAMEL.get(), convertedRenderer(context -> new CamelRenderer(context, ModelLayers.CAMEL)));
+        event.registerEntityRenderer(ModEntities.CONVERTED_CAT.get(), convertedRenderer(CatRenderer::new));
     }
 
     static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {

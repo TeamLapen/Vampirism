@@ -9,7 +9,8 @@
     },
     "minecraft:cat": {
       "handler": {
-        "type": "vampirism:default"
+        "type": "vampirism:special",
+        "converted_type": "vampirism:converted_cat"
       },
       "overlay": "vampirism:textures/entity/vanilla/cat_overlay.png"
     },
