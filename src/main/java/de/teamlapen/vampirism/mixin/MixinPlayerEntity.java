@@ -1,10 +1,15 @@
 package de.teamlapen.vampirism.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.MixinHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,13 +18,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
+
+    @Shadow public abstract Either<Player.BedSleepingProblem, Unit> startSleepInBed(BlockPos pBedPos);
+
+    @Shadow public abstract void startAutoSpinAttack(int pAttackTicks);
 
     @Unique
     private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();
@@ -53,5 +65,15 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
             return crossbow.getSupportedProjectiles(shootable);
         }
         return original;
+    }
+
+    @Inject(method = "canTakeItem", at = @At("HEAD"), cancellable = true)
+    private void canTakeItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (stack.getItem() instanceof IFactionExclusiveItem item) {
+            IFaction<?> exclusiveFaction = item.getExclusiveFaction(stack);
+            if (exclusiveFaction != null && exclusiveFaction != this.vampirismPlayerAttributes.faction) {
+                cir.setReturnValue(false);
+            }
+        }
     }
 }
