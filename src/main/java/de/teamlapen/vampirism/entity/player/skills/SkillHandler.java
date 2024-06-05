@@ -315,7 +315,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt);
+                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
                     IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
                     if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
@@ -360,11 +360,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
-            ListTag refinements = nbt.getList("refinement_items", 10);
+            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_LIST);
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt);
+                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
                     IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
                     if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
@@ -384,7 +384,11 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     @Override
     public void resetRefinements() {
+        for (int i = 0; i < this.refinementItems.size(); i++) {
+            removeRefinementItem(i);
+        }
         this.refinementItems.clear();
+        this.dirty = true;
     }
 
     public void resetSkills() {
@@ -405,7 +409,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             if (!stack.isEmpty()) {
                 CompoundTag stackNbt = new CompoundTag();
                 stackNbt.putInt("slot", i);
-                stack.save(provider, stackNbt);
+                var tag = stack.save(provider);
+                stackNbt.put("stack", tag);
                 refinements.add(stackNbt);
             }
         }
@@ -432,7 +437,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             if (!stack.isEmpty()) {
                 CompoundTag stackNbt = new CompoundTag();
                 stackNbt.putInt("slot", i);
-                stack.save(provider, stackNbt);
+                var tag = stack.save(provider);
+                stackNbt.put("stack", tag);
                 refinementItems.add(stackNbt);
             }
         }
