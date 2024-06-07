@@ -219,7 +219,16 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 float f = Mth.lerp(event.getPartialTick(), entity.yRotO, entity.getYRot());
                 isInsideBloodVisionRendering = true;
                 EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
+
+                // force entity to be rendered without nametag
+                boolean isInvisible = entity.isInvisible();
+                entity.setInvisible(false);
+                boolean hideGui = Minecraft.getInstance().options.hideGui;
+                Minecraft.getInstance().options.hideGui = true;
                 entityrenderer.render(entity, f, event.getPartialTick(), event.getPoseStack(), bloodVisionBuffer, renderManager.getPackedLightCoords(entity, event.getPartialTick()));
+                entity.setInvisible(isInvisible);
+                Minecraft.getInstance().options.hideGui = hideGui;
+
                 mc.getMainRenderTarget().bindWrite(false);
                 isInsideBloodVisionRendering = false;
 
