@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Handles the players skills
  */
-public interface ISkillHandler<T extends IFactionPlayer<T>> {
+public interface ISkillHandler<T extends IFactionPlayer<T>> extends IRefinementHandler {
 
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
@@ -27,12 +27,6 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     default Result canSkillBeEnabled(ISkill<?> skill) {
         return canSkillBeEnabled(RegUtil.holder(skill));
     }
-
-    ItemStack[] createRefinementItems();
-
-    NonNullList<ItemStack> getRefinementItems();
-
-    void damageRefinements();
 
     /**
      * Disables the given skill
@@ -49,16 +43,6 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     void enableSkill(Holder<ISkill<T>> skill, boolean fromLoading);
 
     /**
-     * Equip the refinement set from the given stack to the appropriate slot
-     * If no set is present, or it is from the wrong faction, the old set for the slot will be removed, but no new set will be added
-     *
-     * @return Whether the item was equipped
-     */
-    boolean equipRefinementItem(ItemStack stack);
-
-    void removeRefinementItem(IRefinementItem.AccessorySlotType slot);
-
-    /**
      * @return The count of additional skills that can be currently unlocked
      */
     int getLeftSkillPoints();
@@ -71,28 +55,11 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     List<Holder<ISkill<?>>> getParentSkills(Holder<ISkill<?>> skill);
 
     @Deprecated
-    default boolean isRefinementEquipped(IRefinement refinement) {
-        return isRefinementEquipped(RegUtil.holder(refinement));
-    }
-
-    boolean isRefinementEquipped(Holder<IRefinement> refinement);
-
-    @Deprecated
     default boolean isSkillEnabled(ISkill<?> skill) {
         return isSkillEnabled(RegUtil.holder(skill));
     }
 
     boolean isSkillEnabled(Holder<ISkill<?>> skill);
-
-    /**
-     * remove all equipped refinements
-     */
-    void resetRefinements();
-
-    /**
-     * Reset all skills but reactivate the root skill of the faction
-     */
-    void resetSkills();
 
     void reset();
 
