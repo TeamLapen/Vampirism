@@ -257,10 +257,10 @@ public class SkillsScreen extends Screen {
     }
 
     private void unlockSkill(double mouseX, double mouseY) {
-        ISkill<?> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
+        Holder<ISkill<?>> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
         if (selected != null) {
             if (canUnlockSkill(selected)) {
-                VampirismMod.proxy.sendToServer(new ServerboundUnlockSkillPacket(RegUtil.id(selected)));
+                VampirismMod.proxy.sendToServer(new ServerboundUnlockSkillPacket(selected));
                 playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
             } else {
                 playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
@@ -268,7 +268,7 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    private boolean canUnlockSkill(@NotNull ISkill skill) {
+    private boolean canUnlockSkill(@NotNull Holder<ISkill<?>> skill) {
         if (this.factionPlayer == null) return false;
         return this.factionPlayer.getSkillHandler().canSkillBeEnabled(skill) == ISkillHandler.Result.OK;
     }

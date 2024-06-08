@@ -660,7 +660,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.HALF_INVULNERABLE.get()) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
@@ -674,7 +674,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void onEntityKilled(LivingEntity victim, DamageSource src) {
-        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.RAGE_FURY.get())) {
+        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.RAGE_FURY)) {
             //No need to check if rage active, extending only has an effect when already active
             int bonus = VampirismConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
             if (victim instanceof Player) {

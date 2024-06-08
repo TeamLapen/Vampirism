@@ -4,12 +4,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.FactionCodec;
 import de.teamlapen.vampirism.util.StreamCodecExtension;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -35,11 +38,11 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
     private final @NotNull NonNullList<Ingredient> recipeItems;
     private final @NotNull ItemStack recipeOutput;
     private final int requiredLevel;
-    private final List<ISkill<IHunterPlayer>> requiredSkills;
+    private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
     private final boolean isSimple;
 
-    public ShapelessWeaponTableRecipe(@NotNull String group, @NotNull CraftingBookCategory category, @NotNull NonNullList<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull List<ISkill<IHunterPlayer>> skills) {
+    public ShapelessWeaponTableRecipe(@NotNull String group, @NotNull CraftingBookCategory category, @NotNull NonNullList<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
         this.category = category;
         this.group = group;
         this.recipeItems = ingredients;
@@ -89,7 +92,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
 
     @NotNull
     @Override
-    public List<ISkill<IHunterPlayer>> getRequiredSkills() {
+    public List<Holder<ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -156,7 +159,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
                     ItemStack.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
                     Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.requiredLevel),
                     Codec.INT.optionalFieldOf( "lava", 0).forGetter(p -> p.requiredLava),
-                    FactionCodec.<IHunterPlayer>skillCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
             ).apply(inst, ShapelessWeaponTableRecipe::new);
         });
 
@@ -167,7 +170,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
                 ItemStack.STREAM_CODEC, s -> s.recipeOutput,
                 ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
                 ByteBufCodecs.VAR_INT, s -> s.requiredLava,
-                FactionCodec.<RegistryFriendlyByteBuf,IHunterPlayer>skillStreamCodec().apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+                ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
                 ShapelessWeaponTableRecipe::new
         );
 

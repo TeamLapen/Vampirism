@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
@@ -64,9 +65,9 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
-        if (tier == TIER.ULTIMATE) return HunterSkills.ULTIMATE_CRUCIFIX.get();
-        return HunterSkills.CRUCIFIX_WIELDER.get();
+    public Holder<ISkill<?>> requiredSkill(@NotNull ItemStack stack) {
+        if (tier == TIER.ULTIMATE) return HunterSkills.ULTIMATE_CRUCIFIX;
+        return HunterSkills.CRUCIFIX_WIELDER;
     }
 
     @org.jetbrains.annotations.Nullable
@@ -146,7 +147,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
             } else if (level >= 8) {
                 tier = 2;
             }
-            if (VampirePlayer.get((Player) e).getSkillHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT.get())) {
+            if (VampirePlayer.get((Player) e).getSkillHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)) {
                 tier++;
             }
             return tier;

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -21,13 +22,13 @@ import java.util.function.Supplier;
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
 
     private Component name;
-    private final @NotNull Supplier<? extends ISkill<?>> requiredSkill;
+    private final @Nullable Holder<ISkill<?>> requiredSkill;
 
     public DefaultMinionTask() {
-        this(() -> null);
+        this( null);
     }
 
-    public DefaultMinionTask(@NotNull Supplier<? extends ISkill<?>> requiredSkill) {
+    public DefaultMinionTask(@Nullable Holder<ISkill<?>> requiredSkill) {
         this.requiredSkill = requiredSkill;
     }
 
@@ -53,6 +54,6 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
     }
 
     public boolean isRequiredSkillUnlocked(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
-        return this.requiredSkill.get() == null || player == null || faction.getPlayerCapability(player.getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(this.requiredSkill.get())).orElse(false);
+        return this.requiredSkill == null || player == null || faction.getPlayerCapability(player.getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
     }
 }

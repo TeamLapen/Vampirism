@@ -20,7 +20,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     @Override
     public int getCooldown(@NotNull IVampirePlayer player) {
         int cooldown = VampirismConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE.get())) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE)) {
             cooldown *= VampirismConfig.BALANCE.vrDarkBloodProjectileAOECooldownMod.get();
         }
         return cooldown;
@@ -43,16 +43,16 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         float directDamage = VampirismConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;
         float speed = 0.95f;
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE.get())) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE)) {
             float modifier = VampirismConfig.BALANCE.vrDarkBloodProjectileDamageMod.get().floatValue();
             directDamage *= modifier;
             indirectDamage *= modifier;
         }
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_SPEED.get())) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_SPEED)) {
             speed = 1.4f;
         }
 
-        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE.get())) {
+        if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE)) {
             for (int i = 0; i < 32; i++) {
                 Vec3 vec3d = getRotationVector(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) + i * 11.25f);
                 DarkBloodProjectileEntity entity = createProjectile(shooter, shooter.position(), 0, vec3d, false, 0, 0, 0.95f);
@@ -64,9 +64,9 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
                 }
             }
         } else {
-            boolean goThrough = player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION.get());
+            boolean goThrough = player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION);
             createProjectile(shooter, shooter.position(), shooter.getEyeHeight() * 0.9f, shooter.getViewVector(1.0F), goThrough, directDamage, indirectDamage, speed);
-            if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT.get())) {
+            if (player.getSkillHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT)) {
                 createProjectile(shooter, shooter.position(), shooter.getEyeHeight() * 0.9f, getVectorForRotation(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) + 30f), goThrough, directDamage, indirectDamage, speed);
                 createProjectile(shooter, shooter.position(), shooter.getEyeHeight() * 0.9f, getVectorForRotation(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) - 30f), goThrough, directDamage, indirectDamage, speed);
             }

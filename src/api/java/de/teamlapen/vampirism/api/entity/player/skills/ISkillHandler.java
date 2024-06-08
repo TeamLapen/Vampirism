@@ -5,11 +5,13 @@ import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Handles the players skills
@@ -19,7 +21,12 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
-    Result canSkillBeEnabled(ISkill<T> skill);
+    Result canSkillBeEnabled(Holder<ISkill<?>> skill);
+
+    @Deprecated
+    default Result canSkillBeEnabled(ISkill<?> skill) {
+        return canSkillBeEnabled(RegUtil.holder(skill));
+    }
 
     ItemStack[] createRefinementItems();
 
@@ -30,16 +37,16 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
     /**
      * Disables the given skill
      */
-    void disableSkill(ISkill<T> skill);
+    void disableSkill(Holder<ISkill<T>> skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      */
-    default void enableSkill(ISkill<T> skill) {
+    default void enableSkill(Holder<ISkill<T>> skill) {
         enableSkill(skill, false);
     }
 
-    void enableSkill(ISkill<T> skill, boolean fromLoading);
+    void enableSkill(Holder<ISkill<T>> skill, boolean fromLoading);
 
     /**
      * Equip the refinement set from the given stack to the appropriate slot
@@ -56,11 +63,24 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
      */
     int getLeftSkillPoints();
 
-    ISkill<T>[] getParentSkills(ISkill<T> skill);
+    @Deprecated
+    default ISkill<?>[] getParentSkills(ISkill<?> skill) {
+        return getParentSkills(RegUtil.holder(skill)).stream().map(Holder::value).toArray(ISkill[]::new);
+    }
 
-    boolean isRefinementEquipped(IRefinement refinement);
+    List<Holder<ISkill<?>>> getParentSkills(Holder<ISkill<?>> skill);
 
-    boolean isSkillEnabled(ISkill<?> skill);
+    @Deprecated
+    default boolean isRefinementEquipped(IRefinement refinement) {
+        return isRefinementEquipped(RegUtil.holder(refinement));
+    }
+
+    boolean isRefinementEquipped(Holder<IRefinement> refinement);
+
+    @Deprecated
+    default boolean isSkillEnabled(ISkill<?> skill) {
+        return isSkillEnabled(RegUtil.holder(skill));
+    }
 
     boolean isSkillEnabled(Holder<ISkill<?>> skill);
 

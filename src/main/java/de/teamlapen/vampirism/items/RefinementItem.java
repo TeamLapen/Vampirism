@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.items.component.EffectiveRefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
@@ -75,7 +76,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         super.appendHoverText(stack, context, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinements().stream().map(Supplier::get).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
+            set.getRefinements().stream().map(Holder::value).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
         }
     }
 

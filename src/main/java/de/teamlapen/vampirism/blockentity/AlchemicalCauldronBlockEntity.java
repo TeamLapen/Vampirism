@@ -80,7 +80,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 return false;
             }
-            if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY.get())) {
+            if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
                 if (ownerID == null) {
                     setOwnerID(player);
                     return true;

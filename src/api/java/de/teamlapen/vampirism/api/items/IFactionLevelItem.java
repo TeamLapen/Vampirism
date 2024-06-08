@@ -4,7 +4,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -34,9 +36,10 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
         if (minLevel > 1) {
             tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_level", String.valueOf(minLevel))).withStyle(correctFaction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
-        ISkill<T> requiredSkill = getRequiredSkill(stack);
+        Holder<ISkill<?>> requiredSkill = requiredSkill(stack);
         if (requiredSkill != null) {
-            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill", requiredSkill.getName())).withStyle(correctFaction && playerHandler.getCurrentFactionPlayer().map(p -> p.getSkillHandler().isSkillEnabled(requiredSkill)).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+            //noinspection unchecked
+            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill", requiredSkill.value().getName())).withStyle(correctFaction && playerHandler.getCurrentFactionPlayer().map(p -> p.getSkillHandler().isSkillEnabled((Holder<ISkill<?>>) (Object) requiredSkill)).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
     }
 
@@ -51,5 +54,17 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
      * @return The skill required to use this or null if none
      */
     @Nullable
-    ISkill<T> getRequiredSkill(@NotNull ItemStack stack);
+    default Holder<ISkill<?>> requiredSkill(@NotNull ItemStack stack) {
+        var req = getRequiredSkill(stack);
+        return req == null ? null : RegUtil.holder(req);
+    }
+
+    /**
+     * use @link {@link #requiredSkill(ItemStack)} instead
+     */
+    @Deprecated(forRemoval = true)
+    @Nullable
+    default ISkill<T> getRequiredSkill(@NotNull ItemStack stack) {
+        return null;
+    }
 }

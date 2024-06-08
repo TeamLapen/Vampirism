@@ -9,12 +9,14 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.util.Color;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -71,8 +73,8 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
             skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));
-            for (ISkill<?> skill : recipe.getRequiredSkills()) {
-                skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
+            for (Holder<ISkill<?>> skill : recipe.getRequiredSkills()) {
+                skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
             guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), guiLeft + 40, y, 110, Color.GRAY.getRGB());

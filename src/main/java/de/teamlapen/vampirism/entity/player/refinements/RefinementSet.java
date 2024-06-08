@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.random.WeightedEntry;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 
 public abstract class RefinementSet implements IRefinementSet {
 
-    private final Set<Supplier<? extends IRefinement>> refinements;
+    private final Set<Holder<IRefinement>> refinements;
     private final Rarity rarity;
     private final int color;
     private final @NotNull WeightedEntry.Wrapper<IRefinementSet> weightedRandom;
@@ -27,7 +28,7 @@ public abstract class RefinementSet implements IRefinementSet {
     @Nullable
     private IRefinementItem.AccessorySlotType restrictedType;
 
-    public RefinementSet(Rarity rarity, int color, Set<Supplier<? extends IRefinement>> refinements) {
+    public RefinementSet(Rarity rarity, int color, Set<Holder<IRefinement>> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
         this.weightedRandom = WeightedEntry.wrap(this, this.rarity.weight);
@@ -35,7 +36,7 @@ public abstract class RefinementSet implements IRefinementSet {
     }
 
     @SafeVarargs
-    public RefinementSet(Rarity rarity, int color, Supplier<? extends IRefinement>... refinements) {
+    public RefinementSet(Rarity rarity, int color, Holder<IRefinement>... refinements) {
         this(rarity, color, UtilLib.newSortedSet(refinements));
     }
 
@@ -58,7 +59,7 @@ public abstract class RefinementSet implements IRefinementSet {
 
     @NotNull
     @Override
-    public Set<Supplier<? extends IRefinement>> getRefinements() {
+    public Set<Holder<IRefinement>> getRefinements() {
         return this.refinements;
     }
 
@@ -67,7 +68,7 @@ public abstract class RefinementSet implements IRefinementSet {
         return Optional.ofNullable(restrictedType);
     }
 
-    public WeightedEntry.Wrapper<IRefinementSet> getWeightedRandom() {
+    public WeightedEntry.@NotNull Wrapper<IRefinementSet> getWeightedRandom() {
         return weightedRandom;
     }
 
@@ -80,12 +81,12 @@ public abstract class RefinementSet implements IRefinementSet {
     }
 
     public static class VampireRefinementSet extends RefinementSet {
-        public VampireRefinementSet(Rarity rarity, int color, Set<Supplier<? extends IRefinement>> refinements) {
+        public VampireRefinementSet(Rarity rarity, int color, Set<Holder<IRefinement>> refinements) {
             super(rarity, color, refinements);
         }
 
         @SafeVarargs
-        public VampireRefinementSet(Rarity rarity, int color, Supplier<? extends IRefinement>... refinements) {
+        public VampireRefinementSet(Rarity rarity, int color, Holder<IRefinement>... refinements) {
             super(rarity, color, refinements);
         }
 

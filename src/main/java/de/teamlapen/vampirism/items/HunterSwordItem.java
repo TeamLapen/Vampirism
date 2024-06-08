@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.util.ToolMaterial;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -40,7 +41,7 @@ public abstract class HunterSwordItem extends VampirismSwordItem implements IFac
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
+    public Holder<ISkill<?>> requiredSkill(@NotNull ItemStack stack) {
         return null;
     }
 

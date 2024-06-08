@@ -180,8 +180,8 @@ public class Helper {
     /**
      * @return Checks if all given skills are enabled
      */
-    public static <T extends IFactionPlayer<T>> boolean areSkillsEnabled(@NotNull ISkillHandler<T> skillHandler, @NotNull List<ISkill<T>> skills) {
-        for (ISkill<T> skill : skills) {
+    public static boolean areSkillsEnabled(@NotNull ISkillHandler<?> skillHandler, @NotNull List<Holder<ISkill<?>>> skills) {
+        for (Holder<ISkill<?>> skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
                 return false;
             }
@@ -228,14 +228,15 @@ public class Helper {
     /**
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
-    public static boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<?> item, @NotNull IFactionPlayerHandler playerHandler) {
+    public static <T extends IFactionPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
         IFaction<?> usingFaction = item.getExclusiveFaction(stack);
-        ISkill<?> requiredSkill = item.getRequiredSkill(stack);
+        Holder<ISkill<?>> requiredSkill = item.requiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         if (requiredSkill == null) return true;
-        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
+        //noinspection unchecked
+        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled((Holder<ISkill<?>>) (Object) requiredSkill)).orElse(false);
     }
 
     public static int getExperiencePoints(@NotNull LivingEntity entity, Player player) {

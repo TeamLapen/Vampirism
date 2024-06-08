@@ -475,7 +475,8 @@ public class ModPlayerEventHandler {
                 }
                 return false;
             } else if (stack.getItem() instanceof IFactionLevelItem<?> levelItem) {
-                ISkill<?> requiredSkill = levelItem.getRequiredSkill(stack);
+                //noinspection unchecked
+                Holder<ISkill<?>> requiredSkill = (Holder<ISkill<?>>) (Object) levelItem.requiredSkill(stack);
 
                 if (handler.getCurrentLevel() < levelItem.getMinLevel(stack)) {
                     if (message) {

@@ -44,8 +44,8 @@ public record SkillNode(@NotNull List<Holder<ISkill<?>>> skills, @NotNull List<R
     }
 
     @Override
-    public boolean containsSkill(ISkill<?> skill) {
-        return skills.stream().map(Holder::value).anyMatch(s -> s == skill);
+    public boolean containsSkill(Holder<ISkill<?>> skill) {
+        return skills.stream().anyMatch(s -> s.is(skill));
     }
 
 }

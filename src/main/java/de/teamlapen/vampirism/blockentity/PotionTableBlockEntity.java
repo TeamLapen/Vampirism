@@ -390,12 +390,12 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
         public void deriveFromHunter(@NotNull IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> manager = player.getSkillHandler();
-            durableBrewing = manager.isSkillEnabled(HunterSkills.DURABLE_BREWING.get()) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING.get());
-            concentratedBrewing = manager.isSkillEnabled(HunterSkills.CONCENTRATED_BREWING.get()) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING.get());
-            swiftBrewing = manager.isSkillEnabled(HunterSkills.SWIFT_BREWING.get());
-            masterBrewing = manager.isSkillEnabled(HunterSkills.MASTER_BREWER.get());
-            efficientBrewing = manager.isSkillEnabled(HunterSkills.EFFICIENT_BREWING.get());
-            multiTaskBrewing = manager.isSkillEnabled(HunterSkills.MULTITASK_BREWING.get());
+            durableBrewing = manager.isSkillEnabled(HunterSkills.DURABLE_BREWING) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING);
+            concentratedBrewing = manager.isSkillEnabled(HunterSkills.CONCENTRATED_BREWING) || manager.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING);
+            swiftBrewing = manager.isSkillEnabled(HunterSkills.SWIFT_BREWING);
+            masterBrewing = manager.isSkillEnabled(HunterSkills.MASTER_BREWER);
+            efficientBrewing = manager.isSkillEnabled(HunterSkills.EFFICIENT_BREWING);
+            multiTaskBrewing = manager.isSkillEnabled(HunterSkills.MULTITASK_BREWING);
         }
 
         public void fromByte(byte d) {

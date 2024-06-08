@@ -119,9 +119,9 @@ public class SkillNodeScreen {
         }
     }
 
-    private List<ISkill<?>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
+    private List<Holder<ISkill<?>>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
         Registry<ISkillNode> nodes = minecraft.level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_NODE);
-        return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).map(Holder::value).collect(Collectors.toList());
+        return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).collect(Collectors.toList());
     }
 
     public List<SkillNodeScreen> getChildren() {
@@ -236,7 +236,7 @@ public class SkillNodeScreen {
             Holder<ISkill<?>> hoveredSkill = elements[hoveredSkillIndex];
             int x = getNodeStart() + (26 + 10) * hoveredSkillIndex;
 
-            Collection<ISkill<?>> lockingSkills = this.getLockingSkills(this.skillNode);
+            Collection<Holder<ISkill<?>>> lockingSkills = this.getLockingSkills(this.skillNode);
             //draw blocked
             if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
                 List<Component> text = new ArrayList<>();
@@ -245,7 +245,7 @@ public class SkillNodeScreen {
                     text.add(t1);
                 } else {
                     text.add(Component.translatable("text.vampirism.skill.locked"));
-                    lockingSkills.stream().map(a -> a.getName().copy().withStyle(ChatFormatting.DARK_RED)).forEach(text::add);
+                    lockingSkills.stream().map(a -> a.value().getName().copy().withStyle(ChatFormatting.DARK_RED)).forEach(text::add);
                 }
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
                 graphics.blitSprite(DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, width + 8, 10 + text.size() * 10);
@@ -260,7 +260,7 @@ public class SkillNodeScreen {
             if (!lockingSkills.isEmpty()) {
                 List<Component> text = new ArrayList<>();
                 text.add(Component.translatable("text.vampirism.skill.excluding"));
-                lockingSkills.stream().map(a -> a.getName().copy().withStyle(ChatFormatting.YELLOW)).forEach(text::add);
+                lockingSkills.stream().map(a -> a.value().getName().copy().withStyle(ChatFormatting.YELLOW)).forEach(text::add);
                 int width = Math.min(this.width[hoveredSkillIndex], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
 
                 int yOffset = description.isEmpty() ? 15 : 24;
@@ -312,9 +312,9 @@ public class SkillNodeScreen {
      */
     private List<FormattedCharSequence> getSkillDescription(int skill) {
         List<FormattedCharSequence> description = this.descriptions[skill];
-        ISkillHandler.Result result = skillHandler.canSkillBeEnabled((ISkill)this.skillNode.elements().get(skill).value());
+        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(this.skillNode.elements().get(skill));
 
-        List<? extends ISkill<?>> lockingSkills = null;
+        List<Holder<ISkill<?>>> lockingSkills = null;
         ChatFormatting lockingColor = ChatFormatting.BLACK;
         if (!this.skillNode.node().value().lockingNodes().isEmpty()) {
             lockingSkills = getLockingSkills(this.skillNode);
@@ -325,8 +325,8 @@ public class SkillNodeScreen {
             int size = Math.max(l + minecraft.font.width(titles[skill]), 120) - 20;
             description = new ArrayList<>(description);
             description.addAll(Language.getInstance().getVisualOrder(this.findOptimalLines(Component.translatable("text.vampirism.skill.excluding").withStyle(lockingColor), size)));
-            for (ISkill<?> lockingSkill : lockingSkills) {
-                description.addAll(Language.getInstance().getVisualOrder(this.findOptimalLines(Component.literal("  ").append(lockingSkill.getName().copy().withStyle(lockingColor)), size)));
+            for (Holder<ISkill<?>> lockingSkill : lockingSkills) {
+                description.addAll(Language.getInstance().getVisualOrder(this.findOptimalLines(Component.literal("  ").append(lockingSkill.value().getName().copy().withStyle(lockingColor)), size)));
             }
         }
         return description;
@@ -352,12 +352,12 @@ public class SkillNodeScreen {
     }
 
     @Nullable
-    public ISkill getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
+    public Holder<ISkill<?>> getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
         if (!isMouseOver(mouseX, mouseY, scrollX, scrollY)) return null;
         int nodeWidth = getNodeWidth();
         for (int i = 0; i < this.skillNode.elementCount(); i++) {
             if (isMouseOverSkill(i, mouseX, mouseY, (int) (scrollX - nodeWidth/2f), scrollY)) {
-                return this.skillNode.elements().get(i).value();
+                return this.skillNode.elements().get(i);
             }
         }
         return null;

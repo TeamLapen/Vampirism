@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,11 +48,11 @@ import java.util.function.Supplier;
 public abstract class HunterCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IHunterCrossbow {
 
     protected final Tier itemTier;
-    private final Supplier<ISkill<IHunterPlayer>> requiredSkill;
+    private final Holder<ISkill<?>> requiredSkill;
     protected final float arrowVelocity;
     protected final int chargeTime;
 
-    public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, @NotNull Supplier<@Nullable ISkill<IHunterPlayer>> requiredSkill) {
+    public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, Tier itemTier, @NotNull Holder<@Nullable ISkill<?>> requiredSkill) {
         super(properties);
         this.arrowVelocity = arrowVelocity;
         this.chargeTime = chargeTime;
@@ -60,8 +61,8 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public @Nullable ISkill<IHunterPlayer> getRequiredSkill(@NotNull ItemStack stack) {
-        return this.requiredSkill.get();
+    public @Nullable Holder<ISkill<?>> requiredSkill(@NotNull ItemStack stack) {
+        return this.requiredSkill;
     }
 
     @Override
@@ -126,7 +127,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     public boolean canUseDoubleCrossbow(LivingEntity entity) {
-        return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT.get());
+        return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT);
     }
 
     @Override

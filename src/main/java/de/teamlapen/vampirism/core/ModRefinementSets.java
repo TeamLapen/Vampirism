@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet.Rarity;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
@@ -151,28 +152,28 @@ public class ModRefinementSets {
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet commonV(Supplier<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet commonV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.COMMON, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet uncommonV(Supplier<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet uncommonV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.UNCOMMON, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet rareV(Supplier<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet rareV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.RARE, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet epicV(Supplier<? extends IRefinement>... refinements) {
+    private static @NotNull IRefinementSet epicV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.EPIC, refinements);
     }
 
     @SuppressWarnings("ConstantConditions")
     @SafeVarargs
-    private static @NotNull RefinementSet vampire(@NotNull Rarity rarity, Supplier<? extends IRefinement>... refinements) {
+    private static @NotNull RefinementSet vampire(@NotNull Rarity rarity, Holder<IRefinement>... refinements) {
         return new RefinementSet.VampireRefinementSet(rarity, rarity.color.getColor(), refinements);
     }
 }

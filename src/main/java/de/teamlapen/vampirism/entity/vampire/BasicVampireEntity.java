@@ -167,7 +167,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
                     if (fph.getCurrentFaction() == this.getFaction()) {
-                        boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE.get())).orElse(false);
+                        boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
                         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
                         data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
                         int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());

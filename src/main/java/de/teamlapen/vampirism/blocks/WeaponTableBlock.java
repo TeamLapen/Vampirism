@@ -135,7 +135,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
      */
     private boolean canUse(@NotNull Player player) {
         if (Helper.isHunter(player)) {
-            return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.WEAPON_TABLE.get());
+            return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.WEAPON_TABLE);
         }
         return false;
     }

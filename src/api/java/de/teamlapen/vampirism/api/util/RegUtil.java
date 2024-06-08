@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -18,5 +20,20 @@ public class RegUtil {
     @SuppressWarnings("unchecked")
     public static <T extends IAction<?>> Holder<T> holder(T action) {
         return (Holder<T>) VampirismRegistries.ACTION.get().wrapAsHolder(action);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends ISkill<?>> Holder<T> holder(T skill) {
+        return (Holder<T>) VampirismRegistries.SKILL.get().wrapAsHolder(skill);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends ISkill<?>> Holder<T> holderAnon(T skill) {
+        return (Holder<T>) VampirismRegistries.SKILL.get().wrapAsHolder(skill);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IRefinement> Holder<T> holder(T refinement) {
+        return (Holder<T>) VampirismRegistries.REFINEMENT.get().wrapAsHolder(refinement);
     }
 }

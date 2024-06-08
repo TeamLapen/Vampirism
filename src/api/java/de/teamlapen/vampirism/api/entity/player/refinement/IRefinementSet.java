@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.refinement;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public interface IRefinementSet {
     Rarity getRarity();
 
     @NotNull
-    Set<Supplier<? extends IRefinement>> getRefinements();
+    Set<Holder<IRefinement>> getRefinements();
 
     /**
      * @return The accessory type this can be on, or empty if all

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import com.mojang.datafixers.types.templates.Hook;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -16,6 +17,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.data.ISkillTreeData;
 import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
@@ -28,6 +30,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -46,13 +49,13 @@ import java.util.stream.Collectors;
 
 public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<T>, ISyncableSaveData {
     private static final String NBT_KEY = "skill_handler";
-    private final static Logger LOGGER = LogManager.getLogger(SkillHandler.class);
-    private final ArrayList<ISkill<T>> enabledSkills = new ArrayList<>();
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final ArrayList<Holder<ISkill<T>>> enabledSkills = new ArrayList<>();
     private final T player;
     private final IPlayableFaction<T> faction;
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
-    private final Set<IRefinement> activeRefinements = new HashSet<>();
-    private final Map<IRefinement, AttributeModifier> refinementModifier = new HashMap<>();
+    private final Set<Holder<IRefinement>> activeRefinements = new HashSet<>();
+    private final Map<Holder<IRefinement>, AttributeModifier> refinementModifier = new HashMap<>();
     private final ISkillPointProvider skillPoints = new SkillPoints();
     public LinkedHashSet<Holder<ISkillTree>> unlockedTrees = new LinkedHashSet<>();
     private boolean dirty = false;
@@ -73,7 +76,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public @NotNull Result canSkillBeEnabled(@NotNull ISkill<T> skill) {
+    public @NotNull Result canSkillBeEnabled(@NotNull Holder<ISkill<?>> skill) {
         if (player.asEntity().getEffect(ModEffects.OBLIVION) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
@@ -86,7 +89,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 return Result.LOCKED_BY_OTHER_NODE;
             }
             if (this.treeData.isRoot(this.unlockedTrees, node.get()) || this.treeData.getParent(node.get()).stream().anyMatch(x -> isNodeEnabled(x.value()))) {
-                if (getLeftSkillPoints() >= skill.getSkillPointCost()) {
+                if (getLeftSkillPoints() >= skill.value().getSkillPointCost()) {
                     return isNodeEnabled(node.get().node().value()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
                 } else {
                     return Result.NO_POINTS;
@@ -128,33 +131,33 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public void disableAllSkills() {
-        for (ISkill<T> skill : enabledSkills) {
-            skill.onDisable(player);
+        for (Holder<ISkill<T>> skill : enabledSkills) {
+            skill.value().onDisable(player);
         }
         enabledSkills.clear();
         dirty = true;
     }
 
     @Override
-    public void disableSkill(@NotNull ISkill<T> skill) {
+    public void disableSkill(@NotNull Holder<ISkill<T>> skill) {
         if (enabledSkills.remove(skill)) {
-            skill.onDisable(player);
+            skill.value().onDisable(player);
             dirty = true;
         }
     }
 
     @Override
-    public void enableSkill(@NotNull ISkill<T> skill, boolean fromLoading) {
+    public void enableSkill(@NotNull Holder<ISkill<T>> skill, boolean fromLoading) {
         if (!enabledSkills.contains(skill)) {
-            skill.onEnable(player);
+            skill.value().onEnable(player);
             enabledSkills.add(skill);
             if (!fromLoading) {
-                this.player.asEntity().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill));
+                this.player.asEntity().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill.value()));
             }
             dirty = true;
             //noinspection ConstantValue
             if (this.player.asEntity() instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
-                ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().trigger(serverPlayer, skill);
+                ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().trigger(serverPlayer, skill.value());
             }
         }
 
@@ -195,14 +198,14 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private void unlockSkillTree(Holder<ISkillTree> tree) {
         this.unlockedTrees.add(tree);
         SkillTreeConfiguration.SkillTreeNodeConfiguration root = this.treeData.root(tree);
-        root.elements().forEach(x -> enableSkill((ISkill<T>) x.value(), true));
+        root.elements().forEach(x -> enableSkill((Holder<ISkill<T>>) (Object) x, true));
         this.dirty = true;
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
         var enabledSkills = new ArrayList<>( this.enabledSkills);
-        for (ISkill<T> enabledSkill : enabledSkills) {
-            if (enabledSkill.allowedSkillTrees().map(tree::is, tree::is)) {
+        for (Holder<ISkill<T>> enabledSkill : enabledSkills) {
+            if (enabledSkill.value().allowedSkillTrees().map(tree::is, tree::is)) {
                 this.disableSkill(enabledSkill);
             }
         }
@@ -219,7 +222,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (this.skillPoints.ignoreSkillPointLimit(this.player)) {
             return Integer.MAX_VALUE;
         }
-        return Math.max(0, this.skillPoints.getSkillPoints(this.player) - this.enabledSkills.stream().mapToInt(ISkill::getSkillPointCost).sum());
+        return Math.max(0, this.skillPoints.getSkillPoints(this.player) - this.enabledSkills.stream().map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
     }
 
     public void reset() {
@@ -230,9 +233,9 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public ISkill<T> @Nullable [] getParentSkills(@NotNull ISkill<T> skill) {
+    public List<Holder<ISkill<?>>> getParentSkills(@NotNull Holder<ISkill<?>> skill) {
         Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> nodeForSkill = this.treeData.getNodeForSkill(this.unlockedTrees, skill);
-        return nodeForSkill.flatMap(this.treeData::getParent).stream().flatMap(x -> x.value().skills().stream()).map(Holder::value).toArray(ISkill[]::new);
+        return nodeForSkill.flatMap(this.treeData::getParent).stream().flatMap(x -> x.value().skills().stream()).collect(Collectors.toList());
     }
 
     public T getPlayer() {
@@ -241,6 +244,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     public boolean noSkillEnabled() {
         List<ISkill<?>> list = this.unlockedTrees.stream().map(this.treeData::root).flatMap(x -> x.elements().stream()).map(Holder::value).collect(Collectors.toList());
+        //noinspection SuspiciousMethodCalls
         return this.enabledSkills.isEmpty() || new HashSet<>(list).containsAll(this.enabledSkills);
     }
 
@@ -251,44 +255,37 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return dirty;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean isNodeEnabled(@NotNull ISkillNode node) {
-        for (ISkill<T> s : enabledSkills) {
-            if (node.containsSkill(s)) return true;
+        for (Holder<ISkill<T>> s : enabledSkills) {
+            if (node.containsSkill((Holder<ISkill<?>>) (Object) s)) return true;
         }
         return false;
     }
 
     @Override
-    public boolean isRefinementEquipped(IRefinement refinement) {
+    public boolean isRefinementEquipped(Holder<IRefinement> refinement) {
         return this.activeRefinements.contains(refinement);
     }
 
     @Override
-    public boolean isSkillEnabled(ISkill<?> skill) {
-        return enabledSkills.contains(skill);
-    }
-
-    @Override
     public boolean isSkillEnabled(Holder<ISkill<?>> skill) {
-        return enabledSkills.contains(skill.value());
+        return enabledSkills.contains(skill);
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
         Registry<ISkillNode> nodes = player.asEntity().level().registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_NODE);
-        return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).map(Holder::value).anyMatch(this::isSkillEnabled);
+        return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).anyMatch(this::isSkillEnabled);
     }
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("skills")) {
             for (String id : nbt.getCompound("skills").getAllKeys()) {
-                //noinspection unchecked
-                ISkill<T> skill = (ISkill<T>) RegUtil.getSkill(new ResourceLocation(id));
-                if (skill == null) {
-                    LOGGER.warn("Skill {} does not exist anymore", id);
-                    continue;
-                }
-                enableSkill(skill, true);
+                ModRegistries.SKILLS.getHolder(new ResourceLocation(id)).ifPresentOrElse(holder -> {
+                    //noinspection unchecked
+                    enableSkill((Holder<ISkill<T>>) (Object) holder, true);
+                }, () -> LOGGER.warn("Skill {} does not exist anymore", id));
 
             }
         }
@@ -338,23 +335,17 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
             //noinspection unchecked
-            List<ISkill<T>> old = (List<ISkill<T>>) enabledSkills.clone();
+            List<Holder<ISkill<T>>> old = (List<Holder<ISkill<T>>>) enabledSkills.clone();
             for (String id : nbt.getCompound("skills").getAllKeys()) {
-                //noinspection unchecked
-                ISkill<T> skill = (ISkill<T>) RegUtil.getSkill(new ResourceLocation(id));
-                if (skill == null) {
-                    LOGGER.error("Skill {} does not exist on client!!!", id);
-                    continue;
-                }
-                if (old.contains(skill)) {
-                    old.remove(skill);
-                } else {
-                    enableSkill(skill, true);
-                }
-
-
+                ModRegistries.SKILLS.getHolder(new ResourceLocation(id)).ifPresent(holder -> {
+                    if (old.contains(holder)) {
+                        old.remove(holder);
+                    } else {
+                        enableSkill((Holder<ISkill<T>>) (Object) holder, true);
+                    }
+                });
             }
-            for (ISkill<T> skill : old) {
+            for (Holder<ISkill<T>> skill : old) {
                 disableSkill(skill);
             }
         }
@@ -399,8 +390,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
-        for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(RegUtil.id(skill).toString(), true);
+        for (Holder<ISkill<T>> skill : enabledSkills) {
+            skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
         }
         nbt.put("skills", skills);
         ListTag refinements = new ListTag();
@@ -427,8 +418,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
-        for (ISkill<T> skill : enabledSkills) {
-            skills.putBoolean(RegUtil.id(skill).toString(), true);
+        for (Holder<ISkill<T>> skill : enabledSkills) {
+            skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
         }
         nbt.put("skills", skills);
         ListTag refinementItems = new ListTag();
@@ -457,17 +448,18 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         if (stack.getItem() instanceof IRefinementItem refinementItem) {
             IRefinementSet set = refinementItem.getRefinementSet(stack);
             if (set != null) {
-                set.getRefinements().stream().map(Supplier::get).forEach(x -> {
+                set.getRefinements().forEach(x -> {
                     this.activeRefinements.add(x);
-                    if (!this.player.isRemote() && x.getAttribute() != null) {
-                        AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
-                        double value = x.getModifierValue();
-                        AttributeModifier t = attributeInstance.getModifier(x.getUUID());
+                    IRefinement refinement = x.value();
+                    if (!this.player.isRemote() && refinement.getAttribute() != null) {
+                        AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
+                        double value = refinement.getModifierValue();
+                        AttributeModifier t = attributeInstance.getModifier(refinement.getUUID());
                         if (t != null) {
-                            attributeInstance.removeModifier(x.getUUID());
+                            attributeInstance.removeModifier(refinement.getUUID());
                             value += t.amount();
                         }
-                        t = x.createAttributeModifier(x.getUUID(), value);
+                        t = refinement.createAttributeModifier(refinement.getUUID(), value);
                         this.refinementModifier.put(x, t);
                         attributeInstance.addTransientModifier(t);
                     }
@@ -483,15 +475,16 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             if (stack.getItem() instanceof IRefinementItem refinementItem) {
                 IRefinementSet set = refinementItem.getRefinementSet(stack);
                 if (set != null) {
-                    set.getRefinements().stream().map(Supplier::get).forEach(x -> {
+                    set.getRefinements().forEach(x -> {
                         this.activeRefinements.remove(x);
-                        if (!this.player.isRemote() && x.getAttribute() != null) {
-                            AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
+                        IRefinement refinement = x.value();
+                        if (!this.player.isRemote() && refinement.getAttribute() != null) {
+                            AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(x);
                             ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                            double value = t.amount() - x.getModifierValue();
+                            double value = t.amount() - refinement.getModifierValue();
                             if (value != 0) {
-                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.id(), value));
+                                attributeInstance.addTransientModifier(t = refinement.createAttributeModifier(t.id(), value));
                                 this.refinementModifier.put(x, t);
                                 this.activeRefinements.add(x);
                             }

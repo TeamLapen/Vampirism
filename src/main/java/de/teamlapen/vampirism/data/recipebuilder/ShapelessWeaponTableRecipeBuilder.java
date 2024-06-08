@@ -12,10 +12,12 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -38,7 +40,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     private int lava = 1;
-    private final List<ISkill<IHunterPlayer>> skills = new LinkedList<>();
+    private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
     public ShapelessWeaponTableRecipeBuilder(@NotNull RecipeCategory category,@NotNull ItemLike resultIn, int countIn) {
@@ -90,7 +92,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         advancement$builder.addCriterion("has_skill", ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), HunterSkills.WEAPON_TABLE.get())));
         this.skills.forEach(skill -> {
-            advancement$builder.addCriterion("has_skill_" + RegUtil.id(skill).toString().replace(":", "_"), ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill)));
+            advancement$builder.addCriterion("has_skill_" + skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow().replace(":", "_"), ModAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill.value())));
         });
         this.criteria.forEach(advancement$builder::addCriterion);
         ShapelessWeaponTableRecipe shapelessrecipe = new ShapelessWeaponTableRecipe(
@@ -121,7 +123,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @SafeVarargs
-    public final @NotNull ShapelessWeaponTableRecipeBuilder skills(@NotNull ISkill<IHunterPlayer>... skills) {
+    public final @NotNull ShapelessWeaponTableRecipeBuilder skills(@NotNull Holder<ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

@@ -9,6 +9,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -43,7 +44,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     private int lava = 1;
-    private final List<ISkill<IHunterPlayer>> skills = new LinkedList<>();
+    private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
     public ShapedWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike item, int count) {
@@ -117,7 +118,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @SafeVarargs
-    public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull ISkill<IHunterPlayer>... skills) {
+    public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull Holder<ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

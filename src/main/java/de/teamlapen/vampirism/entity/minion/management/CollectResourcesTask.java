@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -46,7 +47,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, @NotNull Supplier<? extends ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;

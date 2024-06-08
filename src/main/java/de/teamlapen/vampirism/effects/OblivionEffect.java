@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModStats;
@@ -20,10 +21,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class OblivionEffect extends VampirismEffect {
+public class OblivionEffect<T extends IFactionPlayer<T>> extends VampirismEffect {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -40,13 +42,13 @@ public class OblivionEffect extends VampirismEffect {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide) {
             if (entityLivingBaseIn instanceof Player player) {
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
-                return FactionPlayerHandler.getCurrentFactionPlayer(((Player) entityLivingBaseIn)).map(factionPlayer -> {
-                    ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
+                return FactionPlayerHandler.<T>getCurrentFactionPlayer(((Player) entityLivingBaseIn)).map(factionPlayer -> {
+                    ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
                     Optional<ISkillNode> nodeOPT = ((SkillHandler<?>) skillHandler).anyLastNode();
                     if (nodeOPT.isPresent()) {
                         for (Holder<ISkill<?>> element : nodeOPT.get().skills()) {
-                            //noinspection unchecked,rawtypes
-                            skillHandler.disableSkill((ISkill)element.value());
+                            //noinspection unchecked
+                            skillHandler.disableSkill((Holder<ISkill<T>>) (Object) element);
                             player.awardStat(ModStats.SKILL_FORGOTTEN.get().get(element.value()));
                         }
                         return true;

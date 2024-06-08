@@ -42,7 +42,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         return false;
     }
 
-    public Optional<SkillTreeNodeConfiguration> getNode(ISkill<?> skill) {
+    public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
         for (SkillTreeNodeConfiguration child : children) {
             var result = child.getNode(skill);
             if (result.isPresent()) {
@@ -125,7 +125,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
             return false;
         }
 
-        public Optional<SkillTreeNodeConfiguration> getNode(ISkill<?> skill) {
+        public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
             if (node().value().containsSkill(skill)) {
                 return Optional.of(this);
             }

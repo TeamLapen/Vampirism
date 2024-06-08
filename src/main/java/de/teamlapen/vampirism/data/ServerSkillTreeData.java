@@ -36,8 +36,8 @@ public class ServerSkillTreeData implements ISkillTreeData {
     }
 
     @Override
-    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, ISkill<?> skill) {
-        return availableTrees.stream().filter(tree -> skill.allowedSkillTrees().map(tree::is, tree::is)).map(this::getConfiguration).flatMap(x -> x.getNode(skill).stream()).findAny();
+    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, Holder<ISkill<?>> skill) {
+        return availableTrees.stream().filter(tree -> skill.value().allowedSkillTrees().map(tree::is, tree::is)).map(this::getConfiguration).flatMap(x -> x.getNode(skill).stream()).findAny();
     }
 
     @Override

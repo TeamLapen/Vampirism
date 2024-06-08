@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -87,8 +88,8 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
             FormattedText newLine = Component.literal("\n");
             List<FormattedText> skills = new ArrayList<>();
             skills.add(Component.translatable("gui.vampirism.skill_required", "\n"));
-            for (ISkill<?> skill : recipe.getRequiredSkills()) {
-                skills.add(skill.getName().copy().withStyle(ChatFormatting.ITALIC));
+            for (Holder<ISkill<?>> skill : recipe.getRequiredSkills()) {
+                skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
             guiGraphics.drawWordWrap(font, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());

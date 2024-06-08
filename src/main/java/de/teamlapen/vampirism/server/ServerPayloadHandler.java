@@ -37,6 +37,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -244,31 +245,30 @@ public class ServerPayloadHandler {
         });
     }
 
-    public static void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
+    public static <T extends IFactionPlayer<T>> void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-        Player player = context.player();
-        Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
-        factionPlayerOpt.ifPresent(factionPlayer -> {
-            ISkill skill = RegUtil.getSkill(msg.skillId());
-            if (skill != null) {
-                ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
-                if (result == ISkillHandler.Result.OK) {
-                    skillHandler.enableSkill(skill);
-                    if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
-                        //does this cause problems with addons?
-                        CompoundTag sync = new CompoundTag();
-                        sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess()));
-                        HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
-                    }
+            Player player = context.player();
+            Optional<T> factionPlayerOpt = FactionPlayerHandler.<T>getCurrentFactionPlayer(player);
+            factionPlayerOpt.ifPresent(factionPlayer -> {
+                Holder<ISkill<?>> skill = msg.skill();
+                if (skill != null) {
+                    ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
+                    ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
+                    if (result == ISkillHandler.Result.OK) {
+                        //noinspection unchecked
+                        skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
+                        if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
+                            //does this cause problems with addons?
+                            CompoundTag sync = new CompoundTag();
+                            sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess()));
+                            HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
+                        }
 
-                } else {
-                    LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
+                    } else {
+                        LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
+                    }
                 }
-            } else {
-                LOGGER.warn("Skill {} was not found so {} cannot activate it", msg.skillId(), player);
-            }
-        });
+            });
         });
     }
 

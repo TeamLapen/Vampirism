@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,8 +18,18 @@ public class FactionCodec {
         return ModRegistries.SKILLS.byNameCodec().xmap(s -> (ISkill<T>) s, s -> s);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends IFactionPlayer<T>> Codec<Holder<ISkill<T>>> skillHolderCodec() {
+        return ModRegistries.SKILLS.holderByNameCodec().xmap(s -> (Holder<ISkill<T>>) (Object) s, s -> (Holder<ISkill<?>>) (Object) s);
+    }
+
     public static <B,T extends IFactionPlayer<T>> StreamCodec<RegistryFriendlyByteBuf,ISkill<T>> skillStreamCodec() {
         return ByteBufCodecs.registry(VampirismRegistries.Keys.SKILL).map(s -> (ISkill<T>) s, s -> s);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <B,T extends IFactionPlayer<T>> StreamCodec<RegistryFriendlyByteBuf,Holder<ISkill<T>>> skillHolderStreamCodec() {
+        return ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.SKILL).map(s -> (Holder<ISkill<T>>) (Object) s, s -> (Holder<ISkill<?>>) (Object) s);
     }
 
     @SuppressWarnings("unchecked")

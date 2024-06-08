@@ -8,6 +8,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     protected String group;
     protected Ingredient ingredient;
     protected Either<Ingredient, FluidStack> fluid;
-    protected List<ISkill<?>> skills = new LinkedList<>();
+    protected List<Holder<ISkill<?>>> skills = new LinkedList<>();
     protected int reqLevel = 1;
     protected int cookTime = 200;
     protected float exp = 0.2f;
@@ -123,7 +124,8 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public @NotNull AlchemicalCauldronRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
+    @SuppressWarnings("unchecked")
+    public @NotNull AlchemicalCauldronRecipeBuilder withSkills(@NotNull Holder<ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

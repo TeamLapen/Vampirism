@@ -54,7 +54,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (!entity.canFreeze()) continue;
 
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
-            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION.get())) {
+            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION)) {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();
             }
             entity.addEffect(new MobEffectInstance(ModEffects.FREEZE, dur));
