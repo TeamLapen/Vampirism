@@ -47,6 +47,7 @@ public class VampirismAPI {
     private static ISettingsProvider settings;
     private static IBloodConversionRegistry bloodConversionRegistry;
 
+    @Deprecated(forRemoval = true)
     public static ISkillManager skillManager() {
         return skillManager;
     }

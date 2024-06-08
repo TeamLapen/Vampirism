@@ -14,12 +14,14 @@ import java.util.List;
  *
  * @author maxanier
  */
+@Deprecated(forRemoval = true)
 public interface ISkillManager {
 
 
     /**
      * A mutable copied list of all skills registered for this faction
      */
+    @Deprecated(forRemoval = true)
     <T extends IFactionPlayer<T>> List<ISkill<T>> getSkillsForFaction(IPlayableFaction<T> faction);
 
     /**
@@ -28,6 +30,7 @@ public interface ISkillManager {
      * @param id id of the registered {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType}
      * @return the registered {@link de.teamlapen.vampirism.api.entity.player.skills.ISkillType} or null
      */
+    @Deprecated(forRemoval = true)
     @Nullable
     ISkillType getSkillType(@NotNull ResourceLocation id);
 
@@ -37,6 +40,7 @@ public interface ISkillManager {
      * @param type the skill type to register
      * @return the input skill type
      */
+    @Deprecated(forRemoval = true)
     @SuppressWarnings("UnusedReturnValue")
     @NotNull
     ISkillType registerSkillType(@NotNull ISkillType type);
