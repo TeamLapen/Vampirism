@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -15,7 +15,7 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
     }
 
     public boolean canBeApplied(@NotNull ItemStack stack) {
-        return stack.getItem() instanceof SwordItem && stack.is(ModTags.Items.APPLICABLE_OIL_SWORD) == VampirismConfig.BALANCE.itApplicableOilSwordReverse.get();
+        return stack.getItem() instanceof SwordItem && stack.is(ModItemTags.APPLICABLE_OIL_SWORD) == VampirismConfig.BALANCE.itApplicableOilSwordReverse.get();
     }
 
     @Override

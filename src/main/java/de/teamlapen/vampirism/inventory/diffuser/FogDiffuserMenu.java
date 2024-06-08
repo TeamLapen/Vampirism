@@ -1,21 +1,12 @@
 package de.teamlapen.vampirism.inventory.diffuser;
 
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
-import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.core.ModDataMaps;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModMenus;
-import de.teamlapen.vampirism.core.ModTags;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
-import java.util.function.Consumer;
 
 public class FogDiffuserMenu extends DiffuserMenu {
     public FogDiffuserMenu(int pContainerId, Inventory playerInventory, PlayerOwnedBlockEntity.LockDataHolder lockData) {

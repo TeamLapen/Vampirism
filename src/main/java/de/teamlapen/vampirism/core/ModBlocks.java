@@ -258,7 +258,7 @@ public class ModBlocks {
      * - Register itemrender in {@link de.teamlapen.vampirism.data.provider.ItemModelGenerator#registerModels()}
      * - Register loot table in {@link de.teamlapen.vampirism.data.provider.LootTablesProvider.ModBlockLootTables#addTables()}
      * - Add lang keys
-     * - Consider adding tool type in {@link de.teamlapen.vampirism.data.provider.TagProvider.ModBlockTagsProvider}
+     * - Consider adding tool type in {@link de.teamlapen.vampirism.data.provider.tags.ModBlockTagsProvider}
      * - Run genData (twice?)
      */
     @SuppressWarnings("JavadocReference")

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IToolOil;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -26,7 +26,7 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
 
     @Override
     public boolean isOilAllowedOnTool(ItemStack stack) {
-        return stack.is(ModTags.Items.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
+        return stack.is(ModItemTags.APPLICABLE_OIL_PICKAXE) == VampirismConfig.BALANCE.itApplicableOilPickaxeReverse.get();
     }
 
     @Override

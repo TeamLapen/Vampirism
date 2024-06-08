@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.mixin.accessor.AbstractContainerMenuAccessor;
@@ -88,7 +88,7 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
 
     public static ItemCombinerMenuSlotDefinition createInputSlotDefinition() {
         return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
-                .withSlot(0, 44, 34, stack -> stack.is(ModTags.Items.PURE_BLOOD))
+                .withSlot(0, 44, 34, stack -> stack.is(ModItemTags.PURE_BLOOD))
                 .withSlot(1, 80, 34, stack -> stack.is(ModItems.HUMAN_HEART.get()))
                 .withSlot(2, 116, 34, stack -> stack.is(ModItems.VAMPIRE_BOOK.get()))
                 .build();

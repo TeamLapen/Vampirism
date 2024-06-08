@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -82,7 +82,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
-        return this.isRemoved() || pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO);
+        return this.isRemoved() || pSource.is(ModDamageTypeTags.MOTHER_RESISTANT_TO);
     }
 
     @Override

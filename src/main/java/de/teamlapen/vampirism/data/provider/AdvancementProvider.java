@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.advancements.*;
@@ -73,7 +74,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
             AdvancementHolder betrayal = Advancement.Builder.advancement()
                     .display(ModItems.HUMAN_HEART.get(), Component.translatable("advancement.vampirism.betrayal"), Component.translatable("advancement.vampirism.betrayal.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_hunter)
-                    .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModTags.Entities.HUNTER)))
+                    .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntityTags.HUNTER)))
                     .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
             AdvancementHolder max_level = Advancement.Builder.advancement()

@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModPoiTypeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -236,9 +236,9 @@ public class TotemHelper {
     public static @NotNull Set<PoiRecord> getVillagePointsOfInterest(@NotNull ServerLevel world, @NotNull BlockPos pos) {
         PoiManager manager = world.getPoiManager();
         Set<PoiRecord> finished = Sets.newHashSet();
-        Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModTags.PoiTypes.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
+        Set<PoiRecord> points = manager.getInRange(type -> !type.is(ModPoiTypeTags.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
         while (!points.isEmpty()) {
-            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(ModTags.PoiTypes.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
+            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(ModPoiTypeTags.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {

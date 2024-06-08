@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.data.CachedOutput;
@@ -50,7 +50,7 @@ public class SundamageProvider implements DataProvider {
     }
 
     protected void registerNoSundamageBiomes(Consumer consumer) {
-        consumer.addBiome(ModTags.Biomes.IS_VAMPIRE_BIOME);
+        consumer.addBiome(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
         consumer.addDimension(BuiltinDimensionTypes.NETHER);
         consumer.addDimension(BuiltinDimensionTypes.END);
     }

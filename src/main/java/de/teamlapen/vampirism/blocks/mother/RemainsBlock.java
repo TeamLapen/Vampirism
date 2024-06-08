@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks.mother;
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
@@ -85,8 +85,8 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
             if (MotherTreeStructure.findMother(level, pos).isEmpty()) {
                 level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
             }
-            if (state.is(ModTags.Blocks.VULNERABLE_REMAINS)) {
-                if (Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModTags.Blocks.REMAINS))) {
+            if (state.is(ModBlockTags.VULNERABLE_REMAINS)) {
+                if (Arrays.stream(Direction.values()).allMatch(d -> level.getBlockState(pos.relative(d)).is(ModBlockTags.REMAINS))) {
                     level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
                 }
             }

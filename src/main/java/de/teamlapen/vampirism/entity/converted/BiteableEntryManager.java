@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModDataMaps;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -122,7 +122,7 @@ public class BiteableEntryManager {
         if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE) {
             return true;
         }
-        if (type.is(ModTags.Entities.VAMPIRE)) return true;
+        if (type.is(ModEntityTags.VAMPIRE)) return true;
         return isConfigBlackListed(RegUtil.id(type));
     }
 }

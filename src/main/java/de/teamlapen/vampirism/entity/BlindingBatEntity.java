@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ import java.util.List;
 public class BlindingBatEntity extends Bat {
 
     public static boolean spawnPredicate(@NotNull EntityType<? extends BlindingBatEntity> entityType, @NotNull LevelAccessor iWorld, MobSpawnType spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
-        if (iWorld.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME)) {
+        if (iWorld.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)) {
             return true;
         }
         if (blockPos.getY() >= iWorld.getSeaLevel()) {

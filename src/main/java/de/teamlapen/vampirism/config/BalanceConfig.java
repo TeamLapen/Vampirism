@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.config;
 
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -439,9 +439,9 @@ public class BalanceConfig {
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
 
         builder.category("items", "it");
-        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_ARMOR.location())).define("applicableOilArmorReverse", false);
-        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
-        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
+        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_ARMOR.location())).define("applicableOilArmorReverse", false);
+        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
+        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
 
         builder.category("lord actions", "la");
         laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);

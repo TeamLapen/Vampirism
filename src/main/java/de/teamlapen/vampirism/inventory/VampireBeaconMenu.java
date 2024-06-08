@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModMenus;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -23,7 +23,7 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
 
         @Override
         public boolean canPlaceItem(int pIndex, ItemStack pStack) {
-            return pStack.is(ModTags.Items.VAMPIRE_BEACON_PAYMENT_ITEM);
+            return pStack.is(ModItemTags.VAMPIRE_BEACON_PAYMENT_ITEM);
         }
 
         @Override
@@ -111,7 +111,7 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.is(ModTags.Items.VAMPIRE_BEACON_PAYMENT_ITEM);
+            return pStack.is(ModItemTags.VAMPIRE_BEACON_PAYMENT_ITEM);
         }
 
         @Override

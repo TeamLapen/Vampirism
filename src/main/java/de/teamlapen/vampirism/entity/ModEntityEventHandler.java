@@ -10,7 +10,8 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
+import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
@@ -112,7 +113,7 @@ public class ModEntityEventHandler {
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
 
-        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
+        if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
             event.setSpawnCancelled(true);
         }
     }
@@ -322,7 +323,7 @@ public class ModEntityEventHandler {
                 }
             }
         }
-        if (event.getSource().is(ModTags.DamageTypes.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
+        if (event.getSource().is(ModDamageTypeTags.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
             for (ItemStack armorStack : event.getEntity().getArmorSlots()) {
                 if (OilUtils.getAppliedOil(armorStack).map(oil -> {
                     if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().random.nextFloat()).orElse(1f)) {

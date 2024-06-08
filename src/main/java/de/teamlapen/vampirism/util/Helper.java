@@ -16,11 +16,11 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.world.fog.FogLevel;
@@ -192,12 +192,12 @@ public class Helper {
     public static boolean isEntityInVampireBiome(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        return w.getBiome(e.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
+        return w.getBiome(e.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
     }
 
     public static boolean isPosInVampireBiome(@NotNull BlockPos pos, @NotNull LevelAccessor level) {
         Holder<Biome> biome = level.getBiome(pos);
-        return biome.is(ModTags.Biomes.IS_VAMPIRE_BIOME);
+        return biome.is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
     }
 
     /**
@@ -289,7 +289,7 @@ public class Helper {
      */
     public static boolean canKillVampires(@NotNull DamageSource source) {
         if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            if (source.is(ModTags.DamageTypes.VAMPIRE_IMMORTAL) || VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
+            if (source.is(ModDamageTypeTags.VAMPIRE_IMMORTAL) || VampirismConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;

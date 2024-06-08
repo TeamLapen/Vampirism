@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModTaskTags;
 import de.teamlapen.vampirism.entity.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.entity.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
@@ -260,7 +260,7 @@ public class TaskManager implements ITaskManager, ISavable {
 
     @Override
     public void resetUniqueTask(@NotNull ResourceKey<Task> id) {
-        this.registry.getHolder(id).filter(a -> a.is(ModTags.Tasks.IS_UNIQUE)).ifPresent(task -> {
+        this.registry.getHolder(id).filter(a -> a.is(ModTaskTags.IS_UNIQUE)).ifPresent(task -> {
             this.completedTasks.remove(task.key());
             TaskWrapper wrapper = this.taskWrapperMap.get(UNIQUE_TASKS);
             if (wrapper != null) {
@@ -404,7 +404,7 @@ public class TaskManager implements ITaskManager, ISavable {
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Holder.Reference<Task>> tasks = this.registry.holders().collect(Collectors.toList());
             Collections.shuffle(tasks);
-            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.is(ModTags.Tasks.IS_UNIQUE)).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer, this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
+            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.is(ModTaskTags.IS_UNIQUE)).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer, this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
         }
         this.updateStats(wrapper.getTaskInstances());
         return wrapper.getTaskInstances();
@@ -424,7 +424,7 @@ public class TaskManager implements ITaskManager, ISavable {
             this.removeLockedTasks(uniqueTasks.values());
         }
         Collection<ResourceKey<Task>> tasks = uniqueTasks.values().stream().map(ITaskInstance::getTask).collect(Collectors.toSet());
-        uniqueTasks.putAll(this.registry.holders().filter(this::matchesFaction).filter(t -> t.is(ModTags.Tasks.IS_UNIQUE)).filter(task -> !tasks.contains(task.key())).filter(task -> !this.completedTasks.contains(task.key())).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
+        uniqueTasks.putAll(this.registry.holders().filter(this::matchesFaction).filter(t -> t.is(ModTaskTags.IS_UNIQUE)).filter(task -> !tasks.contains(task.key())).filter(task -> !this.completedTasks.contains(task.key())).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
         wrapper.tasks.putAll(uniqueTasks);
         this.updateStats(uniqueTasks.values());
         return uniqueTasks.values();
@@ -446,7 +446,7 @@ public class TaskManager implements ITaskManager, ISavable {
     }
 
     private boolean matchesFaction(@NotNull Holder<Task> task) {
-        return !task.is(ModTags.Tasks.HAS_FACTION) || this.faction.getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(ModTaskTags.HAS_FACTION) || this.faction.getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

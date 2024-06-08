@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.*;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
@@ -243,11 +244,11 @@ public class VampirismMod {
                 .build()
                 .village(VampireVillage::vampireVillage)
                 .refinementItems(VampireRefinementItem::getItemForType)
-                .addTag(Registries.BIOME, ModTags.Biomes.IS_VAMPIRE_BIOME)
-                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModTags.PoiTypes.IS_VAMPIRE)
-                .addTag(Registries.VILLAGER_PROFESSION, ModTags.Professions.IS_VAMPIRE)
-                .addTag(Registries.ENTITY_TYPE, ModTags.Entities.VAMPIRE)
-                .addTag(VampirismRegistries.Keys.TASK, ModTags.Tasks.IS_VAMPIRE)
+                .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
+                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE)
+                .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
+                .addTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
+                .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(VReference.HUNTER_FACTION_ID, IHunterPlayer.class, () -> (AttachmentType<IHunterPlayer>)(Object) ModAttachments.HUNTER_PLAYER.get())
@@ -267,11 +268,11 @@ public class VampirismMod {
                 .build()
                 .build()
                 .village(HunterVillage::hunterVillage)
-                .addTag(Registries.BIOME, ModTags.Biomes.IS_HUNTER_BIOME)
-                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModTags.PoiTypes.IS_HUNTER)
-                .addTag(Registries.VILLAGER_PROFESSION, ModTags.Professions.IS_HUNTER)
-                .addTag(Registries.ENTITY_TYPE, ModTags.Entities.HUNTER)
-                .addTag(VampirismRegistries.Keys.TASK, ModTags.Tasks.IS_HUNTER)
+                .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
+                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
+                .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
+                .addTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
+                .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
                 .register();
 
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "night_vision"), new NightVision());

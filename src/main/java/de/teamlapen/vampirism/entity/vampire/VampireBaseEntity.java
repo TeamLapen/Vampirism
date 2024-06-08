@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -303,12 +305,12 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#CURSED_EARTH}
      */
     private boolean getCanSpawnHereRestricted(@NotNull LevelAccessor iWorld) {
-        boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME);
+        boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
         if (lowLightLevel) return true;
         if (!vampireBiome) return false;
         BlockState iblockstate = iWorld.getBlockState((this.blockPosition()).below());
-        return iblockstate.is(ModTags.Blocks.CURSED_EARTH);
+        return iblockstate.is(ModBlockTags.CURSED_EARTH);
     }
 
     public enum SpawnRestriction {

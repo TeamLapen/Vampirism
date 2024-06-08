@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.blocks.TotemBaseBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.ModProfessionTags;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
 import de.teamlapen.vampirism.effects.SanguinareEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -1244,7 +1245,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
 
         for (Villager villager : villagerEntities) {
-            if (BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(villager.getVillagerData().getProfession()).is(ModTags.Professions.HAS_FACTION)) {
+            if (BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(villager.getVillagerData().getProfession()).is(ModProfessionTags.HAS_FACTION)) {
                 villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NONE));
             }
         }

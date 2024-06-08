@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskRewardInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModTaskTags;
 import de.teamlapen.vampirism.util.CodecUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -143,7 +143,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public boolean isUnique(Registry<Task> registry) {
-        return registry.getHolder(this.task).map(s -> s.is(ModTags.Tasks.IS_UNIQUE)).orElse(false);
+        return registry.getHolder(this.task).map(s -> s.is(ModTaskTags.IS_UNIQUE)).orElse(false);
     }
 
     public void startTask(long timestamp) {

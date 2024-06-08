@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data.provider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
+import de.teamlapen.vampirism.data.provider.tags.TagProvider;
 import de.teamlapen.vampirism.mixin.accessor.RegistriesDatapackGeneratorAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;

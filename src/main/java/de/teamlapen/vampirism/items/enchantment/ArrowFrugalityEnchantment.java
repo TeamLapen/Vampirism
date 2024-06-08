@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items.enchantment;
 
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -13,7 +13,7 @@ public class ArrowFrugalityEnchantment extends Enchantment {
 
     public ArrowFrugalityEnchantment() {
         super(Enchantment.definition(
-                        ModTags.Items.CROSSBOW_ENCHANTABLE,
+                        ModItemTags.CROSSBOW_ENCHANTABLE,
                         1,
                         2,
                         Enchantment.dynamicCost(10, 5),

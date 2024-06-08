@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionyMixin;
@@ -223,11 +223,11 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             for(int l = pX - j; l <= pX + j && flag; ++l) {
                 for(int i1 = pZ - j; i1 <= pZ + j; ++i1) {
                     BlockState blockState = pLevel.getBlockState(new BlockPos(l, k, i1));
-                    if (!blockState.is(ModTags.Blocks.VAMPIRE_BEACON_BASE_BLOCKS)) {
+                    if (!blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS)) {
                         flag = false;
                         break;
                     } else if (upgradeFlagLevel) {
-                        upgradeFlagLevel = blockState.is(ModTags.Blocks.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS);
+                        upgradeFlagLevel = blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +26,7 @@ public class ModArmorMaterials {
 
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, REFERENCE.MODID);
 
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_CLOTH = register("vampire_cloth", createReduction(1, 3, 2, 1), 15, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(ModTags.Items.HEART), 0, 0);
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_CLOTH = register("vampire_cloth", createReduction(1, 3, 2, 1), 15, SoundEvents.ARMOR_EQUIP_LEATHER, () -> Ingredient.of(ModItemTags.HEART), 0, 0);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_CLOTH_CROWN = copyWithNewLayer("vampire_clothing_crown", VAMPIRE_CLOTH);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_CLOTH_HAT = copyWithNewLayer("vampire_clothing_hat", VAMPIRE_CLOTH);
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_CLOTH_LEGS = copyWithNewLayer("vampire_clothing_legs", VAMPIRE_CLOTH);

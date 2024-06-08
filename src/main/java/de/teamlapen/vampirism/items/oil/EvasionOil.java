@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorItem;
@@ -21,7 +21,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
 
     @Override
     public boolean canBeApplied(@NotNull ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem && stack.is(ModTags.Items.APPLICABLE_OIL_ARMOR) == VampirismConfig.BALANCE.itApplicableOilArmorReverse.get();
+        return stack.getItem() instanceof ArmorItem && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == VampirismConfig.BALANCE.itApplicableOilArmorReverse.get();
     }
 
     @Override

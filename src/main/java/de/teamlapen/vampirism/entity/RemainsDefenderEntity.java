@@ -3,7 +3,8 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.blockentity.VulnerableRemainsBlockEntity;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
+import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,7 +72,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
     public void tick() {
         super.tick();
         // remove in case the there is no remains block, but the entity was not removed or was added otherwise
-        if (level().getGameTime() % 512 == 32 && getVehicle() == null && !level().getBlockState(blockPosition().relative(getAttachFace())).is(ModTags.Blocks.ACTIVE_REMAINS)) {
+        if (level().getGameTime() % 512 == 32 && getVehicle() == null && !level().getBlockState(blockPosition().relative(getAttachFace())).is(ModBlockTags.ACTIVE_REMAINS)) {
             this.remove(RemovalReason.KILLED);
         }
     }
@@ -87,7 +88,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
-        return pSource.is(ModTags.DamageTypes.MOTHER_RESISTANT_TO) || pSource.is(DamageTypes.IN_WALL) || pSource.is(DamageTypes.DROWN) || super.isInvulnerableTo(pSource);
+        return pSource.is(ModDamageTypeTags.MOTHER_RESISTANT_TO) || pSource.is(DamageTypes.IN_WALL) || pSource.is(DamageTypes.DROWN) || super.isInvulnerableTo(pSource);
     }
 
     @Nullable

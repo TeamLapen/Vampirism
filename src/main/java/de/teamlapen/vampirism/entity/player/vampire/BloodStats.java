@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
@@ -89,7 +89,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
         foodStats.setExhaustion(0);
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
-        float bloodExhaustionGate = player.getCommandSenderWorld().getBiome(player.blockPosition()).is(ModTags.Biomes.IS_VAMPIRE_BIOME) ? 6f : 4f;
+        float bloodExhaustionGate = player.getCommandSenderWorld().getBiome(player.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) ? 6f : 4f;
         if (this.bloodExhaustionLevel > bloodExhaustionGate) {
             this.bloodExhaustionLevel -= bloodExhaustionGate;
             if (bloodSaturationLevel > 0) {

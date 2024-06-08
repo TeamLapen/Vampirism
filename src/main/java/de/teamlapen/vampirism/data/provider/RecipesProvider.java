@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider;
 
-import com.ibm.icu.text.SpoofChecker;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.recipebuilder.*;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -112,15 +112,15 @@ public class RecipesProvider extends RecipeProvider {
         TagKey<Item> diamondBlock = Tags.Items.STORAGE_BLOCKS_DIAMOND;
         TagKey<Item> iron_ingot = Tags.Items.INGOTS_IRON;
         TagKey<Item> coal_block = Tags.Items.STORAGE_BLOCKS_COAL;
-        TagKey<Item> garlic = ModTags.Items.GARLIC;
+        TagKey<Item> garlic = ModItemTags.GARLIC;
         TagKey<Item> obsidian = Tags.Items.OBSIDIANS;
         TagKey<Item> wool = ItemTags.WOOL;
         TagKey<Item> stick = Tags.Items.RODS_WOODEN;
         TagKey<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
         TagKey<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
-        TagKey<Item> pure_blood = ModTags.Items.PURE_BLOOD;
-        TagKey<Item> holy_water = ModTags.Items.HOLY_WATER;
-        TagKey<Item> heart = ModTags.Items.HEART;
+        TagKey<Item> pure_blood = ModItemTags.PURE_BLOOD;
+        TagKey<Item> holy_water = ModItemTags.HOLY_WATER;
+        TagKey<Item> heart = ModItemTags.HEART;
         TagKey<Item> leather = Tags.Items.LEATHERS;
         TagKey<Item> beds = ItemTags.BEDS;
 
@@ -281,8 +281,8 @@ public class RecipesProvider extends RecipeProvider {
         generateRecipes(output, ModBlockFamilies.DARK_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
         generateRecipes(output, ModBlockFamilies.PURPLE_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
 
-        planksFromLog(output, ModBlocks.DARK_SPRUCE_PLANKS.get(), ModTags.Items.DARK_SPRUCE_LOG, 4);
-        planksFromLog(output, ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModTags.Items.CURSED_SPRUCE_LOG, 4);
+        planksFromLog(output, ModBlocks.DARK_SPRUCE_PLANKS.get(), ModItemTags.DARK_SPRUCE_LOG, 4);
+        planksFromLog(output, ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModItemTags.CURSED_SPRUCE_LOG, 4);
         woodFromLogs(output, ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.DARK_SPRUCE_LOG.get());
         woodFromLogs(output, ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_LOG.get());
         woodFromLogs(output, ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
@@ -399,7 +399,7 @@ public class RecipesProvider extends RecipeProvider {
         AlchemyTableRecipeBuilder.builder(ModOils.GARLIC).plantOilIngredient().input(Ingredient.of(garlic)).save(output, new ResourceLocation(REFERENCE.MODID, "garlic_oil"));
         AlchemyTableRecipeBuilder.builder(ModOils.SPITFIRE).plantOilIngredient().input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE.get())).save(output, new ResourceLocation(REFERENCE.MODID, "spitfire_oil"));
         AlchemyTableRecipeBuilder.builder(ModOils.BLEEDING).plantOilIngredient().input(Ingredient.of(Items.AMETHYST_SHARD)).save(output, new ResourceLocation(REFERENCE.MODID, "bleeding_oil"));
-        AlchemyTableRecipeBuilder.builder(ModOils.VAMPIRE_KILLER).oilIngredient(ModOils.GARLIC).input(Ingredient.of(ModTags.Items.HOLY_WATER)).save(output, new ResourceLocation(REFERENCE.MODID, "vampire_killer_oil"));
+        AlchemyTableRecipeBuilder.builder(ModOils.VAMPIRE_KILLER).oilIngredient(ModOils.GARLIC).input(Ingredient.of(ModItemTags.HOLY_WATER)).save(output, new ResourceLocation(REFERENCE.MODID, "vampire_killer_oil"));
 
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));

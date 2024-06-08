@@ -4,7 +4,8 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.config.BalanceMobProps;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.entity.ai.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.ai.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.ai.goals.LookAtClosestVisibleGoal;
@@ -53,7 +54,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
     public static boolean spawnPredicateBaron(@NotNull EntityType<? extends VampireBaronEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
-        return world.getBiome(blockPos).is(ModTags.Biomes.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
+        return world.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
@@ -141,7 +142,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         //Only spawn on the surface
         if (i < 60) return false;
         BlockPos blockpos = new BlockPos((int) this.getX(), (int) this.getBoundingBox().minY, (int) this.getZ());
-        return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSED_EARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
+        return worldIn.getBlockState(blockpos.below()).is(ModBlockTags.CURSED_EARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
     @Override

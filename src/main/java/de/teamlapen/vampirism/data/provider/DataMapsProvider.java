@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.api.datamaps.*;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.datamaps.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.datamaps.ConverterEntry;
@@ -48,14 +49,14 @@ public class DataMapsProvider extends DataMapProvider {
     }
 
     private void gatherLiquidColors(Builder<Integer, Item> builder) {
-        builder.add(ModTags.Items.HOLY_WATER, 0x6666FF, false);
-        builder.add(ModTags.Items.HOLY_WATER_SPLASH, 0x6666FF, false);
+        builder.add(ModItemTags.HOLY_WATER, 0x6666FF, false);
+        builder.add(ModItemTags.HOLY_WATER_SPLASH, 0x6666FF, false);
         builder.add(ModItems.PURE_BLOOD_0, 0x7c0805, false);
         builder.add(ModItems.PURE_BLOOD_1, 0x7d0503, false);
         builder.add(ModItems.PURE_BLOOD_2, 0x830000, false);
         builder.add(ModItems.PURE_BLOOD_3, 0x7e0e0e, false);
         builder.add(ModItems.PURE_BLOOD_4, 0x8e0000, false);
-        builder.add(ModTags.Items.GARLIC, 0xBBBBBB, false);
+        builder.add(ModItemTags.GARLIC, 0xBBBBBB, false);
     }
 
     private void gatherFogDiffuserFuel(Builder<IFogDiffuserFuel, Item> builder) {

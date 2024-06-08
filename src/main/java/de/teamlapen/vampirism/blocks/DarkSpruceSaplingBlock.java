@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -29,7 +30,7 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        if (stack.is(ModTags.Items.PURE_BLOOD)) {
+        if (stack.is(ModItemTags.PURE_BLOOD)) {
             stack.shrink(1);
             pLevel.setBlockAndUpdate(pPos, ModBlocks.CURSED_SPRUCE_SAPLING.get().defaultBlockState());
             return ItemInteractionResult.sidedSuccess(pLevel.isClientSide);
@@ -42,7 +43,7 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
             pLevel.setBlock(pPos, pState.cycle(STAGE), 4);
         } else {
             var grower = this.darkTreeGrower;
-            if (pLevel.getBlockState(pPos.below()).is(ModTags.Blocks.CURSED_EARTH) && pRandom.nextFloat() < 0.3) {
+            if (pLevel.getBlockState(pPos.below()).is(ModBlockTags.CURSED_EARTH) && pRandom.nextFloat() < 0.3) {
                 grower = cursedTreeGrower;
             }
             grower.growTree(pLevel, pLevel.getChunkSource().getGenerator(), pPos, pState, pRandom);

@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
@@ -301,7 +301,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
-        List<Holder<Item>> contents = ((HolderSetLookup<Item>) BuiltInRegistries.ITEM.getOrCreateTag(ModTags.Items.ADVANCED_HUNTER_CROSSBOW_ARROWS)).getContents();
+        List<Holder<Item>> contents = ((HolderSetLookup<Item>) BuiltInRegistries.ITEM.getOrCreateTag(ModItemTags.ADVANCED_HUNTER_CROSSBOW_ARROWS)).getContents();
         this.getEntityData().set(SPECIAL_ARROW, UtilLib.getRandomElementOr(contents, () -> ModItems.CROSSBOW_ARROW_NORMAL).value());
         this.lootBookId = supporter.bookId();
         applyCustomisationItems(supporter);
