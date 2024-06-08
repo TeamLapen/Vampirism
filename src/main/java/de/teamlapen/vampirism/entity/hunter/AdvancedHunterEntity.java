@@ -5,14 +5,10 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
-import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -20,7 +16,6 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
@@ -72,7 +67,7 @@ import java.util.Optional;
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser, VampireBookLootProvider, IVampirismCrossbowUser {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, VampireBookLootProvider, IVampirismCrossbowUser {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
@@ -90,12 +85,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
     }
 
-    /**
-     * available actions for AI task & task
-     */
-    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final @NotNull EntityActionTier entitytier;
     /**
      * Overlay player texture and if slim (true)
      */
@@ -118,10 +107,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
 
         this.setDontDropEquipment();
-        entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRandom());
-        IEntityActionUser.applyAttributes(this);
-        this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
@@ -132,10 +117,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         nbt.putInt("type", getHunterType());
         nbt.putString("texture", getEntityData().get(TEXTURE));
         nbt.putString("name", getEntityData().get(NAME));
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
         nbt.putBoolean("attack", attack);
         if (lootBookId != null) {
             nbt.putString("lootBookId", lootBookId);
@@ -150,22 +131,9 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
-    }
-
-    @Override
     public void defendVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
-    }
-
-    @Override
-    public ActionHandlerEntity<?> getActionHandler() {
-        return entityActionHandler;
     }
 
     @Override
@@ -186,16 +154,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     @Override
@@ -281,9 +239,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             getEntityData().set(TYPE, tagCompund.getInt("type"));
             getEntityData().set(NAME, tagCompund.getString("name"));
             getEntityData().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
         }
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");

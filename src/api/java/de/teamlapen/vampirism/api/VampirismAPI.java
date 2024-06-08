@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.components.IContainedFluid;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
@@ -20,7 +18,6 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +39,6 @@ public class VampirismAPI {
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
-    private static IEntityActionManager entityActionManager;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
     private static ISettingsProvider settings;
     private static IBloodConversionRegistry bloodConversionRegistry;
@@ -54,10 +50,6 @@ public class VampirismAPI {
 
     public static IActionManager actionManager() {
         return actionManager;
-    }
-
-    public static IEntityActionManager entityActionManager() {
-        return entityActionManager;
     }
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -97,7 +89,7 @@ public class VampirismAPI {
      */
     @ApiStatus.Internal
     public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IEntityActionManager entityActionManagerIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn, IBloodConversionRegistry bloodConversionRegistryIn) {
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn, IBloodConversionRegistry bloodConversionRegistryIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
@@ -105,7 +97,6 @@ public class VampirismAPI {
         actionManager = actionManagerIn;
         skillManager = skillManagerIn;
         vampireVisionRegistry = vampireVisionRegistryIn;
-        entityActionManager = entityActionManagerIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
         settings = settingsIn;
         bloodConversionRegistry = bloodConversionRegistryIn;

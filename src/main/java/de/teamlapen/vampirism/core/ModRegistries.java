@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -29,7 +28,6 @@ public class ModRegistries {
 
     public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(VampirismRegistries.Keys.SKILL).callback(new SkillCallbacks()).sync(true).create();
     public static final Registry<IAction<?>> ACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.ACTION).sync(true).create();
-    public static final Registry<IEntityAction> ENTITY_ACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.ENTITY_ACTION).sync(true).create();
     public static final Registry<IMinionTask<?, ?>> MINION_TASKS = new RegistryBuilder<>(VampirismRegistries.Keys.MINION_TASK).sync(true).create();
     public static final Registry<IRefinement> REFINEMENTS  = new RegistryBuilder<>(VampirismRegistries.Keys.REFINEMENT).sync(true).create();
     public static final Registry<IRefinementSet> REFINEMENT_SETS = new RegistryBuilder<>(VampirismRegistries.Keys.REFINEMENT_SET).sync(true).create();
@@ -58,7 +56,6 @@ public class ModRegistries {
     static void registerRegistries(NewRegistryEvent event) {
         event.register(SKILLS);
         event.register(ACTIONS);
-        event.register(ENTITY_ACTIONS);
         event.register(MINION_TASKS);
         event.register(REFINEMENTS);
         event.register(REFINEMENT_SETS);

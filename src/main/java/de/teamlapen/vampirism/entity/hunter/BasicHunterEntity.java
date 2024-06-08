@@ -3,9 +3,6 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.EntityClassType;
-import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
@@ -16,7 +13,6 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
@@ -72,7 +68,7 @@ import java.util.Optional;
 /**
  * Exists in {@link BasicHunterEntity#MAX_LEVEL}+1 different levels
  */
-public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, IVampirismCrossbowUser, IEntityActionUser {
+public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, IVampirismCrossbowUser {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> WATCHED_ID = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicHunterEntity.class, EntityDataSerializers.INT);
@@ -93,12 +89,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private final int MAX_LEVEL = 3;
     /**
-     * available actions for AI task & task
-     */
-    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final @NotNull EntityActionTier entitytier;
-    /**
      * Player currently being trained otherwise null
      */
     @Nullable
@@ -115,10 +105,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.setDontDropEquipment();
 
-        entitytier = EntityActionTier.Medium;
-        entityclass = EntityClassType.getRandomClass(this.getRandom());
-        IEntityActionUser.applyAttributes(this);
-        this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
@@ -129,10 +115,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         nbt.putBoolean("crossbow", isHoldingCrossbow());
         nbt.putBoolean("attack", attack);
         nbt.putInt("type", getEntityTextureType());
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
     }
 
     @Override
@@ -156,9 +138,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                 randomDestination = this.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, randomDestination);
                 this.setHomeArea(randomDestination, 10);
             }
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
         }
     }
 
@@ -205,18 +184,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public ActionHandlerEntity<?> getActionHandler() {
-        return entityActionHandler;
-    }
-
-    @Override
     public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
     }
 
     @Override
@@ -225,11 +194,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     @NotNull
@@ -359,9 +323,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1);
         }
 
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
     }
 
     @Override

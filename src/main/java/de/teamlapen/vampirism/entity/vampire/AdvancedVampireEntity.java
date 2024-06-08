@@ -5,17 +5,13 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
-import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
@@ -63,7 +59,7 @@ import java.util.Optional;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser, VampireBookLootProvider {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, VampireBookLootProvider {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
@@ -78,12 +74,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     private final int MAX_LEVEL = 1;
-    /**
-     * available actions for AI task & task
-     */
-    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final @NotNull EntityActionTier entitytier;
     /**
      * Store the approximate count of entities that are following this advanced vampire.
      * Not guaranteed to be exact and not saved to nbt
@@ -109,10 +99,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
-        entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRandom());
-        IEntityActionUser.applyAttributes(this);
-        this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
@@ -123,10 +109,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         nbt.putInt("type", getEyeType());
         nbt.putString("texture", getEntityData().get(TEXTURE));
         nbt.putString("name", getEntityData().get(NAME));
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
         nbt.putBoolean("attack", this.attack);
         if (lootBookId != null) {
             nbt.putString("lootBookId", lootBookId);
@@ -151,19 +133,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public ActionHandlerEntity<?> getActionHandler() {
-        return entityActionHandler;
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
-    }
-
-    @Override
     public @NotNull Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
@@ -172,16 +141,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     @Override
@@ -289,9 +248,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             getEntityData().set(TYPE, tagCompund.getInt("type"));
             getEntityData().set(NAME, tagCompund.getString("name"));
             getEntityData().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
         }
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");

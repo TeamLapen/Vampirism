@@ -4,10 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
-import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
@@ -21,7 +18,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.IEntityFollower;
-import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -67,7 +63,7 @@ import org.jetbrains.annotations.Nullable;
  * Basic vampire mob.
  * Follows nearby advanced vampire
  */
-public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser, IEntityFollower {
+public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityFollower {
 
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(BasicVampireEntity.class, EntityDataSerializers.INT);
@@ -86,9 +82,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * available actions for AI task & task
      */
-    private final @NotNull ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final @NotNull EntityActionTier entitytier;
     private int bloodtimer = 100;
     private @Nullable IEntityLeader advancedLeader = null;
     private int angryTimer = 0;
@@ -102,10 +95,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
-        entitytier = EntityActionTier.Medium;
-        entityclass = EntityClassType.getRandomClass(this.getRandom());
-        IEntityActionUser.applyAttributes(this);
-        this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
     }
 
@@ -115,10 +104,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         nbt.putInt("level", getEntityLevel());
         nbt.putInt("type", getEntityTextureType());
         nbt.putBoolean("attack", this.attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
-        if (this.entityActionHandler != null) {
-            this.entityActionHandler.write(nbt);
-        }
     }
 
     @Override
@@ -145,9 +130,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 onEffectRemoved(fireResistance);
                 this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
         }
     }
 
@@ -197,11 +179,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     }
 
-    @Override
-    public ActionHandlerEntity<?> getActionHandler() {
-        return entityActionHandler;
-    }
-
     /**
      * @return The advanced vampire this entity is following or null if none
      */
@@ -242,21 +219,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
     public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
             BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     @Override
@@ -374,9 +341,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if (tagCompund.contains("type")) {
             int t = tagCompund.getInt("type");
             getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1);
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
         }
     }
 

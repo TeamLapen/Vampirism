@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
@@ -29,7 +28,6 @@ public class VampirismRegistries {
     // for registry access in the api
     public static final Supplier<Registry<ISkill<?>>> SKILL = supplyRegistry(Keys.SKILL);
     public static final Supplier<Registry<IAction<?>>> ACTION = supplyRegistry(Keys.ACTION);
-    public static final Supplier<Registry<IEntityAction>> ENTITY_ACTION = supplyRegistry(Keys.ENTITY_ACTION);
     public static final Supplier<Registry<IMinionTask<?, ?>>> MINION_TASK = supplyRegistry(Keys.MINION_TASK);
     public static final Supplier<Registry<IRefinement>> REFINEMENT = supplyRegistry(Keys.REFINEMENT);
     public static final Supplier<Registry<IRefinementSet>> REFINEMENT_SET = supplyRegistry(Keys.REFINEMENT_SET);
@@ -46,7 +44,6 @@ public class VampirismRegistries {
         // builtin registries
         public static final ResourceKey<Registry<ISkill<?>>> SKILL = registryKey("skills");
         public static final ResourceKey<Registry<IAction<?>>> ACTION = registryKey("actions");
-        public static final ResourceKey<Registry<IEntityAction>> ENTITY_ACTION = registryKey("entityactions");
         public static final ResourceKey<Registry<IMinionTask<?, ?>>> MINION_TASK = registryKey("miniontasks");
         public static final ResourceKey<Registry<IRefinement>> REFINEMENT = registryKey("refinement");
         public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET = registryKey("refinement_set");

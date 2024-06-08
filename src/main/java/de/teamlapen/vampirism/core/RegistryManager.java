@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.data.PackRepositories;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -12,7 +10,6 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
@@ -58,7 +55,6 @@ public class RegistryManager {
         ModVillage.register(eventBus);
         VampireActions.register(eventBus);
         HunterActions.register(eventBus);
-        EntityActions.register(eventBus);
         MinionTasks.register(eventBus);
         LordActions.register(eventBus);
         LordSkills.register(eventBus);

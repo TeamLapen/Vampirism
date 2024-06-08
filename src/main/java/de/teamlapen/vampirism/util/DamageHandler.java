@@ -2,22 +2,17 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.entity.actions.IActionHandlerEntity;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.world.LevelDamage;
 import de.teamlapen.vampirism.world.ModDamageSources;
-import net.minecraft.core.Holder;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
@@ -149,11 +144,6 @@ public class DamageHandler {
             IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get(player).getActionHandler();
             actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE);
             actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY);
-        } else if (vampire && entity instanceof IEntityActionUser) {
-            IActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.ENTITY_INVISIBLE.get())) {
-                h.deactivateAction();
-            }
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {

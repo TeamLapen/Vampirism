@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -46,10 +45,6 @@ public class RegUtil {
 
     public static ResourceLocation id(@NotNull IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.getKey(minionTask);
-    }
-
-    public static ResourceLocation id(@NotNull IEntityAction entityAction) {
-        return ModRegistries.ENTITY_ACTIONS.getKey(entityAction);
     }
 
     public static ResourceLocation id(@NotNull IRefinement refinement) {
@@ -112,10 +107,6 @@ public class RegUtil {
         return ModRegistries.MINION_TASKS.containsValue(minionTask);
     }
 
-    public static boolean has(@NotNull IEntityAction entityAction) {
-        return ModRegistries.ENTITY_ACTIONS.containsValue(entityAction);
-    }
-
     public static boolean has(@NotNull IRefinement refinement) {
         return ModRegistries.REFINEMENTS.containsValue(refinement);
     }
@@ -155,10 +146,6 @@ public class RegUtil {
 
     public static IMinionTask<?, ?> getMinionTask(@NotNull ResourceLocation id) {
         return ModRegistries.MINION_TASKS.get(id);
-    }
-
-    public static IEntityAction getEntityAction(@NotNull ResourceLocation id) {
-        return ModRegistries.ENTITY_ACTIONS.get(id);
     }
 
     public static IRefinement getRefinement(@NotNull ResourceLocation id) {
