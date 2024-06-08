@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -22,29 +23,29 @@ import java.util.function.Supplier;
  * Simple skill that unlocks one action
  */
 public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> implements IActionSkill<T> {
-    private final Supplier<? extends IAction<T>> action;
+    private final Holder<? extends IAction<T>> action;
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree) {
+    public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree) {
         this(action, skillTree, 2);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree) {
+    public ActionSkill(Holder<? extends IAction<T>> action, TagKey<ISkillTree> skillTree) {
         this(action, skillTree, 2);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost) {
+    public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost) {
         this(action, skillTree, skillPointCost, false);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost) {
+    public ActionSkill(Holder<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost) {
         this(action, skillTree, skillPointCost, false);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, boolean customDescription) {
         this(action, skillTree,2, customDescription);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, boolean customDescription) {
         this(action, skillTree,2, customDescription);
     }
 
@@ -52,15 +53,15 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
      * @param action            The corresponding action
      * @param customDescription If false a generic "unlocks action" string is used
      */
-    public ActionSkill(Supplier<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
         this(action, Either.left(skillTree), skillPointCost, customDescription);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, int skillPointCost, boolean customDescription) {
         this(action, Either.right(skillTree), skillPointCost, customDescription);
     }
 
-    public ActionSkill(Supplier<? extends IAction<T>> action, Either<ResourceKey<ISkillTree>,TagKey<ISkillTree>> skillTree, int skillPointCost, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, Either<ResourceKey<ISkillTree>,TagKey<ISkillTree>> skillTree, int skillPointCost, boolean customDescription) {
         super(skillTree, skillPointCost, customDescription);
         this.action = action;
         if (!customDescription) {
@@ -69,32 +70,42 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     public ResourceLocation getActionID() {
-        return RegUtil.id(action.get());
+        return this.action.unwrapKey().map(ResourceKey::location).orElseThrow();
     }
 
+    @Override
     public IAction<T> action() {
-        return action.get();
+        return this.action.value();
+    }
+
+    @Override
+    public Holder<? extends IAction<T>> actionHolder() {
+        return this.action;
     }
 
     @NotNull
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
-        return action.get().getFaction();
+        return this.action.value().getFaction();
     }
 
     @Override
     public MutableComponent getName() {
-        return action.get().getName();
+        return this.action.value().getName();
     }
 
     @Override
     public String getTranslationKey() {
-        return action.get().getTranslationKey();
+        return this.action.value().getTranslationKey();
     }
 
     @Override
     protected void getActions(@NotNull Collection<IAction<T>> list) {
-        list.add(action.get());
+        list.add(this.action.value());
     }
 
+    @Override
+    protected void collectActions(Collection<Holder<? extends IAction<T>>> list) {
+        list.add(this.action);
+    }
 }

@@ -28,7 +28,6 @@ public class ModCommands {
 
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", () -> ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgument.Info()));
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> SKILL = COMMAND_ARGUMENT_TYPES.register("skill", () -> ArgumentTypeInfos.registerByClass(SkillArgument.class, SingletonArgumentInfo.contextFree(SkillArgument::skills)));
-    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> ACTION = COMMAND_ARGUMENT_TYPES.register("action", () -> ArgumentTypeInfos.registerByClass(ActionArgument.class, SingletonArgumentInfo.contextFree(ActionArgument::actions)));
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> MINION_ID = COMMAND_ARGUMENT_TYPES.register("minion_id", () -> ArgumentTypeInfos.registerByClass(MinionArgument.class, new MinionArgument.Info()));
@@ -53,7 +52,7 @@ public class ModCommands {
         for (String s : vampirism) {
             dispatcher.register(
                     LiteralArgumentBuilder.<CommandSourceStack>literal(s)
-                            .then(BindActionCommand.register())
+                            .then(BindActionCommand.register(buildContext))
                             .then(CurrentDimensionCommand.register())
                             .then(EyeCommand.register())
                             .then(FangCommand.register())

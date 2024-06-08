@@ -30,9 +30,11 @@ import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -42,6 +44,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 import static de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket.*;
@@ -200,11 +203,10 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(context.player()).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg)));
     }
 
-    public static void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
+    public static <T extends IFactionPlayer<T>> void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
-            factionPlayerOpt.ifPresent(factionPlayer -> {
+            FactionPlayerHandler.<T>getCurrentFactionPlayer(player).ifPresent(factionPlayer -> {
                 IAction.ActivationContext activationContext = msg.target() != null ? msg.target().map(entityId -> {
                     Entity e = player.getCommandSenderWorld().getEntity(entityId);
                     if (e == null) {
@@ -213,10 +215,11 @@ public class ServerPayloadHandler {
                     return new ActionHandler.ActivationContext(e);
                 }, ActionHandler.ActivationContext::new) : new ActionHandler.ActivationContext();
 
-                IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
-                IAction action = RegUtil.getAction(msg.actionId());
+                IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
+                Holder<IAction<?>> action = msg.action();
                 if (action != null) {
-                    IAction.PERM r = actionHandler.toggleAction(action, activationContext);
+                    @SuppressWarnings("unchecked")
+                    IAction.PERM r = actionHandler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
                     switch (r) {
                         case NOT_UNLOCKED -> player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
                         case DISABLED -> player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
@@ -227,8 +230,6 @@ public class ServerPayloadHandler {
                             //Everything alright
                         }
                     }
-                } else {
-                    LOGGER.error("Failed to find action with id {}", msg.actionId());
                 }
             });
         });

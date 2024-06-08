@@ -4,7 +4,9 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -189,5 +191,15 @@ public class RegUtil {
 
     public static Holder<ISkillTree> getSkillTree(Level level, String asString) {
         return level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE).getHolderOrThrow(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE,new ResourceLocation(asString)));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFactionPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
+        return (Holder<IAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFactionPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
+        return (Holder<ILastingAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
     }
 }

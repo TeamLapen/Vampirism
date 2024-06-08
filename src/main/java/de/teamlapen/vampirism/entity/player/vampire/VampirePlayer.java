@@ -237,7 +237,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        if (getActionHandler().isActionActive(VampireActions.BAT.get())) {
+        if (getActionHandler().isActionActive(VampireActions.BAT)) {
             LOGGER.warn("Cannot bite in bat mode");
             return;
         }
@@ -630,7 +630,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
-        if (actionHandler.isActionActive(VampireActions.BAT.get()) && src.getDirectEntity() instanceof Projectile) {
+        if (actionHandler.isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -664,7 +664,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.deactivateAction(VampireActions.HALF_INVULNERABLE.get());
+                    this.actionHandler.deactivateAction(VampireActions.HALF_INVULNERABLE);
                 }
             }
         }
@@ -680,7 +680,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             if (victim instanceof Player) {
                 bonus *= 2;
             }
-            this.getActionHandler().extendActionTimer(VampireActions.VAMPIRE_RAGE.get(), bonus);
+            this.getActionHandler().extendActionTimer(VampireActions.VAMPIRE_RAGE, bonus);
         }
     }
 

@@ -71,7 +71,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
 
     @Override
     public @NotNull Optional<T> getPlayerCapability(@NotNull Player player) {
-        return Optional.ofNullable(player.getData(playerCapabilitySupplier.get()));
+        return Optional.of(player.getData(playerCapabilitySupplier.get()));
     }
 
     @Override

@@ -21,6 +21,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -135,7 +136,7 @@ public class ModKeys {
             LocalPlayer player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator()) {
                 VampirePlayer vampire = VampirePlayer.get(player);
-                if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT.get())) {
+                if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT)) {
                     if (mouseOver instanceof EntityHitResult) {
                         VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
                     } else if (mouseOver instanceof BlockHitResult) {
@@ -198,14 +199,15 @@ public class ModKeys {
     /**
      * Try to toggle the given action
      **/
-    private void toggleBoundAction(@NotNull IFactionPlayer<?> player, @Nullable IAction<?> action) {
+    private void toggleBoundAction(@NotNull IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
         if (action == null) {
             player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
-            if (action.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
-                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", action.getFaction().get().getName()), true);
+            IAction<?> value = action.value();
+            if (value.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
+                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", value.getFaction().get().getName()), true);
             } else {
-                VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(action), Minecraft.getInstance().hitResult));
+                VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }
         }
     }

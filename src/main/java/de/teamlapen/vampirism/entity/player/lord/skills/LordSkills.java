@@ -16,8 +16,8 @@ public class LordSkills {
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(VampirismRegistries.Keys.SKILL, REFERENCE.MODID);
 
 
-    public static final DeferredHolder<ISkill<?>, ISkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill<>(LordActions.LORD_SPEED::get, ModTags.SkillTrees.LORD, 1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<?>> LORD_ATTACK_SPEED = SKILLS.register("lord_attack_speed", () -> new ActionSkill<>(LordActions.LORD_ATTACK_SPEED::get, ModTags.SkillTrees.LORD, 1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill(LordActions.LORD_SPEED, ModTags.SkillTrees.LORD, 1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<?>> LORD_ATTACK_SPEED = SKILLS.register("lord_attack_speed", () -> new ActionSkill(LordActions.LORD_ATTACK_SPEED, ModTags.SkillTrees.LORD, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<?>> MINION_RECOVERY = SKILLS.register("minion_recovery", () -> new SimpleLordSkill<>(2, true));
 
 

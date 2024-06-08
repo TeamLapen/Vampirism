@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
@@ -27,11 +28,13 @@ import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,13 +75,13 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static @NotNull Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer(@NotNull Player player) {
+    public static <T extends IFactionPlayer<T>> @NotNull Optional<T> getCurrentFactionPlayer(@NotNull Player player) {
         return get(player).getCurrentFactionPlayer();
     }
 
     private final Player player;
     @NotNull
-    private final Int2ObjectMap<IAction<?>> boundActions = new Int2ObjectArrayMap<>();
+    private final Int2ObjectMap<Holder<IAction<?>>> boundActions = new Int2ObjectArrayMap<>();
     private @Nullable IPlayableFaction<?> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
@@ -114,7 +117,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
      * @return action if bound
      */
     @Nullable
-    public IAction<?> getBoundAction(int id) {
+    public Holder<IAction<?>> getBoundAction(int id) {
         return this.boundActions.get(id);
     }
 
@@ -125,14 +128,14 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     @Nullable
     @Override
-    public IPlayableFaction<?> getCurrentFaction() {
-        return currentFaction;
+    public <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction() {
+        return (IPlayableFaction<T>) currentFaction;
     }
 
     @NotNull
     @Override
-    public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player);
+    public <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer() {
+        return currentFaction == null ? Optional.empty() : (Optional<T>) currentFaction.getPlayerCapability(player);
     }
 
     @Override
@@ -260,14 +263,14 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         });
     }
 
-    public void setBoundAction(int id, @Nullable IAction<?> boundAction, boolean sync, boolean notify) {
+    public void setBoundAction(int id, @Nullable Holder<IAction<?>> boundAction, boolean sync, boolean notify) {
         if (boundAction == null) {
             this.boundActions.remove(id);
         } else {
             this.boundActions.put(id, boundAction);
         }
         if (notify) {
-            player.displayClientMessage(Component.translatable("text.vampirism.actions.bind_action", boundAction != null ? boundAction.getName() : "none", id), true);
+            player.displayClientMessage(Component.translatable("text.vampirism.actions.bind_action", boundAction != null ? boundAction.value().getName() : "none", id), true);
         }
         if (sync) {
             this.sync(false);
@@ -398,12 +401,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
-            IAction<?> action = RegUtil.getAction(new ResourceLocation(bounds.getString(s)));
-            if (action == null) {
-                LOGGER.warn("Cannot find bound action {}", bounds.getString(s));
-            } else {
-                this.boundActions.put(id, action);
-            }
+            ModRegistries.ACTIONS.getHolder(new ResourceLocation(bounds.getString(s))).ifPresentOrElse(h -> this.boundActions.put(id, h), () -> LOGGER.warn("Cannot find bound action {}", bounds.getString(s)));
         }
     }
 
@@ -485,8 +483,10 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     private void writeBoundActions(@NotNull CompoundTag nbt) {
         CompoundTag bounds = new CompoundTag();
-        for (Int2ObjectMap.Entry<IAction<?>> entry : this.boundActions.int2ObjectEntrySet()) {
-            bounds.putString(String.valueOf(entry.getIntKey()), RegUtil.id(entry.getValue()).toString());
+        for (Int2ObjectMap.Entry<Holder<IAction<?>>> entry : this.boundActions.int2ObjectEntrySet()) {
+            entry.getValue().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> {
+                bounds.putString(String.valueOf(entry.getIntKey()), id);
+            });
         }
         nbt.put("bound_actions", bounds);
     }

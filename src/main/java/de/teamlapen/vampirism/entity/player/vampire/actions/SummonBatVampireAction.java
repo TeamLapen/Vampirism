@@ -42,7 +42,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(@NotNull IVampirePlayer player) {
-        return player.getActionHandler().isActionActive(VampireActions.BAT.get()) || player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
+        return player.getActionHandler().isActionActive(VampireActions.BAT) || player.getSkillHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS.get());
     }
 
 

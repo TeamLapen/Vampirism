@@ -58,7 +58,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         return !vampire.isGettingSundamage(player.level())
                 && ModItems.UMBRELLA.asItem() != player.getMainHandItem().getItem()
                 && vampire.isGettingGarlicDamage(player.level()) == EnumStrength.NONE
-                && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())
+                && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)
                 && !player.isInWater()
                 && !VampirismConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())
                 && (player.getVehicle() == null);

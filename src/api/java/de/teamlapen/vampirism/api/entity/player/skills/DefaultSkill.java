@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -46,7 +47,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     @Override
     public final void onDisable(@NotNull T player) {
         removeAttributesModifiersFromEntity(player.asEntity());
-        player.getActionHandler().relockActions(getActions());
+        player.getActionHandler().relockActionHolder(getActionHolder());
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             onDisabled(player);
         } else {
@@ -58,7 +59,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     public final void onEnable(@NotNull T player) {
         applyAttributesModifiersToEntity(player.asEntity());
 
-        player.getActionHandler().unlockActions(getActions());
+        player.getActionHandler().unlockActionHolder(getActionHolder());
         if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
             onEnabled(player);
         } else {
@@ -86,6 +87,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
      * Add actions that should be added to the list
      */
     protected void getActions(Collection<IAction<T>> list) {
+
+    }
+
+    /**
+     * Add actions that should be added to the list
+     */
+    protected void collectActions(Collection<Holder<? extends IAction<T>>> list) {
 
     }
 
@@ -120,6 +128,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
                 throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction().map(Object::toString).orElse(null) + " for skill of faction" + this.getFaction().map(Object::toString).orElse("all"));
             }
         }));
+        return collection;
+    }
+
+    public @NotNull Collection<Holder<? extends IAction<T>>> getActionHolder() {
+        Collection<Holder<? extends IAction<T>>> collection = new ArrayList<>();
+        collectActions(collection);
+        Preconditions.checkState(collection.stream().map(Holder::value).allMatch(h -> h.getFaction().isEmpty() || h.getFaction().get() == getFaction().orElse(null)), "Can't register action of faction for skill of faction");
         return collection;
     }
 

@@ -32,13 +32,13 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      * @return The currently active faction. Can be null
      */
     @Nullable
-    IPlayableFaction<?> getCurrentFaction();
+    <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
      */
     @NotNull
-    Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer();
+    <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer();
 
     /**
      * If no faction is active this returns 0.

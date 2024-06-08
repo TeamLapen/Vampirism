@@ -3,21 +3,31 @@ package de.teamlapen.vampirism.api.event;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
-public abstract class ActionEvent extends Event {
+public abstract class ActionEvent<T extends IFactionPlayer<T>, Z extends IAction<T>> extends Event {
 
     @NotNull
-    private final IFactionPlayer<?> factionPlayer;
+    private final T factionPlayer;
     @NotNull
-    private final IAction<?> action;
+    private final Holder<Z> action;
 
-    public ActionEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action) {
+    @ApiStatus.Internal
+    public ActionEvent(@NotNull T factionPlayer, @NotNull Holder<Z> action) {
         this.factionPlayer = factionPlayer;
         this.action = action;
+    }
+
+    @Deprecated(forRemoval = true)
+    public ActionEvent(@NotNull T factionPlayer, @NotNull Z action) {
+        this.factionPlayer = factionPlayer;
+        this.action = RegUtil.holder(action);
     }
 
     /**
@@ -29,23 +39,38 @@ public abstract class ActionEvent extends Event {
 
     /**
      * @return The action the event is firing for.
+     * @deprecated Use {@link #action()} instead
      */
-    public @NotNull IAction<?> getAction() {
+    @Deprecated
+    public @NotNull Z getAction() {
+        return this.action.value();
+    }
+
+    /**
+     * @return The action the event is firing for.
+     */
+    public @NotNull Holder<Z> action() {
         return this.action;
     }
 
     /**
      * Posted before an action fires. Use this to modify the cooldown or duration of action, or to prevent the action from activating.
      */
-    public static class ActionActivatedEvent extends ActionEvent implements ICancellableEvent {
+    public static class ActionActivatedEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, IAction<T>> implements ICancellableEvent {
 
         private int cooldown;
         private int duration;
 
-        public ActionActivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int cooldown, int duration) {
+        @ApiStatus.Internal
+        public ActionActivatedEvent(@NotNull T factionPlayer, @NotNull Holder<IAction<T>> action, int cooldown, int duration) {
             super(factionPlayer, action);
             this.cooldown = cooldown;
             this.duration = duration;
+        }
+
+        @Deprecated(forRemoval = true)
+        public ActionActivatedEvent(@NotNull T factionPlayer, @NotNull IAction<T> action, int cooldown, int duration) {
+            this(factionPlayer, RegUtil.holder(action), cooldown, duration);
         }
 
         /**
@@ -80,18 +105,24 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
      */
-    public static class ActionDeactivatedEvent extends ActionEvent {
+    public static class ActionDeactivatedEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
         private final int remainingDuration;
         private int cooldown;
         private boolean ignoreCooldown;
         private boolean fullCooldown;
 
-        public ActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+        @ApiStatus.Internal
+        public ActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
             this.cooldown = cooldown;
             this.ignoreCooldown = ignoreCooldown;
             this.fullCooldown = fullCooldown;
+        }
+
+        @Deprecated(forRemoval = true)
+        public ActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull ILastingAction<T> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+            this(factionPlayer, RegUtil.holder(action), remainingDuration, cooldown, ignoreCooldown, fullCooldown);
         }
 
         /**
@@ -147,18 +178,20 @@ public abstract class ActionEvent extends Event {
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction}.
      */
-    public static class ActionUpdateEvent extends ActionEvent {
+    public static class ActionUpdateEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
         private final int remainingDuration;
         private boolean deactivate;
         private boolean skipActionUpdate;
 
-        public ActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull ILastingAction<?> action, int remainingDuration) {
+        @ApiStatus.Internal
+        public ActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<ILastingAction<T>> action, int remainingDuration) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
         }
 
-        public @NotNull ILastingAction<?> getAction() {
-            return (ILastingAction<?>) super.getAction();
+        @Deprecated(forRemoval = true, since = "1.11")
+        public ActionUpdateEvent(@NotNull T factionPlayer, @NotNull ILastingAction<T> action, int remainingDuration) {
+            this(factionPlayer, RegUtil.holder(action), remainingDuration);
         }
 
         /**

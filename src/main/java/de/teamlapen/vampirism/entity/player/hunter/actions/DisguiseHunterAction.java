@@ -26,7 +26,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
 
     @Override
     public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
-        return !player.getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER.get());
+        return !player.getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER);
     }
 
     @Override

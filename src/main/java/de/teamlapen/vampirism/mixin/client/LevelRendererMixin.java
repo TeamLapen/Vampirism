@@ -40,7 +40,7 @@ public class LevelRendererMixin {
 
     @WrapOperation(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z"))
     private boolean vampireGlowing(Minecraft instance, Entity pEntity, Operation<Boolean> original, @Share("renderVampireColor") LocalBooleanRef color) {
-        if (Helper.isHunter(instance.player) && pEntity.distanceToSqr(instance.player) < 256 && Helper.appearsAsVampire(instance.player, pEntity) && HunterPlayer.get(instance.player).getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER.get())) {
+        if (Helper.isHunter(instance.player) && pEntity.distanceToSqr(instance.player) < 256 && Helper.appearsAsVampire(instance.player, pEntity) && HunterPlayer.get(instance.player).getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER)) {
             if (instance.player.hasLineOfSight(pEntity)) {
                 color.set(true);
                 return true;

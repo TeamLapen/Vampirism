@@ -8,14 +8,15 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
-import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Handles actions for vampire players
@@ -39,8 +41,6 @@ import java.util.*;
  */
 public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandler<T>, ISyncableSaveData {
     private static final String NBT_KEY = "action_handler";
-    private final static Logger LOGGER = LogManager.getLogger(ActionHandler.class);
-
 
     /**
      * Holds any action in cooldown state. Maps it to the corresponding cooldown timer
@@ -49,31 +49,32 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      * <p>
      * Keys should be mutually exclusive with {@link #activeTimers}
      */
-    private final @NotNull Object2IntMap<ResourceLocation> cooldownTimers;
+    private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> cooldownTimers;
     /**
      * Holds any active action. Maps it to the corresponding action timer.
      * Actions represented by any key in this map have to be registered and must implement ILastingAction.
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
      * <p>
      * Keys should be mutually exclusive with {@link #cooldownTimers}
+     * @implNote The values must be of type {@link Holder<ILastingAction<T>>}
      */
-    private final @NotNull Object2IntMap<ResourceLocation> activeTimers;
+    private final @NotNull Object2IntMap<Holder<? extends ILastingAction<T>>> activeTimers;
     /**
      * Stores the expected cooldown of an action after it was activated.
      * This is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)} as the cooldown might be modified before activation.
      * The values stored here are only changed when the cooldown is added, it is not decremented like the map for cooldown timers, but removed when the action's cooldown is over.
      */
-    private final @NotNull Object2IntMap<ResourceLocation> expectedCooldownTimes;
+    private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> expectedCooldownTimes;
     /**
      * Stores the expected duration of an action after it was activated.
      * This is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)} as the duration might be modified before activation.
      * The values stored here are only changed when the duration is added, it is not decremented like the map for duration timers, but removed when the action's duration is over.
      */
-    private final @NotNull Object2IntMap<ResourceLocation> expectedDurations;
+    private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> expectedDurations;
 
     private final T player;
 
-    private final List<IAction<T>> unlockedActions = new ArrayList<>();
+    private final List<Holder<? extends IAction<T>>> unlockedActions = new ArrayList<>();
 
     /**
      * If active/cooldown timers have changed and should be synced
@@ -91,71 +92,83 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     public void deactivateAllActions() {
-        for (ResourceLocation r : activeTimers.keySet()) {
-            @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(r);
-            assert action != null;
-            deactivateAction(action, false, true);
+        for (Holder<? extends ILastingAction<T>> r : activeTimers.keySet()) {
+            deactivateAction(r, false, true);
         }
         this.activeTimers.clear();
         dirty = true;
     }
 
     @Override
-    public void extendActionTimer(@NotNull ILastingAction<T> action, int duration) {
-        int i = activeTimers.getOrDefault(RegUtil.id(action), -1);
-        if (i > 0) {
-            activeTimers.put(RegUtil.id(action), i + duration);
-        }
+    public void extendActionTimer(@NotNull Holder<? extends ILastingAction<T>> action, int extension) {
+        this.activeTimers.computeIntIfPresent(action, (action1, duration) -> duration + extension);
     }
 
     @Override
     public @NotNull List<IAction<T>> getAvailableActions() {
-        ArrayList<IAction<T>> actions = new ArrayList<>();
-        for (IAction<T> action : unlockedActions) {
-            if (action.canUse(player) == IAction.PERM.ALLOWED) {
-                actions.add(action);
-            }
-        }
-
-        return actions;
+       return getAvailableActionsHolder().stream().map(Holder::value).collect(Collectors.toList());
     }
 
     @Override
-    public float getPercentageForAction(@NotNull IAction<T> action) {
-        ResourceLocation id = RegUtil.id(action);
-        if (activeTimers.containsKey(id)) {
-            return activeTimers.getInt(id) / ((float) expectedDurations.getInt(id));
+    public @NotNull List<Holder<? extends IAction<T>>> getAvailableActionsHolder() {
+        return this.unlockedActions.stream().filter(s -> s.value().canUse(this.player) == IAction.PERM.ALLOWED).toList();
+    }
+
+    @Override
+    public float getPercentageForAction(@NotNull Holder<? extends IAction<T>> action) {
+        if (activeTimers.containsKey(action)) {
+            return activeTimers.getInt(action) / ((float) expectedDurations.getInt(action));
         }
-        if (cooldownTimers.containsKey(id)) {
-            return -cooldownTimers.getInt(id) / (float) expectedCooldownTimes.getInt(id);
+        if (cooldownTimers.containsKey(action)) {
+            return -cooldownTimers.getInt(action) / (float) expectedCooldownTimes.getInt(action);
         }
         return 0f;
     }
 
     @Override
+    public float getCooldownPercentage(@NotNull Holder<? extends IAction<T>> action) {
+        if (cooldownTimers.containsKey(action)) {
+            return -cooldownTimers.getInt(action) / (float) expectedCooldownTimes.getInt(action);
+        }
+        return 0;
+    }
+
+    @Override
+    public float getDurationPercentage(@NotNull Holder<? extends ILastingAction<?>> action) {
+        if (activeTimers.containsKey(action)) {
+            return activeTimers.getInt(action) / ((float) expectedDurations.getInt(action));
+        }
+        return 0;
+    }
+
+    @Override
     public @NotNull ImmutableList<IAction<T>> getUnlockedActions() {
-        return ImmutableList.copyOf(unlockedActions);
+        return this.unlockedActions.stream().map(Holder::value).collect(ImmutableList.toImmutableList());
     }
 
     @Override
-    public boolean isActionActive(@NotNull ILastingAction<T> action) {
-        return activeTimers.containsKey(RegUtil.id(action));
+    public @NotNull List<Holder<? extends IAction<T>>> getUnlockedActionHolder() {
+        return ImmutableList.copyOf(this.unlockedActions);
     }
 
     @Override
-    public boolean isActionActive(ResourceLocation id) {
-        return activeTimers.containsKey(id);
+    public @NotNull List<Holder<? extends ILastingAction<T>>> getActiveActions() {
+        return ImmutableList.copyOf(this.activeTimers.keySet());
     }
 
     @Override
-    public boolean isActionOnCooldown(IAction<T> action) {
-        return cooldownTimers.containsKey(RegUtil.id(action));
+    public boolean isActionActive(@NotNull Holder<? extends ILastingAction<T>> action) {
+        return activeTimers.containsKey(action);
     }
 
     @Override
-    public boolean isActionUnlocked(IAction<T> action) {
-        return unlockedActions.contains(action);
+    public boolean isActionOnCooldown(@NotNull Holder<? extends IAction<T>> action) {
+        return cooldownTimers.containsKey(action);
+    }
+
+    @Override
+    public boolean isActionUnlocked(@NotNull Holder<? extends IAction<T>> action) {
+        return this.unlockedActions.contains(action);
     }
 
     @Override
@@ -166,7 +179,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         cooldownTimers.clear();
         expectedCooldownTimes.clear();
         expectedDurations.clear();
-        if (nbt.contains("actions_active")) loadTimerMapFromNBT(nbt.getCompound("actions_active"), activeTimers);
+        if (nbt.contains("actions_active")) //noinspection unchecked
+            loadTimerMapFromNBT(nbt.getCompound("actions_active"), (Object2IntMap<Holder<? extends IAction<T>>>)(Object) activeTimers);
         if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
         if (nbt.contains("actions_cooldown_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
         if (nbt.contains("actions_duration_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
@@ -177,14 +191,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      */
     public void onActionsReactivated() {
         if (!player.isRemote()) {
-            for (ResourceLocation id : activeTimers.keySet()) {
-                @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-                assert action != null;
-                action.onReActivated(player);
+            for (Holder<? extends ILastingAction<T>> holder : activeTimers.keySet()) {
+                holder.value().onReActivated(player);
             }
         }
-
     }
 
     /**
@@ -208,8 +218,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
          */
         if (nbt.contains("actions_active", Tag.TAG_COMPOUND)) {
             CompoundTag active = nbt.getCompound("actions_active");
-            List<ResourceLocation> toRemove = new ArrayList<>();
-            for (Object2IntMap.Entry<ResourceLocation> client_active : activeTimers.object2IntEntrySet()) {
+            List<Holder<? extends ILastingAction<T>>> toRemove = new ArrayList<>();
+            for (Object2IntMap.Entry<Holder<? extends ILastingAction<T>>> client_active : activeTimers.object2IntEntrySet()) {
                 String key = client_active.getKey().toString();
                 if (active.contains(key)) {
                     client_active.setValue(active.getInt(key));
@@ -218,21 +228,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     toRemove.add(client_active.getKey());
                 }
             }
-            toRemove.forEach(id -> {
-                @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-                deactivateAction(action);
-            });
+            toRemove.forEach(this::deactivateAction);
+
             for (String key : active.getAllKeys()) {
                 ResourceLocation id = new ResourceLocation(key);
-                @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-                if (action == null) {
-                    LOGGER.error("Action {} is not available client side", key);
-                } else {
-                    action.onActivatedClient(player);
-                    activeTimers.put(id, active.getInt(key));
-                }
+                //noinspection unchecked
+                ModRegistries.ACTIONS.getHolder(id).filter(s -> s.value() instanceof ILastingAction<?>).map(s -> ((Holder.Reference<ILastingAction<T>>) (Object) s)).ifPresent(action -> {
+                    action.value().onActivatedClient(this.player);
+                    this.activeTimers.put(action, active.getInt(key));
+                });
             }
 
         }
@@ -252,20 +256,19 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void relockActions(@NotNull Collection<IAction<T>> actions) {
-        unlockedActions.removeAll(actions);
-        for (IAction<T> action : actions) {
-            if (action instanceof ILastingAction<T> lastingAction) {
-                deactivateAction(lastingAction);
+    public void relockActionHolder(@NotNull Collection<Holder<? extends IAction<T>>> actions) {
+        unlockedActions.removeAll((Collection<Holder<IAction<T>>>) (Object) actions);
+        for (Holder<? extends IAction<T>> action : actions) {
+            if (action.value() instanceof ILastingAction<T>) {
+                //noinspection unchecked
+                deactivateAction((Holder<ILastingAction<T>>) action);
             }
         }
     }
 
     @Override
     public void resetTimers() {
-        for (ResourceLocation id : activeTimers.keySet()) {
-            @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
+        for (Holder<? extends ILastingAction<T>> action : activeTimers.keySet()) {
             deactivateAction(action, true);
         }
         activeTimers.clear();
@@ -276,21 +279,21 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void resetTimer(@NotNull IAction<T> action) {
-        ResourceLocation id = RegUtil.id(action);
-        if(action instanceof ILastingAction<T> lastingAction) {
-            deactivateAction(lastingAction, true);
+    public void resetTimer(@NotNull Holder<? extends IAction<T>> action) {
+        if (action.value() instanceof ILastingAction<T>) {
+            //noinspection unchecked
+            deactivateAction((Holder<ILastingAction<T>>) (Object) action, true);
         }
-        cooldownTimers.removeInt(id);
-        expectedCooldownTimes.removeInt(id);
-        dirty = true;
-
+        this.cooldownTimers.removeInt(action);
+        this.expectedCooldownTimes.removeInt(action);
+        this.dirty = true;
     }
 
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
-        tag.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
+        //noinspection unchecked
+        tag.put("actions_active", writeTimersToNBT((ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>>) (Object) activeTimers.object2IntEntrySet()));
         tag.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
         tag.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
         tag.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
@@ -305,39 +308,39 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      *
      */
     @Override
-    public IAction.PERM toggleAction(@NotNull IAction<T> action, IAction.ActivationContext context) {
-        ResourceLocation id = RegUtil.id(action);
-        if (activeTimers.containsKey(id)) {
-            deactivateAction((ILastingAction<T>) action);
+    public IAction.@NotNull PERM toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
+        if (activeTimers.containsKey(action)) {
+            deactivateAction((Holder<ILastingAction<T>>) (Object) action);
             dirty = true;
             return IAction.PERM.ALLOWED;
-        } else if (cooldownTimers.containsKey(id)) {
+        } else if (cooldownTimers.containsKey(action)) {
             return IAction.PERM.COOLDOWN;
         } else {
             if (this.player.asEntity().isSpectator()) return IAction.PERM.DISALLOWED;
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
 
-            IAction.PERM r = action.canUse(player);
+            IAction.PERM r = action.value().canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 /*
-                 * Only lasting actions have a cooldown, so regular actions will return a duration of -1.
+                 * Only lasting actions have a duration, so regular actions will return a duration of -1.
                  */
-                int duration = action instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
-                ActionEvent.ActionActivatedEvent activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.getCooldown(player), duration);
+                int duration = action.value() instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
+                ActionEvent.ActionActivatedEvent<T> activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.value().getCooldown(player), duration);
                 if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
-                if (action.onActivated(player, context)) {
-                    player.asEntity().awardStat(ModStats.ACTION_USED.get().get(action));
+                if (action.value().onActivated(player, context)) {
+                    player.asEntity().awardStat(ModStats.ACTION_USED.get().get(action.value()));
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
                     int cooldown = activationEvent.getCooldown();
-                    expectedCooldownTimes.put(id, cooldown);
-                    if (action instanceof ILastingAction) {
-                        expectedDurations.put(id, activationEvent.getDuration());
+                    expectedCooldownTimes.put(action, cooldown);
+                    if (action.value() instanceof ILastingAction) {
+                        expectedDurations.put(action, activationEvent.getDuration());
                         duration = activationEvent.getDuration();
-                        activeTimers.put(id, duration);
+                        //noinspection unchecked
+                        activeTimers.put((Holder<ILastingAction<T>>) (Object)action, duration);
                     } else {
-                        cooldownTimers.put(id, cooldown);
+                        cooldownTimers.put(action, cooldown);
                     }
                     dirty = true;
                 }
@@ -349,48 +352,43 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void deactivateAction(@NotNull ILastingAction<T> action) {
-        deactivateAction(action, false);
+    public void deactivateAction(Holder<? extends ILastingAction<T>> action) {
+        this.deactivateAction(action, false);
     }
 
-    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown) {
+    public void deactivateAction(@NotNull Holder<? extends ILastingAction<T>> action, boolean ignoreCooldown) {
         deactivateAction(action, false, false);
     }
 
-
-    public void deactivateAction(@NotNull ILastingAction<T> action, boolean ignoreCooldown, boolean fullCooldown) {
-        ResourceLocation id = RegUtil.id(action);
-        if (activeTimers.containsKey(id)) {
-            int leftTime = activeTimers.getInt(id);
-            int duration = expectedDurations.getInt(id);
-            var event = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, expectedCooldownTimes.getInt(id), ignoreCooldown, fullCooldown);
+    @Override
+    public void deactivateAction(@NotNull Holder<? extends ILastingAction<T>> action, boolean ignoreCooldown, boolean fullCooldown) {
+        if (activeTimers.containsKey(action)) {
+            int leftTime = activeTimers.getInt(action);
+            int duration = expectedDurations.getInt(action);
+            var event = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, expectedCooldownTimes.getInt(action), ignoreCooldown, fullCooldown);
             int cooldown = event.getCooldown();
-            if(!event.ignoreCooldown() && !cooldownTimers.containsKey(id)) {
+            if(!event.ignoreCooldown() && !cooldownTimers.containsKey(action)) {
                 if(!event.fullCooldown()) {
                     cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
-                    expectedCooldownTimes.put(id, cooldown);
+                    //noinspection unchecked
+                    expectedCooldownTimes.put((Holder<IAction<T>>) (Object) action, cooldown);
                 }
                 //Entries should to be at least 1
-                cooldownTimers.put(id, Math.max(cooldown, 1));
-                activeTimers.put(id, 1);
+                //noinspection unchecked
+                cooldownTimers.put((Holder<IAction<T>>) (Object) action, Math.max(cooldown, 1));
+                activeTimers.put(action, 1);
             }
-            activeTimers.removeInt(id);
-            expectedDurations.removeInt(id);
-            action.onDeactivated(player);
+            activeTimers.removeInt(action);
+            expectedDurations.removeInt(action);
+            action.value().onDeactivated(player);
             dirty = true;
         }
     }
 
-
     @Override
-    public void unlockActions(@NotNull Collection<IAction<T>> actions) {
-        for (IAction<T> action : actions) {
-            if (!RegUtil.has(action)) {
-                throw new ActionNotRegisteredException(action);
-            }
-        }
-        unlockedActions.addAll(actions);
+    public void unlockActionHolder(Collection<Holder<? extends IAction<T>>> actions) {
+        unlockedActions.addAll((Collection<? extends Holder<IAction<T>>>) (Object) actions);
     }
 
     /**
@@ -401,10 +399,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      */
     public boolean updateActions() {
         //First update cooldown timers so active actions that become deactivated are not ticked.
-        for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = cooldownTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
-            Object2IntMap.Entry<ResourceLocation> entry = it.next();
+        for (Iterator<Object2IntMap.Entry<Holder<? extends IAction<T>>>> it = cooldownTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
+            Object2IntMap.Entry<Holder<? extends IAction<T>>> entry = it.next();
             int value = entry.getIntValue();
-            player.asEntity().awardStat(ModStats.ACTION_COOLDOWN_TIME.get().get(RegUtil.getAction(entry.getKey())));
+            player.asEntity().awardStat(ModStats.ACTION_COOLDOWN_TIME.get().get(entry.getKey().value()));
             if (value <= 1) { //<= Just in case we have missed something
                 expectedCooldownTimes.removeInt(entry);
                 it.remove();
@@ -413,30 +411,26 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             }
         }
 
-        List<ResourceLocation> toRemove = new ArrayList<>();
-        for (Object2IntMap.Entry<ResourceLocation> entry : activeTimers.object2IntEntrySet()) {
+        List<Holder<? extends ILastingAction<T>>> toRemove = new ArrayList<>();
+        for (Object2IntMap.Entry<Holder<? extends ILastingAction<T>>> entry : activeTimers.object2IntEntrySet()) {
             int newtimer = entry.getIntValue() - 1;
-            ResourceLocation id = entry.getKey();
 
             if (newtimer == 0) {
-                toRemove.add(id);
+                toRemove.add(entry.getKey());
             } else {
-                @SuppressWarnings("unchecked")
-                ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-                ActionEvent.ActionUpdateEvent event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
-                if ((!event.shouldSkipActionUpdate() && action.onUpdate(player)) || event.shouldDeactivation()) {
+                Holder<? extends ILastingAction<T>> action = entry.getKey();
+                ActionEvent.ActionUpdateEvent<T> event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
+                if ((!event.shouldSkipActionUpdate() && action.value().onUpdate(player)) || event.shouldDeactivation()) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
-                    player.asEntity().awardStat(ModStats.ACTION_TIME.get().get(action));
+                    player.asEntity().awardStat(ModStats.ACTION_TIME.get().get(action.value()));
                     entry.setValue(newtimer);
                 }
             }
         }
-        toRemove.forEach(id -> {
-            @SuppressWarnings("unchecked")
-            ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
-            deactivateAction(action, true);
-            cooldownTimers.put(id, expectedCooldownTimes.getInt(id));
+        toRemove.forEach(holder -> {
+            deactivateAction(holder, true);
+            cooldownTimers.put(holder, expectedCooldownTimes.getInt(holder));
             dirty = true;
         });
         if (dirty) {
@@ -451,28 +445,29 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
         return serializeNBT(provider);
     }
 
-    private boolean isActionAllowedPermission(IAction<T> action) {
+    private boolean isActionAllowedPermission(Holder<? extends IAction<T>> action) {
         if (player.asEntity() instanceof ServerPlayer serverPlayer) {
-            return Permissions.ACTION.isAllowed(serverPlayer, action);
+            return Permissions.ACTION.isAllowed(serverPlayer, action.value());
         }
         return true;
     }
 
-    private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<ResourceLocation> map) {
+    private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<Holder<? extends IAction<T>>> map) {
         for (String key : nbt.getAllKeys()) {
             ResourceLocation id = new ResourceLocation(key);
-            if (RegUtil.getAction(id) == null) {
-                LOGGER.warn("Did not find action with key {}", key);
-            } else {
-                map.put(id, nbt.getInt(key));
-            }
+            ModRegistries.ACTIONS.getHolder(id).ifPresent(action -> {
+                //noinspection RedundantCast,unchecked
+                map.put((Holder<? extends IAction<T>>) (Object) action, nbt.getInt(key));
+            });
         }
     }
 
-    private @NotNull CompoundTag writeTimersToNBT(@NotNull ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
+    private @NotNull CompoundTag writeTimersToNBT(@NotNull ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>> set) {
         CompoundTag nbt = new CompoundTag();
-        for (Object2IntMap.Entry<ResourceLocation> entry : set) {
-            nbt.putInt(entry.getKey().toString(), entry.getIntValue());
+        for (Object2IntMap.Entry<Holder<? extends IAction<T>>> entry : set) {
+            entry.getKey().unwrapKey().ifPresent(key -> {
+                nbt.putInt(key.location().toString(), entry.getIntValue());
+            });
         }
         return nbt;
     }
@@ -480,19 +475,6 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public String nbtKey() {
         return NBT_KEY;
-    }
-
-    /**
-     * Is thrown if an unregistered action is used
-     */
-    public static class ActionNotRegisteredException extends RuntimeException {
-        public ActionNotRegisteredException(String name) {
-            super("Action " + name + " is not registered. You cannot use it otherwise");
-        }
-
-        public ActionNotRegisteredException(@NotNull IAction<?> action) {
-            this(action.toString());
-        }
     }
 
     public static class ActivationContext implements IAction.ActivationContext {

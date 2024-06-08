@@ -13,15 +13,19 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.ITotem;
+import io.netty.util.internal.logging.InternalLogLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@ApiStatus.Internal
 public class VampirismEventFactory {
 
     public static boolean fireVillagerCaptureEventPre(@NotNull ITotem totem, @NotNull List<Villager> villagerIn, boolean forced) {
@@ -80,19 +84,25 @@ public class VampirismEventFactory {
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
-    public static @NotNull ActionEvent.ActionActivatedEvent fireActionActivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int cooldown, int duration) {
-        ActionEvent.ActionActivatedEvent event = new ActionEvent.ActionActivatedEvent(factionPlayer, action, cooldown, duration);
-        NeoForge.EVENT_BUS.post(event);
-        return event;
-    }
-    public static ActionEvent.ActionDeactivatedEvent fireActionDeactivatedEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull IAction<?> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
-        ActionEvent.ActionDeactivatedEvent event = new ActionEvent.ActionDeactivatedEvent(factionPlayer, action, remainingDuration, cooldown, ignoreCooldown, fullCooldown);
+
+    @SuppressWarnings("unchecked")
+    @NotNull
+    public static <T extends IFactionPlayer<T>> ActionEvent.ActionActivatedEvent<T> fireActionActivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends IAction<T>> action, int cooldown, int duration) {
+        ActionEvent.ActionActivatedEvent<T> event = new ActionEvent.ActionActivatedEvent<>(factionPlayer, (Holder<IAction<T>>) action, cooldown, duration);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
 
-    public static ActionEvent.ActionUpdateEvent fireActionUpdateEvent(@NotNull IFactionPlayer<?> factionPlayer, @NotNull ILastingAction<?> action, int remainingDuration) {
-        ActionEvent.ActionUpdateEvent event = new ActionEvent.ActionUpdateEvent(factionPlayer, action, remainingDuration);
+    @SuppressWarnings("unchecked")
+    public static <T extends IFactionPlayer<T>> ActionEvent.ActionDeactivatedEvent<T> fireActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+        ActionEvent.ActionDeactivatedEvent<T> event = new ActionEvent.ActionDeactivatedEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration, cooldown, ignoreCooldown, fullCooldown);
+        NeoForge.EVENT_BUS.post(event);
+        return event;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFactionPlayer<T>> ActionEvent.ActionUpdateEvent<T> fireActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration) {
+        ActionEvent.ActionUpdateEvent<T> event = new ActionEvent.ActionUpdateEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }

@@ -16,6 +16,8 @@ import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -33,13 +35,13 @@ import java.util.stream.Stream;
 public class ClientConfigHelper {
 
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(TypeToken.getParameterized(List.class, IAction.class).getType(), new IActionListTypeAdapter())
+            .registerTypeAdapter(TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType(), new IActionListTypeAdapter())
             .registerTypeAdapter(TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType(), new EntryListTypeAdapter())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
             .create();
 
     @SuppressWarnings("unchecked")
-    private static final TypeToken<Map<ResourceLocation, List<IAction<?>>>> ACTION_TOKEN = (TypeToken<Map<ResourceLocation, List<IAction<?>>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, IAction.class).getType());
+    private static final TypeToken<Map<ResourceLocation, List<Holder<IAction<?>>>>> ACTION_TOKEN = (TypeToken<Map<ResourceLocation, List<Holder<IAction<?>>>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType());
     @SuppressWarnings("unchecked")
     private static final TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>> MINION_TASK_TOKEN = (TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType());
 
@@ -50,7 +52,7 @@ public class ClientConfigHelper {
     /**
      * Cache for the action order
      */
-    private static Map<ResourceLocation, List<IAction<?>>> ACTION_ORDER = new HashMap<>();
+    private static Map<ResourceLocation, List<Holder<IAction<?>>>> ACTION_ORDER = new HashMap<>();
     /**
      * Cache for the minion task order
      */
@@ -116,7 +118,7 @@ public class ClientConfigHelper {
      */
     @Deprecated
     @Nullable
-    public static List<IAction<?>> getActionOrder(@NotNull ResourceLocation id) {
+    public static List<Holder<IAction<?>>> getActionOrder(@NotNull ResourceLocation id) {
         return ACTION_ORDER.get(id);
     }
 
@@ -126,16 +128,16 @@ public class ClientConfigHelper {
      * @return a valid order for the given faction
      */
     @NotNull
-    public static List<IAction<?>> getActionOrder(@NotNull IPlayableFaction<?> faction) {
+    public static List<Holder<IAction<?>>> getActionOrder(@NotNull IPlayableFaction<?> faction) {
         return Objects.requireNonNullElseGet(ACTION_ORDER.get(faction.getID()), () -> {
-            List<IAction<?>> order = getDefaultActionOrder(faction);
+            List<Holder<IAction<?>>> order = getDefaultActionOrder(faction);
             saveActionOrder(faction.getID(), order);
             return order;
         });
     }
 
-    public static List<IAction<?>> getDefaultActionOrder(IPlayableFaction<?> faction) {
-        return RegUtil.values(ModRegistries.ACTIONS).stream().filter(action -> action.matchesFaction(faction)).collect(Collectors.toList());
+    public static List<Holder<IAction<?>>> getDefaultActionOrder(IPlayableFaction<?> faction) {
+        return ModRegistries.ACTIONS.holders().filter(s -> s.value().matchesFaction(faction)).collect(Collectors.toList());
     }
 
     /**
@@ -174,7 +176,7 @@ public class ClientConfigHelper {
      * @param id the ordering identifier (faction id)
      * @param actions the ordering
      */
-    public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull  List<IAction<?>> actions) {
+    public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull  List<Holder<IAction<?>>> actions) {
         ACTION_ORDER.put(id, actions);
         try {
             String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
@@ -201,28 +203,28 @@ public class ClientConfigHelper {
 
     }
 
-    private static final class IActionListTypeAdapter extends TypeAdapter<List<IAction<?>>> {
+    private static final class IActionListTypeAdapter extends TypeAdapter<List<Holder<IAction<?>>>> {
 
         @Override
-        public @NotNull List<IAction<?>> read(@NotNull JsonReader in) throws IOException {
-            List<IAction<?>> actions = new ArrayList<>();
+        public @NotNull List<Holder<IAction<?>>> read(@NotNull JsonReader in) throws IOException {
+            List<Holder<IAction<?>>> actions = new ArrayList<>();
             in.beginArray();
             while (in.hasNext()) {
-                IAction<?> action = RegUtil.getAction(new ResourceLocation(in.nextString()));
-                if (action != null) {
-                    actions.add(action);
-                }
+                ModRegistries.ACTIONS.getHolder(new ResourceLocation(in.nextString())).ifPresent(actions::add);
             }
             in.endArray();
             return actions;
         }
 
         @Override
-        public void write(@NotNull JsonWriter out, @Nullable List<IAction<?>> value) throws IOException {
+        public void write(@NotNull JsonWriter out, @Nullable List<Holder<IAction<?>>> value) throws IOException {
             out.beginArray();
             if (value != null) {
-                for (IAction<?> action : value) {
-                    out.value(RegUtil.id(action).toString());
+                for (Holder<IAction<?>> action : value) {
+                    ResourceLocation location = action.unwrapKey().map(ResourceKey::location).orElse(null);
+                    if (location != null) {
+                        out.value(location.toString());
+                    }
                 }
             }
             out.endArray();

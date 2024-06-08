@@ -17,20 +17,23 @@ import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualSwitchingRadialMenu<IAction<?>> {
+public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualSwitchingRadialMenu<Holder<IAction<?>>> {
 
-    private final IActionHandler<?> actionHandler;
+    private final IActionHandler<T> actionHandler;
     private final T player;
 
-    private SelectActionRadialScreen(T player, List<IAction<?>> actions, KeyMapping keyMapping) {
+    private SelectActionRadialScreen(T player, List<Holder<IAction<?>>> actions, KeyMapping keyMapping) {
         super(getRadialMenu(actions), keyMapping, SelectMinionTaskRadialScreen::show);
         this.actionHandler = player.getActionHandler();
         this.player = player;
@@ -40,14 +43,13 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
         show(ModKeys.ACTION);
     }
 
-    public static void show(KeyMapping keyMapping) {
-        IPlayableFaction<?> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction;
+    public static <T extends IFactionPlayer<T>> void show(KeyMapping keyMapping) {
+        IPlayableFaction<T> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction();
         if (faction != null) {
             faction.getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
-                List<IAction<?>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
+                List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (!actions.isEmpty()) {
-                    //noinspection rawtypes
-                    Minecraft.getInstance().setScreen(new SelectActionRadialScreen(player, actions, keyMapping));
+                    Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
                 } else {
                     Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_actions"), true);
                     Minecraft.getInstance().setScreen(null);
@@ -56,25 +58,26 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
         }
     }
 
-    private static RadialMenu<IAction<?>> getRadialMenu(List<IAction<?>> actions) {
+    private static RadialMenu<Holder<IAction<?>>> getRadialMenu(List<Holder<IAction<?>>> actions) {
         Player player = Minecraft.getInstance().player;
-        List<IRadialMenuSlot<IAction<?>>> parts = actions.stream().filter(s -> s.showInSelectAction(player)).map(a -> (IRadialMenuSlot<IAction<?>>)new RadialMenuSlot<IAction<?>>(a.getName(), a, Collections.emptyList())).toList();
+        List<IRadialMenuSlot<Holder<IAction<?>>>> parts = actions.stream().filter(s -> s.value().showInSelectAction(player)).map(a -> (IRadialMenuSlot<Holder<IAction<?>>>) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
-            VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(RegUtil.id(parts.get(i).primarySlotIcon()), Minecraft.getInstance().hitResult));
+            VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(parts.get(i).primarySlotIcon(), Minecraft.getInstance().hitResult));
         }, parts , SelectActionRadialScreen::drawActionPart,0);
     }
 
-    private static void drawActionPart(IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
-        ResourceLocation id = RegUtil.id(action);
-        ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+    private static void drawActionPart(Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+        var texture = action.unwrapKey().map(ResourceKey::location).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
         graphics.setColor(1,1,1,1);
         graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
-    public void drawSlice(IRadialMenuSlot<IAction<?>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        float actionPercentage = actionHandler.getPercentageForAction((IAction) slot.primarySlotIcon());
-        if (((IAction<T>)slot.primarySlotIcon()).canUse(this.player) != IAction.PERM.ALLOWED) {
+    public void drawSlice(IRadialMenuSlot<Holder<IAction<?>>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+        @SuppressWarnings("unchecked")
+        Holder<IAction<T>> iActionHolder = (Holder<IAction<T>>) (Object) slot.primarySlotIcon();
+        float actionPercentage = actionHandler.getPercentageForAction(iActionHolder);
+        if (iActionHolder.value().canUse(this.player) != IAction.PERM.ALLOWED) {
             actionPercentage = -1;
         }
         if (actionPercentage == 0) {

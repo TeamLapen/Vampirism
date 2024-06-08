@@ -2,7 +2,10 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,30 +14,29 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 /**
- * @param actionId the id of the action that was toggled
+ * @param action the id of the action that was toggled
  * @param target   The target the player was looking at when activating the action.
  */
-public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
+public record ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
     public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "toggle_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundToggleActionPacket> CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, ServerboundToggleActionPacket::actionId,
+            ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.ACTION), ServerboundToggleActionPacket::action,
             ByteBufCodecs.optional(ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> Optional.ofNullable(pkt.target),
             ServerboundToggleActionPacket::new
     );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private ServerboundToggleActionPacket(ResourceLocation action, Optional<Either<Integer, BlockPos>> target) {
+    private ServerboundToggleActionPacket(Holder<IAction<?>> action, Optional<Either<Integer, BlockPos>> target) {
         this(action, target.orElse(null));
     }
 
-    public static @NotNull ServerboundToggleActionPacket createFromRaytrace(ResourceLocation action, @Nullable HitResult traceResult) {
+    public static @NotNull ServerboundToggleActionPacket createFromRaytrace(Holder<IAction<?>> action, @Nullable HitResult traceResult) {
         if (traceResult != null) {
             if (traceResult.getType() == HitResult.Type.ENTITY) {
                 return new ServerboundToggleActionPacket(action, ((EntityHitResult) traceResult).getEntity().getId());
@@ -45,16 +47,16 @@ public record ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable
         return new ServerboundToggleActionPacket(action);
     }
 
-    public ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable Integer target) {
-        this(actionId, Either.left(target));
+    public ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Integer target) {
+        this(action, Either.left(target));
     }
 
-    public ServerboundToggleActionPacket(ResourceLocation actionId, @Nullable BlockPos target) {
-        this(actionId, Either.right(target));
+    public ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable BlockPos target) {
+        this(action, Either.right(target));
     }
 
-    public ServerboundToggleActionPacket(ResourceLocation actionId) {
-        this(actionId, (Either<Integer, BlockPos>) null);
+    public ServerboundToggleActionPacket(Holder<IAction<?>> action) {
+        this(action, (Either<Integer, BlockPos>) null);
     }
 
     @Override
