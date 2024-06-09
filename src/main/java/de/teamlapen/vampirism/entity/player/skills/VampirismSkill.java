@@ -2,12 +2,16 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.core.ModFactions;
+import de.teamlapen.vampirism.core.ModTasks;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.network.chat.Component;
@@ -106,6 +110,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             return Optional.of(VReference.HUNTER_FACTION);
         }
 
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return ModFactionTags.IS_HUNTER;
+        }
     }
 
     public static class HunterLordSkill extends VampirismSkill<IHunterPlayer> {
@@ -123,6 +131,10 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             return Optional.of(VReference.HUNTER_FACTION);
         }
 
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return ModFactionTags.IS_HUNTER;
+        }
     }
 
     /**
@@ -136,10 +148,15 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
 
         @NotNull
         @Override
+        @Deprecated
         public Optional<IPlayableFaction<?>> getFaction() {
             return Optional.of(VReference.VAMPIRE_FACTION);
         }
 
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return ModFactionTags.IS_VAMPIRE;
+        }
     }
 
     public static class VampireLordSkill extends VampirismSkill<IVampirePlayer> {
@@ -149,8 +166,14 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
 
         @NotNull
         @Override
+        @Deprecated
         public Optional<IPlayableFaction<?>> getFaction() {
             return Optional.of(VReference.VAMPIRE_FACTION);
+        }
+
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return ModFactionTags.IS_VAMPIRE;
         }
     }
 

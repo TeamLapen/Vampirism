@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
@@ -54,7 +55,7 @@ public class GarlicBlock extends CropBlock {
     public void entityInside(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             if (entity instanceof Player) {
-                VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entity).ifPresent(vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
+                ModFactions.VAMPIRE.get().getPlayerCapability((Player) entity).ifPresent(vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
             } else if (entity instanceof IVampire) {
                 DamageHandler.affectVampireGarlicDirect((IVampire) entity, EnumStrength.WEAK);
             }

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.*;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -43,7 +44,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public abstract class HunterCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IHunterCrossbow {
 
@@ -103,8 +103,8 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public @Nullable IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return  VReference.HUNTER_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return  ModFactions.HUNTER;
     }
 
     @NotNull

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.extensions.IPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -37,16 +38,11 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     @Nullable
     @Deprecated(forRemoval = true)
     default IFaction<?> getDisguisedAs() {
-        return getDisguise().getViewedFaction(null);
+        var holder = getDisguise().getViewedFaction(null);
+        return holder == null ? null : holder.value();
     }
 
     IDisguise getDisguise();
-
-    /**
-     * @return the faction this faction player belongs to
-     */
-    @NotNull
-    IPlayableFaction<T> getFaction();
 
     /**
      * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(IPlayableFaction)}
@@ -59,6 +55,9 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * @return Max level this player type can reach
      */
     int getMaxLevel();
+
+    @Override
+    @NotNull Holder<? extends IPlayableFaction<?>> getFaction();
 
     /**
      * Careful this selects all {@link LivingEntity}'s including etc. Items

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.tags.ModTaskTags;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
 import net.minecraft.client.gui.Font;
@@ -45,7 +46,7 @@ public class PageTaskItemStack extends PageItemStack {
             List<FormattedText> text = new ArrayList<>();
             Component newLine = Component.literal("\n");
             if (holder.is(ModTaskTags.HAS_FACTION)) {
-                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", Arrays.stream(VampirismAPI.factionRegistry().getFactions()).filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
+                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", ModRegistries.FACTIONS.stream().filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
             } else {
                 text.add(Component.translatable("text.vampirism.task.reward_obtain_all"));
             }

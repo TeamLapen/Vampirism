@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
@@ -19,5 +20,5 @@ public interface IFactionSlayerItem extends ItemLike {
     /**
      * @return Modify damage for this faction
      */
-    IFaction<?> getSlayedFaction();
+    Holder<? extends IFaction<?>> getSlayedFaction();
 }

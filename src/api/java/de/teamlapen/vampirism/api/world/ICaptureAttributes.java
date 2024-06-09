@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,13 +15,13 @@ public interface ICaptureAttributes {
      * @return currently attacking faction of the village
      */
     @Nullable
-    IFaction<?> getAttackingFaction();
+    Holder<? extends IFaction<?>> getAttackingFaction();
 
     /**
      * @return currently defending faction of the village
      */
     @Nullable
-    IFaction<?> getDefendingFaction();
+    Holder<? extends IFaction<?>> getDefendingFaction();
 
     /**
      * @return totem position

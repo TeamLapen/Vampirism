@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.entity.player.lord.skills;
 
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.core.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.entity.player.skills.VampirismSkill;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -22,5 +25,10 @@ public class SimpleLordSkill<T extends IFactionPlayer<T>> extends VampirismSkill
     @Override
     public @NotNull Optional<IPlayableFaction<?>> getFaction() {
         return Optional.empty();
+    }
+
+    @Override
+    public TagKey<? extends IFaction<?>> factions() {
+        return ModFactionTags.HAS_LORD_SKILLS;
     }
 }

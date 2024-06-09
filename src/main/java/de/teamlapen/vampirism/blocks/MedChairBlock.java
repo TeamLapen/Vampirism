@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
@@ -15,6 +17,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -92,18 +95,18 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return ItemInteractionResult.sidedSuccess(world.isClientSide);
     }
 
-    private boolean handleGarlicInjection(@NotNull Player player, @NotNull Level world, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
-        if (handler.canJoin(VReference.HUNTER_FACTION)) {
+    private boolean handleGarlicInjection(@NotNull Player player, @NotNull Level world, @NotNull IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
+        if (handler.canJoin(ModFactions.HUNTER)) {
             if (world.isClientSide) {
                 VampirismModClient.getINSTANCE().getOverlay().makeRenderFullColor(4, 30, 0xBBBBBBFF);
             } else {
-                handler.joinFaction(VReference.HUNTER_FACTION);
+                handler.joinFaction(ModFactions.HUNTER);
                 player.addEffect(new MobEffectInstance(ModEffects.POISON, 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
             if (!world.isClientSide) {
-                player.sendSystemMessage(Component.translatable("text.vampirism.med_chair_other_faction", currentFaction.getName()));
+                player.sendSystemMessage(Component.translatable("text.vampirism.med_chair_other_faction", currentFaction.value().getName()));
             }
         }
         return false;
@@ -111,7 +114,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
 
     private boolean handleInjections(@NotNull Player player, @NotNull Level world, @NotNull ItemStack stack, @NotNull BlockPos pos) {
         FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        IPlayableFaction<?> faction = handler.getCurrentFaction();
+        Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
 
         if (stack.getItem().equals(ModItems.INJECTION_GARLIC.get())) {
             return handleGarlicInjection(player, world, handler, faction);
@@ -122,12 +125,12 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return false;
     }
 
-    private boolean handleSanguinareInjection(@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable IPlayableFaction<?> currentFaction) {
-        if (VReference.VAMPIRE_FACTION.equals(currentFaction)) {
+    private boolean handleSanguinareInjection(@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
+        if (IFaction.is(ModFactions.VAMPIRE, currentFaction)) {
             player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), false);
             return false;
         }
-        if (VReference.HUNTER_FACTION.equals(currentFaction)) {
+        if (ModFactions.HUNTER.match(currentFaction)) {
             if (!level.isClientSide) {
                 player.openMenu(new SimpleMenuProvider(new MenuConstructor() {
                     @Override
@@ -139,7 +142,7 @@ public class MedChairBlock extends VampirismHorizontalBlock {
             return false;
         }
         if (currentFaction == null) {
-            if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
+            if (handler.canJoin(ModFactions.VAMPIRE)) {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
                     player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {

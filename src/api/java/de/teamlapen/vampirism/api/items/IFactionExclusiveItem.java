@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VampirismDataComponents;
 import de.teamlapen.vampirism.api.components.IAppliedOilContent;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -26,13 +27,13 @@ public interface IFactionExclusiveItem extends ItemLike {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
         ChatFormatting color = ChatFormatting.GRAY;
-        IFaction<?> faction = getExclusiveFaction(stack);
+        Holder<? extends IFaction<?>> faction = getExclusiveFaction(stack);
 
         if (faction != null) {
             if (player != null) {
-                color = VampirismAPI.factionRegistry().getFaction(player) == faction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+                color = IFaction.is(VampirismAPI.factionRegistry().getFactionHolder(player), faction) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
             }
-            tooltip.add(Component.literal(" ").append(faction.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
+            tooltip.add(Component.literal(" ").append(faction.value().getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
         }
     }
 
@@ -56,5 +57,5 @@ public interface IFactionExclusiveItem extends ItemLike {
      * @return The faction that can use this item or null if any
      */
     @Nullable
-    IFaction<?> getExclusiveFaction(@NotNull ItemStack stack);
+    Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack);
 }

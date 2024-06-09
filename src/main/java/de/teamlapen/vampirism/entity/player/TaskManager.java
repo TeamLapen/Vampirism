@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISavable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
@@ -51,7 +52,7 @@ public class TaskManager implements ITaskManager, ISavable {
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
 
     @NotNull
-    private final IPlayableFaction<?> faction;
+    private final Holder<? extends IPlayableFaction<?>> faction;
     @NotNull
     private final ServerPlayer player;
     @NotNull
@@ -63,7 +64,7 @@ public class TaskManager implements ITaskManager, ISavable {
 
     private final Registry<Task> registry;
 
-    public TaskManager(@NotNull ServerPlayer player, @NotNull IFactionPlayer<?> factionPlayer, @NotNull IPlayableFaction<?> faction) {
+    public TaskManager(@NotNull ServerPlayer player, @NotNull IFactionPlayer<?> factionPlayer, @NotNull Holder<? extends IPlayableFaction<?>> faction) {
         this.faction = faction;
         this.player = player;
         this.factionPlayer = factionPlayer;
@@ -446,7 +447,7 @@ public class TaskManager implements ITaskManager, ISavable {
     }
 
     private boolean matchesFaction(@NotNull Holder<Task> task) {
-        return !task.is(ModTaskTags.HAS_FACTION) || this.faction.getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(ModTaskTags.HAS_FACTION) || this.faction.value().getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

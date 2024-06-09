@@ -10,9 +10,12 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -33,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 
 public class FactionRegistry implements IFactionRegistry {
@@ -70,6 +74,12 @@ public class FactionRegistry implements IFactionRegistry {
     @Override
     @Nullable
     public IFaction<?> getFaction(Entity entity) {
+        Holder<? extends IFaction<?>> factionHolder = getFactionHolder(entity);
+        return factionHolder == null ? null : factionHolder.value();
+    }
+
+    @Override
+    public Holder<? extends IFaction<?>> getFactionHolder(Entity entity) {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
         } else if (entity instanceof Player) {
@@ -102,47 +112,31 @@ public class FactionRegistry implements IFactionRegistry {
         return playableFactions;
     }
 
+    @SuppressWarnings({"unchecked", "RedundantCast"})
+    @Override
+    public List<Holder<? extends IPlayableFaction<?>>> playableFactions() {
+        return ModRegistries.FACTIONS.holders().filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> ((Holder<? extends IPlayableFaction<?>>) (Object) s)).collect(Collectors.toList());
+    }
+
     @Override
     public Predicate<LivingEntity> getPredicate(@NotNull IFaction<?> thisFaction, boolean ignoreDisguise) {
 
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
+    public Predicate<LivingEntity> getPredicate(@NotNull Holder<? extends IFaction<?>> thisFaction, boolean ignoreDisguise) {
+        return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
+    }
+
+    @Override
+    public Predicate<LivingEntity> getPredicate(@NotNull Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction) {
+        var hash = Objects.hash(thisFaction.unwrapKey().orElseThrow(), player, mob, neutralPlayer, ignoreDisguise, otherFaction == null ? null : otherFaction.unwrapKey().orElseThrow());
+        return predicateMap.computeIfAbsent(hash, (k) -> new FactionPredicate.Builder(thisFaction).player().nonPlayer(mob).neutral(neutralPlayer).ignoreDisguise(ignoreDisguise).targetFaction(otherFaction).build());
+    }
+
     @Override
     public Predicate<LivingEntity> getPredicate(@NotNull IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
-        int key = 0;
-        if (otherFaction != null) {
-            int id = otherFaction.hashCode();
-            if (id > 63) {
-                LOGGER.warn("Faction id over 64, predicates won't work");
-            }
-            key |= ((id & 63) << 10);
-        }
-        if (player) {
-            key |= (1 << 9);
-        }
-        if (mob) {
-            key |= (1 << 8);
-        }
-        if (neutralPlayer) {
-            key |= (1 << 7);
-        }
-        if (ignoreDisguise) {
-            key |= (1 << 6);
-        }
-        int id = thisFaction.hashCode();
-        if (id > 64) {
-            LOGGER.warn("Faction id over 64, predicates won't work");
-        }
-        key |= id & 63;
-        Predicate<LivingEntity> predicate;
-        if (predicateMap.containsKey(key)) {
-            predicate = predicateMap.get(key);
-        } else {
-            predicate = new FactionPredicate(thisFaction, player, mob, neutralPlayer, ignoreDisguise, otherFaction);
-            predicateMap.put(key, predicate);
-        }
-        return predicate;
+        return getPredicate(RegUtil.holder(thisFaction), player, mob, neutralPlayer, ignoreDisguise, otherFaction == null ? null : RegUtil.holder(otherFaction));
     }
 
     @ThreadSafeAPI
@@ -285,6 +279,7 @@ public class FactionRegistry implements IFactionRegistry {
             return (IPlayableFactionBuilder<T>) super.color(color);
         }
 
+        @Deprecated
         @Override
         public IPlayableFactionBuilder<T> hostileTowardsNeutral() {
             return (IPlayableFactionBuilder<T>) super.hostileTowardsNeutral();

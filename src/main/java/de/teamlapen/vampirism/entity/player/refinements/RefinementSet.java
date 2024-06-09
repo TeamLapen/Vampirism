@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -92,8 +93,8 @@ public abstract class RefinementSet implements IRefinementSet {
 
         @NotNull
         @Override
-        public IFaction<?> getFaction() {
-            return VReference.VAMPIRE_FACTION;
+        public Holder<? extends IFaction<?>> getFaction() {
+            return ModFactions.VAMPIRE;
         }
     }
 }

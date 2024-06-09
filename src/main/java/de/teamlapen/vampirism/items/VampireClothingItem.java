@@ -2,13 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
-import de.teamlapen.vampirism.core.ModArmorMaterials;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.Holder;
@@ -54,10 +53,9 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
         return super.canEquip(stack, armorType, entity) && Helper.isVampire(entity);
     }
 
-    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.VAMPIRE_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactions.VAMPIRE;
     }
 
     @Override

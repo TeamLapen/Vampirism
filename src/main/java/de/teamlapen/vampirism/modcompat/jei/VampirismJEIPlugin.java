@@ -223,7 +223,7 @@ public class VampirismJEIPlugin implements IModPlugin {
                 .map(s -> (Holder<IApplicableOil> )(Object)s)
                 .flatMap(oil -> BuiltInRegistries.ITEM.stream()
                         .map(Item::getDefaultInstance)
-                        .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item) == VReference.HUNTER_FACTION))
+                        .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ModFactions.HUNTER.match(((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item))))
                         .filter(item -> oil.value().canBeApplied(item))
                         .map(stack -> new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, (oil.unwrapKey().get().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
     }

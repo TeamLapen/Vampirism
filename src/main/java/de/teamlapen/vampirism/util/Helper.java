@@ -16,9 +16,12 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.entity.factions.Faction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.items.StakeItem;
@@ -127,7 +130,7 @@ public class Helper {
     }
 
     public static boolean canBecomeVampire(@NotNull Player player) {
-        return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
+        return FactionPlayerHandler.get(player).canJoin(ModFactions.VAMPIRE);
     }
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
@@ -146,19 +149,19 @@ public class Helper {
      * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
      */
     public static boolean isVampire(Entity entity) {
-        return VReference.VAMPIRE_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.VAMPIRE, VampirismAPI.factionRegistry().getFactionHolder(entity));
     }
 
     public static boolean isHunter(Entity entity) {
-        return VReference.HUNTER_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.HUNTER, VampirismAPI.factionRegistry().getFactionHolder(entity));
     }
 
     public static boolean isHunter(@NotNull Player entity) {
-        return VReference.HUNTER_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
+        return IFaction.is(ModFactions.HUNTER, VampirismPlayerAttributes.get(entity).faction);
     }
 
     public static boolean isVampire(Player entity) {
-        return VReference.VAMPIRE_FACTION.equals(VampirismPlayerAttributes.get(entity).faction);
+        return IFaction.is(ModFactions.VAMPIRE, VampirismPlayerAttributes.get(entity).faction);
     }
 
     public static boolean appearsAsVampire(Entity entity, Entity viewer) {
@@ -170,11 +173,11 @@ public class Helper {
     }
 
     public static boolean appearsAsVampire(Player player, Entity viewer) {
-        return VReference.VAMPIRE_FACTION == viewedFaction(player, viewer);
+        return IFaction.is(ModFactions.VAMPIRE, viewedFaction(player, viewer));
     }
 
-    public static IPlayableFaction<?> viewedFaction(Player player, Entity viewer) {
-        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFaction(viewer))).orElse(null);
+    public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFactionHolder(viewer))).orElse(null);
     }
 
     /**
@@ -229,7 +232,7 @@ public class Helper {
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
     public static <T extends IFactionPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
-        IFaction<?> usingFaction = item.getExclusiveFaction(stack);
+        Holder<? extends IFaction<?>> usingFaction = item.getExclusiveFaction(stack);
         Holder<ISkill<?>> requiredSkill = item.requiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;

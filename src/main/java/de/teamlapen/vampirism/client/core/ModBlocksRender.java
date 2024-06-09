@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -57,8 +58,8 @@ public class ModBlocksRender {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
                 if (tile instanceof TotemBlockEntity) {
-                    IFaction<?> f = ((TotemBlockEntity) tile).getControllingFaction();
-                    if (f != null) return f.getColor();
+                    Holder<? extends IFaction<?>> f = ((TotemBlockEntity) tile).getControllingFaction();
+                    if (f != null) return f.value().getColor();
                 }
             }
             return 0xFFFFFF;

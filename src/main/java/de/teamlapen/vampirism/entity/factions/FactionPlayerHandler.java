@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.tags.ModTaskTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
@@ -22,6 +23,7 @@ import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.util.DamageHandler;
+import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -81,7 +83,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     private final Player player;
     @NotNull
     private final Int2ObjectMap<Holder<IAction<?>>> boundActions = new Int2ObjectArrayMap<>();
-    private @Nullable IPlayableFaction<?> currentFaction = null;
+    private @Nullable Holder<? extends IPlayableFaction<?>> currentFaction = null;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
     @NotNull
@@ -97,7 +99,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public boolean canJoin(IPlayableFaction<?> faction) {
+    public boolean canJoin(Holder<? extends IPlayableFaction<?>> faction) {
         PlayerFactionEvent.CanJoinFaction.Behavior behavior = VampirismEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
         if (behavior == PlayerFactionEvent.CanJoinFaction.Behavior.ONLY_WHEN_NO_FACTION) {
             return currentFaction == null;
@@ -106,10 +108,14 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public boolean canLeaveFaction() {
-        return currentFaction == null || currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false);
+    public boolean canJoin(IPlayableFaction<?> faction) {
+        return canJoin(RegUtil.holder(faction));
     }
 
+    @Override
+    public boolean canLeaveFaction() {
+        return currentFaction == null || currentFaction.value().getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false);
+    }
 
     /**
      * @param id ATM 1-3
@@ -125,16 +131,23 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         return SERIALIZER_ID;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction() {
-        return (IPlayableFaction<T>) currentFaction;
+        return currentFaction == null ? null : (IPlayableFaction<T>) currentFaction.value();
+    }
+
+    @Nullable
+    @Override
+    public Holder<? extends IPlayableFaction<?>> getFaction() {
+        return currentFaction;
     }
 
     @NotNull
     @Override
     public <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer() {
-        return currentFaction == null ? Optional.empty() : (Optional<T>) currentFaction.getPlayerCapability(player);
+        return currentFaction == null ? Optional.empty() : (Optional<T>) currentFaction.value().getPlayerCapability(player);
     }
 
     @Override
@@ -148,14 +161,18 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public float getCurrentLevelRelative() {
-        return currentFaction == null ? 0 : currentLevel / (float) currentFaction.getHighestReachableLevel();
+    public int getCurrentLevel(Holder<? extends IPlayableFaction<?>> f) {
+        return isInFaction(f) ? currentLevel : 0;
     }
 
-    @Nullable
     @Override
-    public IPlayableFaction<?> getLordFaction() {
-        return currentLordLevel > 0 ? currentFaction : null;
+    public float getCurrentLevelRelative() {
+        return currentFaction == null ? 0 : currentLevel / (float) currentFaction.value().getHighestReachableLevel();
+    }
+
+    @Override
+    public @NotNull Optional<Holder<? extends IPlayableFaction<?>>> getLordFaction() {
+        return currentLordLevel > 0 ? Optional.ofNullable(currentFaction) : Optional.empty();
     }
 
     @Override
@@ -175,7 +192,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     public @NotNull Optional<ILordTitleProvider> lordTitles() {
-        return Optional.ofNullable(currentFaction).map(IPlayableFaction::lordTiles);
+        return Optional.ofNullable(currentFaction).map(Holder::value).map(IPlayableFaction::lordTiles);
     }
 
     public int getMaxMinions() {
@@ -195,19 +212,32 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     @Override
     public boolean isInFaction(@Nullable IFaction<?> f) {
-        return Objects.equals(currentFaction, f);
+        if (this.currentFaction != null) {
+            return Objects.equals(currentFaction.value(), f);
+        }
+        return Objects.equals(null, f);
     }
 
     @Override
-    public void joinFaction(@NotNull IPlayableFaction<?> faction) {
+    public <T extends IFaction<?>>  boolean isInFaction(@Nullable Holder<T> f) {
+        return IFaction.is(currentFaction, f);
+    }
+
+    @Override
+    public void joinFaction(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
     }
 
     @Override
+    public void joinFaction(@NotNull IPlayableFaction<?> faction) {
+        joinFaction(RegUtil.holder(faction));
+    }
+
+    @Override
     public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        IPlayableFaction<?> old = currentFaction;
+        Holder<? extends IPlayableFaction<?>> old = currentFaction;
         int oldLevel = currentLevel;
         if (nbt.contains("faction", Tag.TAG_STRING)) {
             String f = nbt.getString("faction");
@@ -277,19 +307,19 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level) {
-        IPlayableFaction<?> old = currentFaction;
+    public boolean setFactionAndLevel(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level) {
+        Holder<? extends IPlayableFaction<?>> old = currentFaction;
         int oldLevel = currentLevel;
         int newLordLevel = this.currentLordLevel;
 
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
-            if (!currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false)) {
-                LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getID());
+            if (!currentFaction.value().getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false)) {
+                LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getRegisteredName());
                 return false;
             }
         }
-        if (faction != null && (level < 0 || level > faction.getHighestReachableLevel())) {
-            LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getID());
+        if (faction != null && (level < 0 || level > faction.value().getHighestReachableLevel())) {
+            LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getRegisteredName());
             return false;
         }
         if (VampirismEventFactory.fireChangeLevelOrFactionEvent(this, old, oldLevel, faction, faction == null ? 0 : level)) {
@@ -297,7 +327,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             return false;
         }
         if (this.currentFaction != null && faction != this.currentFaction) {
-            this.currentFaction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset());
+            this.currentFaction.value().getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset());
         }
         if (faction == null) {
             currentFaction = null;
@@ -306,7 +336,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         } else {
             currentFaction = faction;
             currentLevel = level;
-            if (currentLevel != currentFaction.getHighestReachableLevel() || currentFaction != old) {
+            if (currentLevel != currentFaction.value().getHighestReachableLevel() || currentFaction != old) {
                 newLordLevel = 0;
             }
         }
@@ -322,9 +352,9 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         notifyFaction(old, oldLevel);
         if (this.player instanceof ServerPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
             if (old == currentFaction) {
-                VampirismLogger.info(VampirismLogger.LEVEL, "{} has new faction level {} {}, was {}", this.player.getName().getString(), currentFaction.getID(), currentLevel, oldLevel);
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} has new faction level {} {}, was {}", this.player.getName().getString(), currentFaction.getRegisteredName(), currentLevel, oldLevel);
             } else if (currentFaction != null) {
-                VampirismLogger.info(VampirismLogger.LEVEL, "{} is now in faction {} {}", this.player.getName().getString(), currentFaction.getID(), currentLevel);
+                VampirismLogger.info(VampirismLogger.LEVEL, "{} is now in faction {} {}", this.player.getName().getString(), currentFaction.getRegisteredName(), currentLevel);
             } else {
                 VampirismLogger.info(VampirismLogger.LEVEL, "{} has now no level", this.player.getName().getString());
             }
@@ -347,8 +377,18 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
+    public boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level) {
+        return setFactionAndLevel(faction == null ? null : RegUtil.holder(faction), level);
+    }
+
+    @Override
+    public boolean setFactionLevel(@NotNull Holder<? extends IPlayableFaction<?>> faction, int level) {
+        return faction == currentFaction && setFactionAndLevel(faction, level);
+    }
+
+    @Override
     public boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level) {
-        return faction.equals(currentFaction) && setFactionAndLevel(faction, level);
+        return setFactionLevel(RegUtil.holder(faction), level);
     }
 
     @Override
@@ -368,7 +408,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Override
     public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
-        nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
+        nbt.putString("faction", Optional.ofNullable(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse("null"));
         nbt.putInt("level", currentLevel);
         nbt.putInt("lord_level", currentLordLevel);
         nbt.putString("title_gender", titleGender.name());
@@ -378,22 +418,17 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     @Override
     public void leaveFaction(boolean die) {
-        IFaction<?> oldFaction = currentFaction;
+        Holder<? extends IFaction<?>> oldFaction = currentFaction;
         if (oldFaction == null) return;
-        setFactionAndLevel(null, 0);
-        player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.getName(), 0), true);
+        setFactionAndLevel((Holder<IPlayableFaction<?>>) null, 0);
+        player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.value().getName(), 0), true);
         if (die) {
             DamageHandler.kill(player, 10000);
         }
     }
 
-    private @Nullable IPlayableFaction<?> getFactionFromKey(ResourceLocation key) {
-        for (IPlayableFaction<?> p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.getID().equals(key)) {
-                return p;
-            }
-        }
-        return null;
+    private @Nullable Holder<? extends IPlayableFaction<?>> getFactionFromKey(ResourceLocation key) {
+        return (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.getHolder(key).orElse(null);
     }
 
     private void loadBoundActions(@NotNull CompoundTag nbt) {
@@ -418,22 +453,22 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
      */
-    private void notifyFaction(@Nullable IPlayableFaction<?> oldFaction, int oldLevel) {
+    private void notifyFaction(@Nullable Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
-            LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
-            VampirismLogger.info(VampirismLogger.LEVEL, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getID());
-            oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
+            LOGGER.debug(LogUtil.FACTION, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getRegisteredName());
+            VampirismLogger.info(VampirismLogger.LEVEL, "{} is leaving faction {}", this.player.getName().getString(), oldFaction.getRegisteredName());
+            oldFaction.value().getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
         }
         if (currentFaction != null) {
-            LOGGER.debug(LogUtil.FACTION, "{} has new faction level {} {}", this.player.getName().getString(), currentFaction.getID(), currentLevel);
-            currentFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
+            LOGGER.debug(LogUtil.FACTION, "{} has new faction level {} {}", this.player.getName().getString(), currentFaction.getRegisteredName(), currentLevel);
+            currentFaction.value().getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
         }
-        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.value().hashCode());
     }
 
     private boolean setLordLevel(int level, boolean sync) {
         int oldLevel = this.currentLordLevel;
-        if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
+        if (level > 0 && (currentFaction == null || currentLevel != currentFaction.value().getHighestReachableLevel() || level > currentFaction.value().getHighestLordLevel())) {
             return false;
         }
         if (level < this.currentLordLevel) {
@@ -474,8 +509,8 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     private void updateCache() {
         player.refreshDisplayName();
         VampirismPlayerAttributes atts = ((IVampirismPlayer) player).getVampAtts();
-        atts.hunterLevel = this.currentFaction == VReference.HUNTER_FACTION ? this.currentLevel : 0;
-        atts.vampireLevel = this.currentFaction == VReference.VAMPIRE_FACTION ? this.currentLevel : 0;
+        atts.hunterLevel = getCurrentLevel(ModFactions.HUNTER);
+        atts.vampireLevel = getCurrentLevel(ModFactions.VAMPIRE);
         atts.lordLevel = this.currentLordLevel;
         atts.faction = this.currentFaction;
     }
@@ -495,11 +530,11 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
-        if (currentFaction != null) {
-            nbt.putString("faction", currentFaction.getID().toString());
+        Optional.ofNullable(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(faction -> {
+            nbt.putString("faction", faction);
             nbt.putInt("level", currentLevel);
             nbt.putInt("lord_level", currentLordLevel);
-        }
+        });
         nbt.putString("title_gender", titleGender.name());
 
         writeBoundActions(nbt);
@@ -513,8 +548,8 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             if (currentFaction == null) {
                 LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
             } else {
-                currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.getHighestReachableLevel());
-                currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.getHighestLordLevel());
+                currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.value().getHighestReachableLevel());
+                currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.value().getHighestLordLevel());
                 notifyFaction(null, 0);
             }
         }

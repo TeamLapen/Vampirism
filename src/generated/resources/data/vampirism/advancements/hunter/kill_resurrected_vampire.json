@@ -13,9 +13,7 @@
               },
               "type_specific": {
                 "type": "vampirism:faction",
-                "faction": {
-                  "id": "vampirism:vampire"
-                }
+                "faction": "vampirism:vampire"
               }
             }
           }
@@ -26,9 +24,7 @@
     "main": {
       "conditions": {
         "type": "level",
-        "faction": {
-          "id": "vampirism:hunter"
-        },
+        "faction": "vampirism:hunter",
         "level": 1
       },
       "trigger": "vampirism:faction"

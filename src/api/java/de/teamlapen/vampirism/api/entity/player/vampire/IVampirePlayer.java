@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,6 +56,12 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     @NotNull
     IActionHandler<IVampirePlayer> getActionHandler();
 
+    @Override
+    @NotNull
+    default Holder<? extends IPlayableFaction<IVampirePlayer>> getFaction() {
+        return VampirismFactions.VAMPIRE;
+    }
+
     /**
      * @return The currently active vision. May be null
      */
@@ -66,12 +75,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      */
     @NotNull
     IBloodStats getBloodStats();
-
-    @NotNull
-    @Override
-    default IPlayableFaction<IVampirePlayer> getFaction() {
-        return VReference.VAMPIRE_FACTION;
-    }
 
     /**
      * @return The amount of ticks the player has been in sun. Never higher than 100.

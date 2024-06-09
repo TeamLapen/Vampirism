@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -34,7 +35,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
 
     public HunterTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable);
-        int hunterLevel = FactionPlayerHandler.get(playerInventory.player).getCurrentLevel(VReference.HUNTER_FACTION);
+        int hunterLevel = FactionPlayerHandler.get(playerInventory.player).getCurrentLevel(ModFactions.HUNTER);
         this.tableRequirement = HunterLeveling.getTrainerRequirement(hunterLevel + 1).map(HunterLeveling.HunterTrainerRequirement::tableRequirement);
     }
 

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
@@ -21,19 +22,19 @@ public interface ITotem {
      * @param faction the faction for the capture entity
      * @return entityType of a capture entity
      */
-    Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(IFaction<?> faction);
+    Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(Holder<? extends IFaction<?>> faction);
 
     /**
      * @return current capturing faction of the totem or {@code null} if none
      */
     @Nullable
-    IFaction<?> getCapturingFaction();
+    Holder<? extends IFaction<?>> getCapturingFaction();
 
     /**
      * @return current controlling faction of the totem or {@code null} if none
      */
     @Nullable
-    IFaction<?> getControllingFaction();
+    Holder<? extends IFaction<?>> getControllingFaction();
 
     /**
      * support method for getting block entity level

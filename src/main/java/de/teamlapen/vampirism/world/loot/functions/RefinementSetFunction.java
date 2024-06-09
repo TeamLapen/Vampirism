@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModLoot;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.items.RefinementItem;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -19,11 +21,12 @@ import java.util.List;
 
 public class RefinementSetFunction extends LootItemConditionalFunction {
 
+    @SuppressWarnings("unchecked")
     public static final MapCodec<RefinementSetFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
-            commonFields(inst).and(IFaction.CODEC.fieldOf("faction").forGetter(l -> l.faction))
+            commonFields(inst).and(ModRegistries.FACTIONS.holderByNameCodec().fieldOf("faction").forGetter(l -> (Holder<IFaction<?>>) l.faction))
                     .apply(inst, RefinementSetFunction::new)
             );
-    public static @NotNull Builder<?> builder(IFaction<?> faction) {
+    public static @NotNull Builder<?> builder(Holder<? extends IFaction<?>> faction) {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
     }
 
@@ -32,9 +35,9 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     }
 
     @Nullable
-    public final IFaction<?> faction;
+    public final Holder<? extends IFaction<?>> faction;
 
-    public RefinementSetFunction(@NotNull List<LootItemCondition> conditionsIn, @Nullable IFaction<?> faction) {
+    public RefinementSetFunction(@NotNull List<LootItemCondition> conditionsIn, @Nullable Holder<? extends IFaction<?>> faction) {
         super(conditionsIn);
         this.faction = faction;
     }

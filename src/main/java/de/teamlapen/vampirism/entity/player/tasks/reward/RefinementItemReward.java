@@ -13,7 +13,9 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
+import de.teamlapen.vampirism.util.FactionCodec;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -24,23 +26,20 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RefinementItemReward extends ItemReward {
 
     public static final MapCodec<RefinementItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-        //noinspection RedundantCast,unchecked
         return inst.group(BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item.get()).map(IRefinementItem::asItem)),
-                IFaction.CODEC.optionalFieldOf("faction").forGetter(i -> (Optional<IFaction<?>>) (Object) Optional.ofNullable(i.faction)),
+                FactionCodec.playable().optionalFieldOf("faction").forGetter(i -> Optional.ofNullable(i.faction)),
                 StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
         ).apply(inst, (reward, faction, rarity) -> {
             Preconditions.checkArgument(reward.isEmpty() || reward.get() instanceof IRefinementItem, "Item must be a refinement item");
-            Preconditions.checkArgument(reward.isEmpty() || matchFaction(((IRefinementItem) reward.get()).getExclusiveFaction(reward.get().getDefaultInstance()), faction.get()), "Faction must match item faction");
+            Preconditions.checkArgument(reward.isEmpty() || IFaction.is(((IRefinementItem) reward.get()).getExclusiveFaction(reward.get().getDefaultInstance()), faction.orElse(null)), "Faction must match item faction");
             return new RefinementItemReward((IRefinementItem) reward.orElse(null), faction.orElse(null), rarity.orElse(null));
         });
     });
@@ -49,27 +48,26 @@ public class RefinementItemReward extends ItemReward {
 
     @NotNull
     private final Supplier<@Nullable IRefinementItem> item;
-    @Nullable
-    private final IFaction<?> faction;
+    private final Holder<? extends IPlayableFaction<?>> faction;
     @Nullable
     private final IRefinementSet.Rarity rarity;
 
-    public RefinementItemReward(@Nullable IFaction<?> faction) {
+    public RefinementItemReward(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
         this(faction, null);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(@Nullable Holder<? extends IPlayableFaction<?>> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
         this(faction, () -> null, refinementRarity);
     }
 
-    public RefinementItemReward(@Nullable IFaction<?> faction, @NotNull Supplier<@Nullable IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(@Nullable Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<@Nullable IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
         super(ItemStack.EMPTY);
         this.item = item;
         this.faction = faction;
         this.rarity = refinementRarity;
     }
 
-    private RefinementItemReward(@Nullable IRefinementItem reward, @Nullable IFaction<?> faction, IRefinementSet.@Nullable Rarity rarity) {
+    private RefinementItemReward(@Nullable IRefinementItem reward, Holder<? extends IPlayableFaction<?>> faction, IRefinementSet.@Nullable Rarity rarity) {
         super(ItemStack.EMPTY);
         this.item = () -> reward;
         this.faction = faction;
@@ -87,23 +85,22 @@ public class RefinementItemReward extends ItemReward {
     }
 
     protected <Z extends Item & IRefinementItem> @NotNull ItemStack createItem() {
-        if (this.faction != null && !(this.faction instanceof IPlayableFaction<?>)) return ItemStack.EMPTY;
-        IPlayableFaction<?> faction = ((IPlayableFaction<?>) this.faction);
+        Holder<? extends IPlayableFaction<?>> faction = this.faction;
         IRefinementItem baseItem = this.item.get();
         if (faction == null) {
             if (baseItem != null) {
-                faction = (IPlayableFaction<?>) baseItem.getExclusiveFaction(baseItem.asItem().getDefaultInstance());
+                faction = baseItem.getExclusiveFaction(baseItem.asItem().getDefaultInstance());
             } else {
                 faction = getRandomFactionWithAccessories();
             }
             if (faction == null) return ItemStack.EMPTY;
         }
-        IPlayableFaction<?> finalFaction = faction;
+        Holder<? extends IPlayableFaction<?>> finalFaction = faction;
 
-        Z item = this.item.get() != null ? (Z) this.item.get() : faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+        Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
-                .filter(set -> set.getFaction() == finalFaction)
+                .filter(set -> IFaction.is(set.getFaction(), finalFaction))
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
@@ -115,12 +112,14 @@ public class RefinementItemReward extends ItemReward {
     }
 
     private @NotNull List<ItemStack> getAllRefinementItems() {
-        return Arrays.stream(this.faction != null ? new IPlayableFaction[]{(IPlayableFaction<?>) this.faction} : VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getRefinementItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
+        Stream<IPlayableFaction<?>> stream = this.faction != null ? Stream.of(this.faction.value()) : ModRegistries.FACTIONS.stream().filter(IPlayableFaction.class::isInstance).map(s -> (IPlayableFaction<?>)s);
+        return stream.filter(IPlayableFaction::hasRefinements).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getRefinementItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
     }
 
     @Nullable
-    private static IPlayableFaction<?> getRandomFactionWithAccessories() {
-        List<IPlayableFaction<?>> factions = Arrays.stream(VampirismAPI.factionRegistry().getPlayableFactions()).filter(IPlayableFaction::hasRefinements).toList();
+    private static Holder<? extends IPlayableFaction<?>> getRandomFactionWithAccessories() {
+        //noinspection unchecked,RedundantCast
+        List<Holder<? extends IPlayableFaction<?>>> factions = ModRegistries.FACTIONS.holders().filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> ((Holder<? extends IPlayableFaction<?>>) (Object) s)).filter(s -> s.value().hasRefinements()).collect(Collectors.toUnmodifiableList());
         if (factions.isEmpty()) return null;
         return factions.get(RANDOM.nextInt(factions.size()) - 1);
     }
@@ -130,7 +129,7 @@ public class RefinementItemReward extends ItemReward {
         return CODEC;
     }
 
-    private static boolean matchFaction(IFaction<?> target, IFaction<?> faction) {
+    private static boolean matchFaction(Holder<? extends IFaction<?>> target, IFaction<?> faction) {
         return target == null || faction == null || target == faction;
     }
 }

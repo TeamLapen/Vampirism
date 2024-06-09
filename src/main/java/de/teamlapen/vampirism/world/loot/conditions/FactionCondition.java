@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModLoot;
+import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -21,27 +23,28 @@ import java.util.Optional;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FactionCondition implements LootItemCondition {
 
+    @SuppressWarnings("unchecked")
     public static final MapCodec<FactionCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(s -> s.type),
-            IFaction.CODEC.optionalFieldOf("faction").forGetter(a -> a.faction),
+            ModRegistries.FACTIONS.holderByNameCodec().optionalFieldOf("faction").forGetter(a -> (Optional<Holder<IFaction<?>>>) (Object) a.faction),
             Codec.INT.optionalFieldOf( "min_level").forGetter(a -> a.minLevel),
             Codec.INT.optionalFieldOf( "max_level").forGetter(a -> a.maxLevel)
     ).apply(inst, FactionCondition::new));
 
     private final @NotNull Type type;
-    private final Optional<IFaction<?>> faction;
+    private final Optional<Holder<? extends IFaction<?>>> faction;
     private final Optional<Integer> minLevel;
     private final Optional<Integer> maxLevel;
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private FactionCondition(@NotNull Type type, Optional<IFaction<?>> faction, Optional<Integer> minLevel, Optional<Integer> maxLevel) {
+    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "unchecked"})
+    private FactionCondition(@NotNull Type type, Optional<Holder<IFaction<?>>> faction, Optional<Integer> minLevel, Optional<Integer> maxLevel) {
         this.type = type;
-        this.faction = faction;
+        this.faction = (Optional<Holder<? extends IFaction<?>>>) (Object) faction;
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
     }
 
-    public FactionCondition(@NotNull IFaction<?> faction, int minLevel, int maxLevel) {
+    public FactionCondition(@NotNull Holder<? extends IFaction<?>> faction, int minLevel, int maxLevel) {
         this.type = Type.FACTION;
         this.faction = Optional.of(faction);
         this.minLevel = Optional.of(minLevel);

@@ -249,6 +249,7 @@ public class VampirismMod {
                 .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
                 .addTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
                 .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
+                .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
                 .register();
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
                 .createPlayableFaction(VReference.HUNTER_FACTION_ID, IHunterPlayer.class, () -> (AttachmentType<IHunterPlayer>)(Object) ModAttachments.HUNTER_PLAYER.get())
@@ -273,6 +274,7 @@ public class VampirismMod {
                 .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
                 .addTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
                 .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
+                .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
                 .register();
 
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "night_vision"), new NightVision());

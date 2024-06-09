@@ -4,9 +4,7 @@
     "level": {
       "conditions": {
         "type": "lord",
-        "faction": {
-          "id": "vampirism:hunter"
-        },
+        "faction": "vampirism:hunter",
         "level": 5
       },
       "trigger": "vampirism:faction"
@@ -14,9 +12,7 @@
     "main": {
       "conditions": {
         "type": "level",
-        "faction": {
-          "id": "vampirism:hunter"
-        },
+        "faction": "vampirism:hunter",
         "level": 1
       },
       "trigger": "vampirism:faction"

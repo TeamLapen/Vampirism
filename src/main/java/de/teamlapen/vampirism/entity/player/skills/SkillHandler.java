@@ -52,7 +52,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private final static Logger LOGGER = LogManager.getLogger();
     private final ArrayList<Holder<ISkill<T>>> enabledSkills = new ArrayList<>();
     private final T player;
-    private final IPlayableFaction<T> faction;
+    private final Holder<? extends IPlayableFaction<T>> faction;
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
     private final Set<Holder<IRefinement>> activeRefinements = new HashSet<>();
     private final Map<Holder<IRefinement>, AttributeModifier> refinementModifier = new HashMap<>();
@@ -61,7 +61,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     private boolean dirty = false;
     private final ISkillTreeData treeData;
 
-    public SkillHandler(T player, IPlayableFaction<T> faction) {
+    public SkillHandler(T player, Holder<? extends IPlayableFaction<T>> faction) {
         this.player = player;
         this.faction = faction;
         this.treeData = ISkillTreeData.getData(player.asEntity().level());
@@ -300,7 +300,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 if ("none".equals(setName)) continue;
                 ResourceLocation setId = new ResourceLocation(setName);
                 IRefinementSet set = RegUtil.getRefinementSet(setId);
-                Item refinementItem = this.faction.getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]);
+                Item refinementItem = this.faction.value().getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]);
                 ItemStack itemStack = new ItemStack(refinementItem);
                 itemStack.setDamageValue(damage);
                 ((IRefinementItem) refinementItem).applyRefinementSet(itemStack, set);
@@ -314,8 +314,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 int slot = stackNbt.getInt("slot");
                 ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
-                    IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
-                    if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
+                    Holder<? extends IPlayableFaction<?>> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
+                    if (exclusiveFaction == null || IFaction.is(this.faction, exclusiveFaction)) {
                         applyRefinementItem(stack, slot);
                     }
                 }
@@ -357,8 +357,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 int slot = stackNbt.getInt("slot");
                 ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
                 if (stack.getItem() instanceof IRefinementItem refinementItem) {
-                    IFaction<?> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
-                    if (exclusiveFaction == null || this.faction.equals(exclusiveFaction)) {
+                    Holder<? extends IPlayableFaction<?>> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
+                    if (exclusiveFaction == null || IFaction.is(this.faction, exclusiveFaction)) {
                         applyRefinementItem(stack, slot);
                     }
                 }

@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
@@ -34,6 +35,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.OilUtils;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -82,7 +84,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     public HunterPlayer(Player player) {
         super(player);
         actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this, VReference.HUNTER_FACTION);
+        skillHandler = new SkillHandler<>(this, ModFactions.HUNTER);
         this.disguise = new Disguise();
     }
 
@@ -312,17 +314,17 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     public class Disguise implements IDisguise {
 
         @Override
-        public @NotNull IPlayableFaction<?> getOriginalFaction() {
+        public @NotNull Holder<? extends IPlayableFaction<?>> getOriginalFaction() {
             return getFaction();
         }
 
         @Override
-        public @Nullable IPlayableFaction<?> getViewedFaction(@Nullable IFaction<?> viewerFaction) {
-            return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE) ? VReference.VAMPIRE_FACTION : getOriginalFaction();
+        public @Nullable Holder<? extends IPlayableFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
+            return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE) ? ModFactions.VAMPIRE : getOriginalFaction();
         }
 
         @Override
-        public void disguiseAs(@Nullable IPlayableFaction<?> faction) {
+        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
 
         }
 

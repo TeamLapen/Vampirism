@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.util;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -55,34 +56,41 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
 
     public record EmptyActionSkill<T extends IFactionPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
         private static final TagKey<ISkillTree> key = TagKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(VReference.MODID, "empty"));
+
         @Override
-            public @Nullable Component getDescription() {
-                return null;
-            }
+        public @Nullable Component getDescription() {
+            return null;
+        }
 
-            @Override
-            public @NotNull Optional<IPlayableFaction<?>> getFaction() {
-                return this.actionHolder.value().getFaction();
-            }
+        @Deprecated
+        @Override
+        public @NotNull Optional<IPlayableFaction<?>> getFaction() {
+            return this.actionHolder.value().getFaction();
+        }
 
-            @Override
-            public String getTranslationKey() {
-                return this.actionHolder.value().getTranslationKey();
-            }
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return this.actionHolder.value().factions();
+        }
 
-            @Override
-            public void onDisable(T player) {
+        @Override
+        public String getTranslationKey() {
+            return this.actionHolder.value().getTranslationKey();
+        }
 
-            }
+        @Override
+        public void onDisable(T player) {
 
-            @Override
-            public void onEnable(T player) {
+        }
 
-            }
+        @Override
+        public void onEnable(T player) {
 
-            @Override
-            public Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees() {
-                return Either.right(key);
-            }
+        }
+
+        @Override
+        public Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees() {
+            return Either.right(key);
+        }
     }
 }

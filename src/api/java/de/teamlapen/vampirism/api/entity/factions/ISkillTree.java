@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ public interface ISkillTree {
      * The faction for which the skill tree is
      */
     @NotNull
-    IPlayableFaction<?> faction();
+    Holder<? extends IPlayableFaction<?>> faction();
 
     /**
      * The unlocking predicate that will be checked against the player to see if the skill tree is unlocked <br>

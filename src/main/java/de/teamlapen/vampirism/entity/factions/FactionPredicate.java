@@ -1,79 +1,105 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import com.google.common.base.Predicate;
-import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Predicate for faction related selection
- */
-public class FactionPredicate implements Predicate<LivingEntity> {
-    private final @NotNull IFaction<?> thisFaction;
-    private final boolean player;
-    private final boolean nonPlayer;
-    private final boolean neutralPlayer;
-    private final boolean ignoreDisguise;
-    /**
-     * If null, all other faction are seen as hostile
-     */
-    @Nullable
-    private final IFaction<?> otherFaction;
+import java.util.Optional;
 
-    /**
-     * Selects entities
-     *
-     * @param thisFaction    The friendly faction
-     * @param player         If players should be selected
-     * @param nonPlayer      If non players should be selected
-     * @param neutralPlayer  If neutral playsers should be selected
-     * @param ignoreDisguise If the disguise ability of players should be ignored.
-     * @param otherFaction   If this is not null, only entities of this faction are selected.
-     */
-    protected FactionPredicate(@NotNull IFaction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
-        this.thisFaction = thisFaction;
-        this.player = player;
-        this.nonPlayer = nonPlayer;
-        this.neutralPlayer = neutralPlayer;
-        this.otherFaction = otherFaction;
-        this.ignoreDisguise = ignoreDisguise;
-    }
-
-    protected FactionPredicate(@NotNull Faction<?> thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise) {
-        this(thisFaction, player, nonPlayer, neutralPlayer, ignoreDisguise, null);
-    }
+public record FactionPredicate(Holder<? extends IFaction<?>> sourceFaction, boolean player, boolean nonPlayer, boolean neutral, boolean ignoreDisguise, Optional<Holder<? extends IFaction<?>>> targetFaction) implements Predicate<LivingEntity> {
 
     @Override
     public boolean apply(@Nullable LivingEntity input) {
-        if (input == null) return false;
-        if (nonPlayer && input instanceof IFactionEntity) {
-            IFaction<?> other = ((IFactionEntity) input).getFaction();
-            return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
-
-        }
-        if (player && input instanceof Player && input.isAlive()) {
-            return FactionPlayerHandler.getCurrentFactionPlayer((Player) input).map(fp -> {
-                        IFaction<?> f = fp.getDisguise().getViewedFaction(thisFaction, ignoreDisguise);
-                        return (f != null || (thisFaction.isHostileTowardsNeutral() && neutralPlayer)) && !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
-                    }
-            ).orElse(neutralPlayer);
+        switch (input) {
+            case null -> {
+                return false;
+            }
+            case IFactionEntity iFactionEntity when nonPlayer -> {
+                Holder<? extends IFaction<?>> other = iFactionEntity.getFaction();
+                return !sourceFaction.equals(other) && (targetFaction.isEmpty() || targetFaction.get().equals(other));
+            }
+            case Player player1 when player && input.isAlive() -> {
+                return FactionPlayerHandler.getCurrentFactionPlayer(player1).map(fp -> {
+                            @SuppressWarnings("rawtypes")
+                            Holder f = fp.getDisguise().getViewedFaction(sourceFaction, ignoreDisguise);
+                            //noinspection unchecked,deprecation,rawtypes
+                            return (f != null || (((Holder) sourceFaction).is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) && neutral)) && !sourceFaction.equals(f) && (targetFaction.isEmpty() || (f != null && targetFaction.get().is(f)));
+                        }
+                ).orElse(neutral);
+            }
+            default -> {
+            }
         }
         return false;
     }
 
-    @Override
-    public @NotNull String toString() {
-        return "PredicateFaction{" +
-                "thisFaction=" + thisFaction +
-                ", player=" + player +
-                ", nonPlayer=" + nonPlayer +
-                ", neutralPlayer=" + neutralPlayer +
-                ", otherFaction=" + otherFaction +
-                '}';
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static class Builder {
+
+        private final Holder<? extends IFaction<?>> sourceFaction;
+        private boolean player;
+        private boolean nonPlayer;
+        private boolean neutral;
+        private boolean ignoreDisguise;
+        private Optional<Holder<? extends IFaction<?>>> targetFaction = Optional.empty();
+
+        public Builder(Holder<? extends IFaction<?>> sourceFaction) {
+            this.sourceFaction = sourceFaction;
+        }
+
+        public Builder player() {
+            this.player = true;
+            return this;
+        }
+
+        public Builder player(boolean player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder nonPlayer() {
+            this.nonPlayer = false;
+            return this;
+        }
+
+        public Builder nonPlayer(boolean nonPlayer) {
+            this.nonPlayer = nonPlayer;
+            return this;
+        }
+
+        public Builder neutral() {
+            this.neutral = true;
+            return this;
+        }
+
+        public Builder neutral(boolean neutral) {
+            this.neutral = neutral;
+            return this;
+        }
+
+        public Builder ignoreDisguise() {
+            this.ignoreDisguise = true;
+            return this;
+        }
+
+        public Builder ignoreDisguise(boolean ignoreDisguise) {
+            this.ignoreDisguise = ignoreDisguise;
+            return this;
+        }
+
+        public Builder targetFaction(Holder<? extends IFaction<?>> targetFaction) {
+            this.targetFaction = Optional.ofNullable(targetFaction);
+            return this;
+        }
+
+        public FactionPredicate build() {
+            return new FactionPredicate(sourceFaction, player, nonPlayer, neutral, ignoreDisguise, targetFaction);
+        }
     }
 }

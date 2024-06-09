@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,7 @@ public class VampirismPlayerAttributes {
     public int hunterLevel = 0;
     @Nullable
     @Deprecated
-    public IPlayableFaction<?> faction = null;
+    public Holder<? extends IPlayableFaction<?>> faction = null;
     public int lordLevel = 0;
 
     public @NotNull HunterPlayerSpecialAttribute getHuntSpecial() {
@@ -36,8 +37,8 @@ public class VampirismPlayerAttributes {
         return vampSpecial;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends IFactionPlayer<T>> IPlayableFaction<T> faction() {
-        return (IPlayableFaction<T>) faction;
+    @SuppressWarnings({"RedundantCast", "unchecked"})
+    public <T extends IFactionPlayer<T>> Holder<? extends IPlayableFaction<T>> faction() {
+        return ((Holder<? extends IPlayableFaction<T>>)  (Object) faction);
     }
 }

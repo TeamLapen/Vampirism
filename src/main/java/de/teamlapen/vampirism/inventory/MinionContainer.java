@@ -71,7 +71,7 @@ public class MinionContainer extends InventoryContainerMenu {
         super(ModMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
-        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction(), lord)).toArray(IMinionTask[]::new);
+        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction().orElseThrow(), lord)).toArray(IMinionTask[]::new);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerSlots(playerInventory, 27, 103);
         this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);

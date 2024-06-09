@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -44,7 +45,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
         super(ModMenus.HUNTER_TRAINER.get(), id, playerInventory, trainer == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(trainer.level(), trainer.blockPosition()));
         this.player = playerInventory.player;
         this.entity = trainer;
-        this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1);
+        this.lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.get(player).getCurrentLevel(ModFactions.HUNTER) + 1);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     public void onLevelupClicked() {
         if (canLevelup()) {
             this.lvlRequirement.ifPresent(req -> {
-                FactionPlayerHandler.get(this.player).setFactionLevel(VReference.HUNTER_FACTION, req.targetLevel());
+                FactionPlayerHandler.get(this.player).setFactionLevel(ModFactions.HUNTER, req.targetLevel());
                 InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);

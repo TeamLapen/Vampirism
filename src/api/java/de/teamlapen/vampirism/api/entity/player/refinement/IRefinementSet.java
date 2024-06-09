@@ -18,7 +18,7 @@ public interface IRefinementSet {
     int getColor();
 
     @NotNull
-    IFaction<?> getFaction();
+    Holder<? extends IFaction<?>> getFaction();
 
     @NotNull
     Component getName();

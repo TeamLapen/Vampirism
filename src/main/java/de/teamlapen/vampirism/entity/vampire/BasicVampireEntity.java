@@ -12,10 +12,7 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.IEntityFollower;
 import de.teamlapen.vampirism.entity.ai.goals.*;
@@ -406,7 +403,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                int vampireLevel = handler.getCurrentLevel(VReference.VAMPIRE_FACTION);
+                int vampireLevel = handler.getCurrentLevel(ModFactions.VAMPIRE);
                 if (vampireLevel > 0) {
                     if (handler.getMaxMinions() > 0) {
                         ItemStack heldItem = player.getItemInHand(hand);
@@ -443,7 +440,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
-        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
+        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, ModFactions.HUNTER));
         this.goalSelector.addGoal(2, this.tasks_avoidHunter);
         this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.world.ITotem;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
@@ -24,12 +25,12 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     @Nullable
-    public IFaction<?> getCapturingFaction() {
+    public Holder<? extends IFaction<?>> getCapturingFaction() {
         return this.totem.getCapturingFaction();
     }
 
     @Nullable
-    public IFaction<?> getControllingFaction() {
+    public Holder<? extends IFaction<?>> getControllingFaction() {
         return this.totem.getControllingFaction();
     }
 
@@ -80,7 +81,7 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * Faction that owns the village
          */
-        public @Nullable IFaction<?> getFaction() {
+        public @Nullable Holder<? extends IFaction<?>> getFaction() {
             return this.totem.getControllingFaction();
         }
 
@@ -196,12 +197,12 @@ public abstract class VampirismVillageEvent extends Event {
     public static class InitiateCapture extends VampirismVillageEvent {
 
         @NotNull
-        private final IFaction<?> capturingFaction;
+        private final Holder<? extends IFaction<?>> capturingFaction;
         @Nullable
         private String message;
         private boolean disallowCapture = false;
 
-        public InitiateCapture(ITotem totem, @NotNull IFaction<?> capturingFaction) {
+        public InitiateCapture(ITotem totem, @NotNull Holder<? extends IFaction<?>> capturingFaction) {
             super(totem);
             this.capturingFaction = capturingFaction;
         }
@@ -211,7 +212,7 @@ public abstract class VampirismVillageEvent extends Event {
          */
         @Override
         @NotNull
-        public IFaction<?> getCapturingFaction() {
+        public Holder<? extends IFaction<?>> getCapturingFaction() {
             return capturingFaction;
         }
 

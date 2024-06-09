@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.DeferredAction;
-import de.teamlapen.vampirism.api.DeferredActionRegister;
+import de.teamlapen.vampirism.api.registries.DeferredAction;
+import de.teamlapen.vampirism.api.registries.DeferredActionRegister;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;

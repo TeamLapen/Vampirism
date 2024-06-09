@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
@@ -64,8 +65,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     protected void init() {
         super.init();
         VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(Minecraft.getInstance().player);
-        IFaction<?> f = attributes.faction;
-        this.color = f == null ? Color.GRAY.getRGBColorComponents() : new Color(f.getColor()).getRGBColorComponents();
+        Holder<? extends IPlayableFaction<?>> f = attributes.faction;
+        this.color = f == null ? Color.GRAY.getRGBColorComponents() : new Color(f.value().getColor()).getRGBColorComponents();
         VampirePlayerSpecialAttributes vampAtt = attributes.getVampSpecial();
         this.fangType = vampAtt.fangType;
         this.eyeType = vampAtt.eyeType;

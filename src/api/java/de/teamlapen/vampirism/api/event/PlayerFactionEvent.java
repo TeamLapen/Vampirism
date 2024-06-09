@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -13,11 +14,11 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerFactionEvent extends Event {
 
     @Nullable
-    private final IPlayableFaction<?> currentFaction;
+    private final Holder<IPlayableFaction<?>> currentFaction;
     @NotNull
     private final IFactionPlayerHandler player;
 
-    private PlayerFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction) {
+    private PlayerFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<IPlayableFaction<?>> currentFaction) {
         this.currentFaction = currentFaction;
         this.player = player;
     }
@@ -26,7 +27,7 @@ public class PlayerFactionEvent extends Event {
      * @return The faction the respective player is currently in.
      */
     @Nullable
-    public IPlayableFaction<?> getCurrentFaction() {
+    public Holder<IPlayableFaction<?>> getCurrentFaction() {
         return currentFaction;
     }
 
@@ -49,9 +50,9 @@ public class PlayerFactionEvent extends Event {
         private final int currentLevel;
         private final int newLevel;
         @Nullable
-        private final IPlayableFaction<?> newFaction;
+        private final Holder<IPlayableFaction<?>> newFaction;
 
-        public FactionLevelChangePre(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, int currentLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
+        public FactionLevelChangePre(@NotNull IFactionPlayerHandler player, @Nullable Holder<IPlayableFaction<?>> currentFaction, int currentLevel, @Nullable Holder<IPlayableFaction<?>> newFaction, int newLevel) {
             super(player, currentFaction);
             this.currentLevel = currentLevel;
             this.newLevel = newLevel;
@@ -69,7 +70,7 @@ public class PlayerFactionEvent extends Event {
          * @return The faction the player is going to be
          */
         @Nullable
-        public IPlayableFaction<?> getNewFaction() {
+        public Holder<IPlayableFaction<?>> getNewFaction() {
             return newFaction;
         }
 
@@ -88,9 +89,9 @@ public class PlayerFactionEvent extends Event {
         private final int oldLevel;
         private final int newLevel;
         @Nullable
-        private final IPlayableFaction<?> oldFaction;
+        private final Holder<IPlayableFaction<?>> oldFaction;
 
-        public FactionLevelChanged(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
+        public FactionLevelChanged(@NotNull IFactionPlayerHandler player, @Nullable Holder<IPlayableFaction<?>> oldFaction, int oldLevel, @Nullable Holder<IPlayableFaction<?>> newFaction, int newLevel) {
             super(player, newFaction);
             this.oldLevel = oldLevel;
             this.newLevel = newLevel;
@@ -108,7 +109,7 @@ public class PlayerFactionEvent extends Event {
          * @return The faction the player was before
          */
         @Nullable
-        public IPlayableFaction<?> getOldFaction() {
+        public Holder<IPlayableFaction<?>> getOldFaction() {
             return oldFaction;
         }
 
@@ -133,10 +134,10 @@ public class PlayerFactionEvent extends Event {
      */
     public static class CanJoinFaction extends PlayerFactionEvent {
 
-        private final IPlayableFaction<?> toJoin;
+        private final Holder<IPlayableFaction<?>> toJoin;
         private Behavior behavior = Behavior.ONLY_WHEN_NO_FACTION;
 
-        public CanJoinFaction(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> toJoin) {
+        public CanJoinFaction(@NotNull IFactionPlayerHandler player, @Nullable Holder<IPlayableFaction<?>> currentFaction, Holder<IPlayableFaction<?>> toJoin) {
             super(player, currentFaction);
             this.toJoin = toJoin;
         }
@@ -144,7 +145,7 @@ public class PlayerFactionEvent extends Event {
         /**
          * @return The faction the player wants to join
          */
-        public IPlayableFaction<?> getFactionToJoin() {
+        public Holder<IPlayableFaction<?>> getFactionToJoin() {
             return toJoin;
         }
 

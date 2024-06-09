@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.entity.minion.management.CollectResourcesTask.Desc;
@@ -41,13 +40,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     private final List<WeightedEntry.Wrapper<ItemStack>> resources;
     private final RandomSource rng = RandomSource.create();
     @Nullable
-    private final IFaction<?> faction;
+    private final Holder<? extends IFaction<?>> faction;
 
 
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable IFaction<?> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(@Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
@@ -72,8 +71,8 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public boolean isAvailable(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
-        return (this.faction == null || this.faction == faction) && isRequiredSkillUnlocked(faction, player);
+    public boolean isAvailable(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
+        return (this.faction == null || IFaction.is(this.faction, faction)) && isRequiredSkillUnlocked(faction, player);
     }
 
 
@@ -99,7 +98,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public @Nullable IFaction<?> getFaction() {
+    public @Nullable Holder<? extends IFaction<?>> getFaction() {
         return this.faction;
     }
 

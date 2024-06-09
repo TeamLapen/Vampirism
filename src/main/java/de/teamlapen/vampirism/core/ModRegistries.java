@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -37,6 +38,7 @@ public class ModRegistries {
     public static final Registry<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS  = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REQUIREMENT).create();
     public static final Registry<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES= new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REWARD_INSTANCE).create();
     public static final Registry<MapCodec<? extends Converter>> ENTITY_CONVERTER = new RegistryBuilder<>(VampirismRegistries.Keys.ENTITY_CONVERTER).create();
+    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.FACTION).sync(true).create();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(Registries.BIOME, ModBiomes::createBiomes)
@@ -65,6 +67,7 @@ public class ModRegistries {
         event.register(TASK_REQUIREMENTS);
         event.register(TASK_REWARD_INSTANCES);
         event.register(ENTITY_CONVERTER);
+        event.register(FACTIONS);
     }
 
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

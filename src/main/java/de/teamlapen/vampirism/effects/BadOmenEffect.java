@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.Holder;
@@ -21,7 +22,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * does not extend {@link VampirismEffect} so other mods can use this too
  */
-public abstract class BadOmenEffect extends MobEffect {
+public class BadOmenEffect extends MobEffect {
+
+    private final Holder<? extends IFaction<?>> faction;
 
     /**
      * Call this if onDeath of an entity that might carry a faction banner.
@@ -32,11 +35,11 @@ public abstract class BadOmenEffect extends MobEffect {
      */
     public static void handlePotentialBannerKill(@Nullable Entity offender, @NotNull IFactionEntity victim) {
         if (offender instanceof Player player) {
-            IFaction<?> faction = victim.getFaction();
-            if (faction.getVillageData().isBanner(victim.asEntity().getItemBySlot(EquipmentSlot.HEAD), offender.registryAccess())) {
-                IFaction<?> playerFaction = VampirismPlayerAttributes.get(player).faction;
+            Holder<? extends IFaction<?>> faction = victim.getFaction();
+            if (faction.value().getVillageData().isBanner(victim.asEntity().getItemBySlot(EquipmentSlot.HEAD), offender.registryAccess())) {
+                Holder<? extends IPlayableFaction<?>> playerFaction = VampirismPlayerAttributes.get(player).faction;
                 if (playerFaction != null && playerFaction != faction) {
-                    Holder<MobEffect> badOmen = faction.getVillageData().badOmenEffect();
+                    Holder<MobEffect> badOmen = faction.value().getVillageData().badOmenEffect();
                     if (badOmen != null) {
                         MobEffectInstance inst = player.getEffect(badOmen);
                         int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;
@@ -49,11 +52,10 @@ public abstract class BadOmenEffect extends MobEffect {
         }
     }
 
-    public BadOmenEffect() {
+    public BadOmenEffect(Holder<? extends IFaction<?>> faction) {
         super(MobEffectCategory.NEUTRAL, 745784);
+        this.faction = faction;
     }
-
-    public abstract IFaction<?> getFaction();
 
     @Override
     public boolean applyEffectTick(@NotNull LivingEntity entityLivingBaseIn, int amplifier) {
@@ -62,8 +64,8 @@ public abstract class BadOmenEffect extends MobEffect {
             if (serverWorld.getDifficulty() == Difficulty.PEACEFUL) {
                 return true;
             }
-            return !TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.blockPosition(), true).filter(s -> s.getControllingFaction() != getFaction()).map(totem -> {
-                return totem.initiateCaptureOrIncreaseBadOmenLevel(getFaction(), null, Math.min(amplifier, 4) + 1, 0);
+            return !TotemHelper.getTotemNearPos(serverWorld, entityLivingBaseIn.blockPosition(), true).filter(s -> !IFaction.is(s.getControllingFaction(), this.faction)).map(totem -> {
+                return totem.initiateCaptureOrIncreaseBadOmenLevel(this.faction, null, Math.min(amplifier, 4) + 1, 0);
             }).orElse(false);
         }
         return true;

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -64,7 +65,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
         HunterLeveling.getBasicHunterRequirement(target).ifPresent(req -> {
             inventory.removeItem(0, req.vampireBloodAmount());
             Player player1 = player.asEntity();
-            FactionPlayerHandler.get(player1).setFactionLevel(VReference.HUNTER_FACTION, target);
+            FactionPlayerHandler.get(player1).setFactionLevel(ModFactions.HUNTER, target);
             player1.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
             player1.closeContainer();
         });

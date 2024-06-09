@@ -3,11 +3,15 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.util.FactionCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -48,7 +52,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     public static final MapCodec<TotemTopBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     Codec.BOOL.fieldOf("crafted").forGetter(TotemTopBlock::isCrafted),
-                    ResourceLocation.CODEC.fieldOf("faction").forGetter(inst2 -> inst2.faction),
+                    FactionCodec.faction().fieldOf("faction").forGetter(inst2 -> inst2.faction),
                     propertiesCodec()
             ).apply(inst, TotemTopBlock::new)
     );
@@ -65,17 +69,18 @@ public class TotemTopBlock extends BaseEntityBlock {
         return Shapes.or(a, b);
     }
 
-    public final ResourceLocation faction;
+    @Nullable
+    public final Holder<? extends IFaction<?>> faction;
     private final boolean crafted;
 
-    public TotemTopBlock(boolean crafted, ResourceLocation faction) {
+    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction) {
         this(crafted, faction, Properties.of().mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
     }
 
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(boolean crafted, ResourceLocation faction, Block.Properties properties) {
+    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Block.Properties properties) {
         super(properties);
         this.faction = faction;
         this.crafted = crafted;

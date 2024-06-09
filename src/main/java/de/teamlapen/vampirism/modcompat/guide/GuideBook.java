@@ -241,14 +241,14 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "dbno"), new EntryText(dbnoPages, translateComponent(base + "dbno")));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription().getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(VReference.VAMPIRE_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription().getString(), ModFactions.VAMPIRE.value().getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), Component.translatable("text.vampirism.title"), Component.translatable("text.vampirism.title"));
-        lordTitleBuilder.addLine(1, VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString());
-        lordTitleBuilder.addLine(2, VReference.VAMPIRE_FACTION.getLordTitle(2,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.FEMALE).getString());
-        lordTitleBuilder.addLine(3, VReference.VAMPIRE_FACTION.getLordTitle(3,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.FEMALE).getString());
-        lordTitleBuilder.addLine(4, VReference.VAMPIRE_FACTION.getLordTitle(4,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(4, IPlayableFaction.TitleGender.FEMALE).getString());
-        lordTitleBuilder.addLine(5, VReference.VAMPIRE_FACTION.getLordTitle(5,  IPlayableFaction.TitleGender.MALE).getString(), VReference.VAMPIRE_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(1, ModFactions.VAMPIRE.value().getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(1, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(2, ModFactions.VAMPIRE.value().getLordTitle(2,  IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(2, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(3, ModFactions.VAMPIRE.value().getLordTitle(3,  IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(3, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(4, ModFactions.VAMPIRE.value().getLordTitle(4,  IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(4, IPlayableFaction.TitleGender.FEMALE).getString());
+        lordTitleBuilder.addLine(5, ModFactions.VAMPIRE.value().getLordTitle(5,  IPlayableFaction.TitleGender.MALE).getString(), ModFactions.VAMPIRE.value().getLordTitle(5, IPlayableFaction.TitleGender.FEMALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.VAMPIRE_MINION_BINDING.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.vampire_minion_binding")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", ModKeys.MINION.getTranslatedKeyMessage(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));
@@ -337,15 +337,15 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "vamp_slayer"), new EntryText(vampSlayerPages, translateComponent(base + "vamp_slayer")));
 
         List<IPage> lordPages = new ArrayList<>();
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), ModFactions.HUNTER.value().getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), ModFactions.HUNTER.value().getLordTitle(ModFactions.HUNTER.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString())), new ResourceLocation("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
         lordTitleBuilder.setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), "text.vampirism.title");
-        lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString());
-        lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.MALE).getString());
-        lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.MALE).getString());
-        lordTitleBuilder.addLine(4, VReference.HUNTER_FACTION.getLordTitle(4, IPlayableFaction.TitleGender.MALE).getString());
-        lordTitleBuilder.addLine(5, VReference.HUNTER_FACTION.getLordTitle(5, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(1, ModFactions.HUNTER.value().getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(2, ModFactions.HUNTER.value().getLordTitle(2, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(3, ModFactions.HUNTER.value().getLordTitle(3, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(4, ModFactions.HUNTER.value().getLordTitle(4, IPlayableFaction.TitleGender.MALE).getString());
+        lordTitleBuilder.addLine(5, ModFactions.HUNTER.value().getLordTitle(5, IPlayableFaction.TitleGender.MALE).getString());
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()))), new ResourceLocation("guide.vampirism.items.hunter_minion_equipment")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", ModKeys.MINION.getTranslatedKeyMessage(), translate("text.vampirism.minion.call_single"), translate("text.vampirism.minion.respawn")))));

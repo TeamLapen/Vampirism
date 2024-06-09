@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.api.DeferredAction;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.annotations.FloatRange;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;

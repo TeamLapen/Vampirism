@@ -9,6 +9,9 @@ import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.entity.factions.Faction;
+import de.teamlapen.vampirism.entity.factions.PlayableFaction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -179,24 +182,24 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     private static class Disguise implements IDisguise {
 
-        private final IPlayableFaction<?> faction;
+        private final Holder<? extends IPlayableFaction<?>> faction;
 
-        public Disguise(IPlayableFaction<?> faction) {
+        public Disguise(Holder<? extends IPlayableFaction<?>> faction) {
             this.faction = faction;
         }
 
         @Override
-        public @NotNull IPlayableFaction<?> getOriginalFaction() {
+        public @NotNull Holder<? extends IPlayableFaction<?>> getOriginalFaction() {
             return this.faction;
         }
 
         @Override
-        public @Nullable IPlayableFaction<?> getViewedFaction(@Nullable IFaction<?> viewerFaction) {
+        public @Nullable Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
             return this.faction;
         }
 
         @Override
-        public void disguiseAs(@Nullable IPlayableFaction<?> faction) {
+        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
 
         }
 

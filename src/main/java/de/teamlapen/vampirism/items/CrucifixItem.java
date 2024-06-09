@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -70,10 +71,9 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
         return HunterSkills.CRUCIFIX_WIELDER;
     }
 
-    @org.jetbrains.annotations.Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.HUNTER_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactions.HUNTER;
     }
 
     @Override
@@ -142,7 +142,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
         if (e instanceof Player) {
             int level = VampirismPlayerAttributes.get((Player) e).vampireLevel;
             int tier = 1;
-            if (level == VReference.VAMPIRE_FACTION.getHighestReachableLevel()) {
+            if (level == ModFactions.VAMPIRE.value().getHighestReachableLevel()) {
                 tier = 3;
             } else if (level >= 8) {
                 tier = 2;

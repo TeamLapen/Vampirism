@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -59,7 +60,7 @@ public class SkillCommand extends BasicCommand {
         T factionPlayer = FactionPlayerHandler.<T>getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
         ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
         ModRegistries.SKILLS.holders().forEach(holder -> {
-            if (!holder.value().getFaction().map(f -> f != factionPlayer.getFaction()).orElse(false)) {
+            if (IFaction.is(factionPlayer.getFaction(), holder.value().factions())) {
                 //noinspection unchecked
                 skillHandler.enableSkill((Holder<ISkill<T>>) (Object) holder);
             }

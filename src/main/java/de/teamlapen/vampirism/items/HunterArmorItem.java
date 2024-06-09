@@ -4,8 +4,10 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.Holder;
@@ -37,16 +39,15 @@ public abstract class HunterArmorItem extends ArmorItem implements IFactionExclu
 
 
     @Override
-    @Nullable
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.HUNTER_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactions.HUNTER;
     }
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity.tickCount % 16 == 8 && pSlotId >= 36 && pSlotId <= 39 && pEntity instanceof Player player) {
-            IFaction<?> f = VampirismPlayerAttributes.get(player).faction;
-            if (f != null && !VReference.HUNTER_FACTION.equals(f)) {
+            Holder<? extends IPlayableFaction<?>> f = VampirismPlayerAttributes.get(player).faction;
+            if (f != null && !ModFactions.HUNTER.match(f)) {
                 player.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
             }
         }

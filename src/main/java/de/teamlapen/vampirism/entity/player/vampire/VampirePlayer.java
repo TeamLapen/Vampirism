@@ -52,6 +52,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -181,7 +182,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         super(player);
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this, VReference.VAMPIRE_FACTION);
+        skillHandler = new SkillHandler<>(this, ModFactions.VAMPIRE);
         this.disguise = new Disguise();
     }
 
@@ -1546,7 +1547,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private class Disguise implements IDisguise, ISyncable {
         private static final String KEY_DISGUISE = "disguise";
         private boolean isDisguised;
-        private @Nullable IPlayableFaction<?> disguiseFaction = getOriginalFaction();
+        private @Nullable Holder<? extends IFaction<?>> disguiseFaction = getOriginalFaction();
 
         @Override
         public void unDisguise() {
@@ -1554,7 +1555,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         @Override
-        public void disguiseAs(@Nullable IPlayableFaction<?> faction) {
+        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
             this.disguiseFaction = faction;
             this.isDisguised = faction != getOriginalFaction();
             getSpecialAttributes().disguised = this.isDisguised;
@@ -1565,12 +1566,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         @Override
-        public @NotNull IPlayableFaction<?> getOriginalFaction() {
+        public @NotNull Holder<? extends IPlayableFaction<?>> getOriginalFaction() {
             return getFaction();
         }
 
         @Override
-        public @Nullable IPlayableFaction<?> getViewedFaction(@Nullable IFaction<?> viewerFaction) {
+        public @Nullable Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
             return disguiseFaction;
         }
 
@@ -1583,18 +1584,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
             if (nbt.contains("disguise")) {
                 String disguise = nbt.getString("disguise");
-                if (disguise.isEmpty()) {
-                    disguiseAs(null);
-                } else {
-                    disguiseAs((IPlayableFaction<?>) VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(disguise)));
-                }
+                disguiseAs(Optional.of(disguise).filter(s -> !s.isEmpty()).flatMap(s -> ModRegistries.FACTIONS.getHolder(new ResourceLocation(s))).orElse(null));
             }
         }
 
         @Override
         public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider ) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("disguise", this.disguiseFaction == null ? "" : this.disguiseFaction.getID().toString());
+            tag.putString("disguise", Optional.ofNullable(this.disguiseFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(""));
             return tag;
         }
 

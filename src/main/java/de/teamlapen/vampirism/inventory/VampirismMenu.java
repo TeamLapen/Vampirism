@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
@@ -13,6 +14,7 @@ import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
@@ -36,11 +38,11 @@ import java.util.stream.Collectors;
 public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     private static final Function<Player, SelectorInfo[]> SELECTOR_INFOS = player -> {
-        IPlayableFaction<?> faction = FactionPlayerHandler.getCurrentFactionPlayer(player).orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
+        Holder<? extends IPlayableFaction<?>> faction = FactionPlayerHandler.getCurrentFactionPlayer(player).orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
         return new SelectorInfo[]{
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 8),
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 26),
-                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && faction.equals(((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 44)};
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 8),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 26),
+                new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 44)};
     };
     private final IFactionPlayer<?> factionPlayer;
     private final TextColor factionColor;
@@ -55,8 +57,8 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
     public VampirismMenu(int id, @NotNull Inventory playerInventory) {
         super(ModMenus.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
         this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
-        this.factionColor = factionPlayer.getFaction().getChatColor();
-        this.refinementsAvailable = factionPlayer.getFaction().hasRefinements();
+        this.factionColor = factionPlayer.getFaction().value().getChatColor();
+        this.refinementsAvailable = factionPlayer.getFaction().value().hasRefinements();
         this.addPlayerSlots(playerInventory, 37, 124);
         this.refinementStacks = this.factionPlayer.getSkillHandler().getRefinementItems();
         this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
@@ -111,7 +113,6 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     @Override
     public int getRequirementStatus(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
-        assert this.completedRequirements != null;
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard())) {
             return this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId()).get(requirement.id());
         } else {
@@ -139,11 +140,9 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     @Override
     public boolean isRequirementCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
-        if (this.completedRequirements != null) {
-            if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
-                Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
-                return data.containsKey(requirement.id()) && data.get(requirement.id()) >= requirement.getAmount(this.factionPlayer);
-            }
+        if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
+            Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
+            return data.containsKey(requirement.id()) && data.get(requirement.id()) >= requirement.getAmount(this.factionPlayer);
         }
         return false;
     }

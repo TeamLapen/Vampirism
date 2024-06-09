@@ -9,6 +9,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
@@ -40,9 +41,9 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
             }
             BeaconRenderer.renderBeaconBeam(matrixStack, iRenderTypeBuffer, TEXTURE_BEACON_BEAM, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
         } else {
-            IFaction<?> faction = te.getControllingFaction();
+            Holder<? extends IFaction<?>> faction = te.getControllingFaction();
             if (faction != null) {
-                renderFactionName(faction, matrixStack, iRenderTypeBuffer, i);
+                renderFactionName(faction.value(), matrixStack, iRenderTypeBuffer, i);
             }
         }
     }

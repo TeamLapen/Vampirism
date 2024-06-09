@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.items.RefinementItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -39,9 +40,9 @@ public class GiveAccessoriesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static <Z extends Item & IRefinementItem> int give(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IRefinementSet set) {
-        IFaction<?> faction = set.getFaction();
-        if (faction instanceof PlayableFaction<?>) { // should always be true
-            Z i = ((PlayableFaction<?>) faction).getRefinementItem(IRefinementItem.AccessorySlotType.values()[number - 1]);
+        Holder<? extends IFaction<?>> faction = set.getFaction();
+        if (faction.value() instanceof PlayableFaction<?> playable) { // should always be true
+            Z i = playable.getRefinementItem(IRefinementItem.AccessorySlotType.values()[number - 1]);
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);
@@ -61,11 +62,10 @@ public class GiveAccessoriesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static <T extends IFactionPlayer<T>> int random(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer entity, int amount) {
-        IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(entity);
-        if (faction instanceof PlayableFaction<?>) {
+        Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFactionHolder(entity);
+        if (faction.value() instanceof PlayableFaction<?> playable) {
             for (int i = 0; i < amount; ++i) {
-                //noinspection unchecked
-                ItemStack stack = RefinementItem.getRandomRefinementItem(((PlayableFaction<T>) faction));
+                ItemStack stack = RefinementItem.getRandomRefinementItem(playable);
                 if (!stack.isEmpty()) {
                     entity.addItem(stack);
                 } else {

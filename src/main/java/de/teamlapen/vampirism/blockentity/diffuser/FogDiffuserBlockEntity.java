@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blockentity.diffuser;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.datamaps.IFogDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.inventory.diffuser.FogDiffuserMenu;
@@ -53,7 +54,7 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     public boolean canOpen(@NotNull Player pPlayer) {
-        return tryAccess(pPlayer, VReference.VAMPIRE_FACTION, getName())  && super.canOpen(pPlayer);
+        return tryAccess(pPlayer, ModFactions.VAMPIRE, getName())  && super.canOpen(pPlayer);
     }
 
     protected int getRange() {

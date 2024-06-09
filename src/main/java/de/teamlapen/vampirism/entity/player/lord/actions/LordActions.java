@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.entity.player.lord.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.DeferredAction;
-import de.teamlapen.vampirism.api.DeferredActionRegister;
-import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.registries.DeferredAction;
+import de.teamlapen.vampirism.api.registries.DeferredActionRegister;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 public class LordActions {

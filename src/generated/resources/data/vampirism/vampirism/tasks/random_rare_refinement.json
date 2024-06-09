@@ -14,9 +14,7 @@
   },
   "rewards": {
     "type": "vampirism:refinement",
-    "faction": {
-      "id": "vampirism:vampire"
-    },
+    "faction": "vampirism:vampire",
     "rarity": "rare"
   },
   "title": {

@@ -1,12 +1,17 @@
 package de.teamlapen.vampirism.entity.player.lord.actions;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.VampirismTags;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +33,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
     @Override
     protected boolean activate(@NotNull T player, ActivationContext context) {
         int lordLevel = FactionPlayerHandler.get(player.asEntity()).getLordLevel();
-        List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> player.getFaction() == VampirismAPI.factionRegistry().getFaction(e));
+        List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> IFaction.is(player.getFaction(), VampirismAPI.factionRegistry().getFactionHolder(e)));
         for (LivingEntity entity : entitiesOfClass) {
             if (entity instanceof Player && FactionPlayerHandler.get(((Player) entity)).getLordLevel() >= lordLevel) {
                 continue;
@@ -53,5 +58,10 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
         return Optional.empty();
+    }
+
+    @Override
+    public @NotNull TagKey<IFaction<?>> factions() {
+        return VampirismTags.Factions.ALL_FACTIONS;
     }
 }

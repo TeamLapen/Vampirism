@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.datamaps.IGarlicDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
@@ -80,7 +81,7 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     public boolean canOpen(@NotNull Player pPlayer) {
-        return tryAccess(pPlayer, VReference.HUNTER_FACTION, getName()) && super.canOpen(pPlayer);
+        return tryAccess(pPlayer, ModFactions.HUNTER, getName()) && super.canOpen(pPlayer);
     }
 
     @Override

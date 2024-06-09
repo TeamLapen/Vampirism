@@ -55,7 +55,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<IAction<?>>> ordering) {
-        ClientConfigHelper.saveActionOrder(player.getFaction().getID(), ordering.getOrdering());
+        ClientConfigHelper.saveActionOrder(player.getFaction().unwrapKey().map(ResourceKey::location).orElseThrow(), ordering.getOrdering());
     }
 
     private KeyBindingList keyBindingList;

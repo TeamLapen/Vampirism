@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.entity.player.hunter.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.DeferredAction;
-import de.teamlapen.vampirism.api.DeferredActionRegister;
-import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.registries.DeferredAction;
+import de.teamlapen.vampirism.api.registries.DeferredActionRegister;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 /**

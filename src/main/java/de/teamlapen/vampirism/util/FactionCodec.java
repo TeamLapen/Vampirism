@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.util;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -35,5 +37,13 @@ public class FactionCodec {
     @SuppressWarnings("unchecked")
     public static <T extends IFactionPlayer<T>> Codec<IAction<T>> actionCodec() {
         return ModRegistries.ACTIONS.byNameCodec().xmap(s -> (IAction<T>) s, s -> s);
+    }
+
+    public static Codec<Holder<? extends IPlayableFaction<?>>> playable() {
+        return ModRegistries.FACTIONS.holderByNameCodec().xmap(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s, s -> (Holder<IFaction<?>>) (Object) s);
+    }
+
+    public static Codec<Holder<? extends IFaction<?>>> faction() {
+        return ModRegistries.FACTIONS.holderByNameCodec().xmap(s -> (Holder<? extends IFaction<?>>) (Object) s, s -> (Holder<IFaction<?>>) (Object) s);
     }
 }

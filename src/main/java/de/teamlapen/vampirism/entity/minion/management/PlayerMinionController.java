@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -68,10 +69,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static @NotNull List<IMinionTask<?, ?>> getAvailableTasks(@NotNull ILordPlayer player) {
-        if (player.getLordFaction() == null) {
-            return new ArrayList<>();
-        }
-        return RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+        return player.getLordFaction().stream().flatMap(s -> RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(s.value(), player))).collect(Collectors.toList());
     }
 
     private final Random rng = new Random();
@@ -81,7 +79,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     private final UUID lordID;
     private int maxMinions;
     @Nullable
-    private IPlayableFaction<?> faction;
+    private Holder<? extends IPlayableFaction<?>> faction;
     @NotNull
     private MinionInfo @NotNull [] minions = new MinionInfo[0];
     @SuppressWarnings("unchecked")
@@ -204,7 +202,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
             return Helper.createEntity(type, p.getCommandSenderWorld()).map(m -> {
-                if (faction == null || faction.isEntityOfFaction(m)) {
+                if (faction == null || faction.value().isEntityOfFaction(m)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.discard();
                     return null;
@@ -243,12 +241,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
-        if (!(f instanceof IPlayableFaction)) {
+        //noinspection unchecked
+        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(new ResourceLocation(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
+        if (faction.isEmpty()) {
             this.maxMinions = 0;
             return;
         }
-        this.faction = (IPlayableFaction<?>) f;
+        this.faction = faction.get();
         this.maxMinions = nbt.getInt("max_minions");
         ListTag data = nbt.getList("data", 10);
         MinionInfo[] infos = new MinionInfo[data.size()];
@@ -369,9 +368,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
-            getLord().flatMap(player -> player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler)).ifPresent(s -> {
+            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).flatMap(s ->  s.getPlayerCapability(player.getPlayer())).map(IFactionPlayer::getSkillHandler)).ifPresent(s -> {
                 if (s.isSkillEnabled(LordSkills.MINION_RECOVERY)) {
-                    i.deathCooldown *= (int) 0.8;
+                    i.deathCooldown = (int) (i.deathCooldown * 0.8);
                 }
             });
             if (id < minionTokens.length) {
@@ -414,7 +413,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("max_minions", maxMinions);
         if (faction != null) {
-            nbt.putString("faction", faction.getID().toString());
+            nbt.putString("faction", faction.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow());
         }
         ListTag data = new ListTag();
         for (MinionInfo i : minions) {
@@ -429,7 +428,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         return nbt;
     }
 
-    public void setMaxMinions(@Nullable IPlayableFaction<?> faction, int newCount) {
+    public void setMaxMinions(@Nullable Holder<? extends IPlayableFaction<?>> faction, int newCount) {
         assert newCount >= 0;
         if (this.faction != null && faction != this.faction) {
             LOGGER.warn("Changing player minion controller faction");

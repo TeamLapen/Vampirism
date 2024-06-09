@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -84,9 +85,15 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     }
 
     @NotNull
+    @Deprecated
     @Override
     public Optional<IPlayableFaction<?>> getFaction() {
         return this.action.value().getFaction();
+    }
+
+    @Override
+    public TagKey<? extends IFaction<?>> factions() {
+        return this.action.value().factions();
     }
 
     @Override

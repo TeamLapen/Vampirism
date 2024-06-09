@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.entity.ai.goals.DefendLeaderGoal;
@@ -74,10 +75,10 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        NearestAttackableTargetGoal<Player> goal = new NearestAttackableTargetGoal<>(this, Player.class, 0, false, false, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, false, true, true, null));
+        NearestAttackableTargetGoal<Player> goal = new NearestAttackableTargetGoal<>(this, Player.class, 0, false, false, VampirismAPI.factionRegistry().getPredicate(ModFactions.VAMPIRE, true, false, true, true, null));
         ((NearestTargetGoalModifier) goal).ignoreLineOfSight();
         this.targetSelector.addGoal(3, goal);
-        NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, false, true, false, true, null)) {
+        NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, VampirismAPI.factionRegistry().getPredicate(ModFactions.VAMPIRE, false, true, false, true, null)) {
             @Override
             protected double getFollowDistance() {
                 return super.getFollowDistance() / 2;

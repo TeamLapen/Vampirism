@@ -27,6 +27,7 @@ public class TagProvider {
         gen.addProvider(event.includeServer(), new ModSkillTreeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModEffectTypeProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModEnchantmentProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModFactionProvider(output, future, existingFileHelper));
     }
 
 }

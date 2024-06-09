@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillLike;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +38,12 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
     /**
      * @return the faction, which players can use this action
      */
+    @Deprecated
     @NotNull
-    Optional<IPlayableFaction<?>> getFaction(); //TODO might be a good idea to have a more useful return type, that allow more that all or one faction
+    Optional<IPlayableFaction<?>> getFaction();
+
+    @NotNull
+    TagKey<? extends IFaction<?>> factions();
 
     /**
      * @param faction The faction to test
@@ -48,6 +55,11 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
         }
         return getFaction().map(f -> f == faction).orElse(true);
     }
+
+    default boolean matchesFaction(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
+        return IFaction.is(faction, factions());
+    }
+
 
     default MutableComponent getName() {
         return Component.translatable(getTranslationKey());

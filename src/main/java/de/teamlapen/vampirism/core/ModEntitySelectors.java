@@ -9,9 +9,12 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+
+import java.util.List;
 
 
 /**
@@ -31,9 +34,9 @@ public class ModEntitySelectors {
         EntitySelectorOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
             ResourceLocation factionID = new ResourceLocation(parser.getReader().readString());
-            IFaction<?>[] factions = VampirismAPI.factionRegistry().getFactions();
-            for (final IFaction<?> f : factions) {
-                if (f.getID().equals(factionID)) {
+            List<Holder.Reference<IFaction<?>>> factions = ModRegistries.FACTIONS.holders().toList();
+            for (final Holder.Reference<IFaction<?>> f : factions) {
+                if (f.is(factionID)) {
                     parser.addPredicate(input -> {
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());

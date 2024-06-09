@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -142,8 +143,9 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     }
 
-    public static boolean tryAccess(Player player, IPlayableFaction<?> faction, Component displayName) {
-        if (!player.isSpectator() && VampirismAPI.factionRegistry().getFaction(player) != faction) {
+    public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
+        //noinspection rawtypes,deprecation,unchecked
+        if (!player.isSpectator() && VampirismAPI.factionRegistry().getFactionHolder(player).is((Holder)faction)) {
             player.displayClientMessage(Component.translatable("text.vampirism.cannot_access_menu", displayName), true);
             player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
             return false;

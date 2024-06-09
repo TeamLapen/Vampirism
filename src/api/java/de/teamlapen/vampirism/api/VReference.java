@@ -40,14 +40,14 @@ public class VReference {
      */
     public static MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
-     * Vampire Player Faction
-     * Filled during pre-init.
+     * @deprecated use {@link de.teamlapen.vampirism.api.VampirismFactions#VAMPIRE}
      */
+    @Deprecated
     public static IPlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
     /**
-     * Hunter Player Faction
-     * Filled during pre-init.
+     * @deprecated use {@link de.teamlapen.vampirism.api.VampirismFactions#HUNTER}
      */
+    @Deprecated
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;

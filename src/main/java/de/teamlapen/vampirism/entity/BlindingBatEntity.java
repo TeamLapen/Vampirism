@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
@@ -50,7 +51,7 @@ public class BlindingBatEntity extends Bat {
         }
     }
 
-    private final TargetingConditions nonVampirePredicatePlayer = TargetingConditions.forCombat().selector(VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true).and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
+    private final TargetingConditions nonVampirePredicatePlayer = TargetingConditions.forCombat().selector(VampirismAPI.factionRegistry().getPredicate(ModFactions.VAMPIRE, true).and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
     private final TargetingConditions nonVampirePredicate = TargetingConditions.forCombat().selector(e -> !Helper.appearsAsVampire(e, this));
     private boolean restrictLiveSpan;
     private boolean targeting;

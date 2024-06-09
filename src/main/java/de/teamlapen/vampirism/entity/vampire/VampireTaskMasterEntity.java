@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.entity.ai.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
@@ -119,7 +120,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PathfinderMob.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, ModFactions.HUNTER)));
         this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
         this.goalSelector.addGoal(2, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));

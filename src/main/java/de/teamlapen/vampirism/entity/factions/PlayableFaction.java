@@ -52,6 +52,9 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         return highestLevel;
     }
 
+    /**
+     * @deprecated use HasLordSkills tag instead
+     */
     @Override
     public boolean hasLordSkills() {
         return this.hasLordSkills;

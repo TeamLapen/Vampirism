@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -33,7 +34,7 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player && attacker.isAlive()) {
             @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer((Player) attacker).orElse(null);
-            if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
+            if (factionPlayer != null && ModFactions.HUNTER.match(factionPlayer.getFaction())) {
                 ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
                 if (skillHandler.isSkillEnabled(HunterSkills.STAKE1)) {
                     instaKillLowHealth = true;

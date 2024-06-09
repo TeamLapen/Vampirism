@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,7 @@ public class LevelCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int leaveFaction(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
+            FactionPlayerHandler.get(player).setFactionAndLevel((Holder<? extends IPlayableFaction<?>>) null, 0);
         }
         return 0;
     }

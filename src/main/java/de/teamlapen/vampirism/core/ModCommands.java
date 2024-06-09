@@ -84,13 +84,13 @@ public class ModCommands {
                             .then(VampireSwordCommand.register())
                             .then(SpawnTestAnimalCommand.register())
                             .then(HealCommand.register())
-                            .then(VillageCommand.register())
+                            .then(VillageCommand.register(buildContext))
                             .then(MinionCommand.register())
                             .then(TaskCommand.register())
                             .then(ForcePlayerSyncCommand.register())
                             .then(GiveAccessoriesCommand.register())
                             .then(SummonDummy.register())
-                            .then(GiveBannerCommand.register())
+                            .then(GiveBannerCommand.register(buildContext))
             );
         }
     }

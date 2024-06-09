@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.util;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
@@ -35,5 +36,10 @@ public class RegUtil {
     @SuppressWarnings("unchecked")
     public static <T extends IRefinement> Holder<T> holder(T refinement) {
         return (Holder<T>) VampirismRegistries.REFINEMENT.get().wrapAsHolder(refinement);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFaction<?>> Holder<T> holder(T faction) {
+        return (Holder<T>) VampirismRegistries.FACTION.get().wrapAsHolder(faction);
     }
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -68,7 +69,7 @@ public class AltarCleansingBlock extends VampirismHorizontalBlock {
     @Override
     public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (!world.isClientSide || !player.isAlive()) return InteractionResult.PASS;
-        if (FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION)) {
+        if (FactionPlayerHandler.get(player).isInFaction(ModFactions.VAMPIRE)) {
             VampirismMod.proxy.displayRevertBackScreen();
             return InteractionResult.SUCCESS;
         }

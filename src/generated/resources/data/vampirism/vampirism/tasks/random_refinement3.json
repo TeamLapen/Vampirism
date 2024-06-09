@@ -25,9 +25,7 @@
   },
   "rewards": {
     "type": "vampirism:refinement",
-    "faction": {
-      "id": "vampirism:vampire"
-    }
+    "faction": "vampirism:vampire"
   },
   "title": {
     "translate": "task.vampirism.random_refinement3"

@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.api.entity.player.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismFactions;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,14 +20,14 @@ public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
      */
     void breakDisguise();
 
-    @NotNull
-    @Override
-    default IPlayableFaction<IHunterPlayer> getFaction() {
-        return VReference.HUNTER_FACTION;
-    }
-
     /**
      * updates attributes of all minions
      */
     void updateMinionAttributes(boolean increasedStats);
+
+    @Override
+    @NotNull
+    default Holder<? extends IPlayableFaction<IHunterPlayer>> getFaction() {
+        return VampirismFactions.HUNTER;
+    }
 }

@@ -11,11 +11,13 @@ import de.teamlapen.vampirism.config.ServerConfig;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.fog.FogLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -325,10 +327,10 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                     if (opt == ServerConfig.IMobOptions.SMART) {
                         Player player = VampirismMod.proxy.getClientPlayer();
                         if (player != null && player.isAlive()) {
-                            IPlayableFaction<?> f = VampirismPlayerAttributes.get(player).faction;
-                            IFaction<?> thisFaction = ((IFactionEntity) this).getFaction();
+                            Holder<? extends IPlayableFaction<?>> f = VampirismPlayerAttributes.get(player).faction;
+                            Holder<IFaction<?>> thisFaction = (Holder<IFaction<?>>) ((IFactionEntity) this).getFaction();
 
-                            boolean hostile = f == null ? thisFaction.isHostileTowardsNeutral() : !thisFaction.equals(f);
+                            boolean hostile = f == null ? thisFaction.is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) : !thisFaction.equals(f);
                             convert = hostile != current;
 
                         }

@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,31 +31,44 @@ public interface IFactionRegistry {
      * @param entity Can check any entity
      * @return The faction of the given entity or null
      */
+    @Deprecated
     @Nullable
     IFaction<?> getFaction(Entity entity);
+
+    Holder<? extends IFaction<?>> getFactionHolder(Entity entity);
 
     /**
      * Get a faction by its name
      */
+    @Deprecated
     @Nullable
     IFaction<?> getFactionByID(ResourceLocation id);
 
     /**
      * @return All factions after post init
      */
+    @Deprecated
     IFaction<?>[] getFactions();
 
     /**
      * @return All playable factions after post init
      */
+    @Deprecated
     IPlayableFaction<?>[] getPlayableFactions();
+
+    List<Holder<? extends IPlayableFaction<?>>> playableFactions();
 
     /**
      * Get a cached or create a predicate which selects all other faction entities
      *
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      */
-    Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise);
+    @Deprecated
+    default Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise) {
+        return getPredicate(RegUtil.holder(thisFaction), ignoreDisguise);
+    }
+
+    Predicate<LivingEntity> getPredicate(Holder<? extends IFaction<?>> thisFaction, boolean ignoreDisguise);
 
     /**
      * Get a cached or create a predicate which selects entities from other factions.
@@ -65,7 +80,10 @@ public interface IFactionRegistry {
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      */
+    @Deprecated
     Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction);
+
+    Predicate<LivingEntity> getPredicate(Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction);
 
     /**
      * Creates a faction builder.
@@ -75,6 +93,7 @@ public interface IFactionRegistry {
      * @param <T>             Interface all entities implement
      * @return a faction builder
      */
+    @Deprecated
     @ThreadSafeAPI
     <T extends IFactionEntity> IFactionBuilder<T> createFaction(ResourceLocation id, Class<T> entityInterface);
 
@@ -87,6 +106,7 @@ public interface IFactionRegistry {
      * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return a player faction builder
      */
+    @Deprecated
     @ThreadSafeAPI
     <T extends IFactionPlayer<T>> IPlayableFactionBuilder<T> createPlayableFaction(ResourceLocation id, Class<T> entityInterface, Supplier<AttachmentType<T>> playerCapabilitySupplier);
 

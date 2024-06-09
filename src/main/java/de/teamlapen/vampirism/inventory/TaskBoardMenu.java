@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.types.templates.Hook;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -14,6 +15,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundTaskActionPacket;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +58,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
     public TaskBoardMenu(int id, @NotNull Inventory playerInventory) {
         super(ModMenus.TASK_MASTER.get(), id);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
-        this.factionColor = this.factionPlayer.getFaction().getChatColor();
+        this.factionColor = this.factionPlayer.getFaction().value().getChatColor();
         this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
     }
 
@@ -120,7 +122,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements TaskMenu {
     }
 
     @NotNull
-    public IPlayableFaction<?> getFaction() {
+    public Holder<? extends IPlayableFaction<?>> getFaction() {
         return this.factionPlayer.getFaction();
     }
 

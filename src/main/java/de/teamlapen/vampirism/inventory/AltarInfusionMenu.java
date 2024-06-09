@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
@@ -37,7 +38,7 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
         super(ModMenus.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable);
         ((ItemCombinerMenuAccessor) this).setInputSlots(inventory);
         this.init(playerInventory);
-        this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.get(player).getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
+        this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.get(player).getCurrentLevel(ModFactions.VAMPIRE) + 1);
     }
 
     protected void init(@NotNull Inventory playerInventory) {

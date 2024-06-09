@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.tags.ModPoiTypeTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -211,7 +212,7 @@ public class TotemHelper {
      * @param player  the player that requests the faction
      * @return the feedback for the player
      */
-    public static @NotNull Component forceFactionCommand(@Nullable IFaction<?> faction, @NotNull ServerPlayer player) {
+    public static @NotNull Component forceFactionCommand(@Nullable Holder<IFaction<?>> faction, @NotNull ServerPlayer player) {
         Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.getCommandSenderWorld().dimension(), key -> new HashMap<>());
         List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).toList();
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
@@ -223,7 +224,7 @@ public class TotemHelper {
             return Component.literal("");
         }
         tile.setForcedFaction(faction);
-        return Component.translatable("command.vampirism.test.village.success", faction == null ? "none" : faction.getName());
+        return Component.translatable("command.vampirism.test.village.success", faction == null ? "none" : faction.value().getName());
     }
 
     /**

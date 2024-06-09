@@ -40,7 +40,9 @@ public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
      * Enables this faction to have lord skills
      *
      * @return the builder
+     * @deprecated use HasLordSkills tag instead
      */
+    @Deprecated
     ILordPlayerBuilder<T> enableLordSkills();
 
     <Z extends IMinionData> IMinionBuilder<T,Z> minion(ResourceLocation minionId, Supplier<Z> data);

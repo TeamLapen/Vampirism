@@ -44,20 +44,20 @@ public class VampirismEventFactory {
         return event.getNewVillager();
     }
 
-    public static PlayerFactionEvent.CanJoinFaction.Behavior fireCanJoinFactionEvent(@NotNull IFactionPlayerHandler playerHandler, @Nullable IPlayableFaction<?> currentFaction, IPlayableFaction<?> newFaction) {
-        PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, currentFaction, newFaction);
+    public static PlayerFactionEvent.CanJoinFaction.Behavior fireCanJoinFactionEvent(@NotNull IFactionPlayerHandler playerHandler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, Holder<? extends IPlayableFaction<?>> newFaction) {
+        PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, (Holder<IPlayableFaction<?>>) currentFaction, (Holder<IPlayableFaction<?>>) newFaction);
         NeoForge.EVENT_BUS.post(event);
         return event.getBehavior();
     }
 
-    public static boolean fireChangeLevelOrFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> currentFaction, int currentLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
-        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, currentFaction, currentLevel, newFaction, newLevel);
+    public static boolean fireChangeLevelOrFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, int currentLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
+        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, (Holder<IPlayableFaction<?>>) currentFaction, currentLevel,(Holder<IPlayableFaction<?>>) newFaction, newLevel);
         NeoForge.EVENT_BUS.post(event);
         return event.isCanceled();
     }
 
-    public static void fireFactionLevelChangedEvent(@NotNull IFactionPlayerHandler player, @Nullable IPlayableFaction<?> oldFaction, int oldLevel, @Nullable IPlayableFaction<?> newFaction, int newLevel) {
-        PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, oldFaction, oldLevel, newFaction, newLevel);
+    public static void fireFactionLevelChangedEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
+        PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, (Holder<IPlayableFaction<?>>) oldFaction, oldLevel, (Holder<IPlayableFaction<?>>) newFaction, newLevel);
         NeoForge.EVENT_BUS.post(event);
     }
 

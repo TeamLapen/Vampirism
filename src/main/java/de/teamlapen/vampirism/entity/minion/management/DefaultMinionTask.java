@@ -53,7 +53,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
         }
     }
 
-    public boolean isRequiredSkillUnlocked(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
-        return this.requiredSkill == null || player == null || faction.getPlayerCapability(player.getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
+    public boolean isRequiredSkillUnlocked(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
+        return this.requiredSkill == null || player == null || faction.value().getPlayerCapability(player.getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
     }
 }

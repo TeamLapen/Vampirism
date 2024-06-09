@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.base.Suppliers;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.registries.DeferredFaction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.RegistryManager;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
@@ -35,5 +36,10 @@ class APIUtil {
 
     static <T> ResourceKey<Registry<T>> registryKey(String name) {
         return ResourceKey.createRegistryKey(new ResourceLocation(VReference.MODID, name));
+    }
+
+    @SuppressWarnings("unchecked")
+    static <Z extends IFactionEntity, L extends IFaction<Z>> DeferredFaction<Z, L> factionHolder(ResourceLocation key) {
+        return DeferredFaction.createFaction((ResourceKey<L>) ResourceKey.create(VampirismRegistries.Keys.FACTION, key));
     }
 }

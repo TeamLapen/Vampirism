@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.ConvertedCreature;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -267,7 +268,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     @SuppressWarnings("JavadocReference")
     default void registerGoalsC() {
         PathfinderMob entity = ((PathfinderMob) this);
-        entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, PathfinderMob.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+        entity.goalSelector.addGoal(1, new AvoidEntityGoal<>(entity, PathfinderMob.class, 10, 1, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, ModFactions.HUNTER)));
         entity.goalSelector.addGoal(4, new RestrictSunGoal(entity));
         entity.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(entity, 0.9D, false));
 

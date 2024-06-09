@@ -420,13 +420,13 @@ public class ModPlayerEventHandler {
         if (VampirismConfig.SERVER.factionColorInChat.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
             handler.getCurrentFactionPlayer().ifPresent(fp -> {
-                IFaction<?> f = fp.getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getCurrentFaction).orElse(null));
+                Holder<? extends IFaction<?>> f = fp.getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
                 if (f != null) {
                     MutableComponent displayName;
                     displayName = Optional.of(handler).filter(h -> h.getLordLevel() > 0).filter(x -> VampirismConfig.SERVER.lordPrefixInChat.get()).map(FactionPlayerHandler::getLordTitle)
                             .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
                             .orElseGet(() -> event.getDisplayname().copy());
-                    event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
+                    event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
                 }
             });
         }
@@ -468,7 +468,7 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionExclusiveItem factionItem) {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IFaction<?> usingFaction = factionItem.getExclusiveFaction(stack);
+            Holder<? extends IFaction<?>> usingFaction = factionItem.getExclusiveFaction(stack);
             if (usingFaction != null && !handler.isInFaction(usingFaction) && checkExceptions(player, handler.getCurrentFaction(), stack)) {
                 if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
@@ -506,8 +506,8 @@ public class ModPlayerEventHandler {
     public void onPlayerAttackCritical(@NotNull CriticalHitEvent event) {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
-            IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());
-            if (faction != null && faction.equals(item.getSlayedFaction())) {
+            Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFactionHolder(event.getTarget());
+            if (faction != null && IFaction.is(faction, item.getSlayedFaction())) {
                 event.setResult(Event.Result.ALLOW);
                 event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }

@@ -44,9 +44,10 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
     }
 
     public static <T extends IFactionPlayer<T>> void show(KeyMapping keyMapping) {
-        IPlayableFaction<T> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction();
+        Holder<? extends IPlayableFaction<T>> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction();
         if (faction != null) {
-            faction.getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
+            faction.value().getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
+                //noinspection rawtypes
                 List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (!actions.isEmpty()) {
                     Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));

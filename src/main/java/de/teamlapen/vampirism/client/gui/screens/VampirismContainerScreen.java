@@ -136,7 +136,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         if (factionPlayer.getLevel() > 0) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
             MutableComponent component = Optional.of(handler).filter(x -> x.getLordLevel() > 0).map(FactionPlayerHandler::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.vampirism.level").append(" " + factionPlayer.getLevel()));
-            this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().getChatColor()));
+            this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
         } else {
             this.level = Component.empty();
         }

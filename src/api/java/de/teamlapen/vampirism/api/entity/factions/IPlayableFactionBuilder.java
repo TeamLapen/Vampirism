@@ -17,6 +17,10 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     @Override
     IPlayableFactionBuilder<T> color(int color);
 
+    /**
+     * @deprecated  use HostileTowardsNeutral tag instead
+     */
+    @Deprecated
     @Override
     IPlayableFactionBuilder<T> hostileTowardsNeutral();
 

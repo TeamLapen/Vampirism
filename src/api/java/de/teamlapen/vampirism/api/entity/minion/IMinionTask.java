@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.minion;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -45,8 +47,13 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param player  The lord player entity if loaded
      * @return Whether the task can currently be given by the lord player
      */
-    default boolean isAvailable(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+    default boolean isAvailable(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
         return true;
+    }
+
+    @Deprecated
+    default boolean isAvailable(@NotNull IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+        return isAvailable(RegUtil.holder(faction), player);
     }
 
     /**

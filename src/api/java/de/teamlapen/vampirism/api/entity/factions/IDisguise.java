@@ -1,22 +1,23 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface IDisguise {
 
     @NotNull
-    IPlayableFaction<?> getOriginalFaction();
+    Holder<? extends IPlayableFaction<?>> getOriginalFaction();
 
     @Nullable
-    IPlayableFaction<?> getViewedFaction(@Nullable IFaction<?> viewerFaction);
+    Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction);
 
     @Nullable
-    default IPlayableFaction<?> getViewedFaction(@Nullable IFaction<?> viewerFaction, boolean ignoreDisguise) {
+    default Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction, boolean ignoreDisguise) {
         return ignoreDisguise ? getOriginalFaction() : getViewedFaction(viewerFaction);
     }
 
-    void disguiseAs(@Nullable IPlayableFaction<?> faction);
+    void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction);
 
     void unDisguise();
 

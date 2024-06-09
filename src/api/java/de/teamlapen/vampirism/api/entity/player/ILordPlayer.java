@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,8 @@ public interface ILordPlayer {
     /**
      * @return The faction of this lord player or null if not currently a lord
      */
-    @Nullable
-    IPlayableFaction<?> getLordFaction();
+    @NotNull
+    Optional<Holder<? extends IPlayableFaction<?>>> getLordFaction();
 
     int getLordLevel();
 

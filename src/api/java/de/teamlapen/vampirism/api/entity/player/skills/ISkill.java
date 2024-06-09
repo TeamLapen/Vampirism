@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -28,8 +29,11 @@ public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      * A skill can be either
      * @return The faction this skill belongs to
      */
+    @Deprecated
     @NotNull
     Optional<IPlayableFaction<?>> getFaction();
+
+    TagKey<? extends IFaction<?>> factions();
 
     default MutableComponent getName() {
         return Component.translatable(getTranslationKey());

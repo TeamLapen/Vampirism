@@ -10,9 +10,7 @@
     "main": {
       "conditions": {
         "type": "level",
-        "faction": {
-          "id": "vampirism:vampire"
-        },
+        "faction": "vampirism:vampire",
         "level": 1
       },
       "trigger": "vampirism:faction"

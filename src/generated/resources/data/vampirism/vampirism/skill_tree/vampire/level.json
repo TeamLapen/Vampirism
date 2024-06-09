@@ -3,18 +3,14 @@
     "count": 1,
     "id": "vampirism:vampire_book"
   },
-  "faction": {
-    "id": "vampirism:vampire"
-  },
+  "faction": "vampirism:vampire",
   "name": {
     "translate": "text.vampirism.skills.level"
   },
   "unlock_predicate": {
     "type_specific": {
       "type": "vampirism:faction",
-      "faction": {
-        "id": "vampirism:vampire"
-      }
+      "faction": "vampirism:vampire"
     }
   }
 }

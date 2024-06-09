@@ -35,9 +35,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": {
-                "id": "vampirism:vampire"
-              },
+              "faction": "vampirism:vampire",
               "function": "vampirism:add_refinement_set"
             }
           ],
@@ -47,9 +45,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": {
-                "id": "vampirism:vampire"
-              },
+              "faction": "vampirism:vampire",
               "function": "vampirism:add_refinement_set"
             }
           ],
@@ -59,9 +55,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "faction": {
-                "id": "vampirism:vampire"
-              },
+              "faction": "vampirism:vampire",
               "function": "vampirism:add_refinement_set"
             }
           ],

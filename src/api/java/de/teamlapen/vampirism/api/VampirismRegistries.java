@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -37,6 +38,7 @@ public class VampirismRegistries {
     public static final Supplier<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = supplyRegistry(Keys.TASK_REQUIREMENT);
     public static final Supplier<Registry<MapCodec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCE = supplyRegistry(Keys.TASK_REWARD_INSTANCE);
     public static final Supplier<Registry<MapCodec<? extends Converter>>> ENTITY_CONVERTER = supplyRegistry(Keys.ENTITY_CONVERTER);
+    public static final Supplier<Registry<IFaction<?>>> FACTION = supplyRegistry(Keys.FACTION);
 
 
     public static class Keys {
@@ -53,6 +55,7 @@ public class VampirismRegistries {
         public static final ResourceKey<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = registryKey("task_requirement");
         public static final ResourceKey<Registry<MapCodec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCE = registryKey("task_reward_instance");
         public static final ResourceKey<Registry<MapCodec<? extends Converter>>> ENTITY_CONVERTER = registryKey("converting_handler");
+        public static final ResourceKey<Registry<IFaction<?>>> FACTION = registryKey("faction");
 
         // data pack registries
         public static final ResourceKey<Registry<Task>> TASK = registryKey("tasks");

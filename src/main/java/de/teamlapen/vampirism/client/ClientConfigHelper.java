@@ -128,15 +128,16 @@ public class ClientConfigHelper {
      * @return a valid order for the given faction
      */
     @NotNull
-    public static List<Holder<IAction<?>>> getActionOrder(@NotNull IPlayableFaction<?> faction) {
-        return Objects.requireNonNullElseGet(ACTION_ORDER.get(faction.getID()), () -> {
+    public static List<Holder<IAction<?>>> getActionOrder(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
+        ResourceLocation id = faction.unwrapKey().map(ResourceKey::location).orElseThrow();
+        return Objects.requireNonNullElseGet(ACTION_ORDER.get(id), () -> {
             List<Holder<IAction<?>>> order = getDefaultActionOrder(faction);
-            saveActionOrder(faction.getID(), order);
+            saveActionOrder(id, order);
             return order;
         });
     }
 
-    public static List<Holder<IAction<?>>> getDefaultActionOrder(IPlayableFaction<?> faction) {
+    public static List<Holder<IAction<?>>> getDefaultActionOrder(Holder<? extends IPlayableFaction<?>> faction) {
         return ModRegistries.ACTIONS.holders().filter(s -> s.value().matchesFaction(faction)).collect(Collectors.toList());
     }
 

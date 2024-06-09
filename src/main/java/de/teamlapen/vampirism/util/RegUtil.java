@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -188,5 +191,15 @@ public class RegUtil {
     @SuppressWarnings("unchecked")
     public static <T extends IFactionPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
         return (Holder<ILastingAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Holder<? extends IPlayableFaction<?>> holder(IPlayableFaction<?> faction) {
+        return (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.wrapAsHolder(faction);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFaction<?>> Holder<T> holder(T faction) {
+        return (Holder<T>) ModRegistries.FACTIONS.wrapAsHolder(faction);
     }
 }

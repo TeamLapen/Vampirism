@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.Util;
@@ -48,10 +49,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     public final void onDisable(@NotNull T player) {
         removeAttributesModifiersFromEntity(player.asEntity());
         player.getActionHandler().relockActionHolder(getActionHolder());
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
+        if (IFaction.is(player.getFaction(), this.factions())) {
             onDisabled(player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " for action " + VampirismRegistries.SKILL.get().getKey(this));
         }
     }
 
@@ -59,11 +60,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     public final void onEnable(@NotNull T player) {
         applyAttributesModifiersToEntity(player.asEntity());
 
-        player.getActionHandler().unlockActionHolder(getActionHolder());
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
+        if (IFaction.is(player.getFaction(), this.factions())) {
+            player.getActionHandler().unlockActionHolder(getActionHolder());
             onEnabled(player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
+            throw new IllegalArgumentException("skill is not allowed for player for skill " + VampirismRegistries.SKILL.get().getKey(this));
         }
     }
 
@@ -124,8 +125,8 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
-            if (iAction.getFaction().isPresent() && iAction.getFaction().get() != this.getFaction().orElse(null)) {
-                throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction().map(Object::toString).orElse(null) + " for skill of faction" + this.getFaction().map(Object::toString).orElse("all"));
+            if (!IFaction.is(factions(),iAction.factions())) {
+                throw new IllegalArgumentException("Can't register action with different factions than the skill");
             }
         }));
         return collection;
@@ -134,7 +135,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     public @NotNull Collection<Holder<? extends IAction<T>>> getActionHolder() {
         Collection<Holder<? extends IAction<T>>> collection = new ArrayList<>();
         collectActions(collection);
-        Preconditions.checkState(collection.stream().map(Holder::value).allMatch(h -> h.getFaction().isEmpty() || h.getFaction().get() == getFaction().orElse(null)), "Can't register action of faction for skill of faction");
+        Preconditions.checkState(collection.stream().map(Holder::value).allMatch(h -> IFaction.is(h.factions(), factions())), "Can't register action with different factions than the skill");
         return collection;
     }
 

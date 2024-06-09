@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -33,10 +34,9 @@ public abstract class HunterSwordItem extends VampirismSwordItem implements IFac
         addFactionToolTips(stack, context, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
     }
 
-    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.HUNTER_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactions.HUNTER;
     }
 
     @Nullable
@@ -46,7 +46,7 @@ public abstract class HunterSwordItem extends VampirismSwordItem implements IFac
     }
 
     @Override
-    public IFaction<?> getSlayedFaction() {
-        return VReference.VAMPIRE_FACTION;
+    public Holder<? extends IFaction<?>> getSlayedFaction() {
+        return ModFactions.VAMPIRE;
     }
 }

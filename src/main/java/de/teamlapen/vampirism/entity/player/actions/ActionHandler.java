@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
@@ -83,7 +84,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     public ActionHandler(@NotNull T player) {
         this.player = player;
-        List<IAction<T>> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
+        List<Holder<IAction<?>>> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
 
         cooldownTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);
         activeTimers = new Object2IntOpenHashMap<>(actions.size(), 0.9f);

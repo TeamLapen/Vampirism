@@ -20,8 +20,6 @@ import java.util.Optional;
  */
 public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<T> {
 
-    Codec<IPlayableFaction<?>> CODEC = RecordCodecBuilder.create(ins -> ins.group(ResourceLocation.CODEC.fieldOf("id").forGetter(IPlayableFaction::getID)).apply(ins, (id) -> (IPlayableFaction<?>) VampirismAPI.factionRegistry().getFactionByID(id)));
-
     Class<T> getFactionPlayerInterface();
 
     /**
@@ -69,6 +67,7 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
     /**
      * @return If the faction has lord skills
      */
+    @Deprecated
     boolean hasLordSkills();
 
     enum TitleGender implements StringRepresentable {

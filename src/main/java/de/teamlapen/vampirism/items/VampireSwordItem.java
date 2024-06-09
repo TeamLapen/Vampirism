@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
@@ -109,10 +110,9 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         stack.set(ModDataComponents.DO_NOT_NAME, Unit.INSTANCE);
     }
 
-    @Nullable
     @Override
-    public IFaction<?> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VReference.VAMPIRE_FACTION;
+    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactions.VAMPIRE;
     }
 
     @Override
@@ -135,7 +135,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         if (!(entityLiving instanceof Player)) return stack;
-        VReference.VAMPIRE_FACTION.getPlayerCapability((Player) entityLiving).ifPresent(vampire -> {
+        ModFactions.VAMPIRE.value().getPlayerCapability((Player) entityLiving).ifPresent(vampire -> {
             int amount = (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
             if (((Player) entityLiving).isCreative() || vampire.useBlood(amount, false)) {
                 this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
