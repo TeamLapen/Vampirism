@@ -45,7 +45,6 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         Direction direction = state.getValue(HORIZONTAL_FACING);
 
         if (!isHeadSafe(tile.getLevel(), tile.getBlockPos())) return;
-        Material material = ModBlocksRender.COFFIN_TEXTURES[tile.color.getId()];
         matrixStack.pushPose();
         boolean vertical = state.getValue(CoffinBlock.VERTICAL);
         switch (direction) {
@@ -85,7 +84,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
         BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
         ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), material.buffer(iRenderTypeBuffer, RenderType::entitySolid), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
         }
 
         matrixStack.pushPose();
