@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AbstractFurnaceBlockEntityAccessor {
 
     @Invoker("canBurn")
-    boolean invoke_canBurn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipe, NonNullList<ItemStack> availableItems, int maxStackSize);
+    boolean invoke_canBurn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipe, NonNullList<ItemStack> availableItems, int maxStackSize, AbstractFurnaceBlockEntity furnace);
 
     @Invoker("getTotalCookTime")
     static int getTotalCookTime(Level pLevel, AbstractFurnaceBlockEntity pBlockEntity) {

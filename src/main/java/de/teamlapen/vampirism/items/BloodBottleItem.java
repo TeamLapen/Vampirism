@@ -80,17 +80,11 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
 
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        for (int i = 0; i < BloodBottleItem.AMOUNT; i++) {
+        for (int i = 0; i <= BloodBottleItem.AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
             stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(i));
-            output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+            output.accept(stack, i == 0 || i == BloodBottleItem.AMOUNT ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
-        ItemStack stack0 = getDefaultInstance();
-        stack0.set(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY);
-        output.accept(stack0, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
-        ItemStack stack9 = getDefaultInstance();
-        stack9.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(BloodBottleItem.AMOUNT));
-        output.accept(stack9, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 
     @Nullable

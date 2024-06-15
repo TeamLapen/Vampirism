@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
 import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.items.BlessableItem;
 import de.teamlapen.vampirism.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
@@ -30,6 +32,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
@@ -40,6 +43,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -105,6 +109,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), OilNBT.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.BLOOD_BOTTLE.get(), BloodNBT.INSTANCE);
     }
 
     private static class OilNBT implements IIngredientSubtypeInterpreter<ItemStack> {
@@ -114,12 +119,20 @@ public class VampirismJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public @NotNull String apply(@NotNull ItemStack itemStack, UidContext context) {
-            CompoundTag nbtTagCompound = itemStack.getTag();
-            if (nbtTagCompound == null || nbtTagCompound.isEmpty()) {
-                return IIngredientSubtypeInterpreter.NONE;
-            }
-            return RegUtil.id(OilUtils.getOil(itemStack)).toString();
+        public @NotNull String apply(@NotNull ItemStack itemStack, @NotNull UidContext context) {
+            return Optional.ofNullable(itemStack.get(ModDataComponents.OIL)).map(OilContent::oil).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(IIngredientSubtypeInterpreter.NONE);
+        }
+    }
+
+    private static class BloodNBT implements IIngredientSubtypeInterpreter<ItemStack> {
+        public static final BloodNBT INSTANCE = new BloodNBT();
+
+        private BloodNBT() {
+        }
+
+        @Override
+        public @NotNull String apply(@NotNull ItemStack itemStack, @NotNull UidContext context) {
+            return Optional.ofNullable(itemStack.get(ModDataComponents.BOTTLE_BLOOD)).map(BottleBlood::blood).map(Object::toString).orElse(IIngredientSubtypeInterpreter.NONE);
         }
     }
 
@@ -148,9 +161,9 @@ public class VampirismJEIPlugin implements IModPlugin {
         Map<Ingredient, List<Item>> items = Maps.newHashMap();
         Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
         items.put(ironIngredient, Lists.newArrayList(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()));
-        Ingredient stringIngredient = Ingredient.of(Tags.Items.STRING);
+        Ingredient stringIngredient = Ingredient.of(Tags.Items.STRINGS);
         items.put(stringIngredient, Lists.newArrayList(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get()));
-        Ingredient leather = Ingredient.of(Tags.Items.LEATHER);
+        Ingredient leather = Ingredient.of(Tags.Items.LEATHERS);
         items.put(leather, Lists.newArrayList(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()));
         Ingredient bloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
         items.put(bloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_STRIKER_NORMAL.get()));
@@ -193,7 +206,7 @@ public class VampirismJEIPlugin implements IModPlugin {
                         .map(Item::getDefaultInstance)
                         .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item) == VReference.HUNTER_FACTION))
                         .filter(item -> oil.value().canBeApplied(item))
-                        .map(stack -> new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, (oil.unwrapKey().get().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
+                        .map(stack -> new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, (oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
     }
 
     private @NotNull List<RecipeHolder<CraftingRecipe>> getCleanOilRecipes(RegistryAccess registryAccess) {

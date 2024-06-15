@@ -231,7 +231,7 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, @Nullable Entity player) {
+    public boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper) {
         return true;
     }
 

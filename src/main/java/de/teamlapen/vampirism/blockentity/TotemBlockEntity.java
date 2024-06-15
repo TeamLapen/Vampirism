@@ -894,7 +894,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
         NeoForge.EVENT_BUS.post(event);
-        if (event.getResult().equals(Event.Result.DENY)) {
+        if (event.isCaptureDisallowed()) {
             if (event.getMessage() != null) {
                 feedback.accept(Component.translatable(event.getMessage()), true);
             }

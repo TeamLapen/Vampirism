@@ -67,6 +67,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -224,9 +225,9 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onItemPickupPre(@NotNull EntityItemPickupEvent event) {
-        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isDBNO) {
-            event.setCanceled(true);
+    public void onItemPickupPre(@NotNull ItemEntityPickupEvent.Pre event) {
+        if (VampirismPlayerAttributes.get(event.getPlayer()).getVampSpecial().isDBNO) {
+            event.setCanPickup(TriState.FALSE);
         }
     }
 
@@ -375,7 +376,7 @@ public class ModPlayerEventHandler {
                         }
                     }
                     if ((bloodBottle || convert) && block instanceof BloodContainerBlock) {
-                        event.setUseBlock(Event.Result.ALLOW);
+                        event.setUseBlock(TriState.TRUE);
                     }
                     if (convert) {
                         //Dangerous, but only solution I found so far
@@ -432,12 +433,25 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeCheck(@NotNull SleepingTimeCheckEvent event) {
-        if (Helper.isVampire(event.getEntity())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().level().getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getEntity().level().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+    public void sleepTimeCheck(@NotNull CanPlayerSleepEvent event) {
+        if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
+            if (event.getLevel().isNight() && event.getProblem() == null) {
+                event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
+            } else if (event.getLevel().isDay() && event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW) {
+                event.setProblem(null);
+            }
         }
-        if (Helper.isHunter(event.getEntity())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().getCommandSenderWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getEntity().getCommandSenderWorld().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+    }
+
+    @SubscribeEvent
+    public void canContinueToSleep(CanContinueSleepingEvent event) {
+        if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
+            boolean day = event.getEntity().level().isDay();
+            if (day && event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW) {
+                event.setContinueSleeping(true);
+            } else if (!day) {
+                event.setContinueSleeping(false);
+            }
         }
     }
 
@@ -502,8 +516,7 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
             IFaction<?> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());
             if (faction != null && faction.equals(item.getSlayedFaction())) {
-                event.setResult(Event.Result.ALLOW);
-                event.setDamageModifier(event.getDamageModifier() + (event.getOldDamageModifier() * (item.getDamageMultiplierForFaction(stack) - 1)));
+                event.setDamageMultiplier(event.getDamageMultiplier() + (event.getVanillaMultiplier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }
         }
     }

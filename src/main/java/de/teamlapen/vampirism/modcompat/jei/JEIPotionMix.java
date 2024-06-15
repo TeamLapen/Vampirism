@@ -2,12 +2,13 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -21,17 +22,17 @@ public class JEIPotionMix {
         List<ItemStack> in1 = Arrays.stream(mix.reagent1.get().getItems()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent1Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<ItemStack> in2 = Arrays.stream(mix.reagent2.get().getItems()).map(ItemStack::copy).peek(s -> s.setCount(mix.reagent2Count)).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         List<JEIPotionMix> recipes = new ArrayList<>(3);
-        recipes.add(build(mix, Items.POTION, mix.input.get(), mix.output.get(), in1, in2));
-        if (mix.output.get().getEffects().stream().noneMatch(s -> s.getEffect().getCategory() != MobEffectCategory.HARMFUL)) {
-            recipes.add(build(mix, Items.LINGERING_POTION, mix.input.get(), mix.output.get(), in1, in2));
-            recipes.add(build(mix, Items.SPLASH_POTION, mix.input.get(), mix.output.get(), in1, in2));
+        recipes.add(build(mix, Items.POTION, mix.input, mix.output, in1, in2));
+        if (mix.output.value().getEffects().stream().noneMatch(s -> s.getEffect().value().getCategory() != MobEffectCategory.HARMFUL)) {
+            recipes.add(build(mix, Items.LINGERING_POTION, mix.input, mix.output, in1, in2));
+            recipes.add(build(mix, Items.SPLASH_POTION, mix.input, mix.output, in1, in2));
         }
         return recipes;
     }
 
-    private static @NotNull JEIPotionMix build(ExtendedPotionMix mix, Item base, @NotNull Potion in, @NotNull Potion out, List<ItemStack> in1, List<ItemStack> in2) {
-        ItemStack potionIn = PotionUtils.setPotion(new ItemStack(base), in);
-        ItemStack potionOut = PotionUtils.setPotion(new ItemStack(base), out);
+    private static @NotNull JEIPotionMix build(ExtendedPotionMix mix, Item base, @NotNull Holder<Potion> in, @NotNull Holder<Potion> out, List<ItemStack> in1, List<ItemStack> in2) {
+        ItemStack potionIn = PotionContents.createItemStack(base, in);
+        ItemStack potionOut = PotionContents.createItemStack(base, out);
         return new JEIPotionMix(mix, potionIn, in1, in2, potionOut);
     }
 

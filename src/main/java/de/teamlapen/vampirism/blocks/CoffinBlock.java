@@ -136,7 +136,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBed(@NotNull BlockState state, BlockGetter world, BlockPos pos, Entity player) {
+    public boolean isBed(@NotNull BlockState state, BlockGetter world, BlockPos pos, LivingEntity sleeper) {
         return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
     }
 

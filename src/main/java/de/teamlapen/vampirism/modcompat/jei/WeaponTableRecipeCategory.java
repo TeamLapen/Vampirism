@@ -136,8 +136,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             }
         }
 
-        int height = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeHeight() : 4;
-        int width = recipe instanceof IShapedRecipe<?> shaped ? shaped.getRecipeWidth() : 4;
+        int height = recipe instanceof IShapedRecipe<?> shaped ? shaped.getHeight() : 4;
+        int width = recipe instanceof IShapedRecipe<?> shaped ? shaped.getWidth() : 4;
 
         for (int i = 0; i < inputs.size(); i++) {
             int index = getCraftingIndex(i, width, height);
