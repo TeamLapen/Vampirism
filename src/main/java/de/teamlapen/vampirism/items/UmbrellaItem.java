@@ -2,6 +2,10 @@ package de.teamlapen.vampirism.items;
 
 
 import com.google.common.base.Suppliers;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -14,7 +18,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class UmbrellaItem extends Item {
-    private static final UUID SPEED_MODIFIER = UUID.fromString("CB3F55D5-6A5C-4F18-A497-9C11A33DB5CF");
 
     private final Supplier<ItemAttributeModifiers> mainHandAttributes;
 
@@ -23,7 +26,7 @@ public class UmbrellaItem extends Item {
 
         this.mainHandAttributes = Suppliers.memoize(() -> {
             ItemAttributeModifiers.Builder builder1 = ItemAttributeModifiers.builder();
-            builder1.add(Attributes.MOVEMENT_SPEED, new AttributeModifier(SPEED_MODIFIER, "Umbrella modifier", -0.35, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND);
+            builder1.add(Attributes.MOVEMENT_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(this), -0.35, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND);
             return builder1.build();
         });
     }

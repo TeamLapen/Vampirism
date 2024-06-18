@@ -61,11 +61,6 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
-
-    @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
@@ -109,10 +104,9 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 15;
     }
-
 
     @NotNull
     @Override

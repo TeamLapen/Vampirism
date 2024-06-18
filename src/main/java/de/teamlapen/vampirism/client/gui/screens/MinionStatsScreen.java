@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
@@ -30,8 +31,8 @@ import java.util.Optional;
 
 public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/appearance.png");
-    private static final WidgetSprites RESET = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/reset"), new ResourceLocation(REFERENCE.MODID, "widget/reset_highlighted"));
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/appearance.png");
+    private static final WidgetSprites RESET = new WidgetSprites(VResourceLocation.mod("widget/reset"), VResourceLocation.mod("widget/reset_highlighted"));
 
     protected final Q entity;
     protected final int xSize = 256;

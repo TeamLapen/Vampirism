@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttachments;
@@ -112,9 +113,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
-                    ((CameraAccessor) event.getCamera()).invoke_move(0.2, -0.2, 0);
+                    ((CameraAccessor) event.getCamera()).invoke_move(0.2f, -0.2f, 0);
                 } else {
-                    ((CameraAccessor) event.getCamera()).invoke_move(0, -0.2, 0);
+                    ((CameraAccessor) event.getCamera()).invoke_move(0, -0.2f, 0);
                 }
             });
         }
@@ -284,7 +285,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             if (mc.level == null) return;
 
             if (shouldRenderBloodVision() && !reducedBloodVision) {
-                this.blurShader.process(mc.getFrameTime());
+                this.blurShader.process(mc.getTimer().getGameTimeDeltaTicks());
                 this.mc.getMainRenderTarget().bindWrite(false);
             }
         }
@@ -362,7 +363,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
         if (this.blurShader != null) {
             this.blurShader.close();
         }
-        ResourceLocation resourcelocationBlur = new ResourceLocation(REFERENCE.MODID, "shaders/blank.json");
+        ResourceLocation resourcelocationBlur = VResourceLocation.mod("shaders/blank.json");
         try {
             this.blurShader = new PostChain(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getMainRenderTarget(), resourcelocationBlur);
             RenderTarget swap = this.blurShader.getTempTarget("swap");

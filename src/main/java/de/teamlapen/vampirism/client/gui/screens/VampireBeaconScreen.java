@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
@@ -36,13 +37,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> {
-    private static final ResourceLocation BEACON_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampire_beacon.png");
-    static final ResourceLocation BUTTON_DISABLED_SPRITE = new ResourceLocation("container/beacon/button_disabled");
-    static final ResourceLocation BUTTON_SELECTED_SPRITE = new ResourceLocation("container/beacon/button_selected");
-    static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = new ResourceLocation("container/beacon/button_highlighted");
-    static final ResourceLocation BUTTON_SPRITE = new ResourceLocation("container/beacon/button");
-    static final ResourceLocation CONFIRM_SPRITE = new ResourceLocation("container/beacon/confirm");
-    static final ResourceLocation CANCEL_SPRITE = new ResourceLocation("container/beacon/cancel");
+    private static final ResourceLocation BEACON_LOCATION = VResourceLocation.mod("textures/gui/container/vampire_beacon.png");
+    static final ResourceLocation BUTTON_DISABLED_SPRITE = VResourceLocation.mc("container/beacon/button_disabled");
+    static final ResourceLocation BUTTON_SELECTED_SPRITE = VResourceLocation.mc("container/beacon/button_selected");
+    static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = VResourceLocation.mc("container/beacon/button_highlighted");
+    static final ResourceLocation BUTTON_SPRITE = VResourceLocation.mc("container/beacon/button");
+    static final ResourceLocation CONFIRM_SPRITE = VResourceLocation.mc("container/beacon/confirm");
+    static final ResourceLocation CANCEL_SPRITE = VResourceLocation.mc("container/beacon/cancel");
     private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable

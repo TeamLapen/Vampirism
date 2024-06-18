@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
@@ -48,8 +49,8 @@ import java.util.List;
 public class SkillsScreen extends Screen {
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
-    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/window.png");
-    private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
+    private static final ResourceLocation WINDOW_LOCATION = VResourceLocation.mod("textures/gui/skills/window.png");
+    private static final ResourceLocation TABS_LOCATION = VResourceLocation.mc("textures/gui/advancements/tabs.png");
     private static final Component VERY_SAD_LABEL = Component.translatable("advancements.sad_label");
     private static final Component NO_TABS_LABEL = Component.translatable("gui.vampirism.skill_screen.no_tab");
     private static final Component TITLE = Component.translatable("gui.vampirism.vampirism_menu.skill_screen");

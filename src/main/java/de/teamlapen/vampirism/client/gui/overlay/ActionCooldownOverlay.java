@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -16,7 +17,7 @@ public class ActionCooldownOverlay implements LayeredDraw.Layer {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
         if (this.mc.player != null) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
@@ -31,7 +32,7 @@ public class ActionCooldownOverlay implements LayeredDraw.Layer {
                         // noinspection unchecked
                         if (!actionHandler.isActionOnCooldown(action)) continue;
                         ResourceLocation id = RegUtil.id(action);
-                        ResourceLocation loc = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+                        ResourceLocation loc = id.withPath("textures/actions/" + id.getPath() + ".png");
                         //noinspection unchecked
                         int perc = (int) ((1 + actionHandler.getPercentageForAction(action)) * 16);
                         //render gray transparent background for remaining cooldown

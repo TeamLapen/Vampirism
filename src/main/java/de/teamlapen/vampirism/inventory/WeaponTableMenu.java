@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -43,7 +44,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     private final CraftingContainer craftMatrix = new TransientCraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
-    private final RecipeManager.CachedCheck<CraftingContainer, IWeaponTableRecipe> quickCheck;
+    private final RecipeManager.CachedCheck<CraftingInput, IWeaponTableRecipe> quickCheck;
 
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.WEAPON_TABLE.get(), id);
@@ -152,7 +153,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
 
     @Override
     public void slotsChanged(@NotNull Container inventoryIn) {
-        this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult));
+        this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), this.craftResult));
     }
 
     @Override
@@ -160,7 +161,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
-    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingContainer craftMatrixIn, @NotNull ResultContainer craftResultIn) {
+    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingInput craftMatrixIn, @NotNull ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<RecipeHolder<IWeaponTableRecipe>> optional = quickCheck.getRecipeFor(craftMatrixIn, worldIn);
             this.missingLava.set(false);

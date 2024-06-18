@@ -36,9 +36,9 @@ public class BaronWrapperModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
         EntityModel<VampireBaronEntity> model = lady ? baroness : baron;
-        model.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        model.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
     }
 
     @Override

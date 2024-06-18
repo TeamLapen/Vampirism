@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.base.Suppliers;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,6 +31,6 @@ class APIUtil {
     }
 
     static <T> ResourceKey<Registry<T>> registryKey(String name) {
-        return ResourceKey.createRegistryKey(new ResourceLocation(VReference.MODID, name));
+        return ResourceKey.createRegistryKey(VResourceLocation.mod(name));
     }
 }

@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -240,7 +241,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public static class HunterMinionData extends MinionData {
-        public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
+        public static final ResourceLocation ID = VResourceLocation.mod("hunter");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;

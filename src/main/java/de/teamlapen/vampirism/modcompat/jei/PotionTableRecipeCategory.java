@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> {
 
-    private static final ResourceLocation backgroundLocation = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/potion_table.png");
+    private static final ResourceLocation backgroundLocation = VResourceLocation.mod("textures/gui/container/potion_table.png");
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;

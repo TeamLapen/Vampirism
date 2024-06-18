@@ -123,7 +123,7 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     }
 
     public static class Entry<T extends Entry<T>> extends ObjectSelectionList.Entry<T> {
-        protected static final WidgetSprites SPRITES = new WidgetSprites(new ResourceLocation("widget/button"), new ResourceLocation("widget/button_disabled"), new ResourceLocation("widget/button_highlighted"));
+        protected static final WidgetSprites SPRITES = new WidgetSprites(ResourceLocation.withDefaultNamespace("widget/button"), ResourceLocation.withDefaultNamespace("widget/button_disabled"), ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
 
         private final Component component;
         private final Runnable onClick;

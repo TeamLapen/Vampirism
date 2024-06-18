@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
@@ -31,9 +32,9 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_single"), Component.translatable("text.vampirism.minion.call_single"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
-            new SelectMinionTaskRadialScreen.Entry(new ResourceLocation(REFERENCE.MODID, "call_all"), Component.translatable("text.vampirism.minion.call_all"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
-            new SelectMinionTaskRadialScreen.Entry(new ResourceLocation(REFERENCE.MODID, "respawn"), Component.translatable("text.vampirism.minion.respawn"), new ResourceLocation(REFERENCE.MODID, "textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
+    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(VResourceLocation.mod("call_single"), Component.translatable("text.vampirism.minion.call_single"), VResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+            new SelectMinionTaskRadialScreen.Entry(VResourceLocation.mod("call_all"), Component.translatable("text.vampirism.minion.call_all"), VResourceLocation.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
+            new SelectMinionTaskRadialScreen.Entry(VResourceLocation.mod("respawn"), Component.translatable("text.vampirism.minion.respawn"), VResourceLocation.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskRadialScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionRadialScreen::show);
@@ -102,7 +103,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         private final IMinionTask<?,?> task;
 
         public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(RegUtil.id(task), task.getName(), new ResourceLocation(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
+            this(RegUtil.id(task), task.getName(), VResourceLocation.loc(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
         }
 
         public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?,?> task) {

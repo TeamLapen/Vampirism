@@ -48,6 +48,13 @@ public class FactionCondition implements LootItemCondition {
         this.maxLevel = Optional.of(maxLevel);
     }
 
+    public FactionCondition(@NotNull IFaction<?> faction) {
+        this.type = Type.FACTION;
+        this.faction = Optional.of(faction);
+        this.minLevel = Optional.empty();
+        this.maxLevel = Optional.empty();
+    }
+
     public FactionCondition(int minLevel, int maxLevel) {
         this.type = Type.ANY_FACTION;
         this.faction = Optional.empty();

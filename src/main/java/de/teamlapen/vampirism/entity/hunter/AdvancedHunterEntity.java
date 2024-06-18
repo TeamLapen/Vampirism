@@ -363,9 +363,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return type;
     }
 
+
     @Override
-    public int getExperienceReward() {
-        return 10 * (1 + getEntityLevel());
+    protected int getBaseExperienceReward() {
+        this.xpReward = 10 * (1 + getEntityLevel());
+        return super.getBaseExperienceReward();
     }
 
     @Override

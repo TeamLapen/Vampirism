@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.mixin.client.accessor.StatsScreenAccessor;
@@ -36,10 +37,10 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
     protected final List<StatType<ISkill<?>>> skillColumns;
     protected final List<StatType<IAction<?>>> actionColumns;
     private final ResourceLocation[] iconSprites = new ResourceLocation[] {
-            new ResourceLocation( REFERENCE.MODID, "statistics/skills_unlocked"),
-            new ResourceLocation( REFERENCE.MODID, "statistics/skills_forgotten"),
-            new ResourceLocation( "statistics/item_used"),
-            new ResourceLocation(REFERENCE.MODID, "statistics/time"),
+            VResourceLocation.mod("statistics/skills_unlocked"),
+            VResourceLocation.mod("statistics/skills_forgotten"),
+            VResourceLocation.mc( "statistics/item_used"),
+            VResourceLocation.mod("statistics/time"),
             null
     };
     private final ItemStack[] itemSprites = new ItemStack[] {
@@ -202,7 +203,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
 
     public class SkillRow extends ObjectSelectionList.Entry<SkillRow> {
 
-        static final ResourceLocation SLOT_SPRITE = new ResourceLocation("container/slot");
+        static final ResourceLocation SLOT_SPRITE = VResourceLocation.mc("container/slot");
         private final ISkill<?> skill;
 
         public SkillRow(ISkill<?> action) {
@@ -259,10 +260,10 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
             ResourceLocation texture;
             if (skill instanceof IActionSkill<?> actionSkill) {
                 ResourceLocation id = RegUtil.id(actionSkill.action());
-                texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+                texture = id.withPath("textures/actions/" + id.getPath() + ".png");
             } else {
                 ResourceLocation id = RegUtil.id(skill);
-                texture = new ResourceLocation(id.getNamespace(), "textures/skills/" + id.getPath() + ".png");
+                texture = id.withPath("textures/skills/" + id.getPath() + ".png");
             }
             pGuiGraphics.blit(texture,pLeft+40+1+1, pTop+1+1, 0, 0, 0, 16, 16, 16, 16);
         }

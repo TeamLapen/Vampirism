@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -29,9 +30,9 @@ import java.util.stream.Stream;
  */
 public class ModItemsRender {
 
-    public static final ResourceLocation CHARGED = new ResourceLocation(REFERENCE.MODID, "charged");
-    public static final ResourceLocation FILLED = new ResourceLocation(REFERENCE.MODID, "filled");
-    public static final ResourceLocation BLOOD = new ResourceLocation(REFERENCE.MODID, "blood");
+    public static final ResourceLocation CHARGED = VResourceLocation.mod("charged");
+    public static final ResourceLocation FILLED = VResourceLocation.mod("filled");
+    public static final ResourceLocation BLOOD = VResourceLocation.mod("blood");
 
     public static void registerItemModelPropertyUnsafe() {
         Stream.of(ModItems.BASIC_CROSSBOW.get(),ModItems.BASIC_DOUBLE_CROSSBOW.get(),ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(),ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {

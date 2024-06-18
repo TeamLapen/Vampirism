@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -81,7 +83,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
             }
         }
 
-        BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_bottom_" + tile.color.getName()));
+        BakedModel baseModel = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(VResourceLocation.mod("block/coffin/coffin_bottom_" + tile.color.getName())));
         ModelData modelData = baseModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : baseModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, baseModel, 1, 1, 1, i, i1, modelData, renderType);
@@ -96,7 +98,7 @@ public class CoffinBESR extends VampirismBESR<CoffinBlockEntity> {
             matrixStack.translate(0, 0, -0.5 * tile.lidPos);
         }
 
-        BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_top_" + tile.color.getName()));
+        BakedModel lidModel = Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(VResourceLocation.mod("block/coffin/coffin_top_" + tile.color.getName())));
         modelData = lidModel.getModelData(tile.getLevel(), tile.getBlockPos(), state, ModelData.EMPTY);
         for (RenderType renderType : lidModel.getRenderTypes(state, RandomSource.create(42), modelData)) {
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(matrixStack.last(), iRenderTypeBuffer.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), state, lidModel, 1, 1, 1, i, i1, modelData, renderType);

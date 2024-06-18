@@ -243,7 +243,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
+        IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(ResourceLocation.parse(nbt.getString("faction")));
         if (!(f instanceof IPlayableFaction)) {
             this.maxMinions = 0;
             return;
@@ -263,7 +263,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 removedData.add(id);
                 continue;
             }
-            ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
+            ResourceLocation entityTypeID = ResourceLocation.parse(tag.getString("entity_type"));
             if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeID)) {
                 LOGGER.warn("Cannot find saved minion type {}. Continue without entry", entityTypeID);
                 removedData.add(id);

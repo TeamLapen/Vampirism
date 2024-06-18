@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.PlayerModel;
@@ -16,7 +17,7 @@ import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 public class HunterTrainerRenderer extends HumanoidMobRenderer<Mob, PlayerModel<Mob>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_trainer.png");
+    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/hunter_trainer.png");
 
 
     public HunterTrainerRenderer(EntityRendererProvider.@NotNull Context context, boolean renderEquipment) {

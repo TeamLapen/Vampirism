@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * Collection of simple input events that do not need any additional information
  */
 public record ServerboundSimpleInputEvent(Event event) implements CustomPacketPayload {
-    public static final Type<ServerboundSimpleInputEvent> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "simple_input"));
+    public static final Type<ServerboundSimpleInputEvent> TYPE = new Type<>(VResourceLocation.mod("simple_input"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSimpleInputEvent> CODEC = StreamCodec.composite(
             NeoForgeStreamCodecs.enumCodec(Event.class), ServerboundSimpleInputEvent::event,

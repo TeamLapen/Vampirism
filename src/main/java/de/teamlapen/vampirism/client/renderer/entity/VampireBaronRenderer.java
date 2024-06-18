@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BaronModel;
 import de.teamlapen.vampirism.client.model.BaronWrapperModel;
@@ -15,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronWrapperModel> {
 
-    private static final ResourceLocation textureLord = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baron.png");
-    private static final ResourceLocation textureLady = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness.png");
-    private static final ResourceLocation textureLordEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baron_enraged.png");
-    private static final ResourceLocation textureLadyEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness_enraged.png");
+    private static final ResourceLocation textureLord = VResourceLocation.mod("textures/entity/baron.png");
+    private static final ResourceLocation textureLady = VResourceLocation.mod("textures/entity/baroness.png");
+    private static final ResourceLocation textureLordEnraged = VResourceLocation.mod("textures/entity/baron_enraged.png");
+    private static final ResourceLocation textureLadyEnraged = VResourceLocation.mod("textures/entity/baroness_enraged.png");
 
 
     public VampireBaronRenderer(EntityRendererProvider.@NotNull Context context) {

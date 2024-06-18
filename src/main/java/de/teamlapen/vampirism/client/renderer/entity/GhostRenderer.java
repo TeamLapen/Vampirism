@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.GhostModel;
 import de.teamlapen.vampirism.entity.GhostEntity;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GhostRenderer extends MobRenderer<GhostEntity, GhostModel> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/entity/ghost.png");
+    public static final ResourceLocation TEXTURE = VResourceLocation.mod("textures/entity/ghost.png");
 
     public GhostRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new GhostModel(pContext.bakeLayer(ModEntitiesRender.GHOST)), 0.1f);

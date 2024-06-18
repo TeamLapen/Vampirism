@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.data.provider;
 
+import com.google.common.collect.Sets;
 import com.ibm.icu.text.SpoofChecker;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.recipebuilder.*;
@@ -13,6 +15,7 @@ import de.teamlapen.vampirism.recipes.CleanOilRecipe;
 import de.teamlapen.vampirism.recipes.ConfigCondition;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
@@ -20,6 +23,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +40,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -49,8 +56,8 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Objects;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class RecipesProvider extends RecipeProvider {
@@ -59,9 +66,49 @@ public class RecipesProvider extends RecipeProvider {
         super(packOutput, lookupProvider);
     }
 
-    @SuppressWarnings("UnreachableCode")
     @Override
+    protected CompletableFuture<?> run(CachedOutput pOutput, HolderLookup.Provider pRegistries) {
+        final Set<ResourceLocation> set = Sets.newHashSet();
+        final List<CompletableFuture<?>> list = new ArrayList<>();
+        this.buildRecipes(pRegistries,
+                new RecipeOutput() {
+                    @Override
+                    public void accept(ResourceLocation p_312039_, Recipe<?> p_312254_, @Nullable AdvancementHolder p_311794_, net.neoforged.neoforge.common.conditions.ICondition... conditions) {
+                        if (!set.add(p_312039_)) {
+                            throw new IllegalStateException("Duplicate recipe " + p_312039_);
+                        } else {
+                            list.add(net.minecraft.data.DataProvider.saveStable(pOutput, pRegistries, Recipe.CONDITIONAL_CODEC, Optional.of(new net.neoforged.neoforge.common.conditions.WithConditions<>(p_312254_, conditions)), RecipesProvider.this.recipePathProvider.json(p_312039_)));
+                            if (p_311794_ != null) {
+                                list.add(
+                                        DataProvider.saveStable(
+                                                pOutput,
+                                                pRegistries,
+                                                Advancement.CONDITIONAL_CODEC,
+                                                Optional.of(new net.neoforged.neoforge.common.conditions.WithConditions<>(p_311794_.value(), conditions)),
+                                                RecipesProvider.this.advancementPathProvider.json(p_311794_.id())
+                                        )
+                                );
+                            }
+                        }
+                    }
+
+                    @Override
+                    public Advancement.Builder advancement() {
+                        return Advancement.Builder.recipeAdvancement().parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT);
+                    }
+                }
+        );
+        return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
+    }
+
+    @Deprecated
     protected void buildRecipes(@NotNull RecipeOutput output) {
+
+    }
+
+    @SuppressWarnings("UnreachableCode")
+    protected void buildRecipes(@NotNull HolderLookup.Provider provider, @NotNull RecipeOutput output) {
+        HolderLookup.RegistryLookup<Enchantment> enchantments = provider.lookupOrThrow(Registries.ENCHANTMENT);
         ItemLike hopper = Blocks.HOPPER;
         ItemLike cauldron = Blocks.CAULDRON;
         ItemLike stone_bricks = Blocks.STONE_BRICKS;
@@ -193,8 +240,8 @@ public class RecipesProvider extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_HEAD_1.get()).lava(1).pattern(" YY ").pattern("XXXX").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', black_wool).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.PITCHFORK.get()).pattern("X X").pattern("YYY").pattern(" Y ").pattern(" Y ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', stick).save(output);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARROW_CLIP.get()).lava(1).pattern("ILLI").pattern("PLLP").pattern("ILLI").define('I', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('L', leather).define('P', planks).save(output);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL.get(), Enchantments.KNOCKBACK, 2)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', garlic).define('Z', stick).save(output);
-        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ENHANCED.get(), Enchantments.KNOCKBACK, 3)).lava(5).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', garlic).define('W', diamond).define('Z', stick).save(output);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 2)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', garlic).define('Z', stick).save(output);
+        ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ENHANCED.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 3)).lava(5).skills(HunterSkills.ENHANCED_WEAPONS.get()).pattern("XWZY").pattern("XWZY").pattern("  ZY").pattern("  Z ").define('X', iron_ingot).unlockedBy("has_iron", has(iron_ingot)).define('Y', garlic).define('W', diamond).define('Z', stick).save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INFUSION.get()).pattern("YZY").pattern("ZZZ").define('Y', gold_ingot).define('Z', obsidian).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("altar_infusion"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INSPIRATION.get()).pattern("X X").pattern("XYX").pattern("XXX").define('X', planks).define('Y', blood_container).unlockedBy("has_planks", has(planks)).unlockedBy("has_blood_container", has(blood_container)).save(output, vampire("altar_inspiration"));
@@ -241,7 +288,7 @@ public class RecipesProvider extends RecipeProvider {
         new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_SEEKER_ENHANCED.get(), 1).pattern(" X ").pattern("XYX").define('X', blood_infused_enhanced_iron_ingot).define('Y', ModItems.HEART_SEEKER_ENHANCED.get()).unlockedBy("has_heart_seeker", has(ModItems.HEART_SEEKER_ENHANCED.get())).save(output, vampire("heart_seeker_enhanced_repair"));
         new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_STRIKER_ENHANCED.get(), 1).pattern("XXX").pattern("XYX").define('X', blood_infused_enhanced_iron_ingot).define('Y', ModItems.HEART_STRIKER_ENHANCED.get()).unlockedBy("has_heart_striker", has(ModItems.HEART_STRIKER_ENHANCED.get())).save(output, vampire("heart_striker_enhanced_repair"));
 
-        BuiltInRegistries.ITEM.getOptional(new ResourceLocation("guideapi_vp", "vampirism-guidebook")).ifPresent(guideBook -> {
+        BuiltInRegistries.ITEM.getOptional(VResourceLocation.loc("guideapi_vp", "vampirism-guidebook")).ifPresent(guideBook -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, guideBook).requires(vampire_fang).requires(book).unlockedBy("has_fang", has(vampire_fang)).save(output.withConditions(new ModLoadedCondition("guideapi_vp")), modId("general/guidebook"));
         });
 
@@ -295,101 +342,101 @@ public class RecipesProvider extends RecipeProvider {
                 .ingredient(Ingredient.of(new ItemStack(Items.GLASS_BOTTLE)))
                 .input(Ingredient.of(new ItemStack(Items.WHEAT_SEEDS)))
                 .unlockedBy("has_bottles", has(Items.GLASS_BOTTLE)).unlockedBy("has_wheat_seeds", has(Items.WHEAT_SEEDS))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "plant_oil"));
+                .save(output, VResourceLocation.mod("plant_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.VAMPIRE_BLOOD)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE.get())).unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "vampire_blood_oil"));
+                .save(output, VResourceLocation.mod("vampire_blood_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.HEALING)
                 .bloodOilIngredient()
                 .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "healing_oil"));
+                .save(output, VResourceLocation.mod("healing_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.POISON)
                 .bloodOilIngredient()
                 .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "poison_oil"));
+                .save(output, VResourceLocation.mod("poison_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.WEAKNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "weakness_oil"));
+                .save(output, VResourceLocation.mod("weakness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.SLOWNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "slowness_oil"));
+                .save(output, VResourceLocation.mod("slowness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.FIRE_RESISTANCE)
                 .bloodOilIngredient()
                 .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "fire_resistance_oil"));
+                .save(output, VResourceLocation.mod("fire_resistance_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.SWIFTNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "swiftness_oil"));
+                .save(output, VResourceLocation.mod("swiftness_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.REGENERATION)
                 .bloodOilIngredient()
                 .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "regeneration_oil"));
+                .save(output, VResourceLocation.mod("regeneration_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.NIGHT_VISION)
                 .bloodOilIngredient()
                 .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "night_vision_oil"));
+                .save(output, VResourceLocation.mod("night_vision_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.STRENGTH)
                 .bloodOilIngredient()
                 .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "strength_oil"));
+                .save(output, VResourceLocation.mod("strength_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.JUMP)
                 .bloodOilIngredient()
                 .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "jump_oil"));
+                .save(output, VResourceLocation.mod("jump_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.WATER_BREATHING)
                 .bloodOilIngredient()
                 .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "water_breathing_oil"));
+                .save(output, VResourceLocation.mod("water_breathing_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.INVISIBILITY)
                 .bloodOilIngredient()
                 .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "invisibility_oil"));
+                .save(output, VResourceLocation.mod("invisibility_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.SLOW_FALLING)
                 .bloodOilIngredient()
                 .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "slow_falling_oil"));
+                .save(output, VResourceLocation.mod("slow_falling_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.LUCK)
                 .bloodOilIngredient()
                 .input(potion(Potions.LUCK))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "luck_oil"));
+                .save(output, VResourceLocation.mod("luck_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.SMELT)
                 .bloodOilIngredient()
                 .input(Ingredient.of(new ItemStack(ModItems.ITEM_ALCHEMICAL_FIRE.get())))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "smelt_oil"));
+                .save(output, VResourceLocation.mod("smelt_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.TELEPORT)
                 .bloodOilIngredient()
                 .input(Ingredient.of(new ItemStack(Items.ENDER_PEARL)))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "teleport_oil"));
+                .save(output, VResourceLocation.mod("teleport_oil"));
         AlchemyTableRecipeBuilder
                 .builder(ModOils.EVASION)
                 .bloodOilIngredient()
                 .input(Ingredient.of(new ItemStack(Items.HONEY_BOTTLE)))
-                .save(output, new ResourceLocation(REFERENCE.MODID, "evasion_oil"));
+                .save(output, VResourceLocation.mod("evasion_oil"));
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, new ResourceLocation(REFERENCE.MODID, "gold_nugget_from_accessory_blasting"));
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, Items.LEATHER).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(output, new ResourceLocation(REFERENCE.MODID, "leather_from_obi_belt"));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, VResourceLocation.mod("gold_nugget_from_accessory_smelting"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, VResourceLocation.mod("gold_nugget_from_accessory_blasting"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, Items.LEATHER).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(output, VResourceLocation.mod("leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(output);
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, REFERENCE.MODID+":clean_oil");
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT.get()).pattern(" W ").pattern("WBW").define('W', wool).define('B', beds).unlockedBy("has_wool", has(wool)).unlockedBy("has_bed", has(beds)).save(output);
@@ -430,18 +477,18 @@ public class RecipesProvider extends RecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_BRICKS.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_TILES.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 200).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, new ResourceLocation(REFERENCE.MODID, "dark_stone_from_cobbled_dark_stone_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 100).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, new ResourceLocation(REFERENCE.MODID, "dark_stone_from_cobbled_dark_stone_blasting"));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 200).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_smelting"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 100).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_blasting"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE.get()).pattern("GGG").pattern("GPG").pattern("PPP").define('G', gold_ingot).define('P', planks).unlockedBy("has_gold", has(gold_ingot)).unlockedBy("has_planks", has(planks)).save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER.get()).pattern("XYX").pattern("YZY").pattern("OOO").define('X', cursed_spruce_planks).define('Y', diamond).define('O', obsidian).define('Z', mother_core).unlockedBy("has_diamond", has(diamond)).unlockedBy("has_cursed_plank", has(cursed_spruce_planks)).unlockedBy("has_mother_core", has(mother_core)).save(output, vampire("fog_diffuser"));
         nineBlockStorageRecipes(output, RecipeCategory.BUILDING_BLOCKS, ModItems.BLOOD_INFUSED_IRON_INGOT.get(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
         nineBlockStorageRecipes(output, RecipeCategory.BUILDING_BLOCKS, ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON.get()).pattern("GGG").pattern("GCG").pattern("OOO").define('G', Items.GLASS).define('C', mother_core).define('O', obsidian).unlockedBy("has_mother_core", has(mother_core)).unlockedBy("has_obsidian", has(obsidian)).unlockedBy("has_glass", has(Items.GLASS)).save(output);
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_0.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(200).experience(0.1f).save(output, new ResourceLocation(REFERENCE.MODID, "blood_infused_iron_ingot_from_pure_blood_0"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_1.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(180).experience(0.15f).save(output, new ResourceLocation(REFERENCE.MODID, "blood_infused_iron_ingot_from_pure_blood_1"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_2.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(160).experience(0.2f).save(output, new ResourceLocation(REFERENCE.MODID, "blood_infused_iron_ingot_from_pure_blood_2"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_3.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(140).experience(0.25f).save(output, new ResourceLocation(REFERENCE.MODID, "blood_infused_iron_ingot_from_pure_blood_3"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_4.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(300).experience(0.3f).save(output, new ResourceLocation(REFERENCE.MODID, "blood_infused_enhanced_iron_ingot_from_pure_blood_4"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_0.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(200).experience(0.1f).save(output, VResourceLocation.mod("blood_infused_iron_ingot_from_pure_blood_0"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_1.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(180).experience(0.15f).save(output, VResourceLocation.mod("blood_infused_iron_ingot_from_pure_blood_1"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_2.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(160).experience(0.2f).save(output, VResourceLocation.mod("blood_infused_iron_ingot_from_pure_blood_2"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_3.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(140).experience(0.25f).save(output, VResourceLocation.mod("blood_infused_iron_ingot_from_pure_blood_3"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get().asItem()).withFluid(ModItems.PURE_BLOOD_4.get()).withIngredient(new ItemStack(Items.IRON_BLOCK)).cookTime(300).experience(0.3f).save(output, VResourceLocation.mod("blood_infused_enhanced_iron_ingot_from_pure_blood_4"));
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_BRICKS.get(), 2);
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
@@ -456,7 +503,7 @@ public class RecipesProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK.get()).pattern(" X ").pattern("YYY").define('X', iron_ingot).define('Y', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(output, vampire("candle_stick"));
     }
 
-    private void enchantment(ItemStack stack, int level, @NotNull Enchantment enchantment) {
+    private void enchantment(ItemStack stack, int level, @NotNull Holder<Enchantment> enchantment) {
         stack.enchant(enchantment, level);
     }
 
@@ -469,7 +516,7 @@ public class RecipesProvider extends RecipeProvider {
     }
 
     private @NotNull ResourceLocation modId(@NotNull String path) {
-        return new ResourceLocation(REFERENCE.MODID, path);
+        return VResourceLocation.mod(path);
     }
 
     @SafeVarargs

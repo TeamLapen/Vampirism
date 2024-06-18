@@ -66,7 +66,7 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
 
     private static void drawActionPart(IAction<?> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         ResourceLocation id = RegUtil.id(action);
-        ResourceLocation texture = new ResourceLocation(id.getNamespace(), "textures/actions/" + id.getPath() + ".png");
+        ResourceLocation texture = id.withPath("textures/actions/" + id.getPath() + ".png");
         graphics.setColor(1,1,1,1);
         graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }

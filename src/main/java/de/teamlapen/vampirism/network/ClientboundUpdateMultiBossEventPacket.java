@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import de.teamlapen.vampirism.world.MultiBossEvent;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,7 +20,7 @@ import java.util.*;
 
 public record ClientboundUpdateMultiBossEventPacket(Operation operation) implements CustomPacketPayload {
 
-    public static final Type<ClientboundUpdateMultiBossEventPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "update_multi_boss_event"));
+    public static final Type<ClientboundUpdateMultiBossEventPacket> TYPE = new Type<>(VResourceLocation.mod("update_multi_boss_event"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdateMultiBossEventPacket> CODEC = new StreamCodec<>() {
         @Override

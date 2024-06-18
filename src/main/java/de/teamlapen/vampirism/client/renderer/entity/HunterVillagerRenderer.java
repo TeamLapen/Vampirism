@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerWithArmsModel<Villager>> {
 
-    private static final ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
+    private static final ResourceLocation texture = VResourceLocation.mc("textures/entity/villager/villager.png");
 
     public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerWithArmsModel<>(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,7 +18,7 @@ public record ClientboundTaskPacket(int containerId,
                                     Map<UUID, Set<UUID>> completableTasks,
                                     Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) implements CustomPacketPayload {
 
-    public static final Type<ClientboundTaskPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "task"));
+    public static final Type<ClientboundTaskPacket> TYPE = new Type<>(VResourceLocation.mod("task"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTaskPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ClientboundTaskPacket::containerId,
             ByteBufCodecs.map(i -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufCodecs.fromCodec(TaskManager.TaskWrapper.CODEC)), ClientboundTaskPacket::taskWrappers,

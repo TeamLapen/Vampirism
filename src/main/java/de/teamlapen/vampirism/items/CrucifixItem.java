@@ -133,7 +133,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public int getUseDuration(ItemStack p_77626_1_) {
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 72000;
     }
 

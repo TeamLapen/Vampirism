@@ -37,8 +37,8 @@ public class RemainsDefenderModel extends EntityModel<RemainsDefenderEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        this.part1.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
-        this.part2.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+    public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, int color) {
+        this.part1.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, color);
+        this.part2.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, color);
     }
 }

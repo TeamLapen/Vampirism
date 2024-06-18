@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -52,21 +53,21 @@ public class ModArmorMaterials {
     private static DeferredHolder<ArmorMaterial, ArmorMaterial> copyWithNewLayer(String name, Holder<ArmorMaterial> sourceHolder) {
         return ARMOR_MATERIALS.register(name, () -> {
             ArmorMaterial source = sourceHolder.value();
-            var layers = List.of(new ArmorMaterial.Layer(new ResourceLocation(REFERENCE.MODID, name)));
+            var layers = List.of(new ArmorMaterial.Layer(VResourceLocation.mod(name)));
             return new ArmorMaterial(source.defense(), source.enchantmentValue(), source.equipSound(), source.repairIngredient(), layers, source.toughness(), source.knockbackResistance());
         });
     }
 
     private static DeferredHolder<ArmorMaterial, ArmorMaterial> register(String name, Map<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, float toughness, float knockbackResistance) {
         return ARMOR_MATERIALS.register(name, () -> {
-            List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(new ResourceLocation(REFERENCE.MODID, name)));
+            List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(VResourceLocation.mod(name)));
             return new ArmorMaterial(defense, enchantmentValue, equipSound, repairIngredient, list, toughness, knockbackResistance);
         });
     }
 
     private static DeferredHolder<ArmorMaterial, ArmorMaterial> registerWithOverlay(String name, Map<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, float toughness, float knockbackResistance) {
         return ARMOR_MATERIALS.register(name, () -> {
-            List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(new ResourceLocation(REFERENCE.MODID, name), "", true), new ArmorMaterial.Layer(new ResourceLocation(REFERENCE.MODID, name), "_overlay", false));
+            List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(VResourceLocation.mod(name), "", true), new ArmorMaterial.Layer(VResourceLocation.mod(name), "_overlay", false));
             return new ArmorMaterial(defense, enchantmentValue, equipSound, repairIngredient, list, toughness, knockbackResistance);
         });
     }

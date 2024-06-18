@@ -22,7 +22,7 @@ public interface IVampirismCrossbow extends ItemLike {
      * @param crossbow itemstack of a {@link IVampirismCrossbow}
      * @return duration in ticks
      */
-    int getChargeDurationMod(ItemStack crossbow);
+    int getChargeDurationMod(ItemStack crossbow, Level level);
 
     /**
      * @param crossbow the crossbow

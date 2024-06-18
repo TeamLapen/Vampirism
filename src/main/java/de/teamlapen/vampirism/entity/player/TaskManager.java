@@ -226,7 +226,7 @@ public class TaskManager implements ITaskManager, ISavable {
         //completed tasks
         if (compoundNBT.contains("completedTasks")) {
             compoundNBT.getCompound("completedTasks").getAllKeys().forEach(taskId -> {
-                var key = ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(taskId));
+                var key = ResourceKey.create(VampirismRegistries.Keys.TASK, ResourceLocation.parse(taskId));
                 if (this.registry.containsKey(key)) {
                     this.completedTasks.add(key);
                 }

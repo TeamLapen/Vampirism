@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.SanguinareEffect;
@@ -102,7 +103,7 @@ import java.util.function.Predicate;
  */
 public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
     private static final String NBT_KEY = "vampire_player";
-    public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
+    public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     private final static int FEED_TIMER = 20;
     /**
@@ -1067,9 +1068,8 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
-                Collection<UUID> armorItemModifiers = ArmorItemAccessor.getModifierUUID_vampirism().values();
-                double baseArmor = ((AttributeInstanceAccessor) armorAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> armorItemModifiers.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
-                double baseToughness = ((AttributeInstanceAccessor)toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> armorItemModifiers.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseArmor = ((AttributeInstanceAccessor) armorAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = ((AttributeInstanceAccessor)toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
                 if (modArmor != null && targetArmor != modArmor.amount()) {
@@ -1077,14 +1077,14 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     modArmor = null;
                 }
                 if (targetArmor != 0 && modArmor == null) {
-                    armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor", targetArmor, AttributeModifier.Operation.ADD_VALUE));
+                    armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetArmor, AttributeModifier.Operation.ADD_VALUE));
                 }
                 if (modToughness != null && targetToughness != modToughness.amount()) {
                     ((AttributeInstanceAccessor) toughnessAtt).invoke_removeModifier(modToughness);
                     modToughness = null;
                 }
                 if (targetToughness != 0 && modToughness == null) {
-                    toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, "Natural Vampire Armor Toughness", targetToughness, AttributeModifier.Operation.ADD_VALUE));
+                    toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetToughness, AttributeModifier.Operation.ADD_VALUE));
                 }
                 applyLevelModifiersB(lvl, VampirismConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
 
@@ -1209,7 +1209,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         if (ModBlocks.BLOOD_CONTAINER.get() == blockState.getBlock()) {
             if (tileEntity != null) {
-                Optional.ofNullable(tileEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, blockState, tileEntity, null)).ifPresent(handler -> {
+                Optional.ofNullable(tileEntity.getLevel()).map(tile -> tile.getCapability(Capabilities.FluidHandler.BLOCK, pos, blockState, tileEntity, null)).ifPresent(handler -> {
                     int blood = 0;
 
                     FluidStack drainable = handler.drain(new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
@@ -1509,10 +1509,10 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
             if (tag.getBoolean("hasVision")) {
                 if (tag.contains("vision", Tag.TAG_STRING)) {
-                    this.activate(VampirismAPI.vampireVisionRegistry().getVision(new ResourceLocation(tag.getString("vision"))));
+                    this.activate(VampirismAPI.vampireVisionRegistry().getVision(ResourceLocation.parse(tag.getString("vision"))));
                 } else if(tag.contains("visionId", Tag.TAG_STRING)) {
                     this.deactivate();
-                    this.visionId = new ResourceLocation(tag.getString("visionId"));
+                    this.visionId = ResourceLocation.parse(tag.getString("visionId"));
                 }
             } else {
                 this.deactivate();

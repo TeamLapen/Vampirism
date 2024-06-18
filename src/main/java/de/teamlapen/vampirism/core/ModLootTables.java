@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.mixin.accessor.LootTableAccessor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -59,7 +60,7 @@ public class ModLootTables {
     }
 
     static @NotNull ResourceKey<LootTable> register(@NotNull String resourceName) {
-        return register(new ResourceLocation(REFERENCE.MODID, resourceName));
+        return register(VResourceLocation.mod(resourceName));
     }
 
     static @NotNull ResourceKey<LootTable> register(@NotNull ResourceLocation resourceLocation) {

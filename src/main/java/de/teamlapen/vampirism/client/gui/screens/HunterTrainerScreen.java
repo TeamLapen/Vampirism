@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import net.minecraft.client.Minecraft;
@@ -29,9 +30,9 @@ import java.util.Optional;
  * Gui for the Hunter Trainer interaction
  */
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/hunter_trainer.png");
-    private static final ResourceLocation EMPTY_INGOT = new ResourceLocation("item/empty_slot_ingot");
-    private static final ResourceLocation EMPTY_INTEL = new ResourceLocation(REFERENCE.MODID, "item/empty_hunter_intel");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_trainer.png");
+    private static final ResourceLocation EMPTY_INGOT = VResourceLocation.mc("item/empty_slot_ingot");
+    private static final ResourceLocation EMPTY_INTEL = VResourceLocation.mod("item/empty_hunter_intel");
 
     private Button buttonLevelup;
 

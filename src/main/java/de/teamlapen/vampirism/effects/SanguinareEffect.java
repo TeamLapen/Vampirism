@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +49,8 @@ public class SanguinareEffect extends VampirismEffect {
 
     public SanguinareEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
-        addAttributeModifier(Attributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADD_VALUE);
+        //noinspection DataFlowIssue
+        addAttributeModifier(Attributes.ATTACK_DAMAGE, BuiltInRegistries.MOB_EFFECT.getKey(this), 2.0D, AttributeModifier.Operation.ADD_VALUE);
     }
 
     @Override

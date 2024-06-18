@@ -69,7 +69,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final RecipeType<BlessableItem.Recipe> BLESSING = RecipeType.create("vampirism", "blessing", BlessableItem.Recipe.class);
     public static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
     public static final RecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
-    private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
+    private static final ResourceLocation ID = VResourceLocation.mod("plugin");
 
     @NotNull
     @Override
@@ -206,14 +206,14 @@ public class VampirismJEIPlugin implements IModPlugin {
                         .map(Item::getDefaultInstance)
                         .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item) == VReference.HUNTER_FACTION))
                         .filter(item -> oil.value().canBeApplied(item))
-                        .map(stack -> new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, (oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
+                        .map(stack -> new RecipeHolder<CraftingRecipe>(VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
     }
 
     private @NotNull List<RecipeHolder<CraftingRecipe>> getCleanOilRecipes(RegistryAccess registryAccess) {
         return getApplicableOilRecipes().stream().map(recipe -> {
             ItemStack item = recipe.value().getResultItem(registryAccess);
             IApplicableOil oil = OilUtils.getAppliedOil(item).get();
-            return new RecipeHolder<CraftingRecipe>(new ResourceLocation(REFERENCE.MODID, ("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')),new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.remove(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
+            return new RecipeHolder<CraftingRecipe>(VResourceLocation.mod(("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')),new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.remove(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
         }).collect(Collectors.toList());
     }
 }

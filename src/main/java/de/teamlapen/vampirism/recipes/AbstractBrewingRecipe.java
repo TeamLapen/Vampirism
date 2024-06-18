@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractBrewingRecipe implements Recipe<Container> {
+public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput> {
 
     protected final RecipeType<?> type;
     protected final String group;
@@ -27,8 +27,8 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(@NotNull Container inventory, @NotNull Level level) {
-        return this.ingredient.test(inventory.getItem(0));
+    public boolean matches(@NotNull BrewingRecipeInput inventory, @NotNull Level level) {
+        return this.ingredient.test(inventory.input());
     }
 
     public Ingredient getIngredient() {
@@ -47,7 +47,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<Container> {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull Container inventory, HolderLookup.@NotNull Provider lookupProvider) {
+    public ItemStack assemble(@NotNull BrewingRecipeInput inventory, HolderLookup.@NotNull Provider lookupProvider) {
         return this.result.copy();
     }
 

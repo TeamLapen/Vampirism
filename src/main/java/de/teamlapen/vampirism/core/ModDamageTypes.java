@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -23,7 +24,7 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> STAKE = createKey("stake");
 
     private static ResourceKey<DamageType> createKey(String name) {
-        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(REFERENCE.MODID, name));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, VResourceLocation.mod(name));
     }
 
     static void createDamageTypes(BootstrapContext<DamageType> context) {

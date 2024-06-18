@@ -87,7 +87,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
     protected void attack(@NotNull LivingEntity target) {
         Vec3 vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d);
         projectile.setOwner(entity);
         projectile.setDamage(directDamage, indirectDamage);
         if (entity.distanceToSqr(target) > 64) {

@@ -272,7 +272,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
                             this.attackTime = 20 + RemainsDefenderEntity.this.random.nextInt(10) * 20 / 2;
                             Vec3 position = RemainsDefenderEntity.this.position();
                             Vec3 direction = RemainsDefenderEntity.this.getViewVector(1.0f);
-                            var projectile = new DarkBloodProjectileEntity(RemainsDefenderEntity.this.level(), position.x(), position.y(), position.z(), direction.x(), direction.y(), direction.z());
+                            var projectile = new DarkBloodProjectileEntity(RemainsDefenderEntity.this.level(), position.x(), position.y(), position.z(), direction);
                             projectile.setOwner(RemainsDefenderEntity.this);
                             projectile.setDamage((float) RemainsDefenderEntity.this.getAttributeValue(Attributes.ATTACK_DAMAGE), 0);
                             projectile.excludeShooter();

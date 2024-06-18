@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/weapon_table.png");
-    private static final ResourceLocation LAVA_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/weapon_table/lava");
-    private static final ResourceLocation MISSING_LAVA_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/weapon_table/missing_lava");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/weapon_table.png");
+    private static final ResourceLocation LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/lava");
+    private static final ResourceLocation MISSING_LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/missing_lava");
 
     public WeaponTableScreen(@NotNull WeaponTableMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

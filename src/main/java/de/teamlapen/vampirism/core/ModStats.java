@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.CustomStatType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -66,7 +67,7 @@ public class ModStats {
     }
 
     private static DeferredHolder<ResourceLocation, ResourceLocation> add(String name, StatFormatter formatter) {
-        var id = new ResourceLocation(CUSTOM_STAT.getNamespace(), name);
+        var id = VResourceLocation.loc(CUSTOM_STAT.getNamespace(), name);
         var holder = CUSTOM_STAT.register(name, () -> id);
         CUSTOM_STAT_FORMATTERS.put(id, formatter);
         return holder;

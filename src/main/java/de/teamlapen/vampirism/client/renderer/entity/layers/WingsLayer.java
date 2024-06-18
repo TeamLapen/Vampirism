@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.WingModel;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +26,7 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
     private final @NotNull WingModel<T> model;
     private final Predicate<T> predicateRender;
     private final BiFunction<T, Q, ModelPart> bodyPartFunction;
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/wings.png");
+    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/wings.png");
 
     /**
      * @param predicateRender  Decides if the layer is rendered
@@ -49,7 +51,7 @@ public class WingsLayer<T extends LivingEntity, Q extends EntityModel<T>> extend
             stack.pushPose();
             stack.translate(0f, 0, 0.02f);
             stack.scale(s, s, s);
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), model, texture, stack, buffer, packedLight, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), model, texture, stack, buffer, packedLight, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, FastColor.ARGB32.color(FastColor.as8BitChannel(1), FastColor.as8BitChannel(1), FastColor.as8BitChannel(1)));
             stack.popPose();
         }
     }

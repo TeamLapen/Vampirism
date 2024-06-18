@@ -9,8 +9,11 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,8 +24,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -33,9 +38,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     private static final float PLAYER_WIDTH = 0.6F;
     private static final float PLAYER_HEIGHT = 1.8F;
-
-    private final UUID armorModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91439053c");
-    private final UUID armorToughnessModifierUUID = UUID.fromString("6d3df16d-85e4-4b99-b2fc-301818697a6d");
 
     public BatVampireAction() {
         super();
@@ -136,30 +138,29 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     private void setModifier(@NotNull Player player, boolean enabled) {
+        ResourceLocation key = ModRegistries.ACTIONS.getKey(this);
+        if (key == null) {
+            return;
+        }
         if (enabled) {
-
-            AttributeInstance armorAttributeInst = player.getAttribute(Attributes.ARMOR);
-
-            if (armorAttributeInst.getModifier(armorModifierUUID) == null) {
-                armorAttributeInst.addPermanentModifier(new AttributeModifier(armorModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            AttributeInstance armor = player.getAttribute(Attributes.ARMOR);
+            if (armor != null && !armor.hasModifier(key)) {
+                armor.addPermanentModifier(new AttributeModifier(key, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
-            AttributeInstance armorToughnessAttributeInst = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
-            if (armorToughnessAttributeInst.getModifier(armorToughnessModifierUUID) == null) {
-                armorToughnessAttributeInst.addPermanentModifier(new AttributeModifier(armorToughnessModifierUUID, "Bat Armor Disabled", -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            AttributeInstance armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+            if (armorToughness != null && !armorToughness.hasModifier(key)) {
+                armorToughness.addPermanentModifier(new AttributeModifier(key, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            }
+            AttributeInstance fly = player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
+            if (fly != null && !fly.hasModifier(key)) {
+                fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
             }
 
-            player.getAbilities().mayfly = true;
-            player.getAbilities().flying = true;
             setFlightSpeed(player, VampirismConfig.BALANCE.vaBatFlightSpeed.get().floatValue());
         } else {
-            // Health modifier
-            player.getAttribute(Attributes.ARMOR).removeModifier(armorModifierUUID);
-            player.getAttribute(Attributes.ARMOR_TOUGHNESS).removeModifier(armorToughnessModifierUUID);
-
-            boolean spectator = player.isSpectator();
-            boolean creative = player.isCreative();
-            player.getAbilities().mayfly = spectator || creative;
-            player.getAbilities().flying = spectator;
+            Objects.requireNonNull(player.getAttribute(Attributes.ARMOR)).removeModifier(key);
+            Objects.requireNonNull(player.getAttribute(Attributes.ARMOR_TOUGHNESS)).removeModifier(key);
+            Objects.requireNonNull(player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT)).removeModifier(key);
 
             setFlightSpeed(player, 0.05F);
         }

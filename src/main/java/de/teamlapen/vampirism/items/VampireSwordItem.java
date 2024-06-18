@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -29,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
@@ -60,8 +62,6 @@ import java.util.function.Supplier;
 
 public abstract class VampireSwordItem extends VampirismSwordItem implements IBloodChargeable, IFactionExclusiveItem, IFactionLevelItem<IVampirePlayer> {
 
-    public static final UUID TRAINED = UUID.fromString("eb44ff1e-df04-44d4-930c-ba5ee3a9f640");
-    public static final UUID CHARGED = UUID.fromString("e992975e-8ae4-45d1-a3b2-98a068abc839");
     /**
      * Speed modifier on max training
      */
@@ -81,14 +81,6 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
 
         super.appendHoverText(stack, context, tooltip, flagIn);
         this.addFactionToolTips(stack, context, tooltip, flagIn, VampirismMod.proxy.getClientPlayer());
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (enchantment == Enchantments.FIRE_ASPECT) {
-            return false;
-        }
-        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override
@@ -130,7 +122,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity p_344979_) {
         return 40;
     }
 
@@ -160,13 +152,13 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
                 DamageHandler.hurtModded(target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
                 center.add(0, target.getBbHeight() / 2d, 0);
-                ModParticles.spawnParticlesServer(target.level(), new GenericParticleOptions(new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
+                ModParticles.spawnParticlesServer(target.level(), new GenericParticleOptions(VResourceLocation.mc("effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
         //Update training on kill
         if (target.getHealth() <= 0.0f && Helper.isVampire(attacker)) {
             float trained = getTrained(stack, attacker);
-            int exp = target instanceof Player ? 10 : (attacker instanceof Player ? (Helper.getExperiencePoints(target, (Player) attacker)) : 5);
+            int exp = target instanceof Player ? 10 : (attacker instanceof Player && attacker.level() instanceof ServerLevel serverLevel ? target.getExperienceReward(serverLevel, attacker) : 5);
             float newTrained = exp / 5f * (1.0f - trained) / 15f;
             if (attacker instanceof Player && VampirePlayer.get((Player) attacker).getSkillHandler().isRefinementEquipped(ModRefinements.SWORD_TRAINED_AMOUNT.get())) {
                 newTrained *= VampirismConfig.BALANCE.vrSwordTrainingSpeedMod.get();
@@ -329,7 +321,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         Vec3 mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3 pos = mainPos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
-            ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleOptions((int) (4.0F / (player.getRandom().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRandom().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
+            ModParticles.spawnParticleClient(player.getCommandSenderWorld(), new FlyingBloodParticleOptions((int) (4.0F / (player.getRandom().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRandom().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRandom().nextFloat() - 0.5D) * 0.1D, VResourceLocation.mc("glitter_1")), pos.x, pos.y, pos.z);
         }
     }
 

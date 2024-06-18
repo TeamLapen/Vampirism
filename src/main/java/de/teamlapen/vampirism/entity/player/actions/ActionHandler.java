@@ -224,7 +224,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 deactivateAction(action);
             });
             for (String key : active.getAllKeys()) {
-                ResourceLocation id = new ResourceLocation(key);
+                ResourceLocation id = ResourceLocation.parse(key);
                 @SuppressWarnings("unchecked")
                 ILastingAction<T> action = (ILastingAction<T>) RegUtil.getAction(id);
                 if (action == null) {
@@ -463,7 +463,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.getAllKeys()) {
-            ResourceLocation id = new ResourceLocation(key);
+            ResourceLocation id = ResourceLocation.parse(key);
             if (RegUtil.getAction(id) == null) {
                 LOGGER.warn("Did not find action with key {}", key);
             } else {

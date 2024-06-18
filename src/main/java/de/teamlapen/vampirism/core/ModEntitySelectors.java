@@ -30,7 +30,7 @@ public class ModEntitySelectors {
     public static void registerSelectors() {
         EntitySelectorOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
-            ResourceLocation factionID = new ResourceLocation(parser.getReader().readString());
+            ResourceLocation factionID = ResourceLocation.parse(parser.getReader().readString());
             IFaction<?>[] factions = VampirismAPI.factionRegistry().getFactions();
             for (final IFaction<?> f : factions) {
                 if (f.getID().equals(factionID)) {

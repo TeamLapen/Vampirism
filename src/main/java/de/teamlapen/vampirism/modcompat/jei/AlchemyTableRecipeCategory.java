@@ -33,7 +33,7 @@ import java.util.List;
 
 public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemyTableRecipe>> {
 
-    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
+    private static final ResourceLocation location = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
 
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable icon;

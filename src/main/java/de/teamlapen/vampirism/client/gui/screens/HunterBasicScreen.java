@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> {
-    private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/basic_hunter.png");
+    private static final ResourceLocation guiTexture = VResourceLocation.mod("textures/gui/container/basic_hunter.png");
 
     private Button buttonLevelup;
     private int missing = 0;

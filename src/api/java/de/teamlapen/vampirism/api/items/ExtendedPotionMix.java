@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -41,7 +42,7 @@ public class ExtendedPotionMix {
 
     public static class Builder {
         private final static Supplier<Ingredient> EMPTY_SUPPLIER = () -> Ingredient.EMPTY;
-        private static final Supplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(BuiltInRegistries.ITEM.get(new ResourceLocation("vampirism", "vampire_blood_bottle")));
+        private static final Supplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(BuiltInRegistries.ITEM.get(VResourceLocation.mod("vampire_blood_bottle")));
         private final Holder<Potion> input;
         private final Holder<Potion> output;
         private @NotNull Supplier<Ingredient> reagent1 = EMPTY_SUPPLIER;

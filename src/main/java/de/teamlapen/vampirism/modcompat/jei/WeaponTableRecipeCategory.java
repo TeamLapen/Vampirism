@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<IWeaponTableRecipe>> {
 
-    private final static ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
+    private final static ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;

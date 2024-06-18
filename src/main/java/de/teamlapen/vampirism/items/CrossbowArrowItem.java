@@ -54,22 +54,22 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
     @NotNull
     @Override
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, entity, stack);
-        arrowEntity.setEffectsFromItem(stack);
+    public AbstractArrow createArrow(Level pLevel, ItemStack pStack, LivingEntity pShooter, @Nullable ItemStack weapon) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(pLevel, pShooter, pStack, weapon);
+        arrowEntity.setEffectsFromItem(pStack);
         arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
             arrowEntity.igniteForSeconds(100);
         }
-        if (entity instanceof Player) {
+        if (pShooter instanceof Player) {
             arrowEntity.pickup = type == EnumArrowType.NORMAL ? AbstractArrow.Pickup.ALLOWED : AbstractArrow.Pickup.DISALLOWED;
         }
         return arrowEntity;
     }
 
     @NotNull
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position) {
-        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack);
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position, @Nullable ItemStack weapon) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack, weapon);
         arrowEntity.setEffectsFromItem(stack);
         arrowEntity.setBaseDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {

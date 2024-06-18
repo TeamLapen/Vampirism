@@ -78,7 +78,7 @@ public class PureBloodItem extends Item {
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 30;
     }
 

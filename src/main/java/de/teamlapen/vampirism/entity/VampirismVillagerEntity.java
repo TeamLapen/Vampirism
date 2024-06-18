@@ -51,37 +51,6 @@ public class VampirismVillagerEntity extends Villager {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
-    public boolean doHurtTarget(@NotNull Entity entity) {
-        float f = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        int i = 0;
-
-        if (entity instanceof LivingEntity) {
-            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), entity.getType());
-            i += EnchantmentHelper.getKnockbackBonus(this);
-        }
-
-        boolean flag = DamageHandler.hurtVanilla(entity, s -> s.mobAttack(this), f);
-
-        if (flag) {
-            if (i > 0) {
-                entity.push(-Mth.sin(this.getYRot() * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, Mth.cos(this.getYRot() * (float) Math.PI / 180.0F) * (float) i * 0.5F);
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6D, 1D, 0.6D));
-            }
-
-            int j = EnchantmentHelper.getFireAspect(this);
-
-            if (j > 0) {
-                entity.igniteForTicks(j * 4);
-            }
-
-            this.doEnchantDamageEffects(this, entity);
-
-        }
-
-
-        return flag;
-    }
-
     @Override
     public boolean hurt(@NotNull DamageSource src, float amount) {
         if (this.isInvulnerableTo(src)) {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirehut;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModStructures;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireHutPieces {
 
-    private static final ResourceLocation LOCATION = new ResourceLocation(REFERENCE.MODID, "vampire_hut");
+    private static final ResourceLocation LOCATION = VResourceLocation.mod("vampire_hut");
 
     public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos)  {
         Rotation rotation = Rotation.getRandom(random);

@@ -112,7 +112,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
-        if (event.getSlot().getType() == EquipmentSlot.Type.ARMOR && event.getEntity() instanceof Player player) {
+        if (event.getSlot().getType() == EquipmentSlot.Type.HUMANOID_ARMOR && event.getEntity() instanceof Player player) {
             VampirePlayer.get(player).requestNaturalArmorUpdate();
         }
     }
@@ -198,17 +198,6 @@ public class ModEntityEventHandler {
                 }
                 //noinspection UnnecessaryReturnStatement
                 return;
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onEntityLootingEvent(@NotNull LootingLevelEvent event) {
-        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player) {
-            @Nullable
-            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((Player) event.getDamageSource().getEntity()).getHuntSpecial().fullHunterCoat;
-            if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
-                event.setLootingLevel(Math.min(event.getLootingLevel() + 1, 3));
             }
         }
     }

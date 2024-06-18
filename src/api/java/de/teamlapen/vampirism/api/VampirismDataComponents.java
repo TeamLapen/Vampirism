@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.components.*;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,17 +32,17 @@ public class VampirismDataComponents {
 
 
     public static class Keys {
-        public static final ResourceLocation OIL_CONTENTS = new ResourceLocation(VReference.MODID, "oil_contents");
-        public static final ResourceLocation APPLIED_OIL = new ResourceLocation(VReference.MODID, "applied_oil");
-        public static final ResourceLocation VAMPIRE_BOOK = new ResourceLocation(VReference.MODID, "vampire_book");
-        public static final ResourceLocation BLOOD_CONTAINER = new ResourceLocation(VReference.MODID, "blood_container");
-        public static final ResourceLocation CONTAINED_PROJECTILES = new ResourceLocation(VReference.MODID, "contained_projectiles");
-        public static final ResourceLocation REFINEMENT_SET = new ResourceLocation(VReference.MODID, "refinement_set");
-        public static final ResourceLocation DO_NOT_NAME = new ResourceLocation(VReference.MODID, "do_not_name");
-        public static final ResourceLocation VAMPIRE_SWORD = new ResourceLocation(VReference.MODID, "vampire_sword");
-        public static final ResourceLocation TRAINING_CACHE = new ResourceLocation(VReference.MODID, "training_cache");
-        public static final ResourceLocation SELECTED_AMMUNITION = new ResourceLocation(VReference.MODID, "selected_ammunition");
-        public static final ResourceLocation BLOOD_CHARGED = new ResourceLocation(VReference.MODID, "blood_charged");
-        public static final ResourceLocation BOTTLE_BLOOD = new ResourceLocation(VReference.MODID, "bottle_blood");
+        public static final ResourceLocation OIL_CONTENTS = VResourceLocation.mod( "oil_contents");
+        public static final ResourceLocation APPLIED_OIL = VResourceLocation.mod( "applied_oil");
+        public static final ResourceLocation VAMPIRE_BOOK = VResourceLocation.mod( "vampire_book");
+        public static final ResourceLocation BLOOD_CONTAINER = VResourceLocation.mod( "blood_container");
+        public static final ResourceLocation CONTAINED_PROJECTILES = VResourceLocation.mod( "contained_projectiles");
+        public static final ResourceLocation REFINEMENT_SET = VResourceLocation.mod( "refinement_set");
+        public static final ResourceLocation DO_NOT_NAME = VResourceLocation.mod( "do_not_name");
+        public static final ResourceLocation VAMPIRE_SWORD = VResourceLocation.mod( "vampire_sword");
+        public static final ResourceLocation TRAINING_CACHE = VResourceLocation.mod( "training_cache");
+        public static final ResourceLocation SELECTED_AMMUNITION = VResourceLocation.mod( "selected_ammunition");
+        public static final ResourceLocation BLOOD_CHARGED = VResourceLocation.mod( "blood_charged");
+        public static final ResourceLocation BOTTLE_BLOOD = VResourceLocation.mod( "bottle_blood");
     }
 }

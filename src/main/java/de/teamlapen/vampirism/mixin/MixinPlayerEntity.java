@@ -31,8 +31,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
 
     @Shadow public abstract Either<Player.BedSleepingProblem, Unit> startSleepInBed(BlockPos pBedPos);
 
-    @Shadow public abstract void startAutoSpinAttack(int pAttackTicks);
-
     @Unique
     private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();
 
@@ -44,11 +42,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
     @Override
     public VampirismPlayerAttributes getVampAtts() {
         return vampirismPlayerAttributes;
-    }
-
-    @ModifyExpressionValue(method = "attack(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDamageBonus(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EntityType;)F"))
-    private float addVampireSlayerDamageBonus(float damageBonus, Entity target) {
-        return damageBonus + MixinHooks.calculateVampireSlayerEnchantments(target, this.getMainHandItem());
     }
 
     @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getSupportedHeldProjectiles()Ljava/util/function/Predicate;"))

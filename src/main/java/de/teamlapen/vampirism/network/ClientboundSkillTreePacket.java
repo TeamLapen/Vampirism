@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implements CustomPacketPayload {
 
-    public static final Type<ClientboundSkillTreePacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "skill_tree_config"));
+    public static final Type<ClientboundSkillTreePacket> TYPE = new Type<>(VResourceLocation.mod("skill_tree_config"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSkillTreePacket> CODEC = StreamCodec.composite(
             ConfigHolder.CODEC.apply(ByteBufCodecs.list()), ClientboundSkillTreePacket::skillTrees,

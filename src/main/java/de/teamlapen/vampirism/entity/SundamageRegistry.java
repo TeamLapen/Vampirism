@@ -94,9 +94,9 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     public void reloadConfiguration() {
-        Set<ResourceKey<Biome>> biomes = VampirismConfig.SERVER.sundamageDisabledBiomes.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> levels = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> positiveLevels = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(ResourceLocation::new).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Biome>> biomes = VampirismConfig.SERVER.sundamageDisabledBiomes.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> levels = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> positiveLevels = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
         this.configSettings = new ConfigSettings(levels, positiveLevels, biomes);
         reloadSettings();
     }

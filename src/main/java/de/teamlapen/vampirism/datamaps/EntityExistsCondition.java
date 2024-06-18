@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.datamaps;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -17,11 +18,11 @@ public class EntityExistsCondition implements ICondition {
     private final ResourceLocation entity_type;
 
     public EntityExistsCondition(String location) {
-        this(new ResourceLocation(location));
+        this(ResourceLocation.parse(location));
     }
 
     public EntityExistsCondition(String namespace, String path) {
-        this(new ResourceLocation(namespace, path));
+        this(VResourceLocation.loc(namespace, path));
     }
 
     public EntityExistsCondition(ResourceLocation entity_type) {

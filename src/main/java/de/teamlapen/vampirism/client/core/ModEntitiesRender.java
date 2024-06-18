@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.model.*;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.client.renderer.entity.*;
@@ -27,30 +28,30 @@ import org.jetbrains.annotations.NotNull;
  * Handles entity render registration
  */
 public class ModEntitiesRender {
-    public static final ModelLayerLocation HUNTER = new ModelLayerLocation(new ResourceLocation("vampirism:hunter"), "main");
-    public static final ModelLayerLocation HUNTER_SLIM = new ModelLayerLocation(new ResourceLocation("vampirism:slim_hunter"), "main");
-    public static final ModelLayerLocation COFFIN = new ModelLayerLocation(new ResourceLocation("vampirism:coffin"), "main");
-    public static final ModelLayerLocation WING = new ModelLayerLocation(new ResourceLocation("vampirism:wing"), "main");
-    public static final ModelLayerLocation BARON = new ModelLayerLocation(new ResourceLocation("vampirism:baron"), "main");
-    public static final ModelLayerLocation BARONESS = new ModelLayerLocation(new ResourceLocation("vampirism:baroness"), "main");
-    public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(new ResourceLocation("vampirism:baron"), "attire");
-    public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(new ResourceLocation("vampirism:baroness"), "attire");
-    public static final ModelLayerLocation CLOAK = new ModelLayerLocation(new ResourceLocation("vampirism:cloak"), "main");
-    public static final ModelLayerLocation CLOTHING_BOOTS = new ModelLayerLocation(new ResourceLocation("vampirism:clothing"), "boots");
-    public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(new ResourceLocation("vampirism:clothing"), "crown");
-    public static final ModelLayerLocation CLOTHING_PANTS = new ModelLayerLocation(new ResourceLocation("vampirism:clothing"), "pants");
-    public static final ModelLayerLocation CLOTHING_HAT = new ModelLayerLocation(new ResourceLocation("vampirism:clothing"), "hat");
-    public static final ModelLayerLocation HUNTER_HAT0 = new ModelLayerLocation(new ResourceLocation("vampirism:hunter_hat0"), "main");
-    public static final ModelLayerLocation HUNTER_HAT1 = new ModelLayerLocation(new ResourceLocation("vampirism:hunter_hat1"), "main");
-    public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(new ResourceLocation("vampirism:hunter_equipment"), "main");
-    public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(new ResourceLocation("vampirism:villager_with_arms"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED_SLIM = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_OUTER = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "outer_armor");
-    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_INNER = new ModelLayerLocation(new ResourceLocation("vampirism:generic_biped"), "inner_armor");
-    public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(new ResourceLocation("vampirism:task_master"), "main");
-    public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(new ResourceLocation("vampirism:remains_defender"), "main");
-    public static final ModelLayerLocation GHOST = new ModelLayerLocation(new ResourceLocation("vampirism:ghost"), "main");
+    public static final ModelLayerLocation HUNTER = new ModelLayerLocation(VResourceLocation.mod("hunter"), "main");
+    public static final ModelLayerLocation HUNTER_SLIM = new ModelLayerLocation(VResourceLocation.mod("slim_hunter"), "main");
+    public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VResourceLocation.mod("coffin"), "main");
+    public static final ModelLayerLocation WING = new ModelLayerLocation(VResourceLocation.mod("wing"), "main");
+    public static final ModelLayerLocation BARON = new ModelLayerLocation(VResourceLocation.mod("baron"), "main");
+    public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VResourceLocation.mod("baroness"), "main");
+    public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baron"), "attire");
+    public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baroness"), "attire");
+    public static final ModelLayerLocation CLOAK = new ModelLayerLocation(VResourceLocation.mod("cloak"), "main");
+    public static final ModelLayerLocation CLOTHING_BOOTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "boots");
+    public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(VResourceLocation.mod("clothing"), "crown");
+    public static final ModelLayerLocation CLOTHING_PANTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "pants");
+    public static final ModelLayerLocation CLOTHING_HAT = new ModelLayerLocation(VResourceLocation.mod("clothing"), "hat");
+    public static final ModelLayerLocation HUNTER_HAT0 = new ModelLayerLocation(VResourceLocation.mod("hunter_hat0"), "main");
+    public static final ModelLayerLocation HUNTER_HAT1 = new ModelLayerLocation(VResourceLocation.mod("hunter_hat1"), "main");
+    public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VResourceLocation.mod("hunter_equipment"), "main");
+    public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VResourceLocation.mod("villager_with_arms"), "main");
+    public static final ModelLayerLocation GENERIC_BIPED = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
+    public static final ModelLayerLocation GENERIC_BIPED_SLIM = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
+    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_OUTER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "outer_armor");
+    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_INNER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "inner_armor");
+    public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VResourceLocation.mod("task_master"), "main");
+    public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VResourceLocation.mod("remains_defender"), "main");
+    public static final ModelLayerLocation GHOST = new ModelLayerLocation(VResourceLocation.mod("ghost"), "main");
 
 
     static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -147,11 +148,11 @@ public class ModEntitiesRender {
     }
 
     public static @NotNull ModelLayerLocation createBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "boat/" + type.getName()), "main");
+        return new ModelLayerLocation(VResourceLocation.mod("boat/" + type.getName()), "main");
     }
 
     public static @NotNull ModelLayerLocation createChestBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(new ResourceLocation(REFERENCE.MODID, "chest_boat/" + type.getName()), "main");
+        return new ModelLayerLocation(VResourceLocation.mod("chest_boat/" + type.getName()), "main");
     }
 
     private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,Z> provider) {

@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
-    public static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
 
     public SpeedEntityAction(@NotNull EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -28,7 +29,7 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
 
     @Override
     public void deactivate(@NotNull T entity) {
-        entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(UUIDS);
+        entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(ModRegistries.ENTITY_ACTIONS.getKey(this));
     }
 
     @Override
@@ -56,8 +57,9 @@ public class SpeedEntityAction<T extends PathfinderMob & IEntityActionUser> exte
 
     @Override
     public void onUpdate(@NotNull T entity, int duration) {
-        if (entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
-            entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        ResourceLocation key = ModRegistries.ENTITY_ACTIONS.getKey(this);
+        if (!entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(key)) {
+            entity.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).addPermanentModifier(new AttributeModifier(key, VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;

@@ -24,7 +24,7 @@ public class DarkProjectileEntityAction<T extends PathfinderMob & IEntityActionU
         Vec3 vec3dd = entity.getTarget() != null ? new Vec3(entity.getTarget().getX() - entity.getX(), entity.getTarget().getY() - entity.getY(), entity.getTarget().getZ() - entity.getZ()) : Vec3.ZERO;
         vec3dd.normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getCommandSenderWorld(), shooter.getX() + vec3dd.x * 1.0f, shooter.getY() + shooter.getEyeHeight() * 0.9f, shooter.getZ() + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getCommandSenderWorld(), shooter.getX() + vec3dd.x * 1.0f, shooter.getY() + shooter.getEyeHeight() * 0.9f, shooter.getZ() + vec3dd.z * 1.0f, vec3dd);
         projectile.setOwner(shooter);
         projectile.setDamage(VampirismConfig.BALANCE.eaDarkProjectileDamage.get().floatValue(), VampirismConfig.BALANCE.eaDarkProjectileIndirectDamage.get().floatValue());
 

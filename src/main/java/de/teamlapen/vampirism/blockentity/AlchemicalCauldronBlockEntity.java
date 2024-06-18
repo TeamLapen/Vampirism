@@ -8,30 +8,31 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
-import de.teamlapen.vampirism.mixin.accessor.AbstractFurnaceBlockEntityAccessor;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.recipes.BrewingRecipeInput;
 import de.teamlapen.vampirism.util.Helper;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -43,13 +44,12 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
  * slots:  0: liquid, 1: ingredient, 2: result, 3: fuel
  */
-public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
+public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static final int[] SLOTS_DOWN = new int[]{0, 1, 2};
@@ -61,15 +61,76 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     private UUID ownerID;
     @Nullable
     private String ownerName;
-    private @Nullable AlchemicalCauldronRecipe recipeChecked;
+    private @Nullable RecipeHolder<AlchemicalCauldronRecipe> recipeChecked;
+    private final RecipeType<? extends AlchemicalCauldronRecipe> recipeType;
+    protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
+    protected int litTime;
+    protected int litDuration;
+    protected int cookingProgress;
+    protected int cookingTotalTime;
 
-    private final RecipeManager.CachedCheck<Container, AlchemicalCauldronRecipe> quickCheck;
+    protected final ContainerData dataAccess = new ContainerData() {
+        @Override
+        public int get(int p_58431_) {
+            switch (p_58431_) {
+                case 0:
+                    if (litDuration > Short.MAX_VALUE) {
+                        // Neo: preserve litTime / litDuration ratio on the client as data slots are synced as shorts.
+                        return net.minecraft.util.Mth.floor(((double) litTime / litDuration) * Short.MAX_VALUE);
+                    }
+
+                    return AlchemicalCauldronBlockEntity.this.litTime;
+                case 1:
+                    return Math.min(AlchemicalCauldronBlockEntity.this.litDuration, Short.MAX_VALUE);
+                case 2:
+                    return AlchemicalCauldronBlockEntity.this.cookingProgress;
+                case 3:
+                    return AlchemicalCauldronBlockEntity.this.cookingTotalTime;
+                default:
+                    return 0;
+            }
+        }
+
+        @Override
+        public void set(int p_58433_, int p_58434_) {
+            switch (p_58433_) {
+                case 0:
+                    AlchemicalCauldronBlockEntity.this.litTime = p_58434_;
+                    break;
+                case 1:
+                    AlchemicalCauldronBlockEntity.this.litDuration = p_58434_;
+                    break;
+                case 2:
+                    AlchemicalCauldronBlockEntity.this.cookingProgress = p_58434_;
+                    break;
+                case 3:
+                    AlchemicalCauldronBlockEntity.this.cookingTotalTime = p_58434_;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
+
+    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
+    private final RecipeManager.CachedCheck<BrewingRecipeInput, AlchemicalCauldronRecipe> quickCheck;
 
 
     public AlchemicalCauldronBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state, ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
+        super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state);
+        this.recipeType = ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get();
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
         this.quickCheck = RecipeManager.createCheck(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());
+    }
+
+    public ItemStack getFluid() {
+        return this.items.get(0);
+    }
+
+    public ItemStack getIngredient() {
+        return this.items.get(1);
     }
 
 
@@ -96,6 +157,15 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         return false;
     }
 
+    @Override
+    protected void setItems(NonNullList<ItemStack> pItems) {
+        this.items = pItems;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.items;
+    }
 
     @NotNull
     @Override
@@ -131,6 +201,16 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
+    @Override
+    public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int pIndex, ItemStack pStack, Direction pDirection) {
+        return false;
+    }
+
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -155,11 +235,34 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         ContainerHelper.loadAllItems(compound, this.items, holderProvider);
     }
 
+    protected int getBurnDuration(ItemStack pFuel) {
+        if (pFuel.isEmpty()) {
+            return 0;
+        } else {
+            return pFuel.getBurnTime(this.recipeType);
+        }
+    }
+
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider holderProvider) {
-        super.loadAdditional(compound, holderProvider);
-        ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
-        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider holderProvider) {
+        super.loadAdditional(pTag, holderProvider);
+        ownerID = pTag.hasUUID("owner") ? pTag.getUUID("owner") : null;
+        ownerName = pTag.contains("owner_name") ? pTag.getString("owner_name") : null;
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(pTag, this.items, holderProvider);
+        this.litTime = pTag.getInt("BurnTime");
+        this.cookingProgress = pTag.getInt("CookTime");
+        this.cookingTotalTime = pTag.getInt("CookTimeTotal");
+        this.litDuration = this.getBurnDuration(this.items.get(1));
+        CompoundTag compoundtag = pTag.getCompound("RecipesUsed");
+
+        for (String s : compoundtag.getAllKeys()) {
+            this.recipesUsed.put(ResourceLocation.parse(s), compoundtag.getInt(s));
+        }
+    }
+
+    private boolean isLit() {
+        return this.litTime > 0;
     }
 
     @Override
@@ -171,13 +274,20 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider holderProvider) {
-        super.saveAdditional(compound, holderProvider);
+    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider holderProvider) {
+        super.saveAdditional(pTag, holderProvider);
+        pTag.putInt("BurnTime", this.litTime);
+        pTag.putInt("CookTime", this.cookingProgress);
+        pTag.putInt("CookTimeTotal", this.cookingTotalTime);
+        ContainerHelper.saveAllItems(pTag, this.items, holderProvider);
+        CompoundTag compoundtag = new CompoundTag();
+        this.recipesUsed.forEach((p_187449_, p_187450_) -> compoundtag.putInt(p_187449_.toString(), p_187450_));
+        pTag.put("RecipesUsed", compoundtag);
         if (ownerID != null) {
-            compound.putUUID("owner", ownerID);
+            pTag.putUUID("owner", ownerID);
         }
         if (ownerName != null) {
-            compound.putString("owner_name", ownerName);
+            pTag.putString("owner_name", ownerName);
 
         }
     }
@@ -194,6 +304,11 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
                 this.level.setBlock(this.worldPosition, state, 3);
             }
         }
+    }
+
+    @Override
+    public int getContainerSize() {
+        return this.items.size();
     }
 
     @Override
@@ -215,65 +330,78 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
     /**
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
-    public static void serverTick(@NotNull Level level, BlockPos pos, BlockState state, @NotNull AlchemicalCauldronBlockEntity blockEntity) {
-        boolean wasBurning = blockEntity.isBurning();
-        boolean dirty = false;
-        if (wasBurning) {
-            blockEntity.dataAccess.set(0, blockEntity.dataAccess.get(0) - 1); // reduce burntime
+    public static void serverTick(@NotNull Level pLevel, BlockPos pPos, BlockState pState, @NotNull AlchemicalCauldronBlockEntity pBlockEntity) {
+        boolean flag = pBlockEntity.isLit();
+        boolean flag1 = false;
+        if (pBlockEntity.isLit()) {
+            pBlockEntity.litTime--;
         }
 
+        ItemStack itemstack = pBlockEntity.items.get(3);
+        ItemStack itemstack1 = pBlockEntity.items.get(1);
+        ItemStack fluid = pBlockEntity.items.get(0);
+        boolean flag2 = !itemstack1.isEmpty();
+        boolean flag3 = !itemstack.isEmpty();
+        if (pBlockEntity.isLit() || flag3 && flag2) {
+            RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
+            if (flag2) {
+                recipeholder = pBlockEntity.quickCheck.getRecipeFor(new BrewingRecipeInput(itemstack1, fluid), pLevel).orElse(null);
+            } else {
+                recipeholder = null;
+            }
 
-        ItemStack itemstackFuel = blockEntity.items.get(3);
-        if (blockEntity.isBurning() || !itemstackFuel.isEmpty() && !blockEntity.items.get(0).isEmpty() && !blockEntity.items.get(1).isEmpty()) {
-            RecipeHolder<AlchemicalCauldronRecipe> cauldronRecipe = blockEntity.quickCheck.getRecipeFor(blockEntity, level).orElse(null);
-
-            if (cauldronRecipe != null && !blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).invoke_canBurn(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize(), blockEntity) && blockEntity.canPlayerCook(cauldronRecipe.value())) {
-                blockEntity.dataAccess.set(0, blockEntity.getBurnDuration(itemstackFuel)); //Set burn time
-                blockEntity.dataAccess.set(1, blockEntity.dataAccess.get(0));
-                if (blockEntity.isBurning()) {
-                    dirty = true;
-                    if (itemstackFuel.hasCraftingRemainingItem()) {
-                        blockEntity.items.set(3, itemstackFuel.getCraftingRemainingItem());
-                    } else if (!itemstackFuel.isEmpty()) {
-                        Item item = itemstackFuel.getItem();
-                        itemstackFuel.shrink(1);
-                        if (itemstackFuel.isEmpty()) {
-                            blockEntity.items.set(3, itemstackFuel.getCraftingRemainingItem());
+            int i = pBlockEntity.getMaxStackSize();
+            if (!pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity) && pBlockEntity.canPlayerCook(recipeholder)) {
+                pBlockEntity.litTime = pBlockEntity.getBurnDuration(itemstack);
+                pBlockEntity.litDuration = pBlockEntity.litTime;
+                if (pBlockEntity.isLit()) {
+                    flag1 = true;
+                    if (itemstack.hasCraftingRemainingItem())
+                        pBlockEntity.items.set(3, itemstack.getCraftingRemainingItem());
+                    else
+                    if (flag3) {
+                        Item item = itemstack.getItem();
+                        itemstack.shrink(1);
+                        if (itemstack.isEmpty()) {
+                            pBlockEntity.items.set(3, itemstack.getCraftingRemainingItem());
                         }
                     }
                 }
             }
 
-            if (cauldronRecipe != null && blockEntity.isBurning() && ((AbstractFurnaceBlockEntityAccessor) blockEntity).invoke_canBurn(level.registryAccess(), cauldronRecipe, blockEntity.items, blockEntity.getMaxStackSize(), blockEntity) && blockEntity.canPlayerCook(cauldronRecipe.value())) {
-                blockEntity.dataAccess.set(2, blockEntity.dataAccess.get(2) + 1); //Increase cook time
-                if (blockEntity.dataAccess.get(2) == blockEntity.dataAccess.get(3)) { //If finished
-                    blockEntity.dataAccess.set(2, 0);
-                    blockEntity.dataAccess.set(3, AbstractFurnaceBlockEntityAccessor.getTotalCookTime(level, blockEntity));
-                    blockEntity.finishCooking(level.registryAccess(), cauldronRecipe);
-                    dirty = true;
+            if (pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity)) {
+                pBlockEntity.cookingProgress++;
+                if (pBlockEntity.cookingProgress == pBlockEntity.cookingTotalTime) {
+                    pBlockEntity.cookingProgress = 0;
+                    pBlockEntity.cookingTotalTime = getTotalCookTime(pLevel, pBlockEntity);
+                    if (burn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity)) {
+                        pBlockEntity.setRecipeUsed(recipeholder);
+                    }
+
+                    flag1 = true;
                 }
             } else {
-                blockEntity.dataAccess.set(2, 0); //Reset cook time
+                pBlockEntity.cookingProgress = 0;
             }
-        } else if (!blockEntity.isBurning() && blockEntity.dataAccess.get(2) > 0) {
-            blockEntity.dataAccess.set(2, Mth.clamp(blockEntity.dataAccess.get(2) - 2, 0, blockEntity.dataAccess.get(3)));
+        } else if (!pBlockEntity.isLit() && pBlockEntity.cookingProgress > 0) {
+            pBlockEntity.cookingProgress = Mth.clamp(pBlockEntity.cookingProgress - 2, 0, pBlockEntity.cookingTotalTime);
         }
 
-        if (wasBurning != blockEntity.isBurning()) {
-            dirty = true;
+        if (flag != pBlockEntity.isLit()) {
+            flag1 = true;
+            pState = pState.setValue(AbstractFurnaceBlock.LIT, pBlockEntity.isLit());
+            pLevel.setBlock(pPos, pState, 3);
         }
 
-
-        if (dirty) {
-            blockEntity.setChanged();
+        if (flag1) {
+            setChanged(pLevel, pPos, pState);
         }
-
     }
 
     @NotNull
     @Override
     protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
-        return new AlchemicalCauldronMenu(id, player, this, this.dataAccess, level == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(level, worldPosition));
+        return new AlchemicalCauldronMenu(id, player, this, this.dataAccess);
     }
 
     @NotNull
@@ -282,14 +410,15 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         return Component.translatable("tile.vampirism.alchemical_cauldron");
     }
 
-    private boolean canPlayerCook(@NotNull AlchemicalCauldronRecipe recipe) {
+    private boolean canPlayerCook(@Nullable RecipeHolder<AlchemicalCauldronRecipe> recipe) {
+        if (recipe == null) return false;
         if (level == null) return false;
         if (recipeChecked == recipe) return true;
         if (ownerID == null) return false;
         Player playerEntity = this.level.getPlayerByUUID(ownerID);
         if (playerEntity == null || !playerEntity.isAlive()) return false;
         HunterPlayer hunter = HunterPlayer.get(playerEntity);
-        boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
+        boolean canCook = recipe.value().canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
         if (canCook) {
             recipeChecked = recipe;
             return true;
@@ -303,7 +432,7 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
      * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
      */
     private void finishCooking(RegistryAccess access, @Nullable RecipeHolder<AlchemicalCauldronRecipe> recipe) {
-        if (recipe != null && ((AbstractFurnaceBlockEntityAccessor) this).invoke_canBurn(access, recipe, items, getMaxStackSize(), this) && canPlayerCook(recipe.value())) {
+        if (recipe != null && canBurn(access, recipe, items, getMaxStackSize(), this) && canPlayerCook(recipe)) {
             ItemStack itemstackfluid = this.items.get(0);
             ItemStack itemstackingredient = this.items.get(1);
             ItemStack itemstack1result = recipe.value().getResultItem(access);
@@ -332,11 +461,76 @@ public class AlchemicalCauldronBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
+    private static boolean canBurn(RegistryAccess pRegistryAccess, @Nullable RecipeHolder<?> pRecipe, NonNullList<ItemStack> pInventory, int pMaxStackSize, AlchemicalCauldronBlockEntity furnace) {
+        if (!pInventory.get(0).isEmpty() && pRecipe != null) {
+            ItemStack itemstack = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            if (itemstack.isEmpty()) {
+                return false;
+            } else {
+                ItemStack itemstack1 = pInventory.get(2);
+                if (itemstack1.isEmpty()) {
+                    return true;
+                } else if (!ItemStack.isSameItemSameComponents(itemstack1, itemstack)) {
+                    return false;
+                } else {
+                    return itemstack1.getCount() + itemstack.getCount() <= pMaxStackSize && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize() // Neo fix: make furnace respect stack sizes in furnace recipes
+                            ? true
+                            : itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Neo fix: make furnace respect stack sizes in furnace recipes
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean burn(RegistryAccess pRegistryAccess, @javax.annotation.Nullable RecipeHolder<?> pRecipe, NonNullList<ItemStack> pInventory, int pMaxStackSize, AlchemicalCauldronBlockEntity furnace) {
+        if (pRecipe != null && canBurn(pRegistryAccess, pRecipe, pInventory, pMaxStackSize, furnace)) {
+            ItemStack itemstack = pInventory.get(0);
+            ItemStack itemstack1 = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack itemstack2 = pInventory.get(2);
+            if (itemstack2.isEmpty()) {
+                pInventory.set(2, itemstack1.copy());
+            } else if (ItemStack.isSameItemSameComponents(itemstack2, itemstack1)) {
+                itemstack2.grow(itemstack1.getCount());
+            }
+
+            if (itemstack.is(Blocks.WET_SPONGE.asItem()) && !pInventory.get(1).isEmpty() && pInventory.get(1).is(Items.BUCKET)) {
+                pInventory.set(1, new ItemStack(Items.WATER_BUCKET));
+            }
+
+            itemstack.shrink(1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static int getTotalCookTime(Level pLevel, AlchemicalCauldronBlockEntity pBlockEntity) {
+        BrewingRecipeInput brewingRecipeInput = new BrewingRecipeInput(pBlockEntity.getIngredient(), pBlockEntity.getFluid());
+        return pBlockEntity.quickCheck.getRecipeFor(brewingRecipeInput, pLevel).map(p_300840_ -> p_300840_.value().getCookingTime()).orElse(200);
+    }
+
     private boolean isBurning() {
         return this.dataAccess.get(0) > 0;
     }
 
     private boolean isCooking() {
         return this.dataAccess.get(2) > 0;
+    }
+
+    @Override
+    public void setRecipeUsed(@Nullable RecipeHolder<?> pRecipe) {
+
+    }
+
+    @Nullable
+    @Override
+    public RecipeHolder<?> getRecipeUsed() {
+        return null;
+    }
+
+    @Override
+    public void fillStackedContents(StackedContents pContents) {
+
     }
 }

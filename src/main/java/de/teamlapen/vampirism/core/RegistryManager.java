@@ -39,7 +39,6 @@ public class RegistryManager {
         ModBlocks.register(eventBus);
         ModMenus.register(eventBus);
         ModEffects.register(eventBus);
-        ModEnchantments.register(eventBus);
         ModEntities.register(eventBus);
         ModFeatures.register(eventBus);
         ModStructures.register(eventBus);

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -43,13 +44,13 @@ import java.util.function.Supplier;
 
 public class VampirismContainerScreen extends AbstractContainerScreen<VampirismMenu> implements ExtendedScreen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampirism_menu.png");
-    private static final ResourceLocation BACKGROUND_REFINEMENTS = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/vampirism_menu_refinements.png");
-    private static final WidgetSprites APPEARANCE = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/appearance"), new ResourceLocation(REFERENCE.MODID, "widget/appearance_highlighted"));
-    private static final WidgetSprites SKILLS = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/skills"), new ResourceLocation(REFERENCE.MODID, "widget/skills_highlighted"));
-    private static final WidgetSprites SETTINGS = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/settings"), new ResourceLocation(REFERENCE.MODID, "widget/settings_highlighted"));
-    private static final WidgetSprites REMOVE_ACCESSORY = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/remove_accessory"), new ResourceLocation(REFERENCE.MODID, "widget/remove_accessory_highlighted"));
-    private static final WidgetSprites LOCATE_TASK_MASTER = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/locate_task_master"), new ResourceLocation(REFERENCE.MODID, "widget/locate_task_master_highlighted"));
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/vampirism_menu.png");
+    private static final ResourceLocation BACKGROUND_REFINEMENTS = VResourceLocation.mod("textures/gui/container/vampirism_menu_refinements.png");
+    private static final WidgetSprites APPEARANCE = new WidgetSprites(VResourceLocation.mod("widget/appearance"), VResourceLocation.mod("widget/appearance_highlighted"));
+    private static final WidgetSprites SKILLS = new WidgetSprites(VResourceLocation.mod("widget/skills"), VResourceLocation.mod("widget/skills_highlighted"));
+    private static final WidgetSprites SETTINGS = new WidgetSprites(VResourceLocation.mod("widget/settings"), VResourceLocation.mod("widget/settings_highlighted"));
+    private static final WidgetSprites REMOVE_ACCESSORY = new WidgetSprites(VResourceLocation.mod("widget/remove_accessory"), VResourceLocation.mod("widget/remove_accessory_highlighted"));
+    private static final WidgetSprites LOCATE_TASK_MASTER = new WidgetSprites(VResourceLocation.mod("widget/locate_task_master"), VResourceLocation.mod("widget/locate_task_master_highlighted"));
 
     private static final int display_width = 234;
     private static final int display_height = 205;

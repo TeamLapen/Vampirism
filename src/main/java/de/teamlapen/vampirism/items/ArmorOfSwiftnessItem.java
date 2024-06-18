@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.base.Suppliers;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.mixin.accessor.ArmorItemAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -41,7 +43,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         super(material, type, new Item.Properties());
         this.tier = tier;
         Supplier<ItemAttributeModifiers> defaultModifiers = ((ArmorItemAccessor) this).getDefaultModifiers();
-        defaultModifiers = Suppliers.compose( (ItemAttributeModifiers modifiers) -> modifiers.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier("Vampirism armor modifier", getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),  EquipmentSlotGroup.bySlot(type.getSlot())), defaultModifiers::get);
+        defaultModifiers = Suppliers.compose( (ItemAttributeModifiers modifiers) -> modifiers.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier(VResourceLocation.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),  EquipmentSlotGroup.bySlot(type.getSlot())), defaultModifiers::get);
         ((ArmorItemAccessor) this).setDefaultModifiers(defaultModifiers);
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
@@ -25,13 +26,13 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider provider) {
+    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider provider) {
         ItemStack stack = null;
         search:
-        for (int i = 0; i <= inv.getWidth(); ++i) {
-            for (int j = 0; j <= inv.getHeight(); ++j) {
-                if (inv.getItem(i + j * inv.getWidth()).getItem() instanceof IItemWithTier) {
-                    stack = inv.getItem(i + j * inv.getWidth());
+        for (int i = 0; i <= inv.width(); ++i) {
+            for (int j = 0; j <= inv.height(); ++j) {
+                if (inv.getItem(i + j * inv.width()).getItem() instanceof IItemWithTier) {
+                    stack = inv.getItem(i + j * inv.width());
                     break search;
                 }
             }

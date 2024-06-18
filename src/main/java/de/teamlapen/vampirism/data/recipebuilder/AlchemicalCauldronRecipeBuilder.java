@@ -53,7 +53,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        var recipe = new AlchemicalCauldronRecipe(Objects.requireNonNullElse(this.group, ""), CookingBookCategory.MISC, this.ingredient, this.fluid, this.result, this.skills, this.reqLevel, this.cookTime, this.exp);
+        var recipe = new AlchemicalCauldronRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.fluid, this.result, this.skills, this.reqLevel, this.cookTime, this.exp);
         recipeOutput.accept(resourceLocation, recipe, builder.build(resourceLocation.withPrefix("recipes/alchemical_cauldron/")));
     }
 

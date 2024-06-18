@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
@@ -29,6 +30,7 @@ import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -126,22 +128,25 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             blockpos = new BlockPos(i, pBlockEntity.lastCheckY + 1, k);
         }
 
-        BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty() ? null : pBlockEntity.checkingBeamSections.getLast();
+        BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty()
+                ? null
+                : pBlockEntity.checkingBeamSections.getLast();
         int l = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE, i, k);
 
-        for(int i1 = 0; i1 < BLOCKS_CHECK_PER_TICK && blockpos.getY() <= l; ++i1) {
+        for (int i1 = 0; i1 < BLOCKS_CHECK_PER_TICK && blockpos.getY() <= l; i1++) {
             BlockState blockstate = pLevel.getBlockState(blockpos);
-            Block block = blockstate.getBlock();
-            float[] afloat = blockstate.getBeaconColorMultiplier(pLevel, blockpos, pPos);
-            if (afloat != null) {
+            Integer j1 = blockstate.getBeaconColorMultiplier(pLevel, blockpos, pPos);
+            if (j1 != null) {
                 if (pBlockEntity.checkingBeamSections.size() <= 1) {
-                    beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(afloat);
+                    beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(j1);
                     pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
                 } else if (beaconblockentity$beaconbeamsection != null) {
-                    if (Arrays.equals(afloat, beaconblockentity$beaconbeamsection.getColor())) {
+                    if (j1 == beaconblockentity$beaconbeamsection.getColor()) {
                         ((BeaconBeamSectionyMixin)beaconblockentity$beaconbeamsection).invoke_increaseHeight();
                     } else {
-                        beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(new float[]{(beaconblockentity$beaconbeamsection.getColor()[0] + afloat[0]) / 2.0F, (beaconblockentity$beaconbeamsection.getColor()[1] + afloat[1]) / 2.0F, (beaconblockentity$beaconbeamsection.getColor()[2] + afloat[2]) / 2.0F});
+                        beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(
+                                FastColor.ARGB32.average(beaconblockentity$beaconbeamsection.getColor(), j1)
+                        );
                         pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
                     }
                 }
@@ -156,10 +161,10 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             }
 
             blockpos = blockpos.above();
-            ++pBlockEntity.lastCheckY;
+            pBlockEntity.lastCheckY++;
         }
 
-        int j1 = pBlockEntity.levels;
+        int k1 = pBlockEntity.levels;
         if (pLevel.getGameTime() % 80L == 0L) {
             if (!pBlockEntity.beamSections.isEmpty()) {
                 Pair<Integer, Boolean> integerBooleanPair = updateBase(pLevel, i, j, k);
@@ -175,14 +180,16 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
 
         if (pBlockEntity.lastCheckY >= l) {
             pBlockEntity.lastCheckY = pLevel.getMinBuildHeight() - 1;
-            boolean flag = j1 > 0;
+            boolean flag = k1 > 0;
             pBlockEntity.beamSections = pBlockEntity.checkingBeamSections;
             if (!pLevel.isClientSide) {
                 boolean flag1 = pBlockEntity.levels > 0;
                 if (!flag && flag1) {
                     playSound(pLevel, pPos, SoundEvents.BEACON_ACTIVATE);
 
-                    for(ServerPlayer serverplayer : pLevel.getEntitiesOfClass(ServerPlayer.class, (new AABB((double)i, (double)j, (double)k, (double)i, (double)(j - MAX_LEVELS), (double)k)).inflate(10.0D, 5.0D, 10.0D))) {
+                    for (ServerPlayer serverplayer : pLevel.getEntitiesOfClass(
+                            ServerPlayer.class, new AABB((double)i, (double)j, (double)k, (double)i, (double)(j - MAX_LEVELS), (double)k).inflate(10.0, 5.0, 10.0)
+                    )) {
                         CriteriaTriggers.CONSTRUCT_BEACON.trigger(serverplayer, pBlockEntity.levels);
                     }
                 } else if (flag && !flag1) {
@@ -190,7 +197,6 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                 }
             }
         }
-
     }
 
     protected void applyEffects(Level level, BlockPos pos, int levels, @Nullable Holder<MobEffect> power, int effectAmplifier) {

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public class SkillNodeBuilder {
 
     public @NotNull ResourceLocation build(@NotNull SkillNodeOutput output, @NotNull ResourceLocation id) {
         if (faction != null) {
-            id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
+            id = VResourceLocation.loc(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
         this.validate(id);
         output.accept(id, new Result(id, this.parent, this.skills, this.lockingSkillNodes));

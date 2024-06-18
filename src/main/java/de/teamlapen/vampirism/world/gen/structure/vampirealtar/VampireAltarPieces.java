@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen.structure.vampirealtar;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -26,10 +27,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireAltarPieces {
 
-    private static final ResourceLocation LOCATION_SMALL = new ResourceLocation(REFERENCE.MODID, "altar_small");
-    private static final ResourceLocation LOCATION_BIG = new ResourceLocation(REFERENCE.MODID, "altar_big");
-    private static final ResourceLocation LOCATION_SMALL_OLD = new ResourceLocation(REFERENCE.MODID, "altar_small_old");
-    private static final ResourceLocation LOCATION_BIG_OLD = new ResourceLocation(REFERENCE.MODID, "altar_big_old");
+    private static final ResourceLocation LOCATION_SMALL = VResourceLocation.mod("altar_small");
+    private static final ResourceLocation LOCATION_BIG = VResourceLocation.mod("altar_big");
+    private static final ResourceLocation LOCATION_SMALL_OLD = VResourceLocation.mod("altar_small_old");
+    private static final ResourceLocation LOCATION_BIG_OLD = VResourceLocation.mod("altar_big_old");
 
     public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos)  {
         ResourceLocation location;

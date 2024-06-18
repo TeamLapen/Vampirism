@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.entity.player.refinements;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
@@ -17,16 +19,14 @@ import java.util.function.BiFunction;
 public class Refinement implements IRefinement {
 
     private final @Nullable Holder<Attribute> attribute;
-    private final @Nullable BiFunction<UUID, Double, AttributeModifier> modifier;
-    private final @Nullable UUID uuid;
+    private final @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> modifier;
     private final double baseValue;
     private boolean detrimental = false;
     private MutableComponent description;
 
-    public Refinement(Holder<Attribute> attribute, UUID uuid, double baseValue, BiFunction<UUID, Double, AttributeModifier> modifier) {
+    public Refinement(@Nullable Holder<Attribute> attribute, double baseValue, @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> modifier) {
         this.attribute = attribute;
         this.modifier = modifier;
-        this.uuid = uuid;
         this.baseValue = baseValue;
     }
 
@@ -34,12 +34,11 @@ public class Refinement implements IRefinement {
         this.attribute = null;
         this.modifier = null;
         this.baseValue = 0;
-        this.uuid = null;
     }
 
     @Override
-    public AttributeModifier createAttributeModifier(UUID uuid, double value) {
-        return this.modifier == null ? null : this.modifier.apply(uuid, value);
+    public AttributeModifier createAttributeModifier(double value) {
+        return this.modifier == null ? null : this.modifier.apply(ModRegistries.REFINEMENTS.getKey(this), value);
     }
 
     @Nullable
@@ -61,12 +60,6 @@ public class Refinement implements IRefinement {
     @Override
     public double getModifierValue() {
         return this.baseValue;
-    }
-
-    @Nullable
-    @Override
-    public UUID getUUID() {
-        return this.uuid;
     }
 
     /**

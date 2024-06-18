@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu> {
 
-    private static final ResourceLocation BREWING_STAND_LOCATION = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
-    private static final ResourceLocation BLAZE_CHARGE_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemy_table/blaze_charge");
-    private static final ResourceLocation OIL_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemy_table/oil");
-    private static final ResourceLocation PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemy_table/progress");
+    private static final ResourceLocation BREWING_STAND_LOCATION = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
+    private static final ResourceLocation BLAZE_CHARGE_SPRITE = VResourceLocation.mod("container/alchemy_table/blaze_charge");
+    private static final ResourceLocation OIL_SPRITE = VResourceLocation.mod("container/alchemy_table/oil");
+    private static final ResourceLocation PROGRESS_SPRITE = VResourceLocation.mod("container/alchemy_table/progress");
 
     private static final int[] BUBBLELENGTHS = new int[]{29, 24, 20, 16, 11, 6, 0};
 

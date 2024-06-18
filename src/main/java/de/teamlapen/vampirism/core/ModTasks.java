@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.*;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.tasks.TaskBuilder;
 import de.teamlapen.vampirism.entity.player.tasks.req.*;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ConsumerReward;
@@ -120,7 +121,7 @@ public class ModTasks {
     }
 
     private static ResourceKey<Task> key(String path) {
-        return ResourceKey.create(VampirismRegistries.Keys.TASK, new ResourceLocation(REFERENCE.MODID, path));
+        return ResourceKey.create(VampirismRegistries.Keys.TASK, VResourceLocation.mod(path));
     }
 
     @SuppressWarnings("deprecation")

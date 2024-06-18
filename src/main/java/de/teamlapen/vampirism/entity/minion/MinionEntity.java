@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.ai.goals.LookAtClosestVisibleGoal;
@@ -26,7 +27,9 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.PlayerModelType;
+import de.teamlapen.vampirism.world.LevelDamage;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -52,6 +55,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -72,7 +76,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      */
     private static final String NBT_KEY = "minion_data";
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    protected static final ResourceLocation ADDITIONAL_DATA = new ResourceLocation(REFERENCE.MODID, "minion_data");
     private final static Logger LOGGER = LogManager.getLogger();
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
     private final static int CONVERT_DURATION = 20;
@@ -193,36 +196,34 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     /**
      * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
      * Check if code still up-to-date
-     * TODO 1.21
+     * TODO 1.22
      */
     @Override
     public boolean doHurtTarget(Entity pEntity) {
         float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float f1 = (float)this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        if (pEntity instanceof LivingEntity) {
-            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), pEntity.getType());
-            f1 += (float)EnchantmentHelper.getKnockbackBonus(this);
+        DamageSource damagesource = LevelDamage.get(this.level()).minion(this);
+        if (this.level() instanceof ServerLevel serverlevel) {
+            f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), pEntity, damagesource, f);
         }
 
-        int i = EnchantmentHelper.getFireAspect(this);
-        if (i > 0) {
-            pEntity.igniteForSeconds(i * 4);
-        }
-
-        boolean flag = DamageHandler.hurtModded(this, s -> s.minion(this), f);
+        boolean flag = pEntity.hurt(damagesource, f);
         if (flag) {
-            if (f1 > 0.0F && pEntity instanceof LivingEntity) {
-                ((LivingEntity)pEntity)
-                        .knockback(
-                                (double)(f1 * 0.5F),
-                                (double)Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
-                                (double)(-Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)))
-                        );
+            float f1 = this.getKnockback(pEntity, damagesource);
+            if (f1 > 0.0F && pEntity instanceof LivingEntity livingentity) {
+                livingentity.knockback(
+                        (double)(f1 * 0.5F),
+                        (double)Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
+                        (double)(-Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)))
+                );
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
 
-            this.doEnchantDamageEffects(this, pEntity);
+            if (this.level() instanceof ServerLevel serverlevel1) {
+                EnchantmentHelper.doPostAttackEffects(serverlevel1, pEntity, damagesource);
+            }
+
             this.setLastHurtMob(pEntity);
+            this.playAttackSound();
         }
 
         return flag;
@@ -230,9 +231,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @NotNull
     @Override
-    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack) {
+    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
         if (stack.getFoodProperties(this) != null) {
-            float healAmount = stack.getItem().getFoodProperties(stack, this).nutrition() / 2f;
+            float healAmount = properties.nutrition() / 2f;
             this.heal(healAmount);
         }
         return super.eat(world, stack);
@@ -380,8 +381,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public ItemStack getItemBySlot(@NotNull EquipmentSlot slotIn) {
         return switch (slotIn.getType()) {
             case HAND -> getInventory().map(IMinionInventory::getInventoryHands).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
-            case ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
-            case BODY -> ItemStack.EMPTY;
+            case HUMANOID_ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).map(i -> i.get(slotIn.getIndex())).orElse(ItemStack.EMPTY);
+            default -> ItemStack.EMPTY;
         };
     }
 
@@ -428,7 +429,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (minionData == null) return;
         switch (slotIn.getType()) {
             case HAND -> getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
-            case ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
+            case HUMANOID_ARMOR -> getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
         }
     }
 
@@ -630,6 +631,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * @return all allowed capability identifiers
      */
     protected Collection<String> getAllowedCapTags() {
-        return Collections.singleton(new ResourceLocation("armourers_workshop", "entity-skin-provider").toString());
+        return Collections.singleton(VResourceLocation.loc("armourers_workshop", "entity-skin-provider").toString());
     }
 }

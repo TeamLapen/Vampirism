@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.particle;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.mixin.client.accessor.ParticleEngineAccessor;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public class FlyingBloodEntityParticle extends TextureSheetParticle {
             this.yd = (this.level.random.nextDouble() + 0.2);
             this.zd = (this.level.random.nextDouble() - 0.5);
         }
-        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(new ResourceLocation("minecraft", "critical_hit")));
+        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(VResourceLocation.mc("critical_hit")));
         //this.tick();
     }
 

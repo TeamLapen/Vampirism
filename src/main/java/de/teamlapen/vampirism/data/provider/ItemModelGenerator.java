@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.lib.lib.data.BaseItemModelGenerator;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModItemsRender;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
@@ -297,10 +298,10 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
                 .override().predicate(ModItemsRender.BLOOD, 0.99f).model(withExistingParent("blood_bottle_9", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_9"))).end();
 
         singleTexture("tech_crossbow_ammo_package", mcLoc("item/generated"), "layer0", modLoc("item/arrow_clip0"))
-                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.0f).model(withExistingParent("arrow_clip/arrow_clip0",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip0"))).end()
-                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.01f).model(withExistingParent("arrow_clip/arrow_clip1",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip1"))).end()
-                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.55f).model(withExistingParent("arrow_clip/arrow_clip2",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip2"))).end()
-                .override().predicate(new ResourceLocation(REFERENCE.MODID, "filled"), 0.99f).model(withExistingParent("arrow_clip/arrow_clip3",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip3"))).end();
+                .override().predicate(VResourceLocation.mod("filled"), 0.0f).model(withExistingParent("arrow_clip/arrow_clip0",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip0"))).end()
+                .override().predicate(VResourceLocation.mod("filled"), 0.01f).model(withExistingParent("arrow_clip/arrow_clip1",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip1"))).end()
+                .override().predicate(VResourceLocation.mod("filled"), 0.55f).model(withExistingParent("arrow_clip/arrow_clip2",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip2"))).end()
+                .override().predicate(VResourceLocation.mod("filled"), 0.99f).model(withExistingParent("arrow_clip/arrow_clip3",  mcLoc("item/generated")).texture("layer0", modLoc("item/arrow_clip3"))).end();
 
         withExistingParent(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), modLoc("block/dark_spruce_trapdoor_bottom"));
         withExistingParent(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), modLoc("block/cursed_spruce_trapdoor_bottom"));

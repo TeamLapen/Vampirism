@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -25,11 +26,11 @@ public class VampirismDataMaps {
     public static final Supplier<DataMapType<Item, Integer>> LIQUID_COLOR = supplyDataMap(Registries.ITEM, Keys.LIQUID_COLOR);
 
     public static class Keys {
-        public static final ResourceLocation ITEM_BLOOD = new ResourceLocation(VReference.MODID, "item_blood");
-        public static final ResourceLocation ENTITY_BLOOD = new ResourceLocation(VReference.MODID, "entity_blood");
-        public static final ResourceLocation FLUID_BLOOD_CONVERSION = new ResourceLocation(VReference.MODID, "fluid_blood_conversion");
-        public static final ResourceLocation ENTITY_CONVERTER = new ResourceLocation(VReference.MODID, "entity_converter");
-        public static final ResourceLocation LIQUID_COLOR = new ResourceLocation(VReference.MODID, "liquid_color");
+        public static final ResourceLocation ITEM_BLOOD = VResourceLocation.mod("item_blood");
+        public static final ResourceLocation ENTITY_BLOOD = VResourceLocation.mod("entity_blood");
+        public static final ResourceLocation FLUID_BLOOD_CONVERSION = VResourceLocation.mod("fluid_blood_conversion");
+        public static final ResourceLocation ENTITY_CONVERTER = VResourceLocation.mod("entity_converter");
+        public static final ResourceLocation LIQUID_COLOR = VResourceLocation.mod("liquid_color");
     }
 
 

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
@@ -113,7 +114,7 @@ public class DataMapsProvider extends DataMapProvider {
     }
 
     protected void gatherEntityConverter(Builder<IConverterEntry, EntityType<?>> entityValues) {
-        Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
+        Function<String, ResourceLocation> overlay = (String name) -> VResourceLocation.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
         Function<EntityType<?>, Holder<EntityType<?>>> holder = BuiltInRegistries.ENTITY_TYPE::wrapAsHolder;
 
         entityValues.add(holder.apply(EntityType.COW), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_COW), overlay.apply("cow")), false);

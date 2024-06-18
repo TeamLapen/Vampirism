@@ -396,8 +396,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public int getExperienceReward() {
-        return 6 + getEntityLevel();
+    protected int getBaseExperienceReward() {
+        this.xpReward = 6 + getEntityLevel();
+        return super.getBaseExperienceReward();
     }
 
     //IMob -------------------------------------------------------------------------------------------------------------

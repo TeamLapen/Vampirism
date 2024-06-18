@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.client.renderer.entity.ConvertedCreatureRenderer;
-import de.teamlapen.vampirism.mixin.client.accessor.RenderLayerAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -41,7 +40,7 @@ public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends Entit
             if (sourceId != null) {
                 ResourceLocation texture = VampirismAPI.entityRegistry().getConvertibleOverlay(sourceId);
                 if (texture != null) {
-                    RenderLayerAccessor.renderColoredCutoutModel(this.getParentModel(), texture, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
+                    renderColoredCutoutModel(this.getParentModel(), texture, matrixStack, iRenderTypeBuffer, i, entity, -1);
                 }
             }
         }

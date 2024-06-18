@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.ExtendedScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
@@ -15,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> implements ExtendedScreen {
-    private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
+    private static final ResourceLocation TASKMASTER_GUI_TEXTURE = VResourceLocation.mod("textures/gui/taskmaster.png");
     private final IFactionPlayer<?> factionPlayer;
 
     private TaskList list;

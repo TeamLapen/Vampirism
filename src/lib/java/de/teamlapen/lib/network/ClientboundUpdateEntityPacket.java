@@ -33,7 +33,7 @@ import java.util.Optional;
 public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
 
     private final static Logger LOGGER = LogManager.getLogger();
-    public static final Type<ClientboundUpdateEntityPacket> TYPE = new Type<>(new ResourceLocation(LIBREFERENCE.MODID, "update_entity"));
+    public static final Type<ClientboundUpdateEntityPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "update_entity"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdateEntityPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ClientboundUpdateEntityPacket::getId,
             ByteBufCodecs.optional(ByteBufCodecs.COMPOUND_TAG), s -> Optional.ofNullable(s.data),

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.PotionTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> {
 
     private static final int[] BUBBLELENGTHS = new int[]{29, 24, 20, 16, 11, 6, 0};
-    private final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/potion_table.png");
-    private final ResourceLocation BACKGROUND_EXTENDED = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/potion_table_extended.png");
-    private final ResourceLocation FUEL_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/fuel");
-    private final ResourceLocation PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/progress");
-    private final ResourceLocation BUBBLES_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/potion_table/bubbles");
+    private final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/potion_table.png");
+    private final ResourceLocation BACKGROUND_EXTENDED = VResourceLocation.mod("textures/gui/container/potion_table_extended.png");
+    private final ResourceLocation FUEL_SPRITE = VResourceLocation.mod("container/potion_table/fuel");
+    private final ResourceLocation PROGRESS_SPRITE = VResourceLocation.mod("container/potion_table/progress");
+    private final ResourceLocation BUBBLES_SPRITE = VResourceLocation.mod("container/potion_table/bubbles");
 
 
     public PotionTableScreen(@NotNull PotionTableMenu screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {

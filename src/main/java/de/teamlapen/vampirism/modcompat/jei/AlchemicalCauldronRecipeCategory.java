@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemicalCauldronRecipe>> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/alchemical_cauldron.png");
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;

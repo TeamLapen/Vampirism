@@ -74,7 +74,7 @@ public class ActionHandlerEntity<T extends PathfinderMob & IEntityActionUser> im
 
     public void read(@NotNull CompoundTag nbt) {
         if (nbt.contains("activeAction")) {
-            deactivateAction(RegUtil.getEntityAction(new ResourceLocation(nbt.getString("activeAction"))));
+            deactivateAction(RegUtil.getEntityAction(ResourceLocation.parse(nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
     }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FogDiffuserScreen extends Screen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/fog_diffuser.png");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/fog_diffuser.png");
     protected final int xSize = 220;
     protected final int ySize = 79;
     protected int guiLeft;

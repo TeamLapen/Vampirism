@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,18 +45,18 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, 
         if (entitylivingbaseIn.shouldRenderLordSkin()) {
             if (type != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.HEAD);
-                getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+                getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255,255,255,255));
             }
 
             texture = entitylivingbaseIn.getOverlayPlayerProperties().map(Pair::getLeft).orElse(texture);
             RenderType bodyType = getParentModel().getRenderType(this.getParentModel(), texture, entitylivingbaseIn);
             if (bodyType != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.BODY);
-                getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(bodyType), packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+                getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(bodyType), packedLightIn, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255,255,255,255));
             }
         } else if (type != null) {
             getParentModel().setVisibility(VisibilityPlayerModel.Visibility.ALL);
-            getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255,255,255,255));
         }
         getParentModel().setVisibility(VisibilityPlayerModel.Visibility.NONE);
     }

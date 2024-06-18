@@ -37,7 +37,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
 
     @Nullable
     public static <T extends MinionData> T fromNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
+        ResourceLocation dataType = ResourceLocation.parse(nbt.getString("data_type"));
         return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(IFactionRegistry.IMinionEntry::data).map(Supplier::get).map(s-> {
             try {
                 @SuppressWarnings("unchecked")
@@ -81,7 +81,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
         taskLocked = nbt.getBoolean("locked");
         if (nbt.contains("task", Tag.TAG_COMPOUND)) {
             CompoundTag task = nbt.getCompound("task");
-            ResourceLocation id = new ResourceLocation(task.getString("id"));
+            ResourceLocation id = ResourceLocation.parse(task.getString("id"));
             //noinspection unchecked
             IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(id);
             if (activeTask != null) {
@@ -246,6 +246,6 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     }
 
     protected ResourceLocation getDataType() {
-        return new ResourceLocation("");
+        return ResourceLocation.withDefaultNamespace("");
     }
 }

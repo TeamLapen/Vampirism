@@ -48,11 +48,11 @@ public class BaronAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
+        hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         matrixStackIn.pushPose();
         matrixStackIn.scale(1 - 0.4f * enragedProgress, 1 - 0.7f * enragedProgress, 1 - 0.4f * enragedProgress);
-        cloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        cloak.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         matrixStackIn.popPose();
     }
 

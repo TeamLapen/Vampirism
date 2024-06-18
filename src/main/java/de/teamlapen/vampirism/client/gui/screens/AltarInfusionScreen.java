@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.inventory.AltarInfusionMenu;
@@ -19,10 +20,10 @@ import java.util.Optional;
 
 public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/altar_of_infusion.png");
-    private static final ResourceLocation EMPTY_PURE_BLOOD = new ResourceLocation(REFERENCE.MODID, "item/empty_pure_blood");
-    private static final ResourceLocation EMPTY_HUMAN_HEART = new ResourceLocation(REFERENCE.MODID, "item/empty_human_heart");
-    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_book");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/altar_of_infusion.png");
+    private static final ResourceLocation EMPTY_PURE_BLOOD = VResourceLocation.mod("item/empty_pure_blood");
+    private static final ResourceLocation EMPTY_HUMAN_HEART = VResourceLocation.mod("item/empty_human_heart");
+    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = VResourceLocation.mod("item/empty_vampire_book");
 
     private final CyclingSlotBackground pureBloodIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground humanHeartIcon = new CyclingSlotBackground(1);

@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.api.world.ITotem;
 import de.teamlapen.vampirism.blocks.TotemBaseBlock;
@@ -78,7 +79,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -96,7 +96,7 @@ import static de.teamlapen.vampirism.util.TotemHelper.*;
 public class TotemBlockEntity extends BlockEntity implements ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final RandomSource RNG = RandomSource.create();
-    private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
+    private static final ResourceLocation nonFactionTotem = VResourceLocation.mc("none");
 
     public static void makeAgressive(@NotNull Villager villager) {
         AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
@@ -148,8 +148,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     //client attributes
     private long beamRenderCounter;
     private float beamRenderScale;
-    private float[] baseColors = DyeColor.WHITE.getTextureDiffuseColors();
-    private float[] progressColor = DyeColor.WHITE.getTextureDiffuseColors();
+    private int baseColor = DyeColor.WHITE.getTextureDiffuseColor();
+    private int progressColor = DyeColor.WHITE.getTextureDiffuseColor();
     @Nullable
     private CompletableFuture<BlockPos> closestVampireForest = null;
 
@@ -206,8 +206,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
     }
 
-    public float[] getBaseColors() {
-        return this.baseColors;
+    public int getBaseColor() {
+        return this.baseColor;
     }
 
     @Override
@@ -222,7 +222,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get() * 80f);
     }
 
-    public float[] getCapturingColors() {
+    public int getCapturingColors() {
         return this.progressColor;
     }
 
@@ -332,12 +332,12 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.isComplete = compound.getBoolean("isComplete");
         this.isInsideVillage = compound.getBoolean("isInsideVillage");
         if (compound.contains("controllingFaction")) {
-            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("controllingFaction"))));
+            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(ResourceLocation.parse(compound.getString("controllingFaction"))));
         } else {
             this.setControllingFaction(null);
         }
         if (compound.contains("capturingFaction")) {
-            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
+            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(ResourceLocation.parse(compound.getString("capturingFaction"))));
             this.captureTimer = compound.getInt("captureTimer");
             this.captureDuration = compound.getInt("captureDuration");
             this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
@@ -551,7 +551,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     public static void clientTick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull TotemBlockEntity blockEntity) {
         if (level.getGameTime() % 10 == 7 && blockEntity.controllingFaction != null) {
-            ModParticles.spawnParticlesClient(level, new GenericParticleOptions(new ResourceLocation("minecraft", "generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
+            ModParticles.spawnParticlesClient(level, new GenericParticleOptions(VResourceLocation.mc("generic_4"), 20, blockEntity.controllingFaction.getColor(), 0.2F), pos.getX(), pos.getY(), pos.getZ(), 3, 30, level.random);
         }
     }
 
@@ -1010,7 +1010,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private void setCapturingFaction(@Nullable IFaction<?> faction) {
         this.capturingFaction = faction;
-        this.progressColor = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
+        this.progressColor = faction != null ? new Color(faction.getColor()).getRGB() : DyeColor.WHITE.getTextureDiffuseColor();
         if (faction != null) {
             this.captureInfo.setColors(new Color(faction.getColor()), Color.WHITE, this.controllingFaction == null ? Color.WHITE : new Color(this.controllingFaction.getColor()));
             this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.raid", faction.getName().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())))));
@@ -1019,7 +1019,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private void setControllingFaction(@Nullable IFaction<?> faction) {
         this.controllingFaction = faction;
-        this.baseColors = faction != null ? new Color(faction.getColor()).getRGBColorComponents() : DyeColor.WHITE.getTextureDiffuseColors();
+        this.baseColor = faction != null ? new Color(faction.getColor()).getRGB() : DyeColor.WHITE.getTextureDiffuseColor();
         if (this.level != null) {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();

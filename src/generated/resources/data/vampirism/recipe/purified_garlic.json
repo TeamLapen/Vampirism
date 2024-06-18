@@ -1,0 +1,16 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "fluid": {
+    "tag": "vampirism:holy_water"
+  },
+  "ingredient": {
+    "tag": "c:crops/garlic"
+  },
+  "result": {
+    "count": 2,
+    "id": "vampirism:purified_garlic"
+  },
+  "skill": [
+    "vampirism:purified_garlic"
+  ]
+}

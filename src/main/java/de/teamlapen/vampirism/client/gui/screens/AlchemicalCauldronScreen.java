@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import net.minecraft.ChatFormatting;
@@ -14,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class AlchemicalCauldronScreen extends AbstractContainerScreen<AlchemicalCauldronMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemical_cauldron.png");
-    private static final ResourceLocation LIT_PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemical_cauldron/lit_progress");
-    private static final ResourceLocation BURN_PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemical_cauldron/burn_progress");
-    private static final ResourceLocation BUBBLES_PROGRESS_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/alchemical_cauldron/bubbles_progress");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/alchemical_cauldron.png");
+    private static final ResourceLocation LIT_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/lit_progress");
+    private static final ResourceLocation BURN_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/burn_progress");
+    private static final ResourceLocation BUBBLES_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/bubbles_progress");
 
     public AlchemicalCauldronScreen(@NotNull AlchemicalCauldronMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

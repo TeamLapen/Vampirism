@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -39,9 +40,9 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
         createWoodStates();
         createCursedBark();
 
-        ResourceLocation cutout = new ResourceLocation("cutout");
-        ResourceLocation cutout_mipped = new ResourceLocation("cutout_mipped");
-        ResourceLocation translucent = new ResourceLocation("translucent");
+        ResourceLocation cutout = VResourceLocation.mc("cutout");
+        ResourceLocation cutout_mipped = VResourceLocation.mc("cutout_mipped");
+        ResourceLocation translucent = VResourceLocation.mc("translucent");
         //models
         ModelFile dark_spruce_sapling = models().cross("dark_spruce_sapling", modLoc("block/dark_spruce_sapling")).renderType(cutout);
         ModelFile cursed_spruce_sapling = models().cross("cursed_spruce_sapling", modLoc("block/cursed_spruce_sapling")).renderType(cutout);
@@ -238,11 +239,11 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
         simpleBlock(ModBlocks.CURSED_ROOTS.get(), models().cross("cursed_roots", modLoc("block/cursed_roots")).renderType(cutout));
         simpleBlock(ModBlocks.POTTED_CURSED_ROOTS.get(), models().withExistingParent("vampirism:block/potted_cursed_roots", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/cursed_roots").renderType(cutout));
 
-        trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_trapdoor"), true);
-        trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_trapdoor"), true);
+        trapdoorBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), VResourceLocation.mod("block/dark_spruce_trapdoor"), true);
+        trapdoorBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR.get(), VResourceLocation.mod("block/cursed_spruce_trapdoor"), true);
 
-        doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/dark_spruce_door_top"));
-        doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_bottom"), new ResourceLocation(REFERENCE.MODID, "block/cursed_spruce_door_top"));
+        doorBlock(ModBlocks.DARK_SPRUCE_DOOR.get(), VResourceLocation.mod("block/dark_spruce_door_bottom"), VResourceLocation.mod("block/dark_spruce_door_top"));
+        doorBlock(ModBlocks.CURSED_SPRUCE_DOOR.get(), VResourceLocation.mod("block/cursed_spruce_door_bottom"), VResourceLocation.mod("block/cursed_spruce_door_top"));
 
         horizontalBlock(ModBlocks.VAMPIRE_RACK.get(), models().getExistingFile(modLoc("block/vampire_rack")));
         horizontalBlock(ModBlocks.THRONE.get(), models().getExistingFile(modLoc("block/throne")));
@@ -306,14 +307,14 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
 
         fenceBlock(ModBlocks.DARK_SPRUCE_FENCE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
         fenceBlock(ModBlocks.CURSED_SPRUCE_FENCE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
-        models().withExistingParent("dark_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/dark_spruce_planks");
-        models().withExistingParent("cursed_spruce_fence_inventory", new ResourceLocation("block/fence_inventory")).texture("texture", "block/cursed_spruce_planks");
+        models().withExistingParent("dark_spruce_fence_inventory", VResourceLocation.mc("block/fence_inventory")).texture("texture", "block/dark_spruce_planks");
+        models().withExistingParent("cursed_spruce_fence_inventory", VResourceLocation.mc("block/fence_inventory")).texture("texture", "block/cursed_spruce_planks");
         fenceGateBlock(ModBlocks.DARK_SPRUCE_FENCE_GATE.get(), blockTexture(ModBlocks.DARK_SPRUCE_PLANKS.get()));
         fenceGateBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get(), blockTexture(ModBlocks.CURSED_SPRUCE_PLANKS.get()));
 
         logBlock(ModBlocks.DARK_SPRUCE_LOG.get());
         logBlock(ModBlocks.CURSED_SPRUCE_LOG.get());
-        axisBlock(ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), UtilLib.amend(blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), "_top"));
+        axisBlock(ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()).withSuffix("_top"));
         axisBlock(ModBlocks.DARK_SPRUCE_WOOD.get(), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()), blockTexture(ModBlocks.DARK_SPRUCE_LOG.get()));
         axisBlock(ModBlocks.CURSED_SPRUCE_WOOD.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
         axisBlock(ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()), blockTexture(ModBlocks.CURSED_SPRUCE_LOG.get()));
@@ -379,8 +380,8 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
     }
 
     private void createCursedBark() {
-        ModelFile side = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side"));
-        ModelFile side2 = models().getExistingFile(new ResourceLocation(REFERENCE.MODID, "cursed_bark_side_2"));
+        ModelFile side = models().getExistingFile(VResourceLocation.mod("cursed_bark_side"));
+        ModelFile side2 = models().getExistingFile(VResourceLocation.mod("cursed_bark_side_2"));
         MultiPartBlockStateBuilder builder = getMultipartBuilder(ModBlocks.DIRECT_CURSED_BARK.get())
                 .part().modelFile(side).rotationY(90).addModel().condition(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
                 .part().modelFile(side).addModel().condition(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL).end()
@@ -438,9 +439,9 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
 
     private void button(Block block, @NotNull ResourceLocation texture) {
         ResourceLocation id = RegUtil.id(block);
-        ModelFile button = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/button")).texture("texture", texture.getPath());
-        ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", new ResourceLocation("block/button_pressed")).texture("texture", texture.getPath());
-        ModelFile button_inventory = models().withExistingParent("block/" + id.getPath() + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture.getPath());
+        ModelFile button = models().withExistingParent("block/" + id.getPath(), VResourceLocation.mc("block/button")).texture("texture", texture.getPath());
+        ModelFile button_pressed = models().withExistingParent("block/" + id.getPath() + "_pressed", VResourceLocation.mc("block/button_pressed")).texture("texture", texture.getPath());
+        ModelFile button_inventory = models().withExistingParent("block/" + id.getPath() + "_inventory", VResourceLocation.mc("block/button_inventory")).texture("texture", texture.getPath());
         getVariantBuilder(block)
                 .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).rotationX(180).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).rotationX(180).addModel()
@@ -473,8 +474,8 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
 
     private void pressurePlate(Block block, @NotNull ResourceLocation texture) {
         ResourceLocation id = RegUtil.id(block);
-        ModelFile pressure_plate = models().withExistingParent("block/" + id.getPath(), new ResourceLocation("block/pressure_plate_up")).texture("texture", texture.getPath());
-        ModelFile pressure_plate_down = models().withExistingParent("block/" + id.getPath() + "_down", new ResourceLocation("block/pressure_plate_down")).texture("texture", texture.getPath());
+        ModelFile pressure_plate = models().withExistingParent("block/" + id.getPath(), VResourceLocation.mc("block/pressure_plate_up")).texture("texture", texture.getPath());
+        ModelFile pressure_plate_down = models().withExistingParent("block/" + id.getPath() + "_down", VResourceLocation.mc("block/pressure_plate_down")).texture("texture", texture.getPath());
 
         getVariantBuilder(block)
                 .partialState().with(PressurePlateBlock.POWERED, false).modelForState().modelFile(pressure_plate).addModel()

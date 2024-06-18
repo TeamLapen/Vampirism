@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -15,14 +16,14 @@ import java.util.List;
 
 
 public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation taskID) implements CustomPacketPayload {
-    public static final Type<ServerboundSelectMinionTaskPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "select_minion_task"));
+    public static final Type<ServerboundSelectMinionTaskPacket> TYPE = new Type<>(VResourceLocation.mod("select_minion_task"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSelectMinionTaskPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ServerboundSelectMinionTaskPacket::minionID,
             ResourceLocation.STREAM_CODEC, ServerboundSelectMinionTaskPacket::taskID,
             ServerboundSelectMinionTaskPacket::new
     );
-    public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
-    public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
+    public final static ResourceLocation RECALL = VResourceLocation.mod("recall");
+    public final static ResourceLocation RESPAWN = VResourceLocation.mod("respawn");
 
     public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -57,7 +58,7 @@ public class ModSounds {
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> create(@NotNull String soundNameIn) {
-        ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, soundNameIn);
+        ResourceLocation resourcelocation = VResourceLocation.mod(soundNameIn);
         return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
     }
 

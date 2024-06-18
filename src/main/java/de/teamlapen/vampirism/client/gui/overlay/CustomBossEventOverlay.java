@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.Color;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.mixin.client.accessor.BossHealthOverlayAccessor;
 import de.teamlapen.vampirism.mixin.client.accessor.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.world.MultiBossEvent;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -20,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CustomBossEventOverlay implements LayeredDraw.Layer {
-    private static final ResourceLocation BAR_PROGRESS_SPRITE = new ResourceLocation("boss_bar/white_progress");
+    private static final ResourceLocation BAR_PROGRESS_SPRITE = VResourceLocation.mc("boss_bar/white_progress");
     private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
 
@@ -46,7 +48,7 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
     }
 
     @Override
-    public void render(GuiGraphics graphics, float partialTicks) {
+    public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {

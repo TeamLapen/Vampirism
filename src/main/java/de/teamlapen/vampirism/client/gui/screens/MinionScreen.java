@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.MinionContainer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -20,10 +21,10 @@ import java.util.*;
 
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/minion_inventory.png");
-    private static final ResourceLocation LOCKED_SPRITE = new ResourceLocation(REFERENCE.MODID, "container/minion_inventory/locked");
-    private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/settings"), new ResourceLocation(REFERENCE.MODID, "widget/settings_highlighted"));
-    private static final WidgetSprites STATS_SPRITES = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/skill_points"), new ResourceLocation(REFERENCE.MODID, "widget/skill_points_highlighted"));
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/minion_inventory.png");
+    private static final ResourceLocation LOCKED_SPRITE = VResourceLocation.mod("container/minion_inventory/locked");
+    private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(VResourceLocation.mod("widget/settings"), VResourceLocation.mod("widget/settings_highlighted"));
+    private static final WidgetSprites STATS_SPRITES = new WidgetSprites(VResourceLocation.mod("widget/skill_points"), VResourceLocation.mod("widget/skill_points_highlighted"));
     private final int extraSlots;
     private SimpleList<?> taskList;
     private Button taskButton;

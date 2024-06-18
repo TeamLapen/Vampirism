@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.refinement;
 
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ public interface IRefinement {
 
 
     @Nullable
-    AttributeModifier createAttributeModifier(UUID uuid, double value);
+    AttributeModifier createAttributeModifier(double value);
 
     @Nullable
     Holder<Attribute> getAttribute();
@@ -22,7 +23,4 @@ public interface IRefinement {
     Component getDescription();
 
     double getModifierValue();
-
-    @Nullable
-    UUID getUUID();
 }

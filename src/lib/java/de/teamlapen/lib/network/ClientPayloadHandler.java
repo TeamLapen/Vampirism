@@ -44,7 +44,7 @@ public class ClientPayloadHandler {
                 }
                 if (pkt.getAttachments() != null) {
                     for (String key : pkt.getAttachments().getAllKeys()) {
-                        handleCapability(e, new ResourceLocation(key), pkt.getAttachments().getCompound(key));
+                        handleCapability(e, ResourceLocation.parse(key), pkt.getAttachments().getCompound(key));
                     }
                 }
             }

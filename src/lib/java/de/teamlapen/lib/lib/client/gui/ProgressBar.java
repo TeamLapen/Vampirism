@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
-    private static final ResourceLocation WIDGETS = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/widgets.png");
+    private static final ResourceLocation WIDGETS = ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "textures/gui/widgets.png");
     private float progress = 0;
     private int color = 0xFFFFFF;
 

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -41,7 +42,7 @@ import java.util.function.Function;
  */
 public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism {
     private static final String NBT_KEY = "extended_creature";
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
+    public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod(NBT_KEY);
 
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "max_blood";

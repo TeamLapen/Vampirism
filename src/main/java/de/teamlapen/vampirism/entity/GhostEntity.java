@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.DefendLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.FindLeaderGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -40,7 +42,7 @@ import java.util.UUID;
 
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
-    private static final UUID SPEED_MODIFIER = UUID.fromString("e8c3b0b0-3d6c-11eb-b378-0242ac130002");
+    private static final ResourceLocation SPEED_MODIFIER = VResourceLocation.mod("not_in_block");
     private IEntityLeader leader;
 
     public GhostEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {
@@ -103,7 +105,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         if (pState.isAir()) {
             AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);
             if (attribute != null && attribute.getModifier(SPEED_MODIFIER) == null) {
-                attribute.addTransientModifier(new AttributeModifier(SPEED_MODIFIER, "free movement", 0.2, AttributeModifier.Operation.ADD_VALUE));
+                attribute.addTransientModifier(new AttributeModifier(SPEED_MODIFIER, 0.2, AttributeModifier.Operation.ADD_VALUE));
             }
         } else {
             AttributeInstance attribute = getAttribute(Attributes.FLYING_SPEED);

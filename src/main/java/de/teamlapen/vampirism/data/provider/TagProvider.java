@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -294,6 +296,7 @@ public class TagProvider {
             tag(ItemTags.FOOT_ARMOR).add(ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
             tag(ModTags.Items.VAMPIRE_CLOTHING).addTag(ModTags.Items.VAMPIRE_CLOAK);
             tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
+            tag(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
         }
     }
 
@@ -418,7 +421,7 @@ public class TagProvider {
             this.tag(ModTags.DamageTypes.REMAINS_INVULNERABLE).add(DamageTypes.IN_WALL, DamageTypes.DROWN);
             this.tag(ModTags.DamageTypes.MOTHER_RESISTANT_TO).add(DamageTypes.ON_FIRE, DamageTypes.IN_FIRE, ModDamageTypes.HOLY_WATER, DamageTypes.FREEZE, DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC);
             this.tag(ModTags.DamageTypes.VAMPIRE_IMMORTAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.DROWN, DamageTypes.ON_FIRE, DamageTypes.CRAMMING, DamageTypes.FALL, DamageTypes.FLY_INTO_WALL, DamageTypes.MAGIC, DamageTypes.MAGIC, DamageTypes.WITHER, DamageTypes.FALLING_ANVIL, DamageTypes.FALLING_BLOCK, DamageTypes.DRAGON_BREATH, DamageTypes.SWEET_BERRY_BUSH, DamageTypes.TRIDENT, DamageTypes.ARROW, DamageTypes.FIREWORKS, DamageTypes.FIREBALL, DamageTypes.WITHER_SKULL, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION, DamageTypes.THROWN, DamageTypes.INDIRECT_MAGIC, ModDamageTypes.VAMPIRE_ON_FIRE, DamageTypes.STING, DamageTypes.FALLING_STALACTITE, DamageTypes.STALAGMITE, DamageTypes.FREEZE)
-                    .addOptional(new ResourceLocation("mekanism", "radiation"));
+                    .addOptional(VResourceLocation.loc("mekanism", "radiation"));
         }
     }
 
@@ -535,7 +538,8 @@ public class TagProvider {
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-            this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER.getKey());
+            this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
+            this.tag(ModTags.Enchantments.CROSSBOW_INCOMPATIBLE).add(Enchantments.INFINITY);
         }
     }
 }

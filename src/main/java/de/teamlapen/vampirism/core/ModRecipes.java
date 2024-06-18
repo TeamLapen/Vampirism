@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.datamaps.EntityExistsCondition;
 import de.teamlapen.vampirism.recipes.*;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.registries.Registries;
@@ -55,7 +54,6 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new SimpleCraftingRecipeSerializer<>(CleanOilRecipe::new));
 
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
-    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<EntityExistsCondition>> ENTITY_EXISTS_CONDITION = CONDITION_CODECS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
     public static class Types {
         public static final RecipeBookType WEAPON_TABLE_TYPE = RecipeBookType.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString());

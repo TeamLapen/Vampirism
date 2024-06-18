@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFeatures;
@@ -74,15 +75,15 @@ public class VampirismFeatures {
     public static final ResourceKey<BiomeModifier> VAMPIRE_DUNGEON_MODIFIER = createModifierKey("feature/vampire_dungeon");
 
     private static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String name) {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(REFERENCE.MODID, name));
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, VResourceLocation.mod(name));
     }
 
     private static ResourceKey<PlacedFeature> createPlacedKey(String name) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(REFERENCE.MODID, name));
+        return ResourceKey.create(Registries.PLACED_FEATURE, VResourceLocation.mod(name));
     }
 
     private static ResourceKey<BiomeModifier> createModifierKey(String name) {
-        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(REFERENCE.MODID, name));
+        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VResourceLocation.mod(name));
     }
 
     public static void createConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {

@@ -77,10 +77,6 @@ public class RegUtil {
         return level.registryAccess().registryOrThrow(Registries.BIOME).getKey(type);
     }
 
-    public static ResourceLocation id(@NotNull Enchantment type) {
-        return BuiltInRegistries.ENCHANTMENT.getKey(type);
-    }
-
     public static ResourceLocation id(@NotNull VillagerProfession profession) {
         return BuiltInRegistries.VILLAGER_PROFESSION.getKey(profession);
     }
@@ -183,6 +179,6 @@ public class RegUtil {
     }
 
     public static Holder<ISkillTree> getSkillTree(Level level, String asString) {
-        return level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE).getHolderOrThrow(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE,new ResourceLocation(asString)));
+        return level.registryAccess().registryOrThrow(VampirismRegistries.Keys.SKILL_TREE).getHolderOrThrow(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, ResourceLocation.parse(asString)));
     }
 }

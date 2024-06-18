@@ -23,7 +23,7 @@ public class VampirismBoatRenderer extends BoatRenderer {
     public VampirismBoatRenderer(EntityRendererProvider.@NotNull Context context, boolean hasChest) {
         super(context, hasChest);
         this.boatResources = Stream.of(IVampirismBoat.BoatType.values()).collect(ImmutableMap.toImmutableMap((type) -> type, (type) -> {
-            return Pair.of(new ResourceLocation(getTextureLocation(type, hasChest)), this.createBoatModel(context, type, hasChest));
+            return Pair.of(ResourceLocation.parse(getTextureLocation(type, hasChest)), this.createBoatModel(context, type, hasChest));
         }));
     }
 

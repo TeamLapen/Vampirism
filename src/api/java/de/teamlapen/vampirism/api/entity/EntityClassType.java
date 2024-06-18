@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity;
 
 import com.google.common.collect.Maps;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
@@ -48,9 +49,9 @@ public enum EntityClassType {
     private final @NotNull AttributeModifier speedModifier;
 
     EntityClassType(double healthModifier, double damageModifier, double speedModifier) {
-        this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.healthModifier = new AttributeModifier(VResourceLocation.mod("entity_class_health"), healthModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.damageModifier = new AttributeModifier(VResourceLocation.mod("entity_class_damage"), damageModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        this.speedModifier = new AttributeModifier(VResourceLocation.mod("entity_class_speed"), speedModifier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     }
 
     public @NotNull AttributeModifier getDamageModifier() {

@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
@@ -58,7 +59,7 @@ import java.util.stream.Collectors;
 public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
     private static final String NBT_KEY = "faction_player_handler";
-    public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(REFERENCE.MODID, NBT_KEY);
+    public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod(NBT_KEY);
 
     public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
         return player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get());
@@ -209,7 +210,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
                 currentLevel = 0;
                 currentLordLevel = 0;
             } else {
-                currentFaction = getFactionFromKey(new ResourceLocation(f));
+                currentFaction = getFactionFromKey(ResourceLocation.parse(f));
                 if (currentFaction == null) {
                     LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
                     currentLevel = 0;
@@ -393,7 +394,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         CompoundTag bounds = nbt.getCompound("bound_actions");
         for (String s : bounds.getAllKeys()) {
             int id = Integer.parseInt(s);
-            IAction<?> action = RegUtil.getAction(new ResourceLocation(bounds.getString(s)));
+            IAction<?> action = RegUtil.getAction(ResourceLocation.parse(bounds.getString(s)));
             if (action == null) {
                 LOGGER.warn("Cannot find bound action {}", bounds.getString(s));
             } else {
@@ -505,7 +506,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("faction")) {
-            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
+            currentFaction = getFactionFromKey(ResourceLocation.parse(nbt.getString("faction")));
             if (currentFaction == null) {
                 LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
             } else {
