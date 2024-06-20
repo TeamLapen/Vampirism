@@ -5,7 +5,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 
-public record BrewingRecipeInput(ItemStack input, ItemStack ingredient) implements RecipeInput {
+public record BrewingRecipeInput(ItemStack input, ItemStack ingredient, boolean onlyTest) implements RecipeInput {
+
+    public BrewingRecipeInput(ItemStack input, ItemStack ingredient) {
+        this(input, ingredient, false);
+    }
 
     @Override
     public @NotNull ItemStack getItem(int p_346128_) {

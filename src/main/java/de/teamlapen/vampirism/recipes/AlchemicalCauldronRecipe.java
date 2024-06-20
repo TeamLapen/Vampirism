@@ -139,7 +139,11 @@ public class AlchemicalCauldronRecipe implements Recipe<BrewingRecipeInput> {
             Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.ingredient());
             stack.ifPresent((handlerItem) -> fluidMatch.set(FluidStack.isSameFluidSameComponents(ingredient1, handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
         }));
-        return match && fluidMatch.get();
+        if (inv.onlyTest()) {
+            return match || fluidMatch.get();
+        } else {
+            return match && fluidMatch.get();
+        }
     }
 
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {

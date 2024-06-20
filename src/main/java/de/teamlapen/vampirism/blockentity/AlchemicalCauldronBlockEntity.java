@@ -312,11 +312,14 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void setItem(int index, @NotNull ItemStack stack) {
-        super.setItem(index, stack);
-        ItemStack itemstack = this.items.get(index);
-        boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack);
-        if (flag) {
+    public void setItem(int pIndex, ItemStack pStack) {
+        ItemStack itemstack = this.items.get(pIndex);
+        boolean flag = !pStack.isEmpty() && ItemStack.isSameItemSameComponents(itemstack, pStack);
+        this.items.set(pIndex, pStack);
+        pStack.limitSize(this.getMaxStackSize(pStack));
+        if ((pIndex == AlchemicalCauldronMenu.FLUID_SLOT || pIndex == AlchemicalCauldronMenu.INGREDIENT_SLOT) && !flag) {
+            this.cookingTotalTime = getTotalCookTime(this.level, this);
+            this.cookingProgress = 0;
             this.setChanged();
         }
     }
@@ -337,33 +340,34 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
             pBlockEntity.litTime--;
         }
 
-        ItemStack itemstack = pBlockEntity.items.get(3);
-        ItemStack itemstack1 = pBlockEntity.items.get(1);
+        ItemStack fuel = pBlockEntity.items.get(3);
+        ItemStack ingredient = pBlockEntity.items.get(1);
         ItemStack fluid = pBlockEntity.items.get(0);
-        boolean flag2 = !itemstack1.isEmpty();
-        boolean flag3 = !itemstack.isEmpty();
-        if (pBlockEntity.isLit() || flag3 && flag2) {
+        boolean flag2 = !ingredient.isEmpty();
+        boolean flag3 = !fuel.isEmpty();
+        boolean flag4 = !fluid.isEmpty();
+        if (pBlockEntity.isLit() || flag3 && flag2 && flag4) {
             RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
-            if (flag2) {
-                recipeholder = pBlockEntity.quickCheck.getRecipeFor(new BrewingRecipeInput(itemstack1, fluid), pLevel).orElse(null);
+            if (flag2 && flag4) {
+                recipeholder = pBlockEntity.quickCheck.getRecipeFor(new BrewingRecipeInput(ingredient, fluid), pLevel).orElse(null);
             } else {
                 recipeholder = null;
             }
 
             int i = pBlockEntity.getMaxStackSize();
             if (!pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity) && pBlockEntity.canPlayerCook(recipeholder)) {
-                pBlockEntity.litTime = pBlockEntity.getBurnDuration(itemstack);
+                pBlockEntity.litTime = pBlockEntity.getBurnDuration(fuel);
                 pBlockEntity.litDuration = pBlockEntity.litTime;
                 if (pBlockEntity.isLit()) {
                     flag1 = true;
-                    if (itemstack.hasCraftingRemainingItem())
-                        pBlockEntity.items.set(3, itemstack.getCraftingRemainingItem());
+                    if (fuel.hasCraftingRemainingItem())
+                        pBlockEntity.items.set(3, fuel.getCraftingRemainingItem());
                     else
                     if (flag3) {
-                        Item item = itemstack.getItem();
-                        itemstack.shrink(1);
-                        if (itemstack.isEmpty()) {
-                            pBlockEntity.items.set(3, itemstack.getCraftingRemainingItem());
+                        Item item = fuel.getItem();
+                        fuel.shrink(1);
+                        if (fuel.isEmpty()) {
+                            pBlockEntity.items.set(3, fuel.getCraftingRemainingItem());
                         }
                     }
                 }
@@ -485,20 +489,17 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
     private static boolean burn(RegistryAccess pRegistryAccess, @javax.annotation.Nullable RecipeHolder<?> pRecipe, NonNullList<ItemStack> pInventory, int pMaxStackSize, AlchemicalCauldronBlockEntity furnace) {
         if (pRecipe != null && canBurn(pRegistryAccess, pRecipe, pInventory, pMaxStackSize, furnace)) {
-            ItemStack itemstack = pInventory.get(0);
-            ItemStack itemstack1 = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
-            ItemStack itemstack2 = pInventory.get(2);
-            if (itemstack2.isEmpty()) {
-                pInventory.set(2, itemstack1.copy());
-            } else if (ItemStack.isSameItemSameComponents(itemstack2, itemstack1)) {
-                itemstack2.grow(itemstack1.getCount());
+            ItemStack fluid = pInventory.get(AlchemicalCauldronMenu.FLUID_SLOT);
+            ItemStack ingredient = pInventory.get(AlchemicalCauldronMenu.INGREDIENT_SLOT);
+            ItemStack newResult = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack currentResult = pInventory.get(AlchemicalCauldronMenu.RESULT_SLOT);
+            if (currentResult.isEmpty()) {
+                pInventory.set(AlchemicalCauldronMenu.RESULT_SLOT, newResult.copy());
+            } else if (ItemStack.isSameItemSameComponents(currentResult, newResult)) {
+                currentResult.grow(newResult.getCount());
             }
-
-            if (itemstack.is(Blocks.WET_SPONGE.asItem()) && !pInventory.get(1).isEmpty() && pInventory.get(1).is(Items.BUCKET)) {
-                pInventory.set(1, new ItemStack(Items.WATER_BUCKET));
-            }
-
-            itemstack.shrink(1);
+            fluid.shrink(1);
+            ingredient.shrink(1);
             return true;
         } else {
             return false;
@@ -520,7 +521,10 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
     @Override
     public void setRecipeUsed(@Nullable RecipeHolder<?> pRecipe) {
-
+        if (pRecipe != null) {
+            ResourceLocation resourcelocation = pRecipe.id();
+            this.recipesUsed.addTo(resourcelocation, 1);
+        }
     }
 
     @Nullable
@@ -531,6 +535,8 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
     @Override
     public void fillStackedContents(StackedContents pContents) {
-
+        for (ItemStack itemstack : this.items) {
+            pContents.accountStack(itemstack);
+        }
     }
 }

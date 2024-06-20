@@ -138,7 +138,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
                         return ItemStack.EMPTY;
                     }
                 } else if (this.isFuel(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, FLUID_SLOT, FLUID_SLOT + 1, false)) {
+                    if (!this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (pIndex >= INV_SLOT_START && pIndex < INV_SLOT_END) {
@@ -169,11 +169,11 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
     }
 
     protected boolean canSmeltAsIngredient(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(pStack, this.container.getItem(FLUID_SLOT)), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(pStack, this.container.getItem(FLUID_SLOT), true), this.level).isPresent();
     }
 
     protected boolean canSmeltAsFluid(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack, true), this.level).isPresent();
     }
 
     protected boolean isFuel(ItemStack pStack) {
