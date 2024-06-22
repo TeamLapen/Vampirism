@@ -36,7 +36,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public float getDamageBonus(int level, @NotNull MobType creatureType) {
-        return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? 2f + Math.min(0, level - 1) * 1F : 0;
+        return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? 2f + Math.max(0, level - 1) * 1F : 0;
     }
 
     @Override
