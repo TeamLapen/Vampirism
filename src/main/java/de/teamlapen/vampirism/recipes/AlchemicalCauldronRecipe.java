@@ -16,21 +16,17 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AlchemicalCauldronRecipe implements Recipe<BrewingRecipeInput> {
+public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipeInput> {
 
     protected final RecipeType<?> type;
     protected final String group;
@@ -64,7 +60,7 @@ public class AlchemicalCauldronRecipe implements Recipe<BrewingRecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(BrewingRecipeInput p_345149_, HolderLookup.Provider p_346030_) {
+    public ItemStack assemble(AlchemicalCauldronRecipeInput p_345149_, HolderLookup.Provider p_346030_) {
         return this.result.copy();
     }
 
@@ -130,20 +126,14 @@ public class AlchemicalCauldronRecipe implements Recipe<BrewingRecipeInput> {
     }
 
     @Override
-    public boolean matches(@NotNull BrewingRecipeInput inv, @NotNull Level worldIn) {
-        boolean match = this.ingredient.test(inv.input());
-        AtomicBoolean fluidMatch = new AtomicBoolean(true);
-        fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.ingredient()))));
-        fluid.ifRight((ingredient1 -> {
-            fluidMatch.set(false);
-            Optional<FluidStack> stack = FluidUtil.getFluidContained(inv.ingredient());
-            stack.ifPresent((handlerItem) -> fluidMatch.set(FluidStack.isSameFluidSameComponents(ingredient1, handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
-        }));
-        if (inv.onlyTest()) {
-            return match || fluidMatch.get();
-        } else {
-            return match && fluidMatch.get();
-        }
+    public boolean matches(@NotNull AlchemicalCauldronRecipeInput inv, @NotNull Level worldIn) {
+        boolean match = this.ingredient.test(inv.ingredient());
+        Boolean fluidMatch = fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> FluidUtil.getFluidContained(inv.fluid()).map(s -> FluidStack.isSameFluidSameComponents(fluid1, s) && fluid1.getAmount() < s.getAmount()).orElse(false));
+        return switch (inv.testType()) {
+            case INPUT_1 -> match;
+            case INPUT_2 -> fluidMatch;
+            case BOTH -> match && fluidMatch;
+        } && inv.skills().map(s -> s.areSkillsEnabled(this.skills)).orElse(true);
     }
 
     public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {

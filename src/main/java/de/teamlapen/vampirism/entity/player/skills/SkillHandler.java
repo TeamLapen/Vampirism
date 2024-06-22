@@ -273,6 +273,12 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return enabledSkills.contains(skill);
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
+    @Override
+    public boolean areSkillsEnabled(Collection<ISkill<?>> skill) {
+        return enabledSkills.containsAll(skill);
+    }
+
     @Override
     public boolean isSkillEnabled(Holder<ISkill<?>> skill) {
         return enabledSkills.contains(skill.value());

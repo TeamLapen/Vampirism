@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blockentity;
 
 import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -9,6 +10,7 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipeInput;
 import de.teamlapen.vampirism.recipes.BrewingRecipeInput;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -44,6 +46,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -115,7 +118,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
     };
 
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
-    private final RecipeManager.CachedCheck<BrewingRecipeInput, AlchemicalCauldronRecipe> quickCheck;
+    private final RecipeManager.CachedCheck<AlchemicalCauldronRecipeInput, AlchemicalCauldronRecipe> quickCheck;
 
 
     public AlchemicalCauldronBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
@@ -330,6 +333,10 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         this.setChanged();
     }
 
+    public Optional<ISkillHandler<?>> getPlayerSkillHandler() {
+        return Optional.ofNullable(this.level.getPlayerByUUID(ownerID)).map(HunterPlayer::get).map(HunterPlayer::getSkillHandler);
+    }
+
     /**
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
@@ -349,7 +356,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         if (pBlockEntity.isLit() || flag3 && flag2 && flag4) {
             RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
             if (flag2 && flag4) {
-                recipeholder = pBlockEntity.quickCheck.getRecipeFor(new BrewingRecipeInput(ingredient, fluid), pLevel).orElse(null);
+                recipeholder = pBlockEntity.quickCheck.getRecipeFor(new AlchemicalCauldronRecipeInput(ingredient, fluid, pBlockEntity.getPlayerSkillHandler()), pLevel).orElse(null);
             } else {
                 recipeholder = null;
             }
@@ -373,7 +380,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
                 }
             }
 
-            if (pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity)) {
+            if (pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity)  && pBlockEntity.canPlayerCook(recipeholder)) {
                 pBlockEntity.cookingProgress++;
                 if (pBlockEntity.cookingProgress == pBlockEntity.cookingTotalTime) {
                     pBlockEntity.cookingProgress = 0;
@@ -467,7 +474,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
     private static boolean canBurn(RegistryAccess pRegistryAccess, @Nullable RecipeHolder<?> pRecipe, NonNullList<ItemStack> pInventory, int pMaxStackSize, AlchemicalCauldronBlockEntity furnace) {
         if (!pInventory.get(0).isEmpty() && pRecipe != null) {
-            ItemStack itemstack = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack itemstack = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
             if (itemstack.isEmpty()) {
                 return false;
             } else {
@@ -491,7 +498,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         if (pRecipe != null && canBurn(pRegistryAccess, pRecipe, pInventory, pMaxStackSize, furnace)) {
             ItemStack fluid = pInventory.get(AlchemicalCauldronMenu.FLUID_SLOT);
             ItemStack ingredient = pInventory.get(AlchemicalCauldronMenu.INGREDIENT_SLOT);
-            ItemStack newResult = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new BrewingRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack newResult = ((RecipeHolder<? extends AlchemicalCauldronRecipe>) pRecipe).value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
             ItemStack currentResult = pInventory.get(AlchemicalCauldronMenu.RESULT_SLOT);
             if (currentResult.isEmpty()) {
                 pInventory.set(AlchemicalCauldronMenu.RESULT_SLOT, newResult.copy());
@@ -507,7 +514,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
     }
 
     private static int getTotalCookTime(Level pLevel, AlchemicalCauldronBlockEntity pBlockEntity) {
-        BrewingRecipeInput brewingRecipeInput = new BrewingRecipeInput(pBlockEntity.getIngredient(), pBlockEntity.getFluid());
+        AlchemicalCauldronRecipeInput brewingRecipeInput = new AlchemicalCauldronRecipeInput(pBlockEntity.getIngredient(), pBlockEntity.getFluid());
         return pBlockEntity.quickCheck.getRecipeFor(brewingRecipeInput, pLevel).map(p_300840_ -> p_300840_.value().getCookingTime()).orElse(200);
     }
 

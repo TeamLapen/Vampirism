@@ -62,6 +62,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
 
     boolean isSkillEnabled(ISkill<?> skill);
 
+    boolean areSkillsEnabled(Collection<ISkill<?>> skill);
+
     boolean isSkillEnabled(Holder<ISkill<?>> skill);
 
     /**

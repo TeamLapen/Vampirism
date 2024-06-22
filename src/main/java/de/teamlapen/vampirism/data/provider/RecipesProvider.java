@@ -205,8 +205,7 @@ public class RecipesProvider extends RecipeProvider {
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE.get(), 5).withIngredient(gun_powder).withFluid(holy_water_bottle_enhanced).save(output, modId("alchemical_fire_5"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE.get(), 6).withIngredient(gun_powder).withFluid(holy_water_bottle_ultimate).save(output, modId("alchemical_fire_6"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE.get()).withIngredient(wool).withFluid(garlic).withSkills(HunterSkills.GARLIC_DIFFUSER.get()).save(output, modId("garlic_diffuser_core"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get()).withIngredient(garlic_diffuser_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED.get()).experience(2.0f).save(output, modId("garlic_diffuser" +
-                "_core_improved"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get()).withIngredient(garlic_diffuser_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED.get()).experience(2.0f).save(output, modId("garlic_diffuser_core_improved"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.PURIFIED_GARLIC.get(), 2).withIngredient(garlic).withFluid(holy_water).withSkills(HunterSkills.PURIFIED_GARLIC.get()).save(output, modId("purified_garlic"));
 
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get()).lava(1).pattern("XZZX").pattern("XXXX").pattern("XYYX").pattern("XXXX").define('X', leather).define('Y', garlic).define('Z', potion(Potions.SWIFTNESS)).unlockedBy("has_leather", has(leather)).unlockedBy("has_garlic", has(garlic)).save(output);

@@ -281,6 +281,7 @@
   "gui.vampirism.reset_skills.desc_test": "Do you want to reset your skills? (You do not loose a level, because you are using an alpha version of Vampirism)",
   "gui.vampirism.alchemical_cauldron.level": "Required Hunter Level: %s",
   "gui.vampirism.alchemical_cauldron.skill": "Required Skill: %s",
+  "gui.vampirism.alchemical_cauldron.missing_skills": "Missing skills:",
   "gui.vampirism.name_sword.title": "Sword Name",
   "gui.vampirism.name_sword.text": "Do you want to give this sword a name?",
   "gui.vampirism.minion.appearance": "Change minion appearance",

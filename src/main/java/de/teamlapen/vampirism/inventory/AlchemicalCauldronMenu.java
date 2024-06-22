@@ -3,7 +3,8 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.recipes.BrewingRecipeInput;
+import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipeInput;
+import de.teamlapen.vampirism.recipes.ITestableRecipeInput;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -17,8 +18,10 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 
-public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, AlchemicalCauldronRecipe> {
+
+public class AlchemicalCauldronMenu extends RecipeBookMenu<AlchemicalCauldronRecipeInput, AlchemicalCauldronRecipe> {
     public static final int INGREDIENT_SLOT = 1;
     public static final int FLUID_SLOT = 0;
     public static final int FUEL_SLOT = 3;
@@ -50,10 +53,10 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
         this.container = inv;
         this.data = pData;
         this.level = playerInventory.player.level();
-        this.addSlot(new Slot(this.container, 0, 44, 17));
-        this.addSlot(new Slot(this.container, 1, 68, 17));
-        this.addSlot(new FurnaceFuelSlot(this, this.container, 3, 56, 53));
-        this.addSlot(new FurnaceResultSlot(playerInventory.player, this.container, 2, 116, 35));
+        this.addSlot(new Slot(this.container, FLUID_SLOT, 44, 17));
+        this.addSlot(new Slot(this.container, INGREDIENT_SLOT, 68, 17));
+        this.addSlot(new FurnaceResultSlot(playerInventory.player, this.container, RESULT_SLOT, 116, 35));
+        this.addSlot(new FurnaceFuelSlot(this, this.container, FUEL_SLOT, 56, 53));
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
@@ -75,6 +78,10 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
         }
     }
 
+    public Optional<RecipeHolder<AlchemicalCauldronRecipe>> checkRecipeNoSkills() {
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(this.container.getItem(INGREDIENT_SLOT), this.container.getItem(FLUID_SLOT), ITestableRecipeInput.TestType.BOTH), this.level);
+    }
+
     @Override
     public void clearCraftingContent() {
         this.getSlot(FLUID_SLOT).set(ItemStack.EMPTY);
@@ -84,7 +91,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
 
     @Override
     public boolean recipeMatches(RecipeHolder<AlchemicalCauldronRecipe> pRecipe) {
-        return pRecipe.value().matches(new BrewingRecipeInput(this.container.getItem(INGREDIENT_SLOT), this.container.getItem(FLUID_SLOT)), this.level);
+        return pRecipe.value().matches(new AlchemicalCauldronRecipeInput(this.container.getItem(INGREDIENT_SLOT), this.container.getItem(FLUID_SLOT)), this.level);
     }
 
     @Override
@@ -107,9 +114,6 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
         return SLOT_COUNT;
     }
 
-    /**
-     * Determines whether supplied player can use this container
-     */
     @Override
     public boolean stillValid(Player pPlayer) {
         return this.container.stillValid(pPlayer);
@@ -129,14 +133,10 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
 
                 slot.onQuickCraft(itemstack1, itemstack);
             } else if (pIndex != INGREDIENT_SLOT && pIndex != RESULT_SLOT && pIndex != FLUID_SLOT) {
-                if (this.canSmeltAsFluid(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, FLUID_SLOT, FLUID_SLOT + 1, false)) {
+                var asFluid = this.canSmeltAsFluid(itemstack1) && !this.moveItemStackTo(itemstack1, FLUID_SLOT, FLUID_SLOT + 1, false);
+                var asIngredient = this.canSmeltAsIngredient(itemstack1) && !this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false);
+                if (asFluid || asIngredient) {
                         return ItemStack.EMPTY;
-                    }
-                } else if (this.canSmeltAsIngredient(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false)) {
-                        return ItemStack.EMPTY;
-                    }
                 } else if (this.isFuel(itemstack1)) {
                     if (!this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
@@ -169,11 +169,11 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<BrewingRecipeInput, A
     }
 
     protected boolean canSmeltAsIngredient(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(pStack, this.container.getItem(FLUID_SLOT), true), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(pStack, this.container.getItem(FLUID_SLOT), ITestableRecipeInput.TestType.INPUT_1), this.level).isPresent();
     }
 
     protected boolean canSmeltAsFluid(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new BrewingRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack, true), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack, ITestableRecipeInput.TestType.INPUT_2), this.level).isPresent();
     }
 
     protected boolean isFuel(ItemStack pStack) {

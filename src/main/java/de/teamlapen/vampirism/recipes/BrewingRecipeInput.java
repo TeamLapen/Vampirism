@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.recipes;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 
-public record BrewingRecipeInput(ItemStack input, ItemStack ingredient, boolean onlyTest) implements RecipeInput {
+public record BrewingRecipeInput(ItemStack input, ItemStack ingredient, ITestableRecipeInput.TestType testType) implements RecipeInput, ITestableRecipeInput {
 
     public BrewingRecipeInput(ItemStack input, ItemStack ingredient) {
-        this(input, ingredient, false);
+        this(input, ingredient, ITestableRecipeInput.TestType.BOTH);
     }
 
     @Override
@@ -24,4 +23,5 @@ public record BrewingRecipeInput(ItemStack input, ItemStack ingredient, boolean 
     public int size() {
         return 2;
     }
+
 }
