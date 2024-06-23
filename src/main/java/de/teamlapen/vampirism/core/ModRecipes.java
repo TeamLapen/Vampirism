@@ -3,11 +3,10 @@ package de.teamlapen.vampirism.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.client.ModClientEnums;
 import de.teamlapen.vampirism.recipes.*;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -55,19 +54,6 @@ public class ModRecipes {
 
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
 
-    public static class Types {
-        public static final RecipeBookType WEAPON_TABLE_TYPE = RecipeBookType.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString());
-        public static void init() {
-
-        }
-    }
-    public static class Categories {
-        public static final RecipeBookCategories WEAPON_TABLE = RecipeBookCategories.create(WEAPONTABLE_CRAFTING_TYPE.getKey().location().toString(), new ItemStack(ModBlocks.WEAPON_TABLE));
-        public static void init() {
-
-        }
-    }
-
     static void register(@NotNull IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
@@ -77,7 +63,7 @@ public class ModRecipes {
     static void registerCategories(RegisterRecipeBookCategoriesEvent event) {
         event.registerRecipeCategoryFinder(ALCHEMICAL_CAULDRON_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
         event.registerRecipeCategoryFinder(ALCHEMICAL_TABLE_TYPE.get(), holder -> RecipeBookCategories.UNKNOWN);
-        event.registerRecipeCategoryFinder(WEAPONTABLE_CRAFTING_TYPE.get(), holder -> Categories.WEAPON_TABLE);
+        event.registerRecipeCategoryFinder(WEAPONTABLE_CRAFTING_TYPE.get(), holder -> ModClientEnums.WEAPON_TABLE_RECIPE_BOOK_CATEGORY.getValue());
     }
 
 }

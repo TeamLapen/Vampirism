@@ -120,7 +120,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                 if (shootingEntity != null) {
                     if (!shootingEntity.level().isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
-                            if (player.connection.connection.isConnected() && player.level() == entity.level() && !player.isSleeping()) {
+                            if (player.connection.getConnection().isConnected() && player.level() == entity.level() && !player.isSleeping()) {
 
                                 if (player.isPassenger()) {
                                     player.stopRiding();

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -56,7 +56,6 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -105,7 +104,7 @@ public class ModEntityEventHandler {
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
 
-        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
+        if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VEnums.VAMPIRE_CATEGORY.getValue())) {
             event.setSpawnCancelled(true);
         }
     }

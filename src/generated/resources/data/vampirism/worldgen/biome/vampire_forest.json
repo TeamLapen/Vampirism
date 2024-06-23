@@ -117,8 +117,8 @@
       }
     ],
     "underground_water_creature": [],
-    "vampirism_hunter": [],
-    "vampirism_vampire": [],
+    "vampirism:hunter": [],
+    "vampirism:vampire": [],
     "water_ambient": [],
     "water_creature": []
   },

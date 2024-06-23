@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VEnums;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -25,7 +25,7 @@ public class InfoEntitiesCommand extends BasicCommand {
     private static int infoEntities(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
         NaturalSpawner.SpawnState densityManager = asPlayer.serverLevel().getChunkSource().getLastSpawnState();
         Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();
-        commandSource.sendSuccess(() -> Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxInstancesPerChunk())), true);
+        commandSource.sendSuccess(() -> Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.HUNTER_CATEGORY.getValue(), 0), VEnums.HUNTER_CATEGORY.getValue().getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.VAMPIRE_CATEGORY.getValue(), 0), VEnums.VAMPIRE_CATEGORY.getValue().getMaxInstancesPerChunk())), true);
         return 0;
     }
 }

@@ -65,12 +65,13 @@
     "client.accessor.BossOverlayGuiAccessor",
     "client.accessor.CameraAccessor",
     "client.accessor.EffectRenderingInventoryScreenAccessor",
+    "client.accessor.EntityRenderDispatcherAccessor",
     "client.accessor.HumanoidArmorLayerAccessor",
     "client.accessor.LivingEntityRendererAccessor",
+    "client.accessor.MobEffectAccessor",
     "client.accessor.ParticleEngineAccessor",
     "client.accessor.StatsScreenAccessor",
-    "client.accessor.VillagerModelAccessor",
-    "client.accessor.MobEffectAccessor"
+    "client.accessor.VillagerModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

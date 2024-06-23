@@ -135,8 +135,8 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
-    public AbstractArrow customArrow(AbstractArrow arrow, ItemStack stack) {
-        if (ignoreHurtTimer(stack) && arrow instanceof IEntityCrossbowArrow) {
+    public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
+        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityCrossbowArrow) {
             ((IEntityCrossbowArrow)arrow).setIgnoreHurtTimer();
         }
         return arrow;

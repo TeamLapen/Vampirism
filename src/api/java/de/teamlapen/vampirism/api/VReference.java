@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.PlantType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -32,14 +31,7 @@ public class VReference {
     public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.get("vampirism_vampire");
 
     public static final Supplier<Fluid> BLOOD = DeferredHolder.create(Registries.FLUID, VResourceLocation.mod("blood"));
-    /**
-     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
-     */
-    public static MobCategory HUNTER_CREATURE_TYPE = MobCategory.create("vampirism_hunter", "vampirism_hunter", 15, false, false, 128);
-    /**
-     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link MobCategory#MONSTER}
-     */
-    public static MobCategory VAMPIRE_CREATURE_TYPE = MobCategory.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
+
     /**
      * Vampire Player Faction
      * Filled during pre-init.

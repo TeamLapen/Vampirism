@@ -18,9 +18,9 @@ public class ItemEventHandler {
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof VampireSwordItem sword && event.getSlotType() == EquipmentSlot.MAINHAND) {
-            event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE));
-            event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE));
+        if (stack.getItem() instanceof VampireSwordItem sword) {
+            event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
         }
     }
 }

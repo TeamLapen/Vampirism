@@ -32,8 +32,7 @@ public class UmbrellaItem extends Item {
     }
 
     @Override
-    public @NotNull ItemAttributeModifiers getAttributeModifiers(@NotNull ItemStack stack) {
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
         return mainHandAttributes.get();
     }
-
 }

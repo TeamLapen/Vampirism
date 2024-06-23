@@ -85,11 +85,6 @@ public class VampirismModClient {
         });
     }
 
-    @SubscribeEvent
-    public void commonEvent(FMLCommonSetupEvent event) {
-        ModRecipes.Categories.init();
-    }
-
     public void onDataMapsUpdated(DataMapsUpdatedEvent event) {
         ((VampirismClientEntityRegistry)VampirismAPI.entityRegistry()).syncOverlays();
     }
