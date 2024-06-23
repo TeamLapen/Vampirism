@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import mezz.jei.api.constants.VanillaTypes;
@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemicalCauldronRecipe>> {
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/alchemical_cauldron.png");
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;
@@ -41,17 +40,20 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     AlchemicalCauldronRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
-        this.background = guiHelper.drawableBuilder(BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
+        this.background = guiHelper.drawableBuilder(AlchemicalCauldronScreen.BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
 
-        IDrawableStatic flameDrawable = guiHelper.createDrawable(BACKGROUND, 176, 0, 14, 14);
+        IDrawableStatic flameDrawable = guiHelper.drawableBuilder(fixSprite(AlchemicalCauldronScreen.LIT_PROGRESS_SPRITE), 0, 0, 14, 14).setTextureSize(14, 14).build();
         this.flame = guiHelper.createAnimatedDrawable(flameDrawable, 300, IDrawableAnimated.StartDirection.TOP, true);
 
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(BACKGROUND, 176, 14, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.drawableBuilder(fixSprite(AlchemicalCauldronScreen.BURN_PROGRESS_SPRITE), 0, 0, 24, 16).setTextureSize(24, 16).build();
         this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
 
-        IDrawableStatic bubblesDrawable = guiHelper.createDrawable(BACKGROUND, 176, 31, 12, 29);
+        IDrawableStatic bubblesDrawable = guiHelper.drawableBuilder(fixSprite(AlchemicalCauldronScreen.BUBBLES_PROGRESS_SPRITE), 0, 0, 12, 29).setTextureSize(12, 29).build();
         this.bubbles = guiHelper.createAnimatedDrawable(bubblesDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
+    }
 
+    private static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
+        return spriteLoc.withPrefix("textures/gui/sprites/").withSuffix(".png");
     }
 
     @Override

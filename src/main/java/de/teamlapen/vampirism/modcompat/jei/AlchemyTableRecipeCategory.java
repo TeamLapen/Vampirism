@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.modcompat.jei;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;

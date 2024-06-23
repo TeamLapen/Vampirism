@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.inventory;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.inventory.BooleanDataSlot;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -9,21 +10,16 @@ import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -159,6 +155,13 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player playerIn) {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
+    }
+
+    public Optional<List<ISkill<IHunterPlayer>>> missingSkills() {
+        return this.worldPos.evaluate((world, pos) -> {
+            Optional<RecipeHolder<IWeaponTableRecipe>> recipeFor = quickCheck.getRecipeFor(CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), world);
+            return recipeFor.stream().flatMap(s -> s.value().getRequiredSkills().stream()).filter(s -> !hunterPlayer.getSkillHandler().isSkillEnabled(s)).toList();
+        });
     }
 
     private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingInput craftMatrixIn, @NotNull ResultContainer craftResultIn) {

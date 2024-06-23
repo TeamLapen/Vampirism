@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
@@ -25,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -40,7 +39,6 @@ import java.util.List;
  */
 public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<IWeaponTableRecipe>> {
 
-    private final static ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/weapon_table_clean.png");
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
@@ -49,7 +47,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
 
     WeaponTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
-        this.background = guiHelper.drawableBuilder(BACKGROUND, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
+        this.background = guiHelper.drawableBuilder(WeaponTableScreen.BACKGROUND, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.WEAPON_TABLE.get()));
         this.bucket = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Items.LAVA_BUCKET));
     }

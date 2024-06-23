@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import mezz.jei.api.constants.VanillaTypes;
@@ -26,26 +26,33 @@ import org.jetbrains.annotations.NotNull;
 
 public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> {
 
-    private static final ResourceLocation backgroundLocation = VResourceLocation.mod("textures/gui/container/potion_table.png");
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable background;
     private final @NotNull IDrawable icon;
     private final @NotNull IDrawable slotDrawable;
-    private final @NotNull IDrawableAnimated arrow;
-    private final @NotNull IDrawableAnimated bubbles;
-    private final @NotNull IDrawableStatic blazeHeat;
+    private final @NotNull IDrawable arrow;
+    private final @NotNull IDrawable bubbles;
+    private final @NotNull IDrawable blazeHeat;
 
 
     PotionTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.POTION_TABLE.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.POTION_TABLE.get()));
-        this.background = guiHelper.drawableBuilder(backgroundLocation, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
+        this.background = guiHelper.drawableBuilder(PotionTableScreen.BACKGROUND, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
-        ITickTimer bubblesTickTimer = new BrewingBubblesTickTimer(guiHelper);
-        this.bubbles = guiHelper.drawableBuilder(backgroundLocation, 185, 0, 12, 29).buildAnimated(bubblesTickTimer, IDrawableAnimated.StartDirection.BOTTOM);
-        this.blazeHeat = guiHelper.createDrawable(backgroundLocation, 176, 29, 18, 4);
-        this.arrow = guiHelper.drawableBuilder(backgroundLocation, 176, 0, 9, 28).buildAnimated(400, IDrawableAnimated.StartDirection.TOP, false);
 
+        var bubbles = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.BUBBLES_SPRITE), 0, 0, 12, 29).setTextureSize(12, 29).build();
+        this.bubbles = guiHelper.createAnimatedDrawable(bubbles, 400, IDrawableAnimated.StartDirection.BOTTOM, false);
+
+        var blaze = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.FUEL_SPRITE), 0, 0, 18, 4).setTextureSize(18,4).build();
+        this.blazeHeat = guiHelper.createAnimatedDrawable(blaze, 400, IDrawableAnimated.StartDirection.LEFT, false);
+
+        var progress =guiHelper.drawableBuilder(fixSprite(PotionTableScreen.PROGRESS_SPRITE), 0, 0, 9, 28).setTextureSize(9, 28).build();
+        this.arrow = guiHelper.createAnimatedDrawable(progress, 400, IDrawableAnimated.StartDirection.TOP, false);
+    }
+
+    private static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
+        return spriteLoc.withPrefix("textures/gui/sprites/").withSuffix(".png");
     }
 
     @Override
