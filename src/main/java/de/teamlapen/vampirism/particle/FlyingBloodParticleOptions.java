@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.particle;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import net.minecraft.core.particles.ParticleOptions;
@@ -35,7 +36,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
             ByteBufCodecs.VAR_INT, FlyingBloodParticleOptions::maxAge,
             ByteBufCodecs.BOOL, FlyingBloodParticleOptions::direct,
             ByteBufferCodecUtil.VECTOR3D, p -> new Vector3d(p.targetX, p.targetY, p.targetZ),
-            ByteBufCodecs.STRING_UTF8.map(ResourceLocation::new, Object::toString), FlyingBloodParticleOptions::texture,
+            ResourceLocation.STREAM_CODEC, FlyingBloodParticleOptions::texture,
             ByteBufCodecs.FLOAT, FlyingBloodParticleOptions::scale,
             FlyingBloodParticleOptions::new);
 
@@ -45,7 +46,7 @@ public record FlyingBloodParticleOptions(int maxAge, boolean direct, double targ
     }
 
     public FlyingBloodParticleOptions(int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ, float scale) {
-        this(maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"), scale);
+        this(maxAgeIn, direct, targetX, targetY, targetZ, VResourceLocation.mc("critical_hit"), scale);
     }
 
     public FlyingBloodParticleOptions(int maxAge, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation texture) {

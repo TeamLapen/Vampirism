@@ -3,12 +3,8 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +54,8 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> extends IRefinementH
     default boolean isSkillEnabled(ISkill<?> skill) {
         return isSkillEnabled(RegUtil.holder(skill));
     }
+
+    boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill);
 
     boolean isSkillEnabled(Holder<ISkill<?>> skill);
 

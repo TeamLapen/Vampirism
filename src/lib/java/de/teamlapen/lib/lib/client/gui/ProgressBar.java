@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
-    private static final WidgetSprites SPRITES = new WidgetSprites(new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar"), new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_inactive"), new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_highlighted"));
-    private static final ResourceLocation PROGRESS = new ResourceLocation(LIBREFERENCE.MODID, "widgets/progress_bar_progress");
+    private static final WidgetSprites SPRITES = new WidgetSprites(ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "widgets/progress_bar"), ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "widgets/progress_bar_inactive"), ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "widgets/progress_bar_highlighted"));
+    private static final ResourceLocation PROGRESS = ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "widgets/progress_bar_progress");
     private float progress = 0;
     private int color = 0xFFFFFF;
 

@@ -53,6 +53,7 @@ public class ModRegistries {
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)
             .add(SKILL_TREE, ModSkills::createSkillTrees)
+            .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
             ;
 
     static void registerRegistries(NewRegistryEvent event) {

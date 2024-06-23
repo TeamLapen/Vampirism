@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -65,7 +65,6 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -114,14 +113,14 @@ public class ModEntityEventHandler {
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
 
-        if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
+        if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) !=  VEnums.VAMPIRE_CATEGORY.getValue())) {
             event.setSpawnCancelled(true);
         }
     }
 
     @SubscribeEvent
     public void onEntityEquipmentChange(@NotNull LivingEquipmentChangeEvent event) {
-        if (event.getSlot().getType() == EquipmentSlot.Type.ARMOR && event.getEntity() instanceof Player player) {
+        if (event.getSlot().getType() == EquipmentSlot.Type.HUMANOID_ARMOR && event.getEntity() instanceof Player player) {
             VampirePlayer.get(player).requestNaturalArmorUpdate();
         }
     }
@@ -212,17 +211,6 @@ public class ModEntityEventHandler {
                 }
                 //noinspection UnnecessaryReturnStatement
                 return;
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onEntityLootingEvent(@NotNull LootingLevelEvent event) {
-        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof Player) {
-            @Nullable
-            IItemWithTier.TIER hunterCoatTier = VampirismPlayerAttributes.get((Player) event.getDamageSource().getEntity()).getHuntSpecial().fullHunterCoat;
-            if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
-                event.setLootingLevel(Math.min(event.getLootingLevel() + 1, 3));
             }
         }
     }

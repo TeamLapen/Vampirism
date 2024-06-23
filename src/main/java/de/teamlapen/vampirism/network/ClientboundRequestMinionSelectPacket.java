@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
@@ -44,7 +45,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
         return Optional.empty();
     }
 
-    public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "request_minion_select"));
+    public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(VResourceLocation.mod("request_minion_select"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRequestMinionSelectPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8.map(Action::valueOf, s -> s.name), ClientboundRequestMinionSelectPacket::action,
             ByteBufferCodecUtil.pair(ByteBufCodecs.VAR_INT, ComponentSerialization.STREAM_CODEC).apply(ByteBufCodecs.collection(i -> new ArrayList<>())), ClientboundRequestMinionSelectPacket::minions,

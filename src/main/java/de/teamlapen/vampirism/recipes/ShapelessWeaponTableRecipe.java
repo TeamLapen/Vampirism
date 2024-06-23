@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IWeaponTableRecipe {
+public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe {
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
 
@@ -55,7 +55,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider registryAccess) {
+    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
         return this.recipeOutput.copy();
     }
 
@@ -109,14 +109,14 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingContainer>, IW
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
+    public boolean matches(@NotNull CraftingInput inv, @NotNull Level worldIn) {
         StackedContents recipeitemhelper = new StackedContents();
         java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
         int i = 0;
 
-        for (int j = 0; j < inv.getHeight(); ++j) {
-            for (int k = 0; k < inv.getWidth(); ++k) {
-                ItemStack itemstack = inv.getItem(k + j * inv.getWidth());
+        for (int j = 0; j < inv.height(); ++j) {
+            for (int k = 0; k < inv.width(); ++k) {
+                ItemStack itemstack = inv.getItem(k + j * inv.width());
                 if (!itemstack.isEmpty()) {
                     ++i;
                     if (isSimple) {

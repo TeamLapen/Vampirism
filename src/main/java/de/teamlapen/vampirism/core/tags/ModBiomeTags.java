@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.core.tags;
 
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +42,6 @@ public class ModBiomeTags {
     }
 
     private static @NotNull TagKey<Biome> tag(@NotNull String name) {
-        return TagKey.create(Registries.BIOME, new ResourceLocation(REFERENCE.MODID, name));
+        return TagKey.create(Registries.BIOME, VResourceLocation.mod(name));
     }
 }

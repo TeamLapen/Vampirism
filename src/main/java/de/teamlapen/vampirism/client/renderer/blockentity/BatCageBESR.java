@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.BatCageBlockEntity;
 import de.teamlapen.vampirism.blocks.BatCageBlock;
 import net.minecraft.client.model.BatModel;
@@ -48,7 +49,7 @@ public class BatCageBESR extends VampirismBESR<BatCageBlockEntity> {
         pPoseStack.scale(0.65F, 0.65F, 0.65F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(180));
         this.model.setupAnim(this.bat, 0, 0, (float)level.getGameTime() + pPartialTick + (float) this.bat.hashCode(), -1, -1);
-        this.model.renderToBuffer(pPoseStack, pBuffer.getBuffer(this.model.renderType(new ResourceLocation("textures/entity/bat.png"))), pPackedLight, pPackedOverlay, 1, 1, 1, 1);
+        this.model.renderToBuffer(pPoseStack, pBuffer.getBuffer(this.model.renderType(VResourceLocation.mc("textures/entity/bat.png"))), pPackedLight, pPackedOverlay, -1);
         pPoseStack.popPose();
     }
 }

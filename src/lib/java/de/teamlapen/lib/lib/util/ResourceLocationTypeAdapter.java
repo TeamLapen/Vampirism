@@ -13,7 +13,7 @@ public final class ResourceLocationTypeAdapter extends TypeAdapter<ResourceLocat
 
     @Override
     public @NotNull ResourceLocation read(@NotNull JsonReader in) throws IOException {
-        return new ResourceLocation(in.nextString());
+        return ResourceLocation.parse(in.nextString());
     }
 
     @Override

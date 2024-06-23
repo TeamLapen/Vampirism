@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.MixinHooks;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +45,7 @@ public class SingleJigsawReloadListener implements PreparableReloadListener {
     public @NotNull List<ResourceLocation> load(ResourceManager manager) {
         List<ResourceLocation> locations = new ArrayList<>();
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(directory, location -> location.getPath().endsWith(fileName)).entrySet()) {
-            ResourceLocation resourceName = new ResourceLocation(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
+            ResourceLocation resourceName = VResourceLocation.loc(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);

@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 @Deprecated(forRemoval = true)
 public interface IVampirismCrossbow extends ItemLike {
 
-    int getChargeDurationMod(ItemStack crossbow);
+    int getChargeDurationMod(ItemStack crossbow, Level level);
 
     boolean canSelectAmmunition(ItemStack crossbow);
 

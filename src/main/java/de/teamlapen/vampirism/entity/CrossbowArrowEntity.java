@@ -24,11 +24,11 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     private boolean ignoreHurtTimer = false;
 
     public CrossbowArrowEntity(@NotNull EntityType<? extends CrossbowArrowEntity> type, @NotNull Level world) {
-        super(type, world, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+        super(type, world);
     }
 
-    public CrossbowArrowEntity(Level level, LivingEntity entity, ItemStack stack) {
-        super(ModEntities.CROSSBOW_ARROW.get(), entity, level, stack);
+    public CrossbowArrowEntity(Level level, LivingEntity entity, ItemStack stack, ItemStack weapon) {
+        super(ModEntities.CROSSBOW_ARROW.get(), entity, level, stack, weapon);
         this.arrowStack = stack.copy();
         this.arrowStack.setCount(1);
     }
@@ -37,8 +37,8 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public CrossbowArrowEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow) {
-        super(ModEntities.CROSSBOW_ARROW.get(), x,y,z,worldIn, arrow);
+    public CrossbowArrowEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow, ItemStack weapon) {
+        super(ModEntities.CROSSBOW_ARROW.get(), x,y,z,worldIn, arrow, weapon);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);

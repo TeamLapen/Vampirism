@@ -75,14 +75,14 @@ public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        this.dressArmBandLeft.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.dressArmBandRight.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.dressTorso.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        this.hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void renderToBuffer(@NotNull PoseStack matrixStackIn, @NotNull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
+        this.dressArmBandLeft.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        this.dressArmBandRight.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        this.dressTorso.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        this.hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         matrixStackIn.pushPose();
         matrixStackIn.scale(1 - 0.5f * enragedProgress, 1 - 0.7f * enragedProgress, 1 - 0.5f * enragedProgress);
-        this.hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        this.hood.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         matrixStackIn.popPose();
     }
 

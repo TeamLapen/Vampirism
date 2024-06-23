@@ -55,7 +55,7 @@ public abstract class SkillTreeProvider implements DataProvider {
     }
 
     protected @NotNull ResourceLocation modId(@NotNull String string) {
-        return new ResourceLocation(this.modId, string);
+        return ResourceLocation.fromNamespaceAndPath(this.modId, string);
     }
 
     public interface SkillTreeOutput {

@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -65,13 +66,13 @@ import java.util.Optional;
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
-    protected static final ResourceLocation CROSSHAIR_SPRITE = new ResourceLocation("hud/crosshair");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_full");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_background");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = new ResourceLocation("hud/crosshair_attack_indicator_progress");
-    public static final ResourceLocation FANG_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/fang");
-    public static final ResourceLocation PROGRESS_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/progress_background");
-    public static final ResourceLocation PROGRESS_FOREGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "fang/progress_foreground");
+    protected static final ResourceLocation CROSSHAIR_SPRITE = VResourceLocation.mc("hud/crosshair");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_full");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_background");
+    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_progress");
+    public static final ResourceLocation FANG_SPRITE = VResourceLocation.mod("fang/fang");
+    public static final ResourceLocation PROGRESS_BACKGROUND_SPRITE = VResourceLocation.mod("fang/progress_background");
+    public static final ResourceLocation PROGRESS_FOREGROUND_SPRITE = VResourceLocation.mod("fang/progress_foreground");
 
     private int screenColor = 0;
     private int screenPercentage = 0;
@@ -235,8 +236,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
             PoseStack stack = event.getGuiGraphics().pose();
             stack.pushPose();
-            int w = (this.mc.getWindow().getGuiScaledWidth());
-            int h = (this.mc.getWindow().getGuiScaledHeight());
+            int w = (event.getGuiGraphics().guiWidth());
+            int h = (event.getGuiGraphics().guiHeight());
             if (fullScreen) {
                 // Render a see through colored square over the whole screen
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
@@ -246,10 +247,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                 Matrix4f matrix = stack.last().pose();
                 VertexConsumer buffer = event.getGuiGraphics().bufferSource().getBuffer(RenderType.guiOverlay());
-                buffer.vertex(matrix, 0, h, 0).color(r, g, b, a).endVertex();
-                buffer.vertex(matrix, w, h, 0).color(r, g, b, a).endVertex();
-                buffer.vertex(matrix, w, 0, 0).color(r, g, b, a).endVertex();
-                buffer.vertex(matrix, 0, 0, 0).color(r, g, b, a).endVertex();
+                buffer.addVertex(matrix, 0, h, 0).setColor(r, g, b, a);
+                buffer.addVertex(matrix, w, h, 0).setColor(r, g, b, a);
+                buffer.addVertex(matrix, w, 0, 0).setColor(r, g, b, a);
+                buffer.addVertex(matrix, 0, 0, 0).setColor(r, g, b, a);
                 event.getGuiGraphics().flush();
 
 

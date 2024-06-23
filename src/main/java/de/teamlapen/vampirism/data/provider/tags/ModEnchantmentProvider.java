@@ -22,6 +22,6 @@ public class ModEnchantmentProvider extends TagsProvider<Enchantment> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-        this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER.getKey());
+        this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
     }
 }

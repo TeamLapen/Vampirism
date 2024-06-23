@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -26,10 +27,10 @@ public class ApplicableOilRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer inventory, @NotNull Level world) {
+    public boolean matches(@NotNull CraftingInput inventory, @NotNull Level world) {
         IApplicableOil oil = null;
         ItemStack tool = null;
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getItem(i);
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof IOilItem) {
@@ -49,10 +50,10 @@ public class ApplicableOilRecipe extends CustomRecipe {
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inventory, @NotNull HolderLookup.Provider registryAccess) {
+    public ItemStack assemble(@NotNull CraftingInput inventory, @NotNull HolderLookup.Provider registryAccess) {
         ItemStack oilStack = ItemStack.EMPTY;
         ItemStack toolStack = ItemStack.EMPTY;
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getItem(i);
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof IOilItem) {

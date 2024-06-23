@@ -510,13 +510,13 @@ public class GuideBook implements IGuideBook {
         helper.info(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
 
         List<IPage> decorativeBlocks = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "decorative.text"), ModItems.ITEM_CANDELABRA.get()));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/candelabra")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "vampire/chandelier")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "hunter/cross")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone1")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone2")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/tombstone3")));
-        decorativeBlocks.add(helper.getRecipePage(new ResourceLocation(REFERENCE.MODID, "general/grave_cage")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("vampire/candelabra")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("vampire/chandelier")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("hunter/cross")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("general/tombstone1")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("general/tombstone2")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("general/tombstone3")));
+        decorativeBlocks.add(helper.getRecipePage(VResourceLocation.mod("general/grave_cage")));
 
         entries.put(new ResourceLocation(base + "decorative"), new EntryItemStack(decorativeBlocks, Component.translatable(base + "decorative.title"), new ItemStack(ModItems.ITEM_CANDELABRA.get())));
         return entries;
@@ -558,10 +558,10 @@ public class GuideBook implements IGuideBook {
         v1_8.addAll(raids);
         //skills
         List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/vampire_forest_fog.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/neonatal_decrease.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), new ResourceLocation(REFERENCE.MODID, "textures/skills/dbno_duration.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), new ResourceLocation(REFERENCE.MODID, "textures/actions/hissing.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), VResourceLocation.mod("textures/skills/vampire_forest_fog.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), VResourceLocation.mod("textures/skills/neonatal_decrease.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), VResourceLocation.mod("textures/skills/dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), VResourceLocation.mod("textures/actions/hissing.png"), false));
         v1_8.addAll(skills);
         //balancing
         List<IPage> balancing = PageHelper.pagesForLongText(translateComponent(base1_8 + "balancing.text"));
@@ -639,7 +639,7 @@ public class GuideBook implements IGuideBook {
     @Nullable
     @Override
     public Book buildBook() {
-        BookBinder binder = new BookBinder(new ResourceLocation("vampirism", "guidebook"));
+        BookBinder binder = new BookBinder(VResourceLocation.mod("guidebook"));
         binder.setGuideTitleKey("guide.vampirism.title");
         binder.setItemNameKey("guide.vampirism");
         binder.setHeaderKey("guide.vampirism.welcome");
@@ -654,6 +654,6 @@ public class GuideBook implements IGuideBook {
     @Nullable
     @Override
     public ResourceLocation getModel() {
-        return new ResourceLocation(REFERENCE.MODID, "guidebook");
+        return VResourceLocation.mod("guidebook");
     }
 }

@@ -23,7 +23,7 @@ public record GenericParticleOptions(ResourceLocation texture, int maxAge, int c
             .apply(p_239803_0_, GenericParticleOptions::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GenericParticleOptions> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8.map(ResourceLocation::new, Object::toString), GenericParticleOptions::texture,
+            ResourceLocation.STREAM_CODEC, GenericParticleOptions::texture,
             ByteBufCodecs.VAR_INT, GenericParticleOptions::maxAge,
             ByteBufCodecs.VAR_INT, GenericParticleOptions::color,
             ByteBufCodecs.FLOAT, GenericParticleOptions::speed,

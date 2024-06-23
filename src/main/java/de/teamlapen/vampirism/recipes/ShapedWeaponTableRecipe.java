@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements Recipe<CraftingContainer>, IWeaponTableRecipe, IShapedRecipe<CraftingContainer> {
+public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe, IShapedRecipe<CraftingInput> {
     protected final static int MAX_WIDTH = 4;
     protected final static int MAX_HEIGHT = 4;
 
@@ -55,7 +55,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingContainer>, IWeap
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider registryAccess) {
+    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
         return this.recipeOutput.copy();
     }
 
@@ -110,7 +110,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingContainer>, IWeap
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer inv, @NotNull Level worldIn) {
+    public boolean matches(@NotNull CraftingInput inv, @NotNull Level worldIn) {
         return this.pattern.matches(inv);
     }
 

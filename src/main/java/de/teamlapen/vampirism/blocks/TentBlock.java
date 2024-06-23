@@ -231,12 +231,25 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, @Nullable Entity player) {
+    public boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper) {
         return true;
     }
 
     @Override
     public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
+        Direction thisFacing = state.getValue(FACING);
+        int thisPos = state.getValue(POSITION);
+        if (thisPos != 0) {
+            BlockPos main = switch (thisPos) {
+                case 1 -> pos.relative(thisFacing.getClockWise());
+                case 2 -> pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
+                case 3 -> pos.relative(thisFacing);
+                default -> null;
+            };
+            if (main != null) {
+                state = world.getBlockState(main);
+            }
+        }
         return switch (state.getValue(POSITION)) {
             case 0, 3 -> state.getValue(HORIZONTAL_FACING).getOpposite();
             default -> state.getValue(HORIZONTAL_FACING);
@@ -324,13 +337,31 @@ public class TentBlock extends VampirismBlock {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.occupied"), true);
             return InteractionResult.SUCCESS;
         } else {
-            player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
+            BlockState targetState = blockState;
+            BlockPos targetPos = pos;
+            Direction thisFacing = blockState.getValue(FACING);
+            int thisPos = blockState.getValue(POSITION);
+            if (thisPos != 0) {
+                BlockPos main = switch (thisPos) {
+                    case 1 -> pos.relative(thisFacing.getClockWise());
+                    case 2 -> pos.relative(thisFacing.getOpposite()).relative(thisFacing.getClockWise());
+                    case 3 -> pos.relative(thisFacing);
+                    default -> null;
+                };
+                if (main != null) {
+                    targetState = world.getBlockState(main);
+                    targetPos = main;
+                }
+            }
+            BlockState finalTargetState = targetState;
+            BlockPos finalTargetPos = targetPos;
+            player.startSleepInBed(finalTargetPos).ifLeft(sleepResult1 -> {
                 if (sleepResult1 != null) {
                     player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                 }
             }).ifRight(u -> {
-                this.setBedOccupied(blockState, world, pos, null, true);
-                setTentSleepPosition(player, pos, player.level().getBlockState(pos).getValue(POSITION), player.level().getBlockState(pos).getValue(HORIZONTAL_FACING));
+                this.setBedOccupied(finalTargetState, world, finalTargetPos, null, true);
+                setTentSleepPosition(player, finalTargetPos, finalTargetState.getValue(POSITION), finalTargetState.getValue(HORIZONTAL_FACING));
             });
             return InteractionResult.SUCCESS;
         }

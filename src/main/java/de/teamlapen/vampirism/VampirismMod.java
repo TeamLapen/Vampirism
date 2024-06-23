@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
@@ -277,8 +278,8 @@ public class VampirismMod {
                 .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
                 .register();
 
-        VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "night_vision"), new NightVision());
-        VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(new ResourceLocation(REFERENCE.MODID, "blood_vision"), new BloodVision());
+        VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("night_vision"), new NightVision());
+        VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("blood_vision"), new BloodVision());
 
         VampirismAPI.onSetupComplete();
     }
@@ -305,7 +306,6 @@ public class VampirismMod {
         event.enqueueWork(ModVillage::villagerTradeSetup);
         event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
         event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
-        ModRecipes.Types.init();
         TelemetryCollector.execute();
     }
 

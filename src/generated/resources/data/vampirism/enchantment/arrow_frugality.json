@@ -1,0 +1,21 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.vampirism.arrow_frugality"
+  },
+  "exclusive_set": "#vampirism:crossbow_incompatible",
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 5
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#vampirism:enchantable/crossbow",
+  "weight": 1
+}

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
@@ -25,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
  * Render the advanced vampire with overlays
  */
 public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity, VillagerModel<HunterTaskMasterEntity>> {
-    private final static ResourceLocation texture = new ResourceLocation("textures/entity/villager/villager.png");
-    private final static ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_task_master_overlay.png");
+    private final static ResourceLocation texture = VResourceLocation.mc("textures/entity/villager/villager.png");
+    private final static ResourceLocation overlay = VResourceLocation.mod("textures/entity/hunter_task_master_overlay.png");
 
     public HunterTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel<>(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.AdvancedVampireFangLayer;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * Render the advanced vampire with overlays
  */
 public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
+    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/advanced_vampire.png");
     private final ResourceLocation @NotNull [] textures;
 
 

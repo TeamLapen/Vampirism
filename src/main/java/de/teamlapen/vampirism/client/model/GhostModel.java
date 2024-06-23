@@ -7,6 +7,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,14 +77,15 @@ public class GhostModel extends EntityModel<GhostEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+    public void renderToBuffer(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, int color) {
         if (!this.isAggressive) {
-            pAlpha *= 0.5F;
+            int pAlpha = (int) (FastColor.ARGB32.alpha(color) * 0.5f);
+            color = pAlpha << 24 | color;
         }
         pPoseStack.pushPose();
         pPoseStack.scale(0.5F, 0.5F, 0.5F);
         pPoseStack.translate(0.0F, 1.5F, 0.0F);
-        this.body.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+        this.body.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, color);
         pPoseStack.popPose();
     }
 

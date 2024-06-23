@@ -34,6 +34,10 @@ public class ModLoot {
     public static final DeferredHolder<LootItemConditionType, LootItemConditionType> WITH_OIL_ITEM = LOOT_CONDITION_TYPES.register("with_oil_item", () -> new LootItemConditionType(OilItemCondition.CODEC));
     public static final DeferredHolder<LootItemConditionType, LootItemConditionType> FACTION = LOOT_CONDITION_TYPES.register("faction", () -> new LootItemConditionType(FactionCondition.CODEC));
 
+    /**
+     * Global loot modifier {@see src/main/resource/data/vampirism/loot_modifiers/smelting.json
+     */
+    @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<SmeltItemLootModifier>> SMELTING = GLOBAL_LOOT_MODIFIER.register("smelting", () -> SmeltItemLootModifier.CODEC);
 
     static void register(IEventBus bus) {

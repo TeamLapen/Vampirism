@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.entity.IDefaultTaskMasterEntity;
-import de.teamlapen.vampirism.mixin.client.accessor.RenderLayerAccessor;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -30,13 +29,13 @@ public class TaskMasterTypeLayer<T extends Mob & IDefaultTaskMasterEntity> exten
         if (!entityIn.isInvisible()) {
             VillagerType type = entityIn.getBiomeType();
             VillagerModel<T> m = getParentModel();
-            RenderLayerAccessor.renderColoredCutoutModel(m, this.deriveTypeTextureOverlay(BuiltInRegistries.VILLAGER_TYPE.getKey(type)), matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
-            RenderLayerAccessor.renderColoredCutoutModel(m, additionalOverlay, matrixStackIn, bufferIn, packedLightIn, entityIn, 1.0F, 1.0F, 1.0F);
+            renderColoredCutoutModel(m, this.deriveTypeTextureOverlay(BuiltInRegistries.VILLAGER_TYPE.getKey(type)), matrixStackIn, bufferIn, packedLightIn, entityIn, -1);
+            renderColoredCutoutModel(m, additionalOverlay, matrixStackIn, bufferIn, packedLightIn, entityIn, -1);
         }
     }
 
     private @NotNull ResourceLocation deriveTypeTextureOverlay(@NotNull ResourceLocation id) {
-        return new ResourceLocation(id.getNamespace(), "textures/entity/villager/type/" + id.getPath() + ".png");
+        return id.withPath("textures/entity/villager/type/" + id.getPath() + ".png");
     }
 
 }

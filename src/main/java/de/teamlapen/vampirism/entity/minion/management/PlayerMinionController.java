@@ -242,7 +242,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         //noinspection unchecked
-        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(new ResourceLocation(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
+        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
         if (faction.isEmpty()) {
             this.maxMinions = 0;
             return;
@@ -262,7 +262,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 removedData.add(id);
                 continue;
             }
-            ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
+            ResourceLocation entityTypeID = ResourceLocation.parse(tag.getString("entity_type"));
             if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeID)) {
                 LOGGER.warn("Cannot find saved minion type {}. Continue without entry", entityTypeID);
                 removedData.add(id);

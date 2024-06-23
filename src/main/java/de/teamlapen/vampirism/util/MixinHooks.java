@@ -2,10 +2,15 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.core.ModEnchantments;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import org.jetbrains.annotations.NotNull;
@@ -45,14 +50,6 @@ public class MixinHooks {
         if (first == second) return true;
         if (first.getClass() != second.getClass()) return false;
         return first.toString().equals(second.toString());
-    }
-
-    public static float calculateVampireSlayerEnchantments(Entity entity, @NotNull ItemStack item) {
-        if (!(entity instanceof Player)) return 0;
-        if (!Helper.isVampire(entity)) return 0;
-        int enchantmentLevel = item.getEnchantmentLevel(ModEnchantments.VAMPIRE_SLAYER.get());
-        if (enchantmentLevel == 0) return 0;
-        return ModEnchantments.VAMPIRE_SLAYER.get().getDamageBonus(enchantmentLevel, entity.getType());
     }
 
     private static @NotNull String singleJigsawString(@NotNull ResourceLocation resourceLocation) {

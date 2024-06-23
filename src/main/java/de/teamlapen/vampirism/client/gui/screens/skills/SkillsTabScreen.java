@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
@@ -73,7 +74,7 @@ public class SkillsTabScreen {
         this.treeWidth = this.treeData.getTreeWidth(skillTree);
         this.treeHeight = this.treeData.getTreeHeight(skillTree);
         this.root = new SkillNodeScreen(minecraft, screen, this, this.treeData.root(skillTree), this.treeData, ((SkillHandler<?>) skillHandler));
-        this.background = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills/backgrounds/level.png");
+        this.background = VResourceLocation.mod("textures/gui/skills/backgrounds/level.png");
         addNode(this.root);
 
         recalculateBorders();

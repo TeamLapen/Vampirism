@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 public record ServerboundSelectAmmoTypePacket(boolean hasRestriction, @Nullable Item ammoId) implements CustomPacketPayload {
 
-    public static final Type<ServerboundSelectAmmoTypePacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "select_ammo_type"));
+    public static final Type<ServerboundSelectAmmoTypePacket> TYPE = new Type<>(VResourceLocation.mod("select_ammo_type"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSelectAmmoTypePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ServerboundSelectAmmoTypePacket::hasRestriction,
             ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.ITEM)), pkt -> Optional.ofNullable(pkt.ammoId),

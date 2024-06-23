@@ -1,0 +1,62 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.vampirism.vampire_slayer"
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 1.0
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "vampirism:faction",
+              "faction": "vampirism:vampire"
+            }
+          }
+        }
+      },
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": 2.0
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type_specific": {
+              "type": "vampirism:faction",
+              "faction": "vampirism:vampire"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/damage",
+  "max_cost": {
+    "base": 20,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 3,
+    "per_level_above_first": 10
+  },
+  "primary_items": "#vampirism:enchantable/vampire_slayer",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/weapon",
+  "weight": 5
+}

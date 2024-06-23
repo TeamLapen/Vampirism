@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.tasks.req.*;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ConsumerReward;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
@@ -66,7 +67,7 @@ public class TaskBuilder {
     @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull EntityType<?> entityType, int amount) {
-        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(), name), entityType, amount, requirementDescription(name)));
+        return this.addRequirement(new EntityRequirement(VResourceLocation.loc(modId(), name), entityType, amount, requirementDescription(name)));
     }
 
     @NotNull
@@ -82,7 +83,7 @@ public class TaskBuilder {
     @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull TagKey<EntityType<?>> entityType, int amount) {
-        return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount, requirementDescription(name)));
+        return this.addRequirement(new EntityTypeRequirement(VResourceLocation.loc(modId(), name), entityType, amount, requirementDescription(name)));
     }
 
     @NotNull
@@ -98,7 +99,7 @@ public class TaskBuilder {
     @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull ResourceLocation stat, int amount) {
-        return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount, requirementDescription(name)));
+        return this.addRequirement(new StatRequirement(VResourceLocation.loc(modId(), name), stat, amount, requirementDescription(name)));
     }
 
     @NotNull
@@ -113,7 +114,7 @@ public class TaskBuilder {
 
     @Deprecated
     public TaskBuilder addRequirement(@NotNull String name, ItemStack itemStack) {
-        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(), name), itemStack, requirementDescription(name)));
+        return this.addRequirement(new ItemRequirement(VResourceLocation.loc(modId(), name), itemStack, requirementDescription(name)));
     }
 
     public TaskBuilder addRequirement(ItemStack itemStack, Component description) {
@@ -127,7 +128,7 @@ public class TaskBuilder {
     @Deprecated
     @NotNull
     public TaskBuilder addRequirement(@NotNull String name, @NotNull FactionPlayerBooleanSupplier function) {
-        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(), name), function, requirementDescription(name)));
+        return this.addRequirement(new BooleanRequirement(VResourceLocation.loc(modId(), name), function, requirementDescription(name)));
     }
 
     @NotNull
@@ -170,7 +171,7 @@ public class TaskBuilder {
     @Deprecated
     private Component requirementDescription(String name) {
         Preconditions.checkArgument(this.taskId != null, "If you want to use legacy naming, you need to provide the builder with a task key");
-        return Component.translatable(Util.makeDescriptionId("task", this.taskId) + ".req." + new ResourceLocation(modId(), name).toString().replace(":", "."));
+        return Component.translatable(Util.makeDescriptionId("task", this.taskId) + ".req." + VResourceLocation.loc(modId(), name).toString().replace(":", "."));
     }
 
 

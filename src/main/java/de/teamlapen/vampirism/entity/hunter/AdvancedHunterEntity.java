@@ -16,9 +16,9 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.mixin.accessor.HolderSetLookup;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
@@ -247,7 +247,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             this.lootBookId = tagCompund.getString("lootBookId");
         }
         if (tagCompund.contains("specialArrow")) {
-            Item specialArrow = RegUtil.getItem(new ResourceLocation(tagCompund.getString("specialArrow")));
+            Item specialArrow = RegUtil.getItem(ResourceLocation.parse(tagCompund.getString("specialArrow")));
             this.getEntityData().set(SPECIAL_ARROW, specialArrow);
         }
     }
@@ -335,9 +335,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return type;
     }
 
+
     @Override
-    public int getExperienceReward() {
-        return 10 * (1 + getEntityLevel());
+    protected int getBaseExperienceReward() {
+        this.xpReward = 10 * (1 + getEntityLevel());
+        return super.getBaseExperienceReward();
     }
 
     @Override

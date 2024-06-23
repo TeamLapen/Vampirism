@@ -1,0 +1,18 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "cookTime": 1200,
+  "fluid": {
+    "amount": 1,
+    "id": "minecraft:water"
+  },
+  "ingredient": {
+    "tag": "c:crops/garlic"
+  },
+  "result": {
+    "count": 4,
+    "id": "vampirism:pure_salt"
+  },
+  "skill": [
+    "vampirism:basic_alchemy"
+  ]
+}

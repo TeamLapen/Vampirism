@@ -240,7 +240,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getPortalWaitTime() {
+    public int getDimensionChangingDelay() {
         return 500;
     }
 
@@ -328,8 +328,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int getExperienceReward() {
-        return 20 + 5 * getEntityLevel();
+    protected int getBaseExperienceReward() {
+        this.xpReward = 20 + 5 * getEntityLevel();
+        return super.getBaseExperienceReward();
     }
 
     @Override

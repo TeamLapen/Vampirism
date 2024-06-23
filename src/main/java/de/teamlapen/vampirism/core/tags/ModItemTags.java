@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core.tags;
 
-import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.resources.ResourceLocation;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -59,10 +58,10 @@ public class ModItemTags {
     public static final TagKey<Item> ADVANCED_HUNTER_CROSSBOW_ARROWS = tag("advanced_hunter_crossbow_arrows");
 
     private static @NotNull TagKey<Item> tag(@NotNull String name) {
-        return ItemTags.create(new ResourceLocation(REFERENCE.MODID, name));
+        return ItemTags.create(VResourceLocation.mod(name));
     }
 
     private static @NotNull TagKey<Item> common(@NotNull String name) {
-        return ItemTags.create(new ResourceLocation("c", name));
+        return ItemTags.create(VResourceLocation.common(name));
     }
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.core.Holder;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public record ServerboundUnlockSkillPacket(Holder<ISkill<?>> skill) implements CustomPacketPayload {
-    public static final Type<ServerboundUnlockSkillPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "unlock_skill"));
+    public static final Type<ServerboundUnlockSkillPacket> TYPE = new Type<>(VResourceLocation.mod("unlock_skill"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundUnlockSkillPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.SKILL), ServerboundUnlockSkillPacket::skill,
             ServerboundUnlockSkillPacket::new

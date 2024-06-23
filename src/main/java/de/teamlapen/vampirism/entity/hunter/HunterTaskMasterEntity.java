@@ -72,7 +72,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     @Override
     public @NotNull VillagerType getBiomeType() {
         String key = this.entityData.get(BIOME_TYPE);
-        ResourceLocation id = new ResourceLocation(key);
+        ResourceLocation id = ResourceLocation.parse(key);
         return BuiltInRegistries.VILLAGER_TYPE.get(id);
     }
 

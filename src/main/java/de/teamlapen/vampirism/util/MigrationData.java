@@ -20,14 +20,13 @@ public class MigrationData {
         fixTiles(new Mapping(ModTiles.BLOCK_ENTITY_TYPES));
         fixItems(new Mapping(ModItems.ITEMS));
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
-        fixEnchantments(new Mapping(ModEnchantments.ENCHANTMENTS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
         fixEffects(new Mapping(ModEffects.EFFECTS));
     }
 
     public record Mapping(DeferredRegister<?> register) {
         public void remap(String id, String newId) {
-                remap(new ResourceLocation(id), new ResourceLocation(newId));
+                remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
             }
 
         public void remap(ResourceLocation id, ResourceLocation object) {
@@ -114,13 +113,6 @@ public class MigrationData {
         mapping.remap("castle_block_purple_brick_wall", "vampirism:purple_stone_brick_wall");
         mapping.remap("dark_spruce_pressure_place", "vampirism:dark_spruce_pressure_plate");
         mapping.remap("cursed_spruce_pressure_place", "vampirism:cursed_spruce_pressure_plate");
-    }
-
-
-    private static void fixEnchantments(@NotNull Mapping mapping) {
-        mapping.remap("vampirism:crossbowinfinite", "infinity");
-        mapping.remap("vampirism:crossbowfrugality", "vampirism:arrow_frugality");
-        mapping.remap("vampirism:vampireslayer", "vampirism:vampire_slayer");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

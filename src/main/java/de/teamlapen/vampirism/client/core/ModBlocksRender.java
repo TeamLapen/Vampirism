@@ -30,10 +30,6 @@ import static net.minecraft.world.inventory.InventoryMenu.BLOCK_ATLAS;
  */
 public class ModBlocksRender {
 
-    public static final Material[] COFFIN_TEXTURES = Arrays.stream(DyeColor.values()).sorted(Comparator.comparingInt(DyeColor::getId)).map((dye) -> {
-        return new Material(BLOCK_ATLAS, new ResourceLocation(REFERENCE.MODID, "block/coffin/coffin_" + dye.getName()));
-    }).toArray(Material[]::new);
-
     public static void register() {
         registerRenderType();
     }

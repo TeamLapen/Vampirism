@@ -33,7 +33,7 @@ public class ModEntitySelectors {
     public static void registerSelectors() {
         EntitySelectorOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
-            ResourceLocation factionID = new ResourceLocation(parser.getReader().readString());
+            ResourceLocation factionID = ResourceLocation.parse(parser.getReader().readString());
             List<Holder.Reference<IFaction<?>>> factions = ModRegistries.FACTIONS.holders().toList();
             for (final Holder.Reference<IFaction<?>> f : factions) {
                 if (f.is(factionID)) {

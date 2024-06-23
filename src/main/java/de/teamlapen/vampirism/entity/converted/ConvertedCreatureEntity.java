@@ -357,7 +357,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public boolean canBeLeashed(@NotNull Player player) {
+    public boolean canBeLeashed() {
         return true;
     }
 

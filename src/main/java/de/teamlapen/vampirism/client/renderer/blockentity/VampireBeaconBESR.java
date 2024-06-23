@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class VampireBeaconBESR extends VampirismBESR<VampireBeaconBlockEntity> {
-    public static final ResourceLocation BEAM_LOCATION = new ResourceLocation("textures/entity/beacon_beam.png");
+    public static final ResourceLocation BEAM_LOCATION = VResourceLocation.mc("textures/entity/beacon_beam.png");
     public static final int MAX_RENDER_Y = 1024;
 
     public VampireBeaconBESR(BlockEntityRendererProvider.Context pContext) {
@@ -35,8 +36,8 @@ public class VampireBeaconBESR extends VampirismBESR<VampireBeaconBlockEntity> {
 
     }
 
-    private static void renderBeaconBeam(PoseStack pPoseStack, MultiBufferSource pBufferSource, float pPartialTick, long pGameTime, int pYOffset, int pHeight, float[] pColors) {
-        BeaconRenderer.renderBeaconBeam(pPoseStack, pBufferSource, BEAM_LOCATION, pPartialTick, 1.0F, pGameTime, pYOffset, pHeight, pColors, 0.2F, 0.25F);
+    private static void renderBeaconBeam(PoseStack pPoseStack, MultiBufferSource pBufferSource, float pPartialTick, long pGameTime, int pYOffset, int pHeight, int color) {
+        BeaconRenderer.renderBeaconBeam(pPoseStack, pBufferSource, BEAM_LOCATION, pPartialTick, 1.0F, pGameTime, pYOffset, pHeight, color, 0.2F, 0.25F);
     }
 
     @Override

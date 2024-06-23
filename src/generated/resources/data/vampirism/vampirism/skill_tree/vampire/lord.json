@@ -9,7 +9,7 @@
   },
   "unlock_predicate": {
     "type_specific": {
-      "type": "vampirism:faction",
+      "type": "vampirism:player_faction",
       "faction": "vampirism:vampire",
       "lord_level": 1
     }

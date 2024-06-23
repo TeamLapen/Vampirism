@@ -1,24 +1,23 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -27,7 +26,10 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
@@ -144,15 +146,15 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
 
         private class KeyBindingSetting extends ContainerObjectSelectionList.Entry<KeyBindingSetting> {
 
-            private static final WidgetSprites REMOVE_ICON = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/remove"), new ResourceLocation(REFERENCE.MODID, "widget/remove_highlighted"));
-            private static final WidgetSprites BUTTON = new WidgetSprites(new ResourceLocation("widget/button"), new ResourceLocation("widget/button_highlighted"));
+            private static final WidgetSprites REMOVE_ICON = new WidgetSprites(VResourceLocation.mod("widget/remove"), VResourceLocation.mod("widget/remove_highlighted"));
+            private static final WidgetSprites BUTTON = new WidgetSprites(VResourceLocation.mc("widget/button"), VResourceLocation.mc("widget/button_highlighted"));
 
             private final int index;
             private final KeyMapping keyMapping;
             private Holder<IAction<?>> action;
-            private StringWidget stringWidget;
+            private final StringWidget stringWidget;
             private ImageWidget imageWidget;
-            private ImageButton imageButton;
+            private final ImageButton imageButton;
 
             public KeyBindingSetting(int index, KeyMapping keyMapping, Holder<IAction<?>> action) {
                 this.index = index;

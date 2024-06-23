@@ -31,8 +31,7 @@ public class DataProvider {
 
         ModBlockFamilies.init();
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(packOutput, lookupProviderFuture, ModRegistries.DATA_BUILDER, Set.of(REFERENCE.MODID));
-        //noinspection DataFlowIssue
-        lookupProviderFuture = ((RegistriesDatapackGeneratorAccessor) provider).getRegistries();
+        lookupProviderFuture = provider.getRegistryProvider();
         generator.addProvider(event.includeServer(), provider);
         TagProvider.register(generator, event, packOutput, lookupProviderFuture, existingFileHelper);
         generator.addProvider(event.includeServer(), LootTablesProvider.getProvider(packOutput, lookupProviderFuture));
@@ -44,5 +43,6 @@ public class DataProvider {
         generator.addProvider(event.includeServer(), new SundamageProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(event.includeServer(), new SkillTreeProvider(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new DataMapsProvider(packOutput, lookupProviderFuture));
+        generator.addProvider(event.includeServer(), new LootModifierGenerator(packOutput, lookupProviderFuture));
     }
 }

@@ -69,13 +69,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
 
-    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull String uuid, double amount, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), () -> amount, operation));
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, double amount, AttributeModifier.@NotNull Operation operation) {
+        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, () -> amount, operation));
         return this;
     }
 
-    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull String uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, UUID.fromString(uuid), amountSupplier, operation));
+    public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, amountSupplier, operation));
         return this;
     }
 
@@ -115,7 +115,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
             if (instance != null) {
-                instance.removeModifier(entry.getValue().uuid);
+                instance.removeModifier(entry.getValue().id);
                 instance.addPermanentModifier(entry.getValue().create());
             }
         }
@@ -144,7 +144,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
             if (attribute != null) {
-                attribute.removeModifier(entry.getValue().uuid);
+                attribute.removeModifier(entry.getValue().id);
             }
         }
     }
@@ -161,19 +161,19 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
     protected class AttributeHolder {
         public final Holder<Attribute> attribute;
-        public final @NotNull UUID uuid;
         public final @NotNull Supplier<Double> amountSupplier;
         public final AttributeModifier.@NotNull Operation operation;
+        private final ResourceLocation id;
 
-        private AttributeHolder(Holder<Attribute> attribute, @NotNull UUID uuid, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+        private AttributeHolder(Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
             this.attribute = attribute;
-            this.uuid = uuid;
             this.amountSupplier = amountSupplier;
             this.operation = operation;
+            this.id = VampirismRegistries.SKILL.get().getKey(DefaultSkill.this);
         }
 
         public AttributeModifier create() {
-            return new AttributeModifier(uuid, DefaultSkill.this.getRegistryName().toString(), amountSupplier.get(), operation);
+            return new AttributeModifier(this.id, amountSupplier.get(), operation);
         }
     }
 }

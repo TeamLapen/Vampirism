@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.modcompat.jei;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
 import mezz.jei.api.constants.VanillaTypes;
@@ -32,7 +34,7 @@ import java.util.List;
 
 public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemyTableRecipe>> {
 
-    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/alchemy_table.png");
+    private static final ResourceLocation location = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
 
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable icon;
@@ -90,7 +92,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
-        int color = OilUtils.getOil(RecipeUtil.getResultItem(recipe)).getColor();
+        int color = OilContent.getOil(RecipeUtil.getResultItem(recipe)).value().getColor();
         graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
         this.pool.draw(graphics, 104 - 9 - 2, 36 - 10 - 2);
         graphics.setColor(1, 1, 1, 1);

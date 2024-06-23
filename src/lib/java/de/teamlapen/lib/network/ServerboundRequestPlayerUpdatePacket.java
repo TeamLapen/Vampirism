@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ServerboundRequestPlayerUpdatePacket implements CustomPacketPayload {
     public static final ServerboundRequestPlayerUpdatePacket INSTANCE = new ServerboundRequestPlayerUpdatePacket();
-    public static final Type<ServerboundRequestPlayerUpdatePacket> TYPE = new Type<>(new ResourceLocation(LIBREFERENCE.MODID, "request_player_update"));
+    public static final Type<ServerboundRequestPlayerUpdatePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(LIBREFERENCE.MODID, "request_player_update"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundRequestPlayerUpdatePacket> CODEC = StreamCodec.unit(INSTANCE);
 
     private ServerboundRequestPlayerUpdatePacket() {

@@ -57,7 +57,7 @@ public class SundamageReloadListener implements PreparableReloadListener {
     private SundamageRegistry.Settings load(@NotNull ResourceManager manager) {
         List<RawFile> files = new ArrayList<>();
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(directory, location -> location.getPath().endsWith(fileName)).entrySet()) {
-            ResourceLocation resourceName = new ResourceLocation(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
+            ResourceLocation resourceName = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);

@@ -24,14 +24,14 @@ public class ItemDataUtils {
         return PotionContents.createItemStack(Items.POTION, potion);
     }
 
-    public static ItemStack setEnchantment(ItemStack stack, Enchantment enchantment, int level) {
+    public static ItemStack setEnchantment(ItemStack stack, Holder<Enchantment> enchantment, int level) {
         ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(stack.get(DataComponents.ENCHANTMENTS));
         mutable.set(enchantment, level);
         stack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
         return stack;
     }
 
-    public static ItemStack createEnchantment(Item item, Enchantment enchantment, int level) {
+    public static ItemStack createEnchantment(Item item, Holder<Enchantment> enchantment, int level) {
         ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         mutable.set(enchantment, level);
         ItemStack itemStack = item.getDefaultInstance();

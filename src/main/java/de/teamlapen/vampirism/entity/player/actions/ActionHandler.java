@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
-import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
@@ -24,8 +23,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -232,7 +229,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             toRemove.forEach(this::deactivateAction);
 
             for (String key : active.getAllKeys()) {
-                ResourceLocation id = new ResourceLocation(key);
+                ResourceLocation id = ResourceLocation.parse(key);
                 //noinspection unchecked
                 ModRegistries.ACTIONS.getHolder(id).filter(s -> s.value() instanceof ILastingAction<?>).map(s -> ((Holder.Reference<ILastingAction<T>>) (Object) s)).ifPresent(action -> {
                     action.value().onActivatedClient(this.player);
@@ -283,7 +280,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     public void resetTimer(@NotNull Holder<? extends IAction<T>> action) {
         if (action.value() instanceof ILastingAction<T>) {
             //noinspection unchecked
-            deactivateAction((Holder<ILastingAction<T>>) (Object) action, true);
+            deactivateAction((Holder<ILastingAction<T>>) action, true);
         }
         this.cooldownTimers.removeInt(action);
         this.expectedCooldownTimes.removeInt(action);
@@ -311,7 +308,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     @Override
     public IAction.@NotNull PERM toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
         if (activeTimers.containsKey(action)) {
-            deactivateAction((Holder<ILastingAction<T>>) (Object) action);
+            deactivateAction((Holder<ILastingAction<T>>) action);
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(action)) {
@@ -339,7 +336,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                         expectedDurations.put(action, activationEvent.getDuration());
                         duration = activationEvent.getDuration();
                         //noinspection unchecked
-                        activeTimers.put((Holder<ILastingAction<T>>) (Object)action, duration);
+                        activeTimers.put((Holder<ILastingAction<T>>) action, duration);
                     } else {
                         cooldownTimers.put(action, cooldown);
                     }
@@ -373,11 +370,11 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                     cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
                     //noinspection unchecked
-                    expectedCooldownTimes.put((Holder<IAction<T>>) (Object) action, cooldown);
+                    expectedCooldownTimes.put((Holder<IAction<T>>) action, cooldown);
                 }
                 //Entries should to be at least 1
                 //noinspection unchecked
-                cooldownTimers.put((Holder<IAction<T>>) (Object) action, Math.max(cooldown, 1));
+                cooldownTimers.put((Holder<IAction<T>>) action, Math.max(cooldown, 1));
                 activeTimers.put(action, 1);
             }
             activeTimers.removeInt(action);
@@ -389,7 +386,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public void unlockActionHolder(Collection<Holder<? extends IAction<T>>> actions) {
-        unlockedActions.addAll((Collection<? extends Holder<IAction<T>>>) (Object) actions);
+        unlockedActions.addAll((Collection<? extends Holder<IAction<T>>>) actions);
     }
 
     /**
@@ -455,7 +452,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<Holder<? extends IAction<T>>> map) {
         for (String key : nbt.getAllKeys()) {
-            ResourceLocation id = new ResourceLocation(key);
+            ResourceLocation id = ResourceLocation.parse(key);
             ModRegistries.ACTIONS.getHolder(id).ifPresent(action -> {
                 //noinspection RedundantCast,unchecked
                 map.put((Holder<? extends IAction<T>>) (Object) action, nbt.getInt(key));

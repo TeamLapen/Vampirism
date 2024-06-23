@@ -8,9 +8,11 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
+import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -40,7 +42,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IGuiHelper guiHelper;
 
     public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        this.background = guiHelper.drawableBuilder(new ResourceLocation("jei", "textures/jei/gui/gui_vanilla.png"), 90, 168, 18, 18).addPadding(14, 90, 75, 75).build();
+        this.background = guiHelper.drawableBuilder(VResourceLocation.loc(ModIds.JEI_ID, "textures/jei/atlas/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18,18).addPadding(14, 90, 75, 75).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
         this.guiHelper = guiHelper;
     }

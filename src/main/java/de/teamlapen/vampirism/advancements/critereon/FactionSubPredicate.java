@@ -4,10 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.factions.PlayableFaction;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FactionSubPredicate implements EntitySubPredicate {
 
     @SuppressWarnings("unchecked")

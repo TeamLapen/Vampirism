@@ -16,7 +16,16 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableMenu extends AbstractContainerMenu {
-
+    public static final int OIL_SLOT_1 = 0;
+    public static final int OIL_SLOT_2 = 1;
+    public static final int RESULT_SLOT_1 = 2;
+    public static final int RESULT_SLOT_2 = 3;
+    public static final int INGREDIENT_SLOT = 4;
+    public static final int FUEL_SLOT = 5;
+    private static final int INV_SLOT_START = 6;
+    private static final int INV_SLOT_END = 33;
+    private static final int USE_ROW_SLOT_START = 33;
+    private static final int USE_ROW_SLOT_END = 42;
     private final @NotNull Container alchemyTable;
     private final @NotNull ContainerData alchemyTableData;
     private final @NotNull Slot ingredientSlot;
@@ -76,32 +85,32 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (slotId < 0 || slotId > 5) {
+            if (slotId < OIL_SLOT_1 || slotId > FUEL_SLOT) {
                 if (FuelSlot.mayPlaceItem(itemstack)) {
-                    if (this.moveItemStackTo(itemstack1, 5, 6, false) || this.ingredientSlot.mayPlace(itemstack1) && !this.moveItemStackTo(itemstack1, 4, 5, false)) {
+                    if (this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT+1, false) || this.ingredientSlot.mayPlace(itemstack1) && !this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (this.ingredientSlot.mayPlace(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, 4, 5, false)) {
+                    if (!this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT+1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (OilSlot.mayPlaceItem(player.level(), itemstack) && itemstack.getCount() == 1) {
-                    if (!this.moveItemStackTo(itemstack1, 0, 2, false)) {
+                    if (!this.moveItemStackTo(itemstack1, OIL_SLOT_1, OIL_SLOT_2+1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (slotId >= 6 && slotId < 33) {
-                    if (!this.moveItemStackTo(itemstack1, 33, 42, false)) {
+                } else if (slotId >= INV_SLOT_START && slotId < INV_SLOT_END) {
+                    if (!this.moveItemStackTo(itemstack1, USE_ROW_SLOT_START, USE_ROW_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (slotId >= 33 && slotId < 42) {
-                    if (!this.moveItemStackTo(itemstack1, 6, 33, false)) {
+                } else if (slotId >= USE_ROW_SLOT_START && slotId < USE_ROW_SLOT_END) {
+                    if (!this.moveItemStackTo(itemstack1, INV_SLOT_START, INV_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.moveItemStackTo(itemstack1, 6, 42, false)) {
+                } else if (!this.moveItemStackTo(itemstack1, INV_SLOT_START, USE_ROW_SLOT_END, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.moveItemStackTo(itemstack1, 6, 42, true)) {
+                if (!this.moveItemStackTo(itemstack1, INV_SLOT_START, USE_ROW_SLOT_END, true)) {
                     return ItemStack.EMPTY;
                 }
 

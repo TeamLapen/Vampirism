@@ -47,18 +47,18 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
     @NotNull
     @Override
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        return createArrow(level, stack, entity, entity.position().add(0, entity.getEyeHeight(),0));
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity, ItemStack weapon) {
+        return createArrow(level, stack, entity, entity.position().add(0, entity.getEyeHeight(),0), weapon);
     }
 
     @NotNull
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position) {
-        return createArrow(level, stack, null, position);
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position, @Nullable ItemStack weapon) {
+        return createArrow(level, stack, null, position, weapon);
     }
 
     @NotNull
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, Position position) {
-        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack);
+    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
+        CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack, weapon);
         arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * VampirismConfig.BALANCE.crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {

@@ -27,13 +27,13 @@ public class VampirismArmorModel extends Model {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer buffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-        this.getBodyModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getHeadModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getLeftLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getRightLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getLeftArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
-        this.getRightArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha));
+    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer buffer, int pPackedLight, int pPackedOverlay, int color) {
+        this.getBodyModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
+        this.getHeadModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
+        this.getLeftLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
+        this.getRightLegModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
+        this.getLeftArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
+        this.getRightArmModels().forEach((modelPart) -> modelPart.render(poseStack, buffer, pPackedLight, pPackedOverlay, color));
     }
 
     protected @NotNull Iterable<ModelPart> getBodyModels() {

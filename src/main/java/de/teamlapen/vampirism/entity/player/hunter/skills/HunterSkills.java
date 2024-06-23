@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.entity.player.hunter.skills;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.advancements.critereon.FactionSubPredicate;
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.advancements.critereon.PlayerFactionSubPredicate;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
@@ -23,7 +23,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -46,9 +45,9 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, () -> VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, "ffafd115-96e2-4d08-9588-d1bc9be0d902", () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> VampirismConfig.BALANCE.hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<>(HunterActions.DISGUISE_HUNTER, Trees.LEVEL, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(2, true));
@@ -121,7 +120,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> LORD_6 = node("lord_6");
 
         private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(VampirismRegistries.Keys.SKILL_NODE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_NODE, VResourceLocation.mod("hunter/" + path));
         }
 
         public static void createSkillNodes(BootstrapContext<ISkillNode> context) {
@@ -165,13 +164,13 @@ public class HunterSkills {
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
 
         private static ResourceKey<ISkillTree> tree(String path) {
-            return ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(REFERENCE.MODID, "hunter/" + path));
+            return ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod("hunter/" + path));
         }
 
         public static void createSkillTrees(BootstrapContext<ISkillTree> context) {
             HolderGetter<ISkillNode> lookup = context.lookup(VampirismRegistries.Keys.SKILL_NODE);
-            context.register(LEVEL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.HUNTER)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level")));
-            context.register(LORD, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.lord(ModFactions.HUNTER)).build(), new ItemStack(ModItems.HUNTER_MINION_EQUIPMENT.get()), Component.translatable("text.vampirism.skills.lord")));
+            context.register(LEVEL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.HUNTER)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level")));
+            context.register(LORD, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.HUNTER)).build(), new ItemStack(ModItems.HUNTER_MINION_EQUIPMENT.get()), Component.translatable("text.vampirism.skills.lord")));
         }
 
     }

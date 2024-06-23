@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.entity.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.client.model.HumanoidModel;
@@ -25,11 +26,11 @@ public class VampirePlayerHeadLayer<T extends Player, Q extends HumanoidModel<T>
         super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
-            eyeOverlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/eyes" + (i) + ".png");
+            eyeOverlays[i] = VResourceLocation.mod("textures/entity/vanilla/eyes" + (i) + ".png");
         }
         fangOverlays = new ResourceLocation[REFERENCE.FANG_TYPE_COUNT];
         for (int i = 0; i < fangOverlays.length; i++) {
-            fangOverlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/fangs" + i + ".png");
+            fangOverlays[i] = VResourceLocation.mod("textures/entity/vanilla/fangs" + i + ".png");
         }
     }
 

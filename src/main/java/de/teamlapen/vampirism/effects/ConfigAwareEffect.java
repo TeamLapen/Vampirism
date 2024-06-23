@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.effects;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -29,17 +29,17 @@ public class ConfigAwareEffect extends MobEffect {
         super(pCategory, pColor, pParticle);
     }
 
-    public MobEffect addAttributeModifier(Holder<Attribute> pAttribute, String pId, Supplier<Double> pAmount, AttributeModifier.Operation pOperation) {
-        this.attributeModifiers.put(pAttribute, new AttributeTemplate(UUID.fromString(pId), pAmount, pOperation));
+    public MobEffect addAttributeModifier(Holder<Attribute> pAttribute, ResourceLocation pId, Supplier<Double> pAmount, AttributeModifier.Operation pOperation) {
+        this.attributeModifiers.put(pAttribute, new AttributeTemplate(pId, pAmount, pOperation));
         return this;
     }
 
     /**
-     * use {@link #addAttributeModifier(net.minecraft.core.Holder, String, java.util.function.Supplier, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation)}
+     * use {@link #addAttributeModifier(net.minecraft.core.Holder, net.minecraft.resources.ResourceLocation, java.util.function.Supplier, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation)}
      */
     @Deprecated
     @Override
-    public @NotNull MobEffect addAttributeModifier(@NotNull Holder<Attribute> pAttribute, @NotNull String pId, double pAmount, AttributeModifier.@NotNull Operation pOperation) {
+    public @NotNull MobEffect addAttributeModifier(@NotNull Holder<Attribute> pAttribute, @NotNull ResourceLocation pId, double pAmount, AttributeModifier.@NotNull Operation pOperation) {
         return super.addAttributeModifier(pAttribute, pId, pAmount, pOperation);
     }
 
@@ -67,9 +67,9 @@ public class ConfigAwareEffect extends MobEffect {
         }
     }
 
-    record AttributeTemplate(UUID id, Supplier<Double> amount, AttributeModifier.Operation operation) {
+    record AttributeTemplate(ResourceLocation id, Supplier<Double> amount, AttributeModifier.Operation operation) {
         public AttributeModifier create(String pDescription, int pAmplifier) {
-            return new AttributeModifier(this.id, pDescription + " " + pAmplifier, this.amount.get() * (double)(pAmplifier + 1), this.operation);
+            return new AttributeModifier(this.id, this.amount.get() * (double)(pAmplifier + 1), this.operation);
         }
     }
 }

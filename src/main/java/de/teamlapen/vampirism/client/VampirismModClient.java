@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
-import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
@@ -85,11 +83,6 @@ public class VampirismModClient {
             Sheets.addWoodType(LogBlock.DARK_SPRUCE);
             Sheets.addWoodType(LogBlock.CURSED_SPRUCE);
         });
-    }
-
-    @SubscribeEvent
-    public void commonEvent(FMLCommonSetupEvent event) {
-        ModRecipes.Categories.init();
     }
 
     public void onDataMapsUpdated(DataMapsUpdatedEvent event) {

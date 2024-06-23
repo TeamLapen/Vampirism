@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
@@ -31,12 +32,12 @@ import java.util.stream.Collectors;
 
 @NonnullDefault
 public class SkillNodeScreen {
-    private static final ResourceLocation SKILL_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/node");
-    private static final ResourceLocation START_SKILL_BACKGROUND_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/start_node");
-    private static final ResourceLocation TITLE_RED_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_red");
-    private static final ResourceLocation TITLE_BLUE_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_blue");
-    private static final ResourceLocation TITLE_GREEN_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/title_green");
-    private static final ResourceLocation DESCRIPTION_SPRITE = new ResourceLocation(REFERENCE.MODID, "skills_screen/description");
+    private static final ResourceLocation SKILL_BACKGROUND_SPRITE = VResourceLocation.mod("skills_screen/node");
+    private static final ResourceLocation START_SKILL_BACKGROUND_SPRITE = VResourceLocation.mod("skills_screen/start_node");
+    private static final ResourceLocation TITLE_RED_SPRITE = VResourceLocation.mod("skills_screen/title_red");
+    private static final ResourceLocation TITLE_BLUE_SPRITE = VResourceLocation.mod("skills_screen/title_blue");
+    private static final ResourceLocation TITLE_GREEN_SPRITE = VResourceLocation.mod("skills_screen/title_green");
+    private static final ResourceLocation DESCRIPTION_SPRITE = VResourceLocation.mod("skills_screen/description");
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
     private final Minecraft minecraft;
@@ -334,10 +335,10 @@ public class SkillNodeScreen {
 
     private ResourceLocation getSkillIconLocation(@NotNull ISkill skill) {
         if (skill instanceof ActionSkill) {
-            return new ResourceLocation(((ActionSkill<?>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<?>) skill).getActionID().getPath() + ".png");
+            return VResourceLocation.loc(((ActionSkill<?>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<?>) skill).getActionID().getPath() + ".png");
         } else {
             ResourceLocation id = RegUtil.id(skill);
-            return new ResourceLocation(id.getNamespace(), "textures/skills/" + id.getPath() + ".png");
+            return VResourceLocation.loc(id.getNamespace(), "textures/skills/" + id.getPath() + ".png");
         }
     }
 

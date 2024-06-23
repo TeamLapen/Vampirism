@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class VampireBookScreen extends Screen {
 
-    private final static ResourceLocation pageTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/vampire_book.png");
+    private final static ResourceLocation pageTexture = VResourceLocation.mod("textures/gui/vampire_book.png");
     private final int xSize = 245;
     private final int ySize = 192;
     private int guiLeft, guiTop;

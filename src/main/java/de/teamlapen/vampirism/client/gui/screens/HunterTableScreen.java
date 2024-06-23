@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.inventory.HunterTableMenu;
@@ -22,11 +23,11 @@ import java.util.Optional;
  * Gui for the hunter table
  */
 public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/hunter_table.png");
-    private static final ResourceLocation EMPTY_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_book");
-    private static final ResourceLocation EMPTY_FANG = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_fang");
-    private static final ResourceLocation EMPTY_PURE_BLOOD = new ResourceLocation(REFERENCE.MODID, "item/empty_pure_blood");
-    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = new ResourceLocation(REFERENCE.MODID, "item/empty_vampire_book");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_table.png");
+    private static final ResourceLocation EMPTY_BOOK = VResourceLocation.mod("item/empty_book");
+    private static final ResourceLocation EMPTY_FANG = VResourceLocation.mod("item/empty_vampire_fang");
+    private static final ResourceLocation EMPTY_PURE_BLOOD = VResourceLocation.mod("item/empty_pure_blood");
+    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = VResourceLocation.mod("item/empty_vampire_book");
 
     private final CyclingSlotBackground bookIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground fangsIcon = new CyclingSlotBackground(1);

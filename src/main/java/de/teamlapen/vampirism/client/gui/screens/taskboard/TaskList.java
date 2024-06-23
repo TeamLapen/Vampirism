@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.inventory.TaskMenu;
@@ -42,10 +43,10 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstance, TaskList.TaskEntry, TaskList.DummyEntry> {
-    protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
-    private static final WidgetSprites ACCEPT = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_accept"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_accept_highlighted"));
-    private static final WidgetSprites COMPLETE = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_complete"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_complete_highlighted"));
-    private static final WidgetSprites ABORT = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/task_action_abort"), new ResourceLocation(REFERENCE.MODID, "widget/task_action_abort_highlighted"));
+    protected static final ResourceLocation TASKMASTER_GUI_TEXTURE = VResourceLocation.mod("textures/gui/taskmaster.png");
+    private static final WidgetSprites ACCEPT = new WidgetSprites(VResourceLocation.mod("widget/task_action_accept"), VResourceLocation.mod("widget/task_action_accept_highlighted"));
+    private static final WidgetSprites COMPLETE = new WidgetSprites(VResourceLocation.mod("widget/task_action_complete"), VResourceLocation.mod("widget/task_action_complete_highlighted"));
+    private static final WidgetSprites ABORT = new WidgetSprites(VResourceLocation.mod("widget/task_action_abort"), VResourceLocation.mod("widget/task_action_abort_highlighted"));
 
     protected final TaskMenu menu;
     protected final IFactionPlayer<?> factionPlayer;

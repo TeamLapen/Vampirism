@@ -110,11 +110,6 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         return this.type;
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment == Enchantments.UNBREAKING;
-    }
-
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {

@@ -43,6 +43,7 @@ config = "vampirism.mixins.json"
     displayURL="${mod_url}"
     logoFile="logo.png"
     updateJSONURL="https://api.modrinth.com/updates/vampirism/forge_updates.json"
+    enumExtensions="META-INF/enumextensions.json"
     [[dependencies.${mod_id}]]
         modId="neoforge"
         type="required"

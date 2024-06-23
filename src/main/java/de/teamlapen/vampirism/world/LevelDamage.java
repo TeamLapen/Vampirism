@@ -13,6 +13,10 @@ public class LevelDamage {
         return Optional.of(level.getData(ModAttachments.LEVEL_DAMAGE)).map(LevelDamage::getModDamageSources);
     }
 
+    public static ModDamageSources get(@NotNull Level level) {
+        return level.getData(ModAttachments.LEVEL_DAMAGE).getModDamageSources();
+    }
+
     private final ModDamageSources modDamageSources;
 
     public LevelDamage(Level level) {

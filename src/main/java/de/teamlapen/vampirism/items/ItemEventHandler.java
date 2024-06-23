@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,9 +18,9 @@ public class ItemEventHandler {
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof VampireSwordItem sword && event.getSlotType() == EquipmentSlot.MAINHAND) {
-            event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(VampireSwordItem.CHARGED, "Vampire Sword Blood Charged", sword.getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE));
-            event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(VampireSwordItem.TRAINED, "Vampire Sword Trained", sword.getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE));
+        if (stack.getItem() instanceof VampireSwordItem sword) {
+            event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getAttackDamageModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword), sword.getSpeedModifier(stack), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
         }
     }
 }

@@ -14,11 +14,6 @@ import java.util.function.Supplier;
 @Mixin(ArmorItem.class)
 public interface ArmorItemAccessor {
 
-    @Accessor("ARMOR_MODIFIER_UUID_PER_TYPE")
-    static EnumMap<ArmorItem.Type, UUID> getModifierUUID_vampirism() {
-        throw new IllegalStateException("Mixin not applied");
-    }
-
     @Accessor("defaultModifiers")
     Supplier<ItemAttributeModifiers> getDefaultModifiers();
 

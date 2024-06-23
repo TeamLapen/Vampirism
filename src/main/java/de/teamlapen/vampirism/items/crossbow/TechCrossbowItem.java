@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.Nonnull;
@@ -54,13 +55,8 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public int getChargeDurationMod(ItemStack crossbow) {
+    public int getChargeDurationMod(ItemStack crossbow, Level level) {
         return this.chargeTime;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment != Enchantments.QUICK_CHARGE && enchantment != Enchantments.INFINITY && super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

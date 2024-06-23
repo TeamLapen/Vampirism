@@ -41,7 +41,7 @@ public class SundamageProvider implements DataProvider {
         Consumer consumer = new Consumer();
         this.registerNoSundamageBiomes(consumer);
 
-        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(EncoderException::new), pathProvider.json(new ResourceLocation(modId, "no_sun_damage")));
+        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(EncoderException::new), pathProvider.json(ResourceLocation.fromNamespaceAndPath(modId, "no_sun_damage")));
     }
 
     @Override

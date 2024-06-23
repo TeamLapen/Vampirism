@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AppearanceScreen<T extends LivingEntity> extends Screen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/appearance.png");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/appearance.png");
 
     protected final T entity;
     protected final int xSize = 256;

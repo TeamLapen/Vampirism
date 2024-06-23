@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data.provider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -13,7 +14,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
@@ -44,7 +44,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
         public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> consumer, @NotNull ExistingFileHelper existingFileHelper) {
 
             AdvancementHolder root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), new ResourceLocation(REFERENCE.MODID, "textures/block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("textures/block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
                     .requirements(AdvancementRequirements.Strategy.OR)

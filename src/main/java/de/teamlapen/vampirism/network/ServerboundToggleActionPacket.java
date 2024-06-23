@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,7 @@ import java.util.Optional;
  * @param target   The target the player was looking at when activating the action.
  */
 public record ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
-    public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "toggle_action"));
+    public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(VResourceLocation.mod("toggle_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundToggleActionPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.ACTION), ServerboundToggleActionPacket::action,
             ByteBufCodecs.optional(ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> Optional.ofNullable(pkt.target),

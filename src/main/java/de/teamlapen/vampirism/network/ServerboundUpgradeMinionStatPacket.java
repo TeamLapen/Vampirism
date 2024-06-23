@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record ServerboundUpgradeMinionStatPacket(int entityId, int statId) implements CustomPacketPayload {
 
-    public static final Type<ServerboundUpgradeMinionStatPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "upgrade_minion_stat"));
+    public static final Type<ServerboundUpgradeMinionStatPacket> TYPE = new Type<>(VResourceLocation.mod("upgrade_minion_stat"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundUpgradeMinionStatPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ServerboundUpgradeMinionStatPacket::entityId,
             ByteBufCodecs.VAR_INT, ServerboundUpgradeMinionStatPacket::statId,

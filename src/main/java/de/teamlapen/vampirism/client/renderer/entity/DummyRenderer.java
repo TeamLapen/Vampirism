@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class DummyRenderer<T extends Entity> extends EntityRenderer<T> {
-    private final ResourceLocation TEX = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
+    private final ResourceLocation TEX = VResourceLocation.mod("textures/entity/vampire.png");
 
     public DummyRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context);

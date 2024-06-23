@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -49,6 +50,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -141,9 +143,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.aiStep();
     }
 
-    @NotNull
     @Override
-    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack) {
+    public @NotNull ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
         return stack;
     }
 
@@ -246,7 +247,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public static class VampireMinionData extends MinionData {
-        public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire");
+        public static final ResourceLocation ID = VResourceLocation.mod("vampire");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;

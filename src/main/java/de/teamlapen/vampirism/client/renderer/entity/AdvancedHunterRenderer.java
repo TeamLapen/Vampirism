@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
@@ -28,8 +29,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @OnlyIn(Dist.CLIENT)
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
-    private static final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID + ":textures/entity/hunter_cloak.png");
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
+    private static final ResourceLocation textureCloak = VResourceLocation.mod("textures/entity/hunter_cloak.png");
+    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/hunter_base1.png");
     private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
 
 

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -21,7 +22,7 @@ public class ActionCooldownOverlay<T extends IFactionPlayer<T>> implements Layer
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
         if (this.mc.player != null) {
             VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();

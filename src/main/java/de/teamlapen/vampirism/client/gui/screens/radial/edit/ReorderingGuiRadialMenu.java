@@ -7,6 +7,7 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
-    protected static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "widget/background");
+    protected static final ResourceLocation BACKGROUND = VResourceLocation.mod("widget/background");
 
     protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;

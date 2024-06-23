@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.BlessableItem;
@@ -29,7 +30,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
     private final @NotNull IDrawable icon;
 
     public BlessingRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        background = guiHelper.drawableBuilder(new ResourceLocation(REFERENCE.MODID, "textures/gui/blessing_recipe_jei.png"), 0, 0, 83, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
+        background = guiHelper.drawableBuilder(VResourceLocation.mod("textures/gui/blessing_recipe_jei.png"), 0, 0, 83, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
         icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALTAR_CLEANSING.get()));
     }
 

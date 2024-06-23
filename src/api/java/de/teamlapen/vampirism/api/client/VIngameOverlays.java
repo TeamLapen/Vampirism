@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.client;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,7 +15,7 @@ public class VIngameOverlays {
      * Is rendered above {@link net.neoforged.neoforge.client.gui.VanillaGuiLayers#FOOD_LEVEL}, but the food rendering is canceled
      */
     public static LayeredDraw.Layer BLOOD_BAR_ELEMENT;
-    public static final ResourceLocation BLOOD_BAR_ID = new ResourceLocation("vampirism", "blood_bar");
+    public static final ResourceLocation BLOOD_BAR_ID = VResourceLocation.mod("blood_bar");
 
 
     /**
@@ -23,7 +24,7 @@ public class VIngameOverlays {
      * Is rendered above {@link net.neoforged.neoforge.client.gui.VanillaGuiLayers#BOSS_OVERLAY}
      */
     public static LayeredDraw.Layer FACTION_RAID_BAR_ELEMENT;
-    public static final ResourceLocation FACTION_RAID_BAR_ID = new ResourceLocation("vampirism", "raid_bar");
+    public static final ResourceLocation FACTION_RAID_BAR_ID = VResourceLocation.mod("raid_bar");
 
 
     /**
@@ -32,7 +33,7 @@ public class VIngameOverlays {
      * Is rendered above {@link net.neoforged.neoforge.client.gui.VanillaGuiLayers#EXPERIENCE_BAR}
      */
     public static LayeredDraw.Layer FACTION_LEVEL_ELEMENT;
-    public static final ResourceLocation FACTION_LEVEL_ID = new ResourceLocation("vampirism", "faction_level");
+    public static final ResourceLocation FACTION_LEVEL_ID = VResourceLocation.mod("faction_level");
 
     /**
      * Action cooldown element
@@ -40,7 +41,7 @@ public class VIngameOverlays {
      * Is rendered in the lower left corner
      */
     public static LayeredDraw.Layer ACTION_COOLDOWN_ELEMENT;
-    public static final ResourceLocation ACTION_COOLDOWN_ID = new ResourceLocation("vampirism", "action_cooldown");
+    public static final ResourceLocation ACTION_COOLDOWN_ID = VResourceLocation.mod("action_cooldown");
 
     /**
      * Action duration element
@@ -48,5 +49,5 @@ public class VIngameOverlays {
      * Is rendered in the lower right corner
      */
     public static LayeredDraw.Layer ACTION_DURATION_ELEMENT;
-    public static final ResourceLocation ACTION_DURATION_ID = new ResourceLocation("vampirism", "action_duration");
+    public static final ResourceLocation ACTION_DURATION_ID = VResourceLocation.mod("action_duration");
 }

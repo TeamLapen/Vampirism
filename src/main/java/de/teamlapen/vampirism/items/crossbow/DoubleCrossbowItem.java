@@ -3,12 +3,15 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 

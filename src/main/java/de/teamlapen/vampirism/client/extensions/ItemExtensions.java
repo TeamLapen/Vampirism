@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.extensions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.client.ModClientEnums;
 import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.items.HunterHatItem;
 import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
@@ -67,71 +68,67 @@ public class ItemExtensions {
         }
     };
 
-    public static final HumanoidModel.ArmPose DOUBLE_CROSSBOW_CHARGE = HumanoidModel.ArmPose.create("vampirism:double_crossbow_charge", true, new IArmPoseTransformer() {
-        @Override
-        public void applyTransform(@NotNull HumanoidModel<?> model, @NotNull LivingEntity entity, @NotNull HumanoidArm arm) {
-            AnimationUtils.animateCrossbowCharge(model.rightArm, model.leftArm, entity, arm == HumanoidArm.LEFT);
+    public static final IArmPoseTransformer DOUBLE_CROSSBOW_CHARGE_ARM_POSE_TRANSFORMER = (model, entity, arm) -> {
+        AnimationUtils.animateCrossbowCharge(model.rightArm, model.leftArm, entity, arm == HumanoidArm.LEFT);
 
-            InteractionHand hand = entity.getMainArm() == arm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-            ItemStack itemInHand = entity.getItemInHand(hand);
-            if (itemInHand.getItem() instanceof HunterCrossbowItem crossbow) {
-                ItemStack otherItemStack = entity.getItemInHand(entity.getMainArm() == arm ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                if (otherItemStack.getItem() instanceof IHunterCrossbow otherCrossbow) {
-                    int combinedUseDuration = crossbow.getCombinedUseDuration(itemInHand, entity, hand);
-                    int itemUseDuration = crossbow.getUseDuration(itemInHand);
-                    int combinedChargeDurationMod = crossbow.getCombinedChargeDurationMod(itemInHand, entity, hand);
-                    int itemChargeDurationMod = crossbow.getChargeDurationMod(itemInHand);
-                    float itemUseTicks = entity.getUseItemRemainingTicks();
-                    ModelPart modelpart;
-                    ModelPart modelpart1;
-                    boolean pRightHanded;
-                    float f;
-                    float f1;
-                    if (itemUseTicks < combinedUseDuration - itemUseDuration) {
-                        modelpart = arm == HumanoidArm.RIGHT ? model.leftArm : model.rightArm;
-                        modelpart1 = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-                        pRightHanded = arm == HumanoidArm.LEFT;
-                        f = combinedChargeDurationMod- itemChargeDurationMod;
-                        f1 = Mth.clamp(combinedChargeDurationMod - itemChargeDurationMod - itemUseTicks, 0.0F, f);
-                    } else {
-                        modelpart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-                        modelpart1 = arm == HumanoidArm.RIGHT ? model.leftArm: model.rightArm;
-                        pRightHanded = arm == HumanoidArm.RIGHT;
-                        f = itemChargeDurationMod;
-                        f1 = Mth.clamp((combinedChargeDurationMod-(combinedChargeDurationMod - itemChargeDurationMod)) - (itemUseTicks - (combinedUseDuration - itemUseDuration)), 0.0F, f);
-                    }
-                    modelpart.yRot = pRightHanded ? -0.8F : 0.8F;
-                    modelpart.xRot = -0.97079635F;
-                    modelpart1.xRot = modelpart.xRot;
-                    float f2 = f1 / f;
-                    modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
-                    modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
+        InteractionHand hand = entity.getMainArm() == arm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        ItemStack itemInHand = entity.getItemInHand(hand);
+        if (itemInHand.getItem() instanceof HunterCrossbowItem crossbow) {
+            ItemStack otherItemStack = entity.getItemInHand(entity.getMainArm() == arm ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            if (otherItemStack.getItem() instanceof IHunterCrossbow otherCrossbow) {
+                int combinedUseDuration = crossbow.getCombinedUseDuration(itemInHand, entity, hand);
+                int itemUseDuration = crossbow.getUseDuration(itemInHand, entity);
+                int combinedChargeDurationMod = crossbow.getCombinedChargeDurationMod(itemInHand, entity, hand);
+                int itemChargeDurationMod = crossbow.getChargeDurationMod(itemInHand, entity.level());
+                float itemUseTicks = entity.getUseItemRemainingTicks();
+                ModelPart modelpart;
+                ModelPart modelpart1;
+                boolean pRightHanded;
+                float f;
+                float f1;
+                if (itemUseTicks < combinedUseDuration - itemUseDuration) {
+                    modelpart = arm == HumanoidArm.RIGHT ? model.leftArm : model.rightArm;
+                    modelpart1 = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
+                    pRightHanded = arm == HumanoidArm.LEFT;
+                    f = combinedChargeDurationMod- itemChargeDurationMod;
+                    f1 = Mth.clamp(combinedChargeDurationMod - itemChargeDurationMod - itemUseTicks, 0.0F, f);
                 } else {
-                    ModelPart modelpart = model.rightArm;
-                    ModelPart modelpart1 = model.leftArm;
-                    boolean pRightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
-                    modelpart.yRot = pRightHanded ? -0.8F : 0.8F;
-                    modelpart.xRot = -0.97079635F;
-                    modelpart1.xRot = modelpart.xRot;
-                    float f = crossbow.getChargeDurationMod(entity.getUseItem());
-                    float f1 = Mth.clamp((float)entity.getTicksUsingItem(), 0.0F, f);
-                    float f2 = f1 / f;
-                    modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
-                    modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
+                    modelpart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
+                    modelpart1 = arm == HumanoidArm.RIGHT ? model.leftArm: model.rightArm;
+                    pRightHanded = arm == HumanoidArm.RIGHT;
+                    f = itemChargeDurationMod;
+                    f1 = Mth.clamp((combinedChargeDurationMod-(combinedChargeDurationMod - itemChargeDurationMod)) - (itemUseTicks - (combinedUseDuration - itemUseDuration)), 0.0F, f);
                 }
+                modelpart.yRot = pRightHanded ? -0.8F : 0.8F;
+                modelpart.xRot = -0.97079635F;
+                modelpart1.xRot = modelpart.xRot;
+                float f2 = f1 / f;
+                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
+                modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
+            } else {
+                ModelPart modelpart = model.rightArm;
+                ModelPart modelpart1 = model.leftArm;
+                boolean pRightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
+                modelpart.yRot = pRightHanded ? -0.8F : 0.8F;
+                modelpart.xRot = -0.97079635F;
+                modelpart1.xRot = modelpart.xRot;
+                float f = crossbow.getChargeDurationMod(entity.getUseItem(), entity.level());
+                float f1 = Mth.clamp((float)entity.getTicksUsingItem(), 0.0F, f);
+                float f2 = f1 / f;
+                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
+                modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
             }
         }
-    });
+    };
 
-    public static final HumanoidModel.ArmPose DOUBLE_CROSSBOW_HOLD = HumanoidModel.ArmPose.create("vampirism:double_crossbow_hold", true, new IArmPoseTransformer() {
-        @Override
-        public void applyTransform(@NotNull HumanoidModel<?> model, @NotNull LivingEntity entity, @NotNull HumanoidArm arm) {
-            model.rightArm.yRot = -0F + model.head.yRot;
-            model.leftArm.yRot = 0F + model.head.yRot;
-            model.rightArm.xRot = (float) (-Math.PI / 2) + model.head.xRot + 0.1F;
-            model.leftArm.xRot = -1.5F + model.head.xRot;
-        }
-    });
+    public static final IArmPoseTransformer DOUBLE_CROSSBOW_HOLD_ARM_POSE_TRANSFORMER = (model, entity, arm) -> {
+        model.rightArm.yRot = -0F + model.head.yRot;
+        model.leftArm.yRot = 0F + model.head.yRot;
+        model.rightArm.xRot = (float) (-Math.PI / 2) + model.head.xRot + 0.1F;
+        model.leftArm.xRot = -1.5F + model.head.xRot;
+    };
+
+
     public static final IClientItemExtensions HUNTER_CROSSBOW = new IClientItemExtensions() {
         @Nullable
         @Override
@@ -143,12 +140,12 @@ public class ItemExtensions {
                         if (CrossbowItem.isCharged(otherStack)) {
                             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
                         }
-                        return DOUBLE_CROSSBOW_CHARGE;
+                        return ModClientEnums.DOUBLE_CROSSBOW_CHARGE.getValue();
                     } else if (!entityLiving.swinging) {
                         boolean charged1 = CrossbowItem.isCharged(itemStack);
                         boolean charged2 = CrossbowItem.isCharged(otherStack);
                         if (charged1 && charged2) {
-                            return DOUBLE_CROSSBOW_HOLD;
+                            return ModClientEnums.DOUBLE_CROSSBOW_HOLD.getValue();
                         } else if (charged1) {
                             return HumanoidModel.ArmPose.CROSSBOW_HOLD;
                         } else if (charged2) {
@@ -184,7 +181,7 @@ public class ItemExtensions {
 
             HunterCrossbowItem item = (HunterCrossbowItem) pStack.getItem();
             int totalDuration = item.getCombinedUseDuration(pStack, pPlayer, pHand);
-            int itemDuration = item.getUseDuration(pStack);
+            int itemDuration = item.getUseDuration(pStack, pPlayer);
             float itemUseDuration = pPlayer.getUseItemRemainingTicks();
             if (usingMainHand && itemUseDuration > itemDuration) {
                 itemUseDuration = 0;
@@ -197,8 +194,8 @@ public class ItemExtensions {
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(-11.935F));
                 pPoseStack.mulPose(Axis.YP.rotationDegrees((float)i * 65.3F));
                 pPoseStack.mulPose(Axis.ZP.rotationDegrees((float)i * -9.785F));
-                float f9 = (float)pStack.getUseDuration() - (itemUseDuration - pPartialTicks + 1.0F);
-                float f13 = f9 / item.getChargeDurationMod(pStack);
+                float f9 = (float)pStack.getUseDuration(pPlayer) - (itemUseDuration - pPartialTicks + 1.0F);
+                float f13 = f9 / item.getChargeDurationMod(pStack, pPlayer.level());
                 if (f13 > 1.0F) {
                     f13 = 1.0F;
                 }

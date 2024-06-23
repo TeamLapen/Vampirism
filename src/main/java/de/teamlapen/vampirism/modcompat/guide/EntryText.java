@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class EntryText extends EntryResourceLocation {
     public EntryText(List<IPage> pageList, Component name) {
-        super(pageList, name, new ResourceLocation(REFERENCE.MODID, "textures/item/vampire_fang.png"));
+        super(pageList, name, VResourceLocation.mod("textures/item/vampire_fang.png"));
     }
 
 }

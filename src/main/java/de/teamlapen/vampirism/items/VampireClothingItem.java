@@ -49,7 +49,7 @@ public class VampireClothingItem extends ArmorItem implements IFactionExclusiveI
     }
 
     @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
         return super.canEquip(stack, armorType, entity) && Helper.isVampire(entity);
     }
 

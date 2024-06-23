@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.registries.DeferredFaction;
 import net.minecraft.core.Holder;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +36,7 @@ class APIUtil {
     }
 
     static <T> ResourceKey<Registry<T>> registryKey(String name) {
-        return ResourceKey.createRegistryKey(new ResourceLocation(VReference.MODID, name));
+        return ResourceKey.createRegistryKey(VResourceLocation.mod(name));
     }
 
     @SuppressWarnings("unchecked")

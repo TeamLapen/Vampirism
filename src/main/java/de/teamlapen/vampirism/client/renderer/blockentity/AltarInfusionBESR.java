@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -23,8 +24,8 @@ import org.joml.Matrix4f;
 public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
 
 
-    private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation(REFERENCE.MODID, "textures/entity/infusion_beam.png");
-    private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
+    private final ResourceLocation enderDragonCrystalBeamTextures = VResourceLocation.mod("textures/entity/infusion_beam.png");
+    private final ResourceLocation beaconBeamTexture = VResourceLocation.mc("textures/entity/beacon_beam.png");
 
     public AltarInfusionBESR(BlockEntityRendererProvider.Context context) {
     }
@@ -81,10 +82,10 @@ public class AltarInfusionBESR extends VampirismBESR<AltarInfusionBlockEntity> {
             float f7 = Mth.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f8 = Mth.cos((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
             float f9 = (float) j / 8.0F;
-            ivertexbuilder.vertex(matrix4f, f4, f5, 0.0F).color(75, 0, 0, 255).uv(f6, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).color(255, 0, 0, 255).uv(f6, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).color(255, 0, 0, 255).uv(f9, f3).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
-            ivertexbuilder.vertex(matrix4f, f7, f8, 0.0F).color(75, 0, 0, 255).uv(f9, f2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrixstack$entry, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.addVertex(matrix4f, f4, f5, 0.0F).setColor(75, 0, 0, 255).setUv(f6, f2).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrixstack$entry, 0.0F, -1.0F, 0.0F);
+            ivertexbuilder.addVertex(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).setColor(255, 0, 0, 255).setUv(f6, f3).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrixstack$entry, 0.0F, -1.0F, 0.0F);
+            ivertexbuilder.addVertex(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).setColor(255, 0, 0, 255).setUv(f9, f3).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrixstack$entry, 0.0F, -1.0F, 0.0F);
+            ivertexbuilder.addVertex(matrix4f, f7, f8, 0.0F).setColor(75, 0, 0, 255).setUv(f9, f2).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrixstack$entry, 0.0F, -1.0F, 0.0F);
             f4 = f7;
             f5 = f8;
             f6 = f9;

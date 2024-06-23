@@ -1,0 +1,105 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "minecraft:random_chance_with_enchanted_bonus",
+          "enchanted_chance": {
+            "type": "minecraft:linear",
+            "base": 0.38000003,
+            "per_level_above_first": 0.05
+          },
+          "enchantment": "minecraft:looting",
+          "unenchanted_chance": 0.33
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_fang"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "vampirism:with_stake",
+          "target": "attacking_player"
+        },
+        {
+          "condition": "minecraft:random_chance_with_enchanted_bonus",
+          "enchanted_chance": {
+            "type": "minecraft:linear",
+            "base": 0.55,
+            "per_level_above_first": 0.05
+          },
+          "enchantment": "minecraft:looting",
+          "unenchanted_chance": 0.5
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_blood_bottle"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance_with_enchanted_bonus",
+          "enchanted_chance": {
+            "type": "minecraft:linear",
+            "base": 0.03,
+            "per_level_above_first": 0.01
+          },
+          "enchantment": "minecraft:looting",
+          "unenchanted_chance": 0.02
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:amulet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:ring"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:obi_belt"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "vampirism:entities/vampire_imob"
+}

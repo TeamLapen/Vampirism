@@ -71,11 +71,9 @@ public class CoffinModel extends Model {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer iVertexBuilder, int i, int i1, float v, float v1, float v2, float v3) {
-        modelParts.forEach(part -> part.render(matrixStack, iVertexBuilder, i, i1, v, v1, v2, v3));
+    public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer iVertexBuilder, int packedLight, int overlay, int color) {
+        modelParts.forEach(part -> part.render(matrixStack, iVertexBuilder, packedLight, overlay, color));
     }
-
-
     public void rotateLid(float angle) {
         leftLid.zRot = leftHandle.zRot = -angle;
         rightLid.zRot = rightHandle.zRot = angle;

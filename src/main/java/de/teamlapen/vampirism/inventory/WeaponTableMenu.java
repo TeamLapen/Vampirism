@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.inventory;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.inventory.BooleanDataSlot;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -9,20 +9,17 @@ import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -43,7 +40,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     private final CraftingContainer craftMatrix = new TransientCraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
-    private final RecipeManager.CachedCheck<CraftingContainer, IWeaponTableRecipe> quickCheck;
+    private final RecipeManager.CachedCheck<CraftingInput, IWeaponTableRecipe> quickCheck;
 
     public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.WEAPON_TABLE.get(), id);
@@ -152,7 +149,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
 
     @Override
     public void slotsChanged(@NotNull Container inventoryIn) {
-        this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult));
+        this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), this.craftResult));
     }
 
     @Override
@@ -160,7 +157,14 @@ public class WeaponTableMenu extends AbstractContainerMenu {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
-    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingContainer craftMatrixIn, @NotNull ResultContainer craftResultIn) {
+    public Optional<List<Holder<ISkill<?>>>> missingSkills() {
+        return this.worldPos.evaluate((world, pos) -> {
+            Optional<RecipeHolder<IWeaponTableRecipe>> recipeFor = quickCheck.getRecipeFor(CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), world);
+            return recipeFor.stream().flatMap(s -> s.value().getRequiredSkills().stream()).filter(s -> !hunterPlayer.getSkillHandler().isSkillEnabled(s)).toList();
+        });
+    }
+
+    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingInput craftMatrixIn, @NotNull ResultContainer craftResultIn) {
         if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<RecipeHolder<IWeaponTableRecipe>> optional = quickCheck.getRecipeFor(craftMatrixIn, worldIn);
             this.missingLava.set(false);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BaronAttireModel;
 import de.teamlapen.vampirism.client.model.BaronWrapperModel;
@@ -24,8 +25,8 @@ import java.util.function.Predicate;
 public class BaronAttireLayer extends RenderLayer<VampireBaronEntity, BaronWrapperModel> {
     private final @NotNull BaronessAttireModel baroness;
     private final @NotNull BaronAttireModel baron;
-    private final ResourceLocation textureBaroness = new ResourceLocation(REFERENCE.MODID, "textures/entity/baroness_attire.png");
-    private final ResourceLocation textureBaron = new ResourceLocation(REFERENCE.MODID, "textures/entity/baron_attire.png");
+    private final ResourceLocation textureBaroness = VResourceLocation.mod("textures/entity/baroness_attire.png");
+    private final ResourceLocation textureBaron = VResourceLocation.mod("textures/entity/baron_attire.png");
     private final Predicate<VampireBaronEntity> predicateFemale;
 
     /**
@@ -44,7 +45,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronEntity, BaronWrapp
         if (!entityIn.isInvisible()) {
             boolean female = predicateFemale.test(entityIn);
             EntityModel<VampireBaronEntity> model = female ? baroness : baron;
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), model, female ? textureBaroness : textureBaron, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, 1, 1, 1);
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), model, female ? textureBaroness : textureBaron, matrixStackIn, bufferIn, packedLightIn, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTicks, -1);
         }
     }
 

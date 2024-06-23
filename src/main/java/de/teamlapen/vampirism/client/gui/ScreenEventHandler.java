@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScreenEventHandler {
 
-    private static final WidgetSprites INVENTORY_SKILLS = new WidgetSprites(new ResourceLocation(REFERENCE.MODID, "widget/inventory_skills"), new ResourceLocation(REFERENCE.MODID, "widget/inventory_skills_highlighted"));
+    private static final WidgetSprites INVENTORY_SKILLS = new WidgetSprites(VResourceLocation.mod("widget/inventory_skills"), VResourceLocation.mod("widget/inventory_skills_highlighted"));
     private ImageButton button;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

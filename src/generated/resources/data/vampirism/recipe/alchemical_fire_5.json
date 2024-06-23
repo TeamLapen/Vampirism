@@ -1,0 +1,13 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "fluid": {
+    "item": "vampirism:holy_water_bottle_enhanced"
+  },
+  "ingredient": {
+    "item": "minecraft:gunpowder"
+  },
+  "result": {
+    "count": 5,
+    "id": "vampirism:item_alchemical_fire"
+  }
+}

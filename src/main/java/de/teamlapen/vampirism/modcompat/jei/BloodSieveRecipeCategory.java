@@ -3,37 +3,28 @@ package de.teamlapen.vampirism.modcompat.jei;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.modcompat.jei.recipes.BloodSieveRecipe;
-import de.teamlapen.vampirism.modcompat.jei.recipes.GrinderRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
-import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecipe> {
-    private static final ResourceLocation PROGRESS = new ResourceLocation("jei", "textures/jei/gui/gui_vanilla.png");
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/blood_grinder_jei.png");
+    private static final ResourceLocation PROGRESS = VResourceLocation.loc("jei", "textures/jei/gui/gui_vanilla.png");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
     public static final int width = 78;
     public static final int height = 18;
 
@@ -83,7 +74,7 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     public void setRecipe(IRecipeLayoutBuilder builder, BloodSieveRecipe recipe, @NotNull IFocusGroup focuses) {
         int capacity = FluidType.BUCKET_VOLUME;
         builder.addSlot(RecipeIngredientRole.INPUT, 1,  1).setFluidRenderer(capacity, true, 16,16)
-                .addFluidStack(recipe.input().getRawFluid(), capacity);
+                .addFluidStack(recipe.input().getFluid(), capacity);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 58, 1).setFluidRenderer(capacity, true, 16,16)
                 .addFluidStack(ModFluids.BLOOD.get(), (int)(capacity * recipe.conversionRate())).setBackground(this.slot, -1,-1);
     }

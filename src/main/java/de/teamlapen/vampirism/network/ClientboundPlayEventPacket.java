@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record ClientboundPlayEventPacket(int event, BlockPos pos, int stateId) implements CustomPacketPayload {
 
-    public static final Type<ClientboundPlayEventPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "play_event"));
+    public static final Type<ClientboundPlayEventPacket> TYPE = new Type<>(VResourceLocation.mod("play_event"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundPlayEventPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ClientboundPlayEventPacket::event,
             BlockPos.STREAM_CODEC, ClientboundPlayEventPacket::pos,

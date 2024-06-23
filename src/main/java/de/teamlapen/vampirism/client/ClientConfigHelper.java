@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -48,7 +49,7 @@ public class ClientConfigHelper {
     /**
      * Dummy task order identifier id no faction is given, but this should never happen
      */
-    private static final ResourceLocation NONE = new ResourceLocation("none");
+    private static final ResourceLocation NONE = VResourceLocation.mod("none");
     /**
      * Cache for the action order
      */
@@ -211,7 +212,7 @@ public class ClientConfigHelper {
             List<Holder<IAction<?>>> actions = new ArrayList<>();
             in.beginArray();
             while (in.hasNext()) {
-                ModRegistries.ACTIONS.getHolder(new ResourceLocation(in.nextString())).ifPresent(actions::add);
+                ModRegistries.ACTIONS.getHolder(ResourceLocation.parse(in.nextString())).ifPresent(actions::add);
             }
             in.endArray();
             return actions;
@@ -239,7 +240,7 @@ public class ClientConfigHelper {
             List<SelectMinionTaskRadialScreen.Entry> actions = new ArrayList<>();
             in.beginArray();
             while (in.hasNext()) {
-                ResourceLocation resourceLocation = new ResourceLocation(in.nextString());
+                ResourceLocation resourceLocation = ResourceLocation.parse(in.nextString());
                 IMinionTask<?, ?> minionTask = RegUtil.getMinionTask(resourceLocation);
                 SelectMinionTaskRadialScreen.Entry entry = SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.get(resourceLocation);
                 if (entry != null) {

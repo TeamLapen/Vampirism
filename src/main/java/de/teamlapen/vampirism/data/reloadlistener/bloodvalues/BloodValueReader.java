@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -44,7 +45,7 @@ public class BloodValueReader {
         for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(this.directory, (file) -> file.getPath().endsWith(".json")).entrySet()) {
             ResourceLocation resourcelocation = entry.getKey();
             String s = resourcelocation.getPath();
-            ResourceLocation resourceName = new ResourceLocation(resourcelocation.getNamespace(), s.substring(this.directory.length() + 1, s.length() - PATH_SUFFIX_LENGTH));
+            ResourceLocation resourceName = VResourceLocation.loc(resourcelocation.getNamespace(), s.substring(this.directory.length() + 1, s.length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);

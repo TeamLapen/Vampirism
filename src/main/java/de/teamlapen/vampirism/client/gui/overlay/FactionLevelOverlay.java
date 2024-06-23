@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
@@ -15,7 +16,7 @@ public class FactionLevelOverlay implements LayeredDraw.Layer {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
         if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.mc.player);
             IPlayableFaction<?> faction = handler.getCurrentFaction();

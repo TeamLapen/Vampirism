@@ -31,8 +31,8 @@ public class PlayerFaceOverlayLayer<T extends Mob & IPlayerOverlay, M extends Hu
         VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.entityCutoutNoCull(loc));
         this.getParentModel().head.visible = true;
         this.getParentModel().hat.visible = true;
-        this.getParentModel().head.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-        this.getParentModel().hat.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        this.getParentModel().head.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY,-1);
+        this.getParentModel().hat.render(stack, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, -1);
         this.getParentModel().head.visible = false;
         this.getParentModel().hat.visible = false;
 

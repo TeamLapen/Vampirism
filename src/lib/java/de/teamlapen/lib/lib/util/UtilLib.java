@@ -741,11 +741,6 @@ public class UtilLib {
         return i;
     }
 
-
-    public static @NotNull ResourceLocation amend(@NotNull ResourceLocation original, String amendment) {
-        return new ResourceLocation(original.getNamespace(), original.getPath() + amendment);
-    }
-
     public static void forEachBlockPos(AABB area, Consumer<BlockPos> action) {
         for (double x = area.minX; x <= area.maxX; x++) {
             for (double y = area.minY; y <= area.maxY; y++) {

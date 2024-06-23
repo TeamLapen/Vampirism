@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core.tags;
 
-import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.resources.ResourceLocation;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +32,6 @@ public class ModBlockTags {
     public static final TagKey<Block> CREEPER_REPELLENT = tag("creeper_repellent");
 
     private static @NotNull TagKey<Block> tag(@NotNull String name) {
-        return BlockTags.create(new ResourceLocation(REFERENCE.MODID, name));
+        return BlockTags.create(VResourceLocation.mod(name));
     }
 }

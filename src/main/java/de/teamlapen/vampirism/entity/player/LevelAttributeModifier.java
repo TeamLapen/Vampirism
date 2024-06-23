@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModAttributes;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,25 +23,7 @@ import java.util.UUID;
  */
 public class LevelAttributeModifier {
 
-    private final static Logger LOGGER = LogManager.getLogger(LevelAttributeModifier.class);
-
-    private static final Map<Holder<Attribute>, UUID> modifiers = new HashMap<>();
-
-    static {
-        modifiers.put(Attributes.ATTACK_DAMAGE, UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F"));
-        modifiers.put(Attributes.MOVEMENT_SPEED, UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065"));
-        modifiers.put(Attributes.MAX_HEALTH, UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70"));
-        modifiers.put(ModAttributes.BLOOD_EXHAUSTION, UUID.fromString("4504ccfa-dfdc-11e5-b86d-9a79f06e9478"));
-        modifiers.put(Attributes.ATTACK_SPEED, UUID.fromString("37a4f596-2ff8-45e5-b074-c91df218f26b"));
-        modifiers.put(Attributes.ARMOR, UUID.fromString("84769cda-82dd-46f8-8069-15d659b29408"));
-    }
-
-    /**
-     * Can be used to register an additional modifiable attribute from modcompat
-     */
-    public static void registerModdedAttributeModifier(Holder<Attribute> attribute, UUID uuid) {
-        modifiers.put(attribute, uuid);
-    }
+    public static final ResourceLocation ID = VResourceLocation.mod("level_attribute_modifier");
 
     /**
      * @param player      The player to be modified
@@ -52,18 +37,17 @@ public class LevelAttributeModifier {
      * @param evenIntOnly If the modifier should be rounded to an even integer
      */
     public static void applyModifier(@NotNull Player player, @NotNull Holder<Attribute> attribute, String name, int level, int lcap, double max, double type, AttributeModifier.@NotNull Operation operation, boolean evenIntOnly) {
-        UUID mod = modifiers.get(attribute);
-        if (mod == null) {
-            LOGGER.warn("Cannot modify {}, no modifier is registered", attribute);
-            return;
-        }
         double m = calculateModifierValue(level, lcap, max, type);
         AttributeInstance instance = player.getAttribute(attribute);
-        rmMod(instance, mod);
-        if (evenIntOnly) {
-            m = Math.round(m / 2) * 2;
+        if (instance != null) {
+            instance.removeModifier(ID);
+            if (evenIntOnly) {
+                m = Math.round(m / 2) * 2;
+            }
+            instance.addPermanentModifier(new AttributeModifier(ID, m, operation));
+        } else if (SharedConstants.IS_RUNNING_IN_IDE) {
+            throw new IllegalStateException("Attribute " + attribute + " not found for player " + player);
         }
-        instance.addPermanentModifier(new AttributeModifier(mod, (attribute.value().getDescriptionId() + " " + name + " Boost"), m, operation));
     }
 
     /**
@@ -80,21 +64,4 @@ public class LevelAttributeModifier {
         return Math.pow((Math.min(level, lcap)), type) / Math.pow(lcap, type) * maxMod;
     }
 
-    /**
-     * Removes existing modifiers
-     *
-     * @param att  Attribute
-     * @param uuid UUID of modifier to remove
-     */
-    private static void rmMod(@NotNull AttributeInstance att, @NotNull UUID uuid) {
-        att.removeModifier(uuid);
-    }
-
-    /**
-     * @param attribute the attribute whose UUID you need
-     * @return the UUID of the given attribute
-     */
-    public static UUID getUUID(Holder<Attribute> attribute) {
-        return modifiers.get(attribute);
-    }
 }

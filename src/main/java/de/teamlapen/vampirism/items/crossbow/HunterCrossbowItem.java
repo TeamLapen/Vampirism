@@ -1,22 +1,27 @@
 package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.items.*;
-import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,12 +42,10 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class HunterCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IHunterCrossbow {
@@ -79,15 +82,6 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return (super.canApplyAtEnchantingTable(stack, enchantment) && enchantment != Enchantments.MULTISHOT) || getCompatibleEnchantments().contains(enchantment);
-    }
-
-    protected Collection<Enchantment> getCompatibleEnchantments() {
-        return Arrays.asList(Enchantments.INFINITY, Enchantments.PUNCH, Enchantments.POWER); // plus normal crossbow enchantments
-    }
-
-    @Override
     public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.STRINGS) || super.isValidRepairItem(crossbow, repairItem);
     }
@@ -121,9 +115,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
         ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
         if (otherItemStack.getItem() instanceof HunterCrossbowItem otherItem && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
-            return this.getUseDuration(stack) + otherItem.getUseDuration(otherItemStack);
+            return this.getUseDuration(stack, entity) + otherItem.getUseDuration(otherItemStack, entity);
         }
-        return this.getUseDuration(stack);
+        return this.getUseDuration(stack, entity);
     }
 
     public boolean canUseDoubleCrossbow(LivingEntity entity) {
@@ -141,20 +135,20 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack crossbow) {
-        return getChargeDurationMod(crossbow) + 3;
+    public int getUseDuration(ItemStack pStack, LivingEntity entity) {
+        return getChargeDurationMod(pStack, entity.level()) + 3;
     }
 
     @Override
     public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inacurracy, @Nullable LivingEntity p_331602_) {
-        if (!level.isClientSide()) {
+        if (level instanceof ServerLevel serverLevel) {
             if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
                 List<ItemStack> arrows = getShootingProjectiles(crossbow, availableProjectiles);
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                this.shoot(level, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
+                this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
 
@@ -168,7 +162,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    protected void shoot(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, List<ItemStack> projectiles, float speed, float inaccuracy, boolean isPlayer, @Nullable LivingEntity p_331167_) {
+    protected void shoot(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, List<ItemStack> projectiles, float speed, float inaccuracy, boolean isPlayer, @Nullable LivingEntity p_331167_) {
         for (int i = 0; i < projectiles.size(); i++) {
             ItemStack itemstack = projectiles.get(i);
             if (!itemstack.isEmpty()) {
@@ -199,8 +193,8 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
-    public AbstractArrow customArrow(AbstractArrow arrow, ItemStack stack) {
-        if (ignoreHurtTimer(stack) && arrow instanceof IEntityCrossbowArrow) {
+    public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
+        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityCrossbowArrow) {
             ((IEntityCrossbowArrow)arrow).setIgnoreHurtTimer();
         }
         return arrow;
@@ -213,13 +207,13 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     @Override
     public void releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity entity, int pTimeCharged) {
         int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
-        int useDuration = this.getUseDuration(itemStack);
+        int useDuration = this.getUseDuration(itemStack, entity);
         int combinedChargingDuration = combinedUseDuration - pTimeCharged;
         int chargingDuration = useDuration - pTimeCharged;
         if (combinedChargingDuration != useDuration) {
             chargingDuration += combinedUseDuration - useDuration;
         }
-        if ((float)chargingDuration/ getChargeDurationMod(itemStack) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
+        if ((float)chargingDuration/ getChargeDurationMod(itemStack, level) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
             ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
             if (canUseDoubleCrossbow(entity)&& (float)combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
                 tryLoadProjectiles(entity, otherStack);
@@ -232,13 +226,15 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     public int getCombinedChargeDurationMod(ItemStack crossbow, LivingEntity entity, InteractionHand hand) {
         ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
         if (otherItemStack.getItem() instanceof HunterCrossbowItem other && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
-            return this.getChargeDurationMod(crossbow) + other.getChargeDurationMod(otherItemStack);
+            return this.getChargeDurationMod(crossbow, entity.level()) + other.getChargeDurationMod(otherItemStack, entity.level());
         }
-        return this.getChargeDurationMod(crossbow);
+        return this.getChargeDurationMod(crossbow, entity.level());
     }
 
-    public int getChargeDurationMod(ItemStack crossbow) {
-        int i = crossbow.getEnchantmentLevel(Enchantments.QUICK_CHARGE);
+    @Override
+    public int getChargeDurationMod(ItemStack crossbow, Level level) {
+        Registry<Enchantment> enchantments = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        int i = crossbow.getEnchantmentLevel(enchantments.getHolderOrThrow(Enchantments.QUICK_CHARGE));
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +17,14 @@ import java.util.List;
 /**
  * Recipe that can be used in the hunter weapon crafting table
  */
-public interface IWeaponTableRecipe extends Recipe<CraftingContainer> {
+public interface IWeaponTableRecipe extends Recipe<CraftingInput> {
 
     /**
      * Returns an Item that is the result of this recipe
      */
     @Override
     @NotNull
-    default ItemStack assemble(@NotNull CraftingContainer inv, @NotNull HolderLookup.Provider access) {
+    default ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider access) {
         return getResultItem(access).copy();
     }
 

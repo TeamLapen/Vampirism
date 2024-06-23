@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 public record ServerboundSetVampireBeaconPacket(Optional<Holder<MobEffect>> effect, Optional<Integer> amplifier) implements CustomPacketPayload {
 
-    public static final Type<ServerboundSetVampireBeaconPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "set_vampire_beacon"));
+    public static final Type<ServerboundSetVampireBeaconPacket> TYPE = new Type<>(VResourceLocation.mod("set_vampire_beacon"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSetVampireBeaconPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT)), ServerboundSetVampireBeaconPacket::effect,
             ByteBufCodecs.optional(ByteBufCodecs.INT), ServerboundSetVampireBeaconPacket::amplifier,

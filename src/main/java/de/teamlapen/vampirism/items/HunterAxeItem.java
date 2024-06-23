@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +45,8 @@ public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, Mod
 
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        output.accept(getEnchantedStack());
+        HolderLookup.RegistryLookup<Enchantment> enchantments = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
+        output.accept(getEnchantedStack(enchantments));
     }
 
     @Override
@@ -53,9 +57,9 @@ public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, Mod
     /**
      * @return An {@link ItemStack} with the correct knockback enchantment applied
      */
-    public @NotNull ItemStack getEnchantedStack() {
+    public @NotNull ItemStack getEnchantedStack(HolderLookup.RegistryLookup<Enchantment> enchantments) {
         ItemStack stack = new ItemStack(this);
-        stack.enchant(Enchantments.KNOCKBACK, getKnockback());
+        stack.enchant(enchantments.getOrThrow(Enchantments.KNOCKBACK), getKnockback());
         return stack;
     }
 

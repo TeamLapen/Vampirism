@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.core.tags;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import net.minecraft.resources.ResourceLocation;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +16,6 @@ public class ModFactionTags {
     public static final TagKey<IFaction<?>> HAS_LORD_SKILLS = tag("has_lord_skills");
 
     private static @NotNull TagKey<IFaction<?>> tag(@NotNull String name) {
-        return TagKey.create(VampirismRegistries.Keys.FACTION, new ResourceLocation(REFERENCE.MODID, name));
+        return TagKey.create(VampirismRegistries.Keys.FACTION, VResourceLocation.mod(name));
     }
 }

@@ -62,8 +62,6 @@ public class Helper {
 
 
     private final static Logger LOGGER = LogManager.getLogger();
-    private final static ResourceLocation EMPTY_ID = new ResourceLocation("null", "null");
-    private static Method reflectionMethodExperiencePoints;
 
     /**
      * Checks if the entity can get sundamage at its current position.
@@ -240,10 +238,6 @@ public class Helper {
         if (requiredSkill == null) return true;
         //noinspection unchecked
         return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled((Holder<ISkill<?>>) (Object) requiredSkill)).orElse(false);
-    }
-
-    public static int getExperiencePoints(@NotNull LivingEntity entity, Player player) {
-        return ((LivingEntityAccessor) entity).invoke_getExperiencePoints_vampirism(); //Use mixin instead of AT since AT does not want to work for this specific method for some reason
     }
 
     /**

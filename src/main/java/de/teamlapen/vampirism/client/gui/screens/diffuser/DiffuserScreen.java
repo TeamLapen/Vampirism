@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
 import de.teamlapen.lib.lib.client.gui.ProgressBar;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.network.PlayerOwnedBlockEntityLockPacket;
@@ -10,17 +10,15 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ChestMenu;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/container/diffuser.png");
-    private static final ResourceLocation LIT_PROGRESS_SPRITE = new ResourceLocation("container/furnace/lit_progress");
+    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/diffuser.png");
+    private static final ResourceLocation LIT_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/lit_progress");
 
     protected final int xSize = 176;
     protected final int ySize = 166;

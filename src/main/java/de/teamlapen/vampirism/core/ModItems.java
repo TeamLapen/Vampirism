@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.*;
@@ -55,7 +56,7 @@ public class ModItems {
     private static final Set<DeferredHolder<Item, ? extends Item>> VAMPIRISM_TAB_ITEMS = new HashSet<>();
     private static final Map<ResourceKey<CreativeModeTab>, Set<DeferredHolder<Item, ? extends Item>>> CREATIVE_TAB_ITEMS = new HashMap<>();
 
-    public static final ResourceKey<CreativeModeTab> VAMPIRISM_TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(REFERENCE.MODID, "default"));
+    public static final ResourceKey<CreativeModeTab> VAMPIRISM_TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, VResourceLocation.mod("default"));
     public static final DeferredHolder<CreativeModeTab,CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(VAMPIRISM_TAB_KEY.location().getPath(), () -> VampirismCreativeTab.builder(VAMPIRISM_TAB_ITEMS.stream().map(DeferredHolder::get).collect(Collectors.toSet())).build());
     public static final EffectCure GARLIC_CURE = EffectCure.get("vampirism:garlic");
 
@@ -180,7 +181,7 @@ public class ModItems {
         @Override
         public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
             texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
-            texts.add(Component.empty());
+            texts.add(Component.translatable("item.vampirism.arrow_clip.right_click").withStyle(ChatFormatting.GRAY));
             super.appendHoverText(stack, context, texts, flag);
         }
 

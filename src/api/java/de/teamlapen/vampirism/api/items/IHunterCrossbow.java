@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.items;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -21,7 +21,7 @@ public interface IHunterCrossbow extends IVampirismCrossbow {
      * @param crossbow itemstack of a {@link IHunterCrossbow}
      * @return duration in ticks
      */
-    int getChargeDurationMod(ItemStack crossbow);
+    int getChargeDurationMod(ItemStack crossbow, Level level);
 
     /**
      * @param crossbow the crossbow

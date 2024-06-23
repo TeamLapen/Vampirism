@@ -12,8 +12,6 @@ import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-    @Invoker("getExperienceReward")
-    int invoke_getExperiencePoints_vampirism();
 
     @Accessor("activeEffects")
     Map<Holder<MobEffect>, MobEffectInstance> getActiveEffects();

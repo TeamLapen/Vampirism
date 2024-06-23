@@ -55,7 +55,7 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
     }
 
     public record EmptyActionSkill<T extends IFactionPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
-        private static final TagKey<ISkillTree> key = TagKey.create(VampirismRegistries.Keys.SKILL_TREE, new ResourceLocation(VReference.MODID, "empty"));
+        private static final TagKey<ISkillTree> key = TagKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod("empty"));
 
         @Override
         public @Nullable Component getDescription() {
