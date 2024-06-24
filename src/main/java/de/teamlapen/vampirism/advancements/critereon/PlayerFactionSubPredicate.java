@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.advancements.critereon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.FactionCodec;
@@ -70,7 +71,7 @@ public class PlayerFactionSubPredicate implements EntitySubPredicate {
     public boolean matches(@NotNull Entity pEntity, @NotNull ServerLevel pLevel, @Nullable Vec3 p_218830_) {
         if (pEntity instanceof Player player) {
             FactionPlayerHandler fph = FactionPlayerHandler.get(player);
-            return (faction == null || fph.getCurrentFaction() == faction)
+            return (faction == null || IFaction.is(fph.getFaction(), faction))
                     && (level.isEmpty() || fph.getCurrentLevel() >= level.get())
                     && (lordLevel.isEmpty() || fph.getLordLevel() >= lordLevel.get());
         }

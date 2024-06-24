@@ -7,10 +7,12 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -40,17 +42,18 @@ public class LordCommand extends BasicCommand {
     private static int setLevel(@NotNull CommandContext<CommandSourceStack> context, final int level, @NotNull Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            if (handler.getCurrentFaction() == null) {
+            Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
+            if (faction == null) {
                 throw NO_FACTION.create();
             }
-            int maxLevel = handler.getCurrentFaction().getHighestReachableLevel();
-            if (handler.getCurrentLevel() == maxLevel && !handler.setFactionLevel(handler.getCurrentFaction(), maxLevel)) {
+            int maxLevel = faction.value().getHighestReachableLevel();
+            if (handler.getCurrentLevel() == maxLevel && !handler.setFactionLevel(faction, maxLevel)) {
                 throw LEVEL_UP_FAILED.create();
             }
-            if (!handler.setLordLevel(Math.min(level, handler.getCurrentFaction().getHighestLordLevel()))) {
+            if (!handler.setLordLevel(Math.min(level, faction.value().getHighestLordLevel()))) {
                 throw LORD_FAILED.create();
             }
-            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), handler.getCurrentFaction().getName(), handler.getLordLevel()), true);
+            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.lord.successful", player.getName(), faction.value().getName(), handler.getLordLevel()), true);
         }
         return 0;
     }

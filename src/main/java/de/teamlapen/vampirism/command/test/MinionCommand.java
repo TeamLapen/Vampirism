@@ -7,11 +7,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IMinionBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
@@ -20,6 +22,7 @@ import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -61,24 +64,26 @@ public class MinionCommand extends BasicCommand {
             if (minion.type() == null){
                 continue;
             }
+            //noinspection RedundantCast
+            Holder<? extends IPlayableFaction<?>> faction = (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.getHolder(minion.id()).orElseThrow();
             ArgumentBuilder<CommandSourceStack, ?> currentCommand = null;
             List<? extends IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?>> iCommandEntries = minion.commandArguments();
             for (int i = iCommandEntries.size() - 1; i >= 0; i--) {
                 IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?> iCommandEntry = iCommandEntries.get(i);
                 int finalI = i;
-                var builder  = Commands.argument(iCommandEntry.name(), iCommandEntry.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), minion.faction(), (Supplier<MinionData>) minion.data(), minion.type(),  (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(0, finalI+1), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(finalI+1, iCommandEntries.size())));
+                var builder  = Commands.argument(iCommandEntry.name(), iCommandEntry.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.data(), minion.type(),  (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(0, finalI+1), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(finalI+1, iCommandEntries.size())));
                 if (currentCommand != null) {
                     builder.then(currentCommand);
                 }
                 currentCommand = builder;
             }
-            spawnNew.then(Commands.literal(minion.faction().getID().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), minion.faction(), (Supplier<MinionData>)minion.data(), minion.type(),List.of(), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries)).then(currentCommand));
+            spawnNew.then(Commands.literal(minion.faction().getID().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>)minion.data(), minion.type(),List.of(), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries)).then(currentCommand));
         }
         return spawnNew;
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
+    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
         T t = data.get();
         for (IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : contextProvider) {
             ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
@@ -91,14 +96,14 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, IPlayableFaction<?> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
+    private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler fph = handler(p);
 
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         if (controller.hasFreeMinionSlot()) {
 
-            if (fph.getCurrentFaction() == faction) {
+            if (IFaction.is(fph.getFaction(), faction)) {
                 @SuppressWarnings("unchecked") int id = controller.createNewMinionSlot((MinionData) data, (EntityType<? extends MinionEntity<?>>) type);
                 if (id < 0) {
                     throw fail.create("Failed to get new minion slot");

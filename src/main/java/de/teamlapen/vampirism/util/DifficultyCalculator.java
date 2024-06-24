@@ -39,7 +39,7 @@ public class DifficultyCalculator {
                 min = 0;
                 continue;
             }
-            int level = (int) (pLevel / (float) handler.getCurrentFaction().getHighestReachableLevel());
+            int level = (int) (pLevel / (float) handler.getFaction().value().getHighestReachableLevel());
             if (level < min) {
                 min = level;
             }

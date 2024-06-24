@@ -7,6 +7,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +20,10 @@ public class FactionLevelOverlay implements LayeredDraw.Layer {
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
         if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.mc.player);
-            IPlayableFaction<?> faction = handler.getCurrentFaction();
+            Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
             if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && faction != null) {
                 // boolean flag1 = false;
-                int color = faction.getColor();
+                int color = faction.value().getColor();
                 int lord = handler.getLordLevel();
                 String text = null;
                 if (lord > 0) {

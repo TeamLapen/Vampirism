@@ -42,7 +42,7 @@ public class LevelCommand extends BasicCommand {
         for (ServerPlayer player : players) {
             FactionPlayerHandler h = FactionPlayerHandler.get(player);
             if (level == 0 && !h.canLeaveFaction()) {
-                context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", h.getCurrentFaction().getName()));
+                context.getSource().sendFailure(Component.translatable("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", h.getFaction().value().getName()));
             } else {
                 int finalLevel = Math.min(level, faction.getHighestReachableLevel());
                 if (h.setFactionAndLevel(faction, finalLevel)) {

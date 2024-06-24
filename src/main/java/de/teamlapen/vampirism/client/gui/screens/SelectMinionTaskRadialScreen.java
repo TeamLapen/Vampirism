@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -54,13 +53,13 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
             }
-        };
+        }
     }
 
     private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
         if (playerHandler.getLordLevel() == 0) return List.of();
         return playerHandler.getCurrentFactionPlayer().map(player -> {
-            return ClientConfigHelper.getMinionTaskOrder(playerHandler.getCurrentFaction()).stream().filter(entry -> {
+            return ClientConfigHelper.getMinionTaskOrder(playerHandler.getFaction()).stream().filter(entry -> {
                         return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
             }).collect(Collectors.toList());
                 }

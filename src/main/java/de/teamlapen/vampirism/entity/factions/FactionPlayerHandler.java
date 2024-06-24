@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.LogUtil;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -135,6 +132,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @SuppressWarnings("unchecked")
     @Nullable
     @Override
+    @Deprecated
     public <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction() {
         return currentFaction == null ? null : (IPlayableFaction<T>) currentFaction.value();
     }
@@ -271,7 +269,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
-            IPlayableFaction<?> otherFaction = get((Player) src.getEntity()).getCurrentFaction();
+            Holder<? extends IPlayableFaction<?>> otherFaction = get((Player) src.getEntity()).getFaction();
             if (this.currentFaction == null || otherFaction == null) {
                 return VampirismConfig.SERVER.pvpOnlyBetweenFactionsIncludeHumans.get();
             }
@@ -429,7 +427,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     private @Nullable Holder<? extends IPlayableFaction<?>> getFactionFromKey(ResourceLocation key) {
-        return (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.getHolder(key).orElse(null);
+        return (Holder<? extends IPlayableFaction<?>>) ModRegistries.FACTIONS.getHolder(key).orElse(null);
     }
 
     private void loadBoundActions(@NotNull CompoundTag nbt) {

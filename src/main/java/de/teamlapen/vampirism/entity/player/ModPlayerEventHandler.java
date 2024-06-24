@@ -16,10 +16,12 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -64,7 +66,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -483,14 +484,14 @@ public class ModPlayerEventHandler {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             Holder<? extends IFaction<?>> usingFaction = factionItem.getExclusiveFaction(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction) && checkExceptions(player, handler.getCurrentFaction(), stack)) {
+            if (usingFaction != null && !handler.isInFaction(usingFaction) && checkExceptions(player, handler.getFaction(), stack)) {
                 if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
                 }
                 return false;
             } else if (stack.getItem() instanceof IFactionLevelItem<?> levelItem) {
                 //noinspection unchecked
-                Holder<ISkill<?>> requiredSkill = (Holder<ISkill<?>>) (Object) levelItem.requiredSkill(stack);
+                Holder<ISkill<?>> requiredSkill = levelItem.requiredSkill(stack);
 
                 if (handler.getCurrentLevel() < levelItem.getMinLevel(stack)) {
                     if (message) {
@@ -511,7 +512,7 @@ public class ModPlayerEventHandler {
         return true;
     }
 
-    private boolean checkExceptions(@NotNull Player player, IPlayableFaction<?> currentFaction, @NotNull ItemStack stack) { // stupid implementation. Otherwise we would need a better IFactionExclusiveItem#getExclusiveFaction method.
+    private boolean checkExceptions(@NotNull Player player, Holder<? extends IPlayableFaction<?>> currentFaction, @NotNull ItemStack stack) { // stupid implementation. Otherwise we would need a better IFactionExclusiveItem#getExclusiveFaction method.
         return !stack.is(ModItems.GARLIC_BREAD) || currentFaction != null;
     }
 

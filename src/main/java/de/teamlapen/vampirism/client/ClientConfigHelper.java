@@ -148,8 +148,8 @@ public class ClientConfigHelper {
      * @return a valid order for the given faction
      */
     @NotNull
-    public static List<SelectMinionTaskRadialScreen.Entry> getMinionTaskOrder(@Nullable IFaction<?> faction) {
-        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).map(IFaction::getID).orElse(NONE)),() -> {
+    public static List<SelectMinionTaskRadialScreen.Entry> getMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction) {
+        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE)),() -> {
             List<SelectMinionTaskRadialScreen.Entry> order = getDefaultMinionTaskOrder(faction);
             saveMinionTaskOrder(faction, order);
             return order;
@@ -162,10 +162,10 @@ public class ClientConfigHelper {
      * @param faction the faction for which the order should be created.
      * @return a valid order for the given faction
      */
-    public static List<SelectMinionTaskRadialScreen.Entry> getDefaultMinionTaskOrder(@Nullable IFaction<?> faction) {
+    public static List<SelectMinionTaskRadialScreen.Entry> getDefaultMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction) {
         return Stream.concat(RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?,?>)).filter(task -> {
             if (task instanceof IFactionMinionTask<?, ?> factionTask) {
-                return factionTask.getFaction() == null || factionTask.getFaction() == faction;
+                return factionTask.getFaction() == null || IFaction.is(factionTask.getFaction(), faction);
             } else {
                 return true;
             }
@@ -194,8 +194,8 @@ public class ClientConfigHelper {
      * @param faction the faction for which the order should be saved. If no faction is given a default identifier is used
      * @param tasks the ordering
      */
-    public static void saveMinionTaskOrder(@Nullable IFaction<?> faction, @NotNull  List<SelectMinionTaskRadialScreen.Entry> tasks) {
-        MINION_TASK_ORDER.put(Optional.ofNullable(faction).map(IFaction::getID).orElse(NONE), tasks);
+    public static void saveMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction, @NotNull  List<SelectMinionTaskRadialScreen.Entry> tasks) {
+        MINION_TASK_ORDER.put(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE), tasks);
         try {
             String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());
             VampirismConfig.CLIENT.minionTaskOrder.set(object);

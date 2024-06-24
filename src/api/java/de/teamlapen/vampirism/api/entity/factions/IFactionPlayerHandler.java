@@ -34,6 +34,7 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
     /**
      * @return The currently active faction. Can be null
      */
+    @Deprecated
     @Nullable
     <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction();
 

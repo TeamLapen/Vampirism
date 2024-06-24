@@ -24,6 +24,6 @@ public abstract class DefaultHunterAction extends DefaultAction<IHunterPlayer> {
 
     @Override
     public @NotNull TagKey<IFaction<?>> factions() {
-        return VampirismTags.Factions.IS_VAMPIRE;
+        return VampirismTags.Factions.IS_HUNTER;
     }
 }

@@ -255,7 +255,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public void relockActionHolder(@NotNull Collection<Holder<? extends IAction<T>>> actions) {
-        unlockedActions.removeAll((Collection<Holder<IAction<T>>>) (Object) actions);
+        unlockedActions.removeAll(actions);
         for (Holder<? extends IAction<T>> action : actions) {
             if (action.value() instanceof ILastingAction<T>) {
                 //noinspection unchecked
@@ -369,12 +369,10 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
                 if(!event.fullCooldown()) {
                     cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
-                    //noinspection unchecked
-                    expectedCooldownTimes.put((Holder<IAction<T>>) action, cooldown);
+                    expectedCooldownTimes.put(action, cooldown);
                 }
                 //Entries should to be at least 1
-                //noinspection unchecked
-                cooldownTimers.put((Holder<IAction<T>>) action, Math.max(cooldown, 1));
+                cooldownTimers.put(action, Math.max(cooldown, 1));
                 activeTimers.put(action, 1);
             }
             activeTimers.removeInt(action);
@@ -385,8 +383,8 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
     }
 
     @Override
-    public void unlockActionHolder(Collection<Holder<? extends IAction<T>>> actions) {
-        unlockedActions.addAll((Collection<? extends Holder<IAction<T>>>) actions);
+    public void unlockActionHolder(@NotNull Collection<Holder<? extends IAction<T>>> actions) {
+        unlockedActions.addAll(actions);
     }
 
     /**

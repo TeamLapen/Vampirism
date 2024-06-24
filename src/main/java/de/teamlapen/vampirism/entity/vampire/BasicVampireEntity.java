@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
@@ -145,7 +145,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if (fph.getMaxMinions() > 0) {
             MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    if (fph.getCurrentFaction() == this.getFaction()) {
+                    if (IFaction.is(fph.getFaction(), this.getFaction())) {
                         boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
                         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
                         data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));

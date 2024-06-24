@@ -590,7 +590,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
         //Random raids
         if (timeSinceLastRaid > 12000 && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.random.nextFloat() < VampirismConfig.BALANCE.viRandomRaidChance.get()) {
-            List<Holder<? extends IFaction<?>>> factions = (Object) ModRegistries.FACTIONS.holders().collect(Collectors.toList());
+            List<Holder<IFaction<?>>> factions = ModRegistries.FACTIONS.holders().collect(Collectors.toList());
             if (this.controllingFaction != null) {
                 factions.remove(this.controllingFaction);
             }
