@@ -9,20 +9,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IFactionBuilder<T> {
 
     @Override
     IPlayableFactionBuilder<T> color(int color);
-
-    /**
-     * @deprecated  use HostileTowardsNeutral tag instead
-     */
-    @Deprecated
-    @Override
-    IPlayableFactionBuilder<T> hostileTowardsNeutral();
 
     /**
      * Sets the maximum level for a player of this faction
@@ -33,7 +25,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> highestLevel(int highestLevel);
 
     @Override
-    IPlayableFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder);
+    IPlayableFactionBuilder<T> village(@NotNull IFactionVillage villageBuilder);
 
     /**
      * Allows this faction to have accessories
@@ -41,7 +33,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      * @param refinementItemBySlot function to get the refinement item for each slot
      * @return the builder
      */
-    IPlayableFactionBuilder<T> refinementItems(@NotNull Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot);
+    IPlayableFactionBuilder<T> refinementItem(@NotNull IRefinementItem.AccessorySlotType type, Supplier<IRefinementItem> item);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(TextColor color);
@@ -55,11 +47,11 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     @Override
     IPlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey);
 
-    ILordPlayerBuilder<T> lord();
+    IPlayableFactionBuilder<T> lord(ILordPlayerEntry lordPlayerBuilder);
 
     @Override
     <Z> IPlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);
 
     @Override
-    IPlayableFaction<T> register();
+    IPlayableFaction<T> build();
 }

@@ -1,19 +1,23 @@
 package de.teamlapen.vampirism.entity.factions;
 
+import com.google.common.collect.ImmutableMap;
+import de.teamlapen.vampirism.api.entity.factions.ILordPlayerEntry;
 import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -21,30 +25,23 @@ import java.util.function.Supplier;
  */
 public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
-    private final int highestLordLevel;
+    private final ILordPlayerEntry lord;
     private final Supplier<AttachmentType<T>> playerCapabilitySupplier;
-    private final ILordTitleProvider lordTitleFunction;
-    private final Function<IRefinementItem.AccessorySlotType, IRefinementItem> refinementItemBySlot;
-    private final boolean hasLordSkills;
+    private final Map<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBySlot;
 
-    PlayableFaction(FactionRegistry.@NotNull PlayableFactionBuilder<T> builder) {
+    PlayableFaction(@NotNull PlayableFactionBuilder<T> builder) {
         super(builder);
         this.highestLevel = builder.highestLevel;
-        this.highestLordLevel = builder.lord.maxLevel;
+        this.lord = builder.lord;
         this.playerCapabilitySupplier = builder.playerCapabilitySupplier;
-        this.lordTitleFunction = builder.lord.lordTitleFunction;
-        this.refinementItemBySlot = builder.refinementItemBySlot;
-        this.hasLordSkills = builder.lord.lordSkillsEnabled;
-    }
-
-    @Override
-    public Class<T> getFactionPlayerInterface() {
-        return super.getFactionEntityInterface();
+        ImmutableMap.Builder<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBuilder = ImmutableMap.builder();
+        builder.refinementItemBySlot.forEach((type, list) -> refinementItemBuilder.put(type, List.copyOf(list)));
+        this.refinementItemBySlot = refinementItemBuilder.build();
     }
 
     @Override
     public int getHighestLordLevel() {
-        return highestLordLevel;
+        return this.lord.maxLevel();
     }
 
     @Override
@@ -52,24 +49,9 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         return highestLevel;
     }
 
-    /**
-     * @deprecated use HasLordSkills tag instead
-     */
-    @Override
-    public boolean hasLordSkills() {
-        return this.hasLordSkills;
-    }
-
-    @NotNull
-    @Override
-    public Component getLordTitle(int level, TitleGender female) {
-        var title = lordTiles().getLordTitle(level, female);
-        return title == null ? Component.empty() : title;
-    }
-
     @Override
     public ILordTitleProvider lordTiles() {
-        return this.lordTitleFunction;
+        return this.lord.lordTitleFunction();
     }
 
     @Override
@@ -83,16 +65,19 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type) {
-        assert this.refinementItemBySlot != null;
-        //noinspection unchecked
-        return ((Z) this.refinementItemBySlot.apply(type));
+    public <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, IRefinementItem.AccessorySlotType type) {
+        List<Supplier<IRefinementItem>> iRefinementItems = this.refinementItemBySlot.get(type);
+        assert iRefinementItems != null && !iRefinementItems.isEmpty();
+        return ((Z) iRefinementItems.get(random.nextInt(iRefinementItems.size())).get());
     }
 
     @Override
-    public @NotNull String toString() {
-        return "PlayableFaction{" +
-                "id='" + id + '\'' +
-                '}';
+    public Collection<IRefinementItem> getRefinementItems() {
+        return this.refinementItemBySlot.values().stream().flatMap(Collection::stream).map(Supplier::get).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<IRefinementItem> getRefinementItems(IRefinementItem.AccessorySlotType type) {
+        return this.refinementItemBySlot.getOrDefault(type, List.of()).stream().map(Supplier::get).collect(Collectors.toList());
     }
 }

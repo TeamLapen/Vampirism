@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -19,8 +16,6 @@ import java.util.Optional;
  * One instance should be used for players and entities at the same time.
  */
 public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<T> {
-
-    Class<T> getFactionPlayerInterface();
 
     /**
      * @return The highest reachable lord level or 0 if no lord
@@ -32,15 +27,6 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      */
     int getHighestReachableLevel();
 
-    /**
-     * @param level  lord level
-     * @param female Female version
-     * @return A text component representing the title of the player at the given lord level. empty if level==0
-     * @deprecated Use {@link ILordTitleProvider#getLordTitle(int, TitleGender)} instead
-     */
-    @Deprecated
-    @NotNull
-    Component getLordTitle(int level, TitleGender female);
 
     /**
      * Gets the lord title provider for this faction
@@ -62,13 +48,11 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      *
      * @throws NullPointerException if there are no accessories available
      */
-    <Z extends Item & IRefinementItem> Z getRefinementItem(IRefinementItem.AccessorySlotType type);
+    <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, IRefinementItem.AccessorySlotType type);
 
-    /**
-     * @return If the faction has lord skills
-     */
-    @Deprecated
-    boolean hasLordSkills();
+    Collection<IRefinementItem> getRefinementItems();
+
+    Collection<IRefinementItem> getRefinementItems(IRefinementItem.AccessorySlotType type);
 
     enum TitleGender implements StringRepresentable {
         UNKNOWN("unknown"),

@@ -4,7 +4,6 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
@@ -109,7 +108,7 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public IDisguise getDisguise() {
+    public @NotNull IDisguise getDisguise() {
         return this.disguise;
     }
 
@@ -121,6 +120,26 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     @Override
     public int getMaxLevel() {
         return REFERENCE.HIGHEST_HUNTER_LEVEL;
+    }
+
+    @Override
+    public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
+
+    }
+
+    @Override
+    public void onPlayerLoggedOut() {
+
+    }
+
+    @Override
+    public void onPlayerLoggedIn() {
+
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
+        return false;
     }
 
     @Override
@@ -152,22 +171,11 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
-
-    }
-
-    @Override
     public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
-        actionHandler.deactivateAllActions();
         if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(((ServerPlayer) src.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
         }
-    }
-
-    @Override
-    public boolean onEntityAttacked(DamageSource src, float amt) {
-        return false;
     }
 
     @Override
@@ -188,16 +196,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
-    }
-
-    @Override
-    public void onPlayerLoggedIn() {
-
-    }
-
-    @Override
-    public void onPlayerLoggedOut() {
-
     }
 
     @Override

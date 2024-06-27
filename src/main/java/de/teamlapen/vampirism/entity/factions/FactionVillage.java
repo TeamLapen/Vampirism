@@ -41,12 +41,6 @@ public class FactionVillage implements IFactionVillage {
         this.craftedTotem = builder.craftedTotem;
     }
 
-    @Nullable
-    @Override
-    public MobEffect getBadOmenEffect() {
-        return this.badOmenEffect != null ? this.badOmenEffect.value() : null;
-    }
-
     @Override
     public @Nullable Holder<MobEffect> badOmenEffect() {
         return this.badOmenEffect;
@@ -54,7 +48,7 @@ public class FactionVillage implements IFactionVillage {
 
     @NotNull
     @Override
-    public ItemStack getBanner(HolderLookup.Provider provider) {
+    public ItemStack createBanner(HolderLookup.Provider provider) {
         return this.bannerStack.apply(provider).copy();
     }
 
@@ -87,8 +81,4 @@ public class FactionVillage implements IFactionVillage {
         return crafted ? this.craftedTotem.get() : this.fragileTotem.get();
     }
 
-    @Override
-    public boolean isBanner(@NotNull ItemStack stack, HolderLookup.Provider provider) {
-        return ItemStack.matches(this.bannerStack.apply(provider), stack);
-    }
 }

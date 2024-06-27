@@ -42,7 +42,7 @@ public class GiveAccessoriesCommand extends BasicCommand {
     private static <Z extends Item & IRefinementItem> int give(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer asPlayer, int number, @NotNull IRefinementSet set) {
         Holder<? extends IFaction<?>> faction = set.getFaction();
         if (faction.value() instanceof PlayableFaction<?> playable) { // should always be true
-            Z i = playable.getRefinementItem(IRefinementItem.AccessorySlotType.values()[number - 1]);
+            Z i = playable.getRandomRefinementItem(context.getSource().getLevel().random, IRefinementItem.AccessorySlotType.values()[number - 1]);
             ItemStack s = new ItemStack(i);
             if (i.applyRefinementSet(s, set)) {
                 asPlayer.addItem(s);
@@ -62,8 +62,8 @@ public class GiveAccessoriesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static <T extends IFactionPlayer<T>> int random(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer entity, int amount) {
-        Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFactionHolder(entity);
-        if (faction.value() instanceof PlayableFaction<?> playable) {
+        Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFaction(entity);
+        if (faction != null && faction.value() instanceof PlayableFaction<?> playable) {
             for (int i = 0; i < amount; ++i) {
                 ItemStack stack = RefinementItem.getRandomRefinementItem(playable);
                 if (!stack.isEmpty()) {

@@ -521,7 +521,7 @@ public class ModPlayerEventHandler {
     public void onPlayerAttackCritical(@NotNull CriticalHitEvent event) {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem item) {
-            Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFactionHolder(event.getTarget());
+            Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFaction(event.getTarget());
             if (faction != null && IFaction.is(faction, item.getSlayedFaction())) {
                 event.setDamageMultiplier(event.getDamageMultiplier() + (event.getVanillaMultiplier() * (item.getDamageMultiplierForFaction(stack) - 1)));
             }

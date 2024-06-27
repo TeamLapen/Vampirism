@@ -34,44 +34,44 @@ public class FactionVillageBuilder implements IFactionVillageBuilder {
     Supplier<? extends Block> craftedTotem = () -> Blocks.AIR;
 
     @Override
-    public @NotNull IFactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect) {
+    public @NotNull FactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect) {
         this.badOmenEffect = badOmenEffect;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem) {
+    public @NotNull FactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem) {
         this.bannerStack = bannerItem;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities) {
+    public @NotNull FactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities) {
         this.captureEntities = captureEntities;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession) {
+    public @NotNull FactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession) {
         this.factionVillageProfession = profession;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
+    public @NotNull FactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
         this.guardSuperClass = clazz;
         return this;
     }
 
     @Override
-    public <Z extends Entity & ITaskMasterEntity> @NotNull IFactionVillageBuilder taskMaster(Supplier<EntityType<Z>> taskmaster) {
+    public <Z extends Entity & ITaskMasterEntity> @NotNull FactionVillageBuilder taskMaster(Supplier<EntityType<Z>> taskmaster) {
         //noinspection unchecked
         this.taskMasterEntity = (Supplier<EntityType<? extends ITaskMasterEntity>>) (Object) taskmaster;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
+    public @NotNull FactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
         this.fragileTotem = fragile;
         this.craftedTotem = crafted;
         return this;

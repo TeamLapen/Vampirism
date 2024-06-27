@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -22,14 +21,12 @@ public record FactionPredicate(Holder<? extends IFaction<?>> sourceFaction, bool
             }
             case IFactionEntity iFactionEntity when nonPlayer -> {
                 Holder<? extends IFaction<?>> other = iFactionEntity.getFaction();
-                return !sourceFaction.equals(other) && (targetFaction.isEmpty() || targetFaction.get().equals(other));
+                return !IFaction.is(sourceFaction, other) && (targetFaction.isEmpty() || IFaction.is(targetFaction.get(), other));
             }
             case Player player1 when player && input.isAlive() -> {
                 return FactionPlayerHandler.getCurrentFactionPlayer(player1).map(fp -> {
-                            @SuppressWarnings("rawtypes")
-                            Holder f = fp.getDisguise().getViewedFaction(sourceFaction, ignoreDisguise);
-                            //noinspection unchecked,deprecation,rawtypes
-                            return (f != null || (((Holder) sourceFaction).is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) && neutral)) && !sourceFaction.equals(f) && (targetFaction.isEmpty() || (f != null && targetFaction.get().is(f)));
+                            Holder<? extends IFaction<?>> f = fp.getDisguise().getViewedFaction(sourceFaction, ignoreDisguise);
+                            return (f != null || (IFaction.is(sourceFaction, ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) && neutral)) && !sourceFaction.equals(f) && (targetFaction.isEmpty() || (f != null && IFaction.is(targetFaction.get(), f)));
                         }
                 ).orElse(neutral);
             }
@@ -93,7 +90,7 @@ public record FactionPredicate(Holder<? extends IFaction<?>> sourceFaction, bool
             return this;
         }
 
-        public Builder targetFaction(Holder<? extends IFaction<?>> targetFaction) {
+        public Builder targetFaction(@Nullable Holder<? extends IFaction<?>> targetFaction) {
             this.targetFaction = Optional.ofNullable(targetFaction);
             return this;
         }

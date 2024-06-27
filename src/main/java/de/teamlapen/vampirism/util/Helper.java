@@ -2,11 +2,9 @@ package de.teamlapen.vampirism.util;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTextures;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -19,13 +17,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
-import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
-import de.teamlapen.vampirism.entity.factions.Faction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.items.StakeItem;
-import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.world.fog.FogLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +48,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,11 +141,11 @@ public class Helper {
      * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
      */
     public static boolean isVampire(Entity entity) {
-        return IFaction.is(ModFactions.VAMPIRE, VampirismAPI.factionRegistry().getFactionHolder(entity));
+        return IFaction.is(ModFactions.VAMPIRE, VampirismAPI.factionRegistry().getFaction(entity));
     }
 
     public static boolean isHunter(Entity entity) {
-        return IFaction.is(ModFactions.HUNTER, VampirismAPI.factionRegistry().getFactionHolder(entity));
+        return IFaction.is(ModFactions.HUNTER, VampirismAPI.factionRegistry().getFaction(entity));
     }
 
     public static boolean isHunter(@NotNull Player entity) {
@@ -175,7 +169,7 @@ public class Helper {
     }
 
     public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
-        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFactionHolder(viewer))).orElse(null);
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFaction(viewer))).orElse(null);
     }
 
     /**
@@ -237,7 +231,7 @@ public class Helper {
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         if (requiredSkill == null) return true;
         //noinspection unchecked
-        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled((Holder<ISkill<?>>) (Object) requiredSkill)).orElse(false);
+        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled((Holder<ISkill<?>>) requiredSkill)).orElse(false);
     }
 
     /**

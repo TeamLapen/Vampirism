@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blockentity.diffuser;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -144,8 +145,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
-        //noinspection rawtypes,deprecation,unchecked
-        if (!player.isSpectator() && VampirismAPI.factionRegistry().getFactionHolder(player).is((Holder)faction)) {
+        if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFaction(player), faction)) {
             player.displayClientMessage(Component.translatable("text.vampirism.cannot_access_menu", displayName), true);
             player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
             return false;

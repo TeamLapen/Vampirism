@@ -10,43 +10,34 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public interface IFactionVillage {
-    /**
-     * @return A faction specific bad omen effect
-     */
-    @Nullable
-    MobEffect getBadOmenEffect();
 
+    /**
+     * @return The faction-specific bad omen effect
+     */
     @Nullable
     Holder<MobEffect> badOmenEffect();
 
-    @NotNull
-    ItemStack getBanner(HolderLookup.Provider provider);
+    ItemStack createBanner(HolderLookup.Provider provider);
 
     List<CaptureEntityEntry<?>> getCaptureEntries();
 
-    @NotNull
     VillagerProfession getFactionVillageProfession();
 
-    @NotNull
     Class<? extends Mob> getGuardSuperClass();
 
+    /**
+     * @return The entity type of the task master entity for this faction
+     */
     @Nullable
     EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 
-    @NotNull
+    /**
+     * @return The block that represents the fragile or crafted totem top block for this faction
+     */
     Block getTotemTopBlock(boolean crafted);
-
-    boolean isBanner(@NotNull ItemStack stack, HolderLookup.Provider provider);
-
-    @ApiStatus.Internal
-    default @NotNull IFactionVillage build() {
-        return this;
-    }
 }

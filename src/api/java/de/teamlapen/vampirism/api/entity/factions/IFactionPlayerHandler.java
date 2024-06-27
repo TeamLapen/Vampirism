@@ -22,8 +22,6 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      *
      * @return If the player can join the given faction
      */
-    boolean canJoin(IPlayableFaction<?> faction);
-
     boolean canJoin(Holder<? extends IPlayableFaction<?>> faction);
 
     /**
@@ -34,10 +32,6 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
     /**
      * @return The currently active faction. Can be null
      */
-    @Deprecated
-    @Nullable
-    <T extends IFactionPlayer<T>> IPlayableFaction<T> getCurrentFaction();
-
     @Nullable
     Holder<? extends IPlayableFaction<?>> getFaction();
 
@@ -61,8 +55,6 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      *
      * @return If the faction is active: The faction level, otherwise 0
      */
-    int getCurrentLevel(IPlayableFaction<?> f);
-
     int getCurrentLevel(Holder<? extends IPlayableFaction<?>> f);
 
     /**
@@ -89,11 +81,8 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
 
     /**
      * Join the given faction and set the faction level to 1.
-     * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
+     * Only successful if {@link IFactionPlayerHandler#canJoin(net.minecraft.core.Holder)}
      */
-    void joinFaction(@NotNull IPlayableFaction<?> faction);
-
-
     void joinFaction(@NotNull Holder<? extends IPlayableFaction<?>> faction);
 
     /**
@@ -115,14 +104,11 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
 
     /**
      * Set the level for a faction. Only works if the player already is in the given faction.
-     * Use {@link IFactionPlayerHandler#joinFaction(IPlayableFaction)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
+     * Use {@link IFactionPlayerHandler#joinFaction(net.minecraft.core.Holder)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
      *
      * @return If successful
      */
     boolean setFactionLevel(@NotNull Holder<? extends IPlayableFaction<?>> faction, int level);
-
-
-    boolean setFactionLevel(@NotNull IPlayableFaction<?> faction, int level);
 
     /**
      * Set the players lord level.

@@ -25,14 +25,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class RefinementItem extends Item implements IRefinementItem, ModDisplayItemGenerator.CreativeTabItemProvider {
@@ -49,7 +46,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
             case 1 -> AccessorySlotType.RING;
             default -> AccessorySlotType.AMULET;
         });
-        IRefinementItem i = faction.getRefinementItem(t);
+        IRefinementItem i = faction.getRandomRefinementItem(RANDOM, t);
         ItemStack stack = new ItemStack(i);
         if (i.applyRefinementSet(stack, s)) {
             return stack;

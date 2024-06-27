@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -202,7 +201,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
             return Helper.createEntity(type, p.getCommandSenderWorld()).map(m -> {
-                if (faction == null || faction.value().isEntityOfFaction(m)) {
+                if (faction == null || VampirismAPI.factionRegistry().isEntityOfFaction(m, faction)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.discard();
                     return null;
@@ -242,7 +241,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         //noinspection unchecked
-        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
+        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) s);
         if (faction.isEmpty()) {
             this.maxMinions = 0;
             return;

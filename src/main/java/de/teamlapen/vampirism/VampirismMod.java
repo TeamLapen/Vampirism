@@ -1,27 +1,17 @@
 package de.teamlapen.vampirism;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.core.tags.*;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SkillTreeReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
@@ -31,9 +21,6 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
-import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -43,14 +30,12 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import de.teamlapen.vampirism.items.VampireRefinementItem;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.misc.SettingsProvider;
 import de.teamlapen.vampirism.misc.VampirismLogger;
 import de.teamlapen.vampirism.mixin.accessor.ReloadableServerResourcesAccessor;
 import de.teamlapen.vampirism.mixin.accessor.TagManagerAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
-//import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -61,10 +46,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.BloodConversionRegistry;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -204,13 +186,6 @@ public class VampirismMod {
         VampirismConfig.register(this.modContainer);
     }
 
-    /**
-     * Finish API during InterModProcessEvent
-     */
-    private void finishAPI() {
-        ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-    }
-
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
         onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
@@ -224,68 +199,13 @@ public class VampirismMod {
      * Called during constructor to set up the API as well as VReference
      */
     private void prepareAPI() {
-
         VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry() : new VampirismEntityRegistry(), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API), new BloodConversionRegistry());
-
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry()
-                .createPlayableFaction(VReference.VAMPIRE_FACTION_ID, IVampirePlayer.class, () -> (AttachmentType<IVampirePlayer>)(Object) ModAttachments.VAMPIRE_PLAYER.get())
-                .color(Color.MAGENTA_DARK.getRGB())
-                .chatColor(ChatFormatting.DARK_PURPLE)
-                .name("text.vampirism.vampire")
-                .namePlural("text.vampirism.vampires")
-                .hostileTowardsNeutral()
-                .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).lordTitle(new LordTitles.VampireTitles()).enableLordSkills()
-                .minion(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new)
-                .commandBuilder(ModEntities.VAMPIRE_MINION::get)
-                .with("name", "Vampire", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
-                .with("texture", -1, IntegerArgumentType.integer(-1, IBasicVampire.TYPES), VampireMinionEntity.VampireMinionData::setType, IntegerArgumentType::getInteger)
-                .with("use_lord_skin", false,  BoolArgumentType.bool(), VampireMinionEntity.VampireMinionData::setUseLordSkin, BoolArgumentType::getBool)
-                .build().build()
-                .build()
-                .village(VampireVillage::vampireVillage)
-                .refinementItems(VampireRefinementItem::getItemForType)
-                .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
-                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE)
-                .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
-                .addTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
-                .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
-                .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
-                .register();
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry()
-                .createPlayableFaction(VReference.HUNTER_FACTION_ID, IHunterPlayer.class, () -> (AttachmentType<IHunterPlayer>)(Object) ModAttachments.HUNTER_PLAYER.get())
-                .color(Color.BLUE.getRGB())
-                .chatColor(ChatFormatting.BLUE)
-                .name("text.vampirism.hunter")
-                .namePlural("text.vampirism.hunters")
-                .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-                .lord().lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).lordTitle(new LordTitles.HunterTitles()).enableLordSkills()
-                .minion(HunterMinionEntity.HunterMinionData.ID, HunterMinionEntity.HunterMinionData::new)
-                .commandBuilder(ModEntities.HUNTER_MINION::get)
-                .with("name", "Hunter", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
-                .with("texture", -1, IntegerArgumentType.integer(-1, IBasicHunter.TYPES), HunterMinionEntity.HunterMinionData::setType, IntegerArgumentType::getInteger)
-                .with("hat", 0, IntegerArgumentType.integer(-1, 3), HunterMinionEntity.HunterMinionData::setHat, IntegerArgumentType::getInteger)
-                .with("use_lord_skin", false,  BoolArgumentType.bool(), HunterMinionEntity.HunterMinionData::setUseLordSkin, BoolArgumentType::getBool)
-                .build()
-                .build()
-                .build()
-                .village(HunterVillage::hunterVillage)
-                .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
-                .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
-                .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
-                .addTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
-                .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
-                .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
-                .register();
-
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("night_vision"), new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("blood_vision"), new BloodVision());
-
         VampirismAPI.onSetupComplete();
     }
 
     private void processIMC(final @NotNull InterModProcessEvent event) {
-        finishAPI();
         onInitStep(IInitListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
         CrossbowArrowHandler.collectCrossbowArrows();

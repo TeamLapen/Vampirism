@@ -23,7 +23,7 @@ public class GiveBannerCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int giveBannerItem(@NotNull Holder<IFaction<?>> faction, @NotNull ServerPlayer player) {
-        player.addItem(faction.value().getVillageData().getBanner(player.registryAccess()));
+        player.addItem(faction.value().getVillageData().createBanner(player.registryAccess()));
         return 0;
     }
 }

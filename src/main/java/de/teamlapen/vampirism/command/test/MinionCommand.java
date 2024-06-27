@@ -8,12 +8,11 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.factions.IMinionBuilder;
+import de.teamlapen.vampirism.api.entity.factions.IMinionEntryBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
@@ -24,13 +23,17 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -59,36 +62,40 @@ public class MinionCommand extends BasicCommand {
     @SuppressWarnings("unchecked")
     public static ArgumentBuilder<CommandSourceStack, ?> registerNew() {
         LiteralArgumentBuilder<CommandSourceStack> spawnNew = Commands.literal("spawnNew");
-        Collection<IFactionRegistry.IMinionEntry<?,?>> minions = VampirismAPI.factionRegistry().getMinions();
-        for (IFactionRegistry.IMinionEntry<?,?> minion : minions) {
-            if (minion.type() == null){
-                continue;
-            }
-            //noinspection RedundantCast
-            Holder<? extends IPlayableFaction<?>> faction = (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.getHolder(minion.id()).orElseThrow();
-            ArgumentBuilder<CommandSourceStack, ?> currentCommand = null;
-            List<? extends IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?>> iCommandEntries = minion.commandArguments();
-            for (int i = iCommandEntries.size() - 1; i >= 0; i--) {
-                IMinionBuilder.IMinionCommandBuilder.ICommandEntry<?, ?> iCommandEntry = iCommandEntries.get(i);
-                int finalI = i;
-                var builder  = Commands.argument(iCommandEntry.name(), iCommandEntry.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.data(), minion.type(),  (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(0, finalI+1), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries.subList(finalI+1, iCommandEntries.size())));
-                if (currentCommand != null) {
-                    builder.then(currentCommand);
+        @Unmodifiable Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> minionEntries = VampirismAPI.factionRegistry().getFactionMinionEntries();
+        for (Map.Entry<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> factionEntry : minionEntries.entrySet()) {
+
+            List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>> minions = factionEntry.getValue();
+            for (Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>> minion : minions) {
+                if (minion.getValue().type() == null) {
+                    continue;
                 }
-                currentCommand = builder;
+
+                Holder<? extends IPlayableFaction<?>> faction = factionEntry.getKey();
+                ArgumentBuilder<CommandSourceStack, ?> currentCommand = null;
+                List<? extends IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<?, ?>> iCommandEntries = minion.getValue().commandArguments();
+                for (int i = iCommandEntries.size() - 1; i >= 0; i--) {
+                    IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<?, ?> iCommandEntry = iCommandEntries.get(i);
+                    int finalI = i;
+                    var builder = Commands.argument(iCommandEntry.name(), iCommandEntry.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.getValue().data(), minion.getValue().type(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<MinionData, ?>>) iCommandEntries.subList(0, finalI + 1), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<MinionData, ?>>) iCommandEntries.subList(finalI + 1, iCommandEntries.size())));
+                    if (currentCommand != null) {
+                        builder.then(currentCommand);
+                    }
+                    currentCommand = builder;
+                }
+                spawnNew.then(Commands.literal(minion.getKey().location().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.getValue().data(), minion.getValue().type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<MinionData, ?>>) iCommandEntries)).then(currentCommand));
             }
-            spawnNew.then(Commands.literal(minion.faction().getID().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>)minion.data(), minion.type(),List.of(), (Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<MinionData,?>>) iCommandEntries)).then(currentCommand));
         }
         return spawnNew;
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
+    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
         T t = data.get();
-        for (IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : contextProvider) {
+        for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : contextProvider) {
             ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
         }
-        for (IMinionBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : defaultProvider) {
+        for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : defaultProvider) {
             ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.defaultValue());
         }
         t.setHealth(t.getMaxHealth());

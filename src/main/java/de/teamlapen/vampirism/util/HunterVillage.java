@@ -3,10 +3,8 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModVillage;
+import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.factions.FactionVillageBuilder;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
@@ -37,11 +35,12 @@ public class HunterVillage {
                 .add(bannerPattern.getOrThrow(BannerPatterns.CURLY_BORDER), DyeColor.BLACK)
                 .add(bannerPattern.getOrThrow(BannerPatterns.STRAIGHT_CROSS), DyeColor.WHITE);
         itemStack.set(DataComponents.BANNER_PATTERNS, builder.build());
+        itemStack.set(ModDataComponents.IS_FACTION_BANNER, Unit.INSTANCE);
         return itemStack;
     }
 
-    public static void hunterVillage(@NotNull IFactionVillageBuilder builder) {
-        builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
+    public static IFactionVillageBuilder hunterVillage() {
+        return  new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
                 .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10)))
                 .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
                 .guardSuperClass(HunterBaseEntity.class)

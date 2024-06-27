@@ -7,8 +7,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-
 public interface IFactionBuilder<T extends IFactionEntity> {
 
     /**
@@ -40,12 +38,6 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      */
     IFactionBuilder<T> chatColor(ChatFormatting color);
 
-    /**
-     * Sets this faction as hostile to neutral entities
-     *
-     * @return the builder
-     */
-    IFactionBuilder<T> hostileTowardsNeutral();
 
     /**
      * Adds faction village compatibility
@@ -53,7 +45,7 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @param villageBuilder village builder
      * @return the builder
      */
-    IFactionBuilder<T> village(@NotNull Consumer<IFactionVillageBuilder> villageBuilder);
+    IFactionBuilder<T> village(@NotNull IFactionVillage villageBuilder);
 
     /**
      * Sets the singular name for a entity of this faction
@@ -85,5 +77,5 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      *
      * @return the final faction
      */
-    IFaction<T> register();
+    IFaction<T> build();
 }

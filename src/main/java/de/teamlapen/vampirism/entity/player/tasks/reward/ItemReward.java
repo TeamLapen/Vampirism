@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.core.ModTasks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ItemReward implements TaskReward {
     }
 
     @Override
-    public ITaskRewardInstance createInstance(@Nullable IFactionPlayer<?> player) {
+    public ITaskRewardInstance createInstance(@NotNull IFactionPlayer<?> player) {
         return new Instance(this.reward);
     }
 

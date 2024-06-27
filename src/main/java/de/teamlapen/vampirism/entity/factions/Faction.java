@@ -7,28 +7,19 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Represents an entity faction (e.g. Vampires)
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
-    private static int nextId = 0;
-    protected final ResourceLocation id;
-    private final Class<T> entityInterface;
     private final int color;
-    private final boolean hostileTowardsNeutral;
-    /**
-     * ID used for hashing
-     */
-    private final int integerId;
     @NotNull
     private final IFactionVillage villageFactionData;
     @NotNull
@@ -39,25 +30,15 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final TextColor chatColor;
     private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
 
-    Faction(FactionRegistry.@NotNull FactionBuilder<T> builder) {
-        this.id = builder.id;
-        this.entityInterface = builder.entityInterface;
+    Faction(FactionBuilder<T> builder) {
         this.color = builder.color;
-        this.hostileTowardsNeutral = builder.hostileTowardsNeutral;
-        this.villageFactionData = builder.villageFactionData.build();
+        this.villageFactionData = builder.villageFactionData;
         this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
-        this.name = builder.name == null ? Component.literal(id.toString()) : Component.translatable(builder.name);
-        this.namePlural = builder.namePlural == null ? this.name : Component.translatable(builder.namePlural);
+        this.name = Component.translatable(Objects.requireNonNull(builder.name));
+        this.namePlural = Component.translatable(Objects.requireNonNull(builder.namePlural));
         this.factionTags = Collections.unmodifiableMap(builder.factionTags);
-        integerId = nextId++;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Faction) && this.id == (((Faction<?>) obj).id);
-    }
-
-    @NotNull
     @Override
     public TextColor getChatColor() {
         return this.chatColor;
@@ -69,59 +50,23 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public Class<T> getFactionEntityInterface() {
-        return entityInterface;
-    }
-
-    @Override
-    public ResourceLocation getID() {
-        return id;
-    }
-
-    @NotNull
-    @Override
     public Component getName() {
         return name;
     }
 
-    @NotNull
     @Override
     public Component getNamePlural() {
         return namePlural;
     }
 
-    @NotNull
     @Override
     public IFactionVillage getVillageData() {
         return villageFactionData;
     }
 
     @Override
-    public int hashCode() {
-        return integerId;
-    }
-
-    @Override
-    public boolean isEntityOfFaction(PathfinderMob creature) {
-        return entityInterface.isInstance(creature);
-    }
-
-    @Override
-    public boolean isHostileTowardsNeutral() {
-        return hostileTowardsNeutral;
-    }
-
-    @Override
     public <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey) {
         //noinspection unchecked
         return (Optional<TagKey<Z>>) (Object) Optional.ofNullable(factionTags.get(registryKey));
-    }
-
-    @Override
-    public String toString() {
-        return "Faction{" +
-                "id='" + integerId + '\'' +
-                ", hash=" + integerId +
-                '}';
     }
 }

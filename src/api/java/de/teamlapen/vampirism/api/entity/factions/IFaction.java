@@ -1,17 +1,11 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.PathfinderMob;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -32,20 +26,12 @@ public interface IFaction<T extends IFactionEntity> {
     int getColor();
 
     /**
-     * @return The interface all entities of this faction implement (or for players the IExtendedEntityProperty) implements
+     * @return The name of the faction
      */
-    Class<T> getFactionEntityInterface();
-
-
-    /**
-     * @return Unique key of this faction
-     */
-    ResourceLocation getID();
-
     Component getName();
 
     /**
-     * Preferably a TextComponentTranslation
+     * @return The plural name of the faction
      */
     Component getNamePlural();
 
@@ -54,18 +40,11 @@ public interface IFaction<T extends IFactionEntity> {
      *
      * @return the village data class
      */
-    @NotNull
     IFactionVillage getVillageData();
 
-    boolean isEntityOfFaction(PathfinderMob creature);
-
     /**
-     * @return Whether entities of this faction are hostile towards neutral entities
-     * @deprecated use HostileTowardsNeutral tag instead
+     * @return a tag key for the given registry associated with this faction if any is registered
      */
-    @Deprecated
-    boolean isHostileTowardsNeutral();
-
     <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey);
 
     @SuppressWarnings({"deprecation", "unchecked", "rawtypes"})

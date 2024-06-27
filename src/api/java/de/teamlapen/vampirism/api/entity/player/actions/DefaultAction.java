@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
@@ -36,10 +37,10 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
         if (!isEnabled()) {
             return IAction.PERM.DISABLED;
         }
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
+        if (IFaction.is(player.getFaction(), this.factions())) {
             return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player is not allowed to use action");
         }
 
     }
@@ -60,10 +61,10 @@ public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAct
 
     @Override
     public boolean onActivated(@NotNull T player, ActivationContext context) {
-        if (this.getFaction().map(f -> f.getFactionPlayerInterface().isInstance(player)).orElse(true)) {
+        if (IFaction.is(player.getFaction(), this.factions())) {
             return activate(player, context);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().get().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player is not allowed to use action");
         }
     }
 

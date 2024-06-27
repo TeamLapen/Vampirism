@@ -4,26 +4,30 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public interface IMinionBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {
+public interface IMinionEntryBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {
 
-    IMinionCommandBuilder<T,Z> commandBuilder(@NotNull Supplier<EntityType<? extends IMinionEntity>> type);
+    IMinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T,Z> builder);
 
-    ILordPlayerBuilder<T> build();
+    IMinionEntry<T, Z> build();
 
     interface IMinionCommandBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {
 
         <L> IMinionCommandBuilder<T,Z> with(@NotNull String name, L defaultValue, @NotNull ArgumentType<L> type, BiConsumer<Z,L> setter, BiFunction<CommandContext<CommandSourceStack>, String, L> getter);
 
-        IMinionBuilder<T,Z> build();
+        Supplier<EntityType<? extends IMinionEntity>> type();
+
+        List<ICommandEntry<Z,?>> commandArguments();
 
         interface ICommandEntry<Z extends IMinionData,T> {
 

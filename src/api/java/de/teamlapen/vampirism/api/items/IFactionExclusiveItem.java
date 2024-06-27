@@ -31,7 +31,7 @@ public interface IFactionExclusiveItem extends ItemLike {
 
         if (faction != null) {
             if (player != null) {
-                color = IFaction.is(VampirismAPI.factionRegistry().getFactionHolder(player), faction) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+                color = IFaction.is(VampirismAPI.factionRegistry().getFaction(player), faction) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
             }
             tooltip.add(Component.literal(" ").append(faction.value().getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
         }

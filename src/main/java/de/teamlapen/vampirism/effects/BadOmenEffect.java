@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.effects;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.Holder;
@@ -36,7 +37,7 @@ public class BadOmenEffect extends MobEffect {
     public static void handlePotentialBannerKill(@Nullable Entity offender, @NotNull IFactionEntity victim) {
         if (offender instanceof Player player) {
             Holder<? extends IFaction<?>> faction = victim.getFaction();
-            if (faction.value().getVillageData().isBanner(victim.asEntity().getItemBySlot(EquipmentSlot.HEAD), offender.registryAccess())) {
+            if (victim.asEntity().getItemBySlot(EquipmentSlot.HEAD).has(ModDataComponents.IS_FACTION_BANNER)) {
                 Holder<? extends IPlayableFaction<?>> playerFaction = VampirismPlayerAttributes.get(player).faction;
                 if (playerFaction != null && playerFaction != faction) {
                     Holder<MobEffect> badOmen = faction.value().getVillageData().badOmenEffect();

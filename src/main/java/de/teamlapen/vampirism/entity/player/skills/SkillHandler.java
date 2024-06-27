@@ -35,7 +35,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -298,23 +297,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-        if (nbt.contains("refinement_set")) {
-            CompoundTag setsNBT = nbt.getCompound("refinement_set");
-            for (String id : setsNBT.getAllKeys()) {
-                int i = Integer.parseInt(id);
-                CompoundTag setNBT = setsNBT.getCompound(id);
-                String setName = setNBT.getString("id");
-                int damage = setNBT.getInt("damage");
-                if ("none".equals(setName)) continue;
-                ResourceLocation setId = ResourceLocation.parse(setName);
-                IRefinementSet set = RegUtil.getRefinementSet(setId);
-                Item refinementItem = this.faction.value().getRefinementItem(IRefinementItem.AccessorySlotType.values()[i]);
-                ItemStack itemStack = new ItemStack(refinementItem);
-                itemStack.setDamageValue(damage);
-                ((IRefinementItem) refinementItem).applyRefinementSet(itemStack, set);
-                this.applyRefinementItem(itemStack, i);
-            }
-        }
         if (nbt.contains("refinement_items")) {
             ListTag refinements = nbt.getList("refinement_items", 10);
             for (int i = 0; i < refinements.size(); i++) {

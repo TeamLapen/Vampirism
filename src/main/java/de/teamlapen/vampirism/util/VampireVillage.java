@@ -2,11 +2,8 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
-import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModVillage;
+import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.factions.FactionVillageBuilder;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
@@ -38,11 +35,12 @@ public class VampireVillage {
                 .add(bannerPattern.getOrThrow(BannerPatterns.STRAIGHT_CROSS), DyeColor.RED)
                 .add(bannerPattern.getOrThrow(BannerPatterns.CIRCLE_MIDDLE), DyeColor.PURPLE);
         itemStack.set(DataComponents.BANNER_PATTERNS, builder.build());
+        itemStack.set(ModDataComponents.IS_FACTION_BANNER, Unit.INSTANCE);
         return itemStack;
     }
 
-    public static void vampireVillage(@NotNull IFactionVillageBuilder builder) {
-        builder.badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
+    public static FactionVillageBuilder vampireVillage() {
+        return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
                 .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.VAMPIRE, 10), new CaptureEntityEntry<>(ModEntities.ADVANCED_VAMPIRE, 2)))
                 .factionVillagerProfession(ModVillage.VAMPIRE_EXPERT)
                 .guardSuperClass(VampireBaseEntity.class)

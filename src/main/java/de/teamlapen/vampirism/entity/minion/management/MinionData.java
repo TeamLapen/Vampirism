@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.HolderLookup;
@@ -38,7 +38,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     @Nullable
     public static <T extends MinionData> T fromNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         ResourceLocation dataType = ResourceLocation.parse(nbt.getString("data_type"));
-        return Optional.ofNullable(VampirismAPI.factionRegistry().getMinion(dataType)).map(IFactionRegistry.IMinionEntry::data).map(Supplier::get).map(s-> {
+        return Optional.ofNullable(ModRegistries.MINIONS.get(dataType)).map(IMinionEntry::data).map(Supplier::get).map(s-> {
             try {
                 @SuppressWarnings("unchecked")
                 T t = (T)s;

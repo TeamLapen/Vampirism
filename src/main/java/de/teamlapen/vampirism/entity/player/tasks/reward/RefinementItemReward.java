@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.player.tasks.reward;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -26,7 +25,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,8 +45,6 @@ public class RefinementItemReward extends ItemReward {
             return new RefinementItemReward((IRefinementItem) reward.orElse(null), faction.orElse(null), rarity.orElse(null));
         });
     });
-
-    private static final RandomSource RANDOM = RandomSource.create();
 
     @NotNull
     private final Supplier<@Nullable IRefinementItem> item;
@@ -75,8 +75,8 @@ public class RefinementItemReward extends ItemReward {
     }
 
     @Override
-    public @NotNull ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
-        return new Instance(createItem());
+    public @NotNull ITaskRewardInstance createInstance(@NotNull IFactionPlayer<?> player) {
+        return new Instance(createItem(player.asEntity().getRandom()));
     }
 
     @Override
@@ -84,20 +84,20 @@ public class RefinementItemReward extends ItemReward {
         return !this.reward.isEmpty() ? Collections.singletonList(new ItemStack(this.reward.getItem())) : getAllRefinementItems();
     }
 
-    protected <Z extends Item & IRefinementItem> @NotNull ItemStack createItem() {
+    protected <Z extends Item & IRefinementItem> @NotNull ItemStack createItem(RandomSource random) {
         Holder<? extends IPlayableFaction<?>> faction = this.faction;
         IRefinementItem baseItem = this.item.get();
         if (faction == null) {
             if (baseItem != null) {
                 faction = baseItem.getExclusiveFaction(baseItem.asItem().getDefaultInstance());
             } else {
-                faction = getRandomFactionWithAccessories();
+                faction = getRandomFactionWithAccessories(random);
             }
             if (faction == null) return ItemStack.EMPTY;
         }
         Holder<? extends IPlayableFaction<?>> finalFaction = faction;
 
-        Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRefinementItem(IRefinementItem.AccessorySlotType.values()[RANDOM.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+        Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> IFaction.is(set.getFaction(), finalFaction))
@@ -106,22 +106,22 @@ public class RefinementItemReward extends ItemReward {
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
-            WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).ifPresent(set -> item.applyRefinementSet(stack, set));
+            WeightedRandom.getRandomItem(random, sets).map(WeightedEntry.Wrapper::data).ifPresent(set -> item.applyRefinementSet(stack, set));
         }
         return stack;
     }
 
     private @NotNull List<ItemStack> getAllRefinementItems() {
         Stream<IPlayableFaction<?>> stream = this.faction != null ? Stream.of(this.faction.value()) : ModRegistries.FACTIONS.stream().filter(IPlayableFaction.class::isInstance).map(s -> (IPlayableFaction<?>)s);
-        return stream.filter(IPlayableFaction::hasRefinements).flatMap(function -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).map(function::getRefinementItem)).map(a -> new ItemStack((Item) a)).collect(Collectors.toList());
+        return stream.filter(IPlayableFaction::hasRefinements).flatMap(faction -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).flatMap(type -> faction.getRefinementItems(type).stream())).map(ItemStack::new).collect(Collectors.toList());
     }
 
     @Nullable
-    private static Holder<? extends IPlayableFaction<?>> getRandomFactionWithAccessories() {
+    private static Holder<? extends IPlayableFaction<?>> getRandomFactionWithAccessories(RandomSource random) {
         //noinspection unchecked,RedundantCast
         List<Holder<? extends IPlayableFaction<?>>> factions = ModRegistries.FACTIONS.holders().filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> ((Holder<? extends IPlayableFaction<?>>) (Object) s)).filter(s -> s.value().hasRefinements()).collect(Collectors.toUnmodifiableList());
         if (factions.isEmpty()) return null;
-        return factions.get(RANDOM.nextInt(factions.size()) - 1);
+        return factions.get(random.nextInt(factions.size()) - 1);
     }
 
     @Override

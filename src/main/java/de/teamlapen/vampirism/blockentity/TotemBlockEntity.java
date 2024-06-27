@@ -432,7 +432,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             boolean attacker = faction == this.capturingFaction;
             List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, getVillageArea());
             for (LivingEntity entity : entities) {
-                Holder<? extends IFaction<?>> f = VampirismAPI.factionRegistry().getFactionHolder(entity);
+                Holder<? extends IFaction<?>> f = VampirismAPI.factionRegistry().getFaction(entity);
                 if (f == null) continue;
                 if (entity instanceof ICaptureIgnore) {
                     continue;
@@ -620,7 +620,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         //count entities
         CaptureInfo captureInfo = new CaptureInfo(this);
         for (LivingEntity entity : entities) {
-            Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFactionHolder(entity);
+            Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFaction(entity);
             if (faction == null) continue;
             if (entity instanceof ICaptureIgnore) continue;
             if (!entity.isAlive()) continue;
@@ -840,7 +840,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private void applyVictoryBonus(boolean attackWin) {
         for (Player player : level.players()) {
             if (!player.isSpectator() && this.getVillageArea().contains(player.position())) {
-                if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFactionHolder(player), (attackWin ? this.capturingFaction : this.controllingFaction))) {
+                if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFaction(player), (attackWin ? this.capturingFaction : this.controllingFaction))) {
                     if (!attackWin) {
                         player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel - 1, 0), false, false, true));
                     }
