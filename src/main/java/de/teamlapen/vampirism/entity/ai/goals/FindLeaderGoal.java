@@ -20,7 +20,7 @@ public class FindLeaderGoal<T extends Mob & IEntityFollower, Z extends LivingEnt
 
     public FindLeaderGoal(T entity, Predicate<Z> leaderPredicate) {
         this.entity = entity;
-        this.targetConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().range(this.getFollowDistance()).selector((Predicate<LivingEntity>)(Object) leaderPredicate);
+        this.targetConditions = TargetingConditions.forNonCombat().ignoreLineOfSight().range(this.getFollowDistance()).selector((Predicate<LivingEntity>) (Object) leaderPredicate);
     }
 
     protected double getFollowDistance() {

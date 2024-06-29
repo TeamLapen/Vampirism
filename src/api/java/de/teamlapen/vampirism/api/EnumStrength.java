@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * Can be used to determine which strength/tier something is of. e.g. used for holy water and garlic
  */
 public enum EnumStrength implements StringRepresentable {
-    NONE("none",0),
+    NONE("none", 0),
     WEAK("weak", 1),
     MEDIUM("medium", 2),
     STRONG("strong", 3);

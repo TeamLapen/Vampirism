@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(AreaEffectCloud.class)
 public abstract class AreaEffectCloudMixin extends Entity {
 
-    @Shadow private PotionContents potionContents;
+    @Shadow
+    private PotionContents potionContents;
 
     @Deprecated
     private AreaEffectCloudMixin(EntityType<?> pEntityType, Level pLevel) {

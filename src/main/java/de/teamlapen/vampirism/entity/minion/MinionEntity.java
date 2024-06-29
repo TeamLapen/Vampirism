@@ -198,7 +198,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      */
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         DamageSource damagesource = LevelDamage.get(this.level()).minion(this);
         if (this.level() instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), pEntity, damagesource, f);

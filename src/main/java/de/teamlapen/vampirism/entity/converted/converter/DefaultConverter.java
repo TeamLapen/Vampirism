@@ -16,7 +16,7 @@ import java.util.Optional;
 public class DefaultConverter implements Converter {
 
     public static final MapCodec<DefaultConverter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ConverterEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf( "attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
+            ConverterEntry.ConvertingAttributeModifier.CODEC.optionalFieldOf("attribute_helper", ConverterEntry.ConvertingAttributeModifier.DEFAULT).forGetter(i -> i.helper)
     ).apply(instance, DefaultConverter::new));
 
     protected final ConverterEntry.ConvertingAttributeModifier helper;

@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.recipes;
 
-import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 public record AlchemicalCauldronRecipeInput(ItemStack ingredient, ItemStack fluid, Optional<ISkillHandler<?>> skills, ITestableRecipeInput.TestType testType) implements RecipeInput, ITestableRecipeInput {
@@ -15,7 +13,7 @@ public record AlchemicalCauldronRecipeInput(ItemStack ingredient, ItemStack flui
         this(fluid, ingredient, skills, ITestableRecipeInput.TestType.BOTH);
     }
 
-    public AlchemicalCauldronRecipeInput(ItemStack fluid, ItemStack ingredient,  ITestableRecipeInput.TestType testType) {
+    public AlchemicalCauldronRecipeInput(ItemStack fluid, ItemStack ingredient, ITestableRecipeInput.TestType testType) {
         this(fluid, ingredient, Optional.empty(), testType);
     }
 

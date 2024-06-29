@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blockentity.diffuser;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.datamaps.IFogDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModFactions;
@@ -12,17 +11,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
@@ -54,7 +48,7 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     public boolean canOpen(@NotNull Player pPlayer) {
-        return tryAccess(pPlayer, ModFactions.VAMPIRE, getName())  && super.canOpen(pPlayer);
+        return tryAccess(pPlayer, ModFactions.VAMPIRE, getName()) && super.canOpen(pPlayer);
     }
 
     protected int getRange() {

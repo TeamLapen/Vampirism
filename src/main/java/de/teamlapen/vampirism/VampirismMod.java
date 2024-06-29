@@ -112,7 +112,7 @@ public class VampirismMod {
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
         NeoForge.EVENT_BUS.addListener(this::onDataPackSyncEvent);
 
-        ShapedRecipePattern.setCraftingSize(4,4);
+        ShapedRecipePattern.setCraftingSize(4, 4);
 
         prepareAPI();
         this.registryManager.setupRegistries();

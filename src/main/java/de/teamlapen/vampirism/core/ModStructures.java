@@ -119,7 +119,7 @@ public class ModStructures {
 
         Holder<StructureTemplatePool> empty = holderGetter.getOrThrow(Pools.EMPTY);
 
-        context.register(HUNTER_TRAINER, new StructureTemplatePool(empty , Lists.newArrayList(Pair.of(singleJigsawPieceFunction(processorList, "village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
+        context.register(HUNTER_TRAINER, new StructureTemplatePool(empty, Lists.newArrayList(Pair.of(singleJigsawPieceFunction(processorList, "village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
         CryptStructurePieces.bootstrap(context);
         HunterOutpostPools.bootstrap(context);
     }

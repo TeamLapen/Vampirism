@@ -20,7 +20,6 @@ import java.util.function.Supplier;
  * Builder for faction village related attributes.
  * <br>
  * used for {@link IFactionBuilder}
- *
  */
 public interface IFactionVillageBuilder {
 

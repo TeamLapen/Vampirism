@@ -127,12 +127,12 @@ public class PagePotionTableMix extends Page {
         input = PotionContents.createItemStack(Items.POTION, recipe.input);
         output = PotionContents.createItemStack(Items.POTION, recipe.output);
         ingredients1 = Arrays.stream(recipe.reagent1.get().getItems()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent1Count)).toArray(ItemStack[]::new);
-        ingredients2 =  Arrays.stream(recipe.reagent2.get().getItems()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
+        ingredients2 = Arrays.stream(recipe.reagent2.get().getItems()).map(ItemStack::copy).peek(stack -> stack.setCount(recipe.reagent2Count)).toArray(ItemStack[]::new);
         if (ingredients1.length == 0) {
-            ingredients1 = new ItemStack[]{ItemStack.EMPTY};
+            ingredients1 = new ItemStack[] {ItemStack.EMPTY};
         }
         if (ingredients2.length == 0) {
-            ingredients2 = new ItemStack[]{ItemStack.EMPTY};
+            ingredients2 = new ItemStack[] {ItemStack.EMPTY};
         }
     }
 

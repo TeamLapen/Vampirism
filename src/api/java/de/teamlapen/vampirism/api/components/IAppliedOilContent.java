@@ -7,7 +7,6 @@ import net.minecraft.core.Holder;
  * Interface for item components. An item with this component may have an oil applied to it.
  * <p>
  * For storing {@link de.teamlapen.vampirism.api.items.oil.IOil} in an item (use as an oil bottle) use {@link IOilContent}
- *
  */
 public interface IAppliedOilContent {
 

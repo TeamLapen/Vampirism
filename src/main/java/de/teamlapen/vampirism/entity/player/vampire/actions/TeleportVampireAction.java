@@ -76,8 +76,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playSound(null, ox,oy,oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
-        player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(),ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.getCommandSenderWorld().playSound(null, ox, oy, oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
         return true;
     }
 

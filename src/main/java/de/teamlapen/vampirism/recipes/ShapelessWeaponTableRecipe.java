@@ -5,12 +5,10 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.FactionCodec;
 import de.teamlapen.vampirism.util.StreamCodecExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +17,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -136,7 +133,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
 
         public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
             return inst.group(
-                    Codec.STRING.optionalFieldOf( "group", "").forGetter(p_301127_ -> p_301127_.group),
+                    Codec.STRING.optionalFieldOf("group", "").forGetter(p_301127_ -> p_301127_.group),
                     CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
                     Ingredient.CODEC_NONEMPTY
                             .listOf()
@@ -157,9 +154,9 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
                             )
                             .forGetter(p_300975_ -> p_300975_.recipeItems),
                     ItemStack.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
-                    Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.requiredLevel),
-                    Codec.INT.optionalFieldOf( "lava", 0).forGetter(p -> p.requiredLava),
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+                    Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
+                    Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
+                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
             ).apply(inst, ShapelessWeaponTableRecipe::new);
         });
 

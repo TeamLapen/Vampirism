@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.items;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;

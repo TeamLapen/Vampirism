@@ -49,18 +49,18 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
         if (this.menu.isLit()) {
             int l = Mth.ceil(this.menu.getLitProgress() * 13) + 1;
-            graphics.blitSprite(LIT_PROGRESS_SPRITE, 14, 14, 0, 14-l, i + 56, j + 36 + 14 - l, 14, l);
+            graphics.blitSprite(LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, i + 56, j + 36 + 14 - l, 14, l);
         }
 
         int j1 = Mth.ceil(this.menu.getBurnProgress() * 24.0F);
         graphics.blitSprite(BURN_PROGRESS_SPRITE, 24, 16, 0, 0, i + 79, j + 35, j1, 16);
         int l = Mth.ceil(menu.getBurnProgress() * 29F);
-        graphics.blitSprite(BUBBLES_PROGRESS_SPRITE, 12,29,0, 29-l, i + 142, j + 28 + 30 - l, 12, l);
+        graphics.blitSprite(BUBBLES_PROGRESS_SPRITE, 12, 29, 0, 29 - l, i + 142, j + 28 + 30 - l, 12, l);
 
         this.menu.checkRecipeNoSkills().ifPresent(holder -> {
             boolean allSkills = HunterPlayer.get(this.minecraft.player).getSkillHandler().areSkillsEnabled(holder.value().getRequiredSkills());
             if (!allSkills) {
-                graphics.blitSprite(ERROR_SPRITE, i + 77, j + 32,28,21);
+                graphics.blitSprite(ERROR_SPRITE, i + 77, j + 32, 28, 21);
             }
         });
     }
@@ -75,7 +75,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
                 List<Holder<ISkill<?>>> missingSkills = holder.value().getRequiredSkills().stream().filter(s -> !HunterPlayer.get(this.minecraft.player).getSkillHandler().isSkillEnabled(s)).toList();
                 if (!missingSkills.isEmpty()) {
                     List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.alchemical_cauldron.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("p- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
-                    setTooltipForNextRenderPass(new MultilineTooltip(components),new BelowOrAboveWidgetTooltipPositioner(new ScreenRectangle(i +77, j +32, 28, 21)), false);
+                    setTooltipForNextRenderPass(new MultilineTooltip(components), new BelowOrAboveWidgetTooltipPositioner(new ScreenRectangle(i + 77, j + 32, 28, 21)), false);
                 }
             });
         }

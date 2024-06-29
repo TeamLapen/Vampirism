@@ -1284,7 +1284,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             blockEntity.closestVampireForest = CompletableFuture.supplyAsync(Util.wrapThreadWithTaskName("Find vampire forest", () -> {
                 Stopwatch stopwatch = Stopwatch.createStarted(Util.TICKER);
                 com.mojang.datafixers.util.Pair<BlockPos, Holder<Biome>> location = level.findClosestBiome3d(b -> b.is(biomeId), center, 5000, 8, 16);
-                LOGGER.debug("Looking for vampire forest took {}s", (double)stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) / 1000.0D);
+                LOGGER.debug("Looking for vampire forest took {}s", (double) stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) / 1000.0D);
                 return location == null ? null : location.getFirst();
             }), Util.backgroundExecutor()).handle((result, exception) -> result);
         }

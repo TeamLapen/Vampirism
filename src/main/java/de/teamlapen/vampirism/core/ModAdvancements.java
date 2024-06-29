@@ -30,7 +30,7 @@ public class ModAdvancements {
     public static void revoke(PlayerTrigger trigger, ServerPlayer player) {
         PlayerAdvancements advancements = player.getAdvancements();
         ((PlayerAdvancementsAccessor) advancements).getAdvancements().entrySet().stream().filter(entry -> !entry.getValue().isDone()).forEach(advancementProgressEntry -> {
-            if(advancementProgressEntry.getKey().value().criteria().values().stream().anyMatch(pair -> pair.trigger().equals(trigger))) {
+            if (advancementProgressEntry.getKey().value().criteria().values().stream().anyMatch(pair -> pair.trigger().equals(trigger))) {
                 advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
             }
         });

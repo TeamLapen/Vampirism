@@ -89,6 +89,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     public boolean isValidBonemealTarget(@NotNull LevelReader level, @NotNull BlockPos pPos, @NotNull BlockState pState) {
         return true;
     }
+
     @Override
     public boolean isBonemealSuccess(@NotNull Level level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
         return true;
@@ -148,7 +149,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         Item heldItem = stack.getItem();
-        if (heldItem instanceof HolyWaterBottleItem&& !(heldItem instanceof HolyWaterSplashBottleItem)) {
+        if (heldItem instanceof HolyWaterBottleItem && !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
                 stack.setCount(stack.getCount() - 1);

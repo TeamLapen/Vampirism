@@ -22,8 +22,9 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
 
     public static final MapCodec<SetItemBloodChargeFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst)
-            .and(NumberProviders.CODEC.fieldOf("charge").forGetter(l -> l.charge))
-            .apply(inst, SetItemBloodChargeFunction::new));
+                    .and(NumberProviders.CODEC.fieldOf("charge").forGetter(l -> l.charge))
+                    .apply(inst, SetItemBloodChargeFunction::new));
+
     public static @NotNull Builder<?> builder(NumberProvider p_215931_0_) {
         return simpleBuilder((p_215930_1_) -> new SetItemBloodChargeFunction(p_215930_1_, p_215931_0_));
     }

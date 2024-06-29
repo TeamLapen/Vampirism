@@ -55,7 +55,7 @@ public class GrinderRecipeCategory implements IRecipeCategory<GrinderRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GrinderRecipe recipe, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1,  1)
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStack(recipe.input());
     }
 

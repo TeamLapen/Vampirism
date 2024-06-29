@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 public class ClientRegistryHandler {
 
     @ApiStatus.Internal
-    public static void init(IEventBus modbus){
+    public static void init(IEventBus modbus) {
 
         modbus.addListener(ClientEventHandler::onModelBakeRequest);
         modbus.addListener(ClientEventHandler::onModelBakeEvent);

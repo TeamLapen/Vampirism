@@ -33,7 +33,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> TASK_COMPLETE = create("task_complete");
     public static final DeferredHolder<SoundEvent, SoundEvent> VAMPIRE_FEEDING = create("entity.vampire_feeding");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLESSING_MUSIC = create("block.blessing_music");
-    public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_PROJECTILE_HIT  = create("fx.blood_projectile_hit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_PROJECTILE_HIT = create("fx.blood_projectile_hit");
     public static final DeferredHolder<SoundEvent, SoundEvent> WEAPON_TABLE_CRAFTING = create("block.weapon_table_crafting");
     public static final DeferredHolder<SoundEvent, SoundEvent> STAKE = create("fx.stake");
     public static final DeferredHolder<SoundEvent, SoundEvent> TELEPORT_AWAY = create("fx.teleport_away");
@@ -62,10 +62,10 @@ public class ModSounds {
         return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
     }
 
-    private static final Map<ResourceKey<SoundEvent>, Music> music  = new HashMap<>();
+    private static final Map<ResourceKey<SoundEvent>, Music> music = new HashMap<>();
 
     public static Music getMusic(ResourceKey<SoundEvent> soundEvent) {
-        return music.computeIfAbsent(soundEvent, sound -> BuiltInRegistries.SOUND_EVENT.getHolder(sound).map(event -> new Music(event, 0,0, true)).orElse(Musics.GAME));
+        return music.computeIfAbsent(soundEvent, sound -> BuiltInRegistries.SOUND_EVENT.getHolder(sound).map(event -> new Music(event, 0, 0, true)).orElse(Musics.GAME));
     }
 
 }

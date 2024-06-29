@@ -79,7 +79,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
                     }
                 }
             }
-        } else if(state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD.get()) {
+        } else if (state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD.get()) {
             direction = directions.get(random.nextInt(directions.size()));
             switch (state.getValue(RotatedPillarBlock.AXIS)) {
                 case X -> {
@@ -107,7 +107,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
         if (state1.isAir() || state1.is(ModBlocks.DIAGONAL_CURSED_BARK.get())) {
             state1 = ModBlocks.DIRECT_CURSED_BARK.get().defaultBlockState();
             level.setBlockAndUpdate(pos1, state1.setValue(DirectCursedBarkBlock.SIDE_MAP.get(direction.getOpposite()), type));
-        } else if(state1.is(ModBlocks.DIRECT_CURSED_BARK.get())) {
+        } else if (state1.is(ModBlocks.DIRECT_CURSED_BARK.get())) {
 
         } else {
             return;

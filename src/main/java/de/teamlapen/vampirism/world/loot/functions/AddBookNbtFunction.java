@@ -24,6 +24,7 @@ import java.util.Optional;
 public class AddBookNbtFunction extends LootItemConditionalFunction {
 
     public static final MapCodec<AddBookNbtFunction> CODEC = RecordCodecBuilder.mapCodec(inst -> commonFields(inst).apply(inst, AddBookNbtFunction::new));
+
     public static @NotNull Builder<?> builder() {
         return simpleBuilder(AddBookNbtFunction::new);
     }

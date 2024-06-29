@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
-public record PlayerOwnedBlockEntityLockPacket(int menuId, @NotNull PlayerOwnedBlockEntity.LockDataHolder lockData)  implements CustomPacketPayload {
+public record PlayerOwnedBlockEntityLockPacket(int menuId, @NotNull PlayerOwnedBlockEntity.LockDataHolder lockData) implements CustomPacketPayload {
     public static final Type<PlayerOwnedBlockEntityLockPacket> TYPE = new Type<>(VResourceLocation.mod("player_owned_block_entity_lock"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PlayerOwnedBlockEntityLockPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, PlayerOwnedBlockEntityLockPacket::menuId,

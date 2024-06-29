@@ -1,39 +1,103 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "minecraft:item/handheld",
-	"textures": {
-		"layer0": "vampirism:item/heart_striker_normal"
-	},
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [-12.5, 90, 55],
-			"translation": [0, 10.5, 1.1],
-			"scale": [1.5, 1.5, 1.5]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [-12.5, -90, -55],
-			"translation": [0, 10.5, 1.1],
-			"scale": [1.5, 1.5, 1.5]
-		},
-		"firstperson_righthand": {
-			"rotation": [35, 90, 25],
-			"translation": [3.75, 6.5, 0.5],
-			"scale": [1.25, 1.25, 1.25]
-		},
-		"firstperson_lefthand": {
-			"rotation": [35, -90, -25],
-			"translation": [3.75, 6.5, 0.5],
-			"scale": [1.25, 1.25, 1.25]
-		},
-		"ground": {
-			"translation": [0, 2.5, 0],
-			"scale": [0.75, 0.75, 0.75]
-		},
-		"gui": {
-			"translation": [1, 0, 0]
-		},
-		"head": {
-			"translation": [0, 0, 7]
-		}
-	}
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "vampirism:item/heart_striker_normal"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -12.5,
+        90,
+        55
+      ],
+      "translation": [
+        0,
+        10.5,
+        1.1
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -12.5,
+        -90,
+        -55
+      ],
+      "translation": [
+        0,
+        10.5,
+        1.1
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        35,
+        90,
+        25
+      ],
+      "translation": [
+        3.75,
+        6.5,
+        0.5
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        35,
+        -90,
+        -25
+      ],
+      "translation": [
+        3.75,
+        6.5,
+        0.5
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ]
+    },
+    "gui": {
+      "translation": [
+        1,
+        0,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        0,
+        7
+      ]
+    }
+  }
 }

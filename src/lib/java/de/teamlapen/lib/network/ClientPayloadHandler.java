@@ -48,7 +48,7 @@ public class ClientPayloadHandler {
                     }
                 }
             }
-                });
+        });
     }
 
     private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {

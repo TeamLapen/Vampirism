@@ -40,7 +40,7 @@ public class HunterVillage {
     }
 
     public static IFactionVillageBuilder hunterVillage() {
-        return  new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
+        return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
                 .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10)))
                 .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
                 .guardSuperClass(HunterBaseEntity.class)

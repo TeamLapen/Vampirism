@@ -436,7 +436,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public boolean isHoldingCrossbow(){
+    public boolean isHoldingCrossbow() {
         return this.isHolding(stack -> stack.getItem() instanceof IHunterCrossbow);
     }
 

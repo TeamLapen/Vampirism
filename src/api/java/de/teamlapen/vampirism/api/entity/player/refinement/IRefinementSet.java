@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public interface IRefinementSet {
 

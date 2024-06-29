@@ -34,7 +34,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     public IConvertedCreature<?> convert(@NotNull PathfinderMob entity) {
         Holder<EntityType<?>> holder = entity.getType().builtInRegistryHolder();
-        return Optional.ofNullable(holder.getData(VampirismDataMaps.ENTITY_BLOOD.get())).filter(s -> s.blood() > 0).map(a -> holder.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).map(s -> s.converter().createHandler(s.overlay().orElse(null))).map(s -> ((IConvertingHandler<PathfinderMob>)s).createFrom(entity)).orElse(null);
+        return Optional.ofNullable(holder.getData(VampirismDataMaps.ENTITY_BLOOD.get())).filter(s -> s.blood() > 0).map(a -> holder.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).map(s -> s.converter().createHandler(s.overlay().orElse(null))).map(s -> ((IConvertingHandler<PathfinderMob>) s).createFrom(entity)).orElse(null);
     }
 
     @NotNull

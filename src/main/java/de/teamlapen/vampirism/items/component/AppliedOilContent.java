@@ -21,7 +21,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
 
     public static final Codec<AppliedOilContent> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
-                    ModRegistries.OILS.holderByNameCodec().validate(s -> s.value() instanceof IApplicableOil ? DataResult.success(s) : DataResult.error(() -> "only applicable oils are allowed")).xmap(s -> (Holder<IApplicableOil>)(Object)s, s -> (Holder<IOil>) (Object)s).fieldOf("oil").forGetter(o -> o.oil),
+                    ModRegistries.OILS.holderByNameCodec().validate(s -> s.value() instanceof IApplicableOil ? DataResult.success(s) : DataResult.error(() -> "only applicable oils are allowed")).xmap(s -> (Holder<IApplicableOil>) (Object) s, s -> (Holder<IOil>) (Object) s).fieldOf("oil").forGetter(o -> o.oil),
                     Codec.INT.fieldOf("duration").forGetter(o -> o.duration)
             ).apply(inst, AppliedOilContent::new)
     );

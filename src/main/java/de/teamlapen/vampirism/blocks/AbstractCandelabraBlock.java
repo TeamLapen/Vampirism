@@ -24,7 +24,7 @@ public abstract class AbstractCandelabraBlock extends VampirismHorizontalBlock {
         this.getParticleOffsets(pState)
                 .forEach(
                         p_220695_ -> addParticlesAndSound(
-                                pLevel, p_220695_.add((double) pPos.getX(), (double) pPos.getY(), (double) pPos.getZ()), pRandom
+                                pLevel, p_220695_.add(pPos.getX(), pPos.getY(), pPos.getZ()), pRandom
                         )
                 );
     }

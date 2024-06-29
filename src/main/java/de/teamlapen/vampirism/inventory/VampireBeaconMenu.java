@@ -50,7 +50,6 @@ public class VampireBeaconMenu extends VampirismContainerMenu {
     }
 
 
-
     @Override
     public void removed(@NotNull Player pPlayer) {
         super.removed(pPlayer);

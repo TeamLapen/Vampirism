@@ -3,15 +3,12 @@ package de.teamlapen.vampirism.api.registries;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -33,7 +30,7 @@ public class DeferredFactionRegister extends DeferredRegister<IFaction<?>> {
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
     public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Supplier<? extends I> sup) {
-        return (DeferredFaction<T,I>) (Object) super.register(name, sup);
+        return (DeferredFaction<T, I>) (Object) super.register(name, sup);
     }
 
     @Override
@@ -43,11 +40,11 @@ public class DeferredFactionRegister extends DeferredRegister<IFaction<?>> {
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
     public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Function<ResourceLocation, ? extends I> func) {
-        return (DeferredFaction<T, I>) (Object)  super.register(name, func);
+        return (DeferredFaction<T, I>) (Object) super.register(name, func);
     }
 
     @Override
     protected <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> createHolder(ResourceKey<? extends Registry<IFaction<?>>> registryKey, ResourceLocation key) {
-        return ( DeferredHolder<IFaction<?>, I>) (Object)DeferredFaction.createFaction(key);
+        return (DeferredHolder<IFaction<?>, I>) (Object) DeferredFaction.createFaction(key);
     }
 }

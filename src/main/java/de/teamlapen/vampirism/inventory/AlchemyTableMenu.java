@@ -87,15 +87,15 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
             itemstack = itemstack1.copy();
             if (slotId < OIL_SLOT_1 || slotId > FUEL_SLOT) {
                 if (FuelSlot.mayPlaceItem(itemstack)) {
-                    if (this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT+1, false) || this.ingredientSlot.mayPlace(itemstack1) && !this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false)) {
+                    if (this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT + 1, false) || this.ingredientSlot.mayPlace(itemstack1) && !this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (this.ingredientSlot.mayPlace(itemstack1)) {
-                    if (!this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT+1, false)) {
+                    if (!this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (OilSlot.mayPlaceItem(player.level(), itemstack) && itemstack.getCount() == 1) {
-                    if (!this.moveItemStackTo(itemstack1, OIL_SLOT_1, OIL_SLOT_2+1, false)) {
+                    if (!this.moveItemStackTo(itemstack1, OIL_SLOT_1, OIL_SLOT_2 + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (slotId >= INV_SLOT_START && slotId < INV_SLOT_END) {

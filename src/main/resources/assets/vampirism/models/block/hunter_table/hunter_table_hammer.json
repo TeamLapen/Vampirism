@@ -1,149 +1,149 @@
 {
-	"credit": "By Grid and FoxPrince",
-	"textures": {
-		"particle": "vampirism:block/weapon_table_hammer",
-		"hammer": "vampirism:block/weapon_table_hammer"
-	},
-	"render_type": "minecraft:cutout",
-	"elements": [
-		{
-			"name": "Element",
-			"from": [
-				7,
-				0,
-				9
-			],
-			"to": [
-				12,
-				3,
-				12
-			],
-			"faces": {
-				"north": {
-					"uv": [
-						0,
-						0,
-						5,
-						3
-					],
-					"texture": "#hammer"
-				},
-				"east": {
-					"uv": [
-						4,
-						0,
-						7,
-						3
-					],
-					"texture": "#hammer"
-				},
-				"south": {
-					"uv": [
-						0,
-						0,
-						5,
-						3
-					],
-					"texture": "#hammer"
-				},
-				"west": {
-					"uv": [
-						4,
-						0,
-						7,
-						3
-					],
-					"texture": "#hammer"
-				},
-				"up": {
-					"uv": [
-						0,
-						0,
-						5,
-						3
-					],
-					"texture": "#hammer"
-				},
-				"down": {
-					"uv": [
-						0,
-						0,
-						5,
-						3
-					],
-					"texture": "#hammer",
-					"cullface": "down"
-				}
-			}
-		},
-		{
-			"name": "Element",
-			"from": [
-				9,
-				3,
-				10
-			],
-			"to": [
-				10,
-				9.99,
-				11
-			],
-			"faces": {
-				"north": {
-					"uv": [
-						0,
-						4,
-						1,
-						11
-					],
-					"texture": "#hammer"
-				},
-				"east": {
-					"uv": [
-						0,
-						4,
-						1,
-						11
-					],
-					"texture": "#hammer"
-				},
-				"south": {
-					"uv": [
-						0,
-						4,
-						1,
-						11
-					],
-					"texture": "#hammer"
-				},
-				"west": {
-					"uv": [
-						0,
-						4,
-						1,
-						11
-					],
-					"texture": "#hammer"
-				},
-				"up": {
-					"uv": [
-						0,
-						4,
-						1,
-						5
-					],
-					"texture": "#hammer"
-				},
-				"down": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#hammer"
-				}
-			}
-		}
-	]
+  "credit": "By Grid and FoxPrince",
+  "textures": {
+    "particle": "vampirism:block/weapon_table_hammer",
+    "hammer": "vampirism:block/weapon_table_hammer"
+  },
+  "render_type": "minecraft:cutout",
+  "elements": [
+    {
+      "name": "Element",
+      "from": [
+        7,
+        0,
+        9
+      ],
+      "to": [
+        12,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            5,
+            3
+          ],
+          "texture": "#hammer"
+        },
+        "east": {
+          "uv": [
+            4,
+            0,
+            7,
+            3
+          ],
+          "texture": "#hammer"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            5,
+            3
+          ],
+          "texture": "#hammer"
+        },
+        "west": {
+          "uv": [
+            4,
+            0,
+            7,
+            3
+          ],
+          "texture": "#hammer"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            5,
+            3
+          ],
+          "texture": "#hammer"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            5,
+            3
+          ],
+          "texture": "#hammer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "name": "Element",
+      "from": [
+        9,
+        3,
+        10
+      ],
+      "to": [
+        10,
+        9.99,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            4,
+            1,
+            11
+          ],
+          "texture": "#hammer"
+        },
+        "east": {
+          "uv": [
+            0,
+            4,
+            1,
+            11
+          ],
+          "texture": "#hammer"
+        },
+        "south": {
+          "uv": [
+            0,
+            4,
+            1,
+            11
+          ],
+          "texture": "#hammer"
+        },
+        "west": {
+          "uv": [
+            0,
+            4,
+            1,
+            11
+          ],
+          "texture": "#hammer"
+        },
+        "up": {
+          "uv": [
+            0,
+            4,
+            1,
+            5
+          ],
+          "texture": "#hammer"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": "#hammer"
+        }
+      }
+    }
+  ]
 }

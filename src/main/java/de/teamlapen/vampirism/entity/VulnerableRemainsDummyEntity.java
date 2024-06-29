@@ -32,7 +32,7 @@ import java.util.Optional;
 public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader, IRemainsEntity {
 
     private BlockPos ownerPos = null;
-    private Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
+    private final Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
 
     public VulnerableRemainsDummyEntity(EntityType<VulnerableRemainsDummyEntity> type, Level pLevel) {
         super(type, pLevel);
@@ -66,7 +66,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
         getTile().ifPresent(vr -> {
             vr.onDamageDealt(pDamageSource, pDamageAmount);
         });
-        if(pDamageSource.getEntity() instanceof LivingEntity attacker) {
+        if (pDamageSource.getEntity() instanceof LivingEntity attacker) {
             attacker.hurt(damageSources().thorns(this), 3);
         }
     }
@@ -126,7 +126,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
         this.noPhysics = false;
         if (!this.level().isClientSide) {
             BlockState block = this.level().getBlockState(ownerPos);
-            if(this.ownerPos == null || !block.is(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) || block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
+            if (this.ownerPos == null || !block.is(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) || block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
                 if (block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
                     this.getPassengers().forEach(s -> s.setRemoved(RemovalReason.DISCARDED));
                 }
@@ -191,7 +191,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putIntArray("ownerPos", new int[]{this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
+        pCompound.putIntArray("ownerPos", new int[] {this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
     }
 
     @Override

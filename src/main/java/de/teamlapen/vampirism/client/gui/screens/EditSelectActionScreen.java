@@ -71,10 +71,10 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     protected void init() {
         super.init();
 
-        this.keyBindingList = this.addRenderableWidget(new KeyBindingList(this.width - 140+4, 20, 140-8, this.height - 60));
+        this.keyBindingList = this.addRenderableWidget(new KeyBindingList(this.width - 140 + 4, 20, 140 - 8, this.height - 60));
 
-        this.addRenderableWidget(new ResetButton(this.width - 140+4, this.height - 45, 140-8, 20, (context) -> this.resetKeyBindings()));
-        this.addRenderableWidget(new ExtendedButton(this.width - 140+4, this.height - 24, 140-8, 20, Component.translatable("text.vampirism.open_settings"), (context) -> {
+        this.addRenderableWidget(new ResetButton(this.width - 140 + 4, this.height - 45, 140 - 8, 20, (context) -> this.resetKeyBindings()));
+        this.addRenderableWidget(new ExtendedButton(this.width - 140 + 4, this.height - 24, 140 - 8, 20, Component.translatable("text.vampirism.open_settings"), (context) -> {
             Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options));
         }));
     }
@@ -91,7 +91,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
         graphics.setColor(0.5F, 0.5F, 0.5F, 1.0F);
-        graphics.blitSprite(BACKGROUND, this.width - 140,0, 140, this.height);
+        graphics.blitSprite(BACKGROUND, this.width - 140, 0, 140, this.height);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);
@@ -160,14 +160,14 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             public KeyBindingSetting(int index, KeyMapping keyMapping, Holder<IAction<?>> action) {
                 this.index = index;
                 this.keyMapping = keyMapping;
-                this.stringWidget = new StringWidget(0,2,80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
-                this.imageButton = new ImageButton(115,2,16,16, REMOVE_ICON,(a) -> switchAction(null));
+                this.stringWidget = new StringWidget(0, 2, 80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
+                this.imageButton = new ImageButton(115, 2, 16, 16, REMOVE_ICON, (a) -> switchAction(null));
                 applyAction(action);
             }
 
             @Override
             public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((index-1) * 20), pButton)) {
+                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((index - 1) * 20), pButton)) {
                     return true;
                 } else if (movingItem != null) {
                     switchAction(movingItem.get());
@@ -191,7 +191,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
                     this.imageWidget.setPosition(90, 2);
                     this.imageButton.visible = true;
                 } else {
-                    this.imageWidget = ImageWidget.texture(16, 16, null,16, 16);
+                    this.imageWidget = ImageWidget.texture(16, 16, null, 16, 16);
                     this.imageWidget.setPosition(90, 2);
                     this.imageWidget.visible = false;
                     this.imageButton.visible = false;
@@ -206,7 +206,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             @Override
             public void render(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean p_93531_, float pPartialTick) {
                 pGuiGraphics.pose().pushPose();
-                pGuiGraphics.pose().translate(pLeft, pTop,0);
+                pGuiGraphics.pose().translate(pLeft, pTop, 0);
                 stringWidget.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
                 imageWidget.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
                 imageButton.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
@@ -216,7 +216,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             @Override
             public void renderBack(@NotNull GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
                 if (movingItem != null) {
-                    pGuiGraphics.blitSprite(BUTTON.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight+5);
+                    pGuiGraphics.blitSprite(BUTTON.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight + 5);
                 }
             }
 

@@ -145,15 +145,16 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         }
     }
 
-    private int id;
+    private final int id;
     private @Nullable CompoundTag data;
-    private @Nullable CompoundTag attachments;
+    private final @Nullable CompoundTag attachments;
     private boolean playerItself = false;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ClientboundUpdateEntityPacket(int id, Optional<CompoundTag> data, Optional<CompoundTag> attachments, boolean playerItself) {
         this(id, data.orElse(null), attachments.orElse(null), playerItself);
     }
+
     private ClientboundUpdateEntityPacket(int id, @Nullable CompoundTag data, @Nullable CompoundTag attackments, boolean playerItself) {
         this.id = id;
         this.data = data;

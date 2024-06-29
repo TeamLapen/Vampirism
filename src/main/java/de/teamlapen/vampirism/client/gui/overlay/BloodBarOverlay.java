@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -38,15 +37,15 @@ public class BloodBarOverlay implements LayeredDraw.Layer {
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    graphics.blitSprite(BACKGROUND, x, top, 9,9);
+                    graphics.blitSprite(BACKGROUND, x, top, 9, 9);
 
                     if (idx < blood) {
-                        graphics.blitSprite( idx < blood2 ? FULL : HALF, x, top, 9,9);
+                        graphics.blitSprite(idx < blood2 ? FULL : HALF, x, top, 9, 9);
                         if (idx == blood2) {
-                            graphics.blitSprite(THREE_QUARTER, x, top, 9,9);
+                            graphics.blitSprite(THREE_QUARTER, x, top, 9, 9);
                         }
                     } else if (idx == blood) {
-                        graphics.blitSprite(QUARTER, x, top, 9,9);
+                        graphics.blitSprite(QUARTER, x, top, 9, 9);
                     }
                 }
             }

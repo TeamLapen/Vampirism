@@ -38,23 +38,23 @@ public class VampirismLogger {
         PatternLayout logPattern = PatternLayout.newBuilder().withPattern("[%d{DATE}] [%level] [%markerSimpleName] %msg%n").build();
 
         Appender fileAppender = FileAppender.newBuilder()
-                    .withFileName(LOG_FILE_NAME)
-                    .withAppend(true)
-                    .setName(LOG_NAME)
-                    .setConfiguration(configuration)
-                    .setLayout(logPattern)
-                    .build();
+                .withFileName(LOG_FILE_NAME)
+                .withAppend(true)
+                .setName(LOG_NAME)
+                .setConfiguration(configuration)
+                .setLayout(logPattern)
+                .build();
 
         fileAppender.start();
 
-        AppenderRef[] refs = new AppenderRef[]{AppenderRef.createAppenderRef(LOG_NAME, null, null)};
+        AppenderRef[] refs = new AppenderRef[] {AppenderRef.createAppenderRef(LOG_NAME, null, null)};
 
         LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.INFO, LOGGER_NAME, "true", refs, null, configuration, null);
         loggerConfig.addAppender(fileAppender, null, null);
 
         configuration.addLogger(LOGGER_NAME, loggerConfig);
         ctx.updateLoggers();
-        logger  = LogManager.getLogger(LOGGER_NAME);
+        logger = LogManager.getLogger(LOGGER_NAME);
     }
 
     public static void info(Marker marker, String msg, Object... args) {

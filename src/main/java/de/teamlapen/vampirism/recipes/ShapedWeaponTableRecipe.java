@@ -4,12 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.FactionCodec;
 import de.teamlapen.vampirism.util.StreamCodecExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -17,7 +15,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -43,7 +40,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
 
-    public ShapedWeaponTableRecipe(String groupIn, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack recipeOutputIn,int requiredLevel, @NotNull List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(String groupIn, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack recipeOutputIn, int requiredLevel, @NotNull List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
         this.category = category;
         this.group = groupIn;
         this.pattern = pattern;
@@ -124,13 +121,13 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
 
         public static final MapCodec<ShapedWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
             return inst.group(
-                    Codec.STRING.optionalFieldOf( "group", "").forGetter(p_311729_ -> p_311729_.group),
+                    Codec.STRING.optionalFieldOf("group", "").forGetter(p_311729_ -> p_311729_.group),
                     CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_311732_ -> p_311732_.category),
                     ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
                     ItemStack.CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
-                    Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.requiredLevel),
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
-                    Codec.INT.optionalFieldOf( "lava", 0).forGetter(p -> p.requiredLava)
+                    Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
+                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
+                    Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava)
             ).apply(inst, ShapedWeaponTableRecipe::new);
         });
 

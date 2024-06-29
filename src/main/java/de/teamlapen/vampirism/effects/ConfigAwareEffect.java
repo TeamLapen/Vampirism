@@ -69,7 +69,7 @@ public class ConfigAwareEffect extends MobEffect {
 
     record AttributeTemplate(ResourceLocation id, Supplier<Double> amount, AttributeModifier.Operation operation) {
         public AttributeModifier create(String pDescription, int pAmplifier) {
-            return new AttributeModifier(this.id, this.amount.get() * (double)(pAmplifier + 1), this.operation);
+            return new AttributeModifier(this.id, this.amount.get() * (double) (pAmplifier + 1), this.operation);
         }
     }
 }

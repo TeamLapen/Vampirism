@@ -90,20 +90,20 @@ public class ItemExtensions {
                     modelpart = arm == HumanoidArm.RIGHT ? model.leftArm : model.rightArm;
                     modelpart1 = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
                     pRightHanded = arm == HumanoidArm.LEFT;
-                    f = combinedChargeDurationMod- itemChargeDurationMod;
+                    f = combinedChargeDurationMod - itemChargeDurationMod;
                     f1 = Mth.clamp(combinedChargeDurationMod - itemChargeDurationMod - itemUseTicks, 0.0F, f);
                 } else {
                     modelpart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-                    modelpart1 = arm == HumanoidArm.RIGHT ? model.leftArm: model.rightArm;
+                    modelpart1 = arm == HumanoidArm.RIGHT ? model.leftArm : model.rightArm;
                     pRightHanded = arm == HumanoidArm.RIGHT;
                     f = itemChargeDurationMod;
-                    f1 = Mth.clamp((combinedChargeDurationMod-(combinedChargeDurationMod - itemChargeDurationMod)) - (itemUseTicks - (combinedUseDuration - itemUseDuration)), 0.0F, f);
+                    f1 = Mth.clamp((combinedChargeDurationMod - (combinedChargeDurationMod - itemChargeDurationMod)) - (itemUseTicks - (combinedUseDuration - itemUseDuration)), 0.0F, f);
                 }
                 modelpart.yRot = pRightHanded ? -0.8F : 0.8F;
                 modelpart.xRot = -0.97079635F;
                 modelpart1.xRot = modelpart.xRot;
                 float f2 = f1 / f;
-                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
+                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float) (pRightHanded ? 1 : -1);
                 modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
             } else {
                 ModelPart modelpart = model.rightArm;
@@ -113,9 +113,9 @@ public class ItemExtensions {
                 modelpart.xRot = -0.97079635F;
                 modelpart1.xRot = modelpart.xRot;
                 float f = crossbow.getChargeDurationMod(entity.getUseItem(), entity.level());
-                float f1 = Mth.clamp((float)entity.getTicksUsingItem(), 0.0F, f);
+                float f1 = Mth.clamp((float) entity.getTicksUsingItem(), 0.0F, f);
                 float f2 = f1 / f;
-                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float)(pRightHanded ? 1 : -1);
+                modelpart1.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float) (pRightHanded ? 1 : -1);
                 modelpart1.xRot = Mth.lerp(f2, modelpart1.xRot, (float) (-Math.PI / 2));
             }
         }
@@ -190,11 +190,11 @@ public class ItemExtensions {
             }
             if (pPlayer.isUsingItem() && itemUseDuration > 0 && (pPlayer.getUsedItemHand() == pHand) != usingMainHand && (item.canUseDoubleCrossbow(pPlayer) || !usingMainHand) && !CrossbowItem.isCharged(pStack)) {
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
-                pPoseStack.translate((float)i * -0.4785682F, -0.094387F, 0.05731531F);
+                pPoseStack.translate((float) i * -0.4785682F, -0.094387F, 0.05731531F);
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(-11.935F));
-                pPoseStack.mulPose(Axis.YP.rotationDegrees((float)i * 65.3F));
-                pPoseStack.mulPose(Axis.ZP.rotationDegrees((float)i * -9.785F));
-                float f9 = (float)pStack.getUseDuration(pPlayer) - (itemUseDuration - pPartialTicks + 1.0F);
+                pPoseStack.mulPose(Axis.YP.rotationDegrees((float) i * 65.3F));
+                pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) i * -9.785F));
+                float f9 = (float) pStack.getUseDuration(pPlayer) - (itemUseDuration - pPartialTicks + 1.0F);
                 float f13 = f9 / item.getChargeDurationMod(pStack, pPlayer.level());
                 if (f13 > 1.0F) {
                     f13 = 1.0F;
@@ -209,17 +209,17 @@ public class ItemExtensions {
 
                 pPoseStack.translate(f13 * 0.0F, f13 * 0.0F, f13 * 0.04F);
                 pPoseStack.scale(1.0F, 1.0F, 1.0F + f13 * 0.2F);
-                pPoseStack.mulPose(Axis.YN.rotationDegrees((float)i * 45.0F));
+                pPoseStack.mulPose(Axis.YN.rotationDegrees((float) i * 45.0F));
             } else {
                 float f = -0.4F * Mth.sin(Mth.sqrt(pSwingProgress) * (float) Math.PI);
                 float f1 = 0.2F * Mth.sin(Mth.sqrt(pSwingProgress) * (float) (Math.PI * 2));
                 float f2 = -0.2F * Mth.sin(pSwingProgress * (float) Math.PI);
-                pPoseStack.translate((float)i * f, f1, f2);
+                pPoseStack.translate((float) i * f, f1, f2);
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
                 ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmAttackTransform(pPoseStack, humanoidarm, pSwingProgress);
                 if (flag1 && pSwingProgress < 0.001F && isMainArm && (!(pPlayer.getOffhandItem().getItem() instanceof HunterCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
-                    pPoseStack.translate((float)i * -0.641864F, 0.0F, 0.0F);
-                    pPoseStack.mulPose(Axis.YP.rotationDegrees((float)i * 10.0F));
+                    pPoseStack.translate((float) i * -0.641864F, 0.0F, 0.0F);
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees((float) i * 10.0F));
                 }
             }
         }

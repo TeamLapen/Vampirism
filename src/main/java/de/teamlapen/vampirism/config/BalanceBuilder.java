@@ -163,7 +163,7 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ModConfigSpec.@UnknownNullability  DoubleValue defineInRange(String name, double def, double min, double max) {
+    public ModConfigSpec.@UnknownNullability DoubleValue defineInRange(String name, double def, double min, double max) {
         add(new BalanceBuilder.DoubleConf(name, def, min, max));
         return null;
     }

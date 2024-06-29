@@ -1,19 +1,10 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
-import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
-import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
-import de.teamlapen.vampirism.api.datamaps.IItemBlood;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.datamaps.*;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.datamaps.*;
-import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.datamaps.ConverterEntry;
-import de.teamlapen.vampirism.datamaps.EntityBloodEntry;
-import de.teamlapen.vampirism.datamaps.FluidBloodConversion;
-import de.teamlapen.vampirism.datamaps.ItemBlood;
 import de.teamlapen.vampirism.entity.converted.converter.SpecialConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -73,7 +64,7 @@ public class DataMapsProvider extends DataMapProvider {
     }
 
     protected void gatherCompostables(Builder<Compostable, Item> compostables) {
-        compostables.add((Holder<Item>) (Object)ModBlocks.VAMPIRE_ORCHID, new Compostable(0.65F), false);
+        compostables.add((Holder<Item>) (Object) ModBlocks.VAMPIRE_ORCHID, new Compostable(0.65F), false);
         compostables.add(ModItems.ITEM_GARLIC, new Compostable(0.65f), false);
     }
 

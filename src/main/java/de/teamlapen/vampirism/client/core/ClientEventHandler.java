@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.VampirismModClient;
@@ -24,7 +22,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -35,8 +32,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.logging.log4j.LogManager;
@@ -55,7 +50,7 @@ import java.util.Optional;
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    static void onModelBakeRequest(ModelEvent.RegisterAdditional event){
+    static void onModelBakeRequest(ModelEvent.RegisterAdditional event) {
 
         for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
             event.register(ModelResourceLocation.standalone(VResourceLocation.mod("block/blood_container/blood_" + (x + 1))));
@@ -66,7 +61,8 @@ public class ClientEventHandler {
             event.register(ModelResourceLocation.standalone(VResourceLocation.mod("block/altar_inspiration/blood" + (x + 1))));
         }
 
-        }
+    }
+
     static void onModelBakeEvent(@NotNull ModelEvent.ModifyBakingResult event) {
         /*
          * Not really a clean solution but it works
@@ -164,12 +160,12 @@ public class ClientEventHandler {
     }
 
     /**
-     * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil 
+     * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil
      */
     @SubscribeEvent
     public void onItemToolTip(@NotNull ItemTooltipEvent event) {
         if (event.getItemStack().getItem() instanceof IFactionExclusiveItem) return;
-        AppliedOilContent.getAppliedOil(event.getItemStack()).ifPresent(oil ->  {
+        AppliedOilContent.getAppliedOil(event.getItemStack()).ifPresent(oil -> {
             List<Component> toolTips = event.getToolTip();
             int position = 1;
             if (!event.getItemStack().has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)) {

@@ -1,79 +1,79 @@
 {
-	"credit": "By Grid and FoxPrince",
-	"textures": {
-		"particle": "vampirism:block/weapon_table",
-		"garlic": "vampirism:item/garlic"
-	},
-	"render_type": "minecraft:cutout",
-	"elements": [
-		{
-			"name": "Element",
-			"from": [
-				8.5,
-				9,
-				2
-			],
-			"to": [
-				15,
-				15,
-				2.0625
-			],
-			"faces": {
-				"north": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#garlic"
-				},
-				"east": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"south": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#garlic"
-				},
-				"west": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"up": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"down": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				}
-			}
-		}
-	]
+  "credit": "By Grid and FoxPrince",
+  "textures": {
+    "particle": "vampirism:block/weapon_table",
+    "garlic": "vampirism:item/garlic"
+  },
+  "render_type": "minecraft:cutout",
+  "elements": [
+    {
+      "name": "Element",
+      "from": [
+        8.5,
+        9,
+        2
+      ],
+      "to": [
+        15,
+        15,
+        2.0625
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#garlic"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": "#garlic"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#garlic"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": "#garlic"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": "#garlic"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "texture": "#garlic"
+        }
+      }
+    }
+  ]
 }

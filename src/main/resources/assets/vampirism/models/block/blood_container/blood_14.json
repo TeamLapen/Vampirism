@@ -1,68 +1,68 @@
 {
-	"credit": "Designed by Maxanier ",
-	"render_type": "minecraft:translucent",
-	"textures": {
-		"fluid": "vampirism:block/blood_still"
-	},
-	"elements": [
-		{
-			"from": [
-				3,
-				1,
-				3
-			],
-			"to": [
-				13,
-				15,
-				13
-			],
-			"faces": {
-				"north": {
-					"uv": [
-						3.0005,
-						1,
-						12.9995,
-						15
-					],
-					"texture": "#fluid"
-				},
-				"east": {
-					"uv": [
-						3.0005,
-						1,
-						12.9995,
-						15
-					],
-					"texture": "#fluid"
-				},
-				"south": {
-					"uv": [
-						3.0005,
-						1,
-						12.9995,
-						15
-					],
-					"texture": "#fluid"
-				},
-				"west": {
-					"uv": [
-						3.0005,
-						1,
-						12.9995,
-						15
-					],
-					"texture": "#fluid"
-				},
-				"up": {
-					"uv": [
-						3.0005,
-						3.0005,
-						12.9995,
-						12.9995
-					],
-					"texture": "#fluid"
-				}
-			}
-		}
-	]
+  "credit": "Designed by Maxanier ",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "fluid": "vampirism:block/blood_still"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        1,
+        3
+      ],
+      "to": [
+        13,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3.0005,
+            1,
+            12.9995,
+            15
+          ],
+          "texture": "#fluid"
+        },
+        "east": {
+          "uv": [
+            3.0005,
+            1,
+            12.9995,
+            15
+          ],
+          "texture": "#fluid"
+        },
+        "south": {
+          "uv": [
+            3.0005,
+            1,
+            12.9995,
+            15
+          ],
+          "texture": "#fluid"
+        },
+        "west": {
+          "uv": [
+            3.0005,
+            1,
+            12.9995,
+            15
+          ],
+          "texture": "#fluid"
+        },
+        "up": {
+          "uv": [
+            3.0005,
+            3.0005,
+            12.9995,
+            12.9995
+          ],
+          "texture": "#fluid"
+        }
+      }
+    }
+  ]
 }

@@ -15,21 +15,21 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public interface IMinionEntryBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {
+public interface IMinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> {
 
-    IMinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T,Z> builder);
+    IMinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T, Z> builder);
 
     IMinionEntry<T, Z> build();
 
-    interface IMinionCommandBuilder<T extends IFactionPlayer<T>,Z extends IMinionData> {
+    interface IMinionCommandBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> {
 
-        <L> IMinionCommandBuilder<T,Z> with(@NotNull String name, L defaultValue, @NotNull ArgumentType<L> type, BiConsumer<Z,L> setter, BiFunction<CommandContext<CommandSourceStack>, String, L> getter);
+        <L> IMinionCommandBuilder<T, Z> with(@NotNull String name, L defaultValue, @NotNull ArgumentType<L> type, BiConsumer<Z, L> setter, BiFunction<CommandContext<CommandSourceStack>, String, L> getter);
 
         Supplier<EntityType<? extends IMinionEntity>> type();
 
-        List<ICommandEntry<Z,?>> commandArguments();
+        List<ICommandEntry<Z, ?>> commandArguments();
 
-        interface ICommandEntry<Z extends IMinionData,T> {
+        interface ICommandEntry<Z extends IMinionData, T> {
 
             String name();
 
@@ -39,7 +39,7 @@ public interface IMinionEntryBuilder<T extends IFactionPlayer<T>,Z extends IMini
 
             BiFunction<CommandContext<CommandSourceStack>, String, T> getter();
 
-            BiConsumer<Z,T> setter();
+            BiConsumer<Z, T> setter();
         }
     }
 }

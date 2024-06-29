@@ -73,7 +73,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltips, flag);
         this.addAmmunitionTypeHoverText(stack, context, tooltips, flag);
-        this.addFactionToolTips(stack, context, tooltips, flag,  VampirismMod.proxy.getClientPlayer());
+        this.addFactionToolTips(stack, context, tooltips, flag, VampirismMod.proxy.getClientPlayer());
     }
 
     protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
@@ -99,7 +99,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
 
     @Override
     public @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return  ModFactionTags.IS_HUNTER;
+        return ModFactionTags.IS_HUNTER;
     }
 
     @NotNull
@@ -196,7 +196,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     @Override
     public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
         if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityCrossbowArrow) {
-            ((IEntityCrossbowArrow)arrow).setIgnoreHurtTimer();
+            ((IEntityCrossbowArrow) arrow).setIgnoreHurtTimer();
         }
         return arrow;
     }
@@ -214,9 +214,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
         if (combinedChargingDuration != useDuration) {
             chargingDuration += combinedUseDuration - useDuration;
         }
-        if ((float)chargingDuration/ getChargeDurationMod(itemStack, level) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
+        if ((float) chargingDuration / getChargeDurationMod(itemStack, level) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
             ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-            if (canUseDoubleCrossbow(entity)&& (float)combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
+            if (canUseDoubleCrossbow(entity) && (float) combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
                 tryLoadProjectiles(entity, otherStack);
             }
             SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
@@ -271,7 +271,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     protected static ItemStack useAmmo(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter, boolean infinite) {
-        boolean flag = !infinite && !(shooter.hasInfiniteMaterials() || (projectileStack.getItem() instanceof ArrowItem && ((ArrowItem)projectileStack.getItem()).isInfinite(projectileStack, crossbowStack, shooter)));
+        boolean flag = !infinite && !(shooter.hasInfiniteMaterials() || (projectileStack.getItem() instanceof ArrowItem && ((ArrowItem) projectileStack.getItem()).isInfinite(projectileStack, crossbowStack, shooter)));
         if (!flag) {
             ItemStack itemstack1 = projectileStack.copyWithCount(1);
             itemstack1.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);

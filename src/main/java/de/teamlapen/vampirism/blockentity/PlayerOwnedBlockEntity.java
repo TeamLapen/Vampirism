@@ -3,14 +3,11 @@ package de.teamlapen.vampirism.blockentity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.inventory.diffuser.PlayerOwnedMenu;
-import de.teamlapen.vampirism.util.StreamCodecExtension;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +76,7 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
         return createMenu(pContainerId, pInventory, lockDataHolder);
     }
 
-    protected abstract  PlayerOwnedMenu createMenu(int pContainerId, @NotNull Inventory pInventory, @NotNull LockDataHolder lockData);
+    protected abstract PlayerOwnedMenu createMenu(int pContainerId, @NotNull Inventory pInventory, @NotNull LockDataHolder lockData);
 
     public void writeExtraData(FriendlyByteBuf buffer) {
         this.lockDataHolder.writeToBuffer(buffer);
@@ -174,6 +170,7 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
         public @NotNull String getSerializedName() {
             return this.name;
         }
+
         public static Lock get(String key) {
             for (Lock value : values()) {
                 if (value.name.equals(key)) {

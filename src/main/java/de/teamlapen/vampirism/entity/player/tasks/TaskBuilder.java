@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.player.tasks;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.vampirism.api.entity.player.FactionPlayerConsumer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -180,7 +179,7 @@ public class TaskBuilder {
         Preconditions.checkArgument(!this.requirement.isEmpty(), "Task needs requirements");
         Preconditions.checkArgument(this.reward != null, "Task needs a reward");
         Preconditions.checkArgument(this.title != null, "Task needs a title");
-        return new Task(new TaskRequirement(this.requirement.values()), this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.description, this.title);
+        return new Task(new TaskRequirement(this.requirement.values()), this.reward, this.unlocker.toArray(new TaskUnlocker[] {}), this.description, this.title);
     }
 
     @NotNull

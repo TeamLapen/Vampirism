@@ -1,12 +1,8 @@
 package de.teamlapen.vampirism.util;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
@@ -29,8 +25,9 @@ public class ByteBufferCodecUtil {
     };
 
     public static final StreamCodec<ByteBuf, UUID> UUID = UUIDUtil.STREAM_CODEC;
-    public static <B,T,Z> StreamCodec<B, Pair<T, Z>> pair(StreamCodec<? super B, T> stream1, StreamCodec<? super B, Z> stream2) {
-        return new StreamCodec<B, Pair<T,Z>>() {
+
+    public static <B, T, Z> StreamCodec<B, Pair<T, Z>> pair(StreamCodec<? super B, T> stream1, StreamCodec<? super B, Z> stream2) {
+        return new StreamCodec<B, Pair<T, Z>>() {
             @Override
             public @NotNull Pair<T, Z> decode(@NotNull B buffer) {
                 return Pair.of(stream1.decode(buffer), stream2.decode(buffer));

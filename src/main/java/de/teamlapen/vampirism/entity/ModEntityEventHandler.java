@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.VEnums;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -11,9 +10,9 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
-import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
@@ -53,7 +52,10 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -113,7 +115,7 @@ public class ModEntityEventHandler {
         if (!event.getLevel().hasChunkAt(pos)) return;
         BlockState blockState = event.getLevel().getBlockState(pos);
 
-        if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) !=  VEnums.VAMPIRE_CATEGORY.getValue())) {
+        if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VEnums.VAMPIRE_CATEGORY.getValue())) {
             event.setSpawnCancelled(true);
         }
     }
@@ -155,7 +157,7 @@ public class ModEntityEventHandler {
             //Creeper AI changes for AvoidedByCreepers Skill
             if (VampirismConfig.BALANCE.creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Creeper) {
-                    ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, (target)-> Helper.appearsAsVampire(target, event.getEntity())));
+                    ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, (target) -> Helper.appearsAsVampire(target, event.getEntity())));
                     //noinspection unchecked
                     makeVampireFriendly("creeper", (Creeper) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 1, type -> type == EntityType.CREEPER);
 
@@ -277,7 +279,7 @@ public class ModEntityEventHandler {
     public void onStartAttackHit(AttackEntityEvent event) {
         if (!Helper.isHunter(event.getEntity()) && OilUtils.getAppliedOil(event.getEntity().getMainHandItem()).isPresent()) {
             event.setCanceled(true);
-            event.getEntity().displayClientMessage(Component.translatable("text.vampirism.oils.cannot_use"),true);
+            event.getEntity().displayClientMessage(Component.translatable("text.vampirism.oils.cannot_use"), true);
         }
     }
 

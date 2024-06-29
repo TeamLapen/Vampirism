@@ -60,7 +60,7 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
             int j1 = j - 9;
             graphics.drawString(this.client.font, itextcomponent, i1, j1, 16777215, true);
 
-            if (j >= graphics.guiHeight()  / 3) {
+            if (j >= graphics.guiHeight() / 3) {
                 break;
             }
         }
@@ -87,7 +87,7 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
             graphics.setColor(1, 1, 1, 1);
             RenderSystem.enableBlend();
-            graphics.blitSprite(BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal()-1], k, j, 182, 5);
+            graphics.blitSprite(BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal() - 1], k, j, 182, 5);
             RenderSystem.disableBlend();
         }
     }

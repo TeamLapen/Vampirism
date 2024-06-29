@@ -38,7 +38,7 @@ public class CrossbowArrowEntity extends AbstractArrow implements IEntityCrossbo
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
     public CrossbowArrowEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow, ItemStack weapon) {
-        super(ModEntities.CROSSBOW_ARROW.get(), x,y,z,worldIn, arrow, weapon);
+        super(ModEntities.CROSSBOW_ARROW.get(), x, y, z, worldIn, arrow, weapon);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);

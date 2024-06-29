@@ -63,7 +63,7 @@ public class ModVillage {
 
     private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
         return ImmutableMap.of(
-                1, new VillagerTrades.ItemListing[]{
+                1, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.ITEM_GARLIC.get(), new Trades.Price(2, 5)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), new Trades.Price(1, 1), 7, 1),
@@ -71,7 +71,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), new Trades.Price(1, 1), 6, 1),
                         new Trades.VampireForestMapTrade(5, 3, 2)
                 },
-                2, new VillagerTrades.ItemListing[]{
+                2, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForSouls(new Trades.Price(25, 45), Items.DIAMOND, new Trades.Price(1, 1), 2, 5),
                         new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.CROSSBOW_ARROW_NORMAL.get(), new Trades.Price(5, 15)),
                         new VillagerTrades.ItemsForEmeralds(ModItems.SOUL_ORB_VAMPIRE.get(), 10, 10, 4),
@@ -84,7 +84,7 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), new Trades.Price(1, 1), 6, 1)
                 },
-                3, new VillagerTrades.ItemListing[]{
+                3, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForSouls(new Trades.Price(40, 64), ModItems.VAMPIRE_BOOK.get(), new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), new Trades.Price(1, 1), 7, 1),
@@ -95,10 +95,10 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(15, 30), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), new Trades.Price(1, 1), 5, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), new Trades.Price(1, 1), 6, 1)
                 },
-                4, new VillagerTrades.ItemListing[]{
+                4, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForSouls(new Trades.Price(20, 32), Items.DIAMOND, new Trades.Price(1, 2)),
                 },
-                5, new VillagerTrades.ItemListing[]{
+                5, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForSouls(new Trades.Price(30, 55), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 55), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), new Trades.Price(1, 1), 5, 1),
@@ -108,27 +108,27 @@ public class ModVillage {
 
     private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getPriestTrades() {
         return ImmutableMap.of(
-                1, new VillagerTrades.ItemListing[]{
+                1, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.EmeraldForItems(ModItems.PURE_SALT.get(), 25, 2, 4),
                         new VillagerTrades.EmeraldForItems(ModItems.ITEM_GARLIC.get(), 30, 6, 2),
 
                 },
-                2, new VillagerTrades.ItemListing[]{
+                2, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), 3, 5, 4),
                         new VillagerTrades.EmeraldForItems(ModItems.SOUL_ORB_VAMPIRE.get(), 10, 10, 4),
                         new VillagerTrades.EmeraldForItems(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 9, 4, 5),
                         new VillagerTrades.ItemsForEmeralds(ModItems.CRUCIFIX_NORMAL.get(), 1, 1, 1)
                 },
-                3, new VillagerTrades.ItemListing[]{
+                3, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 2, 5, 4),
 
 
                 },
-                4, new VillagerTrades.ItemListing[]{
+                4, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), 1, 4, 4),
 
                 },
-                5, new VillagerTrades.ItemListing[]{
+                5, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.ItemsForEmeralds(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), 3, 4, 4),
 
                 });
@@ -136,33 +136,33 @@ public class ModVillage {
 
     private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getVampireTrades() {
         return ImmutableMap.of(
-                1, new VillagerTrades.ItemListing[]{
+                1, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForHeart(new Trades.Price(10, 15), ModItems.PURE_BLOOD_0.get(), new Trades.Price(1, 1)),
                         new Trades.BloodBottleForHeart(new Trades.Price(3, 12), new Trades.Price(1, 15), 9),
                         new VillagerTrades.EmeraldForItems(ModBlocks.VAMPIRE_ORCHID.get(), 4, 1, 3),
                         new Trades.VampireForestMapTrade(5, 3, 2)
                 },
-                2, new VillagerTrades.ItemListing[]{
+                2, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForHeart(new Trades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(1, 5), ModBlocks.COFFIN_RED.get(), new Trades.Price(1, 1), 2, 2),
                         new Trades.ItemsForHeart(new Trades.Price(10, 25), ModItems.BLOOD_INFUSED_IRON_INGOT.get(), new Trades.Price(1, 3))
                 },
-                3, new VillagerTrades.ItemListing[]{
+                3, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForHeart(new Trades.Price(30, 40), ModItems.PURE_BLOOD_2.get(), new Trades.Price(1, 1), 10, 1),
                         new Trades.ItemsForHeart(new Trades.Price(15, 30), ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get(), new Trades.Price(1, 2))
                 },
-                4, new VillagerTrades.ItemListing[]{
+                4, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForHeart(new Trades.Price(20, 30), ModItems.PURE_BLOOD_3.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[]{
+                        new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[] {
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_RED.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_RED_BLACK.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get())}, new Trades.Price(1, 1), 10, 2)
                 },
-                5, new VillagerTrades.ItemListing[]{
+                5, new VillagerTrades.ItemListing[] {
                         new Trades.ItemsForHeart(new Trades.Price(30, 40), ModItems.PURE_BLOOD_4.get(), new Trades.Price(1, 1), 10, 1),
-                        new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[]{
+                        new Trades.ItemsForHeart(new Trades.Price(10, 30), new ItemStack[] {
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_RED.get()),
                                 new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()),

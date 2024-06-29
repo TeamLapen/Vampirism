@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirealtar;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -32,9 +31,9 @@ public class VampireAltarPieces {
     private static final ResourceLocation LOCATION_SMALL_OLD = VResourceLocation.mod("altar_small_old");
     private static final ResourceLocation LOCATION_BIG_OLD = VResourceLocation.mod("altar_big_old");
 
-    public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos)  {
+    public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos) {
         ResourceLocation location;
-        if(random.nextFloat() < 0.2) {
+        if (random.nextFloat() < 0.2) {
             location = random.nextFloat() < 0.3 ? LOCATION_BIG_OLD : LOCATION_BIG;
         } else {
             location = random.nextFloat() < 0.5 ? LOCATION_SMALL_OLD : LOCATION_SMALL;

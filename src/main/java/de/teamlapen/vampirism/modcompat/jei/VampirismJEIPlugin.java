@@ -232,19 +232,19 @@ public class VampirismJEIPlugin implements IModPlugin {
     private @NotNull List<RecipeHolder<CraftingRecipe>> getApplicableOilRecipes() {
         return ModRegistries.OILS.holders()
                 .filter(s -> s.value() instanceof IApplicableOil)
-                .map(s -> (Holder<IApplicableOil> )(Object)s)
+                .map(s -> (Holder<IApplicableOil>) (Object) s)
                 .flatMap(oil -> BuiltInRegistries.ITEM.stream()
                         .map(Item::getDefaultInstance)
                         .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || IFaction.is(ModFactions.HUNTER, ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item))))
                         .filter(item -> oil.value().canBeApplied(item))
-                        .map(stack -> new RecipeHolder<CraftingRecipe>(VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
+                        .map(stack -> new RecipeHolder<CraftingRecipe>(VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
     }
 
     private @NotNull List<RecipeHolder<CraftingRecipe>> getCleanOilRecipes(RegistryAccess registryAccess) {
         return getApplicableOilRecipes().stream().map(recipe -> {
             ItemStack item = recipe.value().getResultItem(registryAccess);
             IApplicableOil oil = OilUtils.getAppliedOil(item).get();
-            return new RecipeHolder<CraftingRecipe>(VResourceLocation.mod(("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')),new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.remove(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
+            return new RecipeHolder<CraftingRecipe>(VResourceLocation.mod(("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')), new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.remove(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
         }).collect(Collectors.toList());
     }
 }

@@ -61,7 +61,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
             int damage = 40 + (set.getRarity().weight - 1) * 10 + this.player.asEntity().getRandom().nextInt(60);
             int unbreakingLevel = stack.getEnchantmentLevel(unbreaking);
             if (unbreakingLevel > 0) {
-                damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
+                damage = (int) (damage / (1f / (1.6f / (unbreakingLevel + 1f))));
             }
             stack.setDamageValue(stack.getDamageValue() + damage);
             if (stack.getDamageValue() >= stack.getMaxDamage()) {

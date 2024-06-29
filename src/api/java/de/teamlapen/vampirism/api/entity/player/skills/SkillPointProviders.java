@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
@@ -15,7 +14,7 @@ public class SkillPointProviders {
     public static final Map<ResourceLocation, ISkillPointProvider> MODIFIERS_VIEW = Collections.unmodifiableMap(MODIFIERS);
 
     static {
-        SkillPointProviders.register(VResourceLocation.mod( "none"), factionPlayer -> 0);
+        SkillPointProviders.register(VResourceLocation.mod("none"), factionPlayer -> 0);
     }
 
     public static ISkillPointProvider register(ResourceLocation id, ISkillPointProvider modifier) {

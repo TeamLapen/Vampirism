@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.model.*;
 import de.teamlapen.vampirism.client.model.armor.*;
@@ -18,7 +17,6 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -156,7 +154,7 @@ public class ModEntitiesRender {
         return new ModelLayerLocation(VResourceLocation.mod("chest_boat/" + type.getName()), "main");
     }
 
-    private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,Z> provider) {
+    private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T, Z> provider) {
         return context -> {
             LivingEntityRenderer<T, Z> renderer = provider.create(context);
             renderer.addLayer(new ConvertedVampireEntityLayer<>(renderer, false));
@@ -164,10 +162,10 @@ public class ModEntitiesRender {
         };
     }
 
-    private interface LivingEntityRendererProvider<T extends LivingEntity,Z extends EntityModel<T>> extends EntityRendererProvider<T> {
+    private interface LivingEntityRendererProvider<T extends LivingEntity, Z extends EntityModel<T>> extends EntityRendererProvider<T> {
         @Override
         @NotNull
-        LivingEntityRenderer<T,Z> create(EntityRendererProvider.@NotNull Context pContext);
+        LivingEntityRenderer<T, Z> create(EntityRendererProvider.@NotNull Context pContext);
     }
 
 }

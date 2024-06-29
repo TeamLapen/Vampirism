@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.tasks.TaskInstance;
@@ -24,7 +23,7 @@ public record ClientboundTaskStatusPacket(Set<? extends ITaskInstance> available
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTaskStatusPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodec(TaskInstance.CODEC).apply(ByteBufCodecs.collection(i -> new HashSet<>())).map(d -> d, l -> new HashSet<>((Set<TaskInstance>) l)), ClientboundTaskStatusPacket::available,
             ByteBufferCodecUtil.UUID.apply(ByteBufCodecs.collection(i -> new HashSet<>())), ClientboundTaskStatusPacket::completableTasks,
-            ByteBufCodecs.map(l -> new HashMap<>(),ByteBufferCodecUtil.UUID, ByteBufCodecs.map(l -> new HashMap<>(), ResourceLocation.STREAM_CODEC, ByteBufCodecs.INT)), ClientboundTaskStatusPacket::completedRequirements,
+            ByteBufCodecs.map(l -> new HashMap<>(), ByteBufferCodecUtil.UUID, ByteBufCodecs.map(l -> new HashMap<>(), ResourceLocation.STREAM_CODEC, ByteBufCodecs.INT)), ClientboundTaskStatusPacket::completedRequirements,
             ByteBufCodecs.INT, ClientboundTaskStatusPacket::containerId,
             ByteBufferCodecUtil.UUID, ClientboundTaskStatusPacket::taskBoardId,
             ClientboundTaskStatusPacket::new

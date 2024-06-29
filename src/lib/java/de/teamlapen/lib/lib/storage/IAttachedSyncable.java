@@ -9,9 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 public interface IAttachedSyncable extends ISyncable, IEntity {
 
     /**
-     *
-     * @implSpec The method returns the registry id of the {@link net.neoforged.neoforge.attachment.AttachmentType} of this implementation from {@link net.neoforged.neoforge.registries.NeoForgeRegistries#ATTACHMENT_TYPES}
      * @return unique id of this attachment.
+     * @implSpec The method returns the registry id of the {@link net.neoforged.neoforge.attachment.AttachmentType} of this implementation from {@link net.neoforged.neoforge.registries.NeoForgeRegistries#ATTACHMENT_TYPES}
      */
     ResourceLocation getAttachedKey();
 

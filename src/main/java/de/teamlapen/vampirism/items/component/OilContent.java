@@ -20,7 +20,7 @@ public record OilContent(Holder<IOil> oil) implements IOilContent {
     private static final Codec<OilContent> FULL_CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     ModRegistries.OILS.holderByNameCodec().optionalFieldOf("oil", ModOils.EMPTY).forGetter(o -> o.oil)
-                    ).apply(inst, OilContent::new)
+            ).apply(inst, OilContent::new)
     );
     public static final Codec<OilContent> CODEC = Codec.withAlternative(FULL_CODEC, ModRegistries.OILS.holderByNameCodec(), OilContent::new);
     public static final StreamCodec<RegistryFriendlyByteBuf, OilContent> STREAM_CODEC = StreamCodec.composite(

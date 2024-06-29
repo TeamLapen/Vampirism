@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.recipes;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -30,7 +29,7 @@ public class CleanOilRecipe extends CustomRecipe {
                     if (paper == null) {
                         paper = stack;
                     }
-                } else if(AppliedOilContent.getAppliedOil(stack).isPresent()) {
+                } else if (AppliedOilContent.getAppliedOil(stack).isPresent()) {
                     if (tool != null) return false;
                     tool = stack;
                 } else {

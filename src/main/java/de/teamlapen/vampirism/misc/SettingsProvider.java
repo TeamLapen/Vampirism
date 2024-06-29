@@ -115,15 +115,15 @@ public class SettingsProvider implements ISettingsProvider {
             LOGGER.error("Failed to retrieve supporter from server", error);
         }
         if (VampirismMod.inDev || file != null) {
-                InputStream inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
-                if (inputStream != null) {
-                    try {
-                        List<Supporter> list = GSON.fromJson(new JsonReader(new InputStreamReader(inputStream)), TypeToken.getParameterized(List.class, Supporter.class).getType());
-                        return Optional.of(list);
-                    } catch (JsonSyntaxException ex) {
-                        LOGGER.error("Failed to retrieve supporter from file", ex);
-                    }
+            InputStream inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
+            if (inputStream != null) {
+                try {
+                    List<Supporter> list = GSON.fromJson(new JsonReader(new InputStreamReader(inputStream)), TypeToken.getParameterized(List.class, Supporter.class).getType());
+                    return Optional.of(list);
+                } catch (JsonSyntaxException ex) {
+                    LOGGER.error("Failed to retrieve supporter from file", ex);
                 }
+            }
         }
         return Optional.ofNullable(file);
     }

@@ -143,9 +143,9 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
         this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137, 104, () -> new ArrayList<>(this.menu.getTaskInfos())));
 
-        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20,  SKILLS,  context -> {
+        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, SKILLS, context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
-                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f  -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
+                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
             }
         }, Component.empty()));
         button1.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.skill_screen")));
@@ -210,7 +210,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
         graphics.blit(texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78,30, 0.0625f ,  mouseX, mouseY, this.minecraft.player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
     }
 
     protected void renderHoveredRefinementTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {

@@ -34,7 +34,7 @@ public class GarlicBlock extends CropBlock {
     private static final VoxelShape[] shape = makeShape();
 
     private static VoxelShape @NotNull [] makeShape() {
-        return new VoxelShape[]{
+        return new VoxelShape[] {
                 Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
                 Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
                 Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),

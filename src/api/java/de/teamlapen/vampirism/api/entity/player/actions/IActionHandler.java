@@ -55,6 +55,7 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
     /**
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active
      * Returns -Cooldown_Left/Total_Cooldown(Negative) if action is in cooldown
+     *
      * @deprecated Use {@link #getCooldownPercentage(Holder)} or {@link #getDurationPercentage(Holder)} instead
      */
     @Deprecated(since = "1.11")
@@ -83,7 +84,8 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
     @Unmodifiable
     List<Holder<? extends IAction<T>>> getUnlockedActionHolder();
 
-    @NotNull List<Holder<? extends ILastingAction<T>>> getActiveActions();
+    @NotNull
+    List<Holder<? extends ILastingAction<T>>> getActiveActions();
 
     @Deprecated(forRemoval = true, since = "1.11")
     default boolean isActionActive(@NotNull ILastingAction<T> action) {
@@ -180,9 +182,10 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
 
     /**
      * Lasting actions are deactivated here, which fires the {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionDeactivatedEvent}
-     * @param action - The lasting action being deactivated
+     *
+     * @param action         - The lasting action being deactivated
      * @param ignoreCooldown - Whether the cooldown is ignored for the action
-     * @param fullCooldown - Whether the lasting action should get the full or reduced cooldown
+     * @param fullCooldown   - Whether the lasting action should get the full or reduced cooldown
      */
     void deactivateAction(@NotNull Holder<? extends ILastingAction<T>> action, boolean ignoreCooldown, boolean fullCooldown);
 

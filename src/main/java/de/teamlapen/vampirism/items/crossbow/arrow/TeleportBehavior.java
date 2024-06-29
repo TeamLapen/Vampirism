@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior{
+public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
     @Override
     public int color() {
         return 0xFF0b4d42;

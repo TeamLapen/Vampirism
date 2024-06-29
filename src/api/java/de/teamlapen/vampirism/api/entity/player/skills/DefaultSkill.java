@@ -129,7 +129,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>
         Collection<IAction<T>> collection = new ArrayList<>();
         getActions(collection);
         collection.forEach((iAction -> {
-            if (!IFaction.is(factions(),iAction.factions())) {
+            if (!IFaction.is(factions(), iAction.factions())) {
                 throw new IllegalArgumentException("Can't register action with different factions than the skill");
             }
         }));

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -35,7 +34,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.drawTitle(graphics);
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 150, this.guiTop + 30,this.guiLeft + 250, this.guiTop + 30 + 110,50, 0.0625F, mouseX, mouseY, this.entity);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 150, this.guiTop + 30, this.guiLeft + 250, this.guiTop + 30 + 110, 50, 0.0625F, mouseX, mouseY, this.entity);
 
     }
 

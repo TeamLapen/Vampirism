@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.structure.vampirehut;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -35,7 +34,7 @@ public class VampireHutPieces {
 
     private static final ResourceLocation LOCATION = VResourceLocation.mod("vampire_hut");
 
-    public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos)  {
+    public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos) {
         Rotation rotation = Rotation.getRandom(random);
         pieceAccessor.addPiece(new VampireHutPiece(structureTemplateManager, LOCATION, pos, rotation));
     }
@@ -81,7 +80,7 @@ public class VampireHutPieces {
         public void postProcess(WorldGenLevel pLevel, @NotNull StructureManager pStructureManager, @NotNull ChunkGenerator pGenerator, @NotNull RandomSource pRandom, @NotNull BoundingBox pBox, @NotNull ChunkPos pChunkPos, BlockPos pPos) {
             int i = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE_WG, pPos.getX(), pPos.getZ());
             var oldPos = this.templatePosition;
-            this.templatePosition = this.templatePosition.offset(0,i - 90,0);
+            this.templatePosition = this.templatePosition.offset(0, i - 90, 0);
             super.postProcess(pLevel, pStructureManager, pGenerator, pRandom, pBox, pChunkPos, pPos);
             this.templatePosition = oldPos;
         }

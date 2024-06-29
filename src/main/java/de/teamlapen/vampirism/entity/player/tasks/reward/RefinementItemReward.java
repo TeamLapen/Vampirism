@@ -106,7 +106,7 @@ public class RefinementItemReward extends ItemReward {
         Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         @SuppressWarnings("DataFlowIssue")
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
+        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> IFaction.is(set.getFaction(), finalFaction))
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
@@ -119,7 +119,7 @@ public class RefinementItemReward extends ItemReward {
     }
 
     private @NotNull List<ItemStack> getAllRefinementItems() {
-        Stream<IPlayableFaction<?>> stream = this.faction != null ? Stream.of(this.faction.value()) : ModRegistries.FACTIONS.stream().filter(IPlayableFaction.class::isInstance).map(s -> (IPlayableFaction<?>)s);
+        Stream<IPlayableFaction<?>> stream = this.faction != null ? Stream.of(this.faction.value()) : ModRegistries.FACTIONS.stream().filter(IPlayableFaction.class::isInstance).map(s -> (IPlayableFaction<?>) s);
         return stream.filter(IPlayableFaction::hasRefinements).flatMap(faction -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).flatMap(type -> faction.getRefinementItems(type).stream())).map(ItemStack::new).collect(Collectors.toList());
     }
 

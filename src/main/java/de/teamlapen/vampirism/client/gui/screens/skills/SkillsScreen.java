@@ -129,7 +129,7 @@ public class SkillsScreen extends Screen {
 
         this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
         this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
-        for(Renderable renderable : this.renderables) {
+        for (Renderable renderable : this.renderables) {
             renderable.render(graphics, mouseX, mouseY, partialTicks);
         }
         this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
@@ -138,7 +138,7 @@ public class SkillsScreen extends Screen {
     public void renderInside(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
         PoseStack pose = graphics.pose();
         if (this.selectedTab != null) {
-            this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX-9-guiLeft, mouseY-18 - guiTop);
+            this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
         } else {
             pose.pushPose();
             pose.translate(x + 9, y + 18, 0);
@@ -218,7 +218,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION) == null && this.isMouseOverContent(pMouseX, pMouseY)) {
-            return this.selectedTab.mouseScrolled(pMouseX-9-guiLeft, pMouseY-18-guiTop, pScrollX, pScrollY);
+            return this.selectedTab.mouseScrolled(pMouseX - 9 - guiLeft, pMouseY - 18 - guiTop, pScrollX, pScrollY);
         }
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
     }

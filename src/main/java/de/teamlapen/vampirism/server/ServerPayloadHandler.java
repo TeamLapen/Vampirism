@@ -96,62 +96,62 @@ public class ServerPayloadHandler {
 
     public static void handleSelectAmmoTypePacket(ServerboundSelectAmmoTypePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-                ItemStack stack = context.player().getMainHandItem();
-                if (stack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
-                    crossbow.setAmmunition(stack, msg.ammoId());
-                }
-                ItemStack offhand = context.player().getOffhandItem();
-                if (offhand.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
-                    crossbow.setAmmunition(offhand, msg.ammoId());
-                }
+            ItemStack stack = context.player().getMainHandItem();
+            if (stack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(stack)) {
+                crossbow.setAmmunition(stack, msg.ammoId());
+            }
+            ItemStack offhand = context.player().getOffhandItem();
+            if (offhand.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(offhand)) {
+                crossbow.setAmmunition(offhand, msg.ammoId());
+            }
         });
     }
 
     public static void handleSelectMinionTaskPacket(ServerboundSelectMinionTaskPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-                FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
-                PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
-                if (RECALL.equals(msg.taskID())) {
-                    if (msg.minionID() < 0) {
-                        Collection<Integer> ids = controller.recallMinions(false);
-                        for (Integer id : ids) {
-                            controller.createMinionEntityAtPlayer(id, context.player());
-                        }
-                        printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
-
-                    } else {
-                        if (controller.recallMinion(msg.minionID())) {
-                            controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
-                        } else {
-                            context.player().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
-                        }
-                    }
-                } else if (RESPAWN.equals(msg.taskID())) {
-                    Collection<Integer> ids = controller.getUnclaimedMinions();
+            FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
+            PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
+            if (RECALL.equals(msg.taskID())) {
+                if (msg.minionID() < 0) {
+                    Collection<Integer> ids = controller.recallMinions(false);
                     for (Integer id : ids) {
                         controller.createMinionEntityAtPlayer(id, context.player());
                     }
                     printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
 
                 } else {
-                    //noinspection unchecked
-                    IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(msg.taskID());
-                    if (task == null) {
-                        LOGGER.error("Cannot find action to activate {}", msg.taskID());
-                    } else if (msg.minionID() < -1) {
-                        LOGGER.error("Illegal minion id {}", msg.minionID());
+                    if (controller.recallMinion(msg.minionID())) {
+                        controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                     } else {
-                        controller.activateTask(msg.minionID(), task);
+                        context.player().displayClientMessage(Component.translatable("text.vampirism.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
                     }
                 }
+            } else if (RESPAWN.equals(msg.taskID())) {
+                Collection<Integer> ids = controller.getUnclaimedMinions();
+                for (Integer id : ids) {
+                    controller.createMinionEntityAtPlayer(id, context.player());
+                }
+                printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
+
+            } else {
+                //noinspection unchecked
+                IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(msg.taskID());
+                if (task == null) {
+                    LOGGER.error("Cannot find action to activate {}", msg.taskID());
+                } else if (msg.minionID() < -1) {
+                    LOGGER.error("Illegal minion id {}", msg.minionID());
+                } else {
+                    controller.activateTask(msg.minionID(), task);
+                }
+            }
         });
     }
 
     public static void handleSetVampireBeaconPacket(ServerboundSetVampireBeaconPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-                if (context.player().containerMenu instanceof VampireBeaconMenu beaconMenu && beaconMenu.stillValid(context.player())) {
-                    beaconMenu.updateEffects(msg.effect(), msg.amplifier());
-                }
+            if (context.player().containerMenu instanceof VampireBeaconMenu beaconMenu && beaconMenu.stillValid(context.player())) {
+                beaconMenu.updateEffects(msg.effect(), msg.amplifier());
+            }
         });
     }
 
@@ -194,8 +194,8 @@ public class ServerPayloadHandler {
     public static void handleStartFeedingPacket(ServerboundStartFeedingPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             VampirePlayer vampire = VampirePlayer.get(context.player());
-                msg.target().ifLeft(vampire::biteEntity);
-                msg.target().ifRight(vampire::biteBlock);
+            msg.target().ifLeft(vampire::biteEntity);
+            msg.target().ifRight(vampire::biteBlock);
         });
     }
 
@@ -236,10 +236,10 @@ public class ServerPayloadHandler {
 
     public static void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-                FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
-                PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
-                controller.contactMinionData(msg.minionID(), data -> data.setTaskLocked(!data.isTaskLocked()));
-                controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
+            FactionPlayerHandler fp = FactionPlayerHandler.get(context.player());
+            PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(fp);
+            controller.contactMinionData(msg.minionID(), data -> data.setTaskLocked(!data.isTaskLocked()));
+            controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
         });
     }
 

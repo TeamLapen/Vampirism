@@ -38,7 +38,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     private static final Function<Player, SelectorInfo[]> SELECTOR_INFOS = player -> {
         Holder<? extends IPlayableFaction<?>> faction = FactionPlayerHandler.getCurrentFactionPlayer(player).orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction")).getFaction();
-        return new SelectorInfo[]{
+        return new SelectorInfo[] {
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 8),
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 26),
                 new SelectorInfo(stack -> stack.getItem() instanceof IRefinementItem && ((IRefinementItem) stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT && IFaction.is(faction, ((IRefinementItem) stack.getItem()).getExclusiveFaction(stack)), 58, 44)};

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class StrippableLogBlock extends LogBlock{
+public class StrippableLogBlock extends LogBlock {
 
     private final @NotNull Supplier<? extends LogBlock> strippedBlock;
 

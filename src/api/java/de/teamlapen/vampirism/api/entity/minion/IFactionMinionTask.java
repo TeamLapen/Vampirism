@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 public interface IFactionMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> extends IMinionTask<T, Q> {
 
     /**
-     *
      * @return The faction that is required to use this task. Null if no faction is required
      */
     @Nullable

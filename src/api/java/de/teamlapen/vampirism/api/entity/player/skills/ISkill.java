@@ -24,6 +24,7 @@ public interface ISkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends I
 
     /**
      * A skill can be either
+     *
      * @return The faction this skill belongs to
      */
     TagKey<? extends IFaction<?>> factions();
@@ -60,6 +61,7 @@ public interface ISkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends I
 
     /**
      * Skill can only be added to skill trees defined by the return value.
+     *
      * @return A key of the allowed skilltree or a tag of skilltrees
      */
     Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();

@@ -90,13 +90,13 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T,?>> defaultProvider) throws CommandSyntaxException{
+    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?>> defaultProvider) throws CommandSyntaxException {
         T t = data.get();
         for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : contextProvider) {
-            ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
+            ((BiConsumer<T, Object>) tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
         }
         for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandEntry<T, ?> tiCommandEntry : defaultProvider) {
-            ((BiConsumer<T,Object>)tiCommandEntry.setter()).accept(t, tiCommandEntry.defaultValue());
+            ((BiConsumer<T, Object>) tiCommandEntry.setter()).accept(t, tiCommandEntry.defaultValue());
         }
         t.setHealth(t.getMaxHealth());
         return spawnNewMinion(ctx, faction, t, type.get());
@@ -152,11 +152,11 @@ public class MinionCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
         FactionPlayerHandler fph = handler(player);
-            PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
-            Collection<Integer> ids = controller.getUnclaimedMinions();
-            for (Integer id : ids) {
-                controller.createMinionEntityAtPlayer(id, player);
-            }
+        PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
+        Collection<Integer> ids = controller.getUnclaimedMinions();
+        for (Integer id : ids) {
+            controller.createMinionEntityAtPlayer(id, player);
+        }
         return 0;
     }
 

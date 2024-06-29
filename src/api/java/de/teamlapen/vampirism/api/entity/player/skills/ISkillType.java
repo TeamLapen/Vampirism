@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
-import com.mojang.serialization.Codec;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.resources.ResourceLocation;

@@ -1,4 +1,3 @@
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 package de.teamlapen.vampirism.entity.factions;

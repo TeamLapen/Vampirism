@@ -95,9 +95,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     /**
-     *
      * For vampire expert villagers on server side this will return an asynchronously found block pos (or empty if still searching).
      * For all other villagers it returns an empty optional
+     *
      * @return The location of the closest vampire forest if available
      */
     public Optional<BlockPos> getClosestVampireForest(Level level, BlockPos blockPos) {

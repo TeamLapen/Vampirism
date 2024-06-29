@@ -34,5 +34,6 @@ public interface ISkillTreeData {
 
     SkillTreeConfiguration.SkillTreeNodeConfiguration root(Holder<ISkillTree> skillTree);
 
-    @NotNull Optional<ISkillNode> getAnyLastNode(Holder<ISkillTree> tree, Function<ISkillNode, Boolean> isUnlocked);
+    @NotNull
+    Optional<ISkillNode> getAnyLastNode(Holder<ISkillTree> tree, Function<ISkillNode, Boolean> isUnlocked);
 }

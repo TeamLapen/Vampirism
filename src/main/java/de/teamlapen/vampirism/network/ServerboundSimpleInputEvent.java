@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +33,6 @@ public record ServerboundSimpleInputEvent(Event event) implements CustomPacketPa
         SHOW_MINION_CALL_SELECTION,
         VAMPIRISM_MENU,
         RESURRECT,
-        GIVE_UP;
+        GIVE_UP
     }
 }

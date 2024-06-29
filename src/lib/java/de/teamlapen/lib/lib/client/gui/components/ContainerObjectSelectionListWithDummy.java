@@ -28,17 +28,17 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     public void renderWidget(GuiGraphics graphics, int p_283242_, int p_282891_, float p_283683_) {
         int color = 0xFFFFFFFF;
         graphics.hLine(this.getX() - 1, this.getRight() - 6, this.getY() - 1, color);
-        graphics.hLine(this.getX()  - 1, this.getRight() - 6, this.getBottom(), color);
-        graphics.vLine(this.getX()  - 1, this.getY() - 1, this.getBottom() + 1, color);
+        graphics.hLine(this.getX() - 1, this.getRight() - 6, this.getBottom(), color);
+        graphics.vLine(this.getX() - 1, this.getY() - 1, this.getBottom() + 1, color);
         graphics.vLine(this.getRight() - 6, this.getY() - 1, this.getBottom() + 1, color);
-        graphics.fillGradient(this.getX() , this.getY(), this.getRight() - 6, this.getBottom(), 0xFF000000, 0xFF000000);
+        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom(), 0xFF000000, 0xFF000000);
         super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
     }
 
     @Override
     protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-        graphics.fillGradient(this.getX() , this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
-        graphics.fillGradient(this.getX() , this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
+        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
+        graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
     }
 
     @Override
@@ -63,9 +63,9 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         int j = this.getX() + this.width / 2;
         int k = j - i;
         int l = j + i;
-        int i1 = Mth.floor(pMouseY - (double)this.getY()) - this.headerHeight + (int)this.getScrollAmount() - 4;
+        int i1 = Mth.floor(pMouseY - (double) this.getY()) - this.headerHeight + (int) this.getScrollAmount() - 4;
         int j1 = i1 / this.itemHeight;
-        return pMouseX >= (double)k && pMouseX <= (double)l -6 && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.children().get(j1) : null;
+        return pMouseX >= (double) k && pMouseX <= (double) l - 6 && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.children().get(j1) : null;
     }
 
     @Override

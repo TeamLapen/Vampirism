@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +40,7 @@ public class SupporterManager {
         if (supporters[0].length > 0) {
             return supporters[0][rnd.nextInt(supporters[0].length)];
         }
-        return new Supporter(VReference.VAMPIRE_FACTION_ID, "none", "none",  null, new HashMap<>());
+        return new Supporter(VReference.VAMPIRE_FACTION_ID, "none", "none", null, new HashMap<>());
     }
 
 

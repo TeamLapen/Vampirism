@@ -30,7 +30,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundRequestMinionSelectPacket.TYPE, ClientboundRequestMinionSelectPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRequestMinionSelectPacket(msg, context));
         registrar.playToClient(ClientboundTaskStatusPacket.TYPE, ClientboundTaskStatusPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleTaskStatusPacket(msg, context));
         registrar.playToClient(ClientboundTaskPacket.TYPE, ClientboundTaskPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleTaskPacket(msg, context));
-        registrar.playToClient(ClientboundUpdateMultiBossEventPacket.TYPE, ClientboundUpdateMultiBossEventPacket.CODEC,(msg, context) -> ClientPayloadHandler.handleUpdateMultiBossInfoPacket(msg, context));
+        registrar.playToClient(ClientboundUpdateMultiBossEventPacket.TYPE, ClientboundUpdateMultiBossEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateMultiBossInfoPacket(msg, context));
         registrar.commonToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
         registrar.playToClient(ClientboundBossEventSoundPacket.TYPE, ClientboundBossEventSoundPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context));
         registrar.playToClient(ClientboundSkillTreePacket.TYPE, ClientboundSkillTreePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSkillTreePacket(msg, context));
@@ -56,7 +56,7 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSelectAmmoTypePacket(msg, context));
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));
         registrar.playToServer(ServerboundRequestSkillTreePacket.TYPE, ServerboundRequestSkillTreePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleRequestSkillTreePacket(msg, context));
-        
+
         registrar.playBidirectional(PlayerOwnedBlockEntityLockPacket.TYPE, PlayerOwnedBlockEntityLockPacket.CODEC, (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context));
 
     }

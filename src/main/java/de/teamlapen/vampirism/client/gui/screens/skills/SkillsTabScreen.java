@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -81,11 +80,11 @@ public class SkillsTabScreen {
     }
 
     private void recalculateBorders() {
-        this.minY = -(this.treeHeight+16);
+        this.minY = -(this.treeHeight + 16);
         this.maxY = 20;
 
-        this.minX = -SCREEN_WIDTH/2d;
-        this.maxX = this.treeWidth - SCREEN_WIDTH/2d;
+        this.minX = -SCREEN_WIDTH / 2d;
+        this.maxX = this.treeWidth - SCREEN_WIDTH / 2d;
         this.centerX = 0;
         this.centerY = 0;
     }
@@ -119,17 +118,17 @@ public class SkillsTabScreen {
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
         pose.pushPose();
         pose.translate(x, y, 0);
-        pose.translate(SCREEN_WIDTH/2d + centerX, 20 + centerY, 0);
+        pose.translate(SCREEN_WIDTH / 2d + centerX, 20 + centerY, 0);
 
-        pose.scale((float)this.zoom,(float) this.zoom, 1);
+        pose.scale((float) this.zoom, (float) this.zoom, 1);
 
-        for (int i = -(int)(((SCREEN_WIDTH/2 + centerX)  /16/zoom)) -1; i <= (int)(((SCREEN_WIDTH/2 - centerX)  /16/zoom)); ++i) {
-            for (int j = -(int)((20 + centerY)/16/zoom) -1; j <= (int)((SCREEN_HEIGHT - centerY)/16/zoom); ++j) {
+        for (int i = -(int) (((SCREEN_WIDTH / 2 + centerX) / 16 / zoom)) - 1; i <= (int) (((SCREEN_WIDTH / 2 - centerX) / 16 / zoom)); ++i) {
+            for (int j = -(int) ((20 + centerY) / 16 / zoom) - 1; j <= (int) ((SCREEN_HEIGHT - centerY) / 16 / zoom); ++j) {
                 graphics.blit(this.background, 16 * i, 16 * j, 0.0F, 0.0F, 16, 16, 16, 16);
             }
         }
 
-        this.root.drawConnectivity(graphics, 0,0, true);
+        this.root.drawConnectivity(graphics, 0, 0, true);
         this.root.drawConnectivity(graphics, 0, 0, false);
         this.root.draw(graphics, 0, 0);
         pose.popPose();
@@ -159,9 +158,9 @@ public class SkillsTabScreen {
                 if (nodeScreen.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
                     flag = true;
                     pose.pushPose();
-                    pose.translate(SCREEN_WIDTH/2d + centerX, 20 + centerY, 0);
+                    pose.translate(SCREEN_WIDTH / 2d + centerX, 20 + centerY, 0);
                     pose.scale((float) this.zoom, (float) this.zoom, 1);
-                    nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0,0);
+                    nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0);
                     pose.popPose();
                     break;
                 }
@@ -177,11 +176,11 @@ public class SkillsTabScreen {
     }
 
     private double getScaledMouseX(double mouseX) {
-        return (mouseX - SCREEN_WIDTH/2d - centerX)/zoom;
+        return (mouseX - SCREEN_WIDTH / 2d - centerX) / zoom;
     }
 
     private double getScaledMouseY(double mouseY) {
-        return (mouseY - 20 - centerY) /zoom;
+        return (mouseY - 20 - centerY) / zoom;
     }
 
     public void mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
@@ -191,15 +190,15 @@ public class SkillsTabScreen {
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
         var mouseX = getScaledMouseX(pMouseX);
         var mouseY = getScaledMouseY(pMouseY);
-        this.zoom = Mth.clamp(this.zoom + (float)pScrollX * 0.1f + (float)pScrollY * 0.1f, this.minZoom, this.maxZoom);
+        this.zoom = Mth.clamp(this.zoom + (float) pScrollX * 0.1f + (float) pScrollY * 0.1f, this.minZoom, this.maxZoom);
 
         center(this.centerX - (mouseX - getScaledMouseX(pMouseX)) * zoom, this.centerY - (mouseY - getScaledMouseY(pMouseY)) * zoom);
         return true;
     }
 
     public void center(double x, double y) {
-        this.centerX = Mth.clamp(x, this.minX *zoom, this.maxX*zoom);
-        this.centerY = Mth.clamp(y, -this.treeHeight*zoom,  20*zoom);
+        this.centerX = Mth.clamp(x, this.minX * zoom, this.maxX * zoom);
+        this.centerY = Mth.clamp(y, -this.treeHeight * zoom, 20 * zoom);
     }
 
     public Component getTitle() {
@@ -209,7 +208,7 @@ public class SkillsTabScreen {
     @Nullable
     public Holder<ISkill<?>> getSelected(int mouseX, int mouseY) {
         for (SkillNodeScreen screen : this.nodes.values()) {
-            Holder<ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY),0,0);
+            Holder<ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
             if (selected != null) {
                 return selected;
             }
@@ -237,7 +236,7 @@ public class SkillsTabScreen {
 
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, 400);
-        graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth/2, tooltipY + tooltipHeight/2 - this.minecraft.font.lineHeight/2, 15728880);
+        graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth / 2, tooltipY + tooltipHeight / 2 - this.minecraft.font.lineHeight / 2, 15728880);
         graphics.pose().popPose();
     }
 }

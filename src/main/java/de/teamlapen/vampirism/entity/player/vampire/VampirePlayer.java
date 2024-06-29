@@ -608,7 +608,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public boolean onDeadlyHit(@NotNull DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
-            int dbnoTime = Math.max(1, getDbnoDuration()-timePreviouslySpentInPlayerRevive);
+            int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
             this.setDBNOTimer(dbnoTime);
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
@@ -766,8 +766,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
-                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300));
-                player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300));
+            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
         }
     }
 
@@ -911,7 +911,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        var nbt =  super.serializeNBT(provider);
+        var nbt = super.serializeNBT(provider);
         nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeNBT(provider));
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
@@ -1054,7 +1054,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
                 double baseArmor = ((AttributeInstanceAccessor) armorAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
-                double baseToughness = ((AttributeInstanceAccessor)toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = ((AttributeInstanceAccessor) toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
                 if (modArmor != null && targetArmor != modArmor.amount()) {
@@ -1456,7 +1456,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     this.vision = vision;
                     this.vision.onActivated(VampirePlayer.this);
                 } else if (VampirePlayer.this.player.isAddedToWorld()) {
-                    VampirePlayer.this.player.displayClientMessage(Component.translatable("text.vampirism.vision_disabled_by_config"),true);
+                    VampirePlayer.this.player.displayClientMessage(Component.translatable("text.vampirism.vision_disabled_by_config"), true);
                 }
                 this.visionId = VampirismAPI.vampireVisionRegistry().getVisionId(vision);
             } else {
@@ -1478,7 +1478,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 tag.putBoolean("hasVision", false);
             } else {
                 tag.putBoolean("hasVision", true);
-                tag.putString(this.vision != null ? "vision": "visionId", this.visionId.toString());
+                tag.putString(this.vision != null ? "vision" : "visionId", this.visionId.toString());
             }
             return tag;
         }
@@ -1488,7 +1488,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (tag.getBoolean("hasVision")) {
                 if (tag.contains("vision", Tag.TAG_STRING)) {
                     this.activate(VampirismAPI.vampireVisionRegistry().getVision(ResourceLocation.parse(tag.getString("vision"))));
-                } else if(tag.contains("visionId", Tag.TAG_STRING)) {
+                } else if (tag.contains("visionId", Tag.TAG_STRING)) {
                     this.deactivate();
                     this.visionId = ResourceLocation.parse(tag.getString("visionId"));
                 }
@@ -1560,7 +1560,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider ) {
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
             CompoundTag tag = new CompoundTag();
             tag.putString("disguise", Optional.ofNullable(this.disguiseFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(""));
             return tag;

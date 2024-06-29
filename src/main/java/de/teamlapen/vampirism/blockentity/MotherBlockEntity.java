@@ -120,7 +120,6 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
 
-
     private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
     private final Set<ServerPlayer> activePlayers = new HashSet<>();
     private final Set<UUID> involvedPlayers = new HashSet<>();
@@ -212,7 +211,7 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     public void onVulnerabilityHit(LivingEntity entity, boolean destroyed) {
-        if (entity instanceof ServerPlayer player){
+        if (entity instanceof ServerPlayer player) {
             informAboutAttacker(player);
         }
         updateFightStatus();
@@ -305,7 +304,7 @@ public class MotherBlockEntity extends BlockEntity {
 
     private AABB getArea() {
         if (this.area == null) {
-            this.area = new AABB(this.worldPosition).inflate(9, 0,9).expandTowards(0, -10, 0).expandTowards(0, 4, 0);
+            this.area = new AABB(this.worldPosition).inflate(9, 0, 9).expandTowards(0, -10, 0).expandTowards(0, 4, 0);
         }
         return this.area;
     }
@@ -313,7 +312,7 @@ public class MotherBlockEntity extends BlockEntity {
     private void spawnGhosts() {
         Set<BlockPos> vuls = this.getTreeStructure(false).getCachedBlocks();
         int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
-        for(int i = size; i < Math.max(3, Math.min(this.activePlayers.size() * 1.6, 10)); i++) {
+        for (int i = size; i < Math.max(3, Math.min(this.activePlayers.size() * 1.6, 10)); i++) {
             vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
         }
     }

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import net.minecraft.core.registries.Registries;
@@ -8,7 +7,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +22,7 @@ public record ServerboundSelectAmmoTypePacket(boolean hasRestriction, @Nullable 
             ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.ITEM)), pkt -> Optional.ofNullable(pkt.ammoId),
             ServerboundSelectAmmoTypePacket::new
     );
+
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ServerboundSelectAmmoTypePacket(boolean hasRestriction, Optional<Item> ammoId) {
         this(hasRestriction, ammoId.orElse(null));
@@ -38,7 +37,7 @@ public record ServerboundSelectAmmoTypePacket(boolean hasRestriction, @Nullable 
     }
 
     public static ServerboundSelectAmmoTypePacket of(SelectAmmoScreen.AmmoType ammoType) {
-        if (ammoType.renderStack == null)  {
+        if (ammoType.renderStack == null) {
             return new ServerboundSelectAmmoTypePacket(false, (Item) null);
         } else {
             return new ServerboundSelectAmmoTypePacket(true, ammoType.renderStack.getItem());

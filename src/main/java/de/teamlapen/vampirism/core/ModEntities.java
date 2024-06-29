@@ -102,7 +102,7 @@ public class ModEntities {
     @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<? extends ICondition>> ENTITY_EXISTS = CONDITIONS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Item>> ITEM_DATA = DATA_SERIALIZER.register("item", () -> (EntityDataSerializer.ForValueType<Item>)(() -> ByteBufCodecs.registry(Registries.ITEM)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Item>> ITEM_DATA = DATA_SERIALIZER.register("item", () -> (EntityDataSerializer.ForValueType<Item>) (() -> ByteBufCodecs.registry(Registries.ITEM)));
 
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

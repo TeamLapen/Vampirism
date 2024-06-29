@@ -22,11 +22,11 @@ import java.util.Optional;
 public class PlayerFactionSubPredicate implements EntitySubPredicate {
 
     public static final MapCodec<PlayerFactionSubPredicate> CODEC = RecordCodecBuilder.mapCodec(inst ->
-        inst.group(
-                FactionCodec.playable().optionalFieldOf("faction", null).forGetter(p -> p.faction),
-                Codec.INT.optionalFieldOf( "level").forGetter(p -> p.level),
-                Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
-        ).apply(inst, PlayerFactionSubPredicate::new)
+            inst.group(
+                    FactionCodec.playable().optionalFieldOf("faction", null).forGetter(p -> p.faction),
+                    Codec.INT.optionalFieldOf("level").forGetter(p -> p.level),
+                    Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
+            ).apply(inst, PlayerFactionSubPredicate::new)
     );
 
     @Nullable

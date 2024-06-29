@@ -12,7 +12,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -648,17 +647,17 @@ public class UtilLib {
         int i = (color & 16711680) >> 16;
         int j = (color & 65280) >> 8;
         int k = (color & 255);
-        return new float[]{(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
+        return new float[] {(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
     }
 
     @NotNull
     public static int[] bbToInt(@NotNull AABB bb) {
-        return new int[]{(int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ};
+        return new int[] {(int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ};
     }
 
     @NotNull
     public static int[] mbToInt(@NotNull BoundingBox bb) {
-        return new int[]{bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ()};
+        return new int[] {bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ()};
     }
 
     @NotNull
@@ -767,19 +766,19 @@ public class UtilLib {
 
     @Nullable
     public static Direction getDirection(BlockPos origin, BlockPos offset) {
-        if(origin.getX() > offset.getX()) {
+        if (origin.getX() > offset.getX()) {
             return Direction.EAST;
         } else if (origin.getX() < offset.getX()) {
             return Direction.WEST;
         }
 
-        if(origin.getZ() > offset.getZ()) {
+        if (origin.getZ() > offset.getZ()) {
             return Direction.SOUTH;
         } else if (origin.getZ() < offset.getZ()) {
             return Direction.NORTH;
         }
 
-        if(origin.getY() > offset.getY()) {
+        if (origin.getY() > offset.getY()) {
             return Direction.UP;
         } else if (origin.getY() < offset.getY()) {
             return Direction.DOWN;
@@ -801,7 +800,7 @@ public class UtilLib {
         return list.get(rand.nextInt(list.size()));
     }
 
-    public static  <T> T getRandomElementOr(List<T> list, Supplier<T> ifEmpty) {
+    public static <T> T getRandomElementOr(List<T> list, Supplier<T> ifEmpty) {
         if (list.isEmpty()) {
             return ifEmpty.get();
         }

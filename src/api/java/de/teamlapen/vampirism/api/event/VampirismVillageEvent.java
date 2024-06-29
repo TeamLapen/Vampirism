@@ -226,6 +226,7 @@ public abstract class VampirismVillageEvent extends Event {
 
         /**
          * Set an optional message when the capture is disallowed
+         *
          * @param message the message
          */
         public void setMessage(@Nullable String message) {

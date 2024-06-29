@@ -26,8 +26,8 @@ public class MigrationData {
 
     public record Mapping(DeferredRegister<?> register) {
         public void remap(String id, String newId) {
-                remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
-            }
+            remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
+        }
 
         public void remap(ResourceLocation id, ResourceLocation object) {
             register.addAlias(id, object);
@@ -37,6 +37,7 @@ public class MigrationData {
     private static void fixSkillsVampire(@NotNull Mapping consumer) {
         consumer.remap("vampirism:bat", "vampirism:fledgling");
     }
+
     private static void fixSkillsHunter(@NotNull Mapping consumer) {
         consumer.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         consumer.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
@@ -75,26 +76,26 @@ public class MigrationData {
         mapping.remap("vampirism:obsidian_armor_chest_normal", "vampirism:hunter_coat_chest_normal");
         mapping.remap("vampirism:obsidian_armor_legs_normal", "vampirism:hunter_coat_legs_normal");
         mapping.remap("vampirism:obsidian_armor_feet_normal", "vampirism:hunter_coat_feet_normal");
-        mapping.remap("vampirism:obsidian_armor_head_enhanced","vampirism:hunter_coat_head_enhanced" );
+        mapping.remap("vampirism:obsidian_armor_head_enhanced", "vampirism:hunter_coat_head_enhanced");
         mapping.remap("vampirism:obsidian_armor_chest_enhanced", "vampirism:hunter_coat_chest_enhanced");
-        mapping.remap("vampirism:obsidian_armor_legs_enhanced","vampirism:hunter_coat_legs_enhanced" );
-        mapping.remap("vampirism:obsidian_armor_feet_enhanced","vampirism:hunter_coat_feet_enhanced" );
+        mapping.remap("vampirism:obsidian_armor_legs_enhanced", "vampirism:hunter_coat_legs_enhanced");
+        mapping.remap("vampirism:obsidian_armor_feet_enhanced", "vampirism:hunter_coat_feet_enhanced");
         mapping.remap("vampirism:obsidian_armor_head_ultimate", "vampirism:hunter_coat_head_ultimate");
-        mapping.remap("vampirism:obsidian_armor_chest_ultimate","vampirism:hunter_coat_chest_ultimate" );
-        mapping.remap("vampirism:obsidian_armor_legs_ultimate","vampirism:hunter_coat_legs_ultimate" );
+        mapping.remap("vampirism:obsidian_armor_chest_ultimate", "vampirism:hunter_coat_chest_ultimate");
+        mapping.remap("vampirism:obsidian_armor_legs_ultimate", "vampirism:hunter_coat_legs_ultimate");
         mapping.remap("vampirism:obsidian_armor_feet_ultimate", "vampirism:hunter_coat_feet_ultimate");
 
 
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
-        mapping.remap("vampirism:blood_potion_table","vampirism:potion_table" );
+        mapping.remap("vampirism:blood_potion_table", "vampirism:potion_table");
         mapping.remap("vampirism:garlic_beacon_normal", "vampirism:totem_top_vampirism_hunter_crafted");
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
         mapping.remap("vampirism:vampire_spruce_leaves", "vampirism:dark_spruce_leaves");
-        mapping.remap("vampirism:bloody_spruce_leaves","vampirism:dark_spruce_leaves" );
+        mapping.remap("vampirism:bloody_spruce_leaves", "vampirism:dark_spruce_leaves");
         mapping.remap("vampirism:bloody_spruce_log", "vampirism:cursed_spruce_log");
         mapping.remap("vampirism:cursed_grass_block", "vampirism:cursed_grass");
         mapping.remap("castle_block_dark_brick", "vampirism:dark_stone_bricks");
@@ -105,7 +106,7 @@ public class MigrationData {
         mapping.remap("castle_slab_dark_stone", "vampirism:dark_stone_slab");
         mapping.remap("castle_stairs_dark_brick", "vampirism:dark_stone_brick_stairs");
         mapping.remap("castle_stairs_dark_stone", "vampirism:dark_stone_stairs");
-        mapping.remap("castle_block_dark_brick_cracked","vampirism:cracked_dark_stone_bricks");
+        mapping.remap("castle_block_dark_brick_cracked", "vampirism:cracked_dark_stone_bricks");
         mapping.remap("castle_block_dark_brick_wall", "vampirism:dark_stone_brick_wall");
         mapping.remap("castle_block_purple_brick", "vampirism:purple_stone_bricks");
         mapping.remap("castle_slab_purple_brick", "vampirism:purple_stone_brick_slab");

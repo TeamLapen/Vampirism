@@ -72,12 +72,12 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public @Nullable IMinionEntry<?,?> getMinion(ResourceLocation minionId) {
+    public @Nullable IMinionEntry<?, ?> getMinion(ResourceLocation minionId) {
         return ModRegistries.MINIONS.get(minionId);
     }
 
     @Override
-    public @NotNull Collection<IMinionEntry<?,?>> getMinions() {
+    public @NotNull Collection<IMinionEntry<?, ?>> getMinions() {
         return ModRegistries.MINIONS.stream().toList();
     }
 
@@ -103,8 +103,8 @@ public class FactionRegistry implements IFactionRegistry {
 
     private static class MinionEntryCallbacks implements AddCallback<IMinionEntry<?, ?>>, ClearCallback<IMinionEntry<?, ?>>, BakeCallback<IMinionEntry<?, ?>> {
 
-        private final Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?,?>>,IMinionEntry<?, ?>>>> tmpEntries = new HashMap<>();
-        private Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?,?>>, IMinionEntry<?, ?>>>> entries = ImmutableMap.of();
+        private final Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> tmpEntries = new HashMap<>();
+        private Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> entries = ImmutableMap.of();
 
         @Override
         public void onAdd(Registry<IMinionEntry<?, ?>> registry, int id, ResourceKey<IMinionEntry<?, ?>> key, IMinionEntry<?, ?> value) {
@@ -113,8 +113,8 @@ public class FactionRegistry implements IFactionRegistry {
 
         @Override
         public void onBake(Registry<IMinionEntry<?, ?>> registry) {
-            ImmutableMap.Builder<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?,?>>,IMinionEntry<?, ?>>>> builder =ImmutableMap.builder();
-            for (Map.Entry<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?,?>>,IMinionEntry<?, ?>>>> holderListEntry : this.tmpEntries.entrySet()) {
+            ImmutableMap.Builder<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> builder = ImmutableMap.builder();
+            for (Map.Entry<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> holderListEntry : this.tmpEntries.entrySet()) {
                 builder.put(holderListEntry.getKey(), List.copyOf(holderListEntry.getValue()));
             }
             this.entries = builder.build();

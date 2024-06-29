@@ -13,10 +13,10 @@ public class GarlicDiffuserRecipeMaker {
     public static List<GarlicDiffuserRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllItemStacks().stream()
                 .<GarlicDiffuserRecipe>mapMulti((stack, consumer) -> {
-            IGarlicDiffuserFuel data = stack.getItemHolder().getData(VampirismDataMaps.GARLIC_DIFFUSER_FUEL.get());
-            if (data != null)  {
-                consumer.accept(new GarlicDiffuserRecipe(stack, data));
-            }
-        }).sorted(Comparator.comparingInt(GarlicDiffuserRecipe::getBurnTime)).toList();
+                    IGarlicDiffuserFuel data = stack.getItemHolder().getData(VampirismDataMaps.GARLIC_DIFFUSER_FUEL.get());
+                    if (data != null) {
+                        consumer.accept(new GarlicDiffuserRecipe(stack, data));
+                    }
+                }).sorted(Comparator.comparingInt(GarlicDiffuserRecipe::getBurnTime)).toList();
     }
 }

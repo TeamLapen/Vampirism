@@ -13,10 +13,10 @@ public class FogDiffuserRecipeMaker {
     public static List<FogDiffuserRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllItemStacks().stream()
                 .<FogDiffuserRecipe>mapMulti((stack, consumer) -> {
-            IFogDiffuserFuel data = stack.getItemHolder().getData(VampirismDataMaps.FOG_DIFFUSER_FUEL.get());
-            if (data != null)  {
-                consumer.accept(new FogDiffuserRecipe(stack, data));
-            }
-        }).sorted(Comparator.comparingInt(FogDiffuserRecipe::getBurnTime)).toList();
+                    IFogDiffuserFuel data = stack.getItemHolder().getData(VampirismDataMaps.FOG_DIFFUSER_FUEL.get());
+                    if (data != null) {
+                        consumer.accept(new FogDiffuserRecipe(stack, data));
+                    }
+                }).sorted(Comparator.comparingInt(FogDiffuserRecipe::getBurnTime)).toList();
     }
 }

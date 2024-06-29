@@ -57,7 +57,7 @@ public class Permissions {
         }
     }
 
-    public static class ContextPermission<T>  {
+    public static class ContextPermission<T> {
 
         private final PermissionNode<Boolean> node;
         private final PermissionDynamicContextKey<T> context;

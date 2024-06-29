@@ -68,7 +68,7 @@ public class HelperRegistry {
     @ThreadSafeLibAPI
     public static void registerSyncableEntityCapability(AttachmentType<IAttachedSyncable> capability, Class<? extends IAttachedSyncable> clz) {
         if (syncableEntityCaps == Collections.EMPTY_MAP) {
-            throw new IllegalStateException("Cannot register syncable entity capability " + clz + "("+ capability + ") after the InterModEnqueueEvent");
+            throw new IllegalStateException("Cannot register syncable entity capability " + clz + "(" + capability + ") after the InterModEnqueueEvent");
         }
         syncableEntityCaps.put(NeoForgeRegistries.ATTACHMENT_TYPES.getKey(capability), capability);
     }
@@ -82,7 +82,7 @@ public class HelperRegistry {
     @ThreadSafeLibAPI
     public static void registerSyncablePlayerCapability(AttachmentType<IAttachedSyncable> capability, Class<? extends IAttachedSyncable> clz) {
         if (syncablePlayerCaps == Collections.EMPTY_MAP) {
-            throw new IllegalStateException("Cannot register syncable property " + clz + "("+ capability + ") after the InterModEnqueueEvent");
+            throw new IllegalStateException("Cannot register syncable property " + clz + "(" + capability + ") after the InterModEnqueueEvent");
         }
         syncablePlayerCaps.put(NeoForgeRegistries.ATTACHMENT_TYPES.getKey(capability), capability);
     }
@@ -95,8 +95,8 @@ public class HelperRegistry {
      */
     @ThreadSafeLibAPI
     public static void registerPlayerEventReceivingCapability(AttachmentType<IPlayerEventListener> capability, Class<? extends IPlayerEventListener> clz) {
-        if (playerEventListenerCaps ==  Collections.EMPTY_SET) {
-            throw new IllegalStateException("Cannot register PlayerEventReceiver ("+ capability + ") after the InterModEnqueueEvent");
+        if (playerEventListenerCaps == Collections.EMPTY_SET) {
+            throw new IllegalStateException("Cannot register PlayerEventReceiver (" + capability + ") after the InterModEnqueueEvent");
         } else {
             playerEventListenerCaps.add(capability);
         }

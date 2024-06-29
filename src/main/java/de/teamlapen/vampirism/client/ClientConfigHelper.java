@@ -101,20 +101,20 @@ public class ClientConfigHelper {
 
     /**
      * tests if a serialized minion task order is in a valid format
+     *
      * @param string the serialized order
      * @return true if the order is valid
      */
     public static boolean testTasks(Object string) {
         try {
             GSON.fromJson((String) string, MINION_TASK_TOKEN);
-        } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException  e) {
+        } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException e) {
             return false;
         }
         return true;
     }
 
     /**
-     *
      * @deprecated may be null and does not ensure a valid order
      */
     @Deprecated
@@ -124,9 +124,9 @@ public class ClientConfigHelper {
     }
 
     /**
-     * @implSpec if no order is set for the given faction, the default order is returned and set
      * @param faction the faction for which the order should be returned
      * @return a valid order for the given faction
+     * @implSpec if no order is set for the given faction, the default order is returned and set
      */
     @NotNull
     public static List<Holder<IAction<?>>> getActionOrder(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
@@ -143,13 +143,13 @@ public class ClientConfigHelper {
     }
 
     /**
-     * @implSpec if no order is set for the given faction, the default order is returned and set
      * @param faction the faction for which the order should be returned. If no faction is given a default identifier is used
      * @return a valid order for the given faction
+     * @implSpec if no order is set for the given faction, the default order is returned and set
      */
     @NotNull
     public static List<SelectMinionTaskRadialScreen.Entry> getMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction) {
-        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE)),() -> {
+        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE)), () -> {
             List<SelectMinionTaskRadialScreen.Entry> order = getDefaultMinionTaskOrder(faction);
             saveMinionTaskOrder(faction, order);
             return order;
@@ -163,7 +163,7 @@ public class ClientConfigHelper {
      * @return a valid order for the given faction
      */
     public static List<SelectMinionTaskRadialScreen.Entry> getDefaultMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction) {
-        return Stream.concat(RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?,?>)).filter(task -> {
+        return Stream.concat(RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(task -> !(task instanceof INoGlobalCommandTask<?, ?>)).filter(task -> {
             if (task instanceof IFactionMinionTask<?, ?> factionTask) {
                 return factionTask.getFaction() == null || IFaction.is(factionTask.getFaction(), faction);
             } else {
@@ -175,10 +175,10 @@ public class ClientConfigHelper {
     /**
      * Saves the given order for the given faction
      *
-     * @param id the ordering identifier (faction id)
+     * @param id      the ordering identifier (faction id)
      * @param actions the ordering
      */
-    public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull  List<Holder<IAction<?>>> actions) {
+    public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull List<Holder<IAction<?>>> actions) {
         ACTION_ORDER.put(id, actions);
         try {
             String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
@@ -192,9 +192,9 @@ public class ClientConfigHelper {
      * Saves the given order for the given faction
      *
      * @param faction the faction for which the order should be saved. If no faction is given a default identifier is used
-     * @param tasks the ordering
+     * @param tasks   the ordering
      */
-    public static void saveMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction, @NotNull  List<SelectMinionTaskRadialScreen.Entry> tasks) {
+    public static void saveMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction, @NotNull List<SelectMinionTaskRadialScreen.Entry> tasks) {
         MINION_TASK_ORDER.put(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE), tasks);
         try {
             String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.RemainsDefenderModel;
@@ -26,7 +25,7 @@ public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull RemainsDefenderEntity pEntity) {
         int t = pEntity.tickCount % 20;
-        if (t> 15) {
+        if (t > 15) {
             return TEX4;
         } else if (t > 10) {
             return TEX3;
@@ -39,14 +38,14 @@ public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, 
 
     @Override
     protected void setupRotations(RemainsDefenderEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks, float scale) {
-        pMatrixStack.translate(0, 0.5d,0);
+        pMatrixStack.translate(0, 0.5d, 0);
         pMatrixStack.mulPose(pEntityLiving.getAttachFace().getOpposite().getRotation());
-        pMatrixStack.translate(0,-0.5,0);
+        pMatrixStack.translate(0, -0.5, 0);
     }
 
     @Override
     protected int getBlockLightLevel(RemainsDefenderEntity pEntity, BlockPos pPos) {
-        int i = (int) Mth.clampedLerp(0.0F, 15.0F, (float)pEntity.getLightTicksRemaining() / 10.0F);
+        int i = (int) Mth.clampedLerp(0.0F, 15.0F, (float) pEntity.getLightTicksRemaining() / 10.0F);
         return i == 15 ? 15 : Math.max(i, super.getBlockLightLevel(pEntity, pPos));
     }
 }

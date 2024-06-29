@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.garlic;
 
 import com.google.common.collect.Maps;
-import com.ibm.icu.impl.duration.impl.DataRecord;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -15,7 +14,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -23,7 +21,10 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -101,7 +102,7 @@ public class GarlicLevel implements IGarlicChunkHandler {
 
     public void fill(List<Emitter> emitters) {
         this.clearCache();
-        this.emitterHashMap.putAll(emitters.stream().collect(Collectors.toMap(Record::hashCode, x->x)));
+        this.emitterHashMap.putAll(emitters.stream().collect(Collectors.toMap(Record::hashCode, x -> x)));
         rebuildStrengthMap();
         notifyClear();
     }

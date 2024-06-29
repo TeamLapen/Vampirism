@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
@@ -28,12 +27,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
@@ -42,7 +39,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     private final IGuiHelper guiHelper;
 
     public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        this.background = guiHelper.drawableBuilder(VResourceLocation.loc(ModIds.JEI_ID, "textures/jei/atlas/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18,18).addPadding(14, 90, 75, 75).build();
+        this.background = guiHelper.drawableBuilder(VResourceLocation.loc(ModIds.JEI_ID, "textures/jei/atlas/gui/slot.png"), 0, 0, 18, 18).setTextureSize(18, 18).addPadding(14, 90, 75, 75).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
         this.guiHelper = guiHelper;
     }

@@ -7,12 +7,12 @@ license = "${mod_license}"
 config = "vampirism.mixins.json"
 
 [[mods]]
-    modId="${mod_id}"
-    namespace="vampirism"
-    version="${mod_version}"
-    displayName="${mod_name}"
-    authors="${mod_authors}"
-    credits='''\n
+modId = "${mod_id}"
+namespace = "vampirism"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+credits = '''\n
      - 1LiterZinalco (triage/textures/models)
      - TheRebelT (textures)
      - TinkerHatWill (textures)
@@ -39,46 +39,46 @@ config = "vampirism.mixins.json"
      - T_Corvus (textures)
      - freesound.org (sounds)
      - freeSFX.co.uk (sounds)'''
-    description='''${mod_description}'''
-    displayURL="${mod_url}"
-    logoFile="logo.png"
-    updateJSONURL="https://api.modrinth.com/updates/vampirism/forge_updates.json"
-    enumExtensions="META-INF/enumextensions.json"
-    [[dependencies.${mod_id}]]
-        modId="neoforge"
-        type="required"
-        versionRange="${forge_version_range}"
-        ordering="NONE"
-        side="BOTH"
-    [[dependencies.${mod_id}]]
-        modId="teamlapenlib"
-        type="required"
-        versionRange="[${mod_version},)"
-        ordering="AFTER"
-        side="BOTH"
-    [[dependencies.${mod_id}]]
-        modId = "guideapi-vp"
-        type="optional"
-        versionRange = "[${guideapi_version},)"
-        ordering = "AFTER"
-        side = "BOTH"
-    [[dependencies.${mod_id}]]
-        modId = "jei"
-        type="optional"
-        versionRange = "[${jei_version},)"
-        ordering = "AFTER"
-        side = "BOTH"
+description = '''${mod_description}'''
+displayURL = "${mod_url}"
+logoFile = "logo.png"
+updateJSONURL = "https://api.modrinth.com/updates/vampirism/forge_updates.json"
+enumExtensions = "META-INF/enumextensions.json"
+[[dependencies.${ mod_id }]]
+modId = "neoforge"
+type = "required"
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "teamlapenlib"
+type = "required"
+versionRange = "[${mod_version},)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "guideapi-vp"
+type = "optional"
+versionRange = "[${guideapi_version},)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.${ mod_id }]]
+modId = "jei"
+type = "optional"
+versionRange = "[${jei_version},)"
+ordering = "AFTER"
+side = "BOTH"
 [[mods]]
-    modId="teamlapenlib"
-    namespace="teamlapenlib"
-    version="${mod_version}"
-    displayName="Teamlapen Library"
-    authors="${mod_authors}"
-    description="Required by Vampirism"
-    displayURL="${mod_url}"
-    [[dependencies.teamlapen-lib]]
-        modId="neoforge"
-        type="required"
-        versionRange="${forge_version_range}"
-        ordering="NONE"
-        side="BOTH"
+modId = "teamlapenlib"
+namespace = "teamlapenlib"
+version = "${mod_version}"
+displayName = "Teamlapen Library"
+authors = "${mod_authors}"
+description = "Required by Vampirism"
+displayURL = "${mod_url}"
+[[dependencies.teamlapen-lib]]
+modId = "neoforge"
+type = "required"
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"

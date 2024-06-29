@@ -53,7 +53,7 @@ public class ChandelierBlock extends VampirismBlock {
 
     @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
-        PARTICLE_OFFSETS.forEach(p_220695_ -> addParticlesAndSound(pLevel, p_220695_.add((double) pPos.getX(), (double) pPos.getY(), (double) pPos.getZ()), pRandom));
+        PARTICLE_OFFSETS.forEach(p_220695_ -> addParticlesAndSound(pLevel, p_220695_.add(pPos.getX(), pPos.getY(), pPos.getZ()), pRandom));
     }
 
     private static void addParticlesAndSound(Level pLevel, Vec3 pOffset, RandomSource pRandom) {

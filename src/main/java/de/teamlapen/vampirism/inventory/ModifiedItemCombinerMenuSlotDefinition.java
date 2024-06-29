@@ -31,7 +31,7 @@ public class ModifiedItemCombinerMenuSlotDefinition extends ItemCombinerMenuSlot
         }
 
         public ModifiedItemCombinerMenuSlotDefinition build() {
-            return new ModifiedItemCombinerMenuSlotDefinition(this.slots, new SlotDefinition(this.slots.size()-1, 0, 0, (p_266823_) -> false));
+            return new ModifiedItemCombinerMenuSlotDefinition(this.slots, new SlotDefinition(this.slots.size() - 1, 0, 0, (p_266823_) -> false));
         }
     }
 }

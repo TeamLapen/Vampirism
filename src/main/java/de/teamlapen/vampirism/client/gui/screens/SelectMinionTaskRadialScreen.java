@@ -47,7 +47,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
         if (handler.getLordLevel() > 0) {
             Collection<Entry> tasks = getTasks(handler);
-            if (tasks.isEmpty() ) {
+            if (tasks.isEmpty()) {
                 Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_minion_tasks"), true);
                 Minecraft.getInstance().setScreen(null);
             } else {
@@ -59,9 +59,9 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
         if (playerHandler.getLordLevel() == 0) return List.of();
         return playerHandler.getCurrentFactionPlayer().map(player -> {
-            return ClientConfigHelper.getMinionTaskOrder(playerHandler.getFaction()).stream().filter(entry -> {
+                    return ClientConfigHelper.getMinionTaskOrder(playerHandler.getFaction()).stream().filter(entry -> {
                         return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
-            }).collect(Collectors.toList());
+                    }).collect(Collectors.toList());
                 }
         ).orElseGet(List::of);
     }
@@ -99,13 +99,13 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         private final Component text;
         private final ResourceLocation loc;
         private final Runnable onSelected;
-        private final IMinionTask<?,?> task;
+        private final IMinionTask<?, ?> task;
 
         public Entry(@NotNull IMinionTask<?, ?> task) {
             this(RegUtil.id(task), task.getName(), VResourceLocation.loc(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?,?> task) {
+        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?, ?> task) {
             this.id = id;
             this.text = text;
             this.loc = icon;
@@ -133,7 +133,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         }
 
         @Nullable
-        public IMinionTask<?,?> getTask() {
+        public IMinionTask<?, ?> getTask() {
             return this.task;
         }
 

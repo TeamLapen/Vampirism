@@ -30,18 +30,21 @@ public abstract class BloodDrinkEvent extends Event {
     public IVampire getVampire() {
         return this.vampire;
     }
+
     /**
      * @return The amount of the blood that is drained.
      */
     public int getAmount() {
         return this.amount;
     }
+
     /**
      * @return The saturation modifier that is gained.
      */
     public float getSaturation() {
         return this.saturation;
     }
+
     /**
      * @return The type of blood source that the blood was obtained from.
      */
@@ -57,7 +60,6 @@ public abstract class BloodDrinkEvent extends Event {
     }
 
     /**
-     *
      * @param saturation the new saturation modifier
      */
     public void setSaturationModifier(float saturation) {
@@ -74,14 +76,15 @@ public abstract class BloodDrinkEvent extends Event {
             super(player, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
+
         /**
          * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;
         }
+
         /**
-         *
          * @param useRemaining the new useRemaining
          */
         public void setUseRemaining(boolean useRemaining) {
@@ -100,14 +103,15 @@ public abstract class BloodDrinkEvent extends Event {
             super(vampire, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
+
         /**
          * @return Whether the remaining blood should be used, see {@link de.teamlapen.vampirism.api.entity.vampire.IVampire#drinkBlood(int, float, boolean, de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext)}.
          */
         public boolean useRemaining() {
             return this.useRemaining;
         }
+
         /**
-         *
          * @param useRemaining the new useRemaining
          */
         public void setUseRemaining(boolean useRemaining) {

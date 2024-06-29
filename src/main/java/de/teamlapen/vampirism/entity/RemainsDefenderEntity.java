@@ -145,7 +145,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if(super.hurt(pSource, pAmount)) {
+        if (super.hurt(pSource, pAmount)) {
             this.getDummy().ifPresent(vehicle -> vehicle.childrenIsHurt(pSource, this.dead, getAttachFace()));
             return true;
         }
@@ -203,7 +203,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
 
     @Override
     public boolean startRiding(Entity pEntity, boolean pForce) {
-        if(super.startRiding(pEntity, pForce)) {
+        if (super.startRiding(pEntity, pForce)) {
             this.reapplyPosition();
             return true;
         }
@@ -218,7 +218,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
             case X -> box.contract(0, 4d / 16, 4d / 16).contract(0, (-4d / 16), -(4d / 16));
             case Y -> box.contract(4d / 16, 0, 4d / 16).contract(-(4d / 16), 0, -(4d / 16));
             case Z -> box.contract(4d / 16, 4d / 16, 0).contract(-(4d / 16), -(4d / 16), 0);
-        }).contract(attachFace.getStepX() * (12d/16d),attachFace.getStepY() * (12d/16d),attachFace.getStepZ() * (12d/16d)).move(blockPosition());
+        }).contract(attachFace.getStepX() * (12d / 16d), attachFace.getStepY() * (12d / 16d), attachFace.getStepZ() * (12d / 16d)).move(blockPosition());
     }
 
     public Optional<VulnerableRemainsDummyEntity> getDummy() {
@@ -297,7 +297,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
                 if (target instanceof ServerPlayer player && entity.getDummy().flatMap(VulnerableRemainsDummyEntity::getTile).flatMap(VulnerableRemainsBlockEntity::getMother).map(MotherBlockEntity::involvedPlayers).stream().anyMatch(s -> s.contains(player))) {
                     return true;
                 } else {
-                    return !(target instanceof  IRemainsEntity) && !Helper.isVampire(target);
+                    return !(target instanceof IRemainsEntity) && !Helper.isVampire(target);
                 }
             });
         }

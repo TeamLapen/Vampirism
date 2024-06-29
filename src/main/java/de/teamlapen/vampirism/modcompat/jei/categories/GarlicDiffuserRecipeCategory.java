@@ -55,7 +55,7 @@ public class GarlicDiffuserRecipeCategory implements IRecipeCategory<GarlicDiffu
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GarlicDiffuserRecipe recipe, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1,  1)
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStacks(recipe.getInputs());
     }
 

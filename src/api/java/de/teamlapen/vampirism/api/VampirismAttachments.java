@@ -30,7 +30,7 @@ public class VampirismAttachments {
         public static final ResourceLocation HUNTER_PLAYER = VResourceLocation.mod("hunter_player");
         public static final ResourceLocation GARLIC_HANDLER = VResourceLocation.mod("garlic_handler");
         public static final ResourceLocation FOG_HANDLER = VResourceLocation.mod("fog_handler");
-        public static final ResourceLocation DAMAGE_HANDLER = VResourceLocation.mod( "damage_handler");
-        public static final ResourceLocation VAMPIRE_BAT = VResourceLocation.mod( "vampire_bat");
+        public static final ResourceLocation DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
+        public static final ResourceLocation VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
     }
 }

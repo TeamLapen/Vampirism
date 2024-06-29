@@ -256,7 +256,7 @@ public class BalanceConfig {
         allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
         bleedingEffectDamage = builder.comment("How much damage the bleeding effect should do per damaging tick").defineInRange("bleedingEffectDamage", 0.1, 0, Double.MAX_VALUE);
-        diffuserBootTime = builder.comment("Time in seconds a diffuser needs to boot up, before its effect takes action").defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE/20);
+        diffuserBootTime = builder.comment("Time in seconds a diffuser needs to boot up, before its effect takes action").defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
 
         //Entity actions
         builder.category("entityActions", "ea");

@@ -128,7 +128,7 @@ public abstract class CandleStickBlock extends AbstractCandleBlock implements Si
         if (!pState.getValue(WATERLOGGED) && pFluidState.getType() == Fluids.WATER) {
             BlockState blockstate = pState.setValue(WATERLOGGED, Boolean.TRUE);
             if (pState.getValue(LIT)) {
-                extinguish((Player) null, blockstate, pLevel, pPos);
+                extinguish(null, blockstate, pLevel, pPos);
             } else {
                 pLevel.setBlock(pPos, blockstate, 3);
             }

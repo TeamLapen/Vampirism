@@ -6,5 +6,6 @@ import java.util.Optional;
 
 public interface VampireBookLootProvider {
 
-    @NotNull Optional<String> getBookLootId();
+    @NotNull
+    Optional<String> getBookLootId();
 }

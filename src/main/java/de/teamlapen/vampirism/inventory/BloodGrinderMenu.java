@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class BloodGrinderMenu extends InventoryContainerMenu {
     private static final Predicate<ItemStack> canProcess = VampirismAPI.bloodConversionRegistry()::canBeConverted;
-    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[] {new SelectorInfo(canProcess, 80, 34)};
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated

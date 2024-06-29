@@ -32,7 +32,7 @@ public class VampireKillerBehavior implements IVampirismCrossbowArrow.ICrossbowA
     @Override
     public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
         if (entity instanceof IVampireMob || (entity instanceof Player player && Helper.isVampire(player))) {
-            if(shootingEntity instanceof LivingEntity shooter && StakeItem.canKillInstant(entity, shooter)) {
+            if (shootingEntity instanceof LivingEntity shooter && StakeItem.canKillInstant(entity, shooter)) {
                 DamageHandler.hurtModded(entity, s -> s.stake(shooter), 10000F);
             }
         }

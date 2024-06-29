@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
@@ -220,7 +219,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_VAMPIRE_HUT, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 5))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0, 0.6f)))))
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0, 1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(70).apply(AddBookNbtFunction.builder())))
                     .withPool(accessories(ConstantValue.exactly(2)))
@@ -234,7 +233,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_VAMPIRE_ALTAR, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 8))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0, 0.6f)))))
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(10, 18))
                             .add(LootItem.lootTableItem(Items.GOLD_INGOT).setWeight(16))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(22).apply(SetItemDamageFunction.setDamage(ConstantValue.exactly(1f)))))

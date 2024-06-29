@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,7 +7,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -27,6 +25,7 @@ public record ClientboundSundamagePacket(List<ResourceKey<DimensionType>> dimens
             ResourceKey.streamCodec(Registries.DIMENSION).apply(ByteBufCodecs.list()), ClientboundSundamagePacket::sunDamageLevels,
             ClientboundSundamagePacket::new
     );
+
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;

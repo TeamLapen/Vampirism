@@ -13,14 +13,13 @@ import java.lang.reflect.Method;
  * The down time from PlayerRevive waiting for a revive is counted towards the DBNO timeout before the player can resurrect.
  * Using these methods: <a href="https://github.com/CreativeMD/PlayerRevive/blob/5a2fae4075a7fdfe3452f18b4939b6d21372542e/src/main/java/team/creative/playerrevive/server/PlayerReviveServer.java#L23-L33">PlayerReviveServer</a>
  * Based on <a href="https://github.com/CreativeMD/PlayerRevive/issues/97#issuecomment-1255953836">Github Issue</a>
- *
  */
 public class PlayerReviveHelper {
 
     private static Method m_getDownedTime;
     private static boolean use_player_revive_time = true;
 
-    public static int getPreviousDownTime(Player player){
+    public static int getPreviousDownTime(Player player) {
         if (use_player_revive_time && !player.level().isClientSide()) {
             if (!ModList.get().isLoaded("playerrevive")) {
                 use_player_revive_time = false;
@@ -38,11 +37,11 @@ public class PlayerReviveHelper {
                         use_player_revive_time = false;
                     }
                 }
-                if(m_getDownedTime != null){
+                if (m_getDownedTime != null) {
                     try {
                         Object result = m_getDownedTime.invoke(null, player);
                         return (Integer) result;
-                    } catch (IllegalArgumentException|IllegalAccessException|InvocationTargetException|ClassCastException e) {
+                    } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | ClassCastException e) {
                         LogManager.getLogger().error("Failed to obtain downed time from PlayerRevive method for compatibility", e);
                         throw new RuntimeException(e);
                     }

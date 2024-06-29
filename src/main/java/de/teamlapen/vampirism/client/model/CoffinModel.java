@@ -74,6 +74,7 @@ public class CoffinModel extends Model {
     public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer iVertexBuilder, int packedLight, int overlay, int color) {
         modelParts.forEach(part -> part.render(matrixStack, iVertexBuilder, packedLight, overlay, color));
     }
+
     public void rotateLid(float angle) {
         leftLid.zRot = leftHandle.zRot = -angle;
         rightLid.zRot = rightHandle.zRot = angle;

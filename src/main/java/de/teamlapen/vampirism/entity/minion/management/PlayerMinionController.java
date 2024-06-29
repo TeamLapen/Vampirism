@@ -290,8 +290,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             for (int i = 0; i < infos.length; i++) {
                 MinionInfo info = infos[i];
                 if (info != null) {
-                    newInfos[i-im] = info;
-                    newTokens[i-im] = tokens[i];
+                    newInfos[i - im] = info;
+                    newTokens[i - im] = tokens[i];
                 } else {
                     im++;
                 }
@@ -367,7 +367,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
-            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).map(s ->  s.getPlayerCapability(player.getPlayer())).filter(s -> s instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler)).ifPresent(s -> {
+            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).map(s -> s.getPlayerCapability(player.getPlayer())).filter(s -> s instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler)).ifPresent(s -> {
                 if (s.isSkillEnabled(LordSkills.MINION_RECOVERY)) {
                     i.deathCooldown = (int) (i.deathCooldown * 0.8);
                 }
@@ -551,6 +551,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
      * creates a collection of id for all minions that are unique identifier to be used safely in commands
      * <br>
      * since the player is not necessarily available because the player might not be connected the players name is needed as parameter
+     *
      * @param playerName the players name
      * @return collection of minion ids
      */

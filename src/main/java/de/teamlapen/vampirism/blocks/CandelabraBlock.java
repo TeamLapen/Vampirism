@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 public class CandelabraBlock extends AbstractCandelabraBlock {
 
     private static final Map<Direction, Iterable<Vec3>> PARTICLE_OFFSET = new EnumMap<>(Direction.class) {{
-        put(Direction.NORTH, ImmutableList.of(new Vec3(0.5, 0.9375, 0.5D),new Vec3(0.1875, 0.8125, 0.5), new Vec3(0.8125, 0.8125, 0.5D)));
+        put(Direction.NORTH, ImmutableList.of(new Vec3(0.5, 0.9375, 0.5D), new Vec3(0.1875, 0.8125, 0.5), new Vec3(0.8125, 0.8125, 0.5D)));
         put(Direction.WEST, ImmutableList.of(new Vec3(0.5, 0.9375, 0.5D), new Vec3(0.5, 0.8125, 0.1875), new Vec3(0.5, 0.8125, 0.8125)));
         put(Direction.SOUTH, ImmutableList.of(new Vec3(0.5, 0.9375, 0.5D), new Vec3(0.1875, 0.8125, 0.5), new Vec3(0.8125, 0.8125, 0.5D)));
         put(Direction.EAST, ImmutableList.of(new Vec3(0.5, 0.9375, 0.5D), new Vec3(0.5, 0.8125, 0.1875), new Vec3(0.5D, 0.8125, 0.8125)));

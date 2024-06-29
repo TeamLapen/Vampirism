@@ -40,8 +40,8 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
 
     private static ItemOrdering<SelectMinionTaskRadialScreen.Entry> getOrdering(FactionPlayerHandler player) {
         return new ItemOrdering<>(ClientConfigHelper.getMinionTaskOrder(player.getFaction()), new ArrayList<>(), () -> Stream.concat(ModRegistries.MINION_TASKS.stream().filter(s -> !(s instanceof INoGlobalCommandTask)).filter(s -> {
-            if (s instanceof IFactionMinionTask<?,?> factionTask) {
-                if(factionTask.getFaction() == null) {
+            if (s instanceof IFactionMinionTask<?, ?> factionTask) {
+                if (factionTask.getFaction() == null) {
                     return true;
                 } else {
                     return IFaction.is(factionTask.getFaction(), player.getFaction());

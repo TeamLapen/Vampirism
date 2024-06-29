@@ -4,9 +4,7 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +21,7 @@ import java.util.List;
 public class BleedingBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
     @Override
     public int color() {
-        return 11141120 | 0xFF000000 ;
+        return 11141120 | 0xFF000000;
     }
 
     @Override

@@ -127,7 +127,7 @@
     "subtitle": "subtitles.vampirism.freeze"
   },
   "block.potion_table_crafting": {
-    "sounds":  [
+    "sounds": [
       "vampirism:reserved/block/potion_table_crafting"
     ]
   },
@@ -154,10 +154,10 @@
   },
   "entity.ghost.ambient": {
     "sounds": [
-        "minecraft:mob/vex/idle1",
-        "minecraft:mob/vex/idle2",
-        "minecraft:mob/vex/idle3",
-        "minecraft:mob/vex/idle4"
+      "minecraft:mob/vex/idle1",
+      "minecraft:mob/vex/idle2",
+      "minecraft:mob/vex/idle3",
+      "minecraft:mob/vex/idle4"
     ],
     "subtitle": "subtitles.vampirism.ghost.ambient"
   },

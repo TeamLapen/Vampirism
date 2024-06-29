@@ -88,7 +88,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        var recipe = new AlchemyTableRecipe(Objects.requireNonNullElse(this.group,""), this.ingredient, this.input, this.result, this.skills);
+        var recipe = new AlchemyTableRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.input, this.result, this.skills);
         recipeOutput.accept(resourceLocation, recipe, advancement.build(resourceLocation.withPrefix("recipes/alchemy_table/")));
     }
 

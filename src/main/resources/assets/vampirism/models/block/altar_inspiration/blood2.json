@@ -1,18 +1,42 @@
 {
-	"credit": "Zin",
-	"textures": {
-		"texture": "vampirism:block/blood_still"
-	},
-    "render_type": "minecraft:translucent",
-	"elements": [
-		{
-			"name": "blood fill",
-			"from": [3, 3, 3],
-			"to": [13, 3, 13],
-			"rotation": {"angle": 0, "axis": "y", "origin": [11, -1, 11]},
-			"faces": {
-				"up": {"uv": [3, 3, 13, 13], "texture": "#texture"}
-			}
-		}
-	]
+  "credit": "Zin",
+  "textures": {
+    "texture": "vampirism:block/blood_still"
+  },
+  "render_type": "minecraft:translucent",
+  "elements": [
+    {
+      "name": "blood fill",
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        13,
+        3,
+        13
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          11,
+          -1,
+          11
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#texture"
+        }
+      }
+    }
+  ]
 }

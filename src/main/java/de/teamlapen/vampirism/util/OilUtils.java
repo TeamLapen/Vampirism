@@ -16,7 +16,7 @@ import java.util.stream.StreamSupport;
 public class OilUtils {
 
     public static Collection<IArmorOil> getEquippedArmorOils(Player player) {
-        return StreamSupport.stream(player.getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil)iApplicableOil.get()).collect(Collectors.toList());
+        return StreamSupport.stream(player.getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil) iApplicableOil.get()).collect(Collectors.toList());
     }
 
     public static @NotNull Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {

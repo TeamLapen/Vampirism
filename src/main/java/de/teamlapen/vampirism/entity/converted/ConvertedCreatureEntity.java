@@ -185,9 +185,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.hurtDuration = this.hurtDuration;
             entityCreature.attackAnim = this.attackAnim;
             entityCreature.oAttackAnim = this.oAttackAnim;
-            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeed(((WalkAnimationStateAccessor)this.walkAnimation).getSpeed());
-            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeedOld(((WalkAnimationStateAccessor)this.walkAnimation).getSpeedOld());
-            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setPosition(((WalkAnimationStateAccessor)this.walkAnimation).getPosition());
+            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeed(((WalkAnimationStateAccessor) this.walkAnimation).getSpeed());
+            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeedOld(((WalkAnimationStateAccessor) this.walkAnimation).getSpeedOld());
+            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setPosition(((WalkAnimationStateAccessor) this.walkAnimation).getPosition());
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;
@@ -214,7 +214,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider,@NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("entity_old", Tag.TAG_COMPOUND)) {
             //noinspection unchecked
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld()).orElse(null));
@@ -276,7 +276,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         if (!Objects.equals(old, creature)) {
             this.entityCreature = Optional.ofNullable(creature);
             this.entityChanged = true;
-            ((EntityAccessor) this).setDimensions(this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f,0.5f)));
+            ((EntityAccessor) this).setDimensions(this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f, 0.5f)));
         }
         if (this.entityCreature.isPresent() && getConvertedHandler() == null) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);

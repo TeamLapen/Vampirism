@@ -1,33 +1,85 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "vampirism:item/tech_crossbow"
-	},
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [-90, 0, -60],
-			"translation": [2.25, 0, -4]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [-90, 0, 25],
-			"translation": [2.25, 0, -4]
-		},
-		"firstperson_righthand": {
-			"rotation": [-90, 0, -55],
-			"translation": [0.88, 3.2, 2.13],
-			"scale": [0.68, 0.68, 0.68]
-		},
-		"firstperson_lefthand": {
-			"rotation": [-90, 0, 35],
-			"translation": [0.75, 3.2, 2.13],
-			"scale": [0.68, 0.68, 0.68]
-		},
-		"ground": {
-			"translation": [0, 2, 0],
-			"scale": [0.7, 0.7, 0.7]
-		},
-		"fixed": {
-			"rotation": [0, 180, 0]
-		}
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:item/tech_crossbow"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -90,
+        0,
+        -60
+      ],
+      "translation": [
+        2.25,
+        0,
+        -4
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -90,
+        0,
+        25
+      ],
+      "translation": [
+        2.25,
+        0,
+        -4
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -90,
+        0,
+        -55
+      ],
+      "translation": [
+        0.88,
+        3.2,
+        2.13
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -90,
+        0,
+        35
+      ],
+      "translation": [
+        0.75,
+        3.2,
+        2.13
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ]
+    }
+  }
 }

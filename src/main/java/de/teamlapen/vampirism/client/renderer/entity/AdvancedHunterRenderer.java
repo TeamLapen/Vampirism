@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
@@ -45,7 +44,7 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
             this.textures = gatherTextures("textures/entity/hunter", true);
         } else {
             //noinspection unchecked
-            this.textures = new Pair[]{};
+            this.textures = new Pair[] {};
         }
     }
 

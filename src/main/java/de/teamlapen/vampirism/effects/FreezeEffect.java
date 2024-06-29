@@ -15,7 +15,7 @@ public class FreezeEffect extends ConfigAwareEffect {
 
     public FreezeEffect() {
         super(MobEffectCategory.HARMFUL, 0xFFFFFF);
-        addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.FREEZE.getId(), () -> - VampirismConfig.BALANCE.vaFreezeAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.FREEZE.getId(), () -> -VampirismConfig.BALANCE.vaFreezeAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override

@@ -24,7 +24,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
     private final @Nullable Holder<ISkill<?>> requiredSkill;
 
     public DefaultMinionTask() {
-        this( null);
+        this(null);
     }
 
     public DefaultMinionTask(@Nullable Holder<ISkill<?>> requiredSkill) {

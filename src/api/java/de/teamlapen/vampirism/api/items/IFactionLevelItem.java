@@ -44,7 +44,6 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T> & ISkillPlayer<T>
     }
 
 
-
     /**
      * @return The level the player has to be to use this item
      */

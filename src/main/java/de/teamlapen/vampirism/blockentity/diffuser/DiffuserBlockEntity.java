@@ -96,7 +96,8 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     @Override
-    protected @NotNull abstract DiffuserMenu createMenu(int pContainerId, @NotNull Inventory pInventory, @NotNull LockDataHolder lockData);
+    protected @NotNull
+    abstract DiffuserMenu createMenu(int pContainerId, @NotNull Inventory pInventory, @NotNull LockDataHolder lockData);
 
     @Override
     public int getContainerSize() {
@@ -167,7 +168,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
                 blockEntity.loaded = false;
                 blockEntity.activateEffect(level, blockPos, blockState);
             }
-        } else if (blockEntity.litTime == 0 && blockEntity.getBurnDuration(blockEntity.items.get(SLOT_FUEL)) > 0){
+        } else if (blockEntity.litTime == 0 && blockEntity.getBurnDuration(blockEntity.items.get(SLOT_FUEL)) > 0) {
             ItemStack fuelStack = blockEntity.items.get(SLOT_FUEL);
             int burnDuration = blockEntity.getBurnDuration(fuelStack);
             blockEntity.litTime += burnDuration;

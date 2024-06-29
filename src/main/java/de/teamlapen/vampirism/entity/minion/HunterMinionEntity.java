@@ -2,18 +2,15 @@ package de.teamlapen.vampirism.entity.minion;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
@@ -179,7 +176,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttackGoal() {
-        if (this.level().isClientSide()) return;
+        if (this.level().isClientSide()) {
+        }
     }
 
     public void updateAttributes() {
@@ -393,14 +391,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         /**
          * Called on server side to upgrade a stat of the given id
          * <p>
-         * @param  statId values: <br>
-         * -1: reset all stats <br>
-         * -2: update attributes <br>
-         * 0: increases inventory level <br>
-         * 1: increases health level <br>
-         * 2: increases strength level <br>
-         * 3: increases resource efficiency level <br>
          *
+         * @param statId values: <br>
+         *               -1: reset all stats <br>
+         *               -2: update attributes <br>
+         *               0: increases inventory level <br>
+         *               1: increases health level <br>
+         *               2: increases strength level <br>
+         *               3: increases resource efficiency level <br>
          * @return if attributes where changed and a sync is required
          */
         @Override

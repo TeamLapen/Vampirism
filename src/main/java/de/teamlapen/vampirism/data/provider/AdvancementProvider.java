@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;

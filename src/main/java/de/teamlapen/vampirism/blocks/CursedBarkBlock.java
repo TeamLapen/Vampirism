@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
-    private static final VoxelShape shape =  Shapes.empty();
+    private static final VoxelShape shape = Shapes.empty();
 
     public CursedBarkBlock(BlockBehaviour.Properties properties) {
         super(properties.noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));

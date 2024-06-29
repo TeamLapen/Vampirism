@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModMenus;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * Container for interacting with basic hunters to level up as a hunter
  */
 public class HunterBasicMenu extends InventoryContainerMenu {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 27, 32)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[] {new SelectorInfo(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 27, 32)};
     private final @NotNull IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;

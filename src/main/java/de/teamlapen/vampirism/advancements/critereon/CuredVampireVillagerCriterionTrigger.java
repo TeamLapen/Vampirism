@@ -31,9 +31,9 @@ public class CuredVampireVillagerCriterionTrigger extends SimpleCriterionTrigger
     public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Optional<ContextAwarePredicate> vampire, @NotNull Optional<ContextAwarePredicate> villager) implements SimpleCriterionTrigger.SimpleInstance {
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf( "player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf( "vampire").forGetter(TriggerInstance::vampire),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf( "villager").forGetter(TriggerInstance::villager)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("vampire").forGetter(TriggerInstance::vampire),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("villager").forGetter(TriggerInstance::villager)
         ).apply(inst, TriggerInstance::new));
 
         private TriggerInstance() {

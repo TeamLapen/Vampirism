@@ -132,7 +132,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             //make sure a crafting table is only generated once
             if (!specialComponentAdd && rand.nextInt(2) == 0) {
                 specialComponentAdd = true;
-                return new SpecialBlock(this.pos.offset(xOffset,0, zOffset), direction, advanced);
+                return new SpecialBlock(this.pos.offset(xOffset, 0, zOffset), direction, advanced);
             }
             return new Tent(this.pos.offset(xOffset, 0, zOffset), direction, advanced);
         }
@@ -236,10 +236,10 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.placeBlock(worldIn, air, xDiff, 1, 1, structureBoundingBoxIn);
 
             //replace top level dirt with grass
-            if (worldIn.getBlockState(this.pos.offset(0,-1,-2)).is(BlockTags.DIRT)) {
+            if (worldIn.getBlockState(this.pos.offset(0, -1, -2)).is(BlockTags.DIRT)) {
                 this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), 1, -1, -1, structureBoundingBoxIn);
             }
-            if (worldIn.getBlockState(atX(this.pos.offset(0,-1,-2),xCenter)).is(BlockTags.DIRT)) {
+            if (worldIn.getBlockState(atX(this.pos.offset(0, -1, -2), xCenter)).is(BlockTags.DIRT)) {
                 this.placeBlock(worldIn, Blocks.GRASS_BLOCK.defaultBlockState(), xDiff, -1, -1, structureBoundingBoxIn);
             }
         }

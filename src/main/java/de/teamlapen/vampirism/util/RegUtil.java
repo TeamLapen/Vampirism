@@ -164,7 +164,7 @@ public class RegUtil {
         return getHolder(level, Registries.DAMAGE_TYPE, type);
     }
 
-    public static <T> boolean has(@NotNull Registry<T> registry, @NotNull  ResourceLocation id) {
+    public static <T> boolean has(@NotNull Registry<T> registry, @NotNull ResourceLocation id) {
         return registry.containsKey(id);
     }
 
@@ -177,12 +177,12 @@ public class RegUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
         return (Holder<IAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
         return (Holder<ILastingAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
     }
 

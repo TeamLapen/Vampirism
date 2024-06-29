@@ -55,14 +55,14 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FogDiffuserRecipe recipe, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1,  1)
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStacks(recipe.getInputs());
     }
 
     @Override
     public void draw(FogDiffuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.slot.draw(guiGraphics);
-        
+
         int burnDuration = recipe.getBurnTime() / 20;
         Component text;
         if (burnDuration < 60) {

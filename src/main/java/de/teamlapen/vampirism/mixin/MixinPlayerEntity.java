@@ -28,7 +28,8 @@ import java.util.function.Predicate;
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
 
-    @Shadow public abstract Either<Player.BedSleepingProblem, Unit> startSleepInBed(BlockPos pBedPos);
+    @Shadow
+    public abstract Either<Player.BedSleepingProblem, Unit> startSleepInBed(BlockPos pBedPos);
 
     @Unique
     private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();

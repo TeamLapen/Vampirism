@@ -34,7 +34,7 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
     public void onAdd(@NotNull Registry<ISkill<?>> registry, int id, @NotNull ResourceKey<ISkill<?>> key, @NotNull ISkill<?> value) {
         if (value instanceof IActionSkill<?> actionSkill) {
             ACTION_TO_SKILL_MAP.put(actionSkill.actionHolder(), actionSkill);
-        } else if (value instanceof DefaultSkill<?> defaultSkill){
+        } else if (value instanceof DefaultSkill<?> defaultSkill) {
             defaultSkill.getActionHolder().forEach(action -> ACTION_TO_SKILL_MAP.put(action, new EmptyActionSkill<>(action)));
         }
     }

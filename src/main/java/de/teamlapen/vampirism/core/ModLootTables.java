@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.mixin.accessor.LootTableAccessor;
 import net.minecraft.core.registries.Registries;

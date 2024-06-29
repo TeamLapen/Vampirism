@@ -55,6 +55,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
      * <p>
      * Keys should be mutually exclusive with {@link #cooldownTimers}
+     *
      * @implNote The values must be of type {@link Holder<ILastingAction<T>>}
      */
     private final @NotNull Object2IntMap<Holder<? extends ILastingAction<T>>> activeTimers;
@@ -105,7 +106,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
 
     @Override
     public @NotNull List<IAction<T>> getAvailableActions() {
-       return getAvailableActionsHolder().stream().map(Holder::value).collect(Collectors.toList());
+        return getAvailableActionsHolder().stream().map(Holder::value).collect(Collectors.toList());
     }
 
     @Override
@@ -179,7 +180,9 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         expectedCooldownTimes.clear();
         expectedDurations.clear();
         if (nbt.contains("actions_active")) //noinspection unchecked
-            loadTimerMapFromNBT(nbt.getCompound("actions_active"), (Object2IntMap<Holder<? extends IAction<T>>>)(Object) activeTimers);
+        {
+            loadTimerMapFromNBT(nbt.getCompound("actions_active"), (Object2IntMap<Holder<? extends IAction<T>>>) (Object) activeTimers);
+        }
         if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
         if (nbt.contains("actions_cooldown_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
         if (nbt.contains("actions_duration_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
@@ -302,9 +305,9 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     /**
      * After server receives action toggle packet this is called.
      * Actions can be canceled, have their cooldown changed, or if a lasting action their duration changed as well through {@link de.teamlapen.vampirism.api.event.ActionEvent.ActionActivatedEvent}
+     *
      * @param action  Action being toggled
      * @param context Context holding Block/Entity the player was looking at when activating if any
-     *
      */
     @Override
     public IAction.@NotNull PERM toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
@@ -326,7 +329,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
                  */
                 int duration = action.value() instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
                 ActionEvent.ActionActivatedEvent<T> activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.value().getCooldown(player), duration);
-                if(activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
+                if (activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
                 if (action.value().onActivated(player, context)) {
                     player.asEntity().awardStat(ModStats.ACTION_USED.get().get(action.value()));
                     //Even though lasting actions do not activate their cooldown until they deactivate
@@ -366,8 +369,8 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
             int duration = expectedDurations.getInt(action);
             var event = VampirismEventFactory.fireActionDeactivatedEvent(player, action, leftTime, expectedCooldownTimes.getInt(action), ignoreCooldown, fullCooldown);
             int cooldown = event.getCooldown();
-            if(!event.ignoreCooldown() && !cooldownTimers.containsKey(action)) {
-                if(!event.fullCooldown()) {
+            if (!event.ignoreCooldown() && !cooldownTimers.containsKey(action)) {
+                if (!event.fullCooldown()) {
                     cooldown -= (int) (cooldown * (leftTime / (float) duration / 2f));
                 } else {
                     expectedCooldownTimes.put(action, cooldown);

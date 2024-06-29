@@ -17,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(StatsScreen.class)
 public abstract class StatsScreenMixin extends Screen {
 
-    @Shadow public abstract void setActiveList(@Nullable ObjectSelectionList<?> pActiveList);
+    @Shadow
+    public abstract void setActiveList(@Nullable ObjectSelectionList<?> pActiveList);
 
     @Unique
     private ActionStatisticsList vampirism$actionStatisticsList;
@@ -28,12 +29,12 @@ public abstract class StatsScreenMixin extends Screen {
 
     @Inject(method = "initLists()V", at = @At("RETURN"))
     private void initLists(CallbackInfo ci) {
-        this.vampirism$actionStatisticsList = new ActionStatisticsList(this.minecraft, ((StatsScreen) (Object)this), width, height-96);
+        this.vampirism$actionStatisticsList = new ActionStatisticsList(this.minecraft, ((StatsScreen) (Object) this), width, height - 96);
     }
 
     @Inject(method = "initButtons", at = @At("RETURN"))
     private void initButtons(CallbackInfo ci) {
-        var button = this.addRenderableWidget(Button.builder(Component.translatable("text.vampirism.actions"), b -> this.setActiveList(this.vampirism$actionStatisticsList)).bounds(this.width / 2 + 120, this.height -52, 80, 20).build());
+        var button = this.addRenderableWidget(Button.builder(Component.translatable("text.vampirism.actions"), b -> this.setActiveList(this.vampirism$actionStatisticsList)).bounds(this.width / 2 + 120, this.height - 52, 80, 20).build());
         if (this.vampirism$actionStatisticsList.children().isEmpty()) {
             button.active = false;
         }

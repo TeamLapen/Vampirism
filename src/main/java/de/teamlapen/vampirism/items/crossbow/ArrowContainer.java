@@ -43,7 +43,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        return ((MutableComponent) super.getName(stack)).append(" (" + getArrows(stack).size() + "/" + this.maxCount +")");
+        return ((MutableComponent) super.getName(stack)).append(" (" + getArrows(stack).size() + "/" + this.maxCount + ")");
     }
 
     @Override

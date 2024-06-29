@@ -20,13 +20,13 @@ public class VampirismClientEntityRegistry extends VampirismEntityRegistry {
     }
 
     public <I extends LivingEntity, U extends EntityModel<I>> void syncOverlays() {
-        for (EntityType<?> type: getConvertibleOverlay().keySet()) {
-            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) ((EntityRenderDispatcherAccessor)Minecraft.getInstance().getEntityRenderDispatcher()).renderers().get(type);
+        for (EntityType<?> type : getConvertibleOverlay().keySet()) {
+            LivingEntityRenderer<I, U> render = (LivingEntityRenderer<I, U>) ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).renderers().get(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;
             }
-            if(((LivingEntityRendererAccessor) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?,?>)) {
+            if (((LivingEntityRendererAccessor) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?, ?>)) {
                 render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
             }
         }

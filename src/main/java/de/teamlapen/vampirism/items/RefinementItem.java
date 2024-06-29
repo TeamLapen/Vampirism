@@ -37,7 +37,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static @NotNull ItemStack getRandomRefinementItem(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
-        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElseGet(() -> sets.getFirst().data());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {

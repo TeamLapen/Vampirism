@@ -77,7 +77,7 @@ public class CloakModel extends VampirismArmorModel {
         shoulderright = part.getChild(SHOULDER_RIGHT);
     }
 
-    private void setupAnimation(LivingEntity entity)  {
+    private void setupAnimation(LivingEntity entity) {
         boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null && entity.getVehicle().shouldRiderSit());
 
         float f = Mth.rotLerp(MixinHooks.armorLayerPartialTicks, entity.yBodyRotO, entity.yBodyRot);
@@ -124,7 +124,7 @@ public class CloakModel extends VampirismArmorModel {
                 f8 = 1.0F;
             }
         }
-        cloakItemModel.setupAnim(entity, f5, f8,entity.tickCount + MixinHooks.armorLayerPartialTicks, f2, f6);
+        cloakItemModel.setupAnim(entity, f5, f8, entity.tickCount + MixinHooks.armorLayerPartialTicks, f2, f6);
     }
 
     public void setupAnim(@NotNull LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -142,8 +142,9 @@ public class CloakModel extends VampirismArmorModel {
         }
 
         float rotation = Mth.cos(limbSwing * 0.6662F) * 1.4F * (limbSwingAmount / 1.8f) / f6;
-        if (rotation < 0.0F)
+        if (rotation < 0.0F) {
             rotation *= -1;
+        }
         this.cloakback.xRot = 0.0872665F + (rotation / 3);
         this.leftlong.xRot = 0.0872665F + (rotation / 3);
         this.rightlong.xRot = 0.0872665F + (rotation / 3);

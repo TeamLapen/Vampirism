@@ -36,13 +36,13 @@ public class InfectAction extends DefaultVampireAction {
     @Override
     protected boolean activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
         Player player = vampire.asEntity();
-        Entity creature =  context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
+        Entity creature = context.targetEntity().filter(LivingEntity.class::isInstance).filter(target -> {
             if (UtilLib.canReallySee((LivingEntity) target, player, false)) {
                 return false;
             }
             return deriveBiteableEntry(target).map(e -> e.tryInfect(vampire)).orElse(false);
         }).orElse(null);
-        if(creature != null ){
+        if (creature != null) {
             player.awardStat(ModStats.INFECTED_CREATURES.get());
             player.level().playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1, 1);
         } else {

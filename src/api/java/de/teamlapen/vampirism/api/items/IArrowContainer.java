@@ -17,12 +17,14 @@ public interface IArrowContainer {
 
     /**
      * Adds an arrow to the container
+     *
      * @return true if the arrow was added
      */
     boolean addArrow(ItemStack container, ItemStack arrow);
 
     /**
      * Adds multiple arrows to the container.
+     *
      * @param arrowStacks The arrows to add. Added arrows are removed from the list.
      */
     void addArrows(ItemStack container, List<ItemStack> arrowStacks);
@@ -39,6 +41,7 @@ public interface IArrowContainer {
 
     /**
      * Removes a specific arrow from the container
+     *
      * @return true if the arrow was removed
      */
     boolean removeArrow(ItemStack container, ItemStack arrow);

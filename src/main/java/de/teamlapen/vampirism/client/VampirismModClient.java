@@ -86,7 +86,7 @@ public class VampirismModClient {
     }
 
     public void onDataMapsUpdated(DataMapsUpdatedEvent event) {
-        ((VampirismClientEntityRegistry)VampirismAPI.entityRegistry()).syncOverlays();
+        ((VampirismClientEntityRegistry) VampirismAPI.entityRegistry()).syncOverlays();
     }
 
     public static IProxy getProxy() {

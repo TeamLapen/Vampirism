@@ -34,13 +34,13 @@ public class ModRegistries {
     public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(VampirismRegistries.Keys.SKILL).callback(new SkillCallbacks()).sync(true).create();
     public static final Registry<IAction<?>> ACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.ACTION).sync(true).create();
     public static final Registry<IMinionTask<?, ?>> MINION_TASKS = new RegistryBuilder<>(VampirismRegistries.Keys.MINION_TASK).sync(true).create();
-    public static final Registry<IRefinement> REFINEMENTS  = new RegistryBuilder<>(VampirismRegistries.Keys.REFINEMENT).sync(true).create();
+    public static final Registry<IRefinement> REFINEMENTS = new RegistryBuilder<>(VampirismRegistries.Keys.REFINEMENT).sync(true).create();
     public static final Registry<IRefinementSet> REFINEMENT_SETS = new RegistryBuilder<>(VampirismRegistries.Keys.REFINEMENT_SET).sync(true).create();
     public static final Registry<IOil> OILS = new RegistryBuilder<>(VampirismRegistries.Keys.OIL).sync(true).create();
     public static final Registry<MapCodec<? extends TaskReward>> TASK_REWARDS = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REWARD).create();
     public static final Registry<MapCodec<? extends TaskUnlocker>> TASK_UNLOCKER = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_UNLOCKER).create();
-    public static final Registry<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS  = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REQUIREMENT).create();
-    public static final Registry<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES= new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REWARD_INSTANCE).create();
+    public static final Registry<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REQUIREMENT).create();
+    public static final Registry<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REWARD_INSTANCE).create();
     public static final Registry<MapCodec<? extends Converter>> ENTITY_CONVERTER = new RegistryBuilder<>(VampirismRegistries.Keys.ENTITY_CONVERTER).create();
     public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.FACTION).sync(true).defaultKey(VampirismFactions.NEUTRAL.getRawKey()).create();
     public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(VampirismRegistries.Keys.MINION).callback(((FactionRegistry) VampirismAPI.factionRegistry()).getMinionCallback()).sync(true).create();
@@ -58,8 +58,7 @@ public class ModRegistries {
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)
             .add(SKILL_TREE, ModSkills::createSkillTrees)
-            .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
-            ;
+            .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments);
 
     static void registerRegistries(NewRegistryEvent event) {
         event.register(SKILLS);

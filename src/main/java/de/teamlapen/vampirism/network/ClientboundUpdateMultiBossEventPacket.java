@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.util.Color;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
 import de.teamlapen.vampirism.world.MultiBossEvent;
@@ -11,12 +10,14 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public record ClientboundUpdateMultiBossEventPacket(Operation operation) implements CustomPacketPayload {
 
@@ -91,7 +92,7 @@ public record ClientboundUpdateMultiBossEventPacket(Operation operation) impleme
     public record UpdateProgressOperation(UUID uniqueId, Map<Color, Float> entries) implements Operation {
         public static final StreamCodec<RegistryFriendlyByteBuf, UpdateProgressOperation> CODEC = StreamCodec.composite(
                 ByteBufferCodecUtil.UUID, UpdateProgressOperation::uniqueId,
-                ByteBufCodecs.map(s -> new HashMap<>(),Color.STREAM_CODEC,ByteBufCodecs.FLOAT), UpdateProgressOperation::entries,
+                ByteBufCodecs.map(s -> new HashMap<>(), Color.STREAM_CODEC, ByteBufCodecs.FLOAT), UpdateProgressOperation::entries,
                 UpdateProgressOperation::new
         );
 

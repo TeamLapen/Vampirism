@@ -5,7 +5,6 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -336,7 +335,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             for (int i = 0; i < data.size(); i++) {
                 switch (i) {
                     case 0 -> this.type = data.get(i);
-                    case 1 ->  {
+                    case 1 -> {
                         this.useLordSkin = (data.get(i) & 0b1) == 1;
                         this.minionSkin = (data.get(i) & 0b10) == 0b10;
                     }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.*;
@@ -21,7 +20,6 @@ import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -51,11 +49,11 @@ public class ModTasks {
     public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<LordLevelReward>> LORD_LEVEL_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("lord_level", () -> LordLevelReward.CODEC);
     public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<ConsumerReward>> CONSUMER_INSTANCE = TASK_REWARD_INSTANCES.register("consumer", () -> ConsumerReward.CODEC);
 
-    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>,MapCodec<? extends TaskRequirement.Requirement<?>>> BOOLEAN_REQUIREMENT = TASK_REQUIREMENTS.register("boolean", () -> BooleanRequirement.CODEC);
-    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>,MapCodec<? extends TaskRequirement.Requirement<?>>> ENTITY_REQUIREMENT = TASK_REQUIREMENTS.register("entity", () -> EntityRequirement.CODEC);
-    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>,MapCodec<? extends TaskRequirement.Requirement<?>>> ENTITY_TYPE_REQUIREMENT = TASK_REQUIREMENTS.register("entity_type", () -> EntityTypeRequirement.CODEC);
-    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>,MapCodec<? extends TaskRequirement.Requirement<?>>> ITEM_REQUIREMENT = TASK_REQUIREMENTS.register("item", () -> ItemRequirement.CODEC);
-    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>,MapCodec<? extends TaskRequirement.Requirement<?>>> STAT_REQUIREMENT = TASK_REQUIREMENTS.register("stat", () -> StatRequirement.CODEC);
+    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>, MapCodec<? extends TaskRequirement.Requirement<?>>> BOOLEAN_REQUIREMENT = TASK_REQUIREMENTS.register("boolean", () -> BooleanRequirement.CODEC);
+    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>, MapCodec<? extends TaskRequirement.Requirement<?>>> ENTITY_REQUIREMENT = TASK_REQUIREMENTS.register("entity", () -> EntityRequirement.CODEC);
+    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>, MapCodec<? extends TaskRequirement.Requirement<?>>> ENTITY_TYPE_REQUIREMENT = TASK_REQUIREMENTS.register("entity_type", () -> EntityTypeRequirement.CODEC);
+    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>, MapCodec<? extends TaskRequirement.Requirement<?>>> ITEM_REQUIREMENT = TASK_REQUIREMENTS.register("item", () -> ItemRequirement.CODEC);
+    public static final DeferredHolder<MapCodec<? extends TaskRequirement.Requirement<?>>, MapCodec<? extends TaskRequirement.Requirement<?>>> STAT_REQUIREMENT = TASK_REQUIREMENTS.register("stat", () -> StatRequirement.CODEC);
 
     //vampire
     //  lord tasks

@@ -47,7 +47,7 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
         super.setupAnim(entity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
         float f = 1.0F;
         if (entity.getFallFlyingTicks() > 4) {
-            f = (float)entity.getDeltaMovement().lengthSqr();
+            f = (float) entity.getDeltaMovement().lengthSqr();
             f /= 0.2F;
             f *= f * f;
         }
@@ -60,6 +60,6 @@ public class BipedCloakedModel<T extends LivingEntity> extends PlayerModel<T> {
         } else {
             this.bipedCloak.y = 0.0F;
         }
-        this.bipedCloak.xRot = Math.max(Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount / f, Mth.cos(pLimbSwing * 0.6662F + (float)Math.PI) * 1.4F * pLimbSwingAmount / f);
+        this.bipedCloak.xRot = Math.max(Mth.cos(pLimbSwing * 0.6662F) * 1.4F * pLimbSwingAmount / f, Mth.cos(pLimbSwing * 0.6662F + (float) Math.PI) * 1.4F * pLimbSwingAmount / f);
     }
 }

@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.world.fog.FogLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -167,7 +166,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
     @Override
     public void setHomeArea(@NotNull BlockPos pos, int r) {
-        this.setHome(new AABB(Vec3.atLowerCornerOf(pos.offset(-r, -r, -r)), Vec3.atLowerCornerWithOffset(pos.offset(r, r, r), 1,1,1)));
+        this.setHome(new AABB(Vec3.atLowerCornerOf(pos.offset(-r, -r, -r)), Vec3.atLowerCornerWithOffset(pos.offset(r, r, r), 1, 1, 1)));
     }
 
     @Override

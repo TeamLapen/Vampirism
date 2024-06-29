@@ -18,14 +18,12 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
-public class ConvertedCatEntity extends Cat implements CurableConvertedCreature<Cat, ConvertedCatEntity>{
+public class ConvertedCatEntity extends Cat implements CurableConvertedCreature<Cat, ConvertedCatEntity> {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCatEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCatEntity.class, EntityDataSerializers.STRING);

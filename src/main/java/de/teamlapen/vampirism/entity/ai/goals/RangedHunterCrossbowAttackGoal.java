@@ -54,7 +54,7 @@ public class RangedHunterCrossbowAttackGoal<T extends PathfinderMob & RangedAtta
             }
 
             double d0 = this.mob.distanceToSqr(livingentity);
-            boolean flag2 = (d0 > (double)this.attackRadiusSqr || this.seeTime < 5) && this.attackDelay == 0;
+            boolean flag2 = (d0 > (double) this.attackRadiusSqr || this.seeTime < 5) && this.attackDelay == 0;
             if (flag2) {
                 this.updatePathDelay--;
                 if (this.updatePathDelay <= 0) {

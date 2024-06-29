@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entity.layers.TaskMasterTypeLayer;
@@ -54,6 +53,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     protected boolean shouldShowName(HunterTaskMasterEntity pEntity) {
         return Helper.isHunter(pEntity) && super.shouldShowName(pEntity);
     }
+
     private static class HelmetLayer extends RenderLayer<HunterTaskMasterEntity, VillagerModel<HunterTaskMasterEntity>> {
         private final ItemInHandRenderer pItemInHandRenderer;
 

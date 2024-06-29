@@ -25,7 +25,8 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     public static final MapCodec<RefinementSetFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst).and(ModRegistries.FACTIONS.holderByNameCodec().fieldOf("faction").forGetter(l -> (Holder<IFaction<?>>) l.faction))
                     .apply(inst, RefinementSetFunction::new)
-            );
+    );
+
     public static @NotNull Builder<?> builder(Holder<? extends IFaction<?>> faction) {
         return simpleBuilder(conditions -> new RefinementSetFunction(conditions, faction));
     }

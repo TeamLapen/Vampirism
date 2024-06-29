@@ -81,7 +81,7 @@ public class SitEntity extends Entity {
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        if (tag.contains("playerPosX")){
+        if (tag.contains("playerPosX")) {
             this.playerPos = new Vec3(tag.getDouble("playerPosX"), tag.getDouble("playerPosY"), tag.getDouble("playerPosZ"));
         }
     }

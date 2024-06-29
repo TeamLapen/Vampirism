@@ -21,14 +21,14 @@ import java.util.Optional;
  */
 public record SkillNode(@NotNull List<Holder<ISkill<?>>> skills, @NotNull List<ResourceKey<ISkillNode>> lockingNodes) implements ISkillNode {
 
-    public static final Codec<ISkillNode> CODEC = Codec.lazyInitialized(() ->RecordCodecBuilder.create(inst ->
+    public static final Codec<ISkillNode> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(inst ->
             inst.group(
                     ExtraCodecs.nonEmptyList(ModRegistries.SKILLS.holderByNameCodec().listOf()).fieldOf("skills").forGetter(ISkillNode::skills),
-                    Codec.lazyInitialized(() -> ResourceKey.codec(VampirismRegistries.Keys.SKILL_NODE)).listOf().optionalFieldOf( "locking_nodes", List.of()).forGetter(ISkillNode::lockingNodes)
+                    Codec.lazyInitialized(() -> ResourceKey.codec(VampirismRegistries.Keys.SKILL_NODE)).listOf().optionalFieldOf("locking_nodes", List.of()).forGetter(ISkillNode::lockingNodes)
             ).apply(inst, SkillNode::new)
     ));
 
-    public SkillNode( @NotNull List<Holder<ISkill<?>>> elements) {
+    public SkillNode(@NotNull List<Holder<ISkill<?>>> elements) {
         this(elements, new ArrayList<>());
     }
 

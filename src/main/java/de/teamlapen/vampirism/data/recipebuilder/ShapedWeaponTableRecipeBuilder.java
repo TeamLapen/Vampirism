@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.mixin.accessor.ShapedRecipeBuilderAccessor;
 import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
@@ -108,7 +107,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor)this).getRecipeCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
+        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor) this).getRecipeCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
         output.accept(recipeId, recipe, advancement.build(recipeId.withPrefix("recipes/weapontable/")));
     }
 

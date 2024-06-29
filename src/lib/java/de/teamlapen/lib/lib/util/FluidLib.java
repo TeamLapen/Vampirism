@@ -17,7 +17,6 @@ import java.util.Optional;
 public class FluidLib {
 
 
-
     public static @NotNull Optional<IFluidHandlerItem> getFluidItemCap(@NotNull ItemStack stack) {
         return Optional.ofNullable(stack.getCapability(Capabilities.FluidHandler.ITEM, null));
     }

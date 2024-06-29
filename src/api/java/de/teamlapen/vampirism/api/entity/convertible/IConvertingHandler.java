@@ -23,6 +23,7 @@ public interface IConvertingHandler<T extends PathfinderMob> {
 
     /**
      * updates the attributes of the converted creature
+     *
      * @param creature the converted creature
      */
     default void updateEntityAttributes(PathfinderMob creature) {
@@ -34,6 +35,6 @@ public interface IConvertingHandler<T extends PathfinderMob> {
      */
     interface IDefaultHelper {
 
-        Map<Holder<Attribute>, Pair<FloatProvider,Double>> getAttributeModifier();
+        Map<Holder<Attribute>, Pair<FloatProvider, Double>> getAttributeModifier();
     }
 }

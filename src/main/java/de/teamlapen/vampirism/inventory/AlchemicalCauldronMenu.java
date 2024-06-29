@@ -14,7 +14,8 @@ import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +75,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<AlchemicalCauldronRec
     @Override
     public void fillCraftSlotsStackedContents(StackedContents pItemHelper) {
         if (this.container instanceof StackedContentsCompatible) {
-            ((StackedContentsCompatible)this.container).fillStackedContents(pItemHelper);
+            ((StackedContentsCompatible) this.container).fillStackedContents(pItemHelper);
         }
     }
 
@@ -136,7 +137,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<AlchemicalCauldronRec
                 var asFluid = this.canSmeltAsFluid(itemstack1) && !this.moveItemStackTo(itemstack1, FLUID_SLOT, FLUID_SLOT + 1, false);
                 var asIngredient = this.canSmeltAsIngredient(itemstack1) && !this.moveItemStackTo(itemstack1, INGREDIENT_SLOT, INGREDIENT_SLOT + 1, false);
                 if (asFluid || asIngredient) {
-                        return ItemStack.EMPTY;
+                    return ItemStack.EMPTY;
                 } else if (this.isFuel(itemstack1)) {
                     if (!this.moveItemStackTo(itemstack1, FUEL_SLOT, FUEL_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
@@ -183,7 +184,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<AlchemicalCauldronRec
     public float getBurnProgress() {
         int i = this.data.get(2);
         int j = this.data.get(3);
-        return j != 0 && i != 0 ? Mth.clamp((float)i / (float)j, 0.0F, 1.0F) : 0.0F;
+        return j != 0 && i != 0 ? Mth.clamp((float) i / (float) j, 0.0F, 1.0F) : 0.0F;
     }
 
     public float getLitProgress() {
@@ -192,7 +193,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu<AlchemicalCauldronRec
             i = 200;
         }
 
-        return Mth.clamp((float)this.data.get(0) / (float)i, 0.0F, 1.0F);
+        return Mth.clamp((float) this.data.get(0) / (float) i, 0.0F, 1.0F);
     }
 
     public boolean isLit() {

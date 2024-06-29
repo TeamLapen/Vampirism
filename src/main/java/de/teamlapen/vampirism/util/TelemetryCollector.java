@@ -3,13 +3,9 @@ package de.teamlapen.vampirism.util;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.DetectedVersion;
-import net.minecraftforge.srgutils.MinecraftVersion;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.VersionChecker;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +33,7 @@ public class TelemetryCollector {
     }
 
     private static void send() {
-        try(var http =HttpClient.newHttpClient()) {
+        try (var http = HttpClient.newHttpClient()) {
             StringBuilder builder = new StringBuilder();
             builder.append(REFERENCE.SETTINGS_API);
             builder.append("/telemetry/basic");

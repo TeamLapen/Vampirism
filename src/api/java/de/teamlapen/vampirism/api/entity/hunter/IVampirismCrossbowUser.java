@@ -13,7 +13,7 @@ public interface IVampirismCrossbowUser extends CrossbowAttackMob, RangedAttackM
 
     boolean isChargingCrossbow();
 
-    default boolean canUseCrossbow(ItemStack stack){
+    default boolean canUseCrossbow(ItemStack stack) {
         return true;
     }
 

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class ModClientEnums {
 
-    public static final EnumProxy<RecipeBookCategories> WEAPON_TABLE_RECIPE_BOOK_CATEGORY = new EnumProxy<>(RecipeBookCategories.class, (Supplier<ItemStack>)() -> new ItemStack(ModBlocks.WEAPON_TABLE));
+    public static final EnumProxy<RecipeBookCategories> WEAPON_TABLE_RECIPE_BOOK_CATEGORY = new EnumProxy<>(RecipeBookCategories.class, (Supplier<ItemStack>) () -> new ItemStack(ModBlocks.WEAPON_TABLE));
 
     public static final EnumProxy<HumanoidModel.ArmPose> DOUBLE_CROSSBOW_CHARGE = new EnumProxy<>(HumanoidModel.ArmPose.class, true, ItemExtensions.DOUBLE_CROSSBOW_CHARGE_ARM_POSE_TRANSFORMER);
 

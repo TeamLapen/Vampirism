@@ -69,7 +69,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     @Override
     public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
         for (Map.Entry<Direction, EnumProperty<Type>> entry : SIDE_MAP.entrySet()) {
-            if (state.getValue(entry.getValue()) != Type.NONE && this.canAttachTo(worldReader, blockPos.relative(entry.getKey()), entry.getKey().getOpposite())){
+            if (state.getValue(entry.getValue()) != Type.NONE && this.canAttachTo(worldReader, blockPos.relative(entry.getKey()), entry.getKey().getOpposite())) {
                 return true;
             }
         }

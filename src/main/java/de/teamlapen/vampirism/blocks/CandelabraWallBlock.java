@@ -26,9 +26,9 @@ public class CandelabraWallBlock extends AbstractCandelabraBlock {
 
     private static final Map<Direction, Iterable<Vec3>> PARTICLE_OFFSET = new EnumMap<>(Direction.class) {{
         put(Direction.NORTH, ImmutableList.of(new Vec3(0.5, 0.9375, 0.8125), new Vec3(0.1875, 0.8125, 0.8125), new Vec3(0.8125, 0.8125, 0.8125)));
-        put(Direction.WEST, ImmutableList.of(new Vec3(0.8125, 0.9375,0.5 ), new Vec3(0.8125, 0.8125,0.1875), new Vec3(0.8125, 0.8125, 0.8125)));
+        put(Direction.WEST, ImmutableList.of(new Vec3(0.8125, 0.9375, 0.5), new Vec3(0.8125, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.8125)));
         put(Direction.SOUTH, ImmutableList.of(new Vec3(0.5, 0.9375, 0.1875), new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.1875)));
-        put(Direction.EAST, ImmutableList.of(new Vec3(0.1875, 0.9375, 0.5D), new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.1875, 0.8125, 1-0.1875)));
+        put(Direction.EAST, ImmutableList.of(new Vec3(0.1875, 0.9375, 0.5D), new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.1875, 0.8125, 1 - 0.1875)));
     }};
 
     public CandelabraWallBlock() {

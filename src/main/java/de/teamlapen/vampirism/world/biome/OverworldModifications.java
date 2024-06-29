@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.mixin.accessor.MultiNoiseBiomeSourceParameterListPresetAccessor;
-//import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -77,7 +76,7 @@ public class OverworldModifications {
 
                 //Setup parameter point (basically the volume in the n-d parameter space) at which the biome should be generated
                 //Order of parameters: Temp , humidity, continentalness, erosion, depth, weirdness
-                Climate.ParameterPoint[] forestPoints = new Climate.ParameterPoint[]{
+                Climate.ParameterPoint[] forestPoints = new Climate.ParameterPoint[] {
                         Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0), Climate.Parameter.span(-0.56666666F, -0.05F), 0),
 //                    Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(1), Climate.Parameter.span(-0.56666666F, -0.05F), 0),
                         Climate.parameters(Climate.Parameter.span(-0.40F, -0.19F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(-0.11F, 0.55F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.point(0), Climate.Parameter.span(0.05f, 0.4F), 0),

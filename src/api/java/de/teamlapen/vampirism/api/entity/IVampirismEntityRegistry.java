@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -8,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
@@ -28,10 +28,10 @@ public interface IVampirismEntityRegistry {
     /**
      * Create a converted creature from the given entity.
      *
-     * @apiNote This will not replace the entity in the world. It will only create a new instance of the converted creature.
-     * @implSpec This will copy all relevant data from the original entity to the converted entity using {@link  de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler#createFrom(net.minecraft.world.entity.PathfinderMob)}
      * @param entity the entity to convert
      * @return the converted creature or null if the entity cannot be converted
+     * @apiNote This will not replace the entity in the world. It will only create a new instance of the converted creature.
+     * @implSpec This will copy all relevant data from the original entity to the converted entity using {@link  de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler#createFrom(net.minecraft.world.entity.PathfinderMob)}
      */
     @Nullable
     IConvertedCreature<?> convert(PathfinderMob entity);
@@ -81,8 +81,9 @@ public interface IVampirismEntityRegistry {
      * - no animals<br>
      * - entities added to the config values of Server#blacklistedBloodEntity<br>
      * <br>
-     * @implNote The blood value of entities without an explicit entry is calculated based on the entity's size and the entity's type.
+     *
      * @return a new or existing entry
+     * @implNote The blood value of entities without an explicit entry is calculated based on the entity's size and the entity's type.
      */
     @NotNull
     IEntityBlood getOrCreateEntry(PathfinderMob creature);

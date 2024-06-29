@@ -28,7 +28,7 @@ public class VampireBeaconBESR extends VampirismBESR<VampireBeaconBlockEntity> {
         List<BeaconBlockEntity.BeaconBeamSection> list = pBlockEntity.getBeamSections();
         int j = 0;
 
-        for(int k = 0; k < list.size(); ++k) {
+        for (int k = 0; k < list.size(); ++k) {
             BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = list.get(k);
             renderBeaconBeam(pPoseStack, pBuffer, pPartialTick, i, j, k == list.size() - 1 ? MAX_RENDER_Y : beaconblockentity$beaconbeamsection.getHeight(), beaconblockentity$beaconbeamsection.getColor());
             j += beaconblockentity$beaconbeamsection.getHeight();

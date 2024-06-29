@@ -3,15 +3,12 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.util.ValuedObject;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -328,13 +325,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
     /**
      * Checks for the requirements for the give player to level up
-     *
      */
     private boolean checkItemRequirements() {
         int newLevel = targetLevel;
-        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> InventoryHelper.checkItems(this, new Item[]{
+        ItemStack missing = VampireLeveling.getInfusionRequirement(newLevel).map(req -> InventoryHelper.checkItems(this, new Item[] {
                         PureBloodItem.getBloodItemForLevel(req.pureBloodLevel()), ModItems.HUMAN_HEART.get(), ModItems.VAMPIRE_BOOK.get()},
-                new int[]{req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
+                new int[] {req.pureBloodQuantity(), req.humanHeartQuantity(), req.vampireBookQuantity()},
                 (supplied, required) -> supplied.equals(required) || (supplied instanceof PureBloodItem suppliedBlood && required instanceof PureBloodItem requiredBlood && suppliedBlood.getLevel() >= requiredBlood.getLevel()))).orElse(ItemStack.EMPTY);
         return missing.isEmpty();
 

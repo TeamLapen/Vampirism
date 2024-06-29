@@ -287,8 +287,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         super.defineSynchedData(builder);
         builder.define(LEVEL, -1);
         builder.define(TYPE, 0);
-        builder.define(NAME, "none" );
-        builder.define(TEXTURE, "none" );
+        builder.define(NAME, "none");
+        builder.define(TEXTURE, "none");
     }
 
     @Nullable
@@ -306,7 +306,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         Map<String, String> appearance = supporter.appearance();
         int type = 0;
         type |= (Integer.parseInt(appearance.getOrDefault("eye", "0")) & 0b111111);
-        type |= (Integer.parseInt(appearance.getOrDefault("fang", "6"))  & 0b111111) << 6;
+        type |= (Integer.parseInt(appearance.getOrDefault("fang", "6")) & 0b111111) << 6;
         type |= (Integer.parseInt(appearance.getOrDefault("body", "16")) & 0b11111111) << 12;
         return type;
     }

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.components;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
@@ -39,7 +38,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
     private final ResourceLocation[] iconSprites = new ResourceLocation[] {
             VResourceLocation.mod("statistics/skills_unlocked"),
             VResourceLocation.mod("statistics/skills_forgotten"),
-            VResourceLocation.mc( "statistics/item_used"),
+            VResourceLocation.mc("statistics/item_used"),
             VResourceLocation.mod("statistics/time"),
             null
     };
@@ -90,10 +89,10 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         if (this.sortColumn != null) {
             int j = getColumnX(this.getColumnIndex(this.sortColumn)) - 36;
             ResourceLocation resourcelocation1 = this.sortOrder == 1 ? StatsScreenAccessor.getSORT_UP_SPRITE() : StatsScreenAccessor.getSORT_DOWN_SPRITE();
-            pGuiGraphics.blitSprite(resourcelocation1,pX + j, pY + 1, 0, 18, 18);
+            pGuiGraphics.blitSprite(resourcelocation1, pX + j, pY + 1, 0, 18, 18);
         }
 
-        for(int k = 0; k < this.iconSprites.length; ++k) {
+        for (int k = 0; k < this.iconSprites.length; ++k) {
             int l = this.headerPressed == k ? 1 : 0;
             ResourceLocation iconSprite = this.iconSprites[k];
             if (iconSprite != null) {
@@ -121,7 +120,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
     protected boolean clickedHeader(int p_97036_, int p_97037_) {
         this.headerPressed = -1;
 
-        for(int i = 0; i < this.iconSprites.length; ++i) {
+        for (int i = 0; i < this.iconSprites.length; ++i) {
             int j = p_97036_ - getColumnX(i);
             if (j >= -36 && j <= 0) {
                 this.headerPressed = i;
@@ -168,7 +167,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 Component component = null;
                 int j = pMouseX - i;
 
-                for(int k = 0; k < this.iconSprites.length; ++k) {
+                for (int k = 0; k < this.iconSprites.length; ++k) {
                     int l = getColumnX(k);
                     if (j >= l - 18 && j <= l) {
                         component = this.getColumn(k).getDisplayName();
@@ -222,11 +221,11 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
 
         @Override
         public void render(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
-            pGuiGraphics.setColor(1,1,1,1);
-            pGuiGraphics.blitSprite(SLOT_SPRITE,pLeft+40+1, pTop+1 ,0,18,18);
+            pGuiGraphics.setColor(1, 1, 1, 1);
+            pGuiGraphics.blitSprite(SLOT_SPRITE, pLeft + 40 + 1, pTop + 1, 0, 18, 18);
             renderSkill(pGuiGraphics, pTop, pLeft);
 
-            for(int i = 0; i < skillColumns.size(); ++i) {
+            for (int i = 0; i < skillColumns.size(); ++i) {
                 Stat<ISkill<?>> stat;
                 if (getSkill() instanceof SkillCallbacks.EmptyActionSkill<?> empty) {
                     stat = null;
@@ -239,7 +238,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 this.renderStat(pGuiGraphics, stat, pLeft + getColumnX(i), pTop, pIndex % 2 == 0);
             }
 
-            for(int j = 0; j < actionColumns.size(); ++j) {
+            for (int j = 0; j < actionColumns.size(); ++j) {
                 Stat<IAction<?>> stat;
                 if (this.skill instanceof IActionSkill<?> actionSkill) {
                     StatType<IAction<?>> stats = actionColumns.get(j);
@@ -265,7 +264,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
                 ResourceLocation id = RegUtil.id(skill);
                 texture = id.withPath("textures/skills/" + id.getPath() + ".png");
             }
-            pGuiGraphics.blit(texture,pLeft+40+1+1, pTop+1+1, 0, 0, 0, 16, 16, 16, 16);
+            pGuiGraphics.blit(texture, pLeft + 40 + 1 + 1, pTop + 1 + 1, 0, 0, 0, 16, 16, 16, 16);
         }
 
         protected void renderStat(GuiGraphics pGuiGraphics, @Nullable Stat<?> pStat, int pX, int pY, boolean pEvenRow) {

@@ -241,12 +241,12 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public <T extends IFaction<?>>  boolean isInFaction(@Nullable Holder<T> f) {
+    public <T extends IFaction<?>> boolean isInFaction(@Nullable Holder<T> f) {
         return IFaction.is(currentFaction, f);
     }
 
     @Override
-    public <T extends IFaction<?>>  boolean isInFaction(@Nullable TagKey<T> f) {
+    public <T extends IFaction<?>> boolean isInFaction(@Nullable TagKey<T> f) {
         return IFaction.is(currentFaction, f);
     }
 
@@ -295,7 +295,6 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
     /**
      * Reset all lord task that should be available for players at the given lord level
-     *
      */
     public void resetLordTasks() {
         getTaskManager().ifPresent(manager -> {
@@ -372,8 +371,8 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
                 VampirismLogger.info(VampirismLogger.LEVEL, "{} has now no level", this.player.getName().getString());
             }
         }
-        if(old != currentFaction || oldLevel != currentLevel){
-            VampirismEventFactory.fireFactionLevelChangedEvent(this,old,oldLevel,currentFaction,currentLevel);
+        if (old != currentFaction || oldLevel != currentLevel) {
+            VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayer serverPlayer) {
@@ -497,7 +496,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             VampirismLogger.info(VampirismLogger.LORD_LEVEL, "{} has now lord level {}", this.player.getName().getString(), level);
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            if (currentLordLevel < oldLevel){
+            if (currentLordLevel < oldLevel) {
                 ModAdvancements.TRIGGER_FACTION.get().revokeLevel(serverPlayer, currentFaction, FactionCriterionTrigger.Type.LORD, currentLordLevel);
             }
             ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
@@ -528,7 +527,6 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         }
         nbt.put("bound_actions", bounds);
     }
-
 
 
     @Override

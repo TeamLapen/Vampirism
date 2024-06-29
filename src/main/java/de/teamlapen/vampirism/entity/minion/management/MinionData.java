@@ -38,10 +38,10 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     @Nullable
     public static <T extends MinionData> T fromNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
         ResourceLocation dataType = ResourceLocation.parse(nbt.getString("data_type"));
-        return Optional.ofNullable(ModRegistries.MINIONS.get(dataType)).map(IMinionEntry::data).map(Supplier::get).map(s-> {
+        return Optional.ofNullable(ModRegistries.MINIONS.get(dataType)).map(IMinionEntry::data).map(Supplier::get).map(s -> {
             try {
                 @SuppressWarnings("unchecked")
-                T t = (T)s;
+                T t = (T) s;
                 t.deserializeNBT(provider, nbt);
                 return t;
             } catch (ClassCastException ex) {
@@ -231,10 +231,10 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     /**
      * Called on server side to upgrade a stat of the given id
      * <p>
-     * @param  statId values:<br>
-     * -1: reset all stats<br>
-     * -2: update attributes<br>
      *
+     * @param statId values:<br>
+     *               -1: reset all stats<br>
+     *               -2: update attributes<br>
      * @return if attributes where changed and a sync is required
      */
     public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {

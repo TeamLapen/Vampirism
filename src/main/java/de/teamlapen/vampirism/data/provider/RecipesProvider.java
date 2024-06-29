@@ -297,7 +297,7 @@ public class RecipesProvider extends RecipeProvider {
         new Shaped(RecipeCategory.MISC, blood_bottle_stack).pattern("XYX").pattern(" X ").define('X', glass).define('Y', rotten_flesh).unlockedBy("has_glass", has(glass)).save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))), vampire("blood_bottle"));
 
         new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_SEEKER_NORMAL.get(), 1).pattern(" X ").pattern("XYX").define('X', blood_infused_iron_ingot).define('Y', ModItems.HEART_SEEKER_NORMAL.get()).unlockedBy("has_heart_seeker", has(ModItems.HEART_SEEKER_NORMAL.get())).save(output, vampire("heart_seeker_normal_repair"));
-        new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT,ModItems.HEART_STRIKER_NORMAL.get(), 1).pattern("XXX").pattern("XYX").define('X', blood_infused_iron_ingot).define('Y', ModItems.HEART_STRIKER_NORMAL.get()).unlockedBy("has_heart_striker", has(ModItems.HEART_STRIKER_NORMAL.get())).save(output, vampire("heart_striker_normal_repair"));
+        new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_STRIKER_NORMAL.get(), 1).pattern("XXX").pattern("XYX").define('X', blood_infused_iron_ingot).define('Y', ModItems.HEART_STRIKER_NORMAL.get()).unlockedBy("has_heart_striker", has(ModItems.HEART_STRIKER_NORMAL.get())).save(output, vampire("heart_striker_normal_repair"));
         new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_SEEKER_ENHANCED.get(), 1).pattern(" X ").pattern("XYX").define('X', blood_infused_enhanced_iron_ingot).define('Y', ModItems.HEART_SEEKER_ENHANCED.get()).unlockedBy("has_heart_seeker", has(ModItems.HEART_SEEKER_ENHANCED.get())).save(output, vampire("heart_seeker_enhanced_repair"));
         new IItemWIthTierRecipeBuilder(RecipeCategory.COMBAT, ModItems.HEART_STRIKER_ENHANCED.get(), 1).pattern("XXX").pattern("XYX").define('X', blood_infused_enhanced_iron_ingot).define('Y', ModItems.HEART_STRIKER_ENHANCED.get()).unlockedBy("has_heart_striker", has(ModItems.HEART_STRIKER_ENHANCED.get())).save(output, vampire("heart_striker_enhanced_repair"));
 
@@ -447,15 +447,15 @@ public class RecipesProvider extends RecipeProvider {
                 .input(Ingredient.of(new ItemStack(Items.HONEY_BOTTLE)))
                 .save(output, VResourceLocation.mod("evasion_oil"));
         AlchemyTableRecipeBuilder.builder(ModOils.GARLIC).plantOilIngredient().input(Ingredient.of(garlic)).save(output, VResourceLocation.mod("garlic_oil"));
-        AlchemyTableRecipeBuilder.builder(ModOils.SPITFIRE).plantOilIngredient().input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE.get())).save(output, VResourceLocation.mod( "spitfire_oil"));
-        AlchemyTableRecipeBuilder.builder(ModOils.BLEEDING).plantOilIngredient().input(Ingredient.of(Items.AMETHYST_SHARD)).save(output, VResourceLocation.mod( "bleeding_oil"));
+        AlchemyTableRecipeBuilder.builder(ModOils.SPITFIRE).plantOilIngredient().input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE.get())).save(output, VResourceLocation.mod("spitfire_oil"));
+        AlchemyTableRecipeBuilder.builder(ModOils.BLEEDING).plantOilIngredient().input(Ingredient.of(Items.AMETHYST_SHARD)).save(output, VResourceLocation.mod("bleeding_oil"));
         AlchemyTableRecipeBuilder.builder(ModOils.VAMPIRE_KILLER).oilIngredient(ModOils.GARLIC).input(Ingredient.of(ModItemTags.HOLY_WATER)).save(output, VResourceLocation.mod("vampire_killer_oil"));
 
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 200).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, VResourceLocation.mod("gold_nugget_from_accessory_smelting"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(amulet, ring), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 100).unlockedBy("has_amulet", has(amulet)).unlockedBy("has_ring", has(ring)).save(output, VResourceLocation.mod("gold_nugget_from_accessory_blasting"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, Items.LEATHER).requires(obi_belt).unlockedBy("has_obi_belt", has(obi_belt)).save(output, VResourceLocation.mod("leather_from_obi_belt"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE.get()).pattern("B  ").pattern("BBB").pattern("P P").define('B', basalt).define('P', planks).unlockedBy("has_basalt", has(basalt)).unlockedBy("has_planks", has(planks)).save(output);
-        SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, REFERENCE.MODID+":clean_oil");
+        SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, REFERENCE.MODID + ":clean_oil");
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT.get()).pattern(" W ").pattern("WBW").define('W', wool).define('B', beds).unlockedBy("has_wool", has(wool)).unlockedBy("has_bed", has(beds)).save(output);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_normal, 2).requires(holy_water_bottle_enhanced).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_enhanced_holy_water", has(holy_water_bottle_enhanced)).save(output, "holy_water_bottle_normal_from_enhanced");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, holy_water_bottle_enhanced, 2).requires(holy_water_bottle_ultimate).requires(ModItems.PURE_SALT_WATER.get()).unlockedBy("has_ultimate_holy_water", has(holy_water_bottle_enhanced)).save(output, "holy_water_bottle_enhanced_from_ultimate");
@@ -476,9 +476,9 @@ public class RecipesProvider extends RecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.DARK_STONE_BRICKS.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(),2);
-        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_BRICKS.get(),2);
-        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE.get(),2);
+        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(), 2);
+        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_BRICKS.get(), 2);
+        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE.get(), 2);
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICKS.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE.get());
@@ -494,8 +494,8 @@ public class RecipesProvider extends RecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_BRICKS.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_TILES.get());
         stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 200).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(),0.1f, 100).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_blasting"));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(), 0.1f, 200).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_smelting"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(), 0.1f, 100).unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get())).save(output, VResourceLocation.mod("dark_stone_from_cobbled_dark_stone_blasting"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE.get()).pattern("GGG").pattern("GPG").pattern("PPP").define('G', gold_ingot).define('P', planks).unlockedBy("has_gold", has(gold_ingot)).unlockedBy("has_planks", has(planks)).save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER.get()).pattern("XYX").pattern("YZY").pattern("OOO").define('X', cursed_spruce_planks).define('Y', diamond).define('O', obsidian).define('Z', mother_core).unlockedBy("has_diamond", has(diamond)).unlockedBy("has_cursed_plank", has(cursed_spruce_planks)).unlockedBy("has_mother_core", has(mother_core)).save(output, vampire("fog_diffuser"));
         nineBlockStorageRecipes(output, RecipeCategory.BUILDING_BLOCKS, ModItems.BLOOD_INFUSED_IRON_INGOT.get(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());

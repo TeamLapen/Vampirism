@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
@@ -12,10 +11,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.BeaconScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
@@ -86,11 +83,11 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         this.addBeaconButton(new BeaconConfirmButton(this.leftPos + 164, this.topPos + 107));
         this.addBeaconButton(new BeaconCancelButton(this.leftPos + 190, this.topPos + 107));
 
-        for(int i = 0; i <= 2; ++i) {
+        for (int i = 0; i <= 2; ++i) {
             int j = VampireBeaconBlockEntity.BEACON_EFFECTS[i].length;
             int k = j * 22 + (j - 1) * 2;
 
-            for(int l = 0; l < j; ++l) {
+            for (int l = 0; l < j; ++l) {
                 Holder<MobEffect> mobeffect = VampireBeaconBlockEntity.BEACON_EFFECTS[i][l];
                 int amplifier = VampireBeaconBlockEntity.BEACON_EFFECTS_AMPLIFIER[i][l];
                 BeaconPowerButton beaconscreen$beaconpowerbutton = new BeaconPowerButton(this.leftPos + 76 + 62 + l * 24 - k / 2, this.topPos + 22 + i * 25, mobeffect, amplifier, i);

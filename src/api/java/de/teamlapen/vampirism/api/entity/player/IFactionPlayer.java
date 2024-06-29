@@ -54,7 +54,8 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     int getMaxLevel();
 
     @Override
-    @NotNull Holder<? extends IPlayableFaction<?>> getFaction();
+    @NotNull
+    Holder<? extends IPlayableFaction<?>> getFaction();
 
     /**
      * Careful this selects all {@link LivingEntity}'s including etc. Items

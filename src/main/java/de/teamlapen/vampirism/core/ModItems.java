@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -22,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -57,7 +55,7 @@ public class ModItems {
     private static final Map<ResourceKey<CreativeModeTab>, Set<DeferredHolder<Item, ? extends Item>>> CREATIVE_TAB_ITEMS = new HashMap<>();
 
     public static final ResourceKey<CreativeModeTab> VAMPIRISM_TAB_KEY = ResourceKey.create(Registries.CREATIVE_MODE_TAB, VResourceLocation.mod("default"));
-    public static final DeferredHolder<CreativeModeTab,CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(VAMPIRISM_TAB_KEY.location().getPath(), () -> VampirismCreativeTab.builder(VAMPIRISM_TAB_ITEMS.stream().map(DeferredHolder::get).collect(Collectors.toSet())).build());
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(VAMPIRISM_TAB_KEY.location().getPath(), () -> VampirismCreativeTab.builder(VAMPIRISM_TAB_ITEMS.stream().map(DeferredHolder::get).collect(Collectors.toSet())).build());
     public static final EffectCure GARLIC_CURE = EffectCure.get("vampirism:garlic");
 
     //Items
@@ -91,7 +89,7 @@ public class ModItems {
     public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_GARLIC = register("crossbow_arrow_garlic", () -> new CrossbowArrowItem(new GarlicBehavior(), new Item.Properties()));
 
     public static final DeferredItem<SingleCrossbowItem> ENHANCED_CROSSBOW = register("enhanced_crossbow", () -> new SingleCrossbowItem(props().durability(930), 1.5F, 15, Tiers.IRON, HunterSkills.MASTER_CRAFTSMANSHIP));
-    public static final DeferredItem<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(props().durability(930),1.5F, 15, Tiers.IRON, HunterSkills.MASTER_CRAFTSMANSHIP));
+    public static final DeferredItem<DoubleCrossbowItem> ENHANCED_DOUBLE_CROSSBOW = register("enhanced_double_crossbow", () -> new DoubleCrossbowItem(props().durability(930), 1.5F, 15, Tiers.IRON, HunterSkills.MASTER_CRAFTSMANSHIP));
     public static final DeferredItem<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = register("enhanced_tech_crossbow", () -> new TechCrossbowItem(props().durability(1860), 1.7F, 30, Tiers.DIAMOND, HunterSkills.MASTER_CRAFTSMANSHIP));
 
     public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE = register("garlic_diffuser_core", () -> new Item(props()));

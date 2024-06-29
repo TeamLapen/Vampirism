@@ -36,7 +36,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     }
 
     public VampirismSkill(Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree, boolean hasDescription) {
-        this(skillTree,2, hasDescription);
+        this(skillTree, 2, hasDescription);
     }
 
     public VampirismSkill(Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree, int skillPointCost, boolean hasDescription) {
@@ -109,7 +109,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     public static class HunterLordSkill extends VampirismSkill<IHunterPlayer> {
 
         /**
-         * @param desc           Enable description using the default unlocalized key
+         * @param desc Enable description using the default unlocalized key
          */
         public HunterLordSkill(int skillPointCost, boolean desc) {
             super(Either.left(HunterSkills.Trees.LORD), skillPointCost, desc);

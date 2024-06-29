@@ -35,7 +35,7 @@ import java.util.List;
 
 public record RadialMenuSlot<T>(Component slotName, T primarySlotIcon, List<T> secondarySlotIcons) implements IRadialMenuSlot<T> {
 
-    public RadialMenuSlot(Component slotName, T primarySlotIcon){
+    public RadialMenuSlot(Component slotName, T primarySlotIcon) {
         this(slotName, primarySlotIcon, new ArrayList<>());
     }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 public class SunscreenBeaconBlock extends VampirismBlockContainer {
 
     public static final MapCodec<SunscreenBeaconBlock> CODEC = simpleCodec(SunscreenBeaconBlock::new);
+
     public SunscreenBeaconBlock(Block.Properties properties) {
         super(properties);
     }

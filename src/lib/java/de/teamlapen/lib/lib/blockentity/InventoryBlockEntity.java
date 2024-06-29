@@ -146,7 +146,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
 
         @Override
         public int getSlotLimit(int slot) {
-            return (slot < 0 || slot >= ((InventoryBlockEntity) this.getInv()).selectors.length) ? 0 :((InventoryBlockEntity) this.getInv()).selectors[slot].stackLimit;
+            return (slot < 0 || slot >= ((InventoryBlockEntity) this.getInv()).selectors.length) ? 0 : ((InventoryBlockEntity) this.getInv()).selectors[slot].stackLimit;
         }
     }
 

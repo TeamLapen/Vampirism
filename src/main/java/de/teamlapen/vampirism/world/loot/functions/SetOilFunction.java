@@ -21,7 +21,7 @@ public class SetOilFunction extends LootItemConditionalFunction {
 
     public static final MapCodec<SetOilFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst).and(
-                    ModRegistries.OILS.holderByNameCodec().optionalFieldOf( "oil").forGetter(l -> Optional.ofNullable(l.oil))
+                    ModRegistries.OILS.holderByNameCodec().optionalFieldOf("oil").forGetter(l -> Optional.ofNullable(l.oil))
             ).apply(inst, SetOilFunction::new));
     private final Holder<IOil> oil;
     private final boolean random;
@@ -29,7 +29,7 @@ public class SetOilFunction extends LootItemConditionalFunction {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     SetOilFunction(List<LootItemCondition> conditions, Optional<Holder<IOil>> oil) {
         super(conditions);
-        if (oil.isPresent()){
+        if (oil.isPresent()) {
             this.oil = oil.get();
             this.random = false;
         } else {

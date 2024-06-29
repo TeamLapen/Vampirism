@@ -13,9 +13,9 @@ public interface IAdvancedVampire extends IVampireMob, IAdjustableLevel, IVillag
     /**
      * The type integer declares multiple things about the hunter. This the different values are stored in the different bits of the integer.
      * <br>
-     *     - Bits 0-1 are used for the vampire eyes<br>
-     *     - Bits 2-3 are used for the vampire fangs<br>
-     *     - bits 4-12 are used for the vampire body texture<br>
+     * - Bits 0-1 are used for the vampire eyes<br>
+     * - Bits 2-3 are used for the vampire fangs<br>
+     * - bits 4-12 are used for the vampire body texture<br>
      */
     default int getVampireType() {
         return 0;

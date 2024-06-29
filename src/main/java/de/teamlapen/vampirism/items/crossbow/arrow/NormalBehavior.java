@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.items.crossbow.arrow;
 
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -15,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class NormalBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior{
+public class NormalBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
     @Override
     public int color() {
         return 0xFFFFFFFF;

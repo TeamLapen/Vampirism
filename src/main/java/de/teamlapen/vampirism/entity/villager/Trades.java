@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class Trades {
-    public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[]{new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 1, 20, 2)};
+    public static final VillagerTrades.ItemListing[] converted_trades = new VillagerTrades.ItemListing[] {new net.minecraft.world.entity.npc.VillagerTrades.EmeraldForItems(ModItems.HUMAN_HEART.get(), 9, 2, 2), new VillagerTrades.ItemsForEmeralds(ModItems.HUMAN_HEART.get(), 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 1, 20, 2)};
 
     /**
      * copy of {@link VillagerTrades.ItemsForEmeralds} with damage to {@link ItemStack}
@@ -75,7 +75,7 @@ public class Trades {
         private final int maxUses;
 
         public ItemsForSouls(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn) {
-            this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
+            this(priceIn, new ItemStack[] {new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
         public ItemsForSouls(Price priceIn, ItemStack[] sellingItemIn, Price sellingIn) {
@@ -84,7 +84,7 @@ public class Trades {
 
         public ItemsForSouls(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
-            this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
+            this.sellingItem = new ItemStack[] {new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
             this.xp = xpIn;
             this.maxUses = maxUsesIn;
@@ -113,7 +113,7 @@ public class Trades {
         private final int maxUses;
 
         public ItemsForHeart(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn) {
-            this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
+            this(priceIn, new ItemStack[] {new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
         }
 
         public ItemsForHeart(Price priceIn, ItemStack[] sellingItemIn, Price sellingIn) {
@@ -122,7 +122,7 @@ public class Trades {
 
         public ItemsForHeart(Price priceIn, @NotNull ItemLike sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
             this.price = priceIn;
-            this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
+            this.sellingItem = new ItemStack[] {new ItemStack(sellingItemIn.asItem())};
             this.selling = sellingIn;
             this.xp = xpIn;
             this.maxUses = maxUsesIn;

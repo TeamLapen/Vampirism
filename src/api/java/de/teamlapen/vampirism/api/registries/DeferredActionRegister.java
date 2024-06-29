@@ -30,7 +30,7 @@ public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T
     @Deprecated
     @SuppressWarnings("unchecked")
     @Override
-    public <I extends IAction<T>> DeferredAction<T,IAction<T>, I> register(String name, Function<ResourceLocation, ? extends I> func) {
+    public <I extends IAction<T>> DeferredAction<T, IAction<T>, I> register(String name, Function<ResourceLocation, ? extends I> func) {
         return (DeferredAction<T, IAction<T>, I>) super.register(name, func);
     }
 
@@ -46,7 +46,7 @@ public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T
     @Override
     @Deprecated
     public <I extends IAction<T>> DeferredAction<T, IAction<T>, I> register(String name, Supplier<? extends I> sup) {
-        return (DeferredAction<T,IAction<T>, I>) super.register(name, sup);
+        return (DeferredAction<T, IAction<T>, I>) super.register(name, sup);
     }
 
     @SuppressWarnings("unchecked")
@@ -55,8 +55,8 @@ public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T
     }
 
     @SuppressWarnings("unchecked")
-    public <I extends IAction<?>> DeferredAction<?,IAction<?> ,I> registerUnspecified(String name, Supplier<? extends I> sup) {
-        return (DeferredAction<?,IAction<?>, I>) (Object) register(name, (Supplier<? extends IAction<T>>) sup);
+    public <I extends IAction<?>> DeferredAction<?, IAction<?>, I> registerUnspecified(String name, Supplier<? extends I> sup) {
+        return (DeferredAction<?, IAction<?>, I>) (Object) register(name, (Supplier<? extends IAction<T>>) sup);
     }
 
     @Override

@@ -151,22 +151,22 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
                 if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
                     VampirePlayer vampire = VampirePlayer.get(mc.player);
-                        Optional<? extends IBiteableEntity> biteableOpt = Optional.empty();
-                        if (entity instanceof IBiteableEntity) {
-                            biteableOpt = Optional.of((IBiteableEntity) entity);
-                        } else if (entity instanceof PathfinderMob && entity.isAlive()) {
-                            biteableOpt = ExtendedCreature.getSafe(entity);
-                        } else if (entity instanceof Player) {
-                            biteableOpt = Optional.of(VampirePlayer.get((Player) entity));
+                    Optional<? extends IBiteableEntity> biteableOpt = Optional.empty();
+                    if (entity instanceof IBiteableEntity) {
+                        biteableOpt = Optional.of((IBiteableEntity) entity);
+                    } else if (entity instanceof PathfinderMob && entity.isAlive()) {
+                        biteableOpt = ExtendedCreature.getSafe(entity);
+                    } else if (entity instanceof Player) {
+                        biteableOpt = Optional.of(VampirePlayer.get((Player) entity));
+                    }
+                    biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(vampire)).ifPresent(biteable -> {
+                        int color = 0xFF0000;
+                        if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
+                            color = 0x099022;
                         }
-                        biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(vampire)).ifPresent(biteable -> {
-                            int color = 0xFF0000;
-                            if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
-                                color = 0x099022;
-                            }
-                            renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
-                            event.setCanceled(true);
-                        });
+                        renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                        event.setCanceled(true);
+                    });
 
                 }
                 if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
@@ -211,7 +211,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     int l = (int) (progress * 14.0F) + 2;
 
                     event.getGuiGraphics().blitSprite(PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
-                    event.getGuiGraphics().blitSprite(PROGRESS_FOREGROUND_SPRITE, 16, 2, 0,0, x, y, l, 2);
+                    event.getGuiGraphics().blitSprite(PROGRESS_FOREGROUND_SPRITE, 16, 2, 0, 0, x, y, l, 2);
                 }
             }
         }
@@ -375,7 +375,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         graphics.blitSprite(FANG_SPRITE, left, top, 16, 10);
         RenderSystem.setShaderColor(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
-        graphics.blitSprite(FANG_SPRITE, 16, 10, 0,10-percHeight, left, top + (10 - percHeight), 16, percHeight);
+        graphics.blitSprite(FANG_SPRITE, 16, 10, 0, 10 - percHeight, left, top + (10 - percHeight), 16, percHeight);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.disableBlend();
 
@@ -400,11 +400,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (flag) {
                 graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, k, j, 16, 16);
             } else if (f < 1.0F) {
-                int l = (int)(f * 17.0F);
+                int l = (int) (f * 17.0F);
                 graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, k, j, 16, 4);
                 graphics.blitSprite(CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, k, j, l, 4);
             }
-            graphics.setColor(1,1,1,1);
+            graphics.setColor(1, 1, 1, 1);
             RenderSystem.defaultBlendFunc();
         }
         RenderSystem.disableBlend();

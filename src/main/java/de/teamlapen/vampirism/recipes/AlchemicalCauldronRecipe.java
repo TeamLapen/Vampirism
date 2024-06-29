@@ -14,12 +14,14 @@ import de.teamlapen.vampirism.util.StreamCodecExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -146,9 +148,9 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
                         Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
                         Codec.either(Ingredient.CODEC_NONEMPTY, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
                         ItemStack.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
-                        ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf( "skill", Collections.emptyList()).forGetter(p -> p.skills),
-                        Codec.INT.optionalFieldOf( "level", 1).forGetter(p -> p.reqLevel),
-                        Codec.INT.optionalFieldOf( "cookTime", 200).forGetter(p -> p.cookingTime),
+                        ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
+                        Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.reqLevel),
+                        Codec.INT.optionalFieldOf("cookTime", 200).forGetter(p -> p.cookingTime),
                         Codec.FLOAT.optionalFieldOf("experience", 0.2F).forGetter(p -> p.experience)
                 ).apply(inst, AlchemicalCauldronRecipe::new));
 

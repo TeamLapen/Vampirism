@@ -98,7 +98,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(HolderLookup.Provider provider,  @NotNull ListTag nbtTagListIn) {
+    public void read(HolderLookup.Provider provider, @NotNull ListTag nbtTagListIn) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
@@ -185,7 +185,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         for (int i = 0; i < this.inventoryHands.size(); i++) {
             if (!this.inventoryHands.get(i).isEmpty()) {
                 CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putByte("Slot", (byte)i);
+                compoundTag.putByte("Slot", (byte) i);
                 nbt.add(this.inventoryHands.get(i).save(provider, compoundTag));
             }
         }

@@ -424,21 +424,21 @@ public class MotherPiece extends ScatteredFeaturePiece {
     protected void replaceRoots(BiConsumer<BlockState, BlockPos> blocksetter, @NotNull RandomSource random) {
         BlockState state = ModBlocks.ACTIVE_VULNERABLE_REMAINS.get().defaultBlockState();
         List<BlockPos> availablePositions = new ArrayList<>() {{
-            add(new BlockPos(0,1,5));
-            add(new BlockPos(5,1,1));
-            add(new BlockPos(8,1,7));
-            add(new BlockPos(10,1,11));
-            add(new BlockPos(3,2,11));
-            add(new BlockPos(3,3,5));
-            add(new BlockPos(7,3,12));
-            add(new BlockPos(10,3,3));
-            add(new BlockPos(12,3,14));
-            add(new BlockPos(15,3,9));
-            add(new BlockPos(16,3,12));
-            add(new BlockPos(9,4,15));
-            add(new BlockPos(6,5,8));
-            add(new BlockPos(11,5,5));
-            add(new BlockPos(12,5,10));
+            add(new BlockPos(0, 1, 5));
+            add(new BlockPos(5, 1, 1));
+            add(new BlockPos(8, 1, 7));
+            add(new BlockPos(10, 1, 11));
+            add(new BlockPos(3, 2, 11));
+            add(new BlockPos(3, 3, 5));
+            add(new BlockPos(7, 3, 12));
+            add(new BlockPos(10, 3, 3));
+            add(new BlockPos(12, 3, 14));
+            add(new BlockPos(15, 3, 9));
+            add(new BlockPos(16, 3, 12));
+            add(new BlockPos(9, 4, 15));
+            add(new BlockPos(6, 5, 8));
+            add(new BlockPos(11, 5, 5));
+            add(new BlockPos(12, 5, 10));
         }};
         int vulnerabilities = random.nextInt(3) + 6;
         for (int i = 0; i < vulnerabilities; i++) {

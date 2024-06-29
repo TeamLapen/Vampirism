@@ -28,7 +28,7 @@ public class SkillUnlockedCriterionTrigger extends SimpleCriterionTrigger<SkillU
     public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull ISkill<?> skill) implements SimpleCriterionTrigger.SimpleInstance {
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf( "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ModRegistries.SKILLS.byNameCodec().fieldOf("skill").forGetter(TriggerInstance::skill)
         ).apply(inst, TriggerInstance::new));
 

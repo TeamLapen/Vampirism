@@ -1,17 +1,15 @@
 package de.teamlapen.vampirism.network;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,7 +20,7 @@ import java.util.Optional;
 
 /**
  * @param action the id of the action that was toggled
- * @param target   The target the player was looking at when activating the action.
+ * @param target The target the player was looking at when activating the action.
  */
 public record ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
     public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(VResourceLocation.mod("toggle_action"));

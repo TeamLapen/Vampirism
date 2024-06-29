@@ -8,7 +8,7 @@ public interface ILordTitleProvider {
     /**
      * Get a lord title.
      *
-     * @param level the lord level
+     * @param level       the lord level
      * @param titleGender the gender of the title
      * @return the lord title
      */
@@ -17,7 +17,8 @@ public interface ILordTitleProvider {
 
     /**
      * Get a short lord title.
-     * @param level the lord level
+     *
+     * @param level       the lord level
      * @param titleGender the gender of the title
      * @return the short lord title
      */

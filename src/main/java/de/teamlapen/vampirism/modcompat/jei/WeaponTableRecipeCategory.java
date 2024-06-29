@@ -112,7 +112,6 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
     }
 
 
-
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IWeaponTableRecipe> holder, IFocusGroup focuses) {
         IWeaponTableRecipe recipe = holder.value();
@@ -164,11 +163,11 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
         } else if (width == 2) {
             index = i;
             if (i > 1) {
-                index+=2;
+                index += 2;
                 if (i > 3) {
-                    index+=2;
-                    if (i > 5){
-                        index+=2;
+                    index += 2;
+                    if (i > 5) {
+                        index += 2;
                     }
                 }
             }

@@ -96,7 +96,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
     @Override
     public void tick() {
-        if (totalTime != OPEN_ANIMATION_LENGTH){
+        if (totalTime != OPEN_ANIMATION_LENGTH) {
             extraTick++;
         }
     }
@@ -135,7 +135,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
 
         pose.pushPose();
-        graphics.setColor(1,1,1,1);
+        graphics.setColor(1, 1, 1, 1);
 
 
         boolean hasMouseOver = false;
@@ -157,7 +157,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         for (int i = 0; i < numberOfSlices; i++) {
             float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-            var item = this.radialMenuSlots.get((i + numberOfSlices/2) % numberOfSlices);
+            var item = this.radialMenuSlots.get((i + numberOfSlices / 2) % numberOfSlices);
             if (selectedItem == i) {
                 drawSlice(item, true, graphics, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
@@ -167,13 +167,13 @@ public abstract class GuiRadialMenu<T> extends Screen {
             }
         }
 
-        graphics.setColor(1,1,1,1);
+        graphics.setColor(1, 1, 1, 1);
 
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             Component component = radialMenuSlots.get(adjusted).slotName();
-            pose.translate(0,0,50);
+            pose.translate(0, 0, 50);
             graphics.drawCenteredString(font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
         }
 
@@ -192,7 +192,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
-                graphics.setColor(1,1,1,1);
+                graphics.setColor(1, 1, 1, 1);
                 radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
                 if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
                     drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
@@ -320,17 +320,14 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    private static boolean isKeyDown0(KeyMapping keybind)
-    {
-        if (keybind.isUnbound())
+    private static boolean isKeyDown0(KeyMapping keybind) {
+        if (keybind.isUnbound()) {
             return false;
+        }
 
-        return switch (keybind.getKey().getType())
-        {
-            case KEYSYM ->
-                    InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
-            case MOUSE ->
-                    GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
+        return switch (keybind.getKey().getType()) {
+            case KEYSYM -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
+            case MOUSE -> GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
             default -> false;
         };
     }

@@ -28,8 +28,8 @@ public class FactionCondition implements LootItemCondition {
     public static final MapCodec<FactionCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(s -> s.type),
             ModRegistries.FACTIONS.holderByNameCodec().optionalFieldOf("faction").forGetter(a -> (Optional<Holder<IFaction<?>>>) (Object) a.faction),
-            Codec.INT.optionalFieldOf( "min_level").forGetter(a -> a.minLevel),
-            Codec.INT.optionalFieldOf( "max_level").forGetter(a -> a.maxLevel)
+            Codec.INT.optionalFieldOf("min_level").forGetter(a -> a.minLevel),
+            Codec.INT.optionalFieldOf("max_level").forGetter(a -> a.maxLevel)
     ).apply(inst, FactionCondition::new));
 
     private final @NotNull Type type;
@@ -90,7 +90,7 @@ public class FactionCondition implements LootItemCondition {
         Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (entity instanceof Player player) {
             IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(player);
-            return  switch (this.type) {
+            return switch (this.type) {
                 case NO_FACTION -> IFaction.is(handler.factionPlayer(), ModFactions.NEUTRAL);
                 case ANY_FACTION -> !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
                 case FACTION ->

@@ -39,6 +39,6 @@ public class VampirismPlayerAttributes {
 
     @SuppressWarnings({"RedundantCast", "unchecked"})
     public <T extends IFactionPlayer<T>> Holder<? extends IPlayableFaction<T>> faction() {
-        return ((Holder<? extends IPlayableFaction<T>>)  (Object) faction);
+        return ((Holder<? extends IPlayableFaction<T>>) (Object) faction);
     }
 }

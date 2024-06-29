@@ -21,7 +21,8 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      * @param stack the refinement item stack
      * @return the applied refinement set
      */
-    @Nullable IRefinementSet getRefinementSet(ItemStack stack);
+    @Nullable
+    IRefinementSet getRefinementSet(ItemStack stack);
 
     /**
      * Gets the accessory slot where this item can be equipped
@@ -47,9 +48,9 @@ public interface IRefinementItem extends IFactionExclusiveItem {
      * (like {@link net.minecraft.world.entity.EquipmentSlot} for other items)
      */
     enum AccessorySlotType implements StringRepresentable {
-        AMULET("amulet",0),
+        AMULET("amulet", 0),
         RING("ring", 1),
-        OBI_BELT("obi_belt",2);
+        OBI_BELT("obi_belt", 2);
 
         private final String name;
         /**

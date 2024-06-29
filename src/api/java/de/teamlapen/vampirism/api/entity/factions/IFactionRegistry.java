@@ -64,7 +64,7 @@ public interface IFactionRegistry {
      */
     @Deprecated
     @Nullable
-    IMinionEntry<?,?> getMinion(ResourceLocation minionId);
+    IMinionEntry<?, ?> getMinion(ResourceLocation minionId);
 
     /**
      * @return all minion entries from {@link de.teamlapen.vampirism.api.VampirismRegistries#MINION} registry
@@ -77,6 +77,6 @@ public interface IFactionRegistry {
      * @return a map of all minion entries from {@link de.teamlapen.vampirism.api.VampirismRegistries#MINION} registry, grouped by faction
      */
     @Unmodifiable
-    Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?,?>>, IMinionEntry<?, ?>>>> getFactionMinionEntries();
+    Map<Holder<? extends IPlayableFaction<?>>, List<Pair<ResourceKey<IMinionEntry<?, ?>>, IMinionEntry<?, ?>>>> getFactionMinionEntries();
 
 }

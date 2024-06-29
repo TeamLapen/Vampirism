@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.client.gui.components.SimpleList;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.MinionContainer;
@@ -73,7 +72,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         int j = (this.height - this.imageHeight) / 2;
         graphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
         for (int k = extraSlots; k < 15; k++) {
-            graphics.blitSprite(LOCKED_SPRITE,i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3),13,13);
+            graphics.blitSprite(LOCKED_SPRITE, i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3), 13, 13);
         }
     }
 

@@ -115,7 +115,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismAPI.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)): EnumStrength.NONE;
+        return world instanceof Level ? VampirismAPI.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
     }
 
     @NotNull
@@ -225,7 +225,7 @@ public class Helper {
     /**
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
-    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
         @NotNull TagKey<IFaction<?>> usingFaction = item.getExclusiveFaction(stack);
         Holder<ISkill<?>> requiredSkill = item.requiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);

@@ -8,7 +8,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,13 +32,13 @@ public abstract class DiffuserMenu extends PlayerOwnedMenu {
         checkContainerSize(pContainer, DiffuserBlockEntity.NUM_SLOTS);
         checkContainerDataCount(pData, DiffuserBlockEntity.NUM_DATA_VALUES);
         this.addSlot(new DiffuserFuelSlot(this, pContainer, 0, 26, 53));
-        for(int i = 0; i < 3; ++i) {
-            for(int j = 0; j < 9; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
-        for(int k = 0; k < 9; ++k) {
+        for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
 
@@ -87,7 +90,7 @@ public abstract class DiffuserMenu extends PlayerOwnedMenu {
         if (i == 0) {
             i = 200;
         }
-        return Mth.clamp(this.pData.get(DiffuserBlockEntity.DATA_LIT_TIME) / (float)i, 0.0F, 1.0F);
+        return Mth.clamp(this.pData.get(DiffuserBlockEntity.DATA_LIT_TIME) / (float) i, 0.0F, 1.0F);
     }
 
     public boolean isLit() {

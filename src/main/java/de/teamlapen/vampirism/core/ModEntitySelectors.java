@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;

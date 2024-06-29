@@ -248,7 +248,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
         @Override
         public @NotNull HunterPlayer read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-            if(holder instanceof Player player) {
+            if (holder instanceof Player player) {
                 var hunter = new HunterPlayer(player);
                 hunter.deserializeNBT(provider, tag);
                 return hunter;

@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.effects.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;

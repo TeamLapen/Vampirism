@@ -18,7 +18,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class CodecUtil {
     public static final Codec<UUID> UUID = Codec.STRING.xmap(java.util.UUID::fromString, java.util.UUID::toString);
@@ -28,7 +27,7 @@ public class CodecUtil {
         public <T> DataResult<DoubleStream> read(final DynamicOps<T> ops, final T input) {
             return ops.getStream(input).flatMap(s -> {
                 final List<T> list = s.collect(Collectors.toList());
-                if(list.stream().allMatch(element -> ops.getNumberValue(element).result().isPresent())) {
+                if (list.stream().allMatch(element -> ops.getNumberValue(element).result().isPresent())) {
                     return DataResult.success(list.stream().mapToDouble(element -> ops.getNumberValue(element).result().get().doubleValue()));
                 }
                 return DataResult.error(() -> "Some elements are not doubles: " + input);
@@ -52,7 +51,7 @@ public class CodecUtil {
     }
 
     public static DataResult<double[]> fixedSize(DoubleStream pStream, int pSize) {
-        double[] aint = pStream.limit((long)(pSize + 1)).toArray();
+        double[] aint = pStream.limit(pSize + 1).toArray();
         if (aint.length != pSize) {
             Supplier<String> supplier = () -> "Input is not a list of " + pSize + " ints";
             return aint.length >= pSize ? DataResult.error(supplier, Arrays.copyOf(aint, pSize)) : DataResult.error(supplier);

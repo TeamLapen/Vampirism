@@ -28,9 +28,9 @@ public class SitUtil {
     /**
      * Adds a sit entity to the map that keeps track of them. This does not spawn the entity itself.
      *
-     * @param level     The world to add the entity in
-     * @param blockPos  The position at which to add the entity
-     * @param entity    The entity to add
+     * @param level    The world to add the entity in
+     * @param blockPos The position at which to add the entity
+     * @param entity   The entity to add
      * @return true if the entity was added, false otherwise. This is always false on the client.
      */
     public static boolean addSitEntity(@NotNull Level level, BlockPos blockPos, SitEntity entity) {

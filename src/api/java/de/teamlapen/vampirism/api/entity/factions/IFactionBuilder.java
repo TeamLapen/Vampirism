@@ -67,7 +67,7 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * Marks the tag as a faction tag
      *
      * @param registryKey the registry key for the tag registry
-     * @param tag the faction tag
+     * @param tag         the faction tag
      * @return the builder
      */
     <Z> IFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);

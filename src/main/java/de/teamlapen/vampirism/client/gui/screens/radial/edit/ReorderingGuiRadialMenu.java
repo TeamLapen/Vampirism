@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.ChatFormatting;
@@ -52,9 +51,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new ResetButton(3, this.height - 45, 140-4, 20, (context) -> this.reset()));
-        this.addRenderableWidget(new ExtendedButton(3, this.height - 24, 140-4, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
-        this.excludedList = this.addRenderableWidget(new ExcludedItemList(3, 20, 140-3, this.height - 70));
+        this.addRenderableWidget(new ResetButton(3, this.height - 45, 140 - 4, 20, (context) -> this.reset()));
+        this.addRenderableWidget(new ExtendedButton(3, this.height - 24, 140 - 4, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
+        this.excludedList = this.addRenderableWidget(new ExcludedItemList(3, 20, 140 - 3, this.height - 70));
 
         if (this.wasGuiHidden == null) {
             this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
@@ -70,7 +69,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         graphics.setColor(0.5F, 0.5F, 0.5F, 1.0F);
-        graphics.blitSprite(BACKGROUND, 0,0, 143, this.height);
+        graphics.blitSprite(BACKGROUND, 0, 0, 143, this.height);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
@@ -140,7 +139,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        for(GuiEventListener guieventlistener1 : this.children()) {
+        for (GuiEventListener guieventlistener1 : this.children()) {
             if (guieventlistener1.mouseClicked(mouseX, mouseY, mouseButton)) {
                 return true;
             }
@@ -190,7 +189,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         if (this.movingItem == null && !slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
             r = 80;
         }
-        super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, Math.min(255, (int)(a*2f)));
+        super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, Math.min(255, (int) (a * 2f)));
     }
 
     @Override

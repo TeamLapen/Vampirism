@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.ai.goals;
 
-import de.teamlapen.vampirism.core.ModVillage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -44,7 +43,7 @@ public class AvoidBlockGoal extends Goal {
         if (this.mob.level() instanceof ServerLevel serverLevel) {
             Vec3 position = this.mob.position();
             this.toAvoid = serverLevel.getPoiManager().getInRange(l -> l.is(this.avoid), this.mob.blockPosition(), this.minDistance, PoiManager.Occupancy.ANY).map(PoiRecord::getPos).map(BlockPos::getCenter).min(Comparator.comparingInt(o -> (int) position.distanceTo(o))).orElse(null);
-            if (toAvoid == null){
+            if (toAvoid == null) {
                 return false;
             } else {
                 Vec3 vec3 = DefaultRandomPos.getPosAway(this.mob, 16, 7, this.toAvoid);

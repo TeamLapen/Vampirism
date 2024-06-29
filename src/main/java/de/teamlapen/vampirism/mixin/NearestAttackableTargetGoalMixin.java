@@ -19,10 +19,13 @@ import java.util.function.Predicate;
 @Mixin(NearestAttackableTargetGoal.class)
 public class NearestAttackableTargetGoalMixin implements NearestTargetGoalModifier {
 
-    @Shadow protected TargetingConditions targetConditions;
-    @Shadow @Nullable protected LivingEntity target;
+    @Shadow
+    protected TargetingConditions targetConditions;
+    @Shadow
+    @Nullable
+    protected LivingEntity target;
     @Unique
-    private static final BiPredicate<Mob,LivingEntity> vampirism$nonVampireCheck = (mob, target) -> !Helper.appearsAsVampire(target, mob);
+    private static final BiPredicate<Mob, LivingEntity> vampirism$nonVampireCheck = (mob, target) -> !Helper.appearsAsVampire(target, mob);
     @Unique
     private static final Predicate<LivingEntity> vampirism$noFactionEntityCheck = entity -> !(entity instanceof IFactionEntity);
 

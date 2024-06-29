@@ -82,11 +82,11 @@ public interface TaskMenu {
         /**
          * The task can be aborted
          */
-        ABORT("abort","gui.vampirism.taskmaster.abort_task"),
+        ABORT("abort", "gui.vampirism.taskmaster.abort_task"),
         /**
          * The task can only be removed
          */
-        REMOVE("remove","gui.vampirism.taskmaster.remove_task");
+        REMOVE("remove", "gui.vampirism.taskmaster.remove_task");
 
         private final String name;
         @NotNull

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.mixin;
 
 //import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
+
 import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;

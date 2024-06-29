@@ -46,6 +46,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
             }
         }
     }
+
     private BlockPos motherPos;
     private int health = MAX_HEALTH;
     @Nullable
@@ -55,6 +56,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     public VulnerableRemainsBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
     }
+
     private long lastDamage = 0;
 
     private void destroyVulnerability() {
@@ -98,7 +100,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         tag.putInt("health", this.health);
         tag.putLong("lastDamage", this.lastDamage);
         if (this.motherPos != null) {
-            tag.putIntArray("motherPos", new int[]{this.motherPos.getX(), this.motherPos.getY(), this.motherPos.getZ()});
+            tag.putIntArray("motherPos", new int[] {this.motherPos.getX(), this.motherPos.getY(), this.motherPos.getZ()});
         }
         if (this.dummy_entity_id != null) {
             tag.putUUID("dummy_entity_id", this.dummy_entity_id);
@@ -134,7 +136,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
     public void checkNeighbor(BlockPos pNeighborPos) {
-        if(level instanceof ServerLevel serverLevel && serverLevel.getBlockState(pNeighborPos).isAir()) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getBlockState(pNeighborPos).isAir()) {
             Direction direction = UtilLib.getDirection(getBlockPos(), pNeighborPos);
             if (direction != null) {
                 checkDummyEntity(serverLevel, getBlockPos()).spawnDefender(direction.getOpposite());
@@ -147,7 +149,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         super.setRemoved();
         if (this.dummy_entity_id != null && this.level instanceof ServerLevel serverLevel) {
             Optional.ofNullable(serverLevel.getEntity(dummy_entity_id)).ifPresent(entity -> {
-                entity.playSound(((VulnerableRemainsDummyEntity)entity).getDeathSound());
+                entity.playSound(((VulnerableRemainsDummyEntity) entity).getDeathSound());
                 entity.remove(Entity.RemovalReason.DISCARDED);
             });
         }

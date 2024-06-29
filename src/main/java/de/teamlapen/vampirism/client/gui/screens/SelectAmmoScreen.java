@@ -5,9 +5,8 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.util.Helper;
@@ -35,7 +34,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     public static void show() {
         Player player = Minecraft.getInstance().player;
         ItemStack crossbowStack = player.getMainHandItem();
-        if(Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack))  {
+        if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
             var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item))).collect(Collectors.toList());
             ammoTypes.add(new AmmoType(null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
@@ -43,7 +42,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     }
 
     private static RadialMenu<AmmoType> getRadialMenu(Collection<AmmoType> ammoTypes) {
-        List<IRadialMenuSlot<AmmoType>> parts = (List<IRadialMenuSlot<AmmoType>>) (Object)ammoTypes.stream().map(a -> new RadialMenuSlot<>(a.getDisplayName(), a)).toList();
+        List<IRadialMenuSlot<AmmoType>> parts = (List<IRadialMenuSlot<AmmoType>>) (Object) ammoTypes.stream().map(a -> new RadialMenuSlot<>(a.getDisplayName(), a)).toList();
         return new RadialMenu<>((i) -> {
             VampirismMod.proxy.sendToServer(ServerboundSelectAmmoTypePacket.of(parts.get(i).primarySlotIcon()));
         }, parts, SelectAmmoScreen::drawAmmoTypePart, 0);
@@ -65,6 +64,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     public static class AmmoType {
         public final ItemStack renderStack;
         public final int count;
+
         public AmmoType(@Nullable Item item, int count) {
             this.count = count;
             this.renderStack = item == null ? null : item.getDefaultInstance();

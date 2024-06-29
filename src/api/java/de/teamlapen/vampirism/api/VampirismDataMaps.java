@@ -1,19 +1,12 @@
 package de.teamlapen.vampirism.api;
 
-import com.google.common.base.Suppliers;
-import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
-import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
-import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
-import de.teamlapen.vampirism.api.datamaps.IItemBlood;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
-import com.google.common.base.Suppliers;
 import de.teamlapen.vampirism.api.datamaps.*;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.registries.RegistryManager;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
 import java.util.function.Supplier;

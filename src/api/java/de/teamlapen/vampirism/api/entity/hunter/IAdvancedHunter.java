@@ -13,8 +13,8 @@ public interface IAdvancedHunter extends IHunterMob, IAdjustableLevel, IVillageC
     /**
      * The type integer declares multiple things about the hunter. This the different values are stored in the different bits of the integer.
      * <br>
-     *     - bit 0 defines if the hunter has a cloak<br>
-     *     - bits 1-9 are used for the hunter body texture<br>
+     * - bit 0 defines if the hunter has a cloak<br>
+     * - bits 1-9 are used for the hunter body texture<br>
      */
     int getHunterType();
 

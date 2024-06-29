@@ -68,7 +68,7 @@ public class ModKeys {
     public static final KeyMapping ACTION9 = new KeyMapping("keys.vampirism.action9", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping("keys.vampirism.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping SELECT_AMMO = new KeyMapping("keys.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
-    public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.vampirism.skill_screen",KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.vampirism.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
     public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1, ACTION1, 2, ACTION2, 3, ACTION3, 4, ACTION4, 5, ACTION5, 6, ACTION6, 7, ACTION7, 8, ACTION8, 9, ACTION9);
 
@@ -178,7 +178,7 @@ public class ModKeys {
     }
 
     private void openMinionTaskMenu() {
-        if(Minecraft.getInstance().player.isSpectator()) return;
+        if (Minecraft.getInstance().player.isSpectator()) return;
         if (FactionPlayerHandler.get(mc.player).getLordLevel() > 0) {
             SelectMinionTaskRadialScreen.show();
         }
@@ -186,7 +186,7 @@ public class ModKeys {
 
     private void toggleAction(int id) {
         long t = System.currentTimeMillis();
-        if (t - this.actionTriggerTime.getOrDefault(id,0) > ACTION_BUTTON_COOLDOWN) {
+        if (t - this.actionTriggerTime.getOrDefault(id, 0) > ACTION_BUTTON_COOLDOWN) {
             this.actionTriggerTime.put(id, t);
             Player player = mc.player;
             if (player.isAlive()) {

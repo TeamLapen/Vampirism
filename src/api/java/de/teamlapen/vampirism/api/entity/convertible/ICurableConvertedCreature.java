@@ -125,7 +125,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @return the action result
      */
     default @NotNull InteractionResult interactWithCureItem(@NotNull Player player, @NotNull ItemStack stack, @NotNull PathfinderMob entity) {
-        if(isConverting(entity)) return InteractionResult.CONSUME;
+        if (isConverting(entity)) return InteractionResult.CONSUME;
         if (!entity.hasEffect(MobEffects.WEAKNESS)) return InteractionResult.CONSUME;
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);

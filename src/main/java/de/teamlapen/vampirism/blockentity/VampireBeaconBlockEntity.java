@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionyMixin;
 import de.teamlapen.vampirism.util.Helper;
@@ -30,8 +30,6 @@ import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BeaconBeamBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
@@ -143,7 +141,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
                 } else if (beaconblockentity$beaconbeamsection != null) {
                     if (j1 == beaconblockentity$beaconbeamsection.getColor()) {
-                        ((BeaconBeamSectionyMixin)beaconblockentity$beaconbeamsection).invoke_increaseHeight();
+                        ((BeaconBeamSectionyMixin) beaconblockentity$beaconbeamsection).invoke_increaseHeight();
                     } else {
                         beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(
                                 FastColor.ARGB32.average(beaconblockentity$beaconbeamsection.getColor(), j1)
@@ -158,7 +156,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     break;
                 }
 
-                ((BeaconBeamSectionyMixin)beaconblockentity$beaconbeamsection).invoke_increaseHeight();
+                ((BeaconBeamSectionyMixin) beaconblockentity$beaconbeamsection).invoke_increaseHeight();
             }
 
             blockpos = blockpos.above();
@@ -189,7 +187,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     playSound(pLevel, pPos, SoundEvents.BEACON_ACTIVATE);
 
                     for (ServerPlayer serverplayer : pLevel.getEntitiesOfClass(
-                            ServerPlayer.class, new AABB((double)i, (double)j, (double)k, (double)i, (double)(j - MAX_LEVELS), (double)k).inflate(10.0, 5.0, 10.0)
+                            ServerPlayer.class, new AABB(i, j, k, i, j - MAX_LEVELS, k).inflate(10.0, 5.0, 10.0)
                     )) {
                         CriteriaTriggers.CONSTRUCT_BEACON.trigger(serverplayer, pBlockEntity.levels);
                     }
@@ -205,7 +203,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             if (NO_AMPLIFIER_EFFECTS.contains(power)) {
                 effectAmplifier = 0;
             }
-            AABB aabb = (new AABB(pos)).inflate(levels * 10 + 10).expandTowards(0.0D, (double) level.getHeight(), 0.0D);
+            AABB aabb = (new AABB(pos)).inflate(levels * 10 + 10).expandTowards(0.0D, level.getHeight(), 0.0D);
             int effectDuration = (9 + levels * 2) * 20;
             List<Player> list = level.getEntitiesOfClass(Player.class, aabb, Helper::isHunter);
             int finalEffectAmplifier = effectAmplifier;
@@ -217,7 +215,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
         int i = 0;
         Optional<Boolean> upgradeFlag = Optional.empty();
 
-        for(int j = 1; j <= MAX_LEVELS; i = j++) {
+        for (int j = 1; j <= MAX_LEVELS; i = j++) {
             int k = pY - j;
             if (k < pLevel.getMinBuildHeight()) {
                 break;
@@ -226,8 +224,8 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             boolean flag = true;
             boolean upgradeFlagLevel = upgradeFlag.orElse(true);
 
-            for(int l = pX - j; l <= pX + j && flag; ++l) {
-                for(int i1 = pZ - j; i1 <= pZ + j; ++i1) {
+            for (int l = pX - j; l <= pX + j && flag; ++l) {
+                for (int i1 = pZ - j; i1 <= pZ + j; ++i1) {
                     BlockState blockState = pLevel.getBlockState(new BlockPos(l, k, i1));
                     if (!blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS)) {
                         flag = false;

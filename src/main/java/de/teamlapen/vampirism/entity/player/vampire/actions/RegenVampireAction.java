@@ -33,6 +33,7 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
     public boolean showHudCooldown(Player player) {
         return true;
     }
+
     @Override
     public boolean showHudDuration(Player player) {
         return true;

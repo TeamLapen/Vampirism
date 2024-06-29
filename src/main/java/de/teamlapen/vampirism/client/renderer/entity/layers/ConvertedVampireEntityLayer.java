@@ -30,11 +30,11 @@ public class ConvertedVampireEntityLayer<T extends LivingEntity, U extends Entit
 
     @Override
     public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int i, @NotNull T entity, float v, float v1, float v2, float v3, float v4, float v5) {
-        if(!entity.isInvisible()) {
+        if (!entity.isInvisible()) {
             String sourceId = null;
             if (ConvertedCreatureRenderer.renderOverlay) {
                 sourceId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
-            } else if(!checkIfRender && entity instanceof IConvertedCreature<?> converted) {
+            } else if (!checkIfRender && entity instanceof IConvertedCreature<?> converted) {
                 sourceId = converted.getSourceEntityId();
             }
             if (sourceId != null) {

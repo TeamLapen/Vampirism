@@ -21,11 +21,11 @@ public class FactionSubPredicate implements EntitySubPredicate {
 
     @SuppressWarnings("unchecked")
     public static final MapCodec<FactionSubPredicate> CODEC = RecordCodecBuilder.mapCodec(inst ->
-        inst.group(
-                ModRegistries.FACTIONS.holderByNameCodec().optionalFieldOf("faction", null).forGetter(p -> (Holder<IFaction<?>>) p.faction),
-                Codec.INT.optionalFieldOf( "level").forGetter(p -> p.level),
-                Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
-        ).apply(inst, FactionSubPredicate::new)
+            inst.group(
+                    ModRegistries.FACTIONS.holderByNameCodec().optionalFieldOf("faction", null).forGetter(p -> (Holder<IFaction<?>>) p.faction),
+                    Codec.INT.optionalFieldOf("level").forGetter(p -> p.level),
+                    Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
+            ).apply(inst, FactionSubPredicate::new)
     );
 
     @Nullable

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui.screens.skills;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -39,7 +38,7 @@ public class SkillNodeScreen {
     private static final ResourceLocation TITLE_GREEN_SPRITE = VResourceLocation.mod("skills_screen/title_green");
     private static final ResourceLocation DESCRIPTION_SPRITE = VResourceLocation.mod("skills_screen/description");
 
-    private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
+    private static final int[] TEST_SPLIT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     private final Minecraft minecraft;
     private final SkillsTabScreen tab;
     private final SkillsScreen screen;
@@ -214,7 +213,7 @@ public class SkillNodeScreen {
         }
     }
 
-    private int getNodeWidth(){
+    private int getNodeWidth() {
         return 26 * this.skillNode.elementCount() + (this.skillNode.elementCount() - 1) * 10;
     }
 
@@ -285,7 +284,7 @@ public class SkillNodeScreen {
             if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
                 texture = SkillNodeState.LOCKED.sprite;
             }
-            graphics.blitSprite(texture, scrollX + x - 5, scrollY + this.y+3, this.width[hoveredSkillIndex], 20);
+            graphics.blitSprite(texture, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 20);
             graphics.drawString(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
 
             //draw skill point cost
@@ -344,7 +343,7 @@ public class SkillNodeScreen {
 
     public boolean isMouseOver(double mouseX, double mouseY, int scrollX, int scrollY) {
         double width = getNodeWidth();
-        return mouseX >= this.x + scrollX - width / 2  && mouseX < this.x + scrollX  + width / 2 - 1 && mouseY > scrollY + this.y && mouseY < scrollY + this.y + 26;
+        return mouseX >= this.x + scrollX - width / 2 && mouseX < this.x + scrollX + width / 2 - 1 && mouseY > scrollY + this.y && mouseY < scrollY + this.y + 26;
     }
 
     public boolean isMouseOverSkill(int index, double mouseX, double mouseY, int guiLeft, int guiTop) {
@@ -357,7 +356,7 @@ public class SkillNodeScreen {
         if (!isMouseOver(mouseX, mouseY, scrollX, scrollY)) return null;
         int nodeWidth = getNodeWidth();
         for (int i = 0; i < this.skillNode.elementCount(); i++) {
-            if (isMouseOverSkill(i, mouseX, mouseY, (int) (scrollX - nodeWidth/2f), scrollY)) {
+            if (isMouseOverSkill(i, mouseX, mouseY, (int) (scrollX - nodeWidth / 2f), scrollY)) {
                 return this.skillNode.elements().get(i);
             }
         }

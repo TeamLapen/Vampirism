@@ -46,7 +46,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         if (faction != null) {
             FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
                 //noinspection rawtypes
-                List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
+                List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler) player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (!actions.isEmpty()) {
                     Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
                 } else {
@@ -62,12 +62,12 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         List<IRadialMenuSlot<Holder<IAction<?>>>> parts = actions.stream().filter(s -> s.value().showInSelectAction(player)).map(a -> (IRadialMenuSlot<Holder<IAction<?>>>) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
             VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(parts.get(i).primarySlotIcon(), Minecraft.getInstance().hitResult));
-        }, parts , SelectActionRadialScreen::drawActionPart,0);
+        }, parts, SelectActionRadialScreen::drawActionPart, 0);
     }
 
     private static void drawActionPart(Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         var texture = action.unwrapKey().map(ResourceKey::location).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
-        graphics.setColor(1,1,1,1);
+        graphics.setColor(1, 1, 1, 1);
         graphics.blit(texture, posX, posY, 0, 0, 0, 16, 16, 16, 16);
     }
 
@@ -81,7 +81,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         }
         if (actionPercentage == 0) {
             super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, 100);
-        } else if(actionPercentage > 0) {
+        } else if (actionPercentage > 0) {
             int color = highlighted ? 200 : 160;
             super.drawSlice(slot, true, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, color, color, 60, 100);
             super.drawSlice(slot, true, buffer, x, y, z, radiusIn, radiusIn + ((radiusOut - radiusIn) * actionPercentage), startAngle, endAngle, color, color, 60, 100);

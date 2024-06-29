@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipeInput;
-import de.teamlapen.vampirism.recipes.BrewingRecipeInput;
 import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.*;
@@ -26,14 +25,18 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
+import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -55,10 +58,10 @@ import java.util.UUID;
 public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final int[] SLOTS_DOWN = new int[]{0, 1, 2};
-    private static final int[] SLOTS_UP = new int[]{0};
-    private static final int[] SLOTS_WEST = new int[]{1};
-    private static final int[] SLOTS_FUEL = new int[]{3};
+    private static final int[] SLOTS_DOWN = new int[] {0, 1, 2};
+    private static final int[] SLOTS_UP = new int[] {0};
+    private static final int[] SLOTS_WEST = new int[] {1};
+    private static final int[] SLOTS_FUEL = new int[] {3};
 
     @Nullable
     private UUID ownerID;
@@ -367,10 +370,9 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
                 pBlockEntity.litDuration = pBlockEntity.litTime;
                 if (pBlockEntity.isLit()) {
                     flag1 = true;
-                    if (fuel.hasCraftingRemainingItem())
+                    if (fuel.hasCraftingRemainingItem()) {
                         pBlockEntity.items.set(3, fuel.getCraftingRemainingItem());
-                    else
-                    if (flag3) {
+                    } else if (flag3) {
                         Item item = fuel.getItem();
                         fuel.shrink(1);
                         if (fuel.isEmpty()) {
@@ -380,7 +382,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
                 }
             }
 
-            if (pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity)  && pBlockEntity.canPlayerCook(recipeholder)) {
+            if (pBlockEntity.isLit() && canBurn(pLevel.registryAccess(), recipeholder, pBlockEntity.items, i, pBlockEntity) && pBlockEntity.canPlayerCook(recipeholder)) {
                 pBlockEntity.cookingProgress++;
                 if (pBlockEntity.cookingProgress == pBlockEntity.cookingTotalTime) {
                     pBlockEntity.cookingProgress = 0;
@@ -484,9 +486,8 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
                 } else if (!ItemStack.isSameItemSameComponents(itemstack1, itemstack)) {
                     return false;
                 } else {
-                    return itemstack1.getCount() + itemstack.getCount() <= pMaxStackSize && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize() // Neo fix: make furnace respect stack sizes in furnace recipes
-                            ? true
-                            : itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Neo fix: make furnace respect stack sizes in furnace recipes
+                    // Neo fix: make furnace respect stack sizes in furnace recipes
+                    return itemstack1.getCount() + itemstack.getCount() <= pMaxStackSize && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize() || itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Neo fix: make furnace respect stack sizes in furnace recipes
                 }
             }
         } else {

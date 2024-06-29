@@ -257,7 +257,7 @@ public class ModPlayerEventHandler {
                 event.setCanceled(true);
             }
             if (event.getItem().getItem() instanceof HunterCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE)) {
-                event.setDuration((int)(event.getDuration() * 0.5f));
+                event.setDuration((int) (event.getDuration() * 0.5f));
             }
         }
 
@@ -333,8 +333,8 @@ public class ModPlayerEventHandler {
 
         // reduce damage dor vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
-            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
-            event.setAmount(event.getAmount() * (1-mod));
+            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float) s.getLevel() / (float) s.getMaxLevel())).orElse(0f));
+            event.setAmount(event.getAmount() * (1 - mod));
         }
     }
 
@@ -497,7 +497,7 @@ public class ModPlayerEventHandler {
                     }
                     return false;
                 } else if (requiredSkill != null) {
-                    if(handler.getSkillHandler().map(s -> !s.isSkillEnabled(requiredSkill)).orElse(true)) {
+                    if (handler.getSkillHandler().map(s -> !s.isSkillEnabled(requiredSkill)).orElse(true)) {
                         if (message) {
                             player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_skill"), true);
                         }

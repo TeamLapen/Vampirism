@@ -51,7 +51,7 @@ public class VampirismEventFactory {
     }
 
     public static boolean fireChangeLevelOrFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, int currentLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
-        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, (Holder<IPlayableFaction<?>>) currentFaction, currentLevel,(Holder<IPlayableFaction<?>>) newFaction, newLevel);
+        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, (Holder<IPlayableFaction<?>>) currentFaction, currentLevel, (Holder<IPlayableFaction<?>>) newFaction, newLevel);
         NeoForge.EVENT_BUS.post(event);
         return event.isCanceled();
     }
@@ -94,14 +94,14 @@ public class VampirismEventFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> ActionEvent.ActionDeactivatedEvent<T> fireActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> ActionEvent.ActionDeactivatedEvent<T> fireActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
         ActionEvent.ActionDeactivatedEvent<T> event = new ActionEvent.ActionDeactivatedEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration, cooldown, ignoreCooldown, fullCooldown);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> ActionEvent.ActionUpdateEvent<T> fireActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> ActionEvent.ActionUpdateEvent<T> fireActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration) {
         ActionEvent.ActionUpdateEvent<T> event = new ActionEvent.ActionUpdateEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration);
         NeoForge.EVENT_BUS.post(event);
         return event;

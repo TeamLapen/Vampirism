@@ -114,7 +114,7 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
             this.name = name;
         }
 
-        public MinionId(String id) throws NumberFormatException{
+        public MinionId(String id) throws NumberFormatException {
             int first = id.indexOf(':');
             this.player = id.substring(0, first);
             int second = id.indexOf('|');

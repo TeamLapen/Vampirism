@@ -18,11 +18,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionEntryBuilder<T,Z> {
+public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionEntryBuilder<T, Z> {
 
     public final Holder<? extends IPlayableFaction<T>> faction;
     public final Supplier<Z> data;
-    public IMinionCommandBuilder<T,Z> commandBuilder;
+    public IMinionCommandBuilder<T, Z> commandBuilder;
 
     public MinionEntryBuilder(Holder<? extends IPlayableFaction<T>> faction, @NotNull Supplier<Z> data) {
         this.faction = faction;
@@ -30,7 +30,7 @@ public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionDa
     }
 
     @Override
-    public MinionEntryBuilder<T,Z> commandBuilder(@NotNull IMinionCommandBuilder<T, Z> builder) {
+    public MinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T, Z> builder) {
         commandBuilder = builder;
         return this;
     }
@@ -40,10 +40,10 @@ public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionDa
         return new MinionEntry<>(this);
     }
 
-    public static class MinionCommandBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionCommandBuilder<T,Z>{
+    public static class MinionCommandBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionCommandBuilder<T, Z> {
 
         protected final Supplier<EntityType<? extends IMinionEntity>> type;
-        protected final List<ICommandEntry<Z,?>> commandArguments = new ArrayList<>();
+        protected final List<ICommandEntry<Z, ?>> commandArguments = new ArrayList<>();
 
         public MinionCommandBuilder(@NotNull Supplier<EntityType<? extends IMinionEntity>> type) {
             this.type = type;
@@ -65,7 +65,7 @@ public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionDa
             return this;
         }
 
-        public record CommandEntry<Z extends IMinionData,T>(String name, T defaultValue, ArgumentType<T> type, BiConsumer<Z,T> setter, BiFunction<CommandContext<CommandSourceStack>, String, T> getter) implements ICommandEntry<Z,T> {
+        public record CommandEntry<Z extends IMinionData, T>(String name, T defaultValue, ArgumentType<T> type, BiConsumer<Z, T> setter, BiFunction<CommandContext<CommandSourceStack>, String, T> getter) implements ICommandEntry<Z, T> {
         }
     }
 }

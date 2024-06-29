@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blockentity.diffuser;
 
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.datamaps.IGarlicDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModFactions;
@@ -17,17 +16,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
 
@@ -87,7 +82,7 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
     @Override
     public void onTouched(Player pPlayer) {
         VampirePlayer vampire = VampirePlayer.get(pPlayer);
-        if(vampire.getLevel() > 0) {
+        if (vampire.getLevel() > 0) {
             DamageHandler.affectVampireGarlicDirect(vampire, this.strength);
         }
     }

@@ -49,11 +49,11 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
      * 3-5: Main bottle slots
      * 6-7: Extra bottle slots
      */
-    private static final int[] SLOTS_FOR_UP = new int[]{0, 1, 2};
-    private static final int[] SLOTS_FOR_DOWN = new int[]{3, 4, 5, 1, 2};
-    private static final int[] SLOTS_FOR_DOWN_EXTENDED = new int[]{3, 4, 5, 6, 7, 1, 2};
-    private static final int[] OUTPUT_SLOTS = new int[]{3, 4, 5, 0};
-    private static final int[] OUTPUT_SLOTS_EXTENDED = new int[]{3, 4, 5, 6, 7, 0};
+    private static final int[] SLOTS_FOR_UP = new int[] {0, 1, 2};
+    private static final int[] SLOTS_FOR_DOWN = new int[] {3, 4, 5, 1, 2};
+    private static final int[] SLOTS_FOR_DOWN_EXTENDED = new int[] {3, 4, 5, 6, 7, 1, 2};
+    private static final int[] OUTPUT_SLOTS = new int[] {3, 4, 5, 0};
+    private static final int[] OUTPUT_SLOTS_EXTENDED = new int[] {3, 4, 5, 6, 7, 0};
     private final BrewingCapabilities config = new BrewingCapabilities();
     @Nullable
     private UUID ownerID;

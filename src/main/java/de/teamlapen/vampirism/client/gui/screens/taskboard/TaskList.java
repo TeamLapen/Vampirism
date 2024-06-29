@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui.screens.taskboard;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.lib.lib.util.MultilineTooltip;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
@@ -16,7 +15,6 @@ import de.teamlapen.vampirism.inventory.TaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
@@ -293,7 +291,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             @Override
             public int getY() {
-                return super.getY() +yOffset;
+                return super.getY() + yOffset;
             }
 
             @Override
@@ -319,7 +317,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 return tooltips;
             }
 
-            protected @NotNull List<Component> getTooltipFromItem2(Item.TooltipContext context,  @NotNull ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
+            protected @NotNull List<Component> getTooltipFromItem2(Item.TooltipContext context, @NotNull ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
                 List<Component> list = itemStack.getTooltipLines(context, Minecraft.getInstance().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
                 List<Component> list1 = Lists.newArrayList();
                 for (int i = 0; i < list.size(); i++) {
@@ -352,7 +350,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             protected List<Component> createTooltip(Item.TooltipContext tooltipContext) {
                 Item.TooltipContext context = Item.TooltipContext.of(Minecraft.getInstance().level);
                 if (this.rewardInstance.getReward() instanceof ItemReward.Instance item) {
-                    return this.renderItemTooltip(item.reward(), REWARD, context,false, null);
+                    return this.renderItemTooltip(item.reward(), REWARD, context, false, null);
                 } else {
                     return this.renderItemTooltip(context);
                 }

@@ -9,7 +9,6 @@ import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -44,10 +43,10 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         var bubbles = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.BUBBLES_SPRITE), 0, 0, 12, 29).setTextureSize(12, 29).build();
         this.bubbles = guiHelper.createAnimatedDrawable(bubbles, 400, IDrawableAnimated.StartDirection.BOTTOM, false);
 
-        var blaze = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.FUEL_SPRITE), 0, 0, 18, 4).setTextureSize(18,4).build();
+        var blaze = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.FUEL_SPRITE), 0, 0, 18, 4).setTextureSize(18, 4).build();
         this.blazeHeat = guiHelper.createAnimatedDrawable(blaze, 400, IDrawableAnimated.StartDirection.LEFT, false);
 
-        var progress =guiHelper.drawableBuilder(fixSprite(PotionTableScreen.PROGRESS_SPRITE), 0, 0, 9, 28).setTextureSize(9, 28).build();
+        var progress = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.PROGRESS_SPRITE), 0, 0, 9, 28).setTextureSize(9, 28).build();
         this.arrow = guiHelper.createAnimatedDrawable(progress, 400, IDrawableAnimated.StartDirection.TOP, false);
     }
 
@@ -118,7 +117,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     }
 
     private static class BrewingBubblesTickTimer implements ITickTimer {
-        private static final int[] BUBBLE_LENGTHS = new int[]{29, 23, 18, 13, 9, 5, 0};
+        private static final int[] BUBBLE_LENGTHS = new int[] {29, 23, 18, 13, 9, 5, 0};
         private final @NotNull ITickTimer internalTimer;
 
         public BrewingBubblesTickTimer(@NotNull IGuiHelper guiHelper) {

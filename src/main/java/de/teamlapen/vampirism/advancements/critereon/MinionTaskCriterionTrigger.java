@@ -28,7 +28,7 @@ public class MinionTaskCriterionTrigger extends SimpleCriterionTrigger<MinionTas
     public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull IMinionTask<?, ?> task) implements SimpleCriterionTrigger.SimpleInstance {
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf( "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ModRegistries.MINION_TASKS.byNameCodec().fieldOf("task").forGetter(TriggerInstance::task)
         ).apply(inst, TriggerInstance::new));
 

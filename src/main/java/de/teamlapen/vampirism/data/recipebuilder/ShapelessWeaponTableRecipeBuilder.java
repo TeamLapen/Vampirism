@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
 import de.teamlapen.vampirism.advancements.critereon.SkillUnlockedCriterionTrigger;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -43,7 +41,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
-    public ShapelessWeaponTableRecipeBuilder(@NotNull RecipeCategory category,@NotNull ItemLike resultIn, int countIn) {
+    public ShapelessWeaponTableRecipeBuilder(@NotNull RecipeCategory category, @NotNull ItemLike resultIn, int countIn) {
         super(category, resultIn, countIn);
     }
 
@@ -99,7 +97,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 Objects.requireNonNullElse(this.group, ""),
                 RecipeBuilder.determineBookCategory(this.category),
                 this.ingredients,
-        new ItemStack(this.result, this.count),
+                new ItemStack(this.result, this.count),
                 level,
                 lava,
                 skills

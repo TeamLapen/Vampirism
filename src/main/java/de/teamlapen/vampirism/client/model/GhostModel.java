@@ -41,6 +41,7 @@ public class GhostModel extends EntityModel<GhostEntity> {
         this.right_arm = this.body.getChild(RIGHT_ARM);
         this.left_arm = this.body.getChild(LEFT_ARM);
     }
+
     @Override
     public void setupAnim(@NotNull GhostEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         this.body.getAllParts().forEach(ModelPart::resetPose);
@@ -62,18 +63,18 @@ public class GhostModel extends EntityModel<GhostEntity> {
             this.left_arm.xRot -= Mth.sin(pLimbSwing * 0.067F) * 0.05F;
         }
 
-        float f3 = pAgeInTicks * 5.0F * ((float)Math.PI / 180F);
+        float f3 = pAgeInTicks * 5.0F * ((float) Math.PI / 180F);
         float f4 = Math.min(pLimbSwingAmount / 0.3F, 1.0F);
         float f5 = 1.0F - f4;
 
-        this.body.y += (float)Math.cos((double)f3) * 0.25F * f5;
+        this.body.y += (float) Math.cos(f3) * 0.25F * f5;
     }
 
     public void setupAnim2(float pAgeInTicks) {
         this.body.getAllParts().forEach(ModelPart::resetPose);
         float f3 = pAgeInTicks * 5.0F * ((float) Math.PI / 180F);
 
-        this.body.y += (float) Math.cos((double) f3) * 0.25F;
+        this.body.y += (float) Math.cos(f3) * 0.25F;
     }
 
     @Override

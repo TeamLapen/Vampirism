@@ -2,38 +2,23 @@ package de.teamlapen.vampirism.proxy;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
-import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
-import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.client.core.ModItemsRender;
-import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
-import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
-import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.blockentity.ModBlockEntityItemRenderer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -44,11 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.fml.event.lifecycle.ParallelDispatchEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +45,7 @@ import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
  * Clientside Proxy
  */
 public class ClientProxy extends CommonProxy {
-    private Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
+    private final Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
     private ModBlockEntityItemRenderer blockEntityItemRenderer;
 
     public ClientProxy() {

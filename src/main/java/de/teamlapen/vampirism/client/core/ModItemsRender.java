@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
-import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -18,7 +16,6 @@ import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +32,13 @@ public class ModItemsRender {
     public static final ResourceLocation BLOOD = VResourceLocation.mod("blood");
 
     public static void registerItemModelPropertyUnsafe() {
-        Stream.of(ModItems.BASIC_CROSSBOW.get(),ModItems.BASIC_DOUBLE_CROSSBOW.get(),ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(),ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
+        Stream.of(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get()).forEach(item -> {
             ItemProperties.register(item, CHARGED, (stack, world, entity, tint) -> {
                 return CrossbowItem.isCharged(stack) ? 0.0f : 1.0f;
             });
         });
         ItemProperties.register(ModItems.ARROW_CLIP.get(), FILLED, (stack, world, entity, tint) -> {
-            return (float)((IArrowContainer) stack.getItem()).getArrows(stack).size()/(float)((IArrowContainer) stack.getItem()).getMaxArrows(stack);
+            return (float) ((IArrowContainer) stack.getItem()).getArrows(stack).size() / (float) ((IArrowContainer) stack.getItem()).getMaxArrows(stack);
         });
         ItemProperties.register(ModItems.BLOOD_BOTTLE.get(), BLOOD, (stack, world, entity, tint) -> {
             return stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() / (float) BloodBottleItem.AMOUNT;

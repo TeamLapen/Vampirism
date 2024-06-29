@@ -10,7 +10,6 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.level.Level;
@@ -48,7 +47,7 @@ public class BatCageBESR extends VampirismBESR<BatCageBlockEntity> {
         pPoseStack.mulPose(Axis.YN.rotationDegrees(90 * direction.get2DDataValue()));
         pPoseStack.scale(0.65F, 0.65F, 0.65F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(180));
-        this.model.setupAnim(this.bat, 0, 0, (float)level.getGameTime() + pPartialTick + (float) this.bat.hashCode(), -1, -1);
+        this.model.setupAnim(this.bat, 0, 0, (float) level.getGameTime() + pPartialTick + (float) this.bat.hashCode(), -1, -1);
         this.model.renderToBuffer(pPoseStack, pBuffer.getBuffer(this.model.renderType(VResourceLocation.mc("textures/entity/bat.png"))), pPackedLight, pPackedOverlay, -1);
         pPoseStack.popPose();
     }

@@ -40,11 +40,11 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
     }
 
     public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree, boolean customDescription) {
-        this(action, skillTree,2, customDescription);
+        this(action, skillTree, 2, customDescription);
     }
 
     public ActionSkill(Holder<? extends IAction<T>> action, TagKey<ISkillTree> skillTree, boolean customDescription) {
-        this(action, skillTree,2, customDescription);
+        this(action, skillTree, 2, customDescription);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
         this(action, Either.right(skillTree), skillPointCost, customDescription);
     }
 
-    public ActionSkill(Holder<? extends IAction<T>> action, Either<ResourceKey<ISkillTree>,TagKey<ISkillTree>> skillTree, int skillPointCost, boolean customDescription) {
+    public ActionSkill(Holder<? extends IAction<T>> action, Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree, int skillPointCost, boolean customDescription) {
         super(skillTree, skillPointCost, customDescription);
         this.action = action;
         if (!customDescription) {

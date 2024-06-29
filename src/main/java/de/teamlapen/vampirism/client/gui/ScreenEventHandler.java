@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -15,7 +14,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.InBedChatScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -50,10 +48,9 @@ public class ScreenEventHandler {
                 VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.VAMPIRISM_MENU));
             });
             event.addListener(button);
-        }
-        else if(event.getScreen() instanceof InBedChatScreen){
+        } else if (event.getScreen() instanceof InBedChatScreen) {
             Player p = event.getScreen().getMinecraft().player;
-            if (p!= null && p.isSleeping()) {
+            if (p != null && p.isSleeping()) {
                 GuiEventListener l = event.getScreen().children().get(1);
                 if (l instanceof AbstractWidget leaveButton) {
                     p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "text.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "text.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {

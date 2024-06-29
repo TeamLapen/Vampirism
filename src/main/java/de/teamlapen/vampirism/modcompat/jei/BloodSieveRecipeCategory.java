@@ -73,10 +73,10 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BloodSieveRecipe recipe, @NotNull IFocusGroup focuses) {
         int capacity = FluidType.BUCKET_VOLUME;
-        builder.addSlot(RecipeIngredientRole.INPUT, 1,  1).setFluidRenderer(capacity, true, 16,16)
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).setFluidRenderer(capacity, true, 16, 16)
                 .addFluidStack(recipe.input().getFluid(), capacity);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 58, 1).setFluidRenderer(capacity, true, 16,16)
-                .addFluidStack(ModFluids.BLOOD.get(), (int)(capacity * recipe.conversionRate())).setBackground(this.slot, -1,-1);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 58, 1).setFluidRenderer(capacity, true, 16, 16)
+                .addFluidStack(ModFluids.BLOOD.get(), (int) (capacity * recipe.conversionRate())).setBackground(this.slot, -1, -1);
     }
 
     @Override
