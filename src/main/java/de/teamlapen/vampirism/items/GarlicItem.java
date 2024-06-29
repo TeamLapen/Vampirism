@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFactions;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.IPlantable;
 import net.neoforged.neoforge.common.PlantType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Item for the garlic plant
@@ -29,8 +27,8 @@ public class GarlicItem extends Item implements IPlantable, IFactionExclusiveIte
     }
 
     @Override
-    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return ModFactions.HUNTER;
+    public @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactionTags.IS_HUNTER;
     }
 
     @Override

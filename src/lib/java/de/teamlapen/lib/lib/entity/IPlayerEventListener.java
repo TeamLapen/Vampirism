@@ -14,16 +14,22 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  */
 public interface IPlayerEventListener {
 
-    void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to);
+    default void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
 
-    void onDeath(DamageSource src);
+    }
+
+    default void onDeath(DamageSource src) {
+
+    }
 
     /**
      * Called when the corresponding player is attacked.
      *
      * @return If true the damage will be canceled
      */
-    boolean onEntityAttacked(DamageSource src, float amt);
+    default boolean onEntityAttacked(DamageSource src, float amt) {
+        return false;
+    }
 
     /**
      * Called when the player killed a living entity
@@ -34,20 +40,32 @@ public interface IPlayerEventListener {
     default void onEntityKilled(LivingEntity victim, DamageSource src) {
     }
 
-    void onJoinWorld();
+    default void onJoinWorld() {
 
-    void onPlayerLoggedIn();
+    }
 
-    void onPlayerLoggedOut();
+    default void onPlayerLoggedIn() {
+
+    }
+
+    default void onPlayerLoggedOut() {
+
+    }
 
     /**
      * Called during EntityLiving Update. Somewhere in the middle of {@link Player}'s onUpdate
      */
-    void onUpdate();
+    default void onUpdate() {
+    }
+
+    default void sync() {
+    }
 
     /**
      * Called at the beginning and at the end of {@link Player}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end
      */
-    void onUpdatePlayer(PlayerTickEvent event);
+    default void onUpdatePlayer(PlayerTickEvent event) {
+
+    }
 }

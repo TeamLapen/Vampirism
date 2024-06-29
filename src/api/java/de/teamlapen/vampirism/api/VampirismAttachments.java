@@ -26,6 +26,7 @@ public class VampirismAttachments {
         public static final ResourceLocation EXTENDED_CREATURE = VResourceLocation.mod("extended_creature");
         public static final ResourceLocation FACTION_PLAYER_HANDLER = VResourceLocation.mod("faction_player_handler");
         public static final ResourceLocation VAMPIRE_PLAYER = VResourceLocation.mod("vampire_player");
+        public static final ResourceLocation NEUTRAL_PLAYER = VResourceLocation.mod("neutral_player");
         public static final ResourceLocation HUNTER_PLAYER = VResourceLocation.mod("hunter_player");
         public static final ResourceLocation GARLIC_HANDLER = VResourceLocation.mod("garlic_handler");
         public static final ResourceLocation FOG_HANDLER = VResourceLocation.mod("fog_handler");

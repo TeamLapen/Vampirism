@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -41,8 +40,7 @@ import java.util.function.Function;
  * Extended entity property which every {@link PathfinderMob} has
  */
 public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism {
-    private static final String NBT_KEY = "extended_creature";
-    public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod(NBT_KEY);
+    public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("extended_creature");
 
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "max_blood";
@@ -160,7 +158,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
         }
@@ -300,11 +298,6 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public String nbtKey() {
-        return NBT_KEY;
-    }
-
-    @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compound) {
         if (compound.contains(KEY_MAX_BLOOD)) {
             setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
@@ -318,7 +311,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());

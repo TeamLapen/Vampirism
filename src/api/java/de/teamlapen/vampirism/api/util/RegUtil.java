@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.util;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.ApiStatus;
 public class RegUtil {
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
         return (Holder<ILastingAction<T>>) (Object) VampirismRegistries.ACTION.get().wrapAsHolder(action);
     }
 

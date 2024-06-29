@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -11,6 +10,7 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRefinements;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -72,8 +73,8 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     }
 
     @Override
-    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return ModFactions.HUNTER;
+    public @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactionTags.IS_HUNTER;
     }
 
     @Override
@@ -147,7 +148,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
             } else if (level >= 8) {
                 tier = 2;
             }
-            if (VampirePlayer.get((Player) e).getSkillHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)) {
+            if (VampirePlayer.get((Player) e).getRefinementHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)) {
                 tier++;
             }
             return tier;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.recipes;
 
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -45,7 +44,7 @@ public class ApplicableOilRecipe extends CustomRecipe {
                 }
             }
         }
-        return oil != null && tool != null && (!(tool.getItem() instanceof IFactionExclusiveItem) || ModFactions.HUNTER.match(((IFactionExclusiveItem) tool.getItem()).getExclusiveFaction(tool))) && oil.canBeApplied(tool);
+        return oil != null && tool != null && (!(tool.getItem() instanceof IFactionExclusiveItem) || IFaction.is(ModFactions.HUNTER, ((IFactionExclusiveItem) tool.getItem()).getExclusiveFaction(tool))) && oil.canBeApplied(tool);
     }
 
     @NotNull

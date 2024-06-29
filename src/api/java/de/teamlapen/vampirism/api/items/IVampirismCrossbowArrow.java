@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismFactions;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -22,8 +21,8 @@ import java.util.List;
 public interface IVampirismCrossbowArrow<T extends AbstractArrow & IEntityCrossbowArrow> extends IFactionExclusiveItem {
 
     @Override
-    default @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return VampirismFactions.HUNTER;
+    default @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return VampirismTags.Factions.IS_HUNTER;
     }
 
     /**

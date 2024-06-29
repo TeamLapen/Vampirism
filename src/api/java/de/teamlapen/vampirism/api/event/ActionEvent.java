@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.util.RegUtil;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
-public abstract class ActionEvent<T extends IFactionPlayer<T>, Z extends IAction<T>> extends Event {
+public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>, Z extends IAction<T>> extends Event {
 
     @NotNull
     private final T factionPlayer;
@@ -56,7 +57,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T>, Z extends IAction
     /**
      * Posted before an action fires. Use this to modify the cooldown or duration of action, or to prevent the action from activating.
      */
-    public static class ActionActivatedEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, IAction<T>> implements ICancellableEvent {
+    public static class ActionActivatedEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ActionEvent<T, IAction<T>> implements ICancellableEvent {
 
         private int cooldown;
         private int duration;
@@ -105,7 +106,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T>, Z extends IAction
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement ILastingAction.
      */
-    public static class ActionDeactivatedEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
+    public static class ActionDeactivatedEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
         private final int remainingDuration;
         private int cooldown;
         private boolean ignoreCooldown;
@@ -178,7 +179,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T>, Z extends IAction
     /**
      * Posted when an action deactivates, either when deactivated manually or when out of time. As regular actions instantly deactivate, this only fires for actions that implement {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction}.
      */
-    public static class ActionUpdateEvent<T extends IFactionPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
+    public static class ActionUpdateEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ActionEvent<T, ILastingAction<T>> {
         private final int remainingDuration;
         private boolean deactivate;
         private boolean skipActionUpdate;

@@ -7,9 +7,10 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -20,23 +21,26 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
     /**
      * @return The highest reachable lord level or 0 if no lord
      */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     int getHighestLordLevel();
 
     /**
      * @return Highest reachable level for players
      */
+    @Range(from = 0, to = Integer.MAX_VALUE)
     int getHighestReachableLevel();
 
 
     /**
      * Gets the lord title provider for this faction
      */
+    @Nullable
     ILordTitleProvider lordTiles();
 
     /**
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    Optional<T> getPlayerCapability(Player player);
+    T getPlayerCapability(Player player);
 
     /**
      * @return If this faction is allowed to have accessories

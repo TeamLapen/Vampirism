@@ -1,18 +1,16 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.core.Holder;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
 
@@ -21,8 +19,8 @@ public class GarlicBreadItem extends Item implements IFactionExclusiveItem {
     }
 
     @Override
-    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return ModFactions.HUNTER;
+    public @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactionTags.USE_GARLIC_BREAD;
     }
 
 

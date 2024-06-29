@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.core.ModFactions;
-import net.minecraft.core.Holder;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -39,8 +38,8 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier, IFaction
     }
 
     @Override
-    public @Nullable Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
-        return ModFactions.HUNTER;
+    public @NotNull TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack) {
+        return ModFactionTags.IS_HUNTER;
     }
 
     /**

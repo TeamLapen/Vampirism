@@ -3,9 +3,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -114,7 +112,7 @@ public class BlessableItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level world, @NotNull LivingEntity livingEntity) {
         if (enhancedBlessedItem != null && livingEntity instanceof Player player) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            boolean enhanced = handler.isInFaction(ModFactions.HUNTER) && handler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING)).orElse(false);
+            boolean enhanced = handler.isInFaction(ModFactions.HUNTER) && handler.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING)).orElse(false);
             return new ItemStack(enhanced ? enhancedBlessedItem.get() : blessedItem.get(), stack.getCount());
         }
         return new ItemStack(blessedItem.get(), stack.getCount());

@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.core.Holder;
@@ -90,7 +91,7 @@ public class FactionCondition implements LootItemCondition {
         if (entity instanceof Player player) {
             IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(player);
             return  switch (this.type) {
-                case NO_FACTION -> handler.getCurrentFactionPlayer().isEmpty();
+                case NO_FACTION -> IFaction.is(handler.factionPlayer(), ModFactions.NEUTRAL);
                 case ANY_FACTION -> !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);
                 case FACTION ->
                         handler.isInFaction(this.faction.orElseThrow()) && !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);

@@ -24,7 +24,6 @@ import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.skills.SkillManager;
 import de.teamlapen.vampirism.entity.player.vampire.BloodVision;
 import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -199,7 +198,7 @@ public class VampirismMod {
      * Called during constructor to set up the API as well as VReference
      */
     private void prepareAPI() {
-        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry() : new VampirismEntityRegistry(), new ActionManager(), new SkillManager(), new VampireVisionRegistry(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API), new BloodConversionRegistry());
+        VampirismAPI.setUpRegistries(new FactionRegistry(), new SundamageRegistry(), FMLEnvironment.dist == Dist.CLIENT ? new VampirismClientEntityRegistry() : new VampirismEntityRegistry(), new ActionManager(), new VampireVisionRegistry(), new ExtendedBrewingRecipeRegistry(), new SettingsProvider(REFERENCE.SETTINGS_API), new BloodConversionRegistry());
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("night_vision"), new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision(VResourceLocation.mod("blood_vision"), new BloodVision());
         VampirismAPI.onSetupComplete();

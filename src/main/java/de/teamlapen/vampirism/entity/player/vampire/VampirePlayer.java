@@ -18,8 +18,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -34,11 +33,12 @@ import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
+import de.teamlapen.vampirism.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
+import de.teamlapen.vampirism.entity.player.skills.RefinementHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
@@ -104,8 +104,7 @@ import java.util.function.Predicate;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
-    private static final String NBT_KEY = "vampire_player";
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
     public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     private final static int FEED_TIMER = 20;
@@ -144,8 +143,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     private final @NotNull BloodStats bloodStats;
-    private final @NotNull ActionHandler<IVampirePlayer> actionHandler;
-    private final @NotNull SkillHandler<IVampirePlayer> skillHandler;
     private boolean sundamage_cache = false;
     private @NotNull EnumStrength garlic_cache = EnumStrength.NONE;
     private int ticksInSun = 0;
@@ -177,13 +174,28 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Nullable
     private Component dbnoMessage;
     private final Disguise disguise;
+    private final IRefinementHandler<IVampirePlayer> refinementHandler;
 
     public VampirePlayer(Player player) {
         super(player);
         bloodStats = new BloodStats(player);
-        actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this, ModFactions.VAMPIRE);
         this.disguise = new Disguise();
+        this.refinementHandler = new RefinementHandler<>(this, ModFactions.VAMPIRE);
+    }
+
+    @Override
+    protected ActionHandler<IVampirePlayer> createActionHandler() {
+        return new ActionHandler<>(this);
+    }
+
+    @Override
+    protected SkillHandler<IVampirePlayer> createSkillHandler() {
+        return new SkillHandler<>(this, ModFactions.VAMPIRE);
+    }
+
+    @Override
+    public IRefinementHandler<IVampirePlayer> getRefinementHandler() {
+        return refinementHandler;
     }
 
     @Override
@@ -358,12 +370,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
-    @NotNull
-    @Override
-    public IActionHandler<IVampirePlayer> getActionHandler() {
-        return actionHandler;
-    }
-
     @Nullable
     @Override
     public IVampireVision getActiveVision() {
@@ -482,12 +488,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
     }
 
-    @NotNull
-    @Override
-    public ISkillHandler<IVampirePlayer> getSkillHandler() {
-        return skillHandler;
-    }
-
     /**
      * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
      */
@@ -542,8 +542,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         super.deserializeNBT(provider, nbt);
         this.bloodStats.deserializeNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
-        this.actionHandler.deserializeNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
         this.vision.deserializeNBT(provider, nbt.getCompound(KEY_VISION));
         if (nbt.getBoolean(KEY_WAS_DBNO)) {
             this.wasDBNO = true;
@@ -631,12 +629,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
-        if (actionHandler.isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
+        this.refinementHandler.damageRefinements();
+        if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
             }
         }
-        actionHandler.deactivateAllActions();
         wasDead = true;
         this.setDBNOTimer(-1);
         dbnoMessage = null;
@@ -661,11 +659,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
         endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * (this.skillHandler.isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+            if (amt >= getRepresentingEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.actionHandler.deactivateAction(VampireActions.HALF_INVULNERABLE);
+                    this.getActionHandler().deactivateAction(VampireActions.HALF_INVULNERABLE);
                 }
             }
         }
@@ -675,7 +673,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
     @Override
     public void onEntityKilled(LivingEntity victim, DamageSource src) {
-        if (this.getSkillHandler().isRefinementEquipped(ModRefinements.RAGE_FURY)) {
+        if (this.getRefinementHandler().isRefinementEquipped(ModRefinements.RAGE_FURY)) {
             //No need to check if rage active, extending only has an effect when already active
             int bonus = VampirismConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
             if (victim instanceof Player) {
@@ -688,7 +686,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     @Override
     public void onJoinWorld() {
         if (getLevel() > 0) {
-            actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
                 player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 400, 4, false, false));
@@ -701,12 +698,16 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
+    protected void onLevelReset(boolean client) {
+        this.refinementHandler.reset();
+        this.removeEntityAttributes();
+    }
+
+    @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         super.onLevelChanged(newLevel, oldLevel);
         if (newLevel > 0) {
             this.applyEntityAttributes();
-        } else {
-            this.removeEntityAttributes();
         }
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
@@ -809,9 +810,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
 
         if (!isRemote()) {
             if (level > 0) {
-                boolean sync = false;
-                boolean syncToAll = false;
-                CompoundTag syncPacket = new CompoundTag();
 
                 if (isGettingSundamage(world)) {
                     handleSunDamage(false);
@@ -839,20 +837,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                     player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(MobEffects.FIRE_RESISTANCE);
                 }
-                if (actionHandler.updateActions()) {
-                    sync = true;
-                    syncToAll = true;
-                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(asEntity().level().registryAccess()));
-                }
-                if (skillHandler.isDirty()) {
-                    sync = true;
-                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(asEntity().level().registryAccess()));
-                }
-
-                if (sync) {
-                    sync(syncPacket, syncToAll);
-                }
-
                 if (feed_victim != -1 && feedBiteTickCounter++ >= FEED_TIMER) {
                     updateFeeding();
                     feedBiteTickCounter = 0;
@@ -868,7 +852,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             }
         } else {
             if (level > 0) {
-                actionHandler.updateActions();
                 if (isGettingSundamage(world)) {
                     handleSunDamage(true);
                 } else if (ticksInSun > 0) {
@@ -933,8 +916,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT(provider));
-        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT(provider));
         nbt.put(this.vision.nbtKey(), this.vision.serializeNBT(provider));
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
         return nbt;
@@ -1107,7 +1088,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         super.deserializeUpdateNBT(provider, nbt);
         if (nbt.contains(KEY_EYE)) {
             setEyeType(nbt.getInt(KEY_EYE));
@@ -1152,8 +1133,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         this.bloodStats.deserializeUpdateNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
-        this.actionHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
         this.disguise.deserializeUpdateNBT(provider, nbt.getCompound(this.disguise.nbtKey()));
         if (nbt.contains(this.vision.nbtKey(), CompoundTag.TAG_COMPOUND)) {
             this.vision.deserializeNBT(provider, nbt.getCompound(this.vision.nbtKey()));
@@ -1161,15 +1140,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         var nbt = super.serializeUpdateNBT(provider);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
         nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(provider));
-        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(provider));
-        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(provider));
         nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT(provider));
         nbt.put(this.disguise.nbtKey(), this.disguise.serializeUpdateNBT(provider));
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
@@ -1413,11 +1390,6 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }));
     }
 
-    @Override
-    public String nbtKey() {
-        return getAttachedKey().getPath();
-    }
-
     private class VisionStatus implements ISyncableSaveData {
         private static final String KEY_VISION = "vision";
         private final SortedSet<IVampireVision> unlockedVisions = new TreeSet<>(Comparator.comparing(o -> VampirismAPI.vampireVisionRegistry().getVisionId(o)));
@@ -1528,12 +1500,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         }
 
         @Override
-        public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+        public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
             deserializeNBT(provider, nbt);
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
             return serializeNBT(provider);
         }
 

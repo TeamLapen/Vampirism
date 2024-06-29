@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
@@ -146,7 +145,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
         var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20,  SKILLS,  context -> {
             if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
-                FactionPlayerHandler.getCurrentFactionPlayer(this.minecraft.player).ifPresent(f  -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
+                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f  -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
             }
         }, Component.empty()));
         button1.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.skill_screen")));
@@ -170,28 +169,30 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             appearanceButton.visible = false;
         }
 
-        NonNullList<ItemStack> refinementList = this.menu.getRefinementStacks();
-        for (Slot slot : this.menu.slots) {
-            if (slot instanceof VampirismMenu.RemovingSelectorSlot) {
-                Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, REMOVE_ACCESSORY, (button) -> {
-                    VampirismMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
-                    refinementList.set(slot.index, ItemStack.EMPTY);
-                }, Component.empty()) {
-                    @Override
-                    public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-                        if(!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) VampirismContainerScreen.this).getDraggingItem().isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
-                            super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        if (this.menu.areRefinementsAvailable()) {
+            NonNullList<ItemStack> refinementList = this.menu.getRefinementStacks();
+            for (Slot slot : this.menu.slots) {
+                if (slot instanceof VampirismMenu.RemovingSelectorSlot) {
+                    Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, REMOVE_ACCESSORY, (button) -> {
+                        VampirismMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
+                        refinementList.set(slot.index, ItemStack.EMPTY);
+                    }, Component.empty()) {
+                        @Override
+                        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+                            if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) VampirismContainerScreen.this).getDraggingItem().isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
+                                super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+                            }
                         }
-                    }
 
-                    private boolean overSlot(@NotNull Slot slot, int mouseX, int mouseY) {
-                        mouseX -= VampirismContainerScreen.this.leftPos;
-                        mouseY -= VampirismContainerScreen.this.topPos;
-                        return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y + 16 > mouseY;
-                    }
-                });
-                xButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED)));
-                refinementRemoveButtons.put(slot.getSlotIndex(), xButton);
+                        private boolean overSlot(@NotNull Slot slot, int mouseX, int mouseY) {
+                            mouseX -= VampirismContainerScreen.this.leftPos;
+                            mouseY -= VampirismContainerScreen.this.topPos;
+                            return slot.x <= mouseX && slot.x + 16 > mouseX && slot.y <= mouseY && slot.y + 16 > mouseY;
+                        }
+                    });
+                    xButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED)));
+                    refinementRemoveButtons.put(slot.getSlotIndex(), xButton);
+                }
             }
         }
 

@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.util.OptifineHandler;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -55,7 +54,6 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.Optional;
@@ -113,7 +111,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        @Nullable IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
+        @NotNull IFactionPlayer<?> player = FactionPlayerHandler.get(mc.player).factionPlayer();
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {

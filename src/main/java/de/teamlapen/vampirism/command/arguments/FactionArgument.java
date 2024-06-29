@@ -18,8 +18,10 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,18 +32,19 @@ import java.util.stream.Stream;
 
 
 @SuppressWarnings("ClassCanBeRecord")
-public class FactionArgument implements ArgumentType<IFaction<?>> {
+public class FactionArgument implements ArgumentType<Holder.Reference<IFaction<?>>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> Component.translatable("command.vampirism.argument.faction.notfound", id));
     private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> Component.translatable("command.vampirism.argument.faction.notplayable", id));
 
-    public static IPlayableFaction<?> getPlayableFaction(@NotNull CommandContext<CommandSourceStack> context, String id) {
-        return (IPlayableFaction<?>) context.getArgument(id, IFaction.class);
+    public FactionArgument(boolean onlyPlayableFactions, HolderLookup.RegistryLookup<IFaction<?>> registryLookup) {
+        this.onlyPlayableFactions = onlyPlayableFactions;
+        this.registryLookup = registryLookup;
     }
 
-    public static @NotNull FactionArgument playableFactions() {
-        return new FactionArgument(true);
+    public static @NotNull FactionArgument playableFactions(CommandBuildContext context) {
+        return new FactionArgument(true, context.lookupOrThrow(VampirismRegistries.Keys.FACTION));
     }
 
     public static @NotNull ResourceArgument<IFaction<?>> factions(CommandBuildContext context) {
@@ -52,11 +55,18 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
         return ResourceArgument.getResource(pContext, pArgument, VampirismRegistries.Keys.FACTION);
     }
 
-    public final boolean onlyPlayableFactions;
-
-    public FactionArgument(boolean onlyPlayableFactions) {
-        this.onlyPlayableFactions = onlyPlayableFactions;
+    @SuppressWarnings("unchecked")
+    public static Holder<IPlayableFaction<?>> getPlayableFaction(CommandContext<CommandSourceStack> pContext, String pArgument) throws CommandSyntaxException {
+        var holder = ResourceArgument.getResource(pContext, pArgument, VampirismRegistries.Keys.FACTION);
+        if (holder.value() instanceof IPlayableFaction<?>) {
+            return (Holder<IPlayableFaction<?>>) (Object) holder;
+        } else {
+            throw FACTION_NOT_PLAYABLE.create(holder.key().location());
+        }
     }
+
+    private final boolean onlyPlayableFactions;
+    private final HolderLookup.RegistryLookup<IFaction<?>> registryLookup;
 
     @Override
     public Collection<String> getExamples() {
@@ -73,12 +83,10 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
     }
 
     @Override
-    public @NotNull IFaction<?> parse(@NotNull StringReader reader) throws CommandSyntaxException {
+    public @NotNull Holder.Reference<IFaction<?>> parse(@NotNull StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
-        IFaction<?> faction = ModRegistries.FACTIONS.get(id);
-        if (faction == null) throw FACTION_NOT_FOUND.create(id);
-        if (this.onlyPlayableFactions & !(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
-        return faction;
+        var key = ResourceKey.create(VampirismRegistries.Keys.FACTION, id);
+        return this.registryLookup.get(key).orElseThrow(() -> FACTION_NOT_FOUND.create(id));
     }
 
     public static class Info implements ArgumentTypeInfo<FactionArgument, Info.Template> {
@@ -115,7 +123,7 @@ public class FactionArgument implements ArgumentType<IFaction<?>> {
             @NotNull
             @Override
             public FactionArgument instantiate(@NotNull CommandBuildContext context) {
-                return new FactionArgument(this.onlyPlayableFaction);
+                return new FactionArgument(this.onlyPlayableFaction, context.lookupOrThrow(VampirismRegistries.Keys.FACTION));
             }
 
             @NotNull

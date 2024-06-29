@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.minion.management;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.command.arguments.MinionArgument;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -240,8 +240,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        //noinspection unchecked
-        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) s);
+        //noinspection unchecked,RedundantCast
+        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
         if (faction.isEmpty()) {
             this.maxMinions = 0;
             return;
@@ -367,7 +367,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
-            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).flatMap(s ->  s.getPlayerCapability(player.getPlayer())).map(IFactionPlayer::getSkillHandler)).ifPresent(s -> {
+            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).map(s ->  s.getPlayerCapability(player.getPlayer())).filter(s -> s instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler)).ifPresent(s -> {
                 if (s.isSkillEnabled(LordSkills.MINION_RECOVERY)) {
                     i.deathCooldown = (int) (i.deathCooldown * 0.8);
                 }

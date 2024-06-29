@@ -68,6 +68,6 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
     }
 
     protected void applyEffect(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, 52, vampire.getSkillHandler().isRefinementEquipped(ModRefinements.REGENERATION) ? 1 : 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, 52, vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.REGENERATION) ? 1 : 0, false, false));
     }
 }

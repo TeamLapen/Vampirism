@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -114,7 +113,7 @@ public class WeaponTableCraftingSlot extends Slot {
         this.amountCrafted = 0;
     }
 
-    protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IFactionPlayer<IHunterPlayer> factionPlayer, int lava) {
+    protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IHunterPlayer factionPlayer, int lava) {
         Optional<RecipeHolder<IWeaponTableRecipe>> optional = playerIn.getCommandSenderWorld().getRecipeManager().getRecipeFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.getCommandSenderWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get().value();

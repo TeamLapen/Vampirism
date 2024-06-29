@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -21,7 +23,7 @@ public class FactionLevelOverlay implements LayeredDraw.Layer {
         if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.mc.player);
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
-            if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && faction != null) {
+            if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && !IFaction.is(faction, ModFactionTags.IS_NEUTRAL)) {
                 // boolean flag1 = false;
                 int color = faction.value().getColor();
                 int lord = handler.getLordLevel();

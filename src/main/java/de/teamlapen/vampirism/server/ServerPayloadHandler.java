@@ -5,10 +5,12 @@ import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
@@ -34,10 +36,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -45,7 +45,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 import static de.teamlapen.vampirism.network.ServerboundSelectMinionTaskPacket.*;
@@ -76,7 +75,7 @@ public class ServerPayloadHandler {
     }
 
     public static void handleDeleteRefinementPacket(ServerboundDeleteRefinementPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(context.player()).ifPresent(fp -> fp.getSkillHandler().removeRefinementItem(msg.slot())));
+        context.enqueueWork(() -> IRefinementHandler.get(context.player()).ifPresent(handler -> handler.removeRefinementItem(msg.slot())));
     }
 
     public static void handleNameItemPacket(ServerboundNameItemPacket msg, IPayloadContext context) {
@@ -159,19 +158,19 @@ public class ServerPayloadHandler {
     public static void handleSimpleInputEvent(ServerboundSimpleInputEvent msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
-            Optional<? extends IFactionPlayer<?>> factionPlayerOpt = FactionPlayerHandler.getCurrentFactionPlayer(player);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             //Try to keep this simple
             switch (msg.event()) {
                 case FINISH_SUCK_BLOOD -> VampirePlayer.get(player).endFeeding(true);
                 case RESET_SKILLS -> {
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
-                    factionPlayerOpt.ifPresent(OblivionItem::applyEffect);
+                    handler.getCurrentSkillPlayer().ifPresent(OblivionItem::applyEffect);
                 }
                 case REVERT_BACK -> {
                     if (player.containerMenu instanceof RevertBackMenu menu) {
                         menu.consume();
                     }
-                    FactionPlayerHandler.get(player).leaveFaction(!player.server.isHardcore());
+                    handler.leaveFaction(!player.server.isHardcore());
                 }
                 case TOGGLE_VAMPIRE_VISION -> VampirePlayer.get(player).switchVision();
                 case TRAINER_LEVELUP -> {
@@ -185,7 +184,7 @@ public class ServerPayloadHandler {
                     }
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
-                case VAMPIRISM_MENU -> factionPlayerOpt.ifPresent(fPlayer -> fPlayer.getTaskManager().openVampirismMenu());
+                case VAMPIRISM_MENU -> handler.getTaskManager().ifPresent(ITaskManager::openVampirismMenu);
                 case RESURRECT -> VampirePlayer.get(player).tryResurrect();
                 case GIVE_UP -> VampirePlayer.get(player).giveUpDBNO();
             }
@@ -201,13 +200,13 @@ public class ServerPayloadHandler {
     }
 
     public static void handleTaskActionPacket(ServerboundTaskActionPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> FactionPlayerHandler.getCurrentFactionPlayer(context.player()).map(IFactionPlayer::getTaskManager).ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg)));
+        context.enqueueWork(() -> FactionPlayerHandler.get(context.player()).getTaskManager().ifPresent(m -> ((TaskManager) m).handleTaskActionMessage(msg)));
     }
 
-    public static <T extends IFactionPlayer<T>> void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            FactionPlayerHandler.<T>getCurrentFactionPlayer(player).ifPresent(factionPlayer -> {
+            FactionPlayerHandler.get(player).<T>getActionHandler().ifPresent(handler -> {
                 IAction.ActivationContext activationContext = msg.target() != null ? msg.target().map(entityId -> {
                     Entity e = player.getCommandSenderWorld().getEntity(entityId);
                     if (e == null) {
@@ -216,11 +215,10 @@ public class ServerPayloadHandler {
                     return new ActionHandler.ActivationContext(e);
                 }, ActionHandler.ActivationContext::new) : new ActionHandler.ActivationContext();
 
-                IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
                 Holder<IAction<?>> action = msg.action();
                 if (action != null) {
                     @SuppressWarnings("unchecked")
-                    IAction.PERM r = actionHandler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
+                    IAction.PERM r = handler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
                     switch (r) {
                         case NOT_UNLOCKED -> player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
                         case DISABLED -> player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
@@ -245,10 +243,10 @@ public class ServerPayloadHandler {
         });
     }
 
-    public static <T extends IFactionPlayer<T>> void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            Optional<T> factionPlayerOpt = FactionPlayerHandler.<T>getCurrentFactionPlayer(player);
+            Optional<T> factionPlayerOpt = FactionPlayerHandler.get(player).getCurrentSkillPlayer();
             factionPlayerOpt.ifPresent(factionPlayer -> {
                 Holder<ISkill<?>> skill = msg.skill();
                 if (skill != null) {

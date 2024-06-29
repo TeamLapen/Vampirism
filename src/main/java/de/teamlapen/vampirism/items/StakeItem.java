@@ -2,10 +2,8 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.advancements.critereon.HunterActionCriterionTrigger;
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -24,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
@@ -32,14 +29,8 @@ import org.jetbrains.annotations.Nullable;
 public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
     public static boolean canKillInstant(@NotNull LivingEntity target, LivingEntity attacker) {
         boolean instaKillLowHealth = false;
-        if (attacker instanceof Player && attacker.isAlive()) {
-            @Nullable IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer((Player) attacker).orElse(null);
-            if (factionPlayer != null && ModFactions.HUNTER.match(factionPlayer.getFaction())) {
-                ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
-                if (skillHandler.isSkillEnabled(HunterSkills.STAKE1)) {
-                    instaKillLowHealth = true;
-                }
-            }
+        if (attacker instanceof Player player && attacker.isAlive()) {
+            instaKillLowHealth = FactionPlayerHandler.get(player).getCurrentSkillPlayer().filter(ac -> IFaction.is(ModFactions.HUNTER, ac.getFaction())).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.STAKE1)).orElse(false);
         } else if (attacker instanceof IAdvancedHunter) {
             instaKillLowHealth = true;// make more out of this
         }

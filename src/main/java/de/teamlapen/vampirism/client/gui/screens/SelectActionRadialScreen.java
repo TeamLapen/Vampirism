@@ -5,30 +5,28 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.client.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualSwitchingRadialMenu<Holder<IAction<?>>> {
+public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwitchingRadialMenu<Holder<IAction<?>>> {
 
     private final IActionHandler<T> actionHandler;
     private final T player;
@@ -43,10 +41,10 @@ public class SelectActionRadialScreen<T extends IFactionPlayer<T>> extends DualS
         show(ModKeys.ACTION);
     }
 
-    public static <T extends IFactionPlayer<T>> void show(KeyMapping keyMapping) {
+    public static <T extends ISkillPlayer<T>> void show(KeyMapping keyMapping) {
         Holder<? extends IPlayableFaction<T>> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction();
         if (faction != null) {
-            faction.value().getPlayerCapability(Minecraft.getInstance().player).ifPresent(player -> {
+            FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
                 //noinspection rawtypes
                 List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler)player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
                 if (!actions.isEmpty()) {

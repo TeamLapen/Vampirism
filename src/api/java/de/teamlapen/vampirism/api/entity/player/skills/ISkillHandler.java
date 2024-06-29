@@ -1,18 +1,25 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles the players skills
  */
-public interface ISkillHandler<T extends IFactionPlayer<T>> extends IRefinementHandler {
+public interface ISkillHandler<T extends ISkillPlayer<T>> {
+
+    static <T extends ISkillPlayer<T>> Optional<ISkillHandler<T>> get(Player player) {
+        return VampirismAPI.factionPlayerHandler(player).getSkillHandler();
+    }
 
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found

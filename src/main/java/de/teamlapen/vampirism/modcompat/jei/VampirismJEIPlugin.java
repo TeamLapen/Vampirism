@@ -3,18 +3,13 @@ package de.teamlapen.vampirism.modcompat.jei;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
-import de.teamlapen.vampirism.client.gui.screens.AlchemyTableScreen;
-import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
-import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -31,10 +26,10 @@ import de.teamlapen.vampirism.modcompat.jei.categories.FogDiffuserRecipeCategory
 import de.teamlapen.vampirism.modcompat.jei.categories.GarlicDiffuserRecipeCategory;
 import de.teamlapen.vampirism.modcompat.jei.recipes.BloodSieveRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.FogDiffuserRecipe;
+import de.teamlapen.vampirism.modcompat.jei.recipes.GarlicDiffuserRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.GrinderRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.BloodSieveRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.FogDiffuserRecipeMaker;
-import de.teamlapen.vampirism.modcompat.jei.recipes.GarlicDiffuserRecipe;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GarlicDiffuserRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GrinderRecipeMaker;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
@@ -57,7 +52,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -241,7 +235,7 @@ public class VampirismJEIPlugin implements IModPlugin {
                 .map(s -> (Holder<IApplicableOil> )(Object)s)
                 .flatMap(oil -> BuiltInRegistries.ITEM.stream()
                         .map(Item::getDefaultInstance)
-                        .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || ModFactions.HUNTER.match(((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item))))
+                        .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || IFaction.is(ModFactions.HUNTER, ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item))))
                         .filter(item -> oil.value().canBeApplied(item))
                         .map(stack -> new RecipeHolder<CraftingRecipe>(VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe( "", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
     }

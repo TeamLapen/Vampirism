@@ -15,4 +15,8 @@ public interface IAttachedSyncable extends ISyncable, IEntity {
      */
     ResourceLocation getAttachedKey();
 
+    @Override
+    default String nbtKey() {
+        return getAttachedKey().toString();
+    }
 }

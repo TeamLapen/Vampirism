@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.registries;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -11,9 +12,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class DeferredActionRegister<T extends IFactionPlayer<T>> extends DeferredRegister<IAction<T>> {
+public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends DeferredRegister<IAction<T>> {
 
-    public static <T extends IFactionPlayer<T>> DeferredActionRegister<T> create(String namespace) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> DeferredActionRegister<T> create(String namespace) {
         return new DeferredActionRegister<>(namespace);
     }
 

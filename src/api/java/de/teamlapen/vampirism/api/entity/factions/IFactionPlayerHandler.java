@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.entity.player.*;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -32,14 +35,29 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
     /**
      * @return The currently active faction. Can be null
      */
-    @Nullable
     Holder<? extends IPlayableFaction<?>> getFaction();
 
     /**
      * @return The currently active faction player. Can be null
      */
     @NotNull
+    <T extends IFactionPlayer<T>> T factionPlayer();
+
     <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer();
+
+    <T extends ISkillPlayer<T>> Optional<T> getCurrentSkillPlayer();
+
+    <T extends IRefinementPlayer<T>> Optional<T> getCurrentRefinementPlayer();
+
+    <T extends ISkillPlayer<T>> Optional<ISkillHandler<T>> getSkillHandler();
+
+    <T extends ISkillPlayer<T>> Optional<IActionHandler<T>> getActionHandler();
+
+    <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> getRefinementHandler();
+
+    <T extends ITaskPlayer<T>> Optional<T> getTaskPlayer();
+
+    Optional<ITaskManager> getTaskManager();
 
     /**
      * If no faction is active this returns 0.
@@ -72,12 +90,9 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
     @NotNull
     Player getPlayer();
 
-    /**
-     * @return If the given faction is equal to the current one
-     */
-    boolean isInFaction(IFaction<?> f);
-
     <T extends IFaction<?>> boolean isInFaction(Holder<T> f);
+
+    <T extends IFaction<?>> boolean isInFaction(TagKey<T> f);
 
     /**
      * Join the given faction and set the faction level to 1.
@@ -98,13 +113,11 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      *
      * @return If successful
      */
-    boolean setFactionAndLevel(@Nullable IPlayableFaction<?> faction, int level);
-
-    boolean setFactionAndLevel(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level);
+    boolean setFactionAndLevel(@NotNull Holder<? extends IPlayableFaction<?>> faction, int level);
 
     /**
      * Set the level for a faction. Only works if the player already is in the given faction.
-     * Use {@link IFactionPlayerHandler#joinFaction(net.minecraft.core.Holder)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
+     * Use {@link IFactionPlayerHandler#joinFaction(net.minecraft.core.Holder)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(net.minecraft.core.Holder, int)} if you are sure what you do
      *
      * @return If successful
      */

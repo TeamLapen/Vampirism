@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import net.minecraft.Util;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Default implementation for an action
  */
-public abstract class DefaultAction<T extends IFactionPlayer<T>> implements IAction<T> {
+public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IAction<T> {
     private String translationId;
 
     public void addEffectInstance(@NotNull T player, @NotNull MobEffectInstance instance) {

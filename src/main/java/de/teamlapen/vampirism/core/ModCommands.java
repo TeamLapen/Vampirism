@@ -6,7 +6,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
-import de.teamlapen.vampirism.command.arguments.*;
+import de.teamlapen.vampirism.command.arguments.BiomeArgument;
+import de.teamlapen.vampirism.command.arguments.FactionArgument;
+import de.teamlapen.vampirism.command.arguments.MinionArgument;
+import de.teamlapen.vampirism.command.arguments.RefinementSetArgument;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -56,7 +59,7 @@ public class ModCommands {
                             .then(EyeCommand.register())
                             .then(FangCommand.register())
                             .then(GlowingEyeCommand.register())
-                            .then(LevelCommand.register())
+                            .then(LevelCommand.register(buildContext))
                             .then(LordCommand.register())
                             .then(LevelUpCommand.register())
                             .then(GenderCommand.register())

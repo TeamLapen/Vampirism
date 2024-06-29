@@ -2,12 +2,11 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,13 +16,11 @@ import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Simple skill that unlocks one action
  */
-public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> implements IActionSkill<T> {
+public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends VampirismSkill<T> implements IActionSkill<T> {
     private final Holder<? extends IAction<T>> action;
 
     public ActionSkill(Holder<? extends IAction<T>> action, ResourceKey<ISkillTree> skillTree) {
@@ -82,13 +79,6 @@ public class ActionSkill<T extends IFactionPlayer<T>> extends VampirismSkill<T> 
     @Override
     public Holder<? extends IAction<T>> actionHolder() {
         return this.action;
-    }
-
-    @NotNull
-    @Deprecated
-    @Override
-    public Optional<IPlayableFaction<?>> getFaction() {
-        return this.action.value().getFaction();
     }
 
     @Override

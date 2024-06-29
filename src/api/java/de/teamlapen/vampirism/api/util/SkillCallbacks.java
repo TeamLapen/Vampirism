@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.api.util;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.IActionSkill;
@@ -15,7 +14,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.neoforged.neoforge.registries.callback.AddCallback;
 import net.neoforged.neoforge.registries.callback.ClearCallback;
@@ -25,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISkill<?>> {
 
@@ -50,22 +47,16 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>> Map<IAction<T>, ISkill<T>> getActionSkillMap() {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Map<IAction<T>, ISkill<T>> getActionSkillMap() {
         return (Map<IAction<T>, ISkill<T>>) (Object) ACTION_TO_SKILL_MAP_READ_ONLY;
     }
 
-    public record EmptyActionSkill<T extends IFactionPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
+    public record EmptyActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
         private static final TagKey<ISkillTree> key = TagKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod("empty"));
 
         @Override
         public @Nullable Component getDescription() {
             return null;
-        }
-
-        @Deprecated
-        @Override
-        public @NotNull Optional<IPlayableFaction<?>> getFaction() {
-            return this.actionHolder.value().getFaction();
         }
 
         @Override

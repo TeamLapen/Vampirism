@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.player.tasks.unlock;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModTasks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -37,7 +37,7 @@ public class LordLvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
+    public <T extends ITaskPlayer<T>> boolean isUnlocked(@NotNull T playerEntity) {
         int aL = FactionPlayerHandler.get(playerEntity.asEntity()).getLordLevel();
         return exact ? aL == reqLordLevel : aL >= reqLordLevel;
     }

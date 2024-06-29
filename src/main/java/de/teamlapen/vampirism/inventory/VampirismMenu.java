@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -25,8 +26,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,11 +55,11 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     public VampirismMenu(int id, @NotNull Inventory playerInventory) {
         super(ModMenus.VAMPIRISM.get(), id, playerInventory, ContainerLevelAccess.NULL, new SimpleContainer(3), RemovingSelectorSlot::new, SELECTOR_INFOS.apply(playerInventory.player));
-        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().orElseThrow(() -> new IllegalStateException("Opening vampirism container without faction"));
+        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).factionPlayer();
         this.factionColor = factionPlayer.getFaction().value().getChatColor();
         this.refinementsAvailable = factionPlayer.getFaction().value().hasRefinements();
         this.addPlayerSlots(playerInventory, 37, 124);
-        this.refinementStacks = this.factionPlayer.getSkillHandler().getRefinementItems();
+        this.refinementStacks = this.factionPlayer instanceof IRefinementPlayer<?> refinementPlayer ? refinementPlayer.getRefinementHandler().getRefinementItems() : NonNullList.create();
         this.registry = playerInventory.player.level().registryAccess().registryOrThrow(VampirismRegistries.Keys.TASK);
     }
 

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
@@ -50,6 +50,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -421,16 +422,14 @@ public class ModPlayerEventHandler {
     public void onPlayerName(PlayerEvent.@NotNull NameFormat event) {
         if (VampirismConfig.SERVER.factionColorInChat.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
-            handler.getCurrentFactionPlayer().ifPresent(fp -> {
-                Holder<? extends IFaction<?>> f = fp.getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
-                if (f != null) {
-                    MutableComponent displayName;
-                    displayName = Optional.of(handler).filter(h -> h.getLordLevel() > 0).filter(x -> VampirismConfig.SERVER.lordPrefixInChat.get()).map(FactionPlayerHandler::getLordTitle)
-                            .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
-                            .orElseGet(() -> event.getDisplayname().copy());
-                    event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
-                }
-            });
+            Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
+            if (f != null) {
+                MutableComponent displayName;
+                displayName = Optional.of(handler).filter(h -> h.getLordLevel() > 0).filter(x -> VampirismConfig.SERVER.lordPrefixInChat.get()).map(FactionPlayerHandler::getLordTitle)
+                        .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
+                        .orElseGet(() -> event.getDisplayname().copy());
+                event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
+            }
         }
     }
 
@@ -483,14 +482,13 @@ public class ModPlayerEventHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionExclusiveItem factionItem) {
             if (!player.isAlive()) return false;
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            Holder<? extends IFaction<?>> usingFaction = factionItem.getExclusiveFaction(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction) && checkExceptions(player, handler.getFaction(), stack)) {
+            TagKey<IFaction<?>> usingFaction = factionItem.getExclusiveFaction(stack);
+            if (!handler.isInFaction(usingFaction) && checkExceptions(player, handler.getFaction(), stack)) {
                 if (message) {
                     player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_faction"), true);
                 }
                 return false;
             } else if (stack.getItem() instanceof IFactionLevelItem<?> levelItem) {
-                //noinspection unchecked
                 Holder<ISkill<?>> requiredSkill = levelItem.requiredSkill(stack);
 
                 if (handler.getCurrentLevel() < levelItem.getMinLevel(stack)) {
@@ -499,8 +497,7 @@ public class ModPlayerEventHandler {
                     }
                     return false;
                 } else if (requiredSkill != null) {
-                    IFactionPlayer<?> factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
-                    if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
+                    if(handler.getSkillHandler().map(s -> !s.isSkillEnabled(requiredSkill)).orElse(true)) {
                         if (message) {
                             player.displayClientMessage(Component.translatable("text.vampirism.can_not_be_used_skill"), true);
                         }
@@ -531,7 +528,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
         if (event.getNewGameMode() == GameType.SPECTATOR) {
-            FactionPlayerHandler.getCurrentFactionPlayer(event.getEntity()).ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions());
+            FactionPlayerHandler.get(event.getEntity()).getActionHandler().ifPresent(IActionHandler::deactivateAllActions);
         }
     }
 

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.task;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Function;
@@ -14,7 +14,7 @@ public interface TaskUnlocker {
 
     Component getDescription();
 
-    boolean isUnlocked(IFactionPlayer<?> playerEntity);
+    <T extends ITaskPlayer<T>> boolean isUnlocked(T playerEntity);
 
     MapCodec<? extends TaskUnlocker> codec();
 }

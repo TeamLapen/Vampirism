@@ -1,15 +1,22 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public interface IRefinementHandler {
+import java.util.Optional;
 
-    ItemStack[] createRefinementItems();
+public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
+
+    static <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> get(Player player) {
+        return VampirismAPI.factionPlayerHandler(player).getRefinementHandler();
+    }
 
     NonNullList<ItemStack> getRefinementItems();
 
@@ -40,5 +47,5 @@ public interface IRefinementHandler {
     /**
      * Reset all skills but reactivate the root skill of the faction
      */
-    void resetSkills();
+    void reset();
 }

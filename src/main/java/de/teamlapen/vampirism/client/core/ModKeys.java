@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
@@ -15,7 +16,6 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundStartFeedingPacket;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
-import de.teamlapen.vampirism.util.RegUtil;
 import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -168,7 +168,7 @@ public class ModKeys {
     }
 
     private void openSkillScreen() {
-        FactionPlayerHandler.getCurrentFactionPlayer(mc.player).ifPresent(factionPlayer -> {
+        FactionPlayerHandler.get(mc.player).getCurrentSkillPlayer().ifPresent(factionPlayer -> {
             mc.setScreen(new SkillsScreen(factionPlayer, mc.screen));
         });
     }
@@ -181,7 +181,7 @@ public class ModKeys {
         if(Minecraft.getInstance().player.isSpectator()) return;
         if (FactionPlayerHandler.get(mc.player).getLordLevel() > 0) {
             SelectMinionTaskRadialScreen.show();
-        };
+        }
     }
 
     private void toggleAction(int id) {
@@ -191,7 +191,7 @@ public class ModKeys {
             Player player = mc.player;
             if (player.isAlive()) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, handler.getBoundAction(id)));
+                toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(id));
             }
         }
     }
@@ -204,8 +204,8 @@ public class ModKeys {
             player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
         } else {
             IAction<?> value = action.value();
-            if (value.getFaction().map(faction -> !faction.equals(player.getFaction())).orElse(false)) {
-                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.only_faction", value.getFaction().get().getName()), true);
+            if (!IFaction.is(player.getFaction(), value.factions())) {
+                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.wrong_faction", player.getFaction().value().getName()), true);
             } else {
                 VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity.player.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismFactions;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * Interface for the hunter player data
  * Attached to all players as capability
  */
-public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter {
+public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter, ISkillPlayer<IHunterPlayer>, ITaskPlayer<IHunterPlayer> {
 
     /**
      * Call when the player does something that would break their disguise (Call regardless of the current disguise state)

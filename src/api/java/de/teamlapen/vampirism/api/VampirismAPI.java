@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
@@ -37,16 +36,10 @@ public class VampirismAPI {
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
-    private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
     private static ISettingsProvider settings;
     private static IBloodConversionRegistry bloodConversionRegistry;
-
-    @Deprecated(forRemoval = true)
-    public static ISkillManager skillManager() {
-        return skillManager;
-    }
 
     public static IActionManager actionManager() {
         return actionManager;
@@ -88,14 +81,13 @@ public class VampirismAPI {
      * @throws IllegalStateException if the API was already setup
      */
     @ApiStatus.Internal
-    public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
+    public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn,
                                        IVampireVisionRegistry vampireVisionRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn, IBloodConversionRegistry bloodConversionRegistryIn) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
         factionRegistry = factionRegistryIn;
         sundamageRegistry = sundamageRegistryIn;
         entityRegistry = entityRegistryIn;
         actionManager = actionManagerIn;
-        skillManager = skillManagerIn;
         vampireVisionRegistry = vampireVisionRegistryIn;
         extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
         settings = settingsIn;

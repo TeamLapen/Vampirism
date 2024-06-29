@@ -178,7 +178,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("max_blood")) {
             setMaxBlood(nbt.getInt("max_blood"));
         }
@@ -221,7 +221,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("max_blood", maxBlood);

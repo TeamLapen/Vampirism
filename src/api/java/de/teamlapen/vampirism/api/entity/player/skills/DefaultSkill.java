@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
-public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
+public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISkill<T> {
 
     private final Map<Holder<Attribute>, AttributeHolder> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.player.tasks.unlock;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModTasks;
@@ -24,7 +24,7 @@ public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
+    public <T extends ITaskPlayer<T>> boolean isUnlocked(@NotNull T playerEntity) {
         return this.parent.unwrapKey().map(key -> playerEntity.getTaskManager().wasTaskCompleted(key)).orElse(false);
     }
 

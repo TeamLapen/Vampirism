@@ -7,6 +7,8 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.command.arguments.SkillArgument;
@@ -28,6 +30,7 @@ import java.util.List;
 public class SkillCommand extends BasicCommand {
 
     private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(Component.translatable("command.vampirism.test.skill.noinfaction"));
+    private static final SimpleCommandExceptionType NO_SKILLS = new SimpleCommandExceptionType(Component.translatable("command.vampirism.test.skill.no_skills"));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return create(Commands.literal("skills"), buildContext);
@@ -50,17 +53,17 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int disableall(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
-        IFactionPlayer<?> factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
-        factionPlayer.getSkillHandler().resetSkills();
+        ISkillHandler.get(asPlayer).ifPresent(ISkillHandler::reset);
+        IRefinementHandler.get(asPlayer).ifPresent(IRefinementHandler::resetRefinements);
         commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.all_locked"), false);
         return 0;
     }
 
-    private static <T extends IFactionPlayer<T>> int enableAll(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
-        T factionPlayer = FactionPlayerHandler.<T>getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
-        ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
+    private static <T extends IFactionPlayer<T> & ISkillPlayer<T>> int enableAll(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
+        FactionPlayerHandler handler = FactionPlayerHandler.get(asPlayer);
+        ISkillHandler<T> skillHandler = handler.<T>getSkillHandler().orElseThrow(NO_FACTION::create);
         ModRegistries.SKILLS.holders().forEach(holder -> {
-            if (IFaction.is(factionPlayer.getFaction(), holder.value().factions())) {
+            if (IFaction.is(handler.getFaction(), holder.value().factions())) {
                 //noinspection unchecked
                 skillHandler.enableSkill((Holder<ISkill<T>>) (Object) holder);
             }
@@ -69,27 +72,28 @@ public class SkillCommand extends BasicCommand {
         return 0;
     }
 
-    private static <T extends IFactionPlayer<T>> int skill(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, @NotNull Holder<ISkill<?>> skill, boolean force) throws CommandSyntaxException {
-        T factionPlayer = FactionPlayerHandler.<T>getCurrentFactionPlayer(asPlayer).orElseThrow(NO_FACTION::create);
-        if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
+    private static <T extends IFactionPlayer<T> & ISkillPlayer<T>> int skill(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, @NotNull Holder<ISkill<?>> skill, boolean force) throws CommandSyntaxException {
+        FactionPlayerHandler handler = FactionPlayerHandler.get(asPlayer);
+        ISkillHandler<T> skillHandler = handler.<T>getSkillHandler().orElseThrow(NO_FACTION::create);
+        if (skillHandler.isSkillEnabled(skill)) {
             //noinspection unchecked
-            factionPlayer.getSkillHandler().disableSkill((Holder<ISkill<T>>) (Object) skill);
+            skillHandler.disableSkill((Holder<ISkill<T>>) (Object) skill);
             commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.disabled"), false);
             return 0;
         }
-        ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
+        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
         if (force) {
             result = ISkillHandler.Result.OK;
         }
         switch (result) {
             case OK -> {
                 //noinspection unchecked
-                factionPlayer.getSkillHandler().enableSkill((Holder<ISkill<T>>) (Object) skill);
+                skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
                 commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.enabled", skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow() + " (" + skill.value().getName().getString() + ")"), false);
             }
             case ALREADY_ENABLED -> commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.value().getName()), false);
             case PARENT_NOT_ENABLED -> {
-                List<Holder<ISkill<?>>> skills = factionPlayer.getSkillHandler().getParentSkills(skill);
+                List<Holder<ISkill<?>>> skills = skillHandler.getParentSkills(skill);
                 if (skills == null || skills.isEmpty()) return 0;
                 if (skills.size() == 1) {
                     commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parent", skills.getFirst().unwrapKey().map(ResourceKey::location).orElseThrow()));

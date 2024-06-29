@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.neutral.NeutralPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampireBat;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.LevelDamage;
@@ -30,6 +31,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<FactionPlayerHandler>> FACTION_PLAYER_HANDLER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.FACTION_PLAYER_HANDLER.getPath(), () -> AttachmentType.builder(new FactionPlayerHandler.Factory()).serialize(new FactionPlayerHandler.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<HunterPlayer>> HUNTER_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_PLAYER.getPath(), () -> AttachmentType.builder(new HunterPlayer.Factory()).serialize(new HunterPlayer.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VampirePlayer>> VAMPIRE_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_PLAYER.getPath(), () -> AttachmentType.builder(new VampirePlayer.Factory()).serialize(new VampirePlayer.Serializer()).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<NeutralPlayer>> NEUTRAL_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEUTRAL_PLAYER.getPath(), () -> AttachmentType.builder(new NeutralPlayer.Factory()).serialize(new NeutralPlayer.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
 
     static void register(IEventBus bus) {

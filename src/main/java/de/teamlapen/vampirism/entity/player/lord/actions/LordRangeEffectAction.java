@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.player.lord.actions;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
@@ -18,9 +18,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
-public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends DefaultAction<T> {
+public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends DefaultAction<T> {
 
     private final Holder<MobEffect> effect;
 
@@ -50,12 +49,6 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T>> extends
 
     protected int getEffectAmplifier(@NotNull T player) {
         return ((IVampirismPlayer) player.asEntity()).getVampAtts().lordLevel - 1;
-    }
-
-    @NotNull
-    @Override
-    public Optional<IPlayableFaction<?>> getFaction() {
-        return Optional.empty();
     }
 
     @Override

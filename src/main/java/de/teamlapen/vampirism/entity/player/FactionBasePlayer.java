@@ -5,24 +5,15 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IDisguise;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.entity.factions.Faction;
-import de.teamlapen.vampirism.entity.factions.PlayableFaction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -33,20 +24,9 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
 
     protected final Player player;
-    /**
-     * {@code @NotNull} on server, otherwise {@code null}
-     */
-    private final @Nullable TaskManager taskManager;
-    private final IDisguise disguise;
 
     public FactionBasePlayer(Player player) {
         this.player = player;
-        if (player instanceof ServerPlayer) {
-            this.taskManager = new TaskManager((ServerPlayer) player, this, this.getFaction());
-        } else {
-            this.taskManager = null;
-        }
-        this.disguise = new Disguise(this.getFaction());
     }
 
     @Override
@@ -73,16 +53,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return player;
     }
 
-    /**
-     * null on client and @NotNull on server
-     */
-    @NotNull
-    @Override
-    public TaskManager getTaskManager() {
-        return taskManager;
-    }
-
-
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isRemote() {
@@ -91,25 +61,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
             return false;
         }
         return player.level().isClientSide;
-    }
-
-    @MustBeInvokedByOverriders
-    @Override
-    public void onDeath(DamageSource src) {
-        this.getSkillHandler().damageRefinements();
-    }
-
-    @MustBeInvokedByOverriders
-    @Override
-    public void onUpdate() {
-        if (!isRemote()) {
-            this.taskManager.tick();
-        }
-    }
-
-    @Override
-    public IDisguise getDisguise() {
-        return this.disguise;
     }
 
     /**
@@ -138,34 +89,13 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @MustBeInvokedByOverriders
     @Override
-    public void onLevelChanged(int newLevel, int oldLevel) {
-        if (!isRemote()) {
-            if (newLevel <= 0) {
-                this.getSkillHandler().reset();
-                this.getActionHandler().resetTimers();
-                this.sync(true);
-            }
-
-        } else {
-            if (newLevel == 0) {
-                this.getActionHandler().resetTimers();
-                this.getSkillHandler().resetRefinements();
-            }
-        }
-    }
-
-    @MustBeInvokedByOverriders
-    @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT(provider));
-        return tag;
+        return new CompoundTag();
     }
 
     @MustBeInvokedByOverriders
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        this.taskManager.deserializeNBT(provider, nbt.getCompound(this.taskManager.nbtKey()));
     }
 
     @MustBeInvokedByOverriders
@@ -180,37 +110,4 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return new CompoundTag();
     }
 
-    private static class Disguise implements IDisguise {
-
-        private final Holder<? extends IPlayableFaction<?>> faction;
-
-        public Disguise(Holder<? extends IPlayableFaction<?>> faction) {
-            this.faction = faction;
-        }
-
-        @Override
-        public @NotNull Holder<? extends IPlayableFaction<?>> getOriginalFaction() {
-            return this.faction;
-        }
-
-        @Override
-        public @Nullable Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
-            return this.faction;
-        }
-
-        @Override
-        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
-
-        }
-
-        @Override
-        public void unDisguise() {
-
-        }
-
-        @Override
-        public boolean isDisguised() {
-            return false;
-        }
-    }
 }

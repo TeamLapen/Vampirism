@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.neutral.INeutralPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -76,6 +77,11 @@ public class ModFactions {
             .village(HunterVillage.hunterVillage().build())
             .lord(new LordPlayerBuilder<IHunterPlayer>()
                     .lordTitle(new LordTitles.HunterTitles()).lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
+            .build());
+
+    public static final DeferredFaction<INeutralPlayer, IPlayableFaction<INeutralPlayer>> NEUTRAL = FACTIONS.registerFaction(VampirismFactions.Keys.NEUTRAL.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<INeutralPlayer>> )(Object) ModAttachments.NEUTRAL_PLAYER)
+            .name("text.vampirism.neutral")
+            .namePlural("text.vampirism.neutral")
             .build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->

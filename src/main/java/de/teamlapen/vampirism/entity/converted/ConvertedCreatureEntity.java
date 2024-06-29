@@ -301,7 +301,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
         writeOldEntityToNBT(tag);
         return tag;

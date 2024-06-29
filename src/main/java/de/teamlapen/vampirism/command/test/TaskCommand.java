@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -41,7 +42,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int refreshTasksList(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().updateTaskLists());
+            FactionPlayerHandler.get(player).getTaskManager().ifPresent(ITaskManager::updateTaskLists);
         }
         return 0;
     }
@@ -49,7 +50,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int resetTasksList(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().resetTaskLists());
+            FactionPlayerHandler.get(player).getTaskManager().ifPresent(ITaskManager::resetTaskLists);
         }
         return 0;
     }
@@ -57,7 +58,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int clearTasks(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset());
+            FactionPlayerHandler.get(player).getTaskManager().ifPresent(ITaskManager::reset);
         }
 
         return 0;
@@ -67,7 +68,7 @@ public class TaskCommand extends BasicCommand {
     private static int resetLordTasks(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.resetLordTasks(handler.getLordLevel());
+            handler.resetLordTasks();
         }
         return 0;
     }

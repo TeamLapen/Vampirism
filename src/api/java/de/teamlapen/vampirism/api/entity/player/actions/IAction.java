@@ -2,12 +2,11 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillLike;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
@@ -21,7 +20,7 @@ import java.util.Optional;
 /**
  * Interface for player actions
  */
-public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
+public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     /**
      * Checks if the player can use this action
      *
@@ -35,13 +34,6 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      */
     int getCooldown(T player);
 
-    /**
-     * @return the faction, which players can use this action
-     */
-    @Deprecated
-    @NotNull
-    Optional<IPlayableFaction<?>> getFaction();
-
     @NotNull
     TagKey<? extends IFaction<?>> factions();
 
@@ -49,13 +41,6 @@ public interface IAction<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      * @param faction The faction to test
      * @return of the action can be used by the given faction
      */
-    default boolean matchesFaction(@Nullable IPlayableFaction<?> faction) {
-        if (getFaction().isEmpty() && faction == null) {
-            return true;
-        }
-        return getFaction().map(f -> f == faction).orElse(true);
-    }
-
     default boolean matchesFaction(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
         return IFaction.is(faction, factions());
     }

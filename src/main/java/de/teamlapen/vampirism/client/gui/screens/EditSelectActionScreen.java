@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -32,10 +33,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
+public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
 
     public static void show() {
-        FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFactionPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen(factionPlayer)));
+        FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen<>(factionPlayer)));
     }
 
     private static void drawActionPart(@Nullable Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
@@ -48,7 +49,7 @@ public class EditSelectActionScreen<T extends IFactionPlayer<T>> extends Reorder
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends IFactionPlayer<T>> boolean isEnabled(T player, @NotNull Holder<IAction<?>> item) {
+    private static <T extends ISkillPlayer<T>> boolean isEnabled(T player, @NotNull Holder<IAction<?>> item) {
         return player.getActionHandler().isActionUnlocked((Holder<IAction<T>>) (Object) item);
     }
 

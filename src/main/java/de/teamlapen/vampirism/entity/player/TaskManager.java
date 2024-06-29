@@ -7,9 +7,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.storage.ISavable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModStats;
@@ -47,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TaskManager implements ITaskManager, ISavable {
+public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, ISavable {
     private static final String NBT_KEY = "task_manager";
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
 
@@ -56,7 +55,7 @@ public class TaskManager implements ITaskManager, ISavable {
     @NotNull
     private final ServerPlayer player;
     @NotNull
-    private final IFactionPlayer<?> factionPlayer;
+    private final T factionPlayer;
     @NotNull
     private final Set<ResourceKey<Task>> completedTasks = new HashSet<>();
     @NotNull
@@ -64,7 +63,7 @@ public class TaskManager implements ITaskManager, ISavable {
 
     private final Registry<Task> registry;
 
-    public TaskManager(@NotNull ServerPlayer player, @NotNull IFactionPlayer<?> factionPlayer, @NotNull Holder<? extends IPlayableFaction<?>> faction) {
+    public TaskManager(@NotNull ServerPlayer player, @NotNull T factionPlayer, @NotNull Holder<? extends IPlayableFaction<?>> faction) {
         this.faction = faction;
         this.player = player;
         this.factionPlayer = factionPlayer;

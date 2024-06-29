@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
@@ -25,11 +24,11 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
     VillagerType getBiomeType();
 
     default boolean processInteraction(@NotNull Player playerEntity, @NotNull Entity entity) {
-        if (FactionPlayerHandler.getCurrentFactionPlayer(playerEntity).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
+        if (FactionPlayerHandler.get(playerEntity).getTaskManager().map(taskManager -> taskManager.hasAvailableTasks(entity.getUUID())).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openMenu(new SimpleMenuProvider((containerId, playerInventory, player) -> new TaskBoardMenu(containerId, playerInventory), entity.getDisplayName().plainCopy()));
             if (containerIdOpt.isPresent()) {
-                FactionPlayerHandler.getCurrentFactionPlayer(playerEntity).ifPresent(iFactionPlayer -> {
-                    iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUUID());
+                FactionPlayerHandler.get(playerEntity).getTaskManager().ifPresent(taskManager -> {
+                    taskManager.openTaskMasterScreen(entity.getUUID());
                 });
                 return true;
             }

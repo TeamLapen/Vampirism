@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.*;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,12 +78,6 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     }
 
     /**
-     * null on client & @NotNull on server
-     */
-    @NotNull
-    ITaskManager getTaskManager();
-
-    /**
      * You can also use {@link de.teamlapen.vampirism.api.entity.player.IFactionPlayer#getDisguise()} to get the faction the player looks like
      *
      * @return If the player is disguised.
@@ -108,11 +99,4 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      */
     void onLevelChanged(int newLevel, int oldLevel);
 
-    /**
-     * @return The skill handler for this player
-     */
-    @NotNull
-    ISkillHandler<T> getSkillHandler();
-
-    IActionHandler<T> getActionHandler();
 }

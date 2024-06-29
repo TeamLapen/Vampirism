@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -25,12 +24,10 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -180,18 +177,13 @@ public class RegUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
+    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
         return (Holder<IAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
+    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
         return (Holder<ILastingAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Holder<? extends IPlayableFaction<?>> holder(IPlayableFaction<?> faction) {
-        return (Holder<? extends IPlayableFaction<?>>) (Object) ModRegistries.FACTIONS.wrapAsHolder(faction);
     }
 
     @SuppressWarnings("unchecked")

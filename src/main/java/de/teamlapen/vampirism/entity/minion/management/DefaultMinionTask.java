@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -15,8 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
@@ -54,6 +53,6 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
     }
 
     public boolean isRequiredSkillUnlocked(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
-        return this.requiredSkill == null || player == null || faction.value().getPlayerCapability(player.getPlayer()).map(a -> a.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
+        return this.requiredSkill == null || player == null || faction.value().getPlayerCapability(player.getPlayer()) instanceof ISkillPlayer<?> s && s.getSkillHandler().isSkillEnabled(this.requiredSkill);
     }
 }

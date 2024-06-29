@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -32,6 +33,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
@@ -223,15 +225,14 @@ public class Helper {
     /**
      * Checks if the given {@link IFactionLevelItem} can be used by the given player
      */
-    public static <T extends IFactionPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
-        Holder<? extends IFaction<?>> usingFaction = item.getExclusiveFaction(stack);
+    public static <T extends IFactionPlayer<T>& ISkillPlayer<T>> boolean canUseFactionItem(@NotNull ItemStack stack, @NotNull IFactionLevelItem<T> item, @NotNull IFactionPlayerHandler playerHandler) {
+        @NotNull TagKey<IFaction<?>> usingFaction = item.getExclusiveFaction(stack);
         Holder<ISkill<?>> requiredSkill = item.requiredSkill(stack);
         int reqLevel = item.getMinLevel(stack);
-        if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
+        if (!playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         if (requiredSkill == null) return true;
-        //noinspection unchecked
-        return playerHandler.getCurrentFactionPlayer().map(IFactionPlayer::getSkillHandler).map(s -> s.isSkillEnabled((Holder<ISkill<?>>) requiredSkill)).orElse(false);
+        return playerHandler.getSkillHandler().map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
     /**

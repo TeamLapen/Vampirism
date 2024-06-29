@@ -15,7 +15,9 @@ import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.util.FactionCodec;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.random.WeightedEntry;
@@ -41,7 +43,7 @@ public class RefinementItemReward extends ItemReward {
                 StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
         ).apply(inst, (reward, faction, rarity) -> {
             Preconditions.checkArgument(reward.isEmpty() || reward.get() instanceof IRefinementItem, "Item must be a refinement item");
-            Preconditions.checkArgument(reward.isEmpty() || IFaction.is(((IRefinementItem) reward.get()).getExclusiveFaction(reward.get().getDefaultInstance()), faction.orElse(null)), "Faction must match item faction");
+            Preconditions.checkArgument(reward.isEmpty() || IFaction.is(faction.orElse(null), ((IRefinementItem) reward.get()).getExclusiveFaction(reward.get().getDefaultInstance())), "Faction must match item faction");
             return new RefinementItemReward((IRefinementItem) reward.orElse(null), faction.orElse(null), rarity.orElse(null));
         });
     });
@@ -89,7 +91,10 @@ public class RefinementItemReward extends ItemReward {
         IRefinementItem baseItem = this.item.get();
         if (faction == null) {
             if (baseItem != null) {
-                faction = baseItem.getExclusiveFaction(baseItem.asItem().getDefaultInstance());
+                TagKey<IFaction<?>> exclusiveFaction = baseItem.getExclusiveFaction(baseItem.asItem().getDefaultInstance());
+                List<Holder<IFaction<?>>> list = ModRegistries.FACTIONS.getTag(exclusiveFaction).stream().flatMap(HolderSet.ListBacked::stream).filter(s -> s.value() instanceof IPlayableFaction<?> faction1 && faction1.hasRefinements()).toList();
+                //noinspection unchecked,RedundantCast
+                faction = list.isEmpty() ? null : (Holder<? extends IPlayableFaction<?>>) (Object) list.get(random.nextInt(list.size() - 1));
             } else {
                 faction = getRandomFactionWithAccessories(random);
             }
@@ -97,7 +102,9 @@ public class RefinementItemReward extends ItemReward {
         }
         Holder<? extends IPlayableFaction<?>> finalFaction = faction;
 
+        @SuppressWarnings("unchecked")
         Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+        @SuppressWarnings("DataFlowIssue")
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> IFaction.is(set.getFaction(), finalFaction))
@@ -127,9 +134,5 @@ public class RefinementItemReward extends ItemReward {
     @Override
     public MapCodec<? extends TaskReward> codec() {
         return CODEC;
-    }
-
-    private static boolean matchFaction(Holder<? extends IFaction<?>> target, IFaction<?> faction) {
-        return target == null || faction == null || target == faction;
     }
 }

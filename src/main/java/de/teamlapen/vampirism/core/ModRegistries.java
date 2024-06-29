@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -41,7 +42,7 @@ public class ModRegistries {
     public static final Registry<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS  = new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REQUIREMENT).create();
     public static final Registry<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES= new RegistryBuilder<>(VampirismRegistries.Keys.TASK_REWARD_INSTANCE).create();
     public static final Registry<MapCodec<? extends Converter>> ENTITY_CONVERTER = new RegistryBuilder<>(VampirismRegistries.Keys.ENTITY_CONVERTER).create();
-    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.FACTION).sync(true).create();
+    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(VampirismRegistries.Keys.FACTION).sync(true).defaultKey(VampirismFactions.NEUTRAL.getRawKey()).create();
     public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(VampirismRegistries.Keys.MINION).callback(((FactionRegistry) VampirismAPI.factionRegistry()).getMinionCallback()).sync(true).create();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()

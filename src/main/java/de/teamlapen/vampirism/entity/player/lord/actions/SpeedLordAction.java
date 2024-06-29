@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity.player.lord.actions;
 
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import org.jetbrains.annotations.NotNull;
 
-public class SpeedLordAction<T extends IFactionPlayer<T>> extends LordRangeEffectAction<T> {
+public class SpeedLordAction<T extends ISkillPlayer<T>> extends LordRangeEffectAction<T> {
 
     public SpeedLordAction() {
         super(ModEffects.LORD_SPEED);

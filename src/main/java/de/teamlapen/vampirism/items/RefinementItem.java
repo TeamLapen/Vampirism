@@ -3,12 +3,11 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.items.component.EffectiveRefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -37,8 +36,8 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
 
-    public static @NotNull ItemStack getRandomRefinementItem(@NotNull IPlayableFaction<?> faction) {
-        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> set.getFaction() == faction).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+    public static @NotNull ItemStack getRandomRefinementItem(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
+        List< WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElseGet(() -> sets.getFirst().data());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
@@ -46,7 +45,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
             case 1 -> AccessorySlotType.RING;
             default -> AccessorySlotType.AMULET;
         });
-        IRefinementItem i = faction.getRandomRefinementItem(RANDOM, t);
+        IRefinementItem i = faction.value().getRandomRefinementItem(RANDOM, t);
         ItemStack stack = new ItemStack(i);
         if (i.applyRefinementSet(stack, s)) {
             return stack;
@@ -112,7 +111,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         if (!worldIn.isClientSide()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
-            if (FactionPlayerHandler.getCurrentFactionPlayer(playerIn).map(IFactionPlayer::getSkillHandler).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
+            if (IRefinementHandler.get(playerIn).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
                 return InteractionResultHolder.consume(ItemStack.EMPTY);
             }
 
@@ -123,7 +122,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack stack = getDefaultInstance();
-        ModRegistries.REFINEMENT_SETS.stream().filter(set -> getExclusiveFaction(stack) == null || set.getFaction() == getExclusiveFaction(stack)).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
+        ModRegistries.REFINEMENT_SETS.stream().filter(set -> IFaction.is(set.getFaction(), getExclusiveFaction(stack))).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
             ItemStack s = stack.copy();
             applyRefinementSet(s, set);
             return s;

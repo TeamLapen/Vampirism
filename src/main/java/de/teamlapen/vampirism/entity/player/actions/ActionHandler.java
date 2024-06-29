@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
  * <p>
  * Probably not the fastest or cleanest approach, but I did not find the perfect solution yet.
  */
-public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandler<T>, ISyncableSaveData {
+public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements IActionHandler<T>, ISyncableSaveData {
     private static final String NBT_KEY = "action_handler";
 
     /**
@@ -393,7 +394,7 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
      *
      * @return If a sync is recommended, only relevant on server side
      */
-    public boolean updateActions() {
+    public void updateActions() {
         //First update cooldown timers so active actions that become deactivated are not ticked.
         for (Iterator<Object2IntMap.Entry<Holder<? extends IAction<T>>>> it = cooldownTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<Holder<? extends IAction<T>>> entry = it.next();
@@ -429,16 +430,15 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
             cooldownTimers.put(holder, expectedCooldownTimes.getInt(holder));
             dirty = true;
         });
-        if (dirty) {
-            dirty = false;
-            return true;
-        }
-        return false;
     }
 
     @Override
     public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
-        return serializeNBT(provider);
+        if (this.dirty) {
+            return serializeNBT(provider);
+        } else {
+            return new CompoundTag();
+        }
     }
 
     private boolean isActionAllowedPermission(Holder<? extends IAction<T>> action) {

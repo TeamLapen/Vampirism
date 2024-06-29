@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class OblivionItem extends Item {
 
-    public static void applyEffect(@NotNull IFactionPlayer<?> factionPlayer) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void applyEffect(@NotNull T factionPlayer) {
         Player player = factionPlayer.asEntity();
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         if (((SkillHandler<?>) skillHandler).noSkillEnabled()) {
@@ -52,8 +53,8 @@ public class OblivionItem extends Item {
     @Override
     public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
         stack.shrink(1);
-        if (entityLiving instanceof Player) {
-            FactionPlayerHandler.getCurrentFactionPlayer((Player) entityLiving).ifPresent(OblivionItem::applyEffect);
+        if (entityLiving instanceof Player player) {
+            FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(OblivionItem::applyEffect);
         }
         if (entityLiving instanceof MinionEntity) {
             ((MinionEntity<?>) entityLiving).getMinionData().ifPresent(d -> d.upgradeStat(-1, (MinionEntity<?>) entityLiving));

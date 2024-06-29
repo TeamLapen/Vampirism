@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import de.teamlapen.lib.util.OptifineHandler;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -145,7 +144,7 @@ public class RenderHandler implements ResourceManagerReloadListener {
             if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire.getSkillHandler().isRefinementEquipped(ModRefinements.VISTA) ? VampirismConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? VampirismConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
 
             } else {
                 insideFog = false;

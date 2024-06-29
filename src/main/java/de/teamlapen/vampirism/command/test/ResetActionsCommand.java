@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command.test;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,12 +27,9 @@ public class ResetActionsCommand extends BasicCommand {
     private static int resetActions(@NotNull CommandSourceStack commandSource, @NotNull List<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;
-            FactionPlayerHandler.getCurrentFactionPlayer(player).ifPresent(factionPlayer -> {
-                IActionHandler<?> handler = factionPlayer.getActionHandler();
-                if (handler != null) {
-                    handler.resetTimers();
-                    commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.resetactions"), false);
-                }
+            FactionPlayerHandler.get(player).getActionHandler().ifPresent(handler -> {
+                handler.resetTimers();
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.resetactions"), false);
             });
         }
         return 0;

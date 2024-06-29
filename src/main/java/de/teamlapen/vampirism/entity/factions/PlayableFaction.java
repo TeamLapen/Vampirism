@@ -11,11 +11,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -41,6 +41,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
 
     @Override
     public int getHighestLordLevel() {
+        if (lord == null) return 0;
         return this.lord.maxLevel();
     }
 
@@ -49,19 +50,21 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
         return highestLevel;
     }
 
+    @Nullable
     @Override
     public ILordTitleProvider lordTiles() {
+        if (lord == null) return null;
         return this.lord.lordTitleFunction();
     }
 
     @Override
-    public @NotNull Optional<T> getPlayerCapability(@NotNull Player player) {
-        return Optional.of(player.getData(playerCapabilitySupplier.get()));
+    public @NotNull T getPlayerCapability(@NotNull Player player) {
+        return player.getData(playerCapabilitySupplier.get());
     }
 
     @Override
     public boolean hasRefinements() {
-        return this.refinementItemBySlot != null;
+        return !this.refinementItemBySlot.isEmpty();
     }
 
     @Override

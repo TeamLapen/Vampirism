@@ -2,10 +2,9 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -54,8 +53,8 @@ public class GarlicBlock extends CropBlock {
     @Override
     public void entityInside(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
-            if (entity instanceof Player) {
-                ModFactions.VAMPIRE.get().getPlayerCapability((Player) entity).ifPresent(vamp -> DamageHandler.affectVampireGarlicDirect(vamp, EnumStrength.WEAK));
+            if (entity instanceof Player player) {
+                DamageHandler.affectVampireGarlicDirect(VampirePlayer.get(player), EnumStrength.WEAK);
             } else if (entity instanceof IVampire) {
                 DamageHandler.affectVampireGarlicDirect((IVampire) entity, EnumStrength.WEAK);
             }

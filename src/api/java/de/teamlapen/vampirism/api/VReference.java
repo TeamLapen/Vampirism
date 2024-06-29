@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
@@ -32,11 +31,6 @@ public class VReference {
 
     public static final Supplier<Fluid> BLOOD = DeferredHolder.create(Registries.FLUID, VResourceLocation.mod("blood"));
 
-    /**
-     * @deprecated use {@link de.teamlapen.vampirism.api.VampirismFactions#VAMPIRE}
-     */
-    @Deprecated
-    public static IPlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
     /**
      * @deprecated use {@link de.teamlapen.vampirism.api.VampirismFactions#HUNTER}
      */

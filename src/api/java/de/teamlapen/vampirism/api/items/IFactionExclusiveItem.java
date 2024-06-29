@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismDataComponents;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IAppliedOilContent;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,14 +28,14 @@ public interface IFactionExclusiveItem extends ItemLike {
         addOilDescTooltip(stack, context, tooltip, flagIn, player);
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
-        ChatFormatting color = ChatFormatting.GRAY;
-        Holder<? extends IFaction<?>> faction = getExclusiveFaction(stack);
+        TagKey<IFaction<?>> factionTag = getExclusiveFaction(stack);
 
-        if (faction != null) {
+        for (Holder<IFaction<?>> faction : VampirismRegistries.FACTION.get().getTagOrEmpty(factionTag)) {
+            var color = ChatFormatting.GRAY;
             if (player != null) {
                 color = IFaction.is(VampirismAPI.factionRegistry().getFaction(player), faction) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
             }
-            tooltip.add(Component.literal(" ").append(faction.value().getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
+            tooltip.add(Component.literal(" ").append(faction.value().getName()).withStyle(color));
         }
     }
 
@@ -56,6 +58,6 @@ public interface IFactionExclusiveItem extends ItemLike {
     /**
      * @return The faction that can use this item or null if any
      */
-    @Nullable
-    Holder<? extends IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack);
+    @NotNull
+    TagKey<IFaction<?>> getExclusiveFaction(@NotNull ItemStack stack);
 }

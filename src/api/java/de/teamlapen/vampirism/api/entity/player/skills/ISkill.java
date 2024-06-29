@@ -2,23 +2,20 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.Optional;
 
 /**
  * Skill that tha unlocks abilities for a player.
  */
-public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
+public interface ISkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ISkillLike<T> {
     /**
      * The description for this skill or null if there is no description.
      */
@@ -29,10 +26,6 @@ public interface ISkill<T extends IFactionPlayer<T>> extends ISkillLike<T> {
      * A skill can be either
      * @return The faction this skill belongs to
      */
-    @Deprecated
-    @NotNull
-    Optional<IPlayableFaction<?>> getFaction();
-
     TagKey<? extends IFaction<?>> factions();
 
     default MutableComponent getName() {

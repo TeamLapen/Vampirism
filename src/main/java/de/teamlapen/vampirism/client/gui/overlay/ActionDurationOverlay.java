@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,17 +14,16 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.Optional;
 
-public class ActionDurationOverlay<T extends IFactionPlayer<T>> implements LayeredDraw.Layer {
+public class ActionDurationOverlay<T extends ISkillPlayer<T>> implements LayeredDraw.Layer {
 
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
         if (this.mc.player != null) {
-            VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+            VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int x = 12;

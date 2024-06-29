@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -63,9 +64,10 @@ public class GiveAccessoriesCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static <T extends IFactionPlayer<T>> int random(@NotNull CommandContext<CommandSourceStack> context, @NotNull ServerPlayer entity, int amount) {
         Holder<? extends IFaction<?>> faction = VampirismAPI.factionRegistry().getFaction(entity);
-        if (faction != null && faction.value() instanceof PlayableFaction<?> playable) {
+        if (faction != null && faction.value() instanceof PlayableFaction<?>) {
             for (int i = 0; i < amount; ++i) {
-                ItemStack stack = RefinementItem.getRandomRefinementItem(playable);
+                @SuppressWarnings({"RedundantCast", "unchecked"})
+                ItemStack stack = RefinementItem.getRandomRefinementItem(((Holder<? extends IPlayableFaction<?>>) (Object) faction));
                 if (!stack.isEmpty()) {
                     entity.addItem(stack);
                 } else {

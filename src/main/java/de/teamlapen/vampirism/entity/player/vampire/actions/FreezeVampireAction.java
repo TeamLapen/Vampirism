@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -54,7 +53,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (!entity.canFreeze()) continue;
 
             int dur = VampirismConfig.BALANCE.vaFreezeDuration.get() * 20;
-            if (vampire.getSkillHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION)) {
+            if (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION)) {
                 dur *= VampirismConfig.BALANCE.vrFreezeDurationMod.get();
             }
             entity.addEffect(new MobEffectInstance(ModEffects.FREEZE, dur));

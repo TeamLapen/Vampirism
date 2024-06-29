@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.player.tasks.unlock;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModTasks;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public class LvlUnlocker implements TaskUnlocker {
     }
 
     @Override
-    public boolean isUnlocked(@NotNull IFactionPlayer<?> playerEntity) {
+    public <T extends ITaskPlayer<T>> boolean isUnlocked(@NotNull T playerEntity) {
         return playerEntity.getLevel() >= reqLevel && (maxLevel <= 0 || playerEntity.getLevel() <= maxLevel);
     }
 

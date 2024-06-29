@@ -151,7 +151,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
                     if (IFaction.is(fph.getFaction(), this.getFaction())) {
-                        boolean hasIncreasedStats = fph.getCurrentFactionPlayer().map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+                        boolean hasIncreasedStats = fph.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
                         HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
                         data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
                         int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());

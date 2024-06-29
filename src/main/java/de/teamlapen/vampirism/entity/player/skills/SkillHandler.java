@@ -2,30 +2,24 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPointProvider;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
-import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.data.ISkillTreeData;
-import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -33,28 +27,19 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<T>, ISyncableSaveData {
+public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISkillHandler<T>, ISyncableSaveData {
     private static final String NBT_KEY = "skill_handler";
     private final static Logger LOGGER = LogManager.getLogger();
     private final ArrayList<Holder<ISkill<T>>> enabledSkills = new ArrayList<>();
     private final T player;
     private final Holder<? extends IPlayableFaction<T>> faction;
-    private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
-    private final Set<Holder<IRefinement>> activeRefinements = new HashSet<>();
-    private final Map<ResourceLocation, AttributeModifier> refinementModifier = new HashMap<>();
     private final ISkillPointProvider skillPoints = new SkillPoints();
     public LinkedHashSet<Holder<ISkillTree>> unlockedTrees = new LinkedHashSet<>();
     private boolean dirty = false;
@@ -103,34 +88,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         }
     }
 
-    @Override
-    public ItemStack @NotNull [] createRefinementItems() {
-        return this.refinementItems.toArray(ItemStack[]::new);
-    }
-
-    @Override
-    public NonNullList<ItemStack> getRefinementItems() {
-        return this.refinementItems;
-    }
-
-    @Override
-    public void damageRefinements() {
-        Registry<Enchantment> enchantments = this.player.asEntity().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        Holder.Reference<Enchantment> unbreaking = enchantments.getHolderOrThrow(Enchantments.UNBREAKING);
-        this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
-            IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
-            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().asEntity().getRandom().nextInt(60);
-            int unbreakingLevel = stack.getEnchantmentLevel(unbreaking);
-            if (unbreakingLevel > 0) {
-                damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
-            }
-            stack.setDamageValue(stack.getDamageValue() + damage);
-            if (stack.getDamageValue() >= stack.getMaxDamage()) {
-                stack.setCount(0);
-            }
-        });
-    }
-
     public void disableAllSkills() {
         for (Holder<ISkill<T>> skill : enabledSkills) {
             skill.value().onDisable(player);
@@ -162,30 +119,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-    }
-
-    @Override
-    public boolean equipRefinementItem(@NotNull ItemStack stack) {
-        if (stack.getItem() instanceof IRefinementItem refinementItem) {
-            if (this.faction.equals(refinementItem.getExclusiveFaction(stack))) {
-                @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
-                IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
-
-                removeRefinementItem(setSlot);
-                this.dirty = true;
-
-                applyRefinementItem(stack, setSlot.getSlot());
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public void removeRefinementItem(IRefinementItem.@NotNull AccessorySlotType slot) {
-        removeRefinementItem(slot.getSlot());
-        this.dirty = true;
     }
 
     @Override
@@ -228,7 +161,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
 
     public void reset() {
         disableAllSkills();
-        resetRefinements();
         this.unlockedTrees.clear();
         this.dirty = true;
     }
@@ -264,11 +196,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         return false;
     }
 
-    @Override
-    public boolean isRefinementEquipped(Holder<IRefinement> refinement) {
-        return this.activeRefinements.contains(refinement);
-    }
-
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill) {
@@ -297,20 +224,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-        if (nbt.contains("refinement_items")) {
-            ListTag refinements = nbt.getList("refinement_items", 10);
-            for (int i = 0; i < refinements.size(); i++) {
-                CompoundTag stackNbt = refinements.getCompound(i);
-                int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
-                if (stack.getItem() instanceof IRefinementItem refinementItem) {
-                    Holder<? extends IPlayableFaction<?>> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
-                    if (exclusiveFaction == null || IFaction.is(this.faction, exclusiveFaction)) {
-                        applyRefinementItem(stack, slot);
-                    }
-                }
-            }
-        }
         if (nbt.contains("unlocked_trees")) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
@@ -321,7 +234,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
             //noinspection unchecked
@@ -340,20 +253,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             }
         }
 
-        if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
-            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_LIST);
-            for (int i = 0; i < refinements.size(); i++) {
-                CompoundTag stackNbt = refinements.getCompound(i);
-                int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
-                if (stack.getItem() instanceof IRefinementItem refinementItem) {
-                    Holder<? extends IPlayableFaction<?>> exclusiveFaction = refinementItem.getExclusiveFaction(stack);
-                    if (exclusiveFaction == null || IFaction.is(this.faction, exclusiveFaction)) {
-                        applyRefinementItem(stack, slot);
-                    }
-                }
-            }
-        }
         if (nbt.contains("unlocked_trees", Tag.TAG_LIST)) {
             ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
             this.unlockedTrees.clear();
@@ -361,15 +260,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().asEntity().level(), tag.getAsString()));
             });
         }
-    }
-
-    @Override
-    public void resetRefinements() {
-        for (int i = 0; i < this.refinementItems.size(); i++) {
-            removeRefinementItem(i);
-        }
-        this.refinementItems.clear();
-        this.dirty = true;
     }
 
     public void resetSkills() {
@@ -384,18 +274,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
             skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
         }
         nbt.put("skills", skills);
-        ListTag refinements = new ListTag();
-        for (int i = 0; i < this.refinementItems.size(); i++) {
-            ItemStack stack = this.refinementItems.get(i);
-            if (!stack.isEmpty()) {
-                CompoundTag stackNbt = new CompoundTag();
-                stackNbt.putInt("slot", i);
-                var tag = stack.save(provider);
-                stackNbt.put("stack", tag);
-                refinements.add(stackNbt);
-            }
-        }
-        nbt.put("refinement_items", refinements);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
@@ -405,25 +283,16 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+        if (!this.dirty) {
+            return new CompoundTag();
+        }
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (Holder<ISkill<T>> skill : enabledSkills) {
             skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
         }
         nbt.put("skills", skills);
-        ListTag refinementItems = new ListTag();
-        for (int i = 0; i < this.refinementItems.size(); i++) {
-            ItemStack stack = this.refinementItems.get(i);
-            if (!stack.isEmpty()) {
-                CompoundTag stackNbt = new CompoundTag();
-                stackNbt.putInt("slot", i);
-                var tag = stack.save(provider);
-                stackNbt.put("stack", tag);
-                refinementItems.add(stackNbt);
-            }
-        }
-        nbt.put("refinement_items", refinementItems);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
@@ -431,60 +300,6 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         nbt.put("unlocked_trees", unlockedTrees);
         dirty = false;
         return nbt;
-    }
-
-    private void applyRefinementItem(@NotNull ItemStack stack, int slot) {
-        this.refinementItems.set(slot, stack);
-        if (stack.getItem() instanceof IRefinementItem refinementItem) {
-            IRefinementSet set = refinementItem.getRefinementSet(stack);
-            if (set != null) {
-                set.getRefinements().forEach(x -> {
-                    this.activeRefinements.add(x);
-                    IRefinement refinement = x.value();
-                    ResourceLocation key = x.unwrapKey().map(ResourceKey::location).orElseThrow();
-                    if (!this.player.isRemote() && refinement.getAttribute() != null) {
-                        AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
-                        double value = refinement.getModifierValue();
-                        AttributeModifier t = attributeInstance.getModifier(key);
-                        if (t != null) {
-                            attributeInstance.removeModifier(key);
-                            value += t.amount();
-                        }
-                        t = refinement.createAttributeModifier(value);
-                        this.refinementModifier.put(key, t);
-                        attributeInstance.addTransientModifier(t);
-                    }
-                });
-            }
-        }
-    }
-
-    private void removeRefinementItem(int slot) {
-        ItemStack stack = this.refinementItems.get(slot);
-        if (!stack.isEmpty()) {
-            this.refinementItems.set(slot, ItemStack.EMPTY);
-            if (stack.getItem() instanceof IRefinementItem refinementItem) {
-                IRefinementSet set = refinementItem.getRefinementSet(stack);
-                if (set != null) {
-                    set.getRefinements().forEach(x -> {
-                        this.activeRefinements.remove(x);
-                        IRefinement refinement = x.value();
-                        ResourceLocation key = x.unwrapKey().map(ResourceKey::location).orElseThrow();
-                        if (!this.player.isRemote() && refinement.getAttribute() != null) {
-                            AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
-                            AttributeModifier t = this.refinementModifier.remove(key);
-                            ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                            double value = t.amount() - refinement.getModifierValue();
-                            if (value != 0) {
-                                attributeInstance.addTransientModifier(t = refinement.createAttributeModifier(value));
-                                this.refinementModifier.put(key, t);
-                                this.activeRefinements.add(x);
-                            }
-                        }
-                    });
-                }
-            }
-        }
     }
 
     @Override

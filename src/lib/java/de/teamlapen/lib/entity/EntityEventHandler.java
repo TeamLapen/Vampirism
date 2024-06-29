@@ -76,8 +76,10 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingUpdate(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> listener : listeners) {
-                event.getEntity().getData(listener).onUpdate();
+            for (AttachmentType<IPlayerEventListener> type : listeners) {
+                IPlayerEventListener listener = event.getEntity().getData(type);
+                listener.onUpdate();
+                listener.sync();
             }
         }
     }

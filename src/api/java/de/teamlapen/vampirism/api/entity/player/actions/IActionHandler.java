@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.annotations.FloatRange;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Interface for player's faction's action handler
  */
-public interface IActionHandler<T extends IFactionPlayer<T>> {
+public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
 
     /**
      * Deactivate any active action and start cooldown timer

@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import net.minecraft.world.entity.player.Player;
 
 /**
  * Action with a duration which is updated every tick
  */
-public interface ILastingAction<T extends IFactionPlayer<T>> extends IAction<T> {
+public interface ILastingAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends IAction<T> {
 
     /**
      * @return Skill duration in ticks

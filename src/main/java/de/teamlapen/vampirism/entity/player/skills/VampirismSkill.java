@@ -1,16 +1,13 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModTasks;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
@@ -19,14 +16,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * Extension of {@link DefaultSkill} with vampirism default unloc names/descriptions
  */
-public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends DefaultSkill<T> {
+public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends DefaultSkill<T> {
     private final Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree;
     private Supplier<Component> description = () -> null;
     private Consumer<T> activate = (T player) -> {
@@ -104,12 +100,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             super(Either.left(HunterSkills.Trees.LEVEL), skillPointCost, desc);
         }
 
-        @NotNull
-        @Override
-        public Optional<IPlayableFaction<?>> getFaction() {
-            return Optional.of(VReference.HUNTER_FACTION);
-        }
-
         @Override
         public TagKey<? extends IFaction<?>> factions() {
             return ModFactionTags.IS_HUNTER;
@@ -123,12 +113,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
          */
         public HunterLordSkill(int skillPointCost, boolean desc) {
             super(Either.left(HunterSkills.Trees.LORD), skillPointCost, desc);
-        }
-
-        @NotNull
-        @Override
-        public Optional<IPlayableFaction<?>> getFaction() {
-            return Optional.of(VReference.HUNTER_FACTION);
         }
 
         @Override
@@ -146,13 +130,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
             super(Either.left(VampireSkills.Trees.LEVEL), skillPointCost, desc);
         }
 
-        @NotNull
-        @Override
-        @Deprecated
-        public Optional<IPlayableFaction<?>> getFaction() {
-            return Optional.of(VReference.VAMPIRE_FACTION);
-        }
-
         @Override
         public TagKey<? extends IFaction<?>> factions() {
             return ModFactionTags.IS_VAMPIRE;
@@ -162,13 +139,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T>> extends Defaul
     public static class VampireLordSkill extends VampirismSkill<IVampirePlayer> {
         public VampireLordSkill(int skillPointCost, boolean desc) {
             super(Either.left(VampireSkills.Trees.LORD), skillPointCost, desc);
-        }
-
-        @NotNull
-        @Override
-        @Deprecated
-        public Optional<IPlayableFaction<?>> getFaction() {
-            return Optional.of(VReference.VAMPIRE_FACTION);
         }
 
         @Override

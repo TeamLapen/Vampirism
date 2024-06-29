@@ -13,7 +13,10 @@ public class ModFactionTags {
     public static final TagKey<IFaction<?>> ALL_FACTIONS = VampirismTags.Factions.ALL_FACTIONS;
     public static final TagKey<IFaction<?>> IS_HUNTER = VampirismTags.Factions.IS_HUNTER;
     public static final TagKey<IFaction<?>> IS_VAMPIRE = VampirismTags.Factions.IS_VAMPIRE;
+    public static final TagKey<IFaction<?>> IS_NEUTRAL = tag("is_neutral");
     public static final TagKey<IFaction<?>> HAS_LORD_SKILLS = tag("has_lord_skills");
+
+    public static final TagKey<IFaction<?>> USE_GARLIC_BREAD = tag("can_use/garlic_bread");
 
     private static @NotNull TagKey<IFaction<?>> tag(@NotNull String name) {
         return TagKey.create(VampirismRegistries.Keys.FACTION, VResourceLocation.mod(name));

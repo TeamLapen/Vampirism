@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.items;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.ChatFormatting;
@@ -23,7 +24,7 @@ import java.util.List;
  * Item's implementing this can only be used by players that match the requirements.
  * Currently, only affects {@link Player#attack(Entity)} and {@link Player#startUsingItem(InteractionHand)}
  */
-public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFactionExclusiveItem {
+public interface IFactionLevelItem<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends IFactionExclusiveItem {
 
     @Override
     default void addFactionToolTips(@NotNull ItemStack stack, Item.@Nullable TooltipContext worldIn, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
@@ -38,8 +39,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T>> extends IFaction
         }
         Holder<ISkill<?>> requiredSkill = requiredSkill(stack);
         if (requiredSkill != null) {
-            //noinspection unchecked
-            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill", requiredSkill.value().getName())).withStyle(correctFaction && playerHandler.getCurrentFactionPlayer().map(p -> p.getSkillHandler().isSkillEnabled((Holder<ISkill<?>>) (Object) requiredSkill)).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+            tooltip.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_skill", requiredSkill.value().getName())).withStyle(correctFaction && playerHandler.getCurrentSkillPlayer().map(p -> p.getSkillHandler().isSkillEnabled(requiredSkill)).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
     }
 

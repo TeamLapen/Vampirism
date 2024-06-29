@@ -10,9 +10,7 @@ import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModAttachments;
@@ -21,7 +19,7 @@ import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
+import de.teamlapen.vampirism.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -37,7 +35,6 @@ import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -47,10 +44,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +57,7 @@ import java.util.stream.StreamSupport;
 /**
  * Main class for hunter players
  */
-public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IHunterPlayer {
+public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements IHunterPlayer {
 
     public static @NotNull HunterPlayer get(@NotNull Player player) {
         return player.getData(ModAttachments.HUNTER_PLAYER);
@@ -76,30 +71,31 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         return Optional.ofNullable(player.getData(ModAttachments.HUNTER_PLAYER));
     }
 
-    private final @NotNull ActionHandler<IHunterPlayer> actionHandler;
-    private final @NotNull SkillHandler<IHunterPlayer> skillHandler;
     private final @NotNull Disguise disguise;
 
     public HunterPlayer(Player player) {
         super(player);
-        actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this, ModFactions.HUNTER);
         this.disguise = new Disguise();
     }
 
     @Override
+    protected ActionHandler<IHunterPlayer> createActionHandler() {
+        return new ActionHandler<>(this);
+    }
+
+    @Override
+    protected SkillHandler<IHunterPlayer> createSkillHandler() {
+        return new SkillHandler<>(this, ModFactions.HUNTER);
+    }
+
+    @Override
     public void breakDisguise() {
-        actionHandler.deactivateAction(HunterActions.DISGUISE_HUNTER);
+        this.getActionHandler().deactivateAction(HunterActions.DISGUISE_HUNTER);
     }
 
     @Override
     public boolean canLeaveFaction() {
         return true;
-    }
-
-    @Override
-    public IActionHandler<IHunterPlayer> getActionHandler() {
-        return actionHandler;
     }
 
     @Override
@@ -123,38 +119,12 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
-
-    }
-
-    @Override
-    public void onPlayerLoggedOut() {
-
-    }
-
-    @Override
-    public void onPlayerLoggedIn() {
-
-    }
-
-    @Override
-    public boolean onEntityAttacked(DamageSource src, float amt) {
-        return false;
-    }
-
-    @Override
     public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
             return entity -> true;
         } else {
             return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }
-    }
-
-    @NotNull
-    @Override
-    public ISkillHandler<IHunterPlayer> getSkillHandler() {
-        return skillHandler;
     }
 
     /**
@@ -175,13 +145,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
         super.onDeath(src);
         if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(((ServerPlayer) src.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
-        }
-    }
-
-    @Override
-    public void onJoinWorld() {
-        if (getLevel() > 0) {
-            actionHandler.onActionsReactivated();
         }
     }
 
@@ -207,12 +170,12 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
             if (!isRemote()) {
                 if (player.level().getGameTime() % 100 == 8) {
                     if (StreamSupport.stream(player.getArmorSlots().spliterator(), false).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
-                        if (skillHandler.isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
+                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP, -1, 0, false, false);
                             ((EffectInstanceWithSource) mobEffectInstance).setSource(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
                         }
-                        if (skillHandler.isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
+                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false);
                             ((EffectInstanceWithSource) mobEffectInstance).setSource(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
@@ -222,28 +185,12 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                         EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
                     }
                 }
-                boolean sync = false;
-                boolean syncToAll = false;
-                CompoundTag syncPacket = new CompoundTag();
-                if (this.actionHandler.updateActions()) {
-                    sync = true;
-                    syncToAll = true;
-                    syncPacket.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(this.asEntity().registryAccess()));
-                }
-                if (this.skillHandler.isDirty()) {
-                    sync = true;
-                    syncPacket.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(this.asEntity().registryAccess()));
-                }
-                if (sync) {
-                    sync(syncPacket, syncToAll);
-                }
             } else {
                 if (getSpecialAttributes().blessingSoundReference != null && !player.isUsingItem()) {
                     //Make sure the blessing sound is stopped when player is not using {@link BlessableItem}. This is necessary because onReleaseUsing is not called for other client players.
                     getSpecialAttributes().blessingSoundReference.stopPlaying();
                     getSpecialAttributes().blessingSoundReference = null;
                 }
-                actionHandler.updateActions();
                 VampirismMod.proxy.handleSleepClient(player);
 
             }
@@ -260,41 +207,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
     }
 
     @Override
-    public void onUpdatePlayer(PlayerTickEvent event) {
-
-    }
-
-    @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        super.deserializeUpdateNBT(provider, nbt);
-        this.actionHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        super.deserializeNBT(provider, nbt);
-        this.actionHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.actionHandler.nbtKey()));
-        this.skillHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.skillHandler.nbtKey()));
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.Provider provider) {
-        var tag = super.serializeUpdateNBT(provider);
-        tag.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(provider));
-        tag.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(provider));
-        return tag;
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag tag = super.serializeNBT(provider);
-        tag.put(this.actionHandler.nbtKey(), this.actionHandler.serializeNBT(provider));
-        tag.put(this.skillHandler.nbtKey(), this.skillHandler.serializeNBT(provider));
-        return tag;
-    }
-
-    @Override
     public void updateMinionAttributes(boolean increasedStats) {
         MinionWorldData.getData(this.player.level()).ifPresent(a -> {
             a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
@@ -302,11 +214,6 @@ public class HunterPlayer extends FactionBasePlayer<IHunterPlayer> implements IH
                 HelperLib.sync(minion);
             });
         });
-    }
-
-    @Override
-    public String nbtKey() {
-        return getAttachedKey().getPath();
     }
 
     public class Disguise implements IDisguise {
