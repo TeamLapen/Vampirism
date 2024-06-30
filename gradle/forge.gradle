@@ -64,7 +64,7 @@ runs {
     configureEach {
         systemProperty 'forge.logging.console.level', 'debug'
 
-        modSources = [project.sourceSets.api, project.sourceSets.lib, project.sourceSets.main]
+        modSources project.sourceSets.api, project.sourceSets.lib, project.sourceSets.main
     }
     client {
         systemProperty 'vampirism_target', 'dev'
