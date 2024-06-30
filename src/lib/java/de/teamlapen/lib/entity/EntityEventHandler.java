@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -48,7 +48,7 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingAttack(@NotNull LivingAttackEvent event) {
+    public void onLivingAttack(@NotNull LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> listener : listeners) {
                 boolean cancel = Optional.ofNullable(event.getEntity().getData(listener)).map(cap -> cap.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);

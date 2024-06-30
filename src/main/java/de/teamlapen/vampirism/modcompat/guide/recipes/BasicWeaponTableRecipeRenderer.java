@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extends IRecipeRenderer.RecipeRendererBase<T> {
 
-    private final SubTexture CRAFTING_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/weapon_table_recipe.png"), 0, 0, 110, 75);
+    private final SubTexture CRAFTING_GRID = new SubTexture(ResourceLocation.fromNamespaceAndPath("vampirismguide", "textures/gui/weapon_table_recipe.png"), 0, 0, 110, 75);
 
     public BasicWeaponTableRecipeRenderer(T recipe) {
         super(recipe);

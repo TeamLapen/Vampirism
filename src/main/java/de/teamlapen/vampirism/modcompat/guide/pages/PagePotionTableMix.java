@@ -29,7 +29,7 @@ import java.util.List;
 
 public class PagePotionTableMix extends Page {
     private final static Logger LOGGER = LogManager.getLogger();
-    private static final SubTexture POTION_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/container/potion_table.png"), 0, 0, 89, 75);
+    private static final SubTexture POTION_GRID = new SubTexture(ResourceLocation.fromNamespaceAndPath("vampirismguide", "textures/gui/container/potion_table.png"), 0, 0, 89, 75);
     private final Component description;
     private final ExtendedPotionMix @NotNull [] recipes;
     private long lastCycle = -1L;

@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -40,8 +41,8 @@ public class GarlicDiffuserBESR extends VampirismBESR<GarlicDiffuserBlockEntity>
             matrixStackIn.translate(-0.5D, 0, -0.5);
             matrixStackIn.pushPose();
 
-            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModItems.ITEM_GARLIC.get()), null, null, 0);
-            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModItems.ITEM_GARLIC.get()), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
+            BakedModel garlic_model = Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(ModBlocks.GARLIC.get()), null, null, 0);
+            Minecraft.getInstance().getItemRenderer().renderModelLists(garlic_model, new ItemStack(ModBlocks.GARLIC.get()), combinedLightIn, combinedOverlayIn, matrixStackIn, vertexConsumer);
             matrixStackIn.popPose();
             matrixStackIn.popPose();
         }

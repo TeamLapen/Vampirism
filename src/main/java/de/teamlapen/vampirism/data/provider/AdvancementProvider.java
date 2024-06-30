@@ -45,7 +45,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
             AdvancementHolder root = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("textures/block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
-                    .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ITEM_GARLIC.get()))
+                    .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.GARLIC.get()))
                     .requirements(AdvancementRequirements.Strategy.OR)
                     .save(consumer, REFERENCE.MODID + ":main/root");
 
@@ -59,7 +59,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_hunter = Advancement.Builder.advancement()
-                    .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, AdvancementType.TASK, true, false, false)
+                    .display(ModBlocks.GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, AdvancementType.TASK, true, false, false)
                     .parent(root)
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/become_hunter");
@@ -77,7 +77,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
             AdvancementHolder max_level = Advancement.Builder.advancement()
-                    .display(ModItems.ITEM_GARLIC.get(), Component.translatable("advancement.vampirism.max_level_hunter"), Component.translatable("advancement.vampirism.max_level_hunter.desc"), null, AdvancementType.GOAL, true, true, true)
+                    .display(ModBlocks.GARLIC.get(), Component.translatable("advancement.vampirism.max_level_hunter"), Component.translatable("advancement.vampirism.max_level_hunter.desc"), null, AdvancementType.GOAL, true, true, true)
                     .parent(stake)
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.level(VReference.HUNTER_FACTION, 14))
                     .rewards(AdvancementRewards.Builder.experience(100))

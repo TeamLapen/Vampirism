@@ -111,6 +111,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.PURPLE_STONE_TILES_WALL.get());
             add(ModBlocks.PURPLE_STONE_TILES_SLAB.get());
             add(ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
+            add(ModBlocks.GARLIC.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -179,7 +180,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), modLoc("item/holy_water_splash_ultimate"));
             put(ModItems.GARLIC_BREAD.get(), modLoc("item/garlic_bread"));
             put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), modLoc("item/alchemical_fire"));
-            put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
             put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
