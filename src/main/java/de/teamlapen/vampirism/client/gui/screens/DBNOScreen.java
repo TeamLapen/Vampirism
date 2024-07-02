@@ -52,11 +52,6 @@ public class DBNOScreen extends Screen {
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
-        graphics.fillGradient(0, 0, this.width, this.height, 1615855616, -1602211792);
-        graphics.pose().pushPose();
-        graphics.pose().scale(2.0F, 2.0F, 2.0F);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2 / 2, 30, 16777215);
-        graphics.pose().popPose();
         if (this.causeOfDeath != null) {
             graphics.drawCenteredString(this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
         }

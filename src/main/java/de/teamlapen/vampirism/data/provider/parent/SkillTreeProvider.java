@@ -31,7 +31,7 @@ public abstract class SkillTreeProvider implements DataProvider {
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput pOutput) {
-        return this.lookupProvider.thenApply(provider -> {
+        return this.lookupProvider.thenCompose(provider -> {
             Set<ResourceLocation> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);

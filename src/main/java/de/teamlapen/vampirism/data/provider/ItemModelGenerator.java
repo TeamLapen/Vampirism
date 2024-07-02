@@ -111,7 +111,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             add(ModBlocks.PURPLE_STONE_TILES_WALL.get());
             add(ModBlocks.PURPLE_STONE_TILES_SLAB.get());
             add(ModBlocks.PURPLE_STONE_TILES_STAIRS.get());
-            add(ModBlocks.GARLIC.get());
         }};
         Set<Item> items = new HashSet<>() {{
             add(ModItems.HUNTER_COAT_CHEST_NORMAL.get());
@@ -191,6 +190,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
             put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
             put(ModItems.MOTHER_CORE.get(), modLoc("item/mother_core"));
+            put(ModBlocks.GARLIC.asItem(), modLoc("item/garlic"));
         }};
 
         blocks.forEach(this::block);
