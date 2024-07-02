@@ -4,9 +4,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.items.*;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
+import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Registry;
@@ -33,7 +37,9 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class VampirismCrossbowItem extends CrossbowItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
@@ -100,7 +106,7 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
-                List<ItemStack> arrows = getShootingProjectiles(crossbow, availableProjectiles);
+                List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
                 this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, angle, shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
@@ -121,9 +127,12 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         }
     }
 
-    protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
-        availableProjectiles.clear();
+
+        if (!ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+            availableProjectiles.clear();
+        }
         return shootingProjectiles;
     }
 

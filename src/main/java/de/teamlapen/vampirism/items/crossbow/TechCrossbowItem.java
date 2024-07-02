@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.ModEnchantmentHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -45,8 +47,12 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
-    protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {
-        return List.of(availableProjectiles.removeFirst());
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
+        if (!ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+            return List.of(availableProjectiles.removeFirst());
+
+        }
+        return List.of(availableProjectiles.getFirst());
     }
 
     @Override

@@ -1,19 +1,18 @@
 package de.teamlapen.vampirism.api;
 
-import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.components.*;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
 import static de.teamlapen.vampirism.api.APIUtil.supplyDataComponent;
 
+/**
+ * This API class does not necessarily contains all data components from Vampirism, but {@link de.teamlapen.vampirism.api.VampirismDataComponents.Keys} contains all keys.
+ */
 @SuppressWarnings({"unused"})
 public class VampirismDataComponents {
 
@@ -44,5 +43,6 @@ public class VampirismDataComponents {
         public static final ResourceLocation SELECTED_AMMUNITION = VResourceLocation.mod( "selected_ammunition");
         public static final ResourceLocation BLOOD_CHARGED = VResourceLocation.mod( "blood_charged");
         public static final ResourceLocation BOTTLE_BLOOD = VResourceLocation.mod( "bottle_blood");
+        public static final ResourceLocation FRUGALITY = VResourceLocation.mod( "frugality");
     }
 }

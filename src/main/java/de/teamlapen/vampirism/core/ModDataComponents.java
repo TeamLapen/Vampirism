@@ -8,9 +8,14 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
+import net.minecraft.world.item.enchantment.ConditionalEffect;
+import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.List;
 
 public class ModDataComponents {
 
@@ -28,6 +33,8 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> TRAINING_CACHE = DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.TRAINING_CACHE.getPath(), (builder) -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedAmmunition>> SELECTED_AMMUNITION = DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.SELECTED_AMMUNITION.getPath(), (builder) -> builder.persistent(SelectedAmmunition.CODEC).networkSynchronized(SelectedAmmunition.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BottleBlood>> BOTTLE_BLOOD = DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BOTTLE_BLOOD.getPath(), (builder) -> builder.persistent(BottleBlood.CODEC).networkSynchronized(BottleBlood.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> FRUGALITY = DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.FRUGALITY.getPath(), (builder) -> builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
 
     static void register(IEventBus eventBus) {
         DATA_COMPONENTS.register(eventBus);
