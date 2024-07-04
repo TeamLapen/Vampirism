@@ -61,6 +61,7 @@
   "client": [
     "client.HumanoidArmorLayerMixin",
     "client.LevelRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.StatsScreenMixin",

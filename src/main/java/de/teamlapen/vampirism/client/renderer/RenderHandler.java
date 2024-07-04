@@ -4,16 +4,20 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttachments;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.items.CrucifixItem;
 import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.util.Helper;
@@ -182,6 +186,14 @@ public class RenderHandler implements ResourceManagerReloadListener {
     public void onRenderHand(@NotNull RenderHandEvent event) {
         if (mc.player != null && mc.player.isAlive() && VampirismPlayerAttributes.get(mc.player).getVampSpecial().bat) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderLivingPost(RenderPlayerEvent.@NotNull Post event)
+    {
+        if (event.getEntity().tickCount % 2 == 0 && IActionHandler.<IVampirePlayer>get(event.getEntity()).map(s -> s.isActionActive(VampireActions.HALF_INVULNERABLE)).orElse(false)) {
+            event.getEntity().level().addParticle(ModParticles.MIST_SMOKE.get(), event.getEntity().getRandomX(0.2), event.getEntity().getY() + event.getEntity().getBbHeight() / 2 + event.getEntity().getRandom().nextDouble() * 0.2f, event.getEntity().getRandomZ(0.2), 0, 0, 0);
         }
     }
 

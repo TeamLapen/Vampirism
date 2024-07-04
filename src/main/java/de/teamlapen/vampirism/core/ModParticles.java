@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -56,6 +57,7 @@ public class ModParticles {
             return GenericParticleOptions.STREAM_CODEC;
         }
     });
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MIST_SMOKE = PARTICLE_TYPES.register("mist_smoke", () -> new SimpleParticleType(true));
 
     static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
