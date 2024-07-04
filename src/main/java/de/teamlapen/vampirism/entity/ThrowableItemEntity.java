@@ -30,6 +30,10 @@ public class ThrowableItemEntity extends ThrowableProjectile implements ItemSupp
         super(ModEntities.THROWABLE_ITEM.get(), thrower, worldIn);
     }
 
+    public ThrowableItemEntity(@NotNull Level worldIn, double pX, double pY, double pZ) {
+        super(ModEntities.THROWABLE_ITEM.get(), pX, pY, pZ, worldIn);
+    }
+
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);

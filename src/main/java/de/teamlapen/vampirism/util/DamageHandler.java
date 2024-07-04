@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.tags.ModActionTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
@@ -142,8 +144,15 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof Player player) {
             IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get(player).getActionHandler();
-            actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE);
-            actionHandler.deactivateAction(VampireActions.VAMPIRE_INVISIBILITY);
+            var tag = switch (strength) {
+                case WEAK -> ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER;
+                case MEDIUM -> ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER;
+                case STRONG -> ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER;
+                default -> null;
+            };
+            if (tag != null) {
+                actionHandler.getActiveActions().stream().filter(action -> IAction.is(action, tag)).forEach(actionHandler::deactivateAction);
+            }
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {

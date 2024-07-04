@@ -78,6 +78,14 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
 
     ISkill<T> asSkill();
 
+    @SuppressWarnings("unchecked")
+    static boolean is(@Nullable Holder<? extends IAction<?>> action, @Nullable TagKey<? extends IAction<?>> tag) {
+        if (action == null) {
+            return false;
+        }
+        return tag != null && action.is((TagKey) tag);
+    }
+
     enum PERM {
         /**
          * The player can use the action

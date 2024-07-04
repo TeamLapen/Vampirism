@@ -4,6 +4,8 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -12,7 +14,9 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -30,7 +34,7 @@ import java.util.List;
  *
  * @author maxanier
  */
-public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem {
+public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem, ProjectileItem {
 
     public HolyWaterSplashBottleItem(TIER tier) {
         super(tier, new Properties());
@@ -102,4 +106,12 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     }
 
+    @Override
+    public Projectile asProjectile(Level pLevel, Position pPos, ItemStack pStack, Direction pDirection) {
+        ThrowableItemEntity entityThrowable = new ThrowableItemEntity(pLevel, pPos.x(), pPos.y(), pPos.z());
+        ItemStack throwStack = pStack.copy();
+        throwStack.setCount(1);
+        entityThrowable.setItem(throwStack);
+        return entityThrowable;
+    }
 }
