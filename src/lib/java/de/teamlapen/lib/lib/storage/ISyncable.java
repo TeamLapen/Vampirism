@@ -25,6 +25,6 @@ public interface ISyncable extends INBTObject {
      * @apiNote This method should only be called on the server side
      */
     @NotNull
-    CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider);
+    CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all);
 
 }

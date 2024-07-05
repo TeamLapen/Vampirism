@@ -258,7 +258,7 @@ public class ServerPayloadHandler {
                         if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
                             //does this cause problems with addons?
                             CompoundTag sync = new CompoundTag();
-                            sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess()));
+                            sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess(), false));
                             HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
                         }
 

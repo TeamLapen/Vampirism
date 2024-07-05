@@ -407,7 +407,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("faction", Optional.of(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow());
         nbt.putInt("level", currentLevel);

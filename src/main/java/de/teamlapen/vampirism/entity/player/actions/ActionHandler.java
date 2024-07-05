@@ -79,7 +79,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     /**
      * If active/cooldown timers have changed and should be synced
      */
-    private boolean dirty = false;
+    private boolean dirty = true;
 
     public ActionHandler(@NotNull T player) {
         this.player = player;
@@ -437,8 +437,8 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
-        if (this.dirty) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+        if (this.dirty || all) {
             return serializeNBT(provider);
         } else {
             return new CompoundTag();

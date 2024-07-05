@@ -168,8 +168,8 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
-        if (!this.dirty) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+        if (!(this.dirty || all)) {
             return new CompoundTag();
         }
         CompoundTag nbt = new CompoundTag();

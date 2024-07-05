@@ -1140,15 +1140,15 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
-        var nbt = super.serializeUpdateNBT(provider);
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+        var nbt = super.serializeUpdateNBT(provider, all);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(provider));
-        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT(provider));
-        nbt.put(this.disguise.nbtKey(), this.disguise.serializeUpdateNBT(provider));
+        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(provider, false));
+        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT(provider, false));
+        nbt.put(this.disguise.nbtKey(), this.disguise.serializeUpdateNBT(provider, false));
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, provider));
         return nbt;
@@ -1246,7 +1246,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (blood > 0) {
             drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
             CompoundTag updatePacket = new CompoundTag();
-            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(entity.registryAccess()));
+            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(entity.registryAccess(), false));
             updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
             sync(updatePacket, true);
             if (player instanceof ServerPlayer) {
@@ -1466,7 +1466,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
             if (!isRemote() && player.isAddedToWorld()) {
                 CompoundTag tag = new CompoundTag();
-                tag.put(KEY_VISION, serializeUpdateNBT(VampirePlayer.this.asEntity().registryAccess()));
+                tag.put(KEY_VISION, serializeUpdateNBT(VampirePlayer.this.asEntity().registryAccess(), false));
                 VampirePlayer.this.sync(tag, false);
             }
         }
@@ -1505,7 +1505,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
             return serializeNBT(provider);
         }
 
@@ -1560,7 +1560,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
             CompoundTag tag = new CompoundTag();
             tag.putString("disguise", Optional.ofNullable(this.disguiseFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(""));
             return tag;

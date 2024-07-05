@@ -80,12 +80,12 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     public void sync() {
         CompoundTag syncTag = new CompoundTag();
         boolean syncAll = false;
-        CompoundTag actionTag = this.actionHandler.serializeUpdateNBT(asEntity().level().registryAccess());
+        CompoundTag actionTag = this.actionHandler.serializeUpdateNBT(asEntity().level().registryAccess(), false);
         if (!actionTag.isEmpty()) {
             syncAll = true;
             syncTag.put(this.actionHandler.nbtKey(), actionTag);
         }
-        CompoundTag skillTag = this.skillHandler.serializeUpdateNBT(asEntity().level().registryAccess());
+        CompoundTag skillTag = this.skillHandler.serializeUpdateNBT(asEntity().level().registryAccess(), false);
         if (!skillTag.isEmpty()) {
             syncTag.put(this.skillHandler.nbtKey(), skillTag);
         }
@@ -150,10 +150,10 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(@NotNull HolderLookup.Provider provider) {
-        var nbt = super.serializeUpdateNBT(provider);
-        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(provider));
-        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(provider));
+    public @NotNull CompoundTag serializeUpdateNBT(@NotNull HolderLookup.Provider provider, boolean all) {
+        var nbt = super.serializeUpdateNBT(provider, all);
+        nbt.put(this.actionHandler.nbtKey(), this.actionHandler.serializeUpdateNBT(provider, false));
+        nbt.put(this.skillHandler.nbtKey(), this.skillHandler.serializeUpdateNBT(provider, false));
         return nbt;
     }
 

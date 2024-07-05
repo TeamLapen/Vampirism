@@ -47,7 +47,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      * Create a sync packet for the given capability instance.
      */
     public static @NotNull ClientboundUpdateEntityPacket create(HolderLookup.Provider provider, @NotNull IAttachedSyncable cap) {
-        return create(cap, cap.serializeUpdateNBT(provider));
+        return create(cap, cap.serializeUpdateNBT(provider, false));
     }
 
     /**
@@ -57,11 +57,15 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      * @param caps   Have to belong to the given entity
      */
     public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, IAttachedSyncable... caps) {
+        return create(entity, false, caps);
+    }
+
+    public static @NotNull ClientboundUpdateEntityPacket create(Mob entity, boolean fullSync, IAttachedSyncable... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
         ClientboundUpdateEntityPacket packet = create(entity.registryAccess(), caps);
-        packet.data = ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess());
+        packet.data = ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess(), fullSync);
         return packet;
     }
 
@@ -71,9 +75,13 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
      * @param caps Have to belong to the same entity
      */
     public static @NotNull ClientboundUpdateEntityPacket create(HolderLookup.Provider provider, IAttachedSyncable @NotNull ... caps) {
+        return create(provider, false, caps);
+    }
+
+    public static @NotNull ClientboundUpdateEntityPacket create(HolderLookup.Provider provider, boolean fullSync, IAttachedSyncable @NotNull ... caps) {
         CompoundTag capsTag = new CompoundTag();
         for (IAttachedSyncable cap : caps) {
-            capsTag.put(cap.getAttachedKey().toString(), cap.serializeUpdateNBT(provider));
+            capsTag.put(cap.getAttachedKey().toString(), cap.serializeUpdateNBT(provider, fullSync));
         }
         return new ClientboundUpdateEntityPacket(caps[0].asEntity().getId(), null, capsTag, false);
     }
@@ -98,7 +106,7 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess()), null, false);
+        return new ClientboundUpdateEntityPacket(entity.getId(), ((ISyncable) entity).serializeUpdateNBT(entity.registryAccess(), false), null, false);
     }
 
     /**
@@ -133,9 +141,9 @@ public class ClientboundUpdateEntityPacket implements CustomPacketPayload {
         }
         if (!capsToSync.isEmpty()) {
             if (entity instanceof ISyncable) {
-                return ClientboundUpdateEntityPacket.create((Mob) entity, capsToSync.toArray(new IAttachedSyncable[0]));
+                return ClientboundUpdateEntityPacket.create((Mob) entity, true, capsToSync.toArray(new IAttachedSyncable[0]));
             } else {
-                return ClientboundUpdateEntityPacket.create(entity.registryAccess(), capsToSync.toArray(new IAttachedSyncable[0]));
+                return ClientboundUpdateEntityPacket.create(entity.registryAccess(), true, capsToSync.toArray(new IAttachedSyncable[0]));
             }
         } else if (entity instanceof ISyncable) {
             return ClientboundUpdateEntityPacket.create(entity);

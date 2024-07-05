@@ -482,7 +482,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
         CompoundTag tag = new CompoundTag();
         if (minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData(provider);
@@ -595,7 +595,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider)}
+     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToWorld()} or if tracking starts before during {@link de.teamlapen.lib.lib.storage.ISyncable#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider, boolean)}
      */
     private void checkoutMinionData(HolderLookup.Provider provider) {
         if (playerMinionController != null && minionData == null) {

@@ -83,7 +83,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     protected void syncProperty(@NotNull ISyncable object, boolean all) {
         CompoundTag tag = new CompoundTag();
-        tag.put(object.nbtKey(), object.serializeUpdateNBT(this.asEntity().registryAccess()));
+        tag.put(object.nbtKey(), object.serializeUpdateNBT(this.asEntity().registryAccess(), false));
         HelperLib.sync(this, tag, player, all);
     }
 
@@ -106,7 +106,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
         return new CompoundTag();
     }
 

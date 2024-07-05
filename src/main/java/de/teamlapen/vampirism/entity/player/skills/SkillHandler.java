@@ -283,8 +283,8 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider) {
-        if (!this.dirty) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+        if (!(this.dirty || all)) {
             return new CompoundTag();
         }
         CompoundTag nbt = new CompoundTag();
