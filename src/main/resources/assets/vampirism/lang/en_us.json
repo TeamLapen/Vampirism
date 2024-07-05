@@ -437,6 +437,8 @@
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_speed.desc": "Increases the movement speed of nearby faction members",
   "action.vampirism.lord_attack_speed.desc": "Increases the attack speed of nearby faction members",
+  "action.vampirism.dark_stalker": "Dark Stalker",
+  "action.vampirism.dark_stalker.desc": "While active move without making a sound",
   "__comment": "skills",
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.creeper_avoided": "Avoided by Creepers",

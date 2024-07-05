@@ -420,7 +420,8 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
             } else {
                 Holder<? extends ILastingAction<T>> action = entry.getKey();
                 ActionEvent.ActionUpdateEvent<T> event = VampirismEventFactory.fireActionUpdateEvent(player, action, newtimer);
-                if ((!event.shouldSkipActionUpdate() && action.value().onUpdate(player)) || event.shouldDeactivation()) {
+                int expectedDuration = expectedDurations.getInt(action);
+                if ((!event.shouldSkipActionUpdate() && action.value().onUpdate(player, expectedDuration - newtimer, expectedDuration)) || event.shouldDeactivation()) {
                     entry.setValue(1); //Value of means they are deactivated next tick and onUpdate is not called again
                 } else {
                     player.asEntity().awardStat(ModStats.ACTION_TIME.get().get(action.value()));

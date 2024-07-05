@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.registries.DeferredAction;
-import de.teamlapen.vampirism.api.registries.DeferredActionRegister;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.registries.DeferredAction;
+import de.teamlapen.vampirism.api.registries.DeferredActionRegister;
 import net.neoforged.bus.api.IEventBus;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -28,6 +28,7 @@ public class VampireActions {
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, RageVampireAction> VAMPIRE_RAGE = ACTIONS.registerAction("vampire_rage", RageVampireAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, InfectAction> INFECT = ACTIONS.registerAction("infect", InfectAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalker> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalker::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

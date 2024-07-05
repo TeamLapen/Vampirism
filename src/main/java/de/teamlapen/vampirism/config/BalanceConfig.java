@@ -187,6 +187,10 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
+    public final ModConfigSpec.BooleanValue vaDarkStalkerEnabled;
+    public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
+    public final ModConfigSpec.IntValue vaDarkStalkerDuration;
+    public final ModConfigSpec.DoubleValue vaDarkStalkerBloodConsumption;
 
     public final ModConfigSpec.IntValue miResourceCooldown;
     public final ModConfigSpec.DoubleValue miResourceCooldownOfflineMult;
@@ -415,7 +419,10 @@ public class BalanceConfig {
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
         vaHissingCooldown = builder.comment("In seconds").defineInRange("hissingCooldown", 60, 0, 10000);
         vaHissingEnabled = builder.define("hissingEnabled", true);
-
+        vaDarkStalkerCooldown = builder.comment("Defined in ticks").defineInRange("darkStalkerCooldown", 1200, 1, Integer.MAX_VALUE);
+        vaDarkStalkerDuration = builder.comment("Defined in ticks").defineInRange("darkStalkerDuration", 600, 1, Integer.MAX_VALUE);
+        vaDarkStalkerEnabled = builder.define("darkStalkerEnabled", true);
+        vaDarkStalkerBloodConsumption = builder.comment("mb blood consumed each tick").defineInRange("darkStalkerBloodConsumption", 1, 0.0, 1000);
 
         builder.category("minions", "mi");
         miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);

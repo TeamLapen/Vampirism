@@ -30,6 +30,7 @@ public class VampirismConfig {
     public static final ServerConfig SERVER;
     public static final CommonConfig COMMON;
     public static final @NotNull BalanceConfig BALANCE;
+    public static final @NotNull ConfigHelper HELPER = new ConfigHelper();
 
     private static final ModConfigSpec clientSpec;
     private static final ModConfigSpec serverSpec;
@@ -107,12 +108,18 @@ public class VampirismConfig {
                 CLIENT.guiLevelOffsetY.set(47); //Temporary workaround to reset incorrect values
             }
         }
+        if (configEvent.getConfig().getSpec() == balanceSpec) {
+            HELPER.onBalanceConfigChanged(configEvent);
+        }
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+        }
+        if (configEvent.getConfig().getSpec() == balanceSpec) {
+            HELPER.onBalanceConfigChanged(configEvent);
         }
     }
 

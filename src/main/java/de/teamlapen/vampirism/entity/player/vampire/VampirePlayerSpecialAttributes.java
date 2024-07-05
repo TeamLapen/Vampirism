@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores special attributes that can be activated by skills or actions.
@@ -20,6 +18,7 @@ public class VampirePlayerSpecialAttributes {
     public int fangType;
     public boolean glowingEyes;
     public boolean isDBNO;
+    public boolean darkStalker;
 
     /**
      * This cancels the render player event.

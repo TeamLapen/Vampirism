@@ -38,7 +38,13 @@ public interface ILastingAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> e
      *
      * @return if true the lasting action is cancelled
      */
-    boolean onUpdate(T player);
+    default boolean onUpdate(T player) {
+        return false;
+    }
+
+    default boolean onUpdate(T player, int duration, int expectedDuration) {
+        return onUpdate(player);
+    }
 
     /**
      * @return if the action's duration should be rendered in the HUD

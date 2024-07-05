@@ -29,6 +29,7 @@ public class TagProvider {
         gen.addProvider(event.includeServer(), new ModEnchantmentProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModFactionProvider(output, future, existingFileHelper));
         gen.addProvider(event.includeServer(), new ModActionTagsProvider(output, future, existingFileHelper));
+        gen.addProvider(event.includeServer(), new ModGameEventProvider(output, future, existingFileHelper));
     }
 
 }

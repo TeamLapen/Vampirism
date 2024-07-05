@@ -18,6 +18,7 @@
     "NoiseGeneratorSettingsMixin",
     "ThrowablePotionMixin",
     "ThrowableProjectileMixin",
+    "VibrationSystemUserMixin",
     "accessor.AbstractContainerMenuAccessor",
     "accessor.ArmorItemAccessor",
     "accessor.AttributeInstanceAccessor",
