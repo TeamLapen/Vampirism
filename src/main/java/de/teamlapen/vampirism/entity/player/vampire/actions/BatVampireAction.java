@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -11,7 +12,7 @@ import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +29,6 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.UUID;
 
 
 public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
@@ -44,26 +44,36 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
         if (player instanceof ServerPlayer) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.BAT);
         }
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
+    public @NotNull IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
         Player player = vampire.asEntity();
-        return !vampire.isGettingSundamage(player.level())
-                && ModItems.UMBRELLA.asItem() != player.getMainHandItem().getItem()
-                && vampire.isGettingGarlicDamage(player.level()) == EnumStrength.NONE
-                && !vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)
-                && !player.isInWater()
-                && !VampirismConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())
-                && (player.getVehicle() == null);
+        if (vampire.isGettingSundamage(player.level())) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_sun"));
+        } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem()) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
+        } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
+        } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
+        } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
+        } else if (player.isInWater()) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_water"));
+        } else if (player.getVehicle() != null) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_vehicle"));
+        } else {
+            return IActionResult.SUCCESS;
+        }
     }
 
     @Override
@@ -85,6 +95,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public void onActivatedClient(@NotNull IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
             updatePlayer((VampirePlayer) vampire, true);
+        }
+        ResourceLocation key = ModRegistries.ACTIONS.getKey(this);
+        AttributeInstance fly = vampire.asEntity().getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
+        if (fly != null && !fly.hasModifier(key)) {
+            fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
         }
     }
 

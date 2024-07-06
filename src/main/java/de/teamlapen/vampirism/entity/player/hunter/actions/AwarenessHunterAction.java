@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.entity.player.hunter.actions;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
@@ -23,8 +20,8 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
-        return !player.getActionHandler().isActionActive(HunterActions.DISGUISE_HUNTER);
+    public @NotNull IActionResult canBeUsedBy(@NotNull IHunterPlayer player) {
+        return IActionResult.otherAction(player.getActionHandler(), HunterActions.DISGUISE_HUNTER);
     }
 
     @Override
@@ -62,8 +59,8 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    protected boolean activate(IHunterPlayer player, ActivationContext context) {
-        return true;
+    protected IActionResult activate(IHunterPlayer player, ActivationContext context) {
+        return IActionResult.SUCCESS;
     }
 
     @Override

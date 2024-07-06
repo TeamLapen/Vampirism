@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -38,7 +39,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(@NotNull IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activate(@NotNull IVampirePlayer player, ActivationContext context) {
         Player shooter = player.asEntity();
         IRefinementHandler<IVampirePlayer> skillHandler = player.getRefinementHandler();
 
@@ -73,7 +74,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
                 createProjectile(shooter, shooter.position(), shooter.getEyeHeight() * 0.9f, getVectorForRotation(shooter.getViewXRot(1.0f), shooter.getViewYRot(1.0f) - 30f), goThrough, directDamage, indirectDamage, speed);
             }
         }
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     private @NotNull DarkBloodProjectileEntity createProjectile(@NotNull Player shooter, @NotNull Vec3 position, double height, @NotNull Vec3 direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {

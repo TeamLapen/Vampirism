@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -14,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
 public class RegenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         applyEffect(vampire);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override

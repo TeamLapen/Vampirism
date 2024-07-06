@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -111,7 +112,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
 
     @Override
     public @NotNull List<Holder<? extends IAction<T>>> getAvailableActionsHolder() {
-        return this.unlockedActions.stream().filter(s -> s.value().canUse(this.player) == IAction.PERM.ALLOWED).toList();
+        return this.unlockedActions.stream().filter(s -> s.value().canUse(this.player).successful()).toList();
     }
 
     @Override
@@ -309,27 +310,28 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
      * @param context Context holding Block/Entity the player was looking at when activating if any
      */
     @Override
-    public IAction.@NotNull PERM toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
+    public @NotNull IActionResult toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
         if (activeTimers.containsKey(action)) {
             deactivateAction((Holder<ILastingAction<T>>) action);
             dirty = true;
-            return IAction.PERM.ALLOWED;
+            return IActionResult.SUCCESS;
         } else if (cooldownTimers.containsKey(action)) {
-            return IAction.PERM.COOLDOWN;
+            return IActionResult.ON_COOLDOWN;
         } else {
-            if (this.player.asEntity().isSpectator()) return IAction.PERM.DISALLOWED;
-            if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
-            if (!isActionAllowedPermission(action)) return IAction.PERM.PERMISSION_DISALLOWED;
+            if (this.player.asEntity().isSpectator()) return IActionResult.RESTRICTED;
+            if (!isActionUnlocked(action)) return IActionResult.NOT_UNLOCKED;
+            if (!isActionAllowedPermission(action)) return IActionResult.DISALLOWED_PERMISSION;
 
-            IAction.PERM r = action.value().canUse(player);
-            if (r == IAction.PERM.ALLOWED) {
+            IActionResult r = action.value().canUse(player);
+            if (r.successful()) {
                 /*
                  * Only lasting actions have a duration, so regular actions will return a duration of -1.
                  */
                 int duration = action.value() instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
                 ActionEvent.ActionActivatedEvent<T> activationEvent = VampirismEventFactory.fireActionActivatedEvent(player, action, action.value().getCooldown(player), duration);
-                if (activationEvent.isCanceled()) return IAction.PERM.DISALLOWED;
-                if (action.value().onActivated(player, context)) {
+                if (activationEvent.isCanceled()) return IActionResult.fail(activationEvent.getCancelMessage());
+                r = action.value().onActivated(player, context);
+                if (r.successful()) {
                     player.asEntity().awardStat(ModStats.ACTION_USED.get().get(action.value()));
                     //Even though lasting actions do not activate their cooldown until they deactivate
                     //we probably want to keep this here so that they are edited by one event.
@@ -345,10 +347,8 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
                     }
                     dirty = true;
                 }
-                return IAction.PERM.ALLOWED;
-            } else {
-                return r;
             }
+            return r;
         }
     }
 

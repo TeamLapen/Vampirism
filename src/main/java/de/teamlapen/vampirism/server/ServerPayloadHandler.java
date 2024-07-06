@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -218,16 +219,9 @@ public class ServerPayloadHandler {
                 Holder<IAction<?>> action = msg.action();
                 if (action != null) {
                     @SuppressWarnings("unchecked")
-                    IAction.PERM r = handler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
-                    switch (r) {
-                        case NOT_UNLOCKED -> player.displayClientMessage(Component.translatable("text.vampirism.action.not_unlocked"), true);
-                        case DISABLED -> player.displayClientMessage(Component.translatable("text.vampirism.action.deactivated_by_serveradmin"), false);
-                        case COOLDOWN -> player.displayClientMessage(Component.translatable("text.vampirism.action.cooldown_not_over"), true);
-                        case DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.disallowed"), true);
-                        case PERMISSION_DISALLOWED -> player.displayClientMessage(Component.translatable("text.vampirism.action.permission_disallowed"), false);
-                        default -> {
-                            //Everything alright
-                        }
+                    IActionResult r = handler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
+                    if (!r.successful()) {
+                        player.displayClientMessage(r.message(), r.sendToStatusBar());
                     }
                 }
             });

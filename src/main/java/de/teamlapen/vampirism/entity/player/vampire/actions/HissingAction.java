@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -24,7 +25,7 @@ public class HissingAction extends DefaultVampireAction {
     }
 
     @Override
-    protected boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
         player.getCommandSenderWorld().getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(10, 10, 10)).forEach(e -> {
@@ -33,7 +34,7 @@ public class HissingAction extends DefaultVampireAction {
                 e.setTarget(null);
             }
         });
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override

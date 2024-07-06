@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -9,6 +10,7 @@ import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,7 +29,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         int dist = VampirismConfig.BALANCE.vaTeleportMaxDistance.get();
         if (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE)) {
@@ -39,7 +41,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 1, 1);
-            return false;
+            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
         }
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
@@ -63,7 +65,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         if (pos == null) {
             player.setPos(ox, oy, oz);
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 1, 1);
-            return false;
+            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
         }
         if (player instanceof ServerPlayer playerMp) {
             playerMp.disconnect();
@@ -78,12 +80,12 @@ public class TeleportVampireAction extends DefaultVampireAction {
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
         player.getCommandSenderWorld().playSound(null, ox, oy, oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
         player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.BAT);
+    public IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+        return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT);
     }
 
     @Override

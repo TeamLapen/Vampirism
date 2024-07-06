@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,9 +18,9 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer player, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer player, ActivationContext context) {
         activate(player);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     protected void activate(@NotNull IVampirePlayer player) {

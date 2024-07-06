@@ -28,19 +28,19 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     /**
      * Can be overridden to check additional requirements
      */
-    public boolean canBeUsedBy(T player) {
-        return true;
+    public IActionResult canBeUsedBy(T player) {
+        return IActionResult.SUCCESS;
     }
 
     @Override
-    public final IAction.@NotNull PERM canUse(@NotNull T player) {
+    public final @NotNull IActionResult canUse(@NotNull T player) {
         if (!isEnabled()) {
-            return IAction.PERM.DISABLED;
+            return IActionResult.DISABLED_CONFIG;
         }
         if (IFaction.is(player.getFaction(), this.factions())) {
-            return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
+            return canBeUsedBy(player);
         } else {
-            throw new IllegalArgumentException("Faction player is not allowed to use action");
+            return IActionResult.DISALLOWED_FACTION;
         }
 
     }
@@ -60,7 +60,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     public abstract boolean isEnabled();
 
     @Override
-    public boolean onActivated(@NotNull T player, ActivationContext context) {
+    public IActionResult onActivated(@NotNull T player, ActivationContext context) {
         if (IFaction.is(player.getFaction(), this.factions())) {
             return activate(player, context);
         } else {
@@ -97,7 +97,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
      *
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    protected abstract boolean activate(T player, ActivationContext context);
+    protected abstract IActionResult activate(T player, ActivationContext context);
 
     private @Nullable ResourceLocation getRegistryName() {
         return VampirismRegistries.ACTION.get().getKey(this);

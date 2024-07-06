@@ -76,7 +76,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         @SuppressWarnings("unchecked")
         Holder<IAction<T>> iActionHolder = (Holder<IAction<T>>) (Object) slot.primarySlotIcon();
         float actionPercentage = actionHandler.getPercentageForAction(iActionHolder);
-        if (iActionHolder.value().canUse(this.player) != IAction.PERM.ALLOWED) {
+        if (!iActionHolder.value().canUse(this.player).successful()) {
             actionPercentage = -1;
         }
         if (actionPercentage == 0) {

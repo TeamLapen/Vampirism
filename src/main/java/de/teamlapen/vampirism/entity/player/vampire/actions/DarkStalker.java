@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -19,10 +20,10 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
     }
 
     @Override
-    protected boolean activate(IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
         ((VampirePlayer) player).getSpecialAttributes().darkStalker = true;
         applyEffect(player);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -15,9 +16,9 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         activate(vampire);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     protected void activate(@NotNull IVampirePlayer player) {

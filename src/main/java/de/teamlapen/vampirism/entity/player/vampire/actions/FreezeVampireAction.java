@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -31,15 +32,15 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean activate(final @NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(final @NotNull IVampirePlayer vampire, ActivationContext context) {
         if (vampire.asEntity().level().dimensionType().ultraWarm()) {
-            return true;
+            return IActionResult.SUCCESS;
         }
         freezeEntities(vampire);
         freezeBlocks(vampire);
         Player player = vampire.asEntity();
         ModParticles.spawnParticlesServer(player.level(), ParticleTypes.SNOWFLAKE, player.getX(), player.getY(), player.getZ(), 60, 7, 4, 7, 0);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     protected void freezeEntities(@NotNull IVampirePlayer vampire) {

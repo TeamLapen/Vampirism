@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.hunter.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -19,14 +20,14 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public boolean activate(@NotNull IHunterPlayer player, ActivationContext context) {
+    public IActionResult activate(@NotNull IHunterPlayer player, ActivationContext context) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IHunterPlayer player) {
-        return !player.getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER);
+    public IActionResult canBeUsedBy(@NotNull IHunterPlayer player) {
+        return IActionResult.otherAction(player.getActionHandler(), HunterActions.AWARENESS_HUNTER);
     }
 
     @Override

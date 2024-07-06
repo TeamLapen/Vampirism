@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.hunter.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -59,9 +60,9 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    protected boolean activate(@NotNull IHunterPlayer player, ActivationContext context) {
+    protected IActionResult activate(@NotNull IHunterPlayer player, ActivationContext context) {
         onUpdate(player);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override

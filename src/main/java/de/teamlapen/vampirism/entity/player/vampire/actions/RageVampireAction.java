@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -16,14 +17,14 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         applyEffects(vampire);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean canBeUsedBy(@NotNull IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.BAT);
+    public IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+        return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT);
     }
 
     @Override

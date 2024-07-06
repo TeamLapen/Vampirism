@@ -150,11 +150,6 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
 
     void resetTimer(@NotNull Holder<? extends IAction<T>> action);
 
-    @Deprecated(forRemoval = true, since = "1.11")
-    default IAction.PERM toggleAction(IAction<T> action, IAction.ActivationContext context) {
-        return toggleAction(RegUtil.holder(action), context);
-    }
-
     /**
      * Toggle the action (server side).
      * If you just want to make sure it is deactivated, call {@link #deactivateAction(ILastingAction)}
@@ -163,7 +158,7 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
      * @param context Context holding Block/Entity the player was looking at when activating if any
      * @return result
      */
-    IAction.PERM toggleAction(Holder<? extends IAction<T>> action, IAction.ActivationContext context);
+    IActionResult toggleAction(Holder<? extends IAction<T>> action, IAction.ActivationContext context);
 
     @Deprecated(forRemoval = true, since = "1.11")
     default void deactivateAction(ILastingAction<T> action) {

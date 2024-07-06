@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -56,10 +57,10 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    protected boolean activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
         ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
         applyEffect(vampire);
-        return true;
+        return IActionResult.SUCCESS;
     }
 
     @Override

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -61,6 +62,8 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
 
         private int cooldown;
         private int duration;
+        @NotNull
+        private Component cancelMessage = Component.translatable("text.vampirism.action.cancelled");
 
         @ApiStatus.Internal
         public ActionActivatedEvent(@NotNull T factionPlayer, @NotNull Holder<IAction<T>> action, int cooldown, int duration) {
@@ -100,6 +103,21 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
          */
         public void setDuration(int duration) {
             this.duration = duration;
+        }
+
+        /**
+         * @return The message that is shown to the player if the event is cancelled
+         */
+        @NotNull
+        public Component getCancelMessage() {
+            return cancelMessage;
+        }
+
+        /**
+         * sets the message that is shown to the player if the event is cancelled
+         * */
+        public void setCancelMessage(@NotNull Component message) {
+            this.cancelMessage = message;
         }
     }
 

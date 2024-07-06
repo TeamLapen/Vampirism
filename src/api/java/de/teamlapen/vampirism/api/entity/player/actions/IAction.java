@@ -26,7 +26,7 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
      *
      * @param player Must be an instance of class that belongs to {@link IAction#getFaction()}
      */
-    PERM canUse(T player);
+    IActionResult canUse(T player);
 
 
     /**
@@ -55,11 +55,11 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     /**
      * Called when the action is activated. Only called server side
      *
-     * @param player  Must be instance of class that belongs to {@link IAction#getFaction()}
+     * @param player  Must be instance of class that belongs to {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#factions()}
      * @param context Holds Block/Entity the player was looking at when activating if any
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    boolean onActivated(T player, ActivationContext context);
+    IActionResult onActivated(T player, ActivationContext context);
 
     /**
      * @return if the action should be shown in the action select screen
