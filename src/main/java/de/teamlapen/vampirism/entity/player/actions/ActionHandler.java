@@ -61,7 +61,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     private final @NotNull Object2IntMap<Holder<? extends ILastingAction<T>>> activeTimers;
     /**
      * Stores the expected cooldown of an action after it was activated.
-     * This is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(IFactionPlayer)} as the cooldown might be modified before activation.
+     * This is used to check the action cooldown instead of {@link de.teamlapen.vampirism.api.entity.player.actions.IAction#getCooldown(de.teamlapen.vampirism.api.entity.player.ISkillPlayer)} as the cooldown might be modified before activation.
      * The values stored here are only changed when the cooldown is added, it is not decremented like the map for cooldown timers, but removed when the action's cooldown is over.
      */
     private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> expectedCooldownTimes;
@@ -179,8 +179,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         cooldownTimers.clear();
         expectedCooldownTimes.clear();
         expectedDurations.clear();
-        if (nbt.contains("actions_active")) //noinspection unchecked
-        {
+        if (nbt.contains("actions_active")) {
             loadTimerMapFromNBT(nbt.getCompound("actions_active"), (Object2IntMap<Holder<? extends IAction<T>>>) (Object) activeTimers);
         }
         if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
@@ -439,6 +438,9 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     @Override
     public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
         if (this.dirty || all) {
+            if (!all) {
+                this.dirty = false;
+            }
             return serializeNBT(provider);
         } else {
             return new CompoundTag();

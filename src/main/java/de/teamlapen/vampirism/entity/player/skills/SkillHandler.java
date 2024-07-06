@@ -298,7 +298,9 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
-        dirty = false;
+        if (!all) {
+            this.dirty = false;
+        }
         return nbt;
     }
 
