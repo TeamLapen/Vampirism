@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -48,7 +47,6 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
@@ -63,7 +61,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -247,7 +244,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.@NotNull Start event) {
         if (event.getEntity() instanceof Player player) {
-            if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get(player).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -434,9 +431,10 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void sleepTimeCheck(@NotNull CanPlayerSleepEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
-            if (event.getLevel().isNight() && event.getProblem() == null) {
+            boolean day = Helper.isDay(event.getLevel());
+            if (!day && event.getProblem() == null) {
                 event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
-            } else if (event.getLevel().isDay() && event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW) {
+            } else if (day && (event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW || event.getProblem() == Player.BedSleepingProblem.OTHER_PROBLEM)) {
                 event.setProblem(null);
             }
         }
@@ -445,7 +443,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void canContinueToSleep(CanContinueSleepingEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
-            boolean day = event.getEntity().level().isDay();
+            boolean day = Helper.isDay(event.getEntity().level());
             if (day && event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW) {
                 event.setContinueSleeping(true);
             } else if (!day) {
@@ -456,7 +454,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void sleepTimeFinish(@NotNull SleepFinishedTimeEvent event) {
-        if (event.getLevel() instanceof ServerLevel && ((ServerLevel) event.getLevel()).isDay()) {
+        if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel())) {
             boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getSleepingPos();
                 return pos.isPresent() && event.getLevel().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
