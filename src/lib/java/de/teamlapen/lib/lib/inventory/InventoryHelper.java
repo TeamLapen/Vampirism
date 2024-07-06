@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +62,7 @@ public class InventoryHelper {
     }
 
     @NotNull
-    public static Optional<Pair<IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull Level world, @NotNull BlockPos pos, @Nullable Direction side) {
+    public static Optional<Pair<net.neoforged.neoforge.items.IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull Level world, @NotNull BlockPos pos, @Nullable Direction side) {
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity()) {
             BlockEntity tile = world.getBlockEntity(pos);
@@ -76,7 +75,7 @@ public class InventoryHelper {
 
 
     public static boolean canMergeStacks(@NotNull ItemStack stack1, @NotNull ItemStack stack2, int invLimit) {
-        return !stack1.isEmpty() && ItemStack.isSameItemSameComponents(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
+        return !stack1.isEmpty() && ItemStack.isSameItemSameComponents(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < Math.min(invLimit, stack1.getMaxStackSize());
     }
 
     /**
