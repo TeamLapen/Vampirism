@@ -114,8 +114,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     public InteractionResultHolder<ItemStack> use(@NotNull Level p_77659_1_, Player p_77659_2_, @NotNull InteractionHand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if (isCharged(itemstack)) {
+            List<ItemStack> originalProjectile = CrossbowItemMixin.getChargedProjectiles(itemstack);
             performShootingMod(p_77659_1_, p_77659_2_, p_77659_3_, itemstack, getShootingPowerMod(itemstack), 1.0F); //call modded shoot function with shooting power
-            setUncharged(p_77659_2_, itemstack); //set uncharged with extra steps
+            setUncharged(p_77659_2_, itemstack, originalProjectile); //set uncharged with extra steps
             return InteractionResultHolder.consume(itemstack);
         } else if (!p_77659_2_.getProjectile(itemstack).isEmpty()) {
             if (!isCharged(itemstack)) {
@@ -238,9 +239,10 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
     }
 
-    protected void setUncharged(Player player, ItemStack stack) {
+    protected void setUncharged(Player player, ItemStack stack, List<ItemStack> originalProjectile) {
         int frugal = isFrugal(stack);
         if (frugal > 0 && player.getRandom().nextInt(Math.max(2, 4- frugal)) == 0) {
+            originalProjectile.forEach(ammo -> CrossbowItemMixin.addChargedProjectile(stack, ammo));
             return;
         }
         setCharged(stack, false);
