@@ -110,7 +110,7 @@ public class InventoryHelper {
     }
 
     public static boolean canMergeStacks(@NotNull ItemStack stack1, @NotNull ItemStack stack2, int invLimit) {
-        return !stack1.isEmpty() && ItemStackUtil.stackEqualExact(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
+        return !stack1.isEmpty() && ItemStack.isSameItemSameTags(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < Math.min(invLimit, stack1.getMaxStackSize());
     }
 
     /**

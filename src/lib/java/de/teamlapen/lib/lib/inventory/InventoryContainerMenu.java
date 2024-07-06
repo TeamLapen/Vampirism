@@ -159,7 +159,7 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
 
         @Override
         public int getMaxStackSize(@NotNull ItemStack stack) {
-            return info.stackLimit;
+            return Math.min(stack.getMaxStackSize(), info.stackLimit);
         }
 
         @Override
