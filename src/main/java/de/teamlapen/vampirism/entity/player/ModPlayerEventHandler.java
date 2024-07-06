@@ -461,7 +461,11 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void sleepTimeCheck(@NotNull SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getEntity())) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().level().getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getEntity().level().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+            event.getSleepingLocation().ifPresent((blockPos -> {
+                if (event.getEntity().level().getBlockState(blockPos).getBlock() instanceof CoffinBlock) {
+                    event.setResult(Helper.isDay(event.getEntity().level()) ? Event.Result.ALLOW : Event.Result.DENY);
+                }
+            }));
         }
         if (Helper.isHunter(event.getEntity())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getEntity().getCommandSenderWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getEntity().getCommandSenderWorld().isDay() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
