@@ -1,7 +1,7 @@
 {
 	"credit": "By Grid and FoxPrince",
 	"textures": {
-		"particle": "vampirism:block/weapon_table",
+		"particle": "vampirism:block/weapon_table_hammer",
 		"potion": "vampirism:item/blood_bottle_9"
 	},
 	"render_type": "minecraft:cutout",
