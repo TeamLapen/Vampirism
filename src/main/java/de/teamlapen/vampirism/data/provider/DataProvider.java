@@ -43,5 +43,6 @@ public class DataProvider {
         generator.addProvider(event.includeServer(), new SkillTreeProvider(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new DataMapsProvider(packOutput, lookupProviderFuture));
         generator.addProvider(event.includeServer(), new LootModifierGenerator(packOutput, lookupProviderFuture));
+        generator.addProvider(event.includeClient(), new SoundDefinitionProvider(packOutput, existingFileHelper));
     }
 }
