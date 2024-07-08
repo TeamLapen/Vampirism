@@ -42,6 +42,13 @@
     ],
     "subtitle": "subtitles.vampirism.boiling"
   },
+  "block.bubbles": {
+    "sounds": [
+      "vampirism:reserved/block/bubbles_1",
+      "vampirism:reserved/block/bubbles_2",
+      "vampirism:reserved/block/bubbles_3"
+    ]
+  },
   "block.grinder": {
     "sounds": [
       "vampirism:cc/block/grinder"
@@ -215,6 +222,16 @@
     ],
     "subtitle": "subtitles.vampirism.entity.vampire_scream"
   },
+  "event.raid_failed": {
+    "sounds": [
+      "vampirism:reserved/event/raid_failed"
+    ]
+  },
+  "event.raid_won": {
+    "sounds": [
+      "vampirism:reserved/event/raid_won"
+    ]
+  },
   "fx.blood_projectile_hit": {
     "sounds": [
       "vampirism:reserved/fx/blood_projectile_hit"
@@ -226,6 +243,11 @@
       "vampirism:reserved/fx/freeze"
     ],
     "subtitle": "subtitles.vampirism.freeze"
+  },
+  "fx.level_up": {
+    "sounds": [
+      "vampirism:reserved/fx/level_up"
+    ]
   },
   "fx.mother_death": {
     "sounds": [
@@ -248,6 +270,13 @@
       "vampirism:reserved/fx/teleport2"
     ],
     "subtitle": "subtitles.vampirism.teleport_here"
+  },
+  "fx.unlock_skills": {
+    "sounds": [
+      "vampirism:reserved/fx/unlock_skills_1",
+      "vampirism:reserved/fx/unlock_skills_2",
+      "vampirism:reserved/fx/unlock_skills_3"
+    ]
   },
   "task_complete": {
     "sounds": [

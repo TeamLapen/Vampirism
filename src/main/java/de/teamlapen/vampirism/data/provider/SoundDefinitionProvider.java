@@ -45,5 +45,10 @@ public class SoundDefinitionProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.REMAINS_DEFENDER_HURT, definition().subtitle("subtitles.vampirism.remains_defender.hit").with(sound(mc("block/amethyst/step1")), sound(mc("block/amethyst/step2")), sound(mc("block/amethyst/step3")), sound(mc("block/amethyst/step4")), sound(mc("block/amethyst/step5")), sound(mc("block/amethyst/step6")), sound(mc("block/amethyst/step7")), sound(mc("block/amethyst/step8")), sound(mc("block/amethyst/step9")), sound(mc("block/amethyst/step10")), sound(mc("block/amethyst/step11")), sound(mc("block/amethyst/step12"))));
         this.add(ModSounds.REMAINS_DEATH, definition().subtitle("subtitles.vampirism.remains.death").with(sound(mod("reserved/block/remains_destroyed"))));
         this.add(ModSounds.REMAINS_HURT, definition().subtitle("subtitles.vampirism.remains.hurt").with(sound(mc("block/rooted_dirt/step1")).volume(0.8), sound(mc("block/rooted_dirt/step2")).volume(0.8), sound(mc("block/rooted_dirt/step3")).volume(0.8), sound(mc("block/rooted_dirt/step4")).volume(0.8), sound(mc("block/rooted_dirt/step5")).volume(0.8), sound(mc("block/rooted_dirt/step6")).volume(0.8)));
+        this.add(ModSounds.RAID_WON, definition().with(sound(mod("reserved/event/raid_won"))));
+        this.add(ModSounds.RAID_FAILED, definition().with(sound(mod("reserved/event/raid_failed"))));
+        this.add(ModSounds.LEVEL_UP, definition().with(sound(mod("reserved/fx/level_up"))));
+        this.add(ModSounds.BUBBLES, definition().with(sound(mod("reserved/block/bubbles_1")), sound(mod("reserved/block/bubbles_2")), sound(mod("reserved/block/bubbles_3"))));
+        this.add(ModSounds.UNLOCK_SKILLS, definition().with(sound(mod("reserved/fx/unlock_skills_1")), sound(mod("reserved/fx/unlock_skills_2")), sound(mod("reserved/fx/unlock_skills_3"))));
     }
 }

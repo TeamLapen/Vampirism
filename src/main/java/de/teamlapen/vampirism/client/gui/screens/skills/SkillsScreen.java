@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
@@ -254,7 +255,7 @@ public class SkillsScreen extends Screen {
         if (selected != null) {
             if (canUnlockSkill(selected)) {
                 VampirismMod.proxy.sendToServer(new ServerboundUnlockSkillPacket(selected));
-                playSoundEffect(SoundEvents.PLAYER_LEVELUP, 0.7F);
+                playSoundEffect(ModSounds.UNLOCK_SKILLS.get(), 0.7F);
             } else {
                 playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
             }
@@ -266,6 +267,6 @@ public class SkillsScreen extends Screen {
     }
 
     private void playSoundEffect(@NotNull SoundEvent event, float pitch) {
-        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, 1.0F));
+        this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, pitch));
     }
 }

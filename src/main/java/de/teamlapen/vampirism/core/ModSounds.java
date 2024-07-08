@@ -51,6 +51,11 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_DEFENDER_HURT = create("entity.remains_defender.hit");
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_DEATH = create("entity.remains.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_HURT = create("entity.remains.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLES = create("block.bubbles");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RAID_FAILED = create("event.raid_failed");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RAID_WON = create("event.raid_won");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LEVEL_UP = create("fx.level_up");
+    public static final DeferredHolder<SoundEvent, SoundEvent> UNLOCK_SKILLS = create("fx.unlock_skills");
 
 
     static void register(IEventBus bus) {

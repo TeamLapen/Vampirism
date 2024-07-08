@@ -18,15 +18,13 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModAttachments;
-import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModTaskTags;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.misc.VampirismLogger;
+import de.teamlapen.vampirism.network.ClientboundPlaySoundEventPacket;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
@@ -362,10 +360,12 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         this.checkSkillTreeLocks();
         updateCache();
         notifyFaction(old, oldLevel);
-        if (this.player instanceof ServerPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
+        if (this.player instanceof ServerPlayer serverPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
             if (old == currentFaction) {
+                serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(ModSounds.LEVEL_UP));
                 VampirismLogger.info(VampirismLogger.LEVEL, "{} has new faction level {} {}, was {}", this.player.getName().getString(), currentFaction.getRegisteredName(), currentLevel, oldLevel);
             } else if (!IFaction.is(currentFaction, ModFactions.NEUTRAL)) {
+                serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(ModSounds.LEVEL_UP));
                 VampirismLogger.info(VampirismLogger.LEVEL, "{} is now in faction {} {}", this.player.getName().getString(), currentFaction.getRegisteredName(), currentLevel);
             } else {
                 VampirismLogger.info(VampirismLogger.LEVEL, "{} has now no level", this.player.getName().getString());

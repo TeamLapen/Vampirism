@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.inventory.VampirismMenu;
-import de.teamlapen.vampirism.inventory.diffuser.PlayerOwnedMenu;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.network.packet.fog.ClientboundAddFogEmitterPacket;
 import de.teamlapen.vampirism.network.packet.fog.ClientboundRemoveFogEmitterPacket;
@@ -22,10 +21,8 @@ import de.teamlapen.vampirism.world.fog.FogLevel;
 import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -115,5 +112,13 @@ public class ClientPayloadHandler {
 
     public static void handleRemoveFogEmitterPacket(ClientboundRemoveFogEmitterPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> FogLevel.get(context.player().level()).remove(msg.position(), msg.tmp()));
+    }
+
+    public static void handlePlaySoundEventPacket(ClientboundPlaySoundEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            SimpleSoundInstance simpleSoundInstance = SimpleSoundInstance.forAmbientAddition(msg.soundEvent().value());
+            Minecraft.getInstance().getSoundManager().play(simpleSoundInstance);
+            context.player().level().playLocalSound(context.player(), msg.soundEvent().value(), SoundSource.AMBIENT, 1,1);
+        });
     }
 }

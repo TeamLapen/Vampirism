@@ -31,6 +31,7 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.network.ClientboundPlaySoundEventPacket;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
@@ -839,17 +840,23 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private void applyVictoryBonus(boolean attackWin) {
         for (Player player : level.players()) {
-            if (!player.isSpectator() && this.getVillageArea().contains(player.position())) {
-                if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFaction(player), (attackWin ? this.capturingFaction : this.controllingFaction))) {
+            if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isSpectator() && this.getVillageArea().contains(serverPlayer.position())) {
+                Holder<? extends IFaction<?>> playerFaction = VampirismAPI.factionRegistry().getFaction(serverPlayer);
+                if (!serverPlayer.isSpectator() && IFaction.is(playerFaction, (attackWin ? this.capturingFaction : this.controllingFaction))) {
                     if (!attackWin) {
-                        player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel - 1, 0), false, false, true));
+                        serverPlayer.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel - 1, 0), false, false, true));
                     }
-                    player.awardStat(ModStats.WIN_VILLAGE_CAPTURE.get());
+
+                    serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(ModSounds.RAID_WON));
+
+                    serverPlayer.awardStat(ModStats.WIN_VILLAGE_CAPTURE.get());
                     if (attackWin) {
-                        player.awardStat(ModStats.CAPTURE_VILLAGE.get());
+                        serverPlayer.awardStat(ModStats.CAPTURE_VILLAGE.get());
                     } else {
-                        player.awardStat(ModStats.DEFEND_VILLAGE.get());
+                        serverPlayer.awardStat(ModStats.DEFEND_VILLAGE.get());
                     }
+                } else if (IFaction.is(playerFaction, (!attackWin ? this.capturingFaction : this.controllingFaction))) {
+                    serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(ModSounds.RAID_FAILED));
                 }
             }
         }
