@@ -14,11 +14,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -27,7 +25,7 @@ import java.util.List;
 /**
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe, IShapedRecipe<CraftingInput> {
+public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe {
     protected final static int MAX_WIDTH = 4;
     protected final static int MAX_HEIGHT = 4;
 

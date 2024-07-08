@@ -27,7 +27,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -104,27 +104,27 @@ public class ModEntities {
         CONDITIONS.register(bus);
     }
 
-    static void onRegisterSpawns(@NotNull SpawnPlacementRegisterEvent event) {
-        event.register(ADVANCED_HUNTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(ADVANCED_VAMPIRE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(BLINDING_BAT.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlindingBatEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(DUMMY_CREATURE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_CREATURE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_SHEEP.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedSheepEntity::checkConvertedSheepSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_COW.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCowEntity::checkConvertedCowSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(HUNTER_TRAINER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(HUNTER_TRAINER_DUMMY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(VAMPIRE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(VAMPIRE_BARON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicateBaron, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(HUNTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(VILLAGER_ANGRY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(VILLAGER_CONVERTED.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_HORSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedHorseEntity::checkConvertedHorseSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_DONKEY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedDonkeyEntity::checkConvertedDonkeySpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_MULE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedMuleEntity::checkConvertedMuleSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_FOX.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedFoxEntity::checkConvertedFoxSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_GOAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedGoatEntity::checkConvertedGoatSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(CONVERTED_CAMEL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCamelEntity::checkConvertedCamelSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+    static void onRegisterSpawns(@NotNull RegisterSpawnPlacementsEvent event) {
+        event.register(ADVANCED_HUNTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ADVANCED_VAMPIRE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(BLINDING_BAT.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlindingBatEntity::spawnPredicate, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(DUMMY_CREATURE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_CREATURE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_SHEEP.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedSheepEntity::checkConvertedSheepSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_COW.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCowEntity::checkConvertedCowSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(HUNTER_TRAINER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(HUNTER_TRAINER_DUMMY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(VAMPIRE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(VAMPIRE_BARON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicateBaron, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(HUNTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(VILLAGER_ANGRY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(VILLAGER_CONVERTED.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_HORSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedHorseEntity::checkConvertedHorseSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_DONKEY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedDonkeyEntity::checkConvertedDonkeySpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_MULE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedMuleEntity::checkConvertedMuleSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_FOX.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedFoxEntity::checkConvertedFoxSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_GOAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedGoatEntity::checkConvertedGoatSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_CAMEL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ConvertedCamelEntity::checkConvertedCamelSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
     }
 
     static void onRegisterEntityTypeAttributes(@NotNull EntityAttributeCreationEvent event) {
