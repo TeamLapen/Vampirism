@@ -56,7 +56,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "vampirism:item_garlic",
+          "name": "vampirism:garlic",
           "weight": 5
         },
         {

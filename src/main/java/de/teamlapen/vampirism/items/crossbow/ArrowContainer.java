@@ -64,7 +64,8 @@ public class ArrowContainer extends Item implements IArrowContainer {
     public void addArrows(ItemStack container, List<ItemStack> arrowStacks) {
         ArrayList<ItemStack> arrows = new ArrayList<>(getArrows(container));
         Iterator<ItemStack> iterator = arrowStacks.iterator();
-        for(var stack = iterator.next(); iterator.hasNext();) {
+        while (iterator.hasNext()) {
+            ItemStack stack = iterator.next();
             if (arrows.size() >= maxCount) break;
             arrows.add(stack);
             iterator.remove();
@@ -141,7 +142,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
             }
             List<ItemStack> arrows = new ArrayList<>();
             ItemStack copy = otherStack.copy();
-            copy.setCount(i);
+            copy.setCount(1);
             for (int j = 0; j < i; j++) {
                 arrows.add(copy.copy());
             }

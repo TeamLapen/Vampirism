@@ -57,7 +57,7 @@ public class DataMapsProvider extends DataMapProvider {
 
     protected void gatherCompostables(Builder<Compostable, Item> compostables) {
         compostables.add((Holder<Item>) (Object)ModBlocks.VAMPIRE_ORCHID, new Compostable(0.65F), false);
-        compostables.add(ModItems.ITEM_GARLIC, new Compostable(0.65f), false);
+        compostables.add((Holder<Item>) (Object)ModBlocks.GARLIC, new Compostable(0.65f), false);
     }
 
     @SuppressWarnings("deprecation")

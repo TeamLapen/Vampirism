@@ -67,6 +67,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
@@ -149,10 +150,8 @@ public class ModPlayerEventHandler {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
-                    event.setNewEyeHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 } else if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isDBNO) {
-                    event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f));
-                    event.setNewEyeHeight(0.725f);
+                    event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f).withEyeHeight(0.725f));
                 }
             }
         }
@@ -290,7 +289,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onLivingAttack(@NotNull LivingAttackEvent event) {
+    public void onLivingAttack(@NotNull LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             if (event.getEntity().isAlive() && !FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
@@ -318,18 +317,18 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onLivingHurt(@NotNull LivingHurtEvent event) {
-        DamageSource d = event.getSource();
-        if (!d.is(DamageTypeTags.WITCH_RESISTANT_TO) && !d.is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player) {
+    public void onLivingHurt(@NotNull LivingDamageEvent.Pre event) {
+        DamageContainer d = event.getContainer();
+        if (!d.getSource().is(DamageTypeTags.WITCH_RESISTANT_TO) && !d.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player) {
             if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().bat) {
-                event.setAmount(event.getAmount() * 2);
+                d.setNewDamage(event.getContainer().getNewDamage() * 2);
             }
         }
 
         // reduce damage dor vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
             float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
-            event.setAmount(event.getAmount() * (1-mod));
+            d.setNewDamage(d.getNewDamage() * (1 - mod));
         }
     }
 

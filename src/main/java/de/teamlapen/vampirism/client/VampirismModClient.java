@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
-import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
@@ -49,6 +47,7 @@ public class VampirismModClient {
         ClientRegistryHandler.init(modEventBus);
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
+        this.modEventBus.register(this);
 
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);

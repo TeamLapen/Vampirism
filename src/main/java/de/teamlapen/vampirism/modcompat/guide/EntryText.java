@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.modcompat.guide;
 import de.maxanier.guideapi.api.IPage;
 import de.maxanier.guideapi.entry.EntryResourceLocation;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 

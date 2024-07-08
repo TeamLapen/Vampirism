@@ -79,7 +79,7 @@ public class ModPotions {
 
     static void registerPotionMixes(RegisterBrewingRecipesEvent event) {
         registerPotionMixes();
-        event.getBuilder().addMix(Potions.WATER, ModItems.ITEM_GARLIC.get(), GARLIC);
+        event.getBuilder().addMix(Potions.WATER, ModBlocks.GARLIC.get().asItem(), GARLIC);
     }
 
     private static void registerPotionMixes() {

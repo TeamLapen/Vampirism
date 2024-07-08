@@ -14,7 +14,7 @@
       "conditions": {
         "items": [
           {
-            "items": "vampirism:item_garlic"
+            "items": "vampirism:garlic"
           }
         ]
       },

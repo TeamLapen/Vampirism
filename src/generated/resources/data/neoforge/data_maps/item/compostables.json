@@ -1,6 +1,6 @@
 {
   "values": {
-    "vampirism:item_garlic": {
+    "vampirism:garlic": {
       "chance": 0.65
     },
     "vampirism:vampire_orchid": {
