@@ -85,7 +85,6 @@ public class VampirismCreativeTab {
             addItem(ITEM_TENT);
             addItem(ITEM_TENT_SPAWNER);
 
-            addItem(ITEM_GARLIC);
             addItem(PURIFIED_GARLIC);
             addItem(PURE_SALT_WATER);
             addItem(PURE_SALT);
@@ -141,6 +140,7 @@ public class VampirismCreativeTab {
             addBlock(POTION_TABLE);
             addBlock(MED_CHAIR);
             addBlock(ALCHEMY_TABLE);
+            addBlock(GARLIC);
 
             addBuildingBlocks();
             addPlantBlocks();

@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -46,6 +47,7 @@ import de.teamlapen.vampirism.world.BloodConversionRegistry;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -223,7 +225,6 @@ public class VampirismMod {
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
         event.enqueueWork(ModVillage::villagerTradeSetup);
-        event.enqueueWork(ModTiles::registerTileExtensionsUnsafe);
         event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
         TelemetryCollector.execute();
     }

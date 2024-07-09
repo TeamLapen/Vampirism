@@ -5,18 +5,15 @@ import de.teamlapen.vampirism.blockentity.*;
 import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
-import de.teamlapen.vampirism.mixin.accessor.TileEntityTypeAccessor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class ModTiles {
@@ -51,21 +48,9 @@ public class ModTiles {
         return BlockEntityType.Builder.of(factoryIn, blocks).build(null);
     }
 
-    public static void registerTileExtensionsUnsafe() {
-        Set<Block> blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.SIGN).getValidBlocks());
-        blocks.add(ModBlocks.DARK_SPRUCE_SIGN.get());
-        blocks.add(ModBlocks.CURSED_SPRUCE_SIGN.get());
-        blocks.add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get());
-        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
-        ((TileEntityTypeAccessor) BlockEntityType.SIGN).setValidBlocks(blocks);
-
-        blocks = new HashSet<>(((TileEntityTypeAccessor) BlockEntityType.HANGING_SIGN).getValidBlocks());
-        blocks.add(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
-        blocks.add(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
-        blocks.add(ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get());
-        blocks.add(ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
-        ((TileEntityTypeAccessor) BlockEntityType.HANGING_SIGN).setValidBlocks(blocks);
-
+    static void registerTileExtensions(BlockEntityTypeAddBlocksEvent event) {
+        event.modify(BlockEntityType.SIGN, ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get());
+        event.modify(BlockEntityType.HANGING_SIGN, ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
     }
 
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -70,6 +71,6 @@ public class GarlicBlock extends CropBlock {
     @NotNull
     @Override
     protected ItemLike getBaseSeedId() {
-        return ModItems.ITEM_GARLIC.get();
+        return ModBlocks.GARLIC;
     }
 }

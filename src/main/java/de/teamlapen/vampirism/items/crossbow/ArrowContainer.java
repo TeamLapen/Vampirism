@@ -141,7 +141,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
             }
             List<ItemStack> arrows = new ArrayList<>();
             ItemStack copy = otherStack.copy();
-            copy.setCount(i);
+            copy.setCount(1);
             for (int j = 0; j < i; j++) {
                 arrows.add(copy.copy());
             }

@@ -179,7 +179,6 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), modLoc("item/holy_water_splash_ultimate"));
             put(ModItems.GARLIC_BREAD.get(), modLoc("item/garlic_bread"));
             put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), modLoc("item/alchemical_fire"));
-            put(ModItems.ITEM_GARLIC.get(), modLoc("item/garlic"));
             put(ModBlocks.MED_CHAIR.get().asItem(), modLoc("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), modLoc("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), modLoc("item/vampire_book"));
@@ -191,6 +190,7 @@ public class ItemModelGenerator extends BaseItemModelGenerator {
             put(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), modLoc("item/dark_spruce_hanging_sign"));
             put(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), modLoc("item/cursed_spruce_hanging_sign"));
             put(ModItems.MOTHER_CORE.get(), modLoc("item/mother_core"));
+            put(ModBlocks.GARLIC.asItem(), modLoc("item/garlic"));
             put(ModBlocks.VAMPIRE_SOUL_LANTERN.asItem(), modLoc("item/vampire_soul_lantern"));
         }};
 

@@ -89,7 +89,7 @@ public class LootTablesProvider {
                     .withPool(LootPool.lootPool().when(LootItemKilledByPlayerCondition.killedByPlayer())
                             .setRolls(UniformGenerator.between(0, 1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(4))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(4).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1))))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(4).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1))))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get()).setWeight(3))
                             .add(LootItem.lootTableItem(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get()).setWeight(1))
                             .add(LootItem.lootTableItem(ModItems.PURE_SALT_WATER.get()).setWeight(4).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1))).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
@@ -178,7 +178,7 @@ public class LootTablesProvider {
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 9))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(40))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(40)))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(40)))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(50).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(95)))
@@ -279,7 +279,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(Items.POTATO).setWeight(10))
                             .add(LootItem.lootTableItem(Items.CARROT).setWeight(10))
                             .add(LootItem.lootTableItem(Items.APPLE).setWeight(10))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(5))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(5))
                             .add(LootItem.lootTableItem(ModItems.GARLIC_BREAD.get()).setWeight(5))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(5))
                             .add(LootItem.lootTableItem(Items.EMERALD).setWeight(5))
@@ -337,7 +337,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(20))
                             .add(LootItem.lootTableItem(Items.GOLD_BLOCK).setWeight(10))
                             .add(LootItem.lootTableItem(ModItems.GARLIC_BREAD.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.OBLIVION_POTION.get()).setWeight(10))
                             .add(LootItem.lootTableItem(ModItems.ITEM_ALCHEMICAL_FIRE.get()).setWeight(15))
                     )
@@ -361,7 +361,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(20))
                             .add(LootItem.lootTableItem(Items.GOLD_BLOCK).setWeight(10))
                             .add(LootItem.lootTableItem(ModItems.GARLIC_BREAD.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.OBLIVION_POTION.get()).setWeight(10))
                             .add(LootItem.lootTableItem(ModItems.ITEM_ALCHEMICAL_FIRE.get()).setWeight(15))
                     )
@@ -439,10 +439,10 @@ public class LootTablesProvider {
             this.dropSelf(ModBlocks.FIRE_PLACE.get());
             this.add(ModBlocks.GARLIC.get(), applyExplosionDecay(ModBlocks.GARLIC.get(), LootTable.lootTable()
                     .withPool(LootPool.lootPool()
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get())))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get())))
                     .withPool(LootPool.lootPool()
                             .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE), 0.5714286F, 3))))));
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE), 0.5714286F, 3))))));
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
             this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
@@ -615,7 +615,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.ABANDONED_MINESHAFT, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(15).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1f, 1f))))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(5).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(40)))
@@ -643,7 +643,7 @@ public class LootTablesProvider {
             );
             consumer.accept(ModLootTables.DESERT_PYRAMID, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(15))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(15))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.6f, 0.6f))))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(8).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(60)))
@@ -654,7 +654,7 @@ public class LootTablesProvider {
             );
             consumer.accept(ModLootTables.JUNGLE_TEMPLE, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(20))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1f, 1f))))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(20).apply(AddBookNbtFunction.builder()))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
@@ -678,7 +678,7 @@ public class LootTablesProvider {
             );
             consumer.accept(ModLootTables.STRONGHOLD_CORRIDOR, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
-                            .add(LootItem.lootTableItem(ModItems.ITEM_GARLIC.get()).setWeight(50))
+                            .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(50))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(20).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(27)))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))

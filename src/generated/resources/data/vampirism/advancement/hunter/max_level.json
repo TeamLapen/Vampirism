@@ -18,7 +18,7 @@
     "hidden": true,
     "icon": {
       "count": 1,
-      "id": "vampirism:item_garlic"
+      "id": "vampirism:garlic"
     },
     "title": {
       "translate": "advancement.vampirism.max_level_hunter"

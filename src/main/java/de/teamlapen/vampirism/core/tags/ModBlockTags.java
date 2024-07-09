@@ -30,8 +30,13 @@ public class ModBlockTags {
     public static final TagKey<Block> VAMPIRE_BEACON_BASE_BLOCKS = tag("vampire_beacon_base_blocks");
     public static final TagKey<Block> VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS = tag("vampire_beacon_base_enhanced_blocks");
     public static final TagKey<Block> CREEPER_REPELLENT = tag("creeper_repellent");
+    public static final TagKey<Block> GARLIC = common("crops/garlic");
 
     private static @NotNull TagKey<Block> tag(@NotNull String name) {
         return BlockTags.create(VResourceLocation.mod(name));
+    }
+
+    private static @NotNull TagKey<Block> common(@NotNull String name) {
+        return BlockTags.create(VResourceLocation.common(name));
     }
 }

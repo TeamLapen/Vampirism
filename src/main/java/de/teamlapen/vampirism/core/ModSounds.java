@@ -26,7 +26,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_VAMPIRE_SCREAM = create("entity.vampire_scream");
     public static final DeferredHolder<SoundEvent, SoundEvent> VAMPIRE_BITE = create("entity.vampire_bite");
     public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_BLOOD_DRIPPING = create("ambient.blood_dripping");
-    public static final DeferredHolder<SoundEvent, SoundEvent> COFFIN_LID = create("coffin_lid");
+    public static final DeferredHolder<SoundEvent, SoundEvent> COFFIN_LID = create("block.coffin_lid");
     public static final DeferredHolder<SoundEvent, SoundEvent> BAT_SWARM = create("entity.bat_swarm");
     public static final DeferredHolder<SoundEvent, SoundEvent> BOILING = create("block.boiling");
     public static final DeferredHolder<SoundEvent, SoundEvent> GRINDER = create("block.grinder");

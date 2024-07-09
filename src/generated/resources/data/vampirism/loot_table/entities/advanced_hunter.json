@@ -27,7 +27,7 @@
               "function": "minecraft:enchanted_count_increase"
             }
           ],
-          "name": "vampirism:item_garlic",
+          "name": "vampirism:garlic",
           "weight": 4
         },
         {

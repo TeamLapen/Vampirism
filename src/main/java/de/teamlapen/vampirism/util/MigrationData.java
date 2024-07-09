@@ -84,7 +84,7 @@ public class MigrationData {
         mapping.remap("vampirism:obsidian_armor_chest_ultimate", "vampirism:hunter_coat_chest_ultimate");
         mapping.remap("vampirism:obsidian_armor_legs_ultimate", "vampirism:hunter_coat_legs_ultimate");
         mapping.remap("vampirism:obsidian_armor_feet_ultimate", "vampirism:hunter_coat_feet_ultimate");
-
+        mapping.remap("vampirism:item_garlic", "vampirism:garlic");
 
     }
 

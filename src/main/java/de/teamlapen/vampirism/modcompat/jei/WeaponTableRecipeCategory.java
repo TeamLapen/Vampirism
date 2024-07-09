@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.client.gui.screens.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
 import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -28,7 +29,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -133,8 +133,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             }
         }
 
-        int height = recipe instanceof IShapedRecipe<?> shaped ? shaped.getHeight() : 4;
-        int width = recipe instanceof IShapedRecipe<?> shaped ? shaped.getWidth() : 4;
+        int height = recipe instanceof ShapedWeaponTableRecipe shaped ? shaped.getHeight() : 4;
+        int width = recipe instanceof ShapedWeaponTableRecipe shaped ? shaped.getWidth() : 4;
 
         for (int i = 0; i < inputs.size(); i++) {
             int index = getCraftingIndex(i, width, height);

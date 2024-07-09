@@ -30,7 +30,7 @@ import java.util.List;
 
 public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRendererBase<AlchemicalCauldronRecipe> {
 
-    private final SubTexture CRAFTING_GRID = new SubTexture(new ResourceLocation("vampirismguide", "textures/gui/alchemical_cauldron_recipe.png"), 0, 0, 110, 75);
+    private final SubTexture CRAFTING_GRID = new SubTexture(ResourceLocation.fromNamespaceAndPath("vampirismguide", "textures/gui/alchemical_cauldron_recipe.png"), 0, 0, 110, 75);
 
     public AlchemicalCauldronRecipeRenderer(AlchemicalCauldronRecipe recipe) {
         super(recipe);

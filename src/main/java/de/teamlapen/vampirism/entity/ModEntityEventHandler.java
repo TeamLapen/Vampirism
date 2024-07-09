@@ -59,6 +59,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -227,16 +228,6 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEyeHeightSet(EntityEvent.@NotNull Size event) {
-        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity) {
-            event.setNewEyeHeight(event.getOldEyeHeight() * 0.875f);
-        }
-        if (event.getEntity() instanceof LivingEntity) {
-            //(CoffinBlock.setSleepSize(event, ((LivingEntity) event.getEntity()));
-        }
-    }
-
-    @SubscribeEvent
     public void onItemUseFinish(LivingEntityUseItemEvent.@NotNull Finish event) {
         if (event.getEntity() instanceof MinionEntity) {
             if (event.getItem().getItem() instanceof PotionItem) {
@@ -284,12 +275,13 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onActuallyHurt(@NotNull LivingHurtEvent event) {
-        if (event.getSource().is(DamageTypes.PLAYER_ATTACK) && event.getSource().getEntity() instanceof Player player) {
+    public void onActuallyHurt(@NotNull LivingDamageEvent.Pre event) {
+        DamageContainer d = event.getContainer();
+        if (d.getSource().is(DamageTypes.PLAYER_ATTACK) && d.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {
                 if (oil instanceof IWeaponOil) {
-                    event.setAmount(event.getAmount() + ((IWeaponOil) oil).onHit(stack, event.getAmount(), ((IWeaponOil) oil), event.getEntity(), player));
+                    d.setNewDamage(d.getNewDamage() + ((IWeaponOil) oil).onHit(stack, d.getNewDamage(), ((IWeaponOil) oil), event.getEntity(), player));
                     oil.reduceDuration(stack, oil, oil.getDurationReduction());
                 }
             });
@@ -297,7 +289,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingDamage(@NotNull LivingDamageEvent event) {
+    public void onLivingDamage(@NotNull LivingIncomingDamageEvent event) {
         if (event.getSource().is(DamageTypes.PLAYER_ATTACK) && event.getSource().getEntity() instanceof Player player) {
             ItemStack stack = player.getMainHandItem();
             OilUtils.getAppliedOil(stack).ifPresent(oil -> {

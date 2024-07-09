@@ -3,6 +3,10 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
@@ -14,6 +18,7 @@ import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
+import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
@@ -43,6 +48,9 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -147,7 +155,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
-                List<ItemStack> arrows = getShootingProjectiles(crossbow, availableProjectiles);
+                List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
                 this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
@@ -180,9 +188,12 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
         return 1;
     }
 
-    protected List<ItemStack> getShootingProjectiles(ItemStack crossbow, List<ItemStack> availableProjectiles) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
-        availableProjectiles.clear();
+
+        if (!ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+            availableProjectiles.clear();
+        }
         return shootingProjectiles;
     }
 

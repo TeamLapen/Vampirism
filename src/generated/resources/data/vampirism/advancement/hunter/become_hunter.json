@@ -17,7 +17,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "vampirism:item_garlic"
+      "id": "vampirism:garlic"
     },
     "title": {
       "translate": "advancement.vampirism.become_hunter"

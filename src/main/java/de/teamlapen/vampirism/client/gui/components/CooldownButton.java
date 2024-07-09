@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.components;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -17,10 +18,13 @@ public class CooldownButton extends Button {
     @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        guiGraphics.blitWithBorder(SPRITES.get(false, false), this.getX(), this.getY(), 0, 0, this.width, this.height, 200, 20, 3);
-        int width = (int) ((1f - progress) * this.width);
-        int s = Mth.clamp(width / 2, 0, 3);
-        guiGraphics.blitWithBorder(SPRITES.get(this.active, this.isHovered), this.getX(), this.getY(), 0, 0, width, this.height, 200, 20, s);
+        guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
+        guiGraphics.blitSprite(SPRITES.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        int width = (int) ((1f - this.progress) * this.getWidth());
+        guiGraphics.blitSprite(SPRITES.get(true, this.isHoveredOrFocused() && progress == 0f), this.getX(), this.getY(), width, this.getHeight());
+        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = getFGColor();
         this.renderString(guiGraphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
     }

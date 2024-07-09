@@ -56,6 +56,7 @@ public class CoffinBlockEntity extends BlockEntity {
         super.loadAdditional(compound, provider);
         this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
         this.lidPos = compound.getFloat("lidPos");
+        this.playLidSoundFlag = this.lidPos==0;
     }
 
     @Override

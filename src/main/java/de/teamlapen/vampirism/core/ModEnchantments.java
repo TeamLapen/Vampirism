@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.advancements.critereon.FactionSubPredicate;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
@@ -67,6 +68,7 @@ public class ModEnchantments {
                                 2,
                                 EquipmentSlotGroup.MAINHAND))
                         .exclusiveWith(enchantments.getOrThrow(ModEnchantmentTags.CROSSBOW_INCOMPATIBLE))
+                        .withEffect(ModDataComponents.FRUGALITY.get(), new AddValue(LevelBasedValue.perLevel(1F)))
                         .build(ARROW_FRUGALITY.location()));
     }
 }

@@ -64,7 +64,7 @@ public class ModVillage {
     private static @NotNull Map<Integer, VillagerTrades.ItemListing[]> getHunterTrades() {
         return ImmutableMap.of(
                 1, new VillagerTrades.ItemListing[] {
-                        new Trades.ItemsForSouls(new Trades.Price(10, 20), ModItems.ITEM_GARLIC.get(), new Trades.Price(2, 5)),
+                        new Trades.ItemsForSouls(new Trades.Price(10, 20), ModBlocks.GARLIC.get(), new Trades.Price(2, 5)),
                         new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), new Trades.Price(1, 1), 8, 1),
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), new Trades.Price(1, 1), 7, 1),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), new Trades.Price(1, 1), 5, 1),
@@ -110,7 +110,7 @@ public class ModVillage {
         return ImmutableMap.of(
                 1, new VillagerTrades.ItemListing[] {
                         new VillagerTrades.EmeraldForItems(ModItems.PURE_SALT.get(), 25, 2, 4),
-                        new VillagerTrades.EmeraldForItems(ModItems.ITEM_GARLIC.get(), 30, 6, 2),
+                        new VillagerTrades.EmeraldForItems(ModBlocks.GARLIC.get(), 30, 6, 2),
 
                 },
                 2, new VillagerTrades.ItemListing[] {

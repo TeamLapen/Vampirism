@@ -71,20 +71,18 @@ public class PageTable extends Page {
 
     }
 
-    /**
-     * Copied from GuiPieMenu
-     */
+
     protected void drawLine(@NotNull GuiGraphics guiGraphics, double x1, double y1, double x2, double y2, float publicZLevel) {
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         Matrix4f matrix = pose.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         RenderSystem.lineWidth(2F);
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
-        builder.vertex(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
-        builder.vertex(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
-        Tesselator.getInstance().end();
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
+        bufferBuilder.addVertex((float) x1, (float) y1, publicZLevel).setColor(0, 0, 0, 255);
+        bufferBuilder.addVertex((float) x2, (float) y2, publicZLevel).setColor(0, 0, 0, 255);
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         pose.popPose();
     }

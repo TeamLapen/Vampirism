@@ -47,6 +47,7 @@ public class VampirismModClient {
         ClientRegistryHandler.init(modEventBus);
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
+        this.modEventBus.register(this);
 
         this.modEventBus.register(this);
 

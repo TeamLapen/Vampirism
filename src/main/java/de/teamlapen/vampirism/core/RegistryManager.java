@@ -88,6 +88,7 @@ public class RegistryManager {
         this.eventBus.addListener(ModRegistries::registerRegistries);
         this.eventBus.addListener(PackRepositories::registerPackRepository);
         this.eventBus.addListener(ModRecipes::registerCategories);
+        this.eventBus.addListener(ModTiles::registerTileExtensions);
     }
 
     public void registerForgeEventHandler() {

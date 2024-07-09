@@ -32,7 +32,7 @@ public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
         if (shootingEntity != null) {
             if (!shootingEntity.level().isClientSide && shootingEntity.isAlive()) {
                 if (shootingEntity instanceof ServerPlayer player) {
-                    if (player.connection.connection.isConnected() && player.level() == arrowEntity.level() && !player.isSleeping()) {
+                    if (player.connection.getConnection().isConnected() && player.level() == arrowEntity.level() && !player.isSleeping()) {
 
                         if (player.isPassenger()) {
                             player.stopRiding();
