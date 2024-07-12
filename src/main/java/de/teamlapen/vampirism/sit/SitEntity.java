@@ -61,8 +61,8 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
         SitUtil.addSitEntity(level(), blockPosition(), this);
     }
 

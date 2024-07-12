@@ -41,7 +41,6 @@ import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.HunterArmorItem;
-import de.teamlapen.vampirism.mixin.accessor.ArmorItemAccessor;
 import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
@@ -1477,7 +1476,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 if (vision.isEnabled()) {
                     this.vision = vision;
                     this.vision.onActivated(VampirePlayer.this);
-                } else if (VampirePlayer.this.player.isAddedToWorld()) {
+                } else if (VampirePlayer.this.player.isAddedToLevel()) {
                     VampirePlayer.this.player.displayClientMessage(Component.translatable("text.vampirism.vision_disabled_by_config"),true);
                 }
                 this.visionId = VampirismAPI.vampireVisionRegistry().getVisionId(vision);
@@ -1486,7 +1485,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
                 this.visionId = null;
             }
 
-            if (!isRemote() && player.isAddedToWorld()) {
+            if (!isRemote() && player.isAddedToLevel()) {
                 CompoundTag tag = new CompoundTag();
                 tag.put(KEY_VISION, serializeUpdateNBT(VampirePlayer.this.asEntity().registryAccess()));
                 VampirePlayer.this.sync(tag, false);

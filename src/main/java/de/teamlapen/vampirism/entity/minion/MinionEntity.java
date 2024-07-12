@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.minion;
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.ISyncable;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
@@ -23,13 +22,11 @@ import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.MinionContainer;
-import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.PlayerModelType;
 import de.teamlapen.vampirism.world.LevelDamage;
 import de.teamlapen.vampirism.world.MinionWorldData;
-import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -211,9 +208,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             float f1 = this.getKnockback(pEntity, damagesource);
             if (f1 > 0.0F && pEntity instanceof LivingEntity livingentity) {
                 livingentity.knockback(
-                        (double)(f1 * 0.5F),
-                        (double)Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
-                        (double)(-Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)))
+                        f1 * 0.5F,
+                        Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
+                        -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0))
                 );
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
@@ -360,20 +357,20 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
         checkoutMinionData(this.level().registryAccess());
     }
 
     @Override
-    public void onRemovedFromWorld() {
+    public void onRemovedFromLevel() {
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
             this.minionData.updateEntityCaps(this.serializeMinionCaps(this.level().registryAccess()));
             this.minionData = null;
             this.playerMinionController = null;
         }
-        super.onRemovedFromWorld();
+        super.onRemovedFromLevel();
     }
 
     @NotNull
@@ -586,7 +583,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider)}
+     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToLevel()} or if tracking starts before during {@link MinionEntity#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider)}
      */
     private void checkoutMinionData(HolderLookup.Provider provider) {
         if (playerMinionController != null && minionData == null) {
