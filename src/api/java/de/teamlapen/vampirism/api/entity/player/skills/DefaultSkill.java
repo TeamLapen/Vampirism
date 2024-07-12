@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -68,12 +71,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, double amount, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, () -> amount, operation));
+        this.attributeModifierMap.put(attribute, new AttributeHolder(this, attribute, () -> amount, operation));
         return this;
     }
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(attribute, amountSupplier, operation));
+        this.attributeModifierMap.put(attribute, new AttributeHolder(this, attribute, amountSupplier, operation));
         return this;
     }
 
@@ -106,8 +109,8 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
             if (instance != null) {
-                instance.removeModifier(entry.getValue().id);
-                instance.addPermanentModifier(entry.getValue().create());
+                AttributeModifier attributeModifier = entry.getValue().create();
+                instance.addOrReplacePermanentModifier(attributeModifier);
             }
         }
     }
@@ -128,7 +131,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
             if (attribute != null) {
-                attribute.removeModifier(entry.getValue().id);
+                attribute.removeModifier(entry.getValue().getId());
             }
         }
     }
@@ -143,21 +146,25 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         return this.skillPointCost;
     }
 
-    protected class AttributeHolder {
+    protected static class AttributeHolder {
         public final Holder<Attribute> attribute;
         public final @NotNull Supplier<Double> amountSupplier;
         public final AttributeModifier.@NotNull Operation operation;
-        private final ResourceLocation id;
+        private final ISkill<?> skill;
 
-        private AttributeHolder(Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+        private AttributeHolder(ISkill<?> skill, Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
             this.attribute = attribute;
             this.amountSupplier = amountSupplier;
             this.operation = operation;
-            this.id = VampirismRegistries.SKILL.get().getKey(DefaultSkill.this);
+            this.skill = skill;
+        }
+
+        public ResourceLocation getId() {
+            return VampirismRegistries.SKILL.get().getKey(this.skill);
         }
 
         public AttributeModifier create() {
-            return new AttributeModifier(this.id, amountSupplier.get(), operation);
+            return new AttributeModifier(this.getId(), this.amountSupplier.get(), this.operation);
         }
     }
 }
