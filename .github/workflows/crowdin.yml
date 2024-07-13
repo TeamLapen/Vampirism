@@ -35,6 +35,10 @@ jobs:
             echo "Invalid version: $version"
             exit 1
           fi
+      - name: remove comment fields
+        run: |
+          sed -i '/"comment":/d' src/main/resources/assets/vampirism/lang/en_us.json
+          sed -i '/"comment":/d' src/main/resources/assets/vampirismguide/lang/en_us.json
       - name: Upload translation keys
         uses: crowdin/github-action@v1
         with:
