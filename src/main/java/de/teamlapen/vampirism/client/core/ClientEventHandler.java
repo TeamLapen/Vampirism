@@ -180,8 +180,7 @@ public class ClientEventHandler {
             }
             List<Component> factionToolTips = new ArrayList<>();
             factionToolTips.add(Component.empty());
-            factionToolTips.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
-            factionToolTips.add(Component.literal(" ").append(VReference.HUNTER_FACTION.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(Minecraft.getInstance().player != null ? Helper.isHunter(Minecraft.getInstance().player) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED : ChatFormatting.GRAY));
+            factionToolTips.add(Component.translatable("text.vampirism.faction_exclusive", VReference.HUNTER_FACTION.getName().copy().withStyle(Minecraft.getInstance().player != null ? Helper.isHunter(Minecraft.getInstance().player) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED : ChatFormatting.GRAY)));
             toolTips.addAll(Math.min(event.getToolTip().size(), position), factionToolTips);
         });
     }

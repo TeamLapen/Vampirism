@@ -23,8 +23,6 @@ public interface IFactionExclusiveItem extends ItemLike {
 
     default void addFactionToolTips(@NotNull ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltip, TooltipFlag flagIn, @Nullable Player player) {
         addOilDescTooltip(stack, context, tooltip, flagIn, player);
-        tooltip.add(Component.empty());
-        tooltip.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
         ChatFormatting color = ChatFormatting.GRAY;
         IFaction<?> faction = getExclusiveFaction(stack);
 
@@ -32,7 +30,8 @@ public interface IFactionExclusiveItem extends ItemLike {
             if (player != null) {
                 color = VampirismAPI.factionRegistry().getFaction(player) == faction ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
             }
-            tooltip.add(Component.literal(" ").append(faction.getName()).append(Component.translatable("text.vampirism.faction_only")).withStyle(color));
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("text.vampirism.faction_exclusive", faction.getName().copy().withStyle(color)));
         }
     }
 
