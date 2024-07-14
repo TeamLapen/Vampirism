@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
@@ -12,6 +14,7 @@ import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
 import de.teamlapen.vampirism.items.component.EffectiveRefinementSet;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -19,6 +22,7 @@ import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -66,13 +70,22 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         this.type = type;
     }
 
-
     @Override
     public void appendHoverText(@NotNull ItemStack stack, TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            set.getRefinements().stream().map(Holder::value).forEach(refinement -> tooltip.add(Component.literal(" - ").append(refinement.getDescription()).withStyle(ChatFormatting.GRAY)));
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("When equipped:").withStyle(ChatFormatting.DARK_PURPLE));
+            for (Holder<IRefinement> holder : set.getRefinements()) {
+                IRefinement refinement = holder.value();
+                AttributeModifier attributeModifier = refinement.createAttributeModifier(refinement.getModifierValue());
+                if (refinement.getAttribute() != null && attributeModifier != null)  {
+                    stack.addModifierTooltip(tooltip::add, VampirismMod.proxy.getClientPlayer(), refinement.getAttribute(), attributeModifier);
+                } else {
+                    tooltip.add(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
+                }
+            }
         }
     }
 
