@@ -92,7 +92,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         if (set == null) {
             return super.getName(stack);
         }
-        return Component.translatable(this.getDescriptionId()).append(" ").append(set.getName()).withStyle(set.getRarity().color);
+        return Component.translatable(this.getDescriptionId() + ".of", set.getName()).withStyle(set.getRarity().color);
     }
 
     @Nullable
