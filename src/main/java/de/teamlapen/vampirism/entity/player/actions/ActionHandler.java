@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.actions;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -68,7 +69,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> expectedCooldownTimes;
     /**
      * Stores the expected duration of an action after it was activated.
-     * This is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} (IFactionPlayer)} as the duration might be modified before activation.
+     * This is used to check the action duration instead of {@link de.teamlapen.vampirism.api.entity.player.actions.ILastingAction#getDuration(IFactionPlayer)} as the duration might be modified before activation.
      * The values stored here are only changed when the duration is added, it is not decremented like the map for duration timers, but removed when the action's duration is over.
      */
     private final @NotNull Object2IntMap<Holder<? extends IAction<T>>> expectedDurations;
@@ -102,7 +103,10 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
 
     @Override
     public void extendActionTimer(@NotNull Holder<? extends ILastingAction<T>> action, int extension) {
-        this.activeTimers.computeIntIfPresent(action, (action1, duration) -> duration + extension);
+        if (this.activeTimers.containsKey(action)) {
+            this.activeTimers.put(action, this.activeTimers.getInt(action) + extension);
+            this.expectedDurations.put(action, this.expectedDurations.getInt(action) + extension);
+        }
     }
 
     @Override
@@ -436,15 +440,18 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
-        if (this.dirty || all) {
-            if (!all) {
-                this.dirty = false;
-            }
-            return serializeNBT(provider);
-        } else {
-            return new CompoundTag();
-        }
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
+        return serializeNBT(provider);
+    }
+
+    @Override
+    public boolean needsUpdate() {
+        return this.dirty;
+    }
+
+    @Override
+    public void updateSend() {
+        this.dirty = false;
     }
 
     private boolean isActionAllowedPermission(Holder<? extends IAction<T>> action) {

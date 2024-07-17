@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion;
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.ISyncable;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
@@ -482,7 +483,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag tag = new CompoundTag();
         if (minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData(provider);

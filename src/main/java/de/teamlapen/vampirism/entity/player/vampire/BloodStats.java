@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAttributes;
@@ -81,7 +82,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
      *
      * @return Whether it changed or not
      */
-    public boolean onUpdate() {
+    public void onUpdate() {
         FoodData foodStats = player.getFoodData();
         foodStats.setFoodLevel(10);
         Difficulty enumDifficulty = player.getCommandSenderWorld().getDifficulty();
@@ -128,11 +129,9 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
         } else {
             this.bloodTimer = 0;
         }
-        if (changed || this.prevBloodLevel != this.bloodLevel) {
-            changed = false;
-            return true;
+        if (this.prevBloodLevel != this.bloodLevel) {
+            this.changed = true;
         }
-        return false;
     }
 
     @Override
@@ -221,12 +220,22 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams sendAllData) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("max_blood", maxBlood);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
         return nbt;
+    }
+
+    @Override
+    public boolean needsUpdate() {
+        return this.changed;
+    }
+
+    @Override
+    public void updateSend() {
+        this.changed = false;
     }
 
     @Override

@@ -2,7 +2,8 @@ package de.teamlapen.vampirism.server;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.storage.IAttachedSyncable;
+import de.teamlapen.lib.lib.storage.Attachment;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -21,7 +22,6 @@ import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.player.TaskManager;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
-import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
@@ -35,7 +35,6 @@ import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -249,11 +248,8 @@ public class ServerPayloadHandler {
                     if (result == ISkillHandler.Result.OK) {
                         //noinspection unchecked
                         skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
-                        if (factionPlayer instanceof IAttachedSyncable && skillHandler instanceof SkillHandler<?> skillHandler1) {
-                            //does this cause problems with addons?
-                            CompoundTag sync = new CompoundTag();
-                            sync.put(skillHandler1.nbtKey(), skillHandler1.serializeUpdateNBT(player.registryAccess(), false));
-                            HelperLib.sync((IAttachedSyncable) factionPlayer, sync, ((IAttachedSyncable) factionPlayer).asEntity(), true);
+                        if (factionPlayer instanceof Attachment t) {
+                            t.sync(UpdateParams.all());
                         }
 
                     } else {

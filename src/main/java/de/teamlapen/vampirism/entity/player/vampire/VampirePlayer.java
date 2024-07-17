@@ -2,8 +2,9 @@ package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.storage.ISyncable;
+import de.teamlapen.lib.lib.storage.IStateSyncable;
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.REFERENCE;
@@ -174,11 +175,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Nullable
     private Component dbnoMessage;
     private final Disguise disguise;
-    private final IRefinementHandler<IVampirePlayer> refinementHandler;
+    private final RefinementHandler<IVampirePlayer> refinementHandler;
 
     public VampirePlayer(Player player) {
         super(player);
-        bloodStats = new BloodStats(player);
+        this.bloodStats = new BloodStats(player);
         this.disguise = new Disguise();
         this.refinementHandler = new RefinementHandler<>(this, ModFactions.VAMPIRE);
     }
@@ -275,9 +276,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                         ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 7, false, false));
                         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 4, false, false));
 
-                        CompoundTag nbt = new CompoundTag();
-                        nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-                        sync(nbt, true);
+                        sync(KEY_FEED_VICTIM_ID, feed_victim, true);
                         break;
                 }
             } else {
@@ -364,9 +363,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (player.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
         }
         if (sync) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-            sync(nbt, true);
+            sync(KEY_FEED_VICTIM_ID, feed_victim, true);
         }
     }
 
@@ -461,11 +458,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void setGlowingEyes(boolean value) {
         if (value != this.getSpecialAttributes().glowingEyes) {
             this.getSpecialAttributes().glowingEyes = value;
-            if (!isRemote()) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putBoolean(KEY_GLOWING_EYES, value);
-                sync(nbt, true);
-            }
+            this.isDirty = true;
+            sync(KEY_GLOWING_EYES, value);
         }
     }
 
@@ -543,6 +537,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         super.deserializeNBT(provider, nbt);
         this.bloodStats.deserializeNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
         this.vision.deserializeNBT(provider, nbt.getCompound(KEY_VISION));
+        this.refinementHandler.deserializeNBT(provider, nbt.getCompound(this.refinementHandler.nbtKey()));
         if (nbt.getBoolean(KEY_WAS_DBNO)) {
             this.wasDBNO = true;
         }
@@ -580,7 +575,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         int amt = this.getBloodStats().getBloodLevel();
         int sucked = (int) Math.ceil((amt * perc));
         bloodStats.removeBlood(sucked, true);
-        syncProperty(this.bloodStats, true);
         return sucked;
     }
 
@@ -594,7 +588,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             int amt = this.getBloodStats().getBloodLevel();
             int sucked = (int) Math.ceil((amt * percentage));
             bloodStats.removeBlood(sucked, true);
-            syncProperty(this.bloodStats, true);
             return sucked;
         }
     }
@@ -620,7 +613,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             CompoundTag nbt = new CompoundTag();
             nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
             if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, this.asEntity().registryAccess()));
-            HelperLib.sync(this, nbt, player, true);
+            sync(nbt, true);
             return true;
         }
         return false;
@@ -727,7 +720,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 bloodStats.setMaxBlood(20);
             } else {
                 this.vision.deactivate();
-                this.sync(true);
+                this.sync(UpdateParams.all());
             }
         } else {
             if (oldLevel == 0) {
@@ -783,9 +776,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (dbnoTimer > 0) {
                 this.setDBNOTimer(dbnoTimer - 1);
                 if (dbnoTimer == 0) {
-                    CompoundTag nbt = new CompoundTag();
-                    nbt.putInt(KEY_DBNO_TIMER, 0);
-                    HelperLib.sync(this, nbt, player, false);
+                    sync(KEY_DBNO_TIMER, 0);
                 }
             }
             player.setAirSupply(300);
@@ -894,9 +885,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             //Update blood stats
             if (getLevel() > 0 && !isDBNO()) {
                 player.level().getProfiler().push("vampirism_bloodupdate");
-                if (!player.level().isClientSide && this.bloodStats.onUpdate()) {
-                    syncProperty(this.bloodStats, false);
-                }
+                this.bloodStats.onUpdate();
                 player.level().getProfiler().pop();
             }
         }
@@ -917,6 +906,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.put(this.vision.nbtKey(), this.vision.serializeNBT(provider));
+        nbt.put(this.refinementHandler.nbtKey(), this.refinementHandler.serializeNBT(provider));
         if (isDBNO()) nbt.putBoolean(KEY_WAS_DBNO, true);
         return nbt;
     }
@@ -933,11 +923,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (eyeType != this.getEyeType()) {
             getSpecialAttributes().eyeType = eyeType;
-            if (!isRemote()) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_EYE, eyeType);
-                sync(nbt, true);
-            }
+            this.isDirty = true;
+            sync(KEY_EYE, eyeType);
         }
         return true;
     }
@@ -954,11 +941,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (fangType != this.getFangType()) {
             this.getSpecialAttributes().fangType = fangType;
-            if (!isRemote()) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_FANGS, fangType);
-                sync(nbt, true);
-            }
+            this.isDirty = true;
+            sync(KEY_FANGS, fangType);
         }
         return true;
     }
@@ -997,7 +981,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             this.bloodStats.removeBlood(bloodStats.getBloodLevel() - 1, true);
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
-            this.sync(true);
+            this.sync(UpdateParams.all());
             int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION);
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL, duration));
             this.player.awardStat(ModStats.RESURRECTED.get());
@@ -1009,7 +993,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 this.setDBNOTimer(-1);
             } else {
                 //If client thinks it is alive again, tell it to die again
-                this.sync(false);
+                this.sync(UpdateParams.ignoreChanged());
             }
         }
     }
@@ -1022,7 +1006,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             this.dbnoMessage = null;
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
-            this.sync(true);
+            this.sync(UpdateParams.all());
             DamageHandler.hurtModded(this.player, sources -> sources.dbno(msg), 10000);
         }
     }
@@ -1134,21 +1118,23 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
         this.bloodStats.deserializeUpdateNBT(provider, nbt.getCompound(this.bloodStats.nbtKey()));
         this.disguise.deserializeUpdateNBT(provider, nbt.getCompound(this.disguise.nbtKey()));
+        this.refinementHandler.deserializeUpdateNBT(provider, nbt.getCompound(this.refinementHandler.nbtKey()));
         if (nbt.contains(this.vision.nbtKey(), CompoundTag.TAG_COMPOUND)) {
             this.vision.deserializeNBT(provider, nbt.getCompound(this.vision.nbtKey()));
         }
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
-        var nbt = super.serializeUpdateNBT(provider, all);
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
+        var nbt = super.serializeUpdateNBTInternal(provider, params);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         nbt.putInt(KEY_FEED_VICTIM_ID, feed_victim);
-        nbt.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(provider, false));
-        nbt.put(this.vision.nbtKey(), this.vision.serializeUpdateNBT(provider, false));
-        nbt.put(this.disguise.nbtKey(), this.disguise.serializeUpdateNBT(provider, false));
+        this.bloodStats.updateToCompound(provider, nbt, params);
+        this.vision.updateToCompound(provider, nbt, params);
+        this.disguise.updateToCompound(provider, nbt, params);
+        this.refinementHandler.updateToCompound(provider, nbt, params);
         nbt.putInt(KEY_DBNO_TIMER, getDbnoTimer());
         if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, provider));
         return nbt;
@@ -1204,8 +1190,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     }
                     if (blood > 0) {
                         drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(blockState, pos));
-
-                        syncProperty(this.bloodStats, true);
                     }
                 });
 
@@ -1245,10 +1229,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (blood > 0) {
             drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
-            CompoundTag updatePacket = new CompoundTag();
-            updatePacket.put(this.bloodStats.nbtKey(), this.bloodStats.serializeUpdateNBT(entity.registryAccess(), false));
-            updatePacket.putInt(KEY_SPAWN_BITE_PARTICLE, entity.getId());
-            sync(updatePacket, true);
+            sync(KEY_SPAWN_BITE_PARTICLE, entity.getId(), true);
+            sync(UpdateParams.forAllPlayer());
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SUCK_BLOOD);
             }
@@ -1264,6 +1246,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      */
     private void handleSpareBlood(int amt) {
         BloodHelper.fillBloodIntoInventory(player, amt * VReference.FOOD_TO_FLUID_BLOOD);
+    }
+
+    @Override
+    public boolean needsUpdate() {
+        return super.needsUpdate() || this.bloodStats.needsUpdate() || this.vision.needsUpdate() || this.disguise.needsUpdate() || this.refinementHandler.needsUpdate();
     }
 
     /**
@@ -1395,12 +1382,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         private final SortedSet<IVampireVision> unlockedVisions = new TreeSet<>(Comparator.comparing(o -> VampirismAPI.vampireVisionRegistry().getVisionId(o)));
         private ResourceLocation visionId;
         private IVampireVision vision;
+        private boolean isDirty;
 
         public void deactivate() {
             if (vision != null) {
                 vision.onDeactivated(VampirePlayer.this);
                 vision = null;
                 visionId = null;
+                isDirty = true;
             }
         }
 
@@ -1463,12 +1452,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 this.vision = null;
                 this.visionId = null;
             }
-
-            if (!isRemote() && player.isAddedToWorld()) {
-                CompoundTag tag = new CompoundTag();
-                tag.put(KEY_VISION, serializeUpdateNBT(VampirePlayer.this.asEntity().registryAccess(), false));
-                VampirePlayer.this.sync(tag, false);
-            }
+            this.isDirty = true;
         }
 
         @Override
@@ -1500,13 +1484,13 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-            deserializeNBT(provider, nbt);
+        public boolean needsUpdate() {
+            return this.isDirty;
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
-            return serializeNBT(provider);
+        public void updateSend() {
+            this.isDirty = false;
         }
 
         @Override
@@ -1515,10 +1499,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
     }
 
-    private class Disguise implements IDisguise, ISyncable {
+    private class Disguise implements IDisguise, IStateSyncable {
         private static final String KEY_DISGUISE = "disguise";
         private boolean isDisguised;
-        private @Nullable Holder<? extends IFaction<?>> disguiseFaction = getOriginalFaction();
+        private @NotNull Holder<? extends IFaction<?>> disguiseFaction = getOriginalFaction();
+        private boolean isDirty;
 
         @Override
         public void unDisguise() {
@@ -1526,14 +1511,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
+        public void disguiseAs(@NotNull Holder<? extends IFaction<?>> faction) {
             this.disguiseFaction = faction;
-            this.isDisguised = faction != getOriginalFaction();
+            this.isDisguised = !IFaction.is(faction, getOriginalFaction());
             getSpecialAttributes().disguised = this.isDisguised;
             player.refreshDisplayName();
-            if (!player.level().isClientSide) {
-                syncProperty(this, true);
-            }
+            this.isDirty = true;
         }
 
         @Override
@@ -1542,7 +1525,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
 
         @Override
-        public @Nullable Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
+        public @NotNull Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
             return disguiseFaction;
         }
 
@@ -1551,24 +1534,35 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             return this.isDisguised;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
             if (nbt.contains("disguise")) {
                 String disguise = nbt.getString("disguise");
-                disguiseAs(Optional.of(disguise).filter(s -> !s.isEmpty()).flatMap(s -> ModRegistries.FACTIONS.getHolder(ResourceLocation.parse(s))).orElse(null));
+                disguiseAs(Optional.of(disguise).map(ResourceLocation::parse).flatMap(s -> (Optional<Holder<? extends IFaction<?>>>) (Object) ModRegistries.FACTIONS.getHolder(s)).orElse(ModFactions.NEUTRAL));
             }
         }
 
         @Override
-        public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+        public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("disguise", Optional.ofNullable(this.disguiseFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(""));
+            tag.putString("disguise", Optional.of(this.disguiseFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(""));
             return tag;
         }
 
         @Override
         public String nbtKey() {
             return KEY_DISGUISE;
+        }
+
+        @Override
+        public void updateSend() {
+            this.isDirty = false;
+        }
+
+        @Override
+        public boolean needsUpdate() {
+            return this.isDirty;
         }
     }
 

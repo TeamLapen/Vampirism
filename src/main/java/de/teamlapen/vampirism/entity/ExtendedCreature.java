@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.storage.IAttachment;
+import de.teamlapen.lib.lib.storage.Attachment;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
@@ -39,7 +39,7 @@ import java.util.function.Function;
 /**
  * Extended entity property which every {@link PathfinderMob} has
  */
-public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism {
+public class ExtendedCreature extends Attachment implements IExtendedCreatureVampirism {
     public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("extended_creature");
 
     private final static String KEY_BLOOD = "bloodLevel";
@@ -311,7 +311,7 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
@@ -319,14 +319,9 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
         return nbt;
     }
 
-
+    @Override
     public void sync() {
-        HelperLib.sync(this, getEntity(), true);
-    }
-
-    private void sync(@NotNull CompoundTag data) {
-        HelperLib.sync(this, data, getEntity(), true);
-
+        sync(UpdateParams.forAllPlayer());
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ExtendedCreature> {

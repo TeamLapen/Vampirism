@@ -807,4 +807,16 @@ public class UtilLib {
         Random rand = new Random();
         return list.get(rand.nextInt(list.size()));
     }
+
+    public static CompoundTag tagOf(String key, int value) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt(key, value);
+        return tag;
+    }
+
+    public static CompoundTag tagOf(String key, String value) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString(key, value);
+        return tag;
+    }
 }

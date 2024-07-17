@@ -58,9 +58,6 @@ public interface IPlayerEventListener {
     default void onUpdate() {
     }
 
-    default void sync() {
-    }
-
     /**
      * Called at the beginning and at the end of {@link Player}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end

@@ -18,4 +18,5 @@ public interface IAttachedSyncable extends ISyncable, IEntity {
     default String nbtKey() {
         return getAttachedKey().toString();
     }
+
 }

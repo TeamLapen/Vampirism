@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.factions;
 
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.storage.IAttachment;
+import de.teamlapen.lib.lib.storage.Attachment;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler {
+public class FactionPlayerHandler extends Attachment implements IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
     public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("faction_player_handler");
 
@@ -312,8 +312,13 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             player.displayClientMessage(Component.translatable("text.vampirism.actions.bind_action", boundAction != null ? boundAction.value().getName() : "none", id), true);
         }
         if (sync) {
-            this.sync(false);
+            sync();
         }
+    }
+
+    @Override
+    public void sync() {
+        this.sync(UpdateParams.ignoreChanged());
     }
 
     @Override
@@ -374,7 +379,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         if (old != currentFaction || oldLevel != currentLevel) {
             VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
-        sync(!Objects.equals(old, currentFaction));
+        sync(Objects.equals(old, currentFaction) ? UpdateParams.ignoreChanged() : UpdateParams.all());
         if (player instanceof ServerPlayer serverPlayer) {
             if (old != faction) {
                 ModAdvancements.TRIGGER_FACTION.get().revokeAll(serverPlayer);
@@ -402,12 +407,12 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         this.titleGender = female ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE;
         player.refreshDisplayName();
         if (!player.level().isClientSide()) {
-            sync(true);
+            sync(UpdateParams.all());
         }
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag nbt = new CompoundTag();
         nbt.putString("faction", Optional.of(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow());
         nbt.putInt("level", currentLevel);
@@ -501,12 +506,8 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             }
             ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
-        if (sync) sync(false);
+        if (sync) sync();
         return true;
-    }
-
-    private void sync(boolean all) {
-        HelperLib.sync(this, player, all);
     }
 
     private void updateCache() {

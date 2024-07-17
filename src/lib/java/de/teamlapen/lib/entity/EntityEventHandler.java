@@ -2,6 +2,7 @@ package de.teamlapen.lib.entity;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
+import de.teamlapen.lib.lib.storage.Attachment;
 import de.teamlapen.lib.lib.storage.ISyncable;
 import de.teamlapen.lib.network.ClientboundUpdateEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -79,7 +80,9 @@ public class EntityEventHandler {
             for (AttachmentType<IPlayerEventListener> type : listeners) {
                 IPlayerEventListener listener = event.getEntity().getData(type);
                 listener.onUpdate();
-                listener.sync();
+                if (listener  instanceof Attachment syncable && !event.getEntity().level().isClientSide()) {
+                    syncable.sync();
+                }
             }
         }
     }

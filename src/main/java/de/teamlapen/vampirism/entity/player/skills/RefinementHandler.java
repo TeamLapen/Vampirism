@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
@@ -26,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +35,7 @@ import java.util.Set;
 
 public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefinementHandler<T>, ISyncableSaveData {
 
+    private static final String NBT_KEY = "refinement_handler";
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(3, ItemStack.EMPTY);
     private final Set<Holder<IRefinement>> activeRefinements = new HashSet<>();
     private final Map<ResourceLocation, AttributeModifier> refinementModifier = new HashMap<>();
@@ -73,14 +74,12 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     @Override
     public boolean equipRefinementItem(@NotNull ItemStack stack) {
         if (stack.getItem() instanceof IRefinementItem refinementItem) {
-            if (this.faction.equals(refinementItem.getExclusiveFaction(stack))) {
-                @Nullable IRefinementSet newSet = refinementItem.getRefinementSet(stack);
+            if (IFaction.is(this.faction, refinementItem.getExclusiveFaction(stack))) {
                 IRefinementItem.AccessorySlotType setSlot = refinementItem.getSlotType();
 
                 removeRefinementItem(setSlot);
-                this.dirty = true;
-
                 applyRefinementItem(stack, setSlot.getSlot());
+                this.dirty = true;
                 return true;
             }
         }
@@ -152,7 +151,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     @Override
     public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
-            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_LIST);
+            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_COMPOUND);
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
@@ -168,10 +167,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
-        if (!(this.dirty || all)) {
-            return new CompoundTag();
-        }
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag nbt = new CompoundTag();
         ListTag refinementItems = new ListTag();
         for (int i = 0; i < this.refinementItems.size(); i++) {
@@ -189,8 +185,18 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     }
 
     @Override
+    public boolean needsUpdate() {
+        return this.dirty;
+    }
+
+    @Override
+    public void updateSend() {
+        this.dirty = false;
+    }
+
+    @Override
     public String nbtKey() {
-        return "";
+        return NBT_KEY;
     }
 
     private void applyRefinementItem(@NotNull ItemStack stack, int slot) {
@@ -233,12 +239,14 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
                         if (!this.player.isRemote() && refinement.getAttribute() != null) {
                             AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(key);
-                            ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                            double value = t.amount() - refinement.getModifierValue();
-                            if (value != 0) {
-                                attributeInstance.addTransientModifier(t = refinement.createAttributeModifier(value));
-                                this.refinementModifier.put(key, t);
-                                this.activeRefinements.add(x);
+                            if (t != null) {
+                                ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
+                                double value = t.amount() - refinement.getModifierValue();
+                                if (value != 0) {
+                                    attributeInstance.addTransientModifier(t = refinement.createAttributeModifier(value));
+                                    this.refinementModifier.put(key, t);
+                                    this.activeRefinements.add(x);
+                                }
                             }
                         }
                     });

@@ -224,7 +224,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         }
 
         @Override
-        public @Nullable Holder<? extends IPlayableFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
+        public @NotNull Holder<? extends IPlayableFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
             return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE) ? ModFactions.VAMPIRE : getOriginalFaction();
         }
 

@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.lib.lib.storage.ISavable;
+import de.teamlapen.lib.lib.storage.IDefaultSavable;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, ISavable {
+public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDefaultSavable {
     private static final String NBT_KEY = "task_manager";
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
 

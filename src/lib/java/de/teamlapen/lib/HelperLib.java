@@ -92,7 +92,7 @@ public class HelperLib {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(@NotNull IAttachedSyncable cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean all) {
+    public static void sync(@NotNull IAttachedSyncable cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean allToAll) {
         if (!entity.getCommandSenderWorld().isClientSide) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap, data);
             if (entity instanceof ServerPlayer player) {
@@ -101,7 +101,7 @@ public class HelperLib {
                     player.connection.send(m);
                 }
             }
-            if (all) {
+            if (allToAll) {
                 sendToAll(entity, m);
             }
         }

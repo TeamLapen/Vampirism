@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.lib.lib.storage.ISyncable;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -301,7 +302,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag tag = new CompoundTag();
         writeOldEntityToNBT(tag);
         return tag;

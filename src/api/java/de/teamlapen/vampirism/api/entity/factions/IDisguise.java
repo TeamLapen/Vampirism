@@ -9,15 +9,15 @@ public interface IDisguise {
     @NotNull
     Holder<? extends IPlayableFaction<?>> getOriginalFaction();
 
-    @Nullable
+    @NotNull
     Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction);
 
-    @Nullable
+    @NotNull
     default Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction, boolean ignoreDisguise) {
         return ignoreDisguise ? getOriginalFaction() : getViewedFaction(viewerFaction);
     }
 
-    void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction);
+    void disguiseAs(@NotNull Holder<? extends IFaction<?>> faction);
 
     void unDisguise();
 
@@ -31,7 +31,7 @@ public interface IDisguise {
         }
 
         @Override
-        public @Nullable Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
+        public @NotNull Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
             return this.faction;
         }
 

@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.entity.player;
 
-import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.storage.IAttachment;
-import de.teamlapen.lib.lib.storage.ISyncable;
+import de.teamlapen.lib.lib.storage.Attachment;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements IFactionPlayer<T>, IAttachment, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Attachment implements IFactionPlayer<T>, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
 
@@ -63,30 +62,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
         return player.level().isClientSide;
     }
 
-    /**
-     * Sync all data
-     *
-     * @param all Whether all tracking players should receive this packet or only the representing player
-     */
-    public void sync(boolean all) {
-        HelperLib.sync(this, player, all);
-    }
-
-    /**
-     * Sync the capability using the given data
-     *
-     * @param all Whether all tracking players should receive this packet or only the representing player
-     */
-    protected void sync(@NotNull CompoundTag data, boolean all) {
-        HelperLib.sync(this, data, player, all);
-    }
-
-    protected void syncProperty(@NotNull ISyncable object, boolean all) {
-        CompoundTag tag = new CompoundTag();
-        tag.put(object.nbtKey(), object.serializeUpdateNBT(this.asEntity().registryAccess(), false));
-        HelperLib.sync(this, tag, player, all);
-    }
-
     @MustBeInvokedByOverriders
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
@@ -106,7 +81,7 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams sendAllData) {
         return new CompoundTag();
     }
 

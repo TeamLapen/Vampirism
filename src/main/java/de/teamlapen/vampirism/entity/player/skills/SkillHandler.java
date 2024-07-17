@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
+import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -181,13 +182,6 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         return this.enabledSkills.isEmpty() || new HashSet<>(list).containsAll(this.enabledSkills);
     }
 
-    /**
-     * @return If an update should be sent to the client
-     */
-    public boolean isDirty() {
-        return dirty;
-    }
-
     @SuppressWarnings("unchecked")
     public boolean isNodeEnabled(@NotNull ISkillNode node) {
         for (Holder<ISkill<T>> s : enabledSkills) {
@@ -283,10 +277,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, boolean all) {
-        if (!(this.dirty || all)) {
-            return new CompoundTag();
-        }
+    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
         for (Holder<ISkill<T>> skill : enabledSkills) {
@@ -298,10 +289,17 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
             unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
-        if (!all) {
-            this.dirty = false;
-        }
         return nbt;
+    }
+
+    @Override
+    public boolean needsUpdate() {
+        return this.dirty;
+    }
+
+    @Override
+    public void updateSend() {
+        this.dirty = false;
     }
 
     @Override
