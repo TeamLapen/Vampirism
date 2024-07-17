@@ -100,9 +100,13 @@ public class ActionHandler<T extends IFactionPlayer<T>> implements IActionHandle
 
     @Override
     public void extendActionTimer(@NotNull ILastingAction<T> action, int duration) {
-        int i = activeTimers.getOrDefault(RegUtil.id(action), -1);
+        ResourceLocation id = RegUtil.id(action);
+        int i = activeTimers.getOrDefault(id, -1);
         if (i > 0) {
-            activeTimers.put(RegUtil.id(action), i + duration);
+            activeTimers.put(id, i + duration);
+            int expectedDuration = this.expectedDurations.getInt(id);
+            expectedDurations.put(id, expectedDuration + duration);
+            dirty = true;
         }
     }
 
