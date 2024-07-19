@@ -370,20 +370,20 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
         checkoutMinionData(this.level().registryAccess());
     }
 
     @Override
-    public void onRemovedFromWorld() {
+    public void onRemovedFromLevel() {
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
             this.minionData.updateEntityCaps(this.serializeMinionCaps(this.level().registryAccess()));
             this.minionData = null;
             this.playerMinionController = null;
         }
-        super.onRemovedFromWorld();
+        super.onRemovedFromLevel();
     }
 
     @NotNull
@@ -596,7 +596,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToWorld()} or if tracking starts before during {@link de.teamlapen.lib.lib.storage.ISyncable#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider, boolean)}
+     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToLevel()} or if tracking starts before during {@link de.teamlapen.lib.lib.storage.ISyncable#serializeUpdateNBT(net.minecraft.core.HolderLookup.Provider, boolean)}
      */
     private void checkoutMinionData(HolderLookup.Provider provider) {
         if (playerMinionController != null && minionData == null) {

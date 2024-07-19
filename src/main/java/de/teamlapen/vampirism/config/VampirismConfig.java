@@ -61,7 +61,7 @@ public class VampirismConfig {
         BALANCE = new BalanceConfig(balanceBuilder);
     }
 
-    public static boolean isClientConfigSpec(IConfigSpec<?> specs) {
+    public static boolean isClientConfigSpec(IConfigSpec specs) {
         return specs == clientSpec;
     }
 

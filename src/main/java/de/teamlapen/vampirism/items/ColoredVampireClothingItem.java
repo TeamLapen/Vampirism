@@ -1,26 +1,17 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.core.ModArmorMaterials;
 import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 
 public class ColoredVampireClothingItem extends VampireClothingItem {
 
     public ColoredVampireClothingItem(@NotNull ArmorItem.Type type, EnumClothingColor color) {
         super(type, color.armorMaterial);
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(ItemExtensions.VAMPIRE_CLOAK);
     }
 
     public enum EnumClothingColor implements StringRepresentable {

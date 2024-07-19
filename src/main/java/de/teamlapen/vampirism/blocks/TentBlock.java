@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -37,12 +36,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static net.minecraft.world.level.block.BedBlock.OCCUPIED;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -208,12 +204,6 @@ public class TentBlock extends VampirismBlock {
         super(Properties.of().mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(OCCUPIED, false));
     }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientBlockExtensions> consumer) {
-        consumer.accept(BlockExtensions.TENT);
-    }
-
 
     @Override
     public boolean canSurvive(@NotNull BlockState blockState, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {

@@ -37,7 +37,6 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.RefinementHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
@@ -483,7 +482,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     /**
-     * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
+     * You can use {@link de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
      */
     @NotNull
     public VampirePlayerSpecialAttributes getSpecialAttributes() {
@@ -1444,7 +1443,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 if (vision.isEnabled()) {
                     this.vision = vision;
                     this.vision.onActivated(VampirePlayer.this);
-                } else if (VampirePlayer.this.player.isAddedToWorld()) {
+                } else if (VampirePlayer.this.player.isAddedToLevel()) {
                     VampirePlayer.this.player.displayClientMessage(Component.translatable("text.vampirism.vision_disabled_by_config"), true);
                 }
                 this.visionId = VampirismAPI.vampireVisionRegistry().getVisionId(vision);
