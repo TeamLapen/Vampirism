@@ -1108,6 +1108,7 @@
   "command.vampirism.test.skill.locked_player_state": "Locked by player status",
   "command.vampirism.test.skill.all_unlocked": "All skills are now unlocked",
   "command.vampirism.test.skill.all_locked": "All skills are now locked",
+  "command.vampirism.test.skill.not_enabled": "Skill %s was not enabled",
   "command.vampirism.test.tent.success": "Success",
   "command.vampirism.test.swordtrained.nosword": "You have to hold a vampire sword in your main hand",
   "command.vampirism.test.swordcharged.nosword": "You have to hold a vampire sword in your main hand",
