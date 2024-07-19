@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,13 +10,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 /**
  * Simple headwear that look like a hunter head
@@ -28,11 +23,6 @@ public class HunterHatItem extends HunterArmorItem {
     public HunterHatItem(HatType type, Holder<ArmorMaterial> armorMaterial) {
         super(armorMaterial, Type.HELMET, new Properties());
         this.type = type;
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(ItemExtensions.HUNTER_HAT);
     }
 
     private String descriptionId;

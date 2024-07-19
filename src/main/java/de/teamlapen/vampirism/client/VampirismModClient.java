@@ -76,7 +76,6 @@ public class VampirismModClient {
     public void setupClient(@NotNull FMLClientSetupEvent event) {
         VampirismMod.proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
         event.enqueueWork(ModBlocksRender::register);
-        event.enqueueWork(ModEffects::modifyNightVisionRenderer);
         event.enqueueWork(ModItemsRender::registerItemModelPropertyUnsafe);
         event.enqueueWork(() -> {
             Sheets.addWoodType(LogBlock.DARK_SPRUCE);

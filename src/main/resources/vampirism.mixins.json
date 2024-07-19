@@ -68,7 +68,6 @@
     "client.accessor.EntityRenderDispatcherAccessor",
     "client.accessor.HumanoidArmorLayerAccessor",
     "client.accessor.LivingEntityRendererAccessor",
-    "client.accessor.MobEffectAccessor",
     "client.accessor.ParticleEngineAccessor",
     "client.accessor.StatsScreenAccessor",
     "client.accessor.VillagerModelAccessor"
