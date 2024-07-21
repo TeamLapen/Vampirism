@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.command.test;
+package de.teamlapen.vampirism.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

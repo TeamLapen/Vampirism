@@ -31,7 +31,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 
-@SuppressWarnings("ClassCanBeRecord")
 public class FactionArgument implements ArgumentType<Holder.Reference<IFaction<?>>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 

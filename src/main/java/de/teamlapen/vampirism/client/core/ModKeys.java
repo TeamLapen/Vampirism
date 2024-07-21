@@ -11,12 +11,13 @@ import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.ActionKeys;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundStartFeedingPacket;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
-import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -57,20 +59,23 @@ public class ModKeys {
     public static final KeyMapping ACTION = new KeyMapping("keys.vampirism.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
     public static final KeyMapping VAMPIRISM_MENU = new KeyMapping("keys.vampirism.select_skills", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
     public static final KeyMapping VISION = new KeyMapping("keys.vampirism.vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    public static final KeyMapping ACTION1 = new KeyMapping("keys.vampirism.action1", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
-    public static final KeyMapping ACTION2 = new KeyMapping("keys.vampirism.action2", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
-    public static final KeyMapping ACTION3 = new KeyMapping("keys.vampirism.action3", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_3, CATEGORY);
-    public static final KeyMapping ACTION4 = new KeyMapping("keys.vampirism.action4", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION5 = new KeyMapping("keys.vampirism.action5", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION6 = new KeyMapping("keys.vampirism.action6", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION7 = new KeyMapping("keys.vampirism.action7", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION8 = new KeyMapping("keys.vampirism.action8", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping ACTION9 = new KeyMapping("keys.vampirism.action9", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping("keys.vampirism.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping SELECT_AMMO = new KeyMapping("keys.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
     public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.vampirism.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
-    public static final Map<Integer, KeyMapping> ACTION_KEYS = Map.of(1, ACTION1, 2, ACTION2, 3, ACTION3, 4, ACTION4, 5, ACTION5, 6, ACTION6, 7, ACTION7, 8, ACTION8, 9, ACTION9);
+    public static final Map<ActionKeys, KeyMapping> ACTION_KEYS;
+
+    static  {
+        ImmutableMap.Builder<ActionKeys, KeyMapping> builder = ImmutableMap.builder();
+        Arrays.stream(ActionKeys.values()).forEach(x -> {
+            if (x.getDefaultKey().isPresent()) {
+                builder.put(x, new KeyMapping("keys.vampirism.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, x.getDefaultKey().getAsInt(), CATEGORY));
+            } else {
+                builder.put(x, new KeyMapping("keys.vampirism.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY));
+            }
+        });
+        ACTION_KEYS = builder.build();
+    }
 
     static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.register(ACTION);
@@ -87,7 +92,7 @@ public class ModKeys {
 
     private final Map<KeyMapping, Runnable> keyMappingActions;
     private final Minecraft mc;
-    private final Int2LongArrayMap actionTriggerTime = new Int2LongArrayMap();
+    private final Object2LongArrayMap<ActionKeys> actionTriggerTime = new Object2LongArrayMap<>();
 
     public ModKeys() {
         ImmutableMap.Builder<KeyMapping, Runnable> keyMappingActions = ImmutableMap.builder();
@@ -184,14 +189,14 @@ public class ModKeys {
         }
     }
 
-    private void toggleAction(int id) {
+    private void toggleAction(ActionKeys key) {
         long t = System.currentTimeMillis();
-        if (t - this.actionTriggerTime.getOrDefault(id, 0) > ACTION_BUTTON_COOLDOWN) {
-            this.actionTriggerTime.put(id, t);
+        if (t - this.actionTriggerTime.getOrDefault(key, 0) > ACTION_BUTTON_COOLDOWN) {
+            this.actionTriggerTime.put(key, t);
             Player player = mc.player;
             if (player.isAlive()) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(id));
+                toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(key));
             }
         }
     }

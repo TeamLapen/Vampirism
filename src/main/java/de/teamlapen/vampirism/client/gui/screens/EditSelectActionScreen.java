@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.ActionKeys;
 import de.teamlapen.vampirism.network.ServerboundActionBindingPacket;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -81,7 +82,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
     private void resetKeyBindings() {
         ModKeys.ACTION_KEYS.keySet().forEach(key -> {
-            FactionPlayerHandler.get(getMinecraft().player).setBoundAction(key, null, false, false);
+            FactionPlayerHandler.get(getMinecraft().player).setBoundAction(key, null, false);
             VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(key));
         });
         this.keyBindingList.clearActions();
@@ -103,7 +104,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
             this.setX(x);
             FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
-            replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), handler.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.index)).toList());
+            replaceEntries(ModKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), handler.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.actionKey.ordinal())).toList());
         }
 
         @Override
@@ -150,16 +151,14 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             private static final WidgetSprites REMOVE_ICON = new WidgetSprites(VResourceLocation.mod("widget/remove"), VResourceLocation.mod("widget/remove_highlighted"));
             private static final WidgetSprites BUTTON = new WidgetSprites(VResourceLocation.mc("widget/button"), VResourceLocation.mc("widget/button_highlighted"));
 
-            private final int index;
-            private final KeyMapping keyMapping;
+            private final ActionKeys actionKey;
             private Holder<IAction<?>> action;
             private final StringWidget stringWidget;
             private ImageWidget imageWidget;
             private final ImageButton imageButton;
 
-            public KeyBindingSetting(int index, KeyMapping keyMapping, Holder<IAction<?>> action) {
-                this.index = index;
-                this.keyMapping = keyMapping;
+            public KeyBindingSetting(ActionKeys actionKey, KeyMapping keyMapping, Holder<IAction<?>> action) {
+                this.actionKey = actionKey;
                 this.stringWidget = new StringWidget(0, 2, 80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
                 this.imageButton = new ImageButton(115, 2, 16, 16, REMOVE_ICON, (a) -> switchAction(null));
                 applyAction(action);
@@ -167,7 +166,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
             @Override
             public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((index - 1) * 20), pButton)) {
+                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((actionKey.ordinal() - 1) * 20), pButton)) {
                     return true;
                 } else if (movingItem != null) {
                     switchAction(movingItem.get());
@@ -180,8 +179,8 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
             private void switchAction(@Nullable Holder<IAction<?>> action) {
                 applyAction(action);
-                VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.index, this.action));
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction(this.index, this.action, false, false);
+                VampirismMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.actionKey, this.action));
+                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction(this.actionKey, this.action, false);
             }
 
             private void applyAction(@Nullable Holder<IAction<?>> action) {

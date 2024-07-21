@@ -6,16 +6,14 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
-import de.teamlapen.vampirism.command.arguments.BiomeArgument;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.command.arguments.MinionArgument;
-import de.teamlapen.vampirism.command.arguments.RefinementSetArgument;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -29,9 +27,9 @@ public class ModCommands {
 
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, REFERENCE.MODID);
 
+    @SuppressWarnings("unused")
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> FACTION_ARGUMENT_TYPE = COMMAND_ARGUMENT_TYPES.register("faction", () -> ArgumentTypeInfos.registerByClass(FactionArgument.class, new FactionArgument.Info()));
-    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> REFINEMENT_SET = COMMAND_ARGUMENT_TYPES.register("refinement_set", () -> ArgumentTypeInfos.registerByClass(RefinementSetArgument.class, SingletonArgumentInfo.contextFree(RefinementSetArgument::set)));
-    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> BIOME = COMMAND_ARGUMENT_TYPES.register("biome", () -> ArgumentTypeInfos.registerByClass(BiomeArgument.class, SingletonArgumentInfo.contextFree(BiomeArgument::biome)));
+    @SuppressWarnings("unused")
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> MINION_ID = COMMAND_ARGUMENT_TYPES.register("minion_id", () -> ArgumentTypeInfos.registerByClass(MinionArgument.class, new MinionArgument.Info()));
 
     static void register(IEventBus bus) {
@@ -44,10 +42,8 @@ public class ModCommands {
         CommandBuildContext buildContext = event.getBuildContext();
 
         List<String> vampirism = Lists.newArrayList("vampirism");
-        List<String> test = Lists.newArrayList("vampirism-test");
         if (VampirismMod.inDev) {
             vampirism.add("v");
-            test.add("vtest");
         }
 
         //Vampirism commands
@@ -55,10 +51,7 @@ public class ModCommands {
             dispatcher.register(
                     LiteralArgumentBuilder.<CommandSourceStack>literal(s)
                             .then(BindActionCommand.register(buildContext))
-                            .then(CurrentDimensionCommand.register())
-                            .then(EyeCommand.register())
-                            .then(FangCommand.register())
-                            .then(GlowingEyeCommand.register())
+                            .then(AppearanceCommand.register())
                             .then(LevelCommand.register(buildContext))
                             .then(LordCommand.register())
                             .then(LevelUpCommand.register())
@@ -67,33 +60,25 @@ public class ModCommands {
                             .then(ConfigCommand.register(dispatcher, buildContext))
                             .then(SkillCommand.register(buildContext))
                             .then(MinionInventoryCommand.register(buildContext))
-            );
-        }
-
-        //Test commands
-        for (String s : test) {
-            dispatcher.register(
-                    LiteralArgumentBuilder.<CommandSourceStack>literal(s)
-                            .then(InfoEntitiesCommand.register())
-                            .then(MarkerCommand.register())
-                            .then(EntityCommand.register())
-                            .then(InfoEntityCommand.register())
-                            .then(BiomeCommand.register())
-                            .then(MakeVillagerAgressiveCommand.register())
-                            .then(ResetActionsCommand.register())
-                            .then(TentCommand.register())
-                            .then(VampireBookCommand.register())
-                            .then(GarlicCheckCommand.register())
                             .then(VampireSwordCommand.register())
-                            .then(SpawnTestAnimalCommand.register())
-                            .then(HealCommand.register())
                             .then(VillageCommand.register(buildContext))
                             .then(MinionCommand.register())
-                            .then(TaskCommand.register())
-                            .then(ForcePlayerSyncCommand.register())
-                            .then(GiveAccessoriesCommand.register())
-                            .then(SummonDummy.register())
-                            .then(GiveBannerCommand.register(buildContext))
+                            .then(ResetActionsCommand.register())
+                            .then(Commands.literal("test")
+                                    .then(InfoEntitiesCommand.register())
+                                    .then(MarkerCommand.register())
+                                    .then(EntityCommand.register())
+                                    .then(InfoEntityCommand.register())
+                                    .then(MakeVillagerAgressiveCommand.register())
+                                    .then(TentCommand.register())
+                                    .then(GarlicCheckCommand.register())
+                                    .then(SpawnTestAnimalCommand.register())
+                                    .then(HealCommand.register())
+                                    .then(TaskCommand.register())
+                                    .then(ForcePlayerSyncCommand.register())
+                                    .then(SummonDummy.register())
+                                    .then(GiveBannerCommand.register(buildContext))
+                            )
             );
         }
     }

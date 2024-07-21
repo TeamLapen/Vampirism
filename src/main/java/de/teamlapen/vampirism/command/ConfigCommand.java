@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.command.arguments.BiomeArgument;
 import de.teamlapen.vampirism.command.arguments.ModSuggestionProvider;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -69,8 +68,8 @@ public class ConfigCommand extends BasicCommand {
                                 })
                                 .then(Commands.literal("biome")
                                         .executes(context -> blacklistBiome(context.getSource().getPlayerOrException()))
-                                        .then(Commands.argument("biome", BiomeArgument.biome()).suggests(ModSuggestionProvider.BIOMES)
-                                                .executes(context -> blacklistBiome(context.getSource().getPlayerOrException(), BiomeArgument.getBiome(context, "biome").key().location()))))
+                                        .then(Commands.argument("biome", ResourceArgument.resource(buildContext, Registries.BIOME)).suggests(ModSuggestionProvider.BIOMES)
+                                                .executes(context -> blacklistBiome(context.getSource().getPlayerOrException(), ResourceArgument.getResource(context, "biome", Registries.BIOME).key().location()))))
                                 .then(Commands.literal("dimension")
                                         .executes(context -> blacklistDimension(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
@@ -144,10 +143,10 @@ public class ConfigCommand extends BasicCommand {
         if (!list.contains(id.toString())) {
             //noinspection unchecked
             ((List<String>) list).add(id.toString());
-            player.displayClientMessage(Component.translatable(blacklist, id), false);
+            player.displayClientMessage(Component.translatable(blacklist, id.toString()), false);
         } else {
             list.remove(id.toString());
-            player.displayClientMessage(Component.translatable(not_blacklist, id), false);
+            player.displayClientMessage(Component.translatable(not_blacklist, id.toString()), false);
         }
         configList.set(list);
         return 0;

@@ -60,8 +60,8 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
 
     enum TitleGender implements StringRepresentable {
         UNKNOWN("unknown"),
-        MALE("unknown"),
-        FEMALE("unknown");
+        MALE("male"),
+        FEMALE("female");
 
         private final String name;
 

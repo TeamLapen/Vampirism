@@ -59,7 +59,7 @@ public class ServerPayloadHandler {
     }
 
     public static void handleActionBindingPacket(ServerboundActionBindingPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> FactionPlayerHandler.get(context.player()).setBoundAction(msg.actionBindingId(), msg.action(), false, false));
+        context.enqueueWork(() -> FactionPlayerHandler.get(context.player()).setBoundAction(msg.actionBindingId(), msg.action(), false));
     }
 
     public static void handleAppearancePacket(ServerboundAppearancePacket msg, IPayloadContext context) {
