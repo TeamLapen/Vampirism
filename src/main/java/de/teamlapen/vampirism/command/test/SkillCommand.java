@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -33,16 +34,20 @@ public class SkillCommand extends BasicCommand {
         return builder.requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
                         .executes(context -> skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), false))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> skill(context.getSource(), EntityArgument.getPlayer(context, "player"), SkillArgument.getSkill(context, "type"), false))
+                                .then(Commands.literal("force")
+                                        .executes(context -> skill(context.getSource(), EntityArgument.getPlayer(context, "player"), SkillArgument.getSkill(context, "type"), true))))
                         .then(Commands.literal("force")
                                 .executes(context -> skill(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "type"), true))))
                 .then(Commands.literal("disableall")
-                        .executes(context -> {
-                            return disableall(context.getSource(), context.getSource().getPlayerOrException());
-                        }))
+                        .executes(context -> disableall(context.getSource(), context.getSource().getPlayerOrException()))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> disableall(context.getSource(), EntityArgument.getPlayer(context, "player")))))
                 .then(Commands.literal("enableall")
-                        .executes(context -> {
-                            return enableAll(context.getSource(), context.getSource().getPlayerOrException());
-                        }));
+                        .executes(context -> enableAll(context.getSource(), context.getSource().getPlayerOrException()))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(context -> enableAll(context.getSource(), EntityArgument.getPlayer(context, "player")))));
     }
 
     private static int disableall(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) throws CommandSyntaxException {
