@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.Range;
 /**
  * Skill that tha unlocks abilities for a player.
  */
-public interface ISkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ISkillLike<T> {
+public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     /**
      * The description for this skill or null if there is no description.
      */

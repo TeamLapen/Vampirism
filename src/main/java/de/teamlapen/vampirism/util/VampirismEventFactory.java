@@ -2,17 +2,15 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.event.ActionEvent;
-import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
-import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
+import de.teamlapen.vampirism.api.event.*;
 import de.teamlapen.vampirism.api.world.ITotem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Mob;
@@ -87,24 +85,40 @@ public class VampirismEventFactory {
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> ActionEvent.ActionActivatedEvent<T> fireActionActivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends IAction<T>> action, int cooldown, int duration) {
+    public static <T extends ISkillPlayer<T>> ActionEvent.ActionActivatedEvent<T> fireActionActivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends IAction<T>> action, int cooldown, int duration) {
         ActionEvent.ActionActivatedEvent<T> event = new ActionEvent.ActionActivatedEvent<>(factionPlayer, (Holder<IAction<T>>) action, cooldown, duration);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> ActionEvent.ActionDeactivatedEvent<T> fireActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+    public static <T extends ISkillPlayer<T>> ActionEvent.ActionDeactivatedEvent<T> fireActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
         ActionEvent.ActionDeactivatedEvent<T> event = new ActionEvent.ActionDeactivatedEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration, cooldown, ignoreCooldown, fullCooldown);
         NeoForge.EVENT_BUS.post(event);
         return event;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> ActionEvent.ActionUpdateEvent<T> fireActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration) {
+    public static <T extends ISkillPlayer<T>> ActionEvent.ActionUpdateEvent<T> fireActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ILastingAction<T>> action, int remainingDuration) {
         ActionEvent.ActionUpdateEvent<T> event = new ActionEvent.ActionUpdateEvent<>(factionPlayer, (Holder<ILastingAction<T>>) action, remainingDuration);
         NeoForge.EVENT_BUS.post(event);
         return event;
+    }
+
+    public static <T extends ISkillPlayer<T>> ISkillHandler.Result fireSkillUnlockCheckEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill) {
+        var event = new SkillEvents.SkillUnlockCheckEvent<>(factionPlayer, skill);
+        NeoForge.EVENT_BUS.post(event);
+        return event.getResult();
+    }
+
+    public static <T extends ISkillPlayer<T>> void fireSkillDisabledEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill) {
+        var event = new SkillEvents.SkillDisableEvent<>(factionPlayer, skill);
+        NeoForge.EVENT_BUS.post(event);
+    }
+
+    public static <T extends ISkillPlayer<T>> void fireSkillEnableEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill, boolean fromLoading) {
+        var event = new SkillEvents.SkillEnableEvent<>(factionPlayer, skill, fromLoading);
+        NeoForge.EVENT_BUS.post(event);
     }
 
 }

@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.data.ISkillTreeData;
 import de.teamlapen.vampirism.util.RegUtil;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -62,6 +63,11 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
 
     @Override
     public @NotNull Result canSkillBeEnabled(@NotNull Holder<ISkill<?>> skill) {
+        var preResult = VampirismEventFactory.fireSkillUnlockCheckEvent(this.player, skill);
+        if (preResult != null) {
+            return preResult;
+        }
+
         if (player.asEntity().getEffect(ModEffects.OBLIVION) != null) {
             return Result.LOCKED_BY_PLAYER_STATE;
         }
@@ -91,6 +97,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
 
     public void disableAllSkills() {
         for (Holder<ISkill<T>> skill : enabledSkills) {
+            VampirismEventFactory.fireSkillDisabledEvent(player, skill);
             skill.value().onDisable(player);
         }
         enabledSkills.clear();
@@ -100,6 +107,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     @Override
     public void disableSkill(@NotNull Holder<ISkill<T>> skill) {
         if (enabledSkills.remove(skill)) {
+            VampirismEventFactory.fireSkillDisabledEvent(player, skill);
             skill.value().onDisable(player);
             dirty = true;
         }
@@ -108,6 +116,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     @Override
     public void enableSkill(@NotNull Holder<ISkill<T>> skill, boolean fromLoading) {
         if (!enabledSkills.contains(skill)) {
+            VampirismEventFactory.fireSkillEnableEvent(player, skill, fromLoading);
             skill.value().onEnable(player);
             enabledSkills.add(skill);
             if (!fromLoading) {
