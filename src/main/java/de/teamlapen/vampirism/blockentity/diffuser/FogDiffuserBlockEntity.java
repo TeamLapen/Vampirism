@@ -43,7 +43,7 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
     @Override
     protected void activateEffect(Level level, BlockPos blockPos, BlockState blockState) {
         var range = getRange();
-        FogLevel.getOpt(level).ifPresent(l -> l.updateArtificialFogBoundingBox(blockPos, new AABB(Vec3.atLowerCornerOf(this.worldPosition.offset(-range, -range, -range)), Vec3.atLowerCornerWithOffset(this.worldPosition.offset(range, range, range), 1, 1, 1))));
+        FogLevel.get(level).updateArtificialFogBoundingBox(blockPos, new AABB(Vec3.atLowerCornerOf(this.worldPosition.offset(-range, -range, -range)), Vec3.atLowerCornerWithOffset(this.worldPosition.offset(range, range, range), 1, 1, 1)));
     }
 
     @Override
@@ -57,6 +57,6 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
-        FogLevel.getOpt(level).ifPresent(l -> l.updateArtificialFogBoundingBox(blockPos, null));
+        FogLevel.get(level).updateArtificialFogBoundingBox(blockPos, null);
     }
 }

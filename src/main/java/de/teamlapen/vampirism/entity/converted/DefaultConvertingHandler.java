@@ -49,7 +49,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.getRepresentingEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString()));
+            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.asEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString()));
             return convertedCreature;
         }).orElse(null);
     }

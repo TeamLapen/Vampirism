@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.api.entity.player;
 
-import de.teamlapen.vampirism.api.entity.factions.*;
+import de.teamlapen.vampirism.api.entity.factions.IDisguise;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -27,22 +28,10 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     @SuppressWarnings("SameReturnValue")
     boolean canLeaveFaction();
 
-    /**
-     * If not disguised this should return the ACTUAL FACTION of the player NOT NULL. Null represents neutral players
-     *
-     * @return The faction the player is disguised as.
-     */
-    @Nullable
-    @Deprecated(forRemoval = true)
-    default IFaction<?> getDisguisedAs() {
-        var holder = getDisguise().getViewedFaction(null);
-        return holder == null ? null : holder.value();
-    }
-
     IDisguise getDisguise();
 
     /**
-     * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(IPlayableFaction)}
+     * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(net.minecraft.core.Holder)}
      *
      * @return 0 if the player is not part of this faction, something > 0 if the player is part of the faction.
      */
@@ -65,18 +54,6 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * @return A predicate that selects all non-friendly entities
      */
     Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
-
-    /**
-     * @deprecated use {@link #asEntity()} instead
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    Player getRepresentingPlayer();
-
-    @Override
-    default @NotNull Player asEntity() {
-        return getRepresentingPlayer();
-    }
 
     /**
      * You can also use {@link de.teamlapen.vampirism.api.entity.player.IFactionPlayer#getDisguise()} to get the faction the player looks like

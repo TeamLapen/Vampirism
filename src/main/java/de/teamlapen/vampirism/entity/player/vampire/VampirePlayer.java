@@ -126,14 +126,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return player.getData(ModAttachments.VAMPIRE_PLAYER);
     }
 
-    /**
-     * @deprecated a player will always have a vampire player attachment
-     */
-    @Deprecated
-    public static @NotNull Optional<VampirePlayer> getOpt(@NotNull Player player) {
-        return Optional.of(player.getData(ModAttachments.VAMPIRE_PLAYER));
-    }
-
     public static double getNaturalArmorValue(int lvl) {
         return lvl > 0 ? VampirismConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * VampirismConfig.BALANCE.vpNaturalArmorIncrease.get() : 0;
     }
@@ -651,7 +643,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         endFeeding(true);
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? VampirismConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {

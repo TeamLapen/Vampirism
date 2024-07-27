@@ -83,11 +83,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    @Override
-    public @NotNull LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
     /**
      * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
      */

@@ -101,12 +101,6 @@ public class SundamageRegistry implements ISundamageRegistry {
         reloadSettings();
     }
 
-    @Deprecated
-    @Override
-    public boolean getSundamageInBiome(ResourceLocation registryName) {
-        return !this.noSunDamageBiomes.contains(ResourceKey.create(Registries.BIOME, registryName));
-    }
-
     @Override
     public boolean getSundamageInDim(ResourceKey<Level> dim) {
         if (this.sunDamageLevels.contains(dim)) {
@@ -164,7 +158,6 @@ public class SundamageRegistry implements ISundamageRegistry {
         return Helper.gettingSundamge(entity, world, null);
     }
 
-    @Deprecated
     @Override
     public void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage) {
         if (sundamage) {

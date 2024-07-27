@@ -171,7 +171,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         this.informEntitiesAboutCaptureStop();
         this.updateBossinfoPlayers(null);
         this.captureInfo.clear();
-        FogLevel.getOpt(this.level).ifPresent(fog -> fog.updateTemporaryArtificialFog(this.worldPosition, null));
+        FogLevel.get(this.level).updateTemporaryArtificialFog(this.worldPosition, null);
         this.setChanged();
     }
 
@@ -356,14 +356,13 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         if (this.level != null) {
             if (compound.contains("villageArea")) {
-                FogLevel.getOpt(this.level).ifPresent(vw -> {
-                    AABB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
-                    // noinspection UnclearExpression
-                    vw.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? aabb : null);
-                    if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
-                        vw.updateTemporaryArtificialFog(this.worldPosition, aabb);
-                    }
-                });
+                FogLevel fog = FogLevel.get(this.level);
+                AABB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
+                // noinspection UnclearExpression
+                fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? aabb : null);
+                if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
+                    fog.updateTemporaryArtificialFog(this.worldPosition, aabb);
+                }
             }
         }
         this.forceVillageUpdate = true;
@@ -483,12 +482,11 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             super.setChanged();
             this.level.sendBlockUpdated(this.worldPosition, this.level.getBlockState(this.worldPosition), this.level.getBlockState(this.worldPosition), 3);
             if (!this.village.isEmpty()) {
-                FogLevel.getOpt(this.level).ifPresent(vw -> {
-                    vw.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? this.getVillageArea() : null);
-                    if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
-                        vw.updateTemporaryArtificialFog(this.worldPosition, this.getVillageArea());
-                    }
-                });
+                FogLevel fog = FogLevel.get(this.level);
+                fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? this.getVillageArea() : null);
+                if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
+                    fog.updateTemporaryArtificialFog(this.worldPosition, this.getVillageArea());
+                }
 
             }
         }
@@ -520,7 +518,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     @Override
     public void setRemoved() {
         //noinspection ConstantConditions
-        FogLevel.getOpt(this.level).ifPresent(vw -> vw.updateArtificialFogBoundingBox(this.worldPosition, null));
+        FogLevel.get(this.level).updateArtificialFogBoundingBox(this.worldPosition, null);
         TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
         if (!unloaded) {
             // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).

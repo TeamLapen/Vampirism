@@ -24,7 +24,7 @@ public class ClientRegistryHandler {
         modbus.addListener(ModItemsRender::registerItemDecorator);
         modbus.addListener(ClientEventHandler::registerReloadListener);
         modbus.addListener(ClientEventHandler::registerStageEvent);
-        modbus.addListener(ModEffects::registerClientExtensions);
+        modbus.addListener(ModClientEffects::registerClientExtensions);
         modbus.addListener(ModBlocksRender::registerClientExtensions);
         modbus.addListener(ModClientFluids::registerClientExtensions);
         modbus.addListener(ModItemsRender::registerClientExtensions);

@@ -150,7 +150,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public @NotNull LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity asEntity() {
         return this;
     }
 

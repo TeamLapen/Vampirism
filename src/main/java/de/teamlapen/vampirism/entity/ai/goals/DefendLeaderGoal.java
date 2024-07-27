@@ -28,8 +28,8 @@ public class DefendLeaderGoal<T extends Mob & IEntityFollower> extends TargetGoa
         if (leader == null) {
             return false;
         } else {
-            this.attacker = leader.getRepresentingEntity().getLastHurtByMob();
-            int i = leader.getRepresentingEntity().getLastHurtByMobTimestamp();
+            this.attacker = leader.asEntity().getLastHurtByMob();
+            int i = leader.asEntity().getLastHurtByMobTimestamp();
             return i != this.timestamp && this.canAttack(this.attacker, TargetingConditions.DEFAULT);
         }
 
@@ -39,7 +39,7 @@ public class DefendLeaderGoal<T extends Mob & IEntityFollower> extends TargetGoa
         this.mob.setTarget(this.attacker);
         IEntityLeader leader = this.entity.getLeader();
         if (leader != null) {
-            this.timestamp = leader.getRepresentingEntity().getLastHurtByMobTimestamp();
+            this.timestamp = leader.asEntity().getLastHurtByMobTimestamp();
         }
 
         super.start();

@@ -117,7 +117,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public void onReActivated(@NotNull IVampirePlayer vampire) {
-        setModifier(vampire.getRepresentingPlayer(), true);
+        setModifier(vampire.asEntity(), true);
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
             updatePlayer((VampirePlayer) vampire, true);
         }
@@ -187,7 +187,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * Adjust the players size and eye height to fit to the bat model
      */
     private void updatePlayer(@NotNull VampirePlayer vampire, boolean bat) {
-        Player player = vampire.getRepresentingPlayer();
+        Player player = vampire.asEntity();
         vampire.getSpecialAttributes().bat = bat;
         player.setForcedPose(bat ? Pose.STANDING : null);
         //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event

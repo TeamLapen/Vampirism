@@ -13,7 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.player.Player;
@@ -52,10 +55,6 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
         return super.getClassification(forSpawnCount);
     }
 
-    @Override
-    public @NotNull LivingEntity getRepresentingEntity() {
-        return this;
-    }
 
     @Override
     public void die(@NotNull DamageSource cause) {

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,20 +35,6 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Att
     @Override
     public int getLevel() {
         return VampirismAPI.factionPlayerHandler(player).getCurrentLevel(getFaction());
-    }
-
-    /**
-     * Only use this if you are dealing with minions.
-     * Otherwise use {@link FactionBasePlayer#getRepresentingPlayer()}
-     */
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return player;
-    }
-
-    @Override
-    public Player getRepresentingPlayer() {
-        return player;
     }
 
     @SuppressWarnings("ConstantConditions")

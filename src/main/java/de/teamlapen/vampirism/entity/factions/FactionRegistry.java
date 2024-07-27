@@ -12,7 +12,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -69,16 +68,6 @@ public class FactionRegistry implements IFactionRegistry {
     public Predicate<LivingEntity> getPredicate(@NotNull Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction) {
         var hash = Objects.hash(thisFaction.unwrapKey().orElseThrow(), player, mob, neutralPlayer, ignoreDisguise, otherFaction == null ? null : otherFaction.unwrapKey().orElseThrow());
         return predicateMap.computeIfAbsent(hash, (k) -> new FactionPredicate.Builder(thisFaction).player().nonPlayer(mob).neutral(neutralPlayer).ignoreDisguise(ignoreDisguise).targetFaction(otherFaction).build());
-    }
-
-    @Override
-    public @Nullable IMinionEntry<?, ?> getMinion(ResourceLocation minionId) {
-        return ModRegistries.MINIONS.get(minionId);
-    }
-
-    @Override
-    public @NotNull Collection<IMinionEntry<?, ?>> getMinions() {
-        return ModRegistries.MINIONS.stream().toList();
     }
 
     @Override

@@ -34,15 +34,6 @@ public class ConfigAwareEffect extends MobEffect {
         return this;
     }
 
-    /**
-     * use {@link #addAttributeModifier(net.minecraft.core.Holder, net.minecraft.resources.ResourceLocation, java.util.function.Supplier, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation)}
-     */
-    @Deprecated
-    @Override
-    public @NotNull MobEffect addAttributeModifier(@NotNull Holder<Attribute> pAttribute, @NotNull ResourceLocation pId, double pAmount, AttributeModifier.@NotNull Operation pOperation) {
-        return super.addAttributeModifier(pAttribute, pId, pAmount, pOperation);
-    }
-
     public void createModifiers(int pAmplifier, @NotNull BiConsumer<Holder<Attribute>, AttributeModifier> pOutput) {
         this.attributeModifiers
                 .forEach((attribute, template) -> pOutput.accept(attribute, template.create(this.getDescriptionId(), pAmplifier)));

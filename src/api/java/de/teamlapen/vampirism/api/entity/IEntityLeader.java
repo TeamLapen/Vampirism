@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.world.entity.LivingEntity;
+import de.teamlapen.vampirism.api.extensions.ILivingEntity;
 
 
-public interface IEntityLeader {
+public interface IEntityLeader extends ILivingEntity {
     /**
      * Call this if an entity stops following this one
      */
@@ -18,8 +18,6 @@ public interface IEntityLeader {
      * @return The maximum number of entities that are allowed to follow this one
      */
     int getMaxFollowerCount();
-
-    LivingEntity getRepresentingEntity();
 
     /**
      * Call this if a new entity starts following this one

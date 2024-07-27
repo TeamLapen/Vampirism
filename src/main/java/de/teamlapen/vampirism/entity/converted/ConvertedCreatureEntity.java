@@ -242,7 +242,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
         }
         if (!nbt.contains("source_entity")) {
-            getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.getRepresentingEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
+            getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.asEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
         }
     }
 

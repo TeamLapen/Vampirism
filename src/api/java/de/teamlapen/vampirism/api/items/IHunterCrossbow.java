@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.items;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -12,8 +13,7 @@ import java.util.function.Predicate;
  * Implemented by any crossbow.
  * Used for crossbow enchantments
  */
-@SuppressWarnings("removal")
-public interface IHunterCrossbow extends IVampirismCrossbow {
+public interface IHunterCrossbow extends ItemLike {
 
     /**
      * gets the required charge duration for the given crossbow

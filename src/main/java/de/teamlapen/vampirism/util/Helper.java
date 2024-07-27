@@ -72,7 +72,7 @@ public class Helper {
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !FogLevel.getOpt(((Level) world)).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
+                        return world instanceof Level && !FogLevel.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
                     }
                 }
             }
@@ -203,7 +203,7 @@ public class Helper {
     public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
         if (e == null) return false;
         Level w = e.getCommandSenderWorld();
-        return FogLevel.getOpt(w).map(vh -> vh.isInsideArtificialVampireFogArea(e.blockPosition())).orElse(false);
+        return FogLevel.get(w).isInsideArtificialVampireFogArea(e.blockPosition());
     }
 
     public static ResourceLocation getBiomeId(@NotNull Entity e) {

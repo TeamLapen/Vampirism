@@ -235,11 +235,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public @NotNull LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    @Override
     public int getDimensionChangingDelay() {
         return 500;
     }

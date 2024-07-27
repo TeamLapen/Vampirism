@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.extensions.ILivingEntity;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.ServerConfig;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -46,10 +47,10 @@ import java.util.Arrays;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity {
+public abstract class VampirismEntity extends PathfinderMob implements IEntityWithHome, IVampirismEntity, ILivingEntity {
 
     public static boolean spawnPredicateVampireFog(@NotNull LevelAccessor world, @NotNull BlockPos blockPos) {
-        return world.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) || (world instanceof Level && FogLevel.getOpt((Level) world).map(vh -> vh.isInsideArtificialVampireFogArea(blockPos)).orElse(false));
+        return world.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) || (world instanceof Level && FogLevel.get((Level) world).isInsideArtificialVampireFogArea(blockPos));
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
@@ -261,6 +262,11 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
             return i <= this.random.nextInt(8);
         }
+    }
+
+    @Override
+    public @NotNull LivingEntity asEntity() {
+        return this;
     }
 
     /**

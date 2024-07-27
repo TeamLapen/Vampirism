@@ -115,15 +115,6 @@ public class ClientConfigHelper {
     }
 
     /**
-     * @deprecated may be null and does not ensure a valid order
-     */
-    @Deprecated
-    @Nullable
-    public static List<Holder<IAction<?>>> getActionOrder(@NotNull ResourceLocation id) {
-        return ACTION_ORDER.get(id);
-    }
-
-    /**
      * @param faction the faction for which the order should be returned
      * @return a valid order for the given faction
      * @implSpec if no order is set for the given faction, the default order is returned and set

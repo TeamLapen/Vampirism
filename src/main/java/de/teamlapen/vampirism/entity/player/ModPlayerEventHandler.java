@@ -54,7 +54,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
@@ -249,7 +248,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.@NotNull Start event) {
         if (event.getEntity() instanceof Player player) {
-            if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirismPlayerAttributes.get(player).getVampSpecial().isCannotInteract()) {
                 event.setCanceled(true);
             }
             if (!checkItemUsePerm(event.getItem(), player)) {
@@ -332,7 +331,8 @@ public class ModPlayerEventHandler {
 
         // reduce damage dor vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
-            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
+            VampirePlayer vampire = VampirePlayer.get(player);
+            float mod = (float) (0.2 * (float)vampire.getLevel()/ (float)vampire.getMaxLevel());
             d.setNewDamage(d.getNewDamage() * (1 - mod));
         }
     }

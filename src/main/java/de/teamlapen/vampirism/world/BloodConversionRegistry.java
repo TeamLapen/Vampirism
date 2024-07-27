@@ -28,11 +28,6 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
     private final Map<Item, IItemBlood> CALCULATED = new HashMap<>();
 
     @Override
-    public int getImpureBloodValue(@NotNull Item item) {
-        return getItemBlood(new ItemStack(item)).blood();
-    }
-
-    @Override
     public boolean canBeConverted(@NotNull ItemStack stack) {
         return getItemBlood(stack).blood() > 0;
     }

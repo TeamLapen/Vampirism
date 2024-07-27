@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
@@ -31,11 +30,6 @@ public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
     boolean equipRefinementItem(ItemStack stack);
 
     void removeRefinementItem(IRefinementItem.AccessorySlotType slot);
-
-    @Deprecated
-    default boolean isRefinementEquipped(IRefinement refinement) {
-        return isRefinementEquipped(RegUtil.holder(refinement));
-    }
 
     boolean isRefinementEquipped(Holder<IRefinement> refinement);
 

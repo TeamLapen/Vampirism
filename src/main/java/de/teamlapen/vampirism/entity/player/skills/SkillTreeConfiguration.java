@@ -30,18 +30,6 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         children.forEach(c -> c.setTreeConfig(this));
     }
 
-    public boolean contains(ISkill<?> skill) {
-        if (root.value().containsSkill(skill)) {
-            return true;
-        }
-        for (SkillTreeNodeConfiguration child : children) {
-            if (child.contains(skill)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
         for (SkillTreeNodeConfiguration child : children) {
             var result = child.getNode(skill);
@@ -111,18 +99,6 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
 
         public SkillTreeConfiguration getTreeConfig() {
             return treeConfig;
-        }
-
-        public boolean contains(ISkill<?> skill) {
-            if (node.value().containsSkill(skill)) {
-                return true;
-            }
-            for (SkillTreeNodeConfiguration child : children) {
-                if (child.contains(skill)) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {

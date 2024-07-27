@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -37,15 +36,6 @@ public interface ISundamageRegistry {
      * @param dimensionType The resource key of the dimension type
      */
     void addNoSundamageDimensionType(ResourceKey<DimensionType> dimensionType);
-
-    /**
-     * Check if vampires can get sundamage in that biome
-     *
-     * @return Whether vampires can get sundamage in that biome
-     * @deprecated use {@link #hasBiomeSundamage(net.minecraft.resources.ResourceKey)} )} instead
-     */
-    @Deprecated
-    boolean getSundamageInBiome(ResourceLocation registryName);
 
     /**
      * Check if vampires can get sundamage in that biome

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
@@ -204,7 +203,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
             this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
         }
         if (compound.contains("source_entity", Tag.TAG_STRING)) {
-            getSourceEntityDataParamOpt().ifPresent(s -> this.getRepresentingEntity().getEntityData().set(s, compound.getString("source_entity")));
+            getSourceEntityDataParamOpt().ifPresent(s -> this.asEntity().getEntityData().set(s, compound.getString("source_entity")));
         }
     }
 
@@ -282,7 +281,8 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     @Override
-    default @NotNull LivingEntity getRepresentingEntity() {
+    @NotNull
+    default LivingEntity asEntity() {
         return ((PathfinderMob) this);
     }
 

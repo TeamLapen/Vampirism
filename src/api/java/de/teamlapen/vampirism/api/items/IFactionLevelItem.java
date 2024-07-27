@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -54,16 +53,6 @@ public interface IFactionLevelItem<T extends IFactionPlayer<T> & ISkillPlayer<T>
      */
     @Nullable
     default Holder<ISkill<?>> requiredSkill(@NotNull ItemStack stack) {
-        var req = getRequiredSkill(stack);
-        return req == null ? null : RegUtil.holder(req);
-    }
-
-    /**
-     * use @link {@link #requiredSkill(ItemStack)} instead
-     */
-    @Deprecated(forRemoval = true)
-    @Nullable
-    default ISkill<T> getRequiredSkill(@NotNull ItemStack stack) {
         return null;
     }
 }

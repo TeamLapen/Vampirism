@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -82,14 +81,6 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      */
     float getCurrentLevelRelative();
 
-    /**
-     * @return The player represented by this handler
-     * @deprecated use {@link de.teamlapen.vampirism.api.extensions.IPlayer#asEntity()}
-     */
-    @Deprecated
-    @NotNull
-    Player getPlayer();
-
     <T extends IFaction<?>> boolean isInFaction(Holder<T> f);
 
     <T extends IFaction<?>> boolean isInFaction(TagKey<T> f);
@@ -145,4 +136,6 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      * It is called when the player level or lord level changes as well as when the player respawns. But it can be called at any time.
      */
     void checkSkillTreeLocks();
+
+
 }

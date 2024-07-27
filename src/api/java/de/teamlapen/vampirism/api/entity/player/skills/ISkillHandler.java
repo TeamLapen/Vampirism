@@ -4,7 +4,6 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
-import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 
@@ -26,11 +25,6 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
      */
     Result canSkillBeEnabled(Holder<ISkill<?>> skill);
 
-    @Deprecated
-    default Result canSkillBeEnabled(ISkill<?> skill) {
-        return canSkillBeEnabled(RegUtil.holder(skill));
-    }
-
     /**
      * Disables the given skill
      */
@@ -50,17 +44,7 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
      */
     int getLeftSkillPoints();
 
-    @Deprecated
-    default ISkill<?>[] getParentSkills(ISkill<?> skill) {
-        return getParentSkills(RegUtil.holder(skill)).stream().map(Holder::value).toArray(ISkill[]::new);
-    }
-
     List<Holder<ISkill<?>>> getParentSkills(Holder<ISkill<?>> skill);
-
-    @Deprecated
-    default boolean isSkillEnabled(ISkill<?> skill) {
-        return isSkillEnabled(RegUtil.holder(skill));
-    }
 
     boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill);
 

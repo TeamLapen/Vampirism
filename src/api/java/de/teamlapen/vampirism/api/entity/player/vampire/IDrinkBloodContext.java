@@ -32,28 +32,4 @@ public interface IDrinkBloodContext {
      */
     Optional<BlockPos> getBlockPos();
 
-    @Deprecated(forRemoval = true)
-    static IDrinkBloodContext none() {
-        return new IDrinkBloodContext() {
-            @Override
-            public Optional<LivingEntity> getEntity() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Optional<ItemStack> getStack() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Optional<BlockState> getBlockState() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Optional<BlockPos> getBlockPos() {
-                return Optional.empty();
-            }
-        };
-    }
 }

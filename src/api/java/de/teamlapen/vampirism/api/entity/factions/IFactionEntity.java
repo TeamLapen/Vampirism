@@ -19,13 +19,8 @@ public interface IFactionEntity extends IEntity {
      * Can be the same object or for Player Capabilities the player object
      *
      * @return The EntityLivingBase represented by this object.
-     * @deprecated use {@link #asEntity()}
      */
-    @Deprecated
-    LivingEntity getRepresentingEntity();
-
     @Override
-    default @NotNull LivingEntity asEntity() {
-        return getRepresentingEntity();
-    }
+    @NotNull
+    LivingEntity asEntity();
 }

@@ -313,11 +313,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.of(skinDetails);
     }
 
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
     public float getScale() {
         return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
     }

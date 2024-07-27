@@ -343,7 +343,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void tick() {
         super.tick();
-        if (advancedLeader != null && !advancedLeader.getRepresentingEntity().isAlive()) {
+        if (advancedLeader != null && !advancedLeader.asEntity().isAlive()) {
             advancedLeader = null;
         }
     }

@@ -20,8 +20,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 import static de.teamlapen.vampirism.api.VampirismAttachments.*;
 
 /**
@@ -164,51 +162,4 @@ public class VampirismAPI {
         return w.getData(VampirismAttachments.FOG_HANDLER);
     }
 
-    /**
-     * @deprecated Use {@link #factionPlayerHandler(Player)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IFactionPlayerHandler> getFactionPlayerHandler(@NotNull Player player) {
-        return Optional.of(player.getData(FACTION_PLAYER_HANDLER));
-    }
-
-    /**
-     * @deprecated Use {@link #vampirePlayer(Player)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IVampirePlayer> getVampirePlayer(@NotNull Player player) {
-        return Optional.of(player.getData(VAMPIRE_PLAYER));
-    }
-
-    /**
-     * @deprecated Use {@link #hunterPlayer(Player)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IHunterPlayer> getHunterPlayer(@NotNull Player player) {
-        return Optional.of(player.getData(HUNTER_PLAYER));
-    }
-
-    /**
-     * @deprecated Use {@link #extendedCreatureVampirism(PathfinderMob)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(@NotNull PathfinderMob creature) {
-        return Optional.of(creature.getData(VampirismAttachments.EXTENDED_CREATURE));
-    }
-
-    /**
-     * @deprecated Use {@link #garlicHandler(Level)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IGarlicChunkHandler> getGarlicHandler(@NotNull Level w) {
-        return Optional.of(w.getData(VampirismAttachments.GARLIC_HANDLER));
-    }
-
-    /**
-     * @deprecated Use {@link #fogHandler(Level)}
-     */
-    @Deprecated
-    public static @NotNull Optional<IFogHandler> getFogHandler(@NotNull Level w) {
-        return Optional.of(w.getData(VampirismAttachments.FOG_HANDLER));
-    }
 }

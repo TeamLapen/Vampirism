@@ -67,10 +67,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static @NotNull List<IMinionTask<?, ?>> getAvailableTasks(@NotNull ILordPlayer player) {
-        return player.getLordFaction().stream().flatMap(s -> RegUtil.values(ModRegistries.MINION_TASKS).stream().filter(t -> t.isAvailable(s.value(), player))).collect(Collectors.toList());
-    }
-
     private final Random rng = new Random();
     @NotNull
     private final MinecraftServer server;

@@ -27,11 +27,6 @@ public interface IGarlicChunkHandler {
      */
     int registerGarlicBlock(EnumStrength strength, List<ChunkPos> pos);
 
-    @Deprecated(forRemoval = true)
-    default int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
-        return registerGarlicBlock(strength, List.of(pos));
-    }
-
     /**
      * Removes a garlic "emitter" registration
      *

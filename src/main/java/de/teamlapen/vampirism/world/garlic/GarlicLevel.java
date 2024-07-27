@@ -24,16 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GarlicLevel implements IGarlicChunkHandler {
-
-    @Deprecated
-    public static Optional<GarlicLevel> getOpt(@NotNull Level level) {
-        return Optional.of(level.getData(ModAttachments.LEVEL_GARLIC));
-    }
 
     public static GarlicLevel get(@NotNull Level level) {
         return level.getData(ModAttachments.LEVEL_GARLIC);

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -58,20 +57,6 @@ public interface IFactionRegistry {
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      */
     Predicate<LivingEntity> getPredicate(Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction);
-
-    /**
-     * @return the minion entry from {@link de.teamlapen.vampirism.api.VampirismRegistries#MINION} registry
-     */
-    @Deprecated
-    @Nullable
-    IMinionEntry<?, ?> getMinion(ResourceLocation minionId);
-
-    /**
-     * @return all minion entries from {@link de.teamlapen.vampirism.api.VampirismRegistries#MINION} registry
-     */
-    @Unmodifiable
-    @Deprecated
-    Collection<IMinionEntry<?, ?>> getMinions();
 
     /**
      * @return a map of all minion entries from {@link de.teamlapen.vampirism.api.VampirismRegistries#MINION} registry, grouped by faction

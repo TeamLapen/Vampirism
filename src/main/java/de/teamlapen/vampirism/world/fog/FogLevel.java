@@ -2,13 +2,9 @@ package de.teamlapen.vampirism.world.fog;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sun.jna.platform.win32.WinDef;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.world.IFogHandler;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.util.CodecUtil;
-import de.teamlapen.vampirism.world.garlic.GarlicLevel;
-import de.teamlapen.vampirism.world.garlic.GarlicServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,27 +12,19 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FogLevel implements IFogHandler {
-
-    @Deprecated
-    public static Optional<FogLevel> getOpt(@NotNull Level level) {
-        return Optional.of(level.getData(ModAttachments.LEVEL_FOG));
-    }
 
     public static FogLevel get(@NotNull Level level) {
         return level.getData(ModAttachments.LEVEL_FOG);

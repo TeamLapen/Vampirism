@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.effects;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
@@ -41,12 +40,12 @@ public class BleedingEffect extends MobEffect {
             if (entityLivingBaseIn.getRandom().nextInt(4) == 0) {
                 if (Helper.isVampire(entityLivingBaseIn)) {
                     if (entityLivingBaseIn instanceof Player) {
-                        VampirePlayer.getOpt(((Player) entityLivingBaseIn)).map(vampire -> vampire.useBlood(1, true));
+                        VampirePlayer.get(((Player) entityLivingBaseIn)).useBlood(1, true);
                     } else if (entityLivingBaseIn instanceof IVampire) {
                         ((IVampire) entityLivingBaseIn).useBlood(1, true);
                     }
                 } else if (entityLivingBaseIn instanceof PathfinderMob) {
-                    VampirismAPI.getExtendedCreatureVampirism((PathfinderMob) entityLivingBaseIn).ifPresent(creature -> creature.setBlood(creature.getBlood() - 1));
+                    ExtendedCreature.getSafe(entityLivingBaseIn).ifPresent(creature -> creature.setBlood(creature.getBlood() - 1));
                 }
             }
         }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.general;
 
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -26,13 +25,6 @@ import org.jetbrains.annotations.NotNull;
  * Entity blood values are handled by {@link de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry}
  */
 public interface IBloodConversionRegistry {
-
-    /**
-     * @implNote a default {@link net.minecraft.world.item.ItemStack} will be created to check the blood value
-     * @deprecated use {@link net.minecraft.world.item.ItemStack} sensitive variant {@link #getItemBlood(ItemStack)}
-     */
-    @Deprecated
-    int getImpureBloodValue(@NotNull Item item);
 
     /**
      * Checks if the item can be converted into impure blood

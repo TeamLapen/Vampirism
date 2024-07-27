@@ -223,7 +223,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public LivingEntity getRepresentingEntity() {
+    public @NotNull LivingEntity asEntity() {
         return this;
     }
 

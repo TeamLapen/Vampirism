@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
-import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.Event;
@@ -26,26 +25,11 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         this.action = action;
     }
 
-    @Deprecated(forRemoval = true)
-    public ActionEvent(@NotNull T factionPlayer, @NotNull Z action) {
-        this.factionPlayer = factionPlayer;
-        this.action = RegUtil.holder(action);
-    }
-
     /**
      * @return The FactionPlayer who activated the action.
      */
     public @NotNull IFactionPlayer<?> getFactionPlayer() {
         return this.factionPlayer;
-    }
-
-    /**
-     * @return The action the event is firing for.
-     * @deprecated Use {@link #action()} instead
-     */
-    @Deprecated
-    public @NotNull Z getAction() {
-        return this.action.value();
     }
 
     /**
@@ -70,11 +54,6 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
             super(factionPlayer, action);
             this.cooldown = cooldown;
             this.duration = duration;
-        }
-
-        @Deprecated(forRemoval = true)
-        public ActionActivatedEvent(@NotNull T factionPlayer, @NotNull IAction<T> action, int cooldown, int duration) {
-            this(factionPlayer, RegUtil.holder(action), cooldown, duration);
         }
 
         /**
@@ -139,11 +118,6 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
             this.fullCooldown = fullCooldown;
         }
 
-        @Deprecated(forRemoval = true)
-        public ActionDeactivatedEvent(@NotNull T factionPlayer, @NotNull ILastingAction<T> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
-            this(factionPlayer, RegUtil.holder(action), remainingDuration, cooldown, ignoreCooldown, fullCooldown);
-        }
-
         /**
          * @return The remaining duration of the action, in ticks.
          */
@@ -206,11 +180,6 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         public ActionUpdateEvent(@NotNull T factionPlayer, @NotNull Holder<ILastingAction<T>> action, int remainingDuration) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
-        }
-
-        @Deprecated(forRemoval = true, since = "1.11")
-        public ActionUpdateEvent(@NotNull T factionPlayer, @NotNull ILastingAction<T> action, int remainingDuration) {
-            this(factionPlayer, RegUtil.holder(action), remainingDuration);
         }
 
         /**

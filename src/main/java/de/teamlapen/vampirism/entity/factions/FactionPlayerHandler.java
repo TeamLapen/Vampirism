@@ -69,14 +69,6 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     }
 
     /**
-     * @deprecated a player will always have a FactionPlayerHandler
-     */
-    @Deprecated
-    public static @NotNull Optional<FactionPlayerHandler> getOpt(@NotNull Player player) {
-        return Optional.of(player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get()));
-    }
-
-    /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
     public static <T extends IFactionPlayer<T>> @NotNull Optional<T> getCurrentFactionPlayer(@NotNull Player player) {

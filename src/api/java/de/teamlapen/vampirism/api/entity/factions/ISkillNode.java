@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +30,4 @@ public interface ISkillNode {
      */
     boolean containsSkill(Holder<ISkill<?>> skill);
 
-    @Deprecated
-    default boolean containsSkill(ISkill<?> skill) {
-        return containsSkill(RegUtil.holder(skill));
-    }
 }

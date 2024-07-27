@@ -33,7 +33,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         if (this.entity.getAdvancedLeader() == null) {
             return false;
         } else {
-            double d0 = this.entity.distanceToSqr(this.entity.getAdvancedLeader().getRepresentingEntity());
+            double d0 = this.entity.distanceToSqr(this.entity.getAdvancedLeader().asEntity());
             return d0 >= DIST && d0 <= 256.0D;
         }
     }
@@ -43,7 +43,7 @@ public class FollowAdvancedVampireGoal extends Goal {
 
         IEntityLeader leader = entity.getAdvancedLeader();
         if (leader != null) {
-            return leader.getRepresentingEntity().isAlive() && this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;
+            return leader.asEntity().isAlive() && this.entity.distanceToSqr(leader.asEntity()) > DIST;
         }
 
         List<VampireBaseEntity> list = this.entity.getCommandSenderWorld().getEntitiesOfClass(VampireBaseEntity.class, this.entity.getBoundingBox().inflate(8, 4, 8), IEntityLeader.class::isInstance);
@@ -68,7 +68,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         } else {
             entity.setAdvancedLeader(leader);
             leader.increaseFollowerCount();
-            return this.entity.distanceToSqr(leader.getRepresentingEntity()) > DIST;
+            return this.entity.distanceToSqr(leader.asEntity()) > DIST;
         }
     }
 
@@ -81,8 +81,8 @@ public class FollowAdvancedVampireGoal extends Goal {
     public void tick() {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
-            this.entity.getNavigation().moveTo(this.entity.getAdvancedLeader().getRepresentingEntity(), this.speed);
-            this.entity.lookAt(EntityAnchorArgument.Anchor.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().position().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
+            this.entity.getNavigation().moveTo(this.entity.getAdvancedLeader().asEntity(), this.speed);
+            this.entity.lookAt(EntityAnchorArgument.Anchor.EYES, this.entity.getAdvancedLeader().asEntity().position().add(0, this.entity.getAdvancedLeader().asEntity().getEyeHeight(), 0));
         }
     }
 }

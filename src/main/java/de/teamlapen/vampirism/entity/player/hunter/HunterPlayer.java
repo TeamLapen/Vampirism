@@ -49,7 +49,6 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
@@ -61,14 +60,6 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     public static @NotNull HunterPlayer get(@NotNull Player player) {
         return player.getData(ModAttachments.HUNTER_PLAYER);
-    }
-
-    /**
-     * @deprecated Every player should have a hunter player
-     */
-    @Deprecated
-    public static @NotNull Optional<HunterPlayer> getOpt(@NotNull Player player) {
-        return Optional.ofNullable(player.getData(ModAttachments.HUNTER_PLAYER));
     }
 
     private final @NotNull Disguise disguise;
@@ -143,7 +134,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void onDeath(@NotNull DamageSource src) {
         super.onDeath(src);
-        if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.getRepresentingPlayer().getEffect(ModEffects.FREEZE) != null) {
+        if (src.getEntity() instanceof ServerPlayer && Helper.isVampire(((Player) src.getEntity())) && this.asEntity().getEffect(ModEffects.FREEZE) != null) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(((ServerPlayer) src.getEntity()), VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER);
         }
     }
