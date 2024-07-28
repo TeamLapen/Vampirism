@@ -40,7 +40,7 @@ public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGener
     @Override
     public Component getName(@NotNull ItemStack stack) {
         OilContent oilContents = stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY);
-        return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.location().getNamespace() + "." + s.location().getPath()).append(" ")).orElse(Component.empty()).append(Component.translatable(this.getDescriptionId(stack)));
+        return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.location().getNamespace() + "." + s.location().getPath()).append(" ")).orElse(Component.empty());
     }
 
     @Override
