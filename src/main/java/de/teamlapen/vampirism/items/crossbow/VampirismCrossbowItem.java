@@ -69,6 +69,16 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     }
 
     @Override
+    public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles(@NotNull ItemStack stack) {
+        return getSupportedProjectiles(stack);
+    }
+
+    @Override
+    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles(@NotNull ItemStack stack) {
+        return getSupportedProjectiles(stack);
+    }
+
+    @Override
     public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.STRINGS) || super.isValidRepairItem(crossbow, repairItem);
     }
@@ -243,6 +253,10 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             crossbow.set(ModDataComponents.SELECTED_AMMUNITION, new SelectedAmmunition(ammo));
         }
     }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public abstract Predicate<ItemStack> getAllSupportedProjectiles();
 
     @Override
     public Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow) {
