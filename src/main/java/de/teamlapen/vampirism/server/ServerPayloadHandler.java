@@ -247,7 +247,7 @@ public class ServerPayloadHandler {
                     ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
                     if (result == ISkillHandler.Result.OK) {
                         //noinspection unchecked
-                        skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
+                        skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill, msg.skillTree());
                         if (factionPlayer instanceof Attachment t) {
                             t.sync(UpdateParams.all());
                         }

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISkillHandler<T>, ISyncableSaveData {
     private static final String NBT_KEY = "skill_handler";
     private final static Logger LOGGER = LogManager.getLogger();
-    private final ArrayList<Holder<ISkill<T>>> enabledSkills = new ArrayList<>();
+    private final Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>> enabledSkills = new HashMap<>();
     private final T player;
     private final Holder<? extends IPlayableFaction<T>> faction;
     private final ISkillPointProvider skillPoints = new SkillPoints();
@@ -62,7 +62,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public @NotNull Result canSkillBeEnabled(@NotNull Holder<ISkill<?>> skill) {
+    public @NotNull Result canSkillBeEnabled(@NotNull Holder<ISkill<?>> skill, Holder<ISkillTree> skillTree) {
         var preResult = VampirismEventFactory.fireSkillUnlockCheckEvent(this.player, skill);
         if (preResult != null) {
             return preResult;
@@ -80,7 +80,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
                 return Result.LOCKED_BY_OTHER_NODE;
             }
             if (this.treeData.isRoot(this.unlockedTrees, node.get()) || this.treeData.getParent(node.get()).stream().anyMatch(x -> isNodeEnabled(x.value()))) {
-                if (getLeftSkillPoints() >= skill.value().getSkillPointCost()) {
+                if (getLeftSkillPoints(skillTree) >= skill.value().getSkillPointCost()) {
                     return isNodeEnabled(node.get().node().value()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
                 } else {
                     return Result.NO_POINTS;
@@ -96,17 +96,19 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     public void disableAllSkills() {
-        for (Holder<ISkill<T>> skill : enabledSkills) {
-            VampirismEventFactory.fireSkillDisabledEvent(player, skill);
-            skill.value().onDisable(player);
+        for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
+            for (Holder<ISkill<T>> skill : entry.getValue()) {
+                VampirismEventFactory.fireSkillDisabledEvent(player, skill);
+                skill.value().onDisable(player);
+            }
         }
         enabledSkills.clear();
         dirty = true;
     }
 
     @Override
-    public void disableSkill(@NotNull Holder<ISkill<T>> skill) {
-        if (enabledSkills.remove(skill)) {
+    public void disableSkill(@NotNull Holder<ISkill<T>> skill, Holder<ISkillTree> tree) {
+        if (enabledSkills.containsKey(tree) && enabledSkills.get(tree).remove(skill)) {
             VampirismEventFactory.fireSkillDisabledEvent(player, skill);
             skill.value().onDisable(player);
             dirty = true;
@@ -114,7 +116,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public void enableSkill(@NotNull Holder<ISkill<T>> skill, boolean fromLoading) {
+    public void enableSkill(@NotNull Holder<ISkill<T>> skill, Holder<ISkillTree>  tree, boolean fromLoading) {
         if (!enabledSkills.contains(skill)) {
             VampirismEventFactory.fireSkillEnableEvent(player, skill, fromLoading);
             skill.value().onEnable(player);
@@ -142,7 +144,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     private void unlockSkillTree(Holder<ISkillTree> tree) {
         this.unlockedTrees.add(tree);
         SkillTreeConfiguration.SkillTreeNodeConfiguration root = this.treeData.root(tree);
-        root.elements().forEach(x -> enableSkill((Holder<ISkill<T>>) (Object) x, true));
+        root.elements().forEach(x -> enableSkill((Holder<ISkill<T>>) (Object) x, tree,true));
         this.dirty = true;
     }
 
@@ -162,11 +164,11 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public int getLeftSkillPoints() {
-        if (this.skillPoints.ignoreSkillPointLimit(this.player)) {
+    public int getLeftSkillPoints(Holder<ISkillTree> tree) {
+        if (this.skillPoints.ignoreSkillPointLimit(this.player, tree)) {
             return Integer.MAX_VALUE;
         }
-        return Math.max(0, this.skillPoints.getSkillPoints(this.player) - this.enabledSkills.stream().map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
+        return Math.max(0, this.skillPoints.getSkillPoints(this.player, tree) - this.enabledSkills.stream().map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
     }
 
     public void reset() {
@@ -324,12 +326,12 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         }
 
         @Override
-        public int getSkillPoints(IFactionPlayer<?> factionPlayer) {
-            return this.provider.values().stream().mapToInt(x -> Math.max(0, x.getSkillPoints(factionPlayer))).sum();
+        public int getSkillPoints(IFactionPlayer<?> factionPlayer, ISkillTree tree) {
+            return this.provider.values().stream().mapToInt(x -> Math.max(0, x.getSkillPoints(factionPlayer, tree))).sum();
         }
 
         @Override
-        public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer) {
+        public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer, ISkillTree tree) {
             return this.provider.values().stream().anyMatch(l -> l.ignoreSkillPointLimit(factionPlayer));
         }
     }

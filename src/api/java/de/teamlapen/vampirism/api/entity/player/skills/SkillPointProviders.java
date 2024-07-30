@@ -14,7 +14,7 @@ public class SkillPointProviders {
     public static final Map<ResourceLocation, ISkillPointProvider> MODIFIERS_VIEW = Collections.unmodifiableMap(MODIFIERS);
 
     static {
-        SkillPointProviders.register(VResourceLocation.mod("none"), factionPlayer -> 0);
+        SkillPointProviders.register(VResourceLocation.mod("none"), (factionPlayer, tree) -> 0);
     }
 
     public static ISkillPointProvider register(ResourceLocation id, ISkillPointProvider modifier) {

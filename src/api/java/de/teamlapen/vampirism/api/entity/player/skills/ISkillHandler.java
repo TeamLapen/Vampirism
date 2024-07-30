@@ -23,26 +23,26 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
-    Result canSkillBeEnabled(Holder<ISkill<?>> skill);
+    Result canSkillBeEnabled(Holder<ISkill<?>> skill, Holder<ISkillTree> skillTree);
 
     /**
      * Disables the given skill
      */
-    void disableSkill(Holder<ISkill<T>> skill);
+    void disableSkill(Holder<ISkill<T>> skill, ISkillTree skillTree);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      */
-    default void enableSkill(Holder<ISkill<T>> skill) {
-        enableSkill(skill, false);
+    default void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree) {
+        enableSkill(skill, skillTree, false);
     }
 
-    void enableSkill(Holder<ISkill<T>> skill, boolean fromLoading);
+    void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree, boolean fromLoading);
 
     /**
      * @return The count of additional skills that can be currently unlocked
      */
-    int getLeftSkillPoints();
+    int getLeftSkillPoints(Holder<ISkillTree> tree);
 
     List<Holder<ISkill<?>>> getParentSkills(Holder<ISkill<?>> skill);
 

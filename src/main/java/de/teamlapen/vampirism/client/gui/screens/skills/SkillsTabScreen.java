@@ -217,7 +217,11 @@ public class SkillsTabScreen {
     }
 
     public int getRemainingPoints() {
-        return this.skillHandler.getLeftSkillPoints();
+        return this.skillHandler.getLeftSkillPoints(this.skillTree);
+    }
+
+    public Holder<ISkillTree> getSkillTree() {
+        return this.skillTree;
     }
 
     public void drawDisableText(@NotNull GuiGraphics graphics, int x, int y) {
