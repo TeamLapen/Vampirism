@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.model.*;
 import de.teamlapen.vampirism.client.model.armor.*;
@@ -9,8 +8,10 @@ import de.teamlapen.vampirism.client.renderer.entity.*;
 import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.entity.IVampirismBoat;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -18,7 +19,6 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -87,8 +87,6 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
-        event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
         event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), convertedRenderer(FoxRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), convertedRenderer(GoatRenderer::new));
         event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
@@ -122,13 +120,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
         event.registerLayerDefinition(GHOST, GhostModel::createMesh);
 
-        LayerDefinition boatDefinition = BoatModel.createBodyModel();
-        LayerDefinition chestBoatDefinition = ChestBoatModel.createBodyModel();
-        for (IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
-            event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
-            event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);
-        }
-
     }
 
     static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
@@ -145,14 +136,6 @@ public class ModEntitiesRender {
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
             }
         }
-    }
-
-    public static @NotNull ModelLayerLocation createBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(VResourceLocation.mod("boat/" + type.getName()), "main");
-    }
-
-    public static @NotNull ModelLayerLocation createChestBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(VResourceLocation.mod("chest_boat/" + type.getName()), "main");
     }
 
     private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,Z> provider) {

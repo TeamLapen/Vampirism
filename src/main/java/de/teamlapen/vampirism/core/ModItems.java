@@ -2,25 +2,25 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.ModRegistryItems;
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
-import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -233,10 +233,10 @@ public class ModItems {
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final DeferredItem<VampirismBoatItem> DARK_SPRUCE_BOAT = register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> CURSED_SPRUCE_BOAT = register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> DARK_SPRUCE_CHEST_BOAT = register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> DARK_SPRUCE_BOAT = register(ModRegistryItems.DARK_SPRUCE_BOAT.getId().getPath(), () -> new BoatItem(false, VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> CURSED_SPRUCE_BOAT = register(ModRegistryItems.CURSED_SPRUCE_BOAT.getId().getPath(), () -> new BoatItem(false, VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> DARK_SPRUCE_CHEST_BOAT = register(ModRegistryItems.DARK_SPRUCE_CHEST_BOAT.getId().getPath(), () -> new BoatItem(true, VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> CURSED_SPRUCE_CHEST_BOAT = register(ModRegistryItems.CURSED_SPRUCE_CHEST_BOAT.getId().getPath(), () -> new BoatItem(true, VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
 
     public static final DeferredItem<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
     public static final DeferredItem<HangingSignItem> DARK_SPRUCE_HANGING_SIGN = register("dark_spruce_hanging_sign", () -> new HangingSignItem(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
@@ -311,8 +311,10 @@ public class ModItems {
     }
 
     public static void registerDispenserBehaviourUnsafe() {
-        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
-        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
+        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(VEnums.DARK_SPRUCE_BOAT_TYPE.getValue()));
+        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue()));
+        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), true));
+        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), true));
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get());
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get());
