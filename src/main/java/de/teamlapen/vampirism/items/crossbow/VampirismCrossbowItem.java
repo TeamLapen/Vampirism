@@ -131,6 +131,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
             if (!itemstack.isEmpty()) {
                 crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, LivingEntity.getSlotForHand(hand));
                 Projectile projectile = this.createProjectile(level, shooter, crossbowStack, itemstack, isPlayer);
+                if(crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
+                    arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                }
                 this.shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, p_331167_);
                 level.addFreshEntity(projectile);
             }
@@ -140,7 +143,9 @@ public abstract class VampirismCrossbowItem extends CrossbowItem implements IFac
     protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
 
-        if (!ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+            crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
+        } else {
             availableProjectiles.clear();
         }
         return shootingProjectiles;

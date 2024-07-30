@@ -67,6 +67,7 @@ public class RegistryManager {
         ModAdvancements.register(eventBus);
         ModStats.register(eventBus);
         ModSkills.init();
+        ModEnchantments.register(eventBus);
         ModDataComponents.register(eventBus);
         ModArmorMaterials.register(eventBus);
     }
