@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
+import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModMenus;
@@ -30,11 +31,17 @@ public class ModScreens {
         event.register(ModMenus.REVERT_BACK.get(), InjectionChairRevertBackScreen::new);
     }
 
+    @SuppressWarnings("removal")
     static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, VIngameOverlays.FACTION_LEVEL_ID, VIngameOverlays.FACTION_LEVEL_ELEMENT);
         event.registerAbove(VanillaGuiLayers.BOSS_OVERLAY, VIngameOverlays.FACTION_RAID_BAR_ID, VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VIngameOverlays.BLOOD_BAR_ID, VIngameOverlays.BLOOD_BAR_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID, VIngameOverlays.ACTION_COOLDOWN_ELEMENT);
         event.registerAboveAll(VIngameOverlays.ACTION_DURATION_ID, VIngameOverlays.ACTION_DURATION_ELEMENT);
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.RAGE, new RageOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.BAT, new BatOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.DISGUISE, new DisguiseOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.NEARBY_VAMPIRE, new NearbyVampireOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.SUN, new SunOverlay());
     }
 }
