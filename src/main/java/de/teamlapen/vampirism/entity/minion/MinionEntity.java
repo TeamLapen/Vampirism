@@ -57,6 +57,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -97,6 +98,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @Nullable
     private Pair<ResourceLocation, PlayerModelType> skinDetails;
+
+    @Nullable
+    private Optional<GameProfile> skinProfile;
     /**
      * Only valid if playerMinionController !=null
      */
@@ -298,6 +302,16 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);
+    }
+
+    @Override
+    public @NotNull Optional<GameProfile> getPlayerOverlay() {
+        //noinspection OptionalAssignedToNull
+        if (this.skinProfile == null) {
+            this.skinProfile = Optional.empty();
+            this.getLordID().ifPresent(id -> SkullBlockEntity.fetchGameProfile("cheaterpaul").thenAccept(p -> this.skinProfile = p));
+        }
+        return this.skinProfile;
     }
 
     @Override

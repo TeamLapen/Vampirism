@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +48,7 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity<?> & IPlayerOverlay, 
                 getParentModel().renderToBuffer(matrixStackIn, bufferIn.getBuffer(type), packedLightIn, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255,255,255,255));
             }
 
-            texture = entitylivingbaseIn.getOverlayPlayerProperties().map(Pair::getLeft).orElse(texture);
+            texture = entitylivingbaseIn.getPlayerOverlay().map(s -> Minecraft.getInstance().getSkinManager().getInsecureSkin(s)).map(PlayerSkin::texture).orElse(texture);
             RenderType bodyType = getParentModel().getRenderType(this.getParentModel(), texture, entitylivingbaseIn);
             if (bodyType != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.BODY);

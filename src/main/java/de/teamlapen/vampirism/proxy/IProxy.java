@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.blockentity.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
 import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -15,8 +14,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 

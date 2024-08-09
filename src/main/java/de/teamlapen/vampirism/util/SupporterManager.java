@@ -8,8 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 /**
  * Handles the download, parsing and access of supporter information.
@@ -20,15 +21,15 @@ import java.util.HashMap;
 public class SupporterManager {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private static Supporter[][] supporters = new Supporter[2][0];
-
+    private static Supporter[] vampire = new Supporter[0];
+    private static Supporter[] hunter = new Supporter[0];
 
     /**
      * Returns a randomly picked hunter
      */
     public static Supporter getRandomHunter(@NotNull RandomSource rnd) {
-        if (supporters[1].length > 0) {
-            return supporters[1][rnd.nextInt(supporters[1].length)];
+        if (hunter.length > 0) {
+            return hunter[rnd.nextInt(hunter.length)];
         }
         return new Supporter(VReference.HUNTER_FACTION_ID, "none", "none", null, new HashMap<>());
     }
@@ -37,26 +38,28 @@ public class SupporterManager {
      * Returns a randomly picked vampire
      */
     public static Supporter getRandomVampire(@NotNull RandomSource rnd) {
-        if (supporters[0].length > 0) {
-            return supporters[0][rnd.nextInt(supporters[0].length)];
+        if (vampire.length > 0) {
+            return vampire[rnd.nextInt(vampire.length)];
         }
         return new Supporter(VReference.VAMPIRE_FACTION_ID, "none", "none",  null, new HashMap<>());
     }
 
-
-    private static @NotNull String getDebugString() {
-        return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
-    }
-
     public static void init() {
-        VampirismAPI.settings().getSupportersAsync().thenAccept(optional -> {
-            optional.ifPresentOrElse(supporters -> {
-                var supporter = new Supporter[2][];
-                supporter[0] = supporters.stream().filter(s -> s.faction().equals(VReference.VAMPIRE_FACTION_ID)).toArray(Supporter[]::new);
-                supporter[1] = supporters.stream().filter(s -> s.faction().equals(VReference.HUNTER_FACTION_ID)).toArray(Supporter[]::new);
-                SupporterManager.supporters = supporter;
-                LOGGER.trace("Supporters {}", getDebugString());
-            }, () -> LOGGER.warn("Failed to retrieve supporters"));
+        VampirismAPI.settings().getSupportersAsync().thenApply(optional -> {
+            if (optional.isPresent()) {
+                vampire = optional.get().stream().filter(s -> s.faction().equals(VReference.VAMPIRE_FACTION_ID)).toArray(Supporter[]::new);
+                hunter = optional.get().stream().filter(s -> s.faction().equals(VReference.HUNTER_FACTION_ID)).toArray(Supporter[]::new);
+                LOGGER.debug("Loaded {} vampire and {} hunter supporter", vampire.length, hunter.length);
+                return optional.get();
+            } else {
+                LOGGER.warn("Failed to retrieve supporters");
+                return new ArrayList<Supporter>();
+            }
         });
     }
+
+    public static Stream<Supporter> getSupporter() {
+        return Stream.concat(Stream.of(hunter), Stream.of(vampire));
+    }
+
 }

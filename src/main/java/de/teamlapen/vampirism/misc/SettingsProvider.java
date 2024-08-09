@@ -9,6 +9,7 @@ import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.settings.Supporter;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,7 +78,7 @@ public class SettingsProvider implements ISettingsProvider {
     }
 
     public CompletableFuture<Collection<Supporter>> retrieveSupportersAsync() {
-        return get("supporter/list").thenApply(x -> GSON.fromJson(x, TypeToken.getParameterized(List.class, Supporter.class).getType()));
+        return get("supporter/list").thenApplyAsync(x -> GSON.fromJson(x, TypeToken.getParameterized(List.class, Supporter.class).getType()), Util.backgroundExecutor());
     }
 
     public CompletableFuture<Collection<Supporter>> retrieveSupportersAsync(String modid) {
