@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -39,60 +40,69 @@ public class ServerConfig {
     public final ModConfigSpec.BooleanValue disableMobBiteInfection;
     public final ModConfigSpec.BooleanValue disableVillageGuards;
 
-    public final ModConfigSpec.BooleanValue oldVampireBiomeGen;
-
     public final ModConfigSpec.BooleanValue infoAboutGuideAPI;
+
+    public final ModConfigSpec.IntValue villageTotemWeight;
+    public final ModConfigSpec.BooleanValue villageReplaceTemples;
+    public final ModConfigSpec.IntValue villageHunterTrainerWeight;
 
 
     ServerConfig(ModConfigSpec.@NotNull Builder builder) {
-        builder.comment("Server configuration settings")
-                .push("server");
-
-        enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
+        builder.comment("Factions").push("factions");
         pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
         pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
-        sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
-        sunscreenBeaconMineable = builder.comment("Whether the suncreen beacon can be mined in survival").define("sunscreenBeaconMineable", false);
-        autoCalculateEntityBlood = builder.comment("Calculate the blood level for unknown creatures based on their size").define("autoCalculateEntityBlood", true);
-        playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
         factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
+        playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
         lordPrefixInChat = builder.comment("Whether to add a prefix title based on the current lord level to the player names").define("lordPrefixInChat", true);
-        entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
-        infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
-        preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
-        batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(Level.END.location().toString()), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
-        allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
-        usePermissions = builder.comment("Use the forge permission system for certain actions. Take a look at the wiki for more information").define("usePermissions", false);
+        builder.pop();
 
-        builder.push("sundamage");
+        builder.push("sun-damage");
         sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
-        sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+        sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));
 
-        sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
-        sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. [\"minecraft:mesa\", \"minecraft:plains\"]").defineList("sundamageDisabledBiomes", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+        sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));
+        sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. [\"minecraft:mesa\", \"minecraft:plains\"]").defineList("sundamageDisabledBiomes", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.BIOME, obj));
         builder.pop();
 
-        builder.push("entities");
-        blacklistedBloodEntity = builder.comment("Blacklist entities from predefined or auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), string -> string instanceof String && UtilLib.isValidResourceLocation(((String) string)));
+        builder.push("entity-blood");
+        autoCalculateEntityBlood = builder.comment("Calculate the blood level for unknown creatures based on their size").define("autoCalculateEntityBlood", true);
+        blacklistedBloodEntity = builder.comment("Blacklist entities from predefined or auto calculated blood values").defineList("blacklistedBloodEntity", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.ENTITY_TYPE, obj));
         builder.pop();
 
-        builder.push("cheats");
-        unlockAllSkills = builder.comment("CHEAT: If enabled, you will be able to unlock all skills at max level").define("allSkillsAtMaxLevel", false);
-        builder.pop();
-
-        builder.comment("Disabling these things might reduce fun or interfere with gameplay");
-        builder.push("disable");
+        builder.comment("infection").push("infection");
         disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
         disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
+        infectCreaturesSanguinare = builder.comment("If enabled, creatures are infected with Sanguinare Vampirism first instead of immediately being converted to a vampire when their blood is sucked dry").define("infectCreaturesSanguinare", false);
+        builder.pop();
+
+        builder.push("village");
+        villageTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 0, 140);
+        villageHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the Village").defineInRange("villageHunterTrainerWeight", 50, 0, 140);
+        villageReplaceTemples = builder.comment("Whether village Temples should be replaced with versions that contain church altars.").define("villageReplaceTemples", true);
+        allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
         disableVillageGuards = builder.comment("Prevent villagers in hunter controlled villages to turn into guard villager when the village is attacked").define("disableVillageGuards", false);
         builder.pop();
 
-        builder.push("internal");
-        infoAboutGuideAPI = builder.comment("Send message about Guide-API once").define("infoAboutGuideAPI", true);
-        oldVampireBiomeGen = builder.comment("If world was generated using the old vampirism biome").define("oldVampireBiomeGen", true);
+        sunscreenBeaconDistance = builder.comment("Block radius the sunscreen beacon affects").defineInRange("sunscreenBeaconDistance", 32, 1, 40000);
+        sunscreenBeaconMineable = builder.comment("Whether the suncreen beacon can be mined in survival").define("sunscreenBeaconMineable", false);
+        entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
+        batDimensionBlacklist = builder.comment("Prevent vampire players to transform into a bat").defineList("batDimensionBlacklist", Collections.singletonList(Level.END.location().toString()), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));
+
+        builder.push("rendering");
+        enforceRenderForestFog = builder.comment("Prevent clients from disabling the vampire forest fog").define("enforceForestFog", true);
+        preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
         builder.pop();
 
+        builder.push("server-admin");
+        usePermissions = builder.comment("Use the forge permission system for certain actions. Take a look at the wiki for more information").define("usePermissions", false);
         builder.pop();
+
+        builder.push("cheats");
+        unlockAllSkills = builder.comment("If enabled, you will be able to unlock all skills at max level").define("allSkillsAtMaxLevel", false);
+        builder.pop();
+
+        builder.comment("Internal");
+        infoAboutGuideAPI = builder.comment("Send message about Guide-API once").define("infoAboutGuideAPI", true);
     }
 
     public enum IMobOptions {

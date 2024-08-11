@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.config;
 
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModTags;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.logging.log4j.LogManager;
@@ -355,7 +356,7 @@ public class BalanceConfig {
         vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
         vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
         vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
-        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", List.of(), s -> ResourceLocation.tryParse((String) s) != null);
+        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", List.of(), () -> "", c -> UtilLib.checkRegistryObjectExistence(Registries.DAMAGE_TYPE, c));
         vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration", 60, 1, 1000);
         vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
         vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration", 240, 1, 2400);
@@ -439,7 +440,7 @@ public class BalanceConfig {
         itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
         itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
 
-        builder.category("lord actions", "la");
+        builder.category("lord_actions", "la");
         laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
         laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
         laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);

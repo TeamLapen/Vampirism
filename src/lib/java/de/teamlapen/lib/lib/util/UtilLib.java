@@ -12,9 +12,9 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -691,6 +691,18 @@ public class UtilLib {
 
     public static boolean isValidResourceLocation(@NotNull String loc) {
         return ResourceLocation.tryParse(loc) != null;
+    }
+
+    public static boolean checkRegistryObjectExistence(ResourceKey<? extends Registry<?>> key, Object obj) {
+        if (obj instanceof String string) {
+            ResourceLocation id = ResourceLocation.tryParse(string);
+            if (id != null) {
+                if (ServerLifecycleHooks.getCurrentServer() != null) {
+                    return ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(key).containsKey(id);
+                }
+            }
+        }
+        return false;
     }
 
     /**

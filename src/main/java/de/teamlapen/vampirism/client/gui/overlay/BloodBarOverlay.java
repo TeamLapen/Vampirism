@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;

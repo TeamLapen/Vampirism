@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Intermediate builder stage for Vampirism's balance configuration ({@link BalanceConfig})
@@ -172,8 +173,8 @@ public class BalanceBuilder {
      * @return null, for drop-in replacement
      */
     @SuppressWarnings("SameReturnValue")
-    public ModConfigSpec.@UnknownNullability ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Predicate<Object> validator) {
-        add(new BalanceBuilder.StringList(name, defaultValues, validator));
+    public ModConfigSpec.@UnknownNullability ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
+        add(new BalanceBuilder.StringList(name, defaultValues, emptyValueSupplier, validator));
         return null;
     }
 
@@ -302,11 +303,13 @@ public class BalanceBuilder {
     public static class StringList extends Conf {
         private final @NotNull List<String> defaultValue;
         private final Predicate<Object> elementValidator;
+        private final Supplier<String> emptyValueSupplier;
 
-        StringList(String name, @NotNull List<String> defaultValue, Predicate<Object> validator) {
+        StringList(String name, @NotNull List<String> defaultValue, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
             super(name);
             this.defaultValue = new ArrayList<>(defaultValue);
             this.elementValidator = validator;
+            this.emptyValueSupplier = emptyValueSupplier;
         }
 
         public void addValue(String s) {
@@ -317,7 +320,7 @@ public class BalanceBuilder {
 
         @Override
         public ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.@NotNull Builder builder) {
-            return builder.defineList(name, Collections.unmodifiableList(defaultValue), elementValidator);
+            return builder.defineList(name, Collections.unmodifiableList(defaultValue), emptyValueSupplier, elementValidator);
         }
 
         public void removeValue(String s) {

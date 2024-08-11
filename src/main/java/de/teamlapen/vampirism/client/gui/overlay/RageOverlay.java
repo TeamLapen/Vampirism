@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import net.minecraft.client.DeltaTracker;
@@ -15,8 +16,10 @@ public class RageOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (VampirePlayer.get(Minecraft.getInstance().player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())) {
-            renderTextureOverlay(graphics, RAGE_TEXTURE, 1.0F);
+        if (this.mc.player != null && VampirismConfig.CLIENT.enableRageOverlayRendering.get()) {
+            if (VampirePlayer.get(Minecraft.getInstance().player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE.get())) {
+                renderTextureOverlay(graphics, RAGE_TEXTURE, 1.0F);
+            }
         }
     }
 }

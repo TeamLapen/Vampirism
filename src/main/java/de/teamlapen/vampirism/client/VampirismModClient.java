@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.blocks.LogBlock;
+import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.*;
@@ -25,6 +26,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -56,6 +59,8 @@ public class VampirismModClient {
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
         this.modEventBus.register(this);
+
+        this.modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
 
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);

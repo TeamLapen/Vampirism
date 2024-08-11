@@ -1,12 +1,15 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public abstract class TextureOverlay implements LayeredDraw.Layer {
+
+    protected final Minecraft mc = Minecraft.getInstance();
 
     protected void renderTextureOverlay(GuiGraphics pGuiGraphics, ResourceLocation pShaderLocation, float pAlpha) {
         RenderSystem.disableDepthTest();

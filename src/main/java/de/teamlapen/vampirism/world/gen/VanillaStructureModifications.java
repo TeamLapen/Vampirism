@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.mixin.accessor.ProcessorListsAccessor;
@@ -67,7 +66,7 @@ public class VanillaStructureModifications {
      */
     private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
-        if (!VampirismConfig.COMMON.villageReplaceTemples.get()) return;
+        if (!VampirismConfig.SERVER.villageReplaceTemples.get()) return;
         // get jigsaw registry
         dynamicRegistries.registry(Registries.TEMPLATE_POOL).ifPresent(jigsawRegistry -> {
             // for every desired pools
@@ -131,14 +130,14 @@ public class VanillaStructureModifications {
                     // create trainer house piece with desired village type
                     StructurePoolElement piece = singleJigsawPiece(reg.lookupOrThrow(Registries.PROCESSOR_LIST), "village/" + type.path + "/houses/hunter_trainer");
                     // add hunter trainer house with weight
-                    for (int i = 0; i < VampirismConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
+                    for (int i = 0; i < VampirismConfig.SERVER.villageHunterTrainerWeight.get(); i++) {
                         ((StructureTemplatePoolAccessor) pattern).getTemplates().add(piece);
                     }
 
                     // Add hunter trainer house to the weighted list for better mod compat if other mods read this field instead of templates
                     // (ex: Repurposed Structures)
                     List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(((StructureTemplatePoolAccessor) pattern).getRawTemplates());
-                    weightedElementList.add(new Pair<>(piece, VampirismConfig.COMMON.villageHunterTrainerWeight.get()));
+                    weightedElementList.add(new Pair<>(piece, VampirismConfig.SERVER.villageHunterTrainerWeight.get()));
                     ((StructureTemplatePoolAccessor) pattern).setRawTemplates(weightedElementList);
                 });
             });
@@ -156,14 +155,14 @@ public class VanillaStructureModifications {
             // get the pool if present
             patternRegistry.getOptional(pool).ifPresent((pattern) -> {
                 // add totem with weight
-                for (int i = 0; i < VampirismConfig.COMMON.villageTotemWeight.get(); ++i) {
+                for (int i = 0; i < VampirismConfig.SERVER.villageTotemWeight.get(); ++i) {
                     ((StructureTemplatePoolAccessor) pattern).getTemplates().add(totem);
                 }
 
                 // Add totem house to the weighted list for better mod compat if other mods read this field instead of templates
                 // (ex: Repurposed Structures)
                 List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(((StructureTemplatePoolAccessor) pattern).getRawTemplates());
-                weightedElementList.add(new Pair<>(totem, VampirismConfig.COMMON.villageTotemWeight.get()));
+                weightedElementList.add(new Pair<>(totem, VampirismConfig.SERVER.villageTotemWeight.get()));
                 ((StructureTemplatePoolAccessor) pattern).setRawTemplates(weightedElementList);
             });
         }));
