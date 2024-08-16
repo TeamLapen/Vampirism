@@ -35,7 +35,7 @@ config = "vampirism.mixins.json"
      - BugraaK (textures/models)
      - MrVityaTrash (textures)
      - FrostedOver (textures)
-     - Grid (textures)
+     - Grid (textures/models/structures)
      - T_Corvus (textures)
      - freesound.org (sounds)
      - freeSFX.co.uk (sounds)'''
