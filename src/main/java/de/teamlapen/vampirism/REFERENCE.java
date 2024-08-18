@@ -19,7 +19,7 @@ public class REFERENCE {
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final int HIGHEST_VAMPIRE_LORD = 5;
     public static final int HIGHEST_HUNTER_LORD = 5;
-    public static final int EYE_TYPE_COUNT = 16;
+    public static final int EYE_TYPE_COUNT = 17;
     public static final int FANG_TYPE_COUNT = 7;
     /**
      * Check for vampire garlic damage every n ticks
