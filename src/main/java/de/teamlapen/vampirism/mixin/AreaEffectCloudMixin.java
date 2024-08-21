@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
@@ -27,12 +28,13 @@ public abstract class AreaEffectCloudMixin extends Entity {
     }
 
     @ModifyVariable(method = "tick", at = @At(value = "STORE", ordinal = 1))
-    private MobEffectInstance l(MobEffectInstance e, @Local(ordinal = 0) LivingEntity entity) {
-        if (this.potionContents.potion().get().value() instanceof VampirismPotion.HunterPotion && Helper.isVampire(entity)) {
-            return VampirismPoisonEffect.createEffectCloudEffect();
-        } else {
-            return e;
-        }
+    private MobEffectInstance replaceEffectForVampires(MobEffectInstance effectInstance, @Local(ordinal = 0) LivingEntity entity) {
+        return this.potionContents.potion()
+                .map(Holder::value)
+                .filter(VampirismPotion.HunterPotion.class::isInstance)
+                .filter(potion -> Helper.isVampire(entity))
+                .map(s -> VampirismPoisonEffect.createEffectCloudEffect())
+                .orElse(effectInstance);
     }
 
 }
