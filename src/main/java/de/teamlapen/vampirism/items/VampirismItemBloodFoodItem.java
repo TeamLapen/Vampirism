@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
@@ -15,13 +16,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class VampirismItemBloodFoodItem extends Item {
 
     private final FoodProperties vampireFood;
 
-    public VampirismItemBloodFoodItem(FoodProperties vampireFood, @NotNull FoodProperties humanFood) {
-        super(new Properties().food(humanFood));
+    public VampirismItemBloodFoodItem(Properties properties, FoodProperties vampireFood) {
+        super(properties);
         this.vampireFood = vampireFood;
     }
 
@@ -45,5 +47,12 @@ public class VampirismItemBloodFoodItem extends Item {
         return stack;
     }
 
+    @Override
+    public @Nullable FoodProperties getFoodProperties(@NotNull ItemStack stack, @Nullable LivingEntity entity) {
+        if (entity == null) {
+            entity = VampirismMod.proxy.getClientPlayer();
+        }
 
+        return Helper.isVampire(entity) ? vampireFood : super.getFoodProperties(stack, entity);
+    }
 }

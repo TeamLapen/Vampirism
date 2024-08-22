@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import de.teamlapen.lib.util.OptifineHandler;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.event.VampireFogEvent;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.items.CrucifixItem;
 import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MixinHooks;
+import de.teamlapen.vampirism.util.VampirismEventFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -52,6 +53,7 @@ import java.util.Optional;
 /**
  * Handle most general rendering related stuff
  */
+@SuppressWarnings("unused")
 public class RenderHandler implements ResourceManagerReloadListener {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
     @NotNull
@@ -146,6 +148,8 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getSkillHandler().isRefinementEquipped(ModRefinements.VISTA.get()) ? VampirismConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
+
+                vampireBiomeFogDistanceMultiplier = VampirismEventFactory.fireVampireFogEvent(vampireBiomeFogDistanceMultiplier);
 
             } else {
                 insideFog = false;
