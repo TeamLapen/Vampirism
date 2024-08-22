@@ -21,7 +21,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -53,6 +52,10 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
      */
     public BloodBottleItem() {
         super(new Properties());
+    }
+
+    public BloodBottleItem(Item.Properties properties) {
+        super(properties);
     }
 
     @Override
