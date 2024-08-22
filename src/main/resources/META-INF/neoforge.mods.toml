@@ -37,6 +37,7 @@ credits = '''\n
      - FrostedOver (textures)
      - Grid (textures)
      - T_Corvus (textures)
+     - Zeyke (textures)
      - freesound.org (sounds)
      - freeSFX.co.uk (sounds)'''
 description = '''${mod_description}'''
