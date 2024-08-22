@@ -149,6 +149,8 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getSkillHandler().isRefinementEquipped(ModRefinements.VISTA.get()) ? VampirismConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
 
+                vampireBiomeFogDistanceMultiplier = VampirismEventFactory.fireVampireFogEvent(vampireBiomeFogDistanceMultiplier);
+
             } else {
                 insideFog = false;
             }
@@ -162,9 +164,6 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 vampireBiomeTicks--;
             }
         }
-
-        VampireFogEvent vampireFogEvent = VampirismEventFactory.fireVampireFogEvent(mc.player, vampireBiomeFogDistanceMultiplier);
-        vampireBiomeFogDistanceMultiplier = vampireFogEvent.getFogDistanceMultiplier();
     }
 
     @SubscribeEvent

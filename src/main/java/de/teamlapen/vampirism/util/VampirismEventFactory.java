@@ -97,10 +97,10 @@ public class VampirismEventFactory {
         return event;
     }
 
-    public static VampireFogEvent fireVampireFogEvent(@NotNull LocalPlayer player, float fogDistanceMultiplier) {
-        VampireFogEvent event = new VampireFogEvent(player, fogDistanceMultiplier);
+    public static float fireVampireFogEvent(float fogDistanceMultiplier) {
+        VampireFogEvent event = new VampireFogEvent(fogDistanceMultiplier);
         NeoForge.EVENT_BUS.post(event);
-        return event;
+        return event.getFogDistanceMultiplier();
     }
 
 }
