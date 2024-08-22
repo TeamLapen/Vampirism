@@ -440,7 +440,7 @@ public class BalanceConfig {
         itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
         itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModTags.Items.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
 
-        builder.category("lord_actions", "la");
+        builder.category("lord actions", "la");
         laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
         laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
         laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);

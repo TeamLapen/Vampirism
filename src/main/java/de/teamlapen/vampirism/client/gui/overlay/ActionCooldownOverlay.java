@@ -18,7 +18,7 @@ public class ActionCooldownOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (this.mc.player != null && VampirismConfig.CLIENT.enableHudActionCooldownRendering.get()) {
+        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
 

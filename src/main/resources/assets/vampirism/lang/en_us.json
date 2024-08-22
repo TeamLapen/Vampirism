@@ -1777,5 +1777,17 @@
   "vampirism.configuration.instantKill2OnlyNPC": "Instant Kill Only NPC",
   "vampirism.configuration.applicableOilSwordReverse": "Applicable Oil Sword Reverse",
   "vampirism.configuration.rageEnabled": "Raage Enabled",
-  "vampirism.configuration.sundamageNauseaMinLevel": "Sun Damage Nausea Min Level"
+  "vampirism.configuration.sundamageNauseaMinLevel": "Sun Damage Nausea Min Level",
+  "vampirism.configuration.lord actions": "Lord Actions",
+  "vampirism.configuration.world": "World",
+  "vampirism.configuration.entities": "Entities",
+  "vampirism.configuration.balance": "Balance",
+  "vampirism.configuration.client": "Client",
+  "vampirism.configuration.gui": "GUI",
+  "vampirism.configuration.common": "Common",
+  "vampirism.configuration.infoAboutGuideAPI": "Information about the Guide API",
+  "vampirism.configuration.server": "Server",
+  "vampirism.configuration.disable": "Disable",
+  "vampirism.configuration.common-server": "Common Server",
+  "vampirism.configuration.render": "Render"
 }

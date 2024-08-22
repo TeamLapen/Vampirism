@@ -79,7 +79,9 @@ public class VampirismConfig {
          */
         final Pair<BalanceConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure((builder) -> {
             builder.comment("A ton of options which allow you to balance the mod to your desire");
+            builder.push("balance");
             balanceBuilder.build(BALANCE, builder);
+            builder.pop();
             return BALANCE;
         });
         balanceSpec = specPair.getRight();

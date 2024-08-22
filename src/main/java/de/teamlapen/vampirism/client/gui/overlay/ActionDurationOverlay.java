@@ -19,7 +19,7 @@ public class ActionDurationOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && VampirismConfig.CLIENT.enableHudActionDurationRendering.get()) {
+        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
 
