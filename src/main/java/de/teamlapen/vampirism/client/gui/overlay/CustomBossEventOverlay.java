@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.mixin.client.accessor.BossHealthOverlayAccessor;
 import de.teamlapen.vampirism.mixin.client.accessor.BossOverlayGuiAccessor;
 import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
@@ -49,6 +50,9 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
+        if (!VampirismConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
+            return;
+        }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int j = 12 + ((BossOverlayGuiAccessor) this.client.gui.getBossOverlay()).getMapBossInfos().size() * (10 + this.client.font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {

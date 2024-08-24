@@ -123,4 +123,8 @@ public class VampirismConfig {
         }
     }
 
+    public static boolean isBalanceSpec(ModConfigSpec spec) {
+        return spec == balanceSpec;
+    }
+
 }

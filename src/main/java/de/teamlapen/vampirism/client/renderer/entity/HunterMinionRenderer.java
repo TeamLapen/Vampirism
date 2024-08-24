@@ -5,15 +5,13 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.HunterMinionModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,14 +19,14 @@ import org.jetbrains.annotations.NotNull;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionModel<HunterMinionEntity>> {
-    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
-    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] minionSpecificTextures;
+    private final PlayerSkin @NotNull [] textures;
+    private final PlayerSkin @NotNull [] minionSpecificTextures;
 
 
     public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new HunterMinionModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new HunterMinionModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
-        textures = gatherTextures("textures/entity/hunter", true);
-        minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
+        this.textures = gatherTextures("textures/entity/hunter", true);
+        this.minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new ArmorLayer<HumanoidModel<HunterMinionEntity>>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
     }
@@ -42,12 +40,8 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull HunterMinionEntity entity) {
-        Pair<ResourceLocation, PlayerModelType> p = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
-        if (entity.shouldRenderLordSkin()) {
-            return entity.getOverlayPlayerProperties().map(Pair::getRight).map(b -> Pair.of(p.getLeft(), b)).orElse(p);
-        }
-        return p;
+    protected PlayerSkin determineTextureAndModel(@NotNull HunterMinionEntity entity) {
+        return (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];
     }
 
     @Override

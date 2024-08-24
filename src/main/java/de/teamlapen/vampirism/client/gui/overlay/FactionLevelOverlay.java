@@ -20,7 +20,7 @@ public class FactionLevelOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui) {
+        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui && VampirismConfig.CLIENT.enableFactionLevelOverlayRendering.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.mc.player);
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
             if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && !IFaction.is(faction, ModFactionTags.IS_NEUTRAL)) {

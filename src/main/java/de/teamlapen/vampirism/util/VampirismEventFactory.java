@@ -105,6 +105,12 @@ public class VampirismEventFactory {
         return event;
     }
 
+    public static float fireVampireFogEvent(float fogDistanceMultiplier) {
+        VampireFogEvent event = new VampireFogEvent(fogDistanceMultiplier);
+        NeoForge.EVENT_BUS.post(event);
+        return event.getFogDistanceMultiplier();
+    }
+
     public static <T extends ISkillPlayer<T>> ISkillHandler.Result fireSkillUnlockCheckEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill) {
         var event = new SkillEvents.SkillUnlockCheckEvent<>(factionPlayer, skill);
         NeoForge.EVENT_BUS.post(event);

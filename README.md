@@ -66,7 +66,7 @@ The following labeling scheme is used:
 - BugraaK _Textures/Models_
 - MrVityaTrash _Textures_
 - FrostedOver _Textures_
-- Grid _Textures_
+- Grid _Models/Textures/Structures_
 - T_Corvus _Textures_
 - Zeyke _Textures_
 

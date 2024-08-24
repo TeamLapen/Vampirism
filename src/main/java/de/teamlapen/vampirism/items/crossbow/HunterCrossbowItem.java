@@ -81,6 +81,16 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     }
 
     @Override
+    public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles(@NotNull ItemStack stack) {
+        return getSupportedProjectiles(stack);
+    }
+
+    @Override
+    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles(@NotNull ItemStack stack) {
+        return getSupportedProjectiles(stack);
+    }
+
+    @Override
     public boolean isValidRepairItem(@NotNull ItemStack crossbow, ItemStack repairItem) {
         return repairItem.is(Tags.Items.STRINGS) || super.isValidRepairItem(crossbow, repairItem);
     }
@@ -162,6 +172,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
             if (!itemstack.isEmpty()) {
                 crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, LivingEntity.getSlotForHand(hand));
                 Projectile projectile = this.createProjectile(level, shooter, crossbowStack, itemstack, isPlayer);
+                if(crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
+                    arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                }
                 this.shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, p_331167_);
                 level.addFreshEntity(projectile);
             }
@@ -176,7 +189,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
     protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
 
-        if (!ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+            crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
+        } else {
             availableProjectiles.clear();
         }
         return shootingProjectiles;
@@ -300,6 +315,10 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IFactio
             crossbow.set(ModDataComponents.SELECTED_AMMUNITION, new SelectedAmmunition(ammo));
         }
     }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public abstract Predicate<ItemStack> getAllSupportedProjectiles();
 
     @Override
     public Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow) {

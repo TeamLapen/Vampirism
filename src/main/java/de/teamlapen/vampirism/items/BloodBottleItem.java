@@ -55,6 +55,10 @@ public class BloodBottleItem extends Item implements IFactionExclusiveItem, ModD
         super(new Properties());
     }
 
+    public BloodBottleItem(Item.Properties properties) {
+        super(properties);
+    }
+
     @Override
     public boolean isEnchantable(@NotNull ItemStack stack) {
         return false;

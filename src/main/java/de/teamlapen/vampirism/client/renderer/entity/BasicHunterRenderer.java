@@ -1,18 +1,16 @@
 package de.teamlapen.vampirism.client.renderer.entity;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
-import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -24,7 +22,7 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     private static final ResourceLocation textureCloak = VResourceLocation.mod("textures/entity/hunter_cloak.png");
 
-    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
+    private final @NotNull PlayerSkin[] textures;
 
     public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
@@ -35,7 +33,7 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
 
     @Override
-    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull BasicHunterEntity entity) {
+    protected PlayerSkin determineTextureAndModel(@NotNull BasicHunterEntity entity) {
         return textures[entity.getEntityTextureType() % textures.length];
     }
 }

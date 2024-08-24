@@ -91,6 +91,7 @@ public class ClientConfigHelper {
      * @return true if the order is valid
      */
     public static boolean testActions(Object string) {
+        if (string == null) return false;
         try {
             GSON.fromJson((String) string, ACTION_TOKEN);
         } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException e) {
@@ -106,6 +107,7 @@ public class ClientConfigHelper {
      * @return true if the order is valid
      */
     public static boolean testTasks(Object string) {
+        if (string == null) return false;
         try {
             GSON.fromJson((String) string, MINION_TASK_TOKEN);
         } catch (JsonSyntaxException | ClassCastException | IllegalArgumentException e) {

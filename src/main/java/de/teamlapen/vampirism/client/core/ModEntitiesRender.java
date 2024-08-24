@@ -8,8 +8,10 @@ import de.teamlapen.vampirism.client.renderer.entity.*;
 import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.entity.IVampirismBoat;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -85,8 +87,6 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.dummy_sit_entity.get(), DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.BOAT.get(), context -> new VampirismBoatRenderer(context, false));
-        event.registerEntityRenderer(ModEntities.CHEST_BOAT.get(), context -> new VampirismBoatRenderer(context, true));
         event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), convertedRenderer(FoxRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), convertedRenderer(GoatRenderer::new));
         event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
@@ -121,13 +121,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
         event.registerLayerDefinition(GHOST, GhostModel::createMesh);
 
-        LayerDefinition boatDefinition = BoatModel.createBodyModel();
-        LayerDefinition chestBoatDefinition = ChestBoatModel.createBodyModel();
-        for (IVampirismBoat.BoatType type : IVampirismBoat.BoatType.values()) {
-            event.registerLayerDefinition(createBoatModelName(type), () -> boatDefinition);
-            event.registerLayerDefinition(createChestBoatModelName(type), () -> chestBoatDefinition);
-        }
-
     }
 
     static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
@@ -146,15 +139,7 @@ public class ModEntitiesRender {
         }
     }
 
-    public static @NotNull ModelLayerLocation createBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(VResourceLocation.mod("boat/" + type.getName()), "main");
-    }
-
-    public static @NotNull ModelLayerLocation createChestBoatModelName(IVampirismBoat.@NotNull BoatType type) {
-        return new ModelLayerLocation(VResourceLocation.mod("chest_boat/" + type.getName()), "main");
-    }
-
-    private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T, Z> provider) {
+    private static @NotNull <T extends LivingEntity, Z extends EntityModel<T>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,Z> provider) {
         return context -> {
             LivingEntityRenderer<T, Z> renderer = provider.create(context);
             renderer.addLayer(new ConvertedVampireEntityLayer<>(renderer, false));

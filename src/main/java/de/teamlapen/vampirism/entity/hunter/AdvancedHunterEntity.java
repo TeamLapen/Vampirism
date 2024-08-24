@@ -54,6 +54,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -90,6 +91,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
      */
     @Nullable
     private Pair<ResourceLocation, PlayerModelType> skinDetails;
+    @Nullable
+    private Optional<GameProfile> skinProfile;
     /**
      * If set, the vampire book with this id should be dropped
      */
@@ -199,6 +202,18 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             skinDetails = PENDING_PROP;
         }
         return Optional.of(skinDetails);
+    }
+
+    @Override
+    public @NotNull Optional<GameProfile> getPlayerOverlay() {
+        //noinspection OptionalAssignedToNull
+        if (this.skinProfile == null) {
+            String name = getTextureName();
+            if (name == null) return Optional.empty();
+            this.skinProfile = Optional.empty();
+            SkullBlockEntity.fetchGameProfile(name).thenAccept(p -> this.skinProfile = p);
+        }
+        return this.skinProfile;
     }
 
     @Nullable

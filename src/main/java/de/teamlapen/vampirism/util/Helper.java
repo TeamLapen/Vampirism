@@ -67,9 +67,8 @@ public class Helper {
         if (entity instanceof Player && entity.isSpectator()) return false;
         if (VampirismAPI.sundamageRegistry().hasSunDamage(world, entity.blockPosition())) {
             if (!(world instanceof Level) || !((Level) world).isRaining()) {
-                float angle = world.getTimeOfDay(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                if (angle > 0.78 || angle < 0.24) {
+                if (isDay(world)) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
                         return world instanceof Level && !FogLevel.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
@@ -78,6 +77,11 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    public static boolean isDay(LevelAccessor level) {
+        float angle = level.getTimeOfDay(1.0F);
+        return angle > 0.78 || angle < 0.24;
     }
 
     public static boolean canBlockSeeSun(@NotNull LevelAccessor world, @NotNull BlockPos pos) {

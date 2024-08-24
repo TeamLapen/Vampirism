@@ -2,10 +2,11 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.ModRegistryItems;
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.entity.IVampirismBoat;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.items.crossbow.ArrowContainer;
@@ -14,10 +15,10 @@ import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.arrow.*;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
-import de.teamlapen.vampirism.misc.VampirismDispenseBoatBehavior;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -76,7 +77,7 @@ public class ModItems {
     public static final DeferredItem<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = register("basic_double_crossbow", () -> new DoubleCrossbowItem(props().durability(465), 1, 20, Tiers.WOOD, HunterSkills.WEAPON_TABLE));
     public static final DeferredItem<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", () -> new TechCrossbowItem(props().durability(930), 1.6F, 40, Tiers.DIAMOND, HunterSkills.WEAPON_TABLE));
 
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", BloodBottleItem::new);
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.register("blood_bottle", () -> new BloodBottleItem(props().stacksTo(1)));
     public static final DeferredItem<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, () -> new BucketItem(ModFluids.BLOOD.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<Item> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", () -> new Item(props()));
     public static final DeferredItem<Item> BLOOD_INFUSED_ENHANCED_IRON_INGOT = register("blood_infused_enhanced_iron_ingot", () -> new Item(props()));
@@ -148,7 +149,7 @@ public class ModItems {
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_8 = register("hunter_intel_8", () -> new HunterIntelItem(8));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_9 = register("hunter_intel_9", () -> new HunterIntelItem(9));
 
-    public static final DeferredItem<VampirismItemBloodFoodItem> HUMAN_HEART = register("human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(20).saturationModifier(1.5F).build(), new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()));
+    public static final DeferredItem<VampirismItemBloodFoodItem> HUMAN_HEART = register("human_heart", () -> new VampirismItemBloodFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()), new FoodProperties.Builder().nutrition(20).saturationModifier(1.5F).build()));
 
     public static final DeferredItem<InjectionItem> INJECTION_EMPTY = register("injection_empty", () -> new InjectionItem(InjectionItem.TYPE.EMPTY));
     public static final DeferredItem<InjectionItem> INJECTION_GARLIC = register("injection_garlic", () -> new InjectionItem(InjectionItem.TYPE.GARLIC));
@@ -193,7 +194,7 @@ public class ModItems {
     public static final DeferredItem<VampireBloodBottleItem> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", VampireBloodBottleItem::new);
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = register("vampire_fang", VampireFangItem::new);
-    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", () -> new VampirismItemBloodFoodItem((new FoodProperties.Builder()).nutrition(10).saturationModifier(0.9F).build(), new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()));
+    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", () -> new VampirismItemBloodFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new FoodProperties.Builder().nutrition(10).saturationModifier(0.9F).build()));
 
     public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = register("vampire_spawn_egg", CreativeModeTabs.SPAWN_EGGS, () -> new DeferredSpawnEggItem(ModEntities.VAMPIRE, 0x8B15A3, 0xa735e3, new Item.Properties()));
     public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = register("vampire_hunter_spawn_egg", CreativeModeTabs.SPAWN_EGGS, () -> new DeferredSpawnEggItem(ModEntities.HUNTER, 0x2d05f2, 0x2600e0, new Item.Properties()));
@@ -235,10 +236,10 @@ public class ModItems {
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = register("crucifix_enhanced", () -> new CrucifixItem(IItemWithTier.TIER.ENHANCED));
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = register("crucifix_ultimate", () -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE));
 
-    public static final DeferredItem<VampirismBoatItem> DARK_SPRUCE_BOAT = register("dark_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, false, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> CURSED_SPRUCE_BOAT = register("cursed_spruce_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, false, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> DARK_SPRUCE_CHEST_BOAT = register("dark_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.DARK_SPRUCE, true, props().stacksTo(1)));
-    public static final DeferredItem<VampirismBoatItem> CURSED_SPRUCE_CHEST_BOAT = register("cursed_spruce_chest_boat", () -> new VampirismBoatItem(IVampirismBoat.BoatType.CURSED_SPRUCE, true, props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> DARK_SPRUCE_BOAT = register(ModRegistryItems.DARK_SPRUCE_BOAT.getId().getPath(), () -> new BoatItem(false, VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> CURSED_SPRUCE_BOAT = register(ModRegistryItems.CURSED_SPRUCE_BOAT.getId().getPath(), () -> new BoatItem(false, VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> DARK_SPRUCE_CHEST_BOAT = register(ModRegistryItems.DARK_SPRUCE_CHEST_BOAT.getId().getPath(), () -> new BoatItem(true, VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
+    public static final DeferredItem<BoatItem> CURSED_SPRUCE_CHEST_BOAT = register(ModRegistryItems.CURSED_SPRUCE_CHEST_BOAT.getId().getPath(), () -> new BoatItem(true, VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), props().stacksTo(1)));
 
     public static final DeferredItem<OilBottleItem> OIL_BOTTLE = register("oil_bottle", () -> new OilBottleItem(props().stacksTo(1)));
     public static final DeferredItem<HangingSignItem> DARK_SPRUCE_HANGING_SIGN = register("dark_spruce_hanging_sign", () -> new HangingSignItem(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
@@ -313,8 +314,10 @@ public class ModItems {
     }
 
     public static void registerDispenserBehaviourUnsafe() {
-        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.DARK_SPRUCE));
-        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new VampirismDispenseBoatBehavior(IVampirismBoat.BoatType.CURSED_SPRUCE));
+        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(VEnums.DARK_SPRUCE_BOAT_TYPE.getValue()));
+        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue()));
+        DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(VEnums.DARK_SPRUCE_BOAT_TYPE.getValue(), true));
+        DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(VEnums.CURSED_SPRUCE_BOAT_TYPE.getValue(), true));
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get());
         DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get());

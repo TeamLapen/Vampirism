@@ -9,17 +9,16 @@ import de.teamlapen.vampirism.client.renderer.entity.layers.CloakLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
-import de.teamlapen.vampirism.util.PlayerModelType;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
     private static final ResourceLocation textureCloak = VResourceLocation.mod("textures/entity/hunter_cloak.png");
-    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/hunter_base1.png");
-    private final Pair<ResourceLocation, PlayerModelType> @NotNull [] textures;
+    private static final PlayerSkin fallback = new PlayerSkin(VResourceLocation.mod("textures/entity/hunter_base1.png"), null, null, null, PlayerSkin.Model.WIDE, false);
+    private final @NotNull PlayerSkin[] textures;
 
 
     public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
@@ -43,14 +42,13 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
             this.getModel().hat.visible = false;
             this.textures = gatherTextures("textures/entity/hunter", true);
         } else {
-            //noinspection unchecked
-            this.textures = new Pair[] {};
+            this.textures = new PlayerSkin[]{};
         }
     }
 
     @Override
-    protected Pair<ResourceLocation, PlayerModelType> determineTextureAndModel(@NotNull AdvancedHunterEntity entity) {
-        if (this.textures.length == 0) return Pair.of(texture, PlayerModelType.WIDE);
+    protected PlayerSkin determineTextureAndModel(@NotNull AdvancedHunterEntity entity) {
+        if (this.textures.length == 0) return fallback;
         return this.textures[entity.getBodyTexture() % this.textures.length];
     }
 

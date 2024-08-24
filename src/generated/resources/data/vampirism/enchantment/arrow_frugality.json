@@ -3,6 +3,20 @@
   "description": {
     "translate": "enchantment.vampirism.arrow_frugality"
   },
+  "effects": {
+    "vampirism:frugality": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 1.0
+          }
+        }
+      }
+    ]
+  },
   "exclusive_set": "#vampirism:crossbow_incompatible",
   "max_cost": {
     "base": 50,

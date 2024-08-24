@@ -22,7 +22,7 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> implements Layered
 
     @Override
     public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (this.mc.player != null) {
+        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 

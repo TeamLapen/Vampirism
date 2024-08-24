@@ -22,7 +22,7 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> implements Layered
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null) {
+        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 

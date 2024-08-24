@@ -119,6 +119,8 @@ public class MigrationData {
     private static void fixEntityTypes(@NotNull Mapping mapping) {
         mapping.remap("vampirism:vampire_hunter", "vampirism:hunter");
         mapping.remap("vampirism:vampire_hunter_imob", "vampirism:hunter_imob");
+        mapping.remap("vampirism:boat", "boat");
+        mapping.remap("vampirism:chest_boat", "chest_boat");
     }
 
     private static void fixEffects(@NotNull Mapping mapping) {

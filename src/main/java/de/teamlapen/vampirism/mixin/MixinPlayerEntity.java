@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
-import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
@@ -23,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.Predicate;
-
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
 
@@ -42,22 +38,6 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IVampiri
     @Override
     public VampirismPlayerAttributes getVampAtts() {
         return vampirismPlayerAttributes;
-    }
-
-    @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getSupportedHeldProjectiles()Ljava/util/function/Predicate;"))
-    private Predicate<ItemStack> getSupport(Predicate<ItemStack> original, ItemStack shootable) {
-        if (shootable.getItem() instanceof IHunterCrossbow crossbow) {
-            return crossbow.getSupportedProjectiles(shootable);
-        }
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "getProjectile", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ProjectileWeaponItem;getAllSupportedProjectiles()Ljava/util/function/Predicate;"))
-    private Predicate<ItemStack> getAllSupport(Predicate<ItemStack> original, ItemStack shootable) {
-        if (shootable.getItem() instanceof IHunterCrossbow crossbow) {
-            return crossbow.getSupportedProjectiles(shootable);
-        }
-        return original;
     }
 
     @Inject(method = "canTakeItem", at = @At("HEAD"), cancellable = true)
