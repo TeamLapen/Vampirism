@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.client.gui.overlay.BatOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.DisguiseOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.RageOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.SunOverlay;
+import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -38,13 +36,12 @@ public class ModScreens {
         event.register(ModMenus.FOG_DIFFUSER.get(), FogDiffuserScreen::new);
     }
 
-    @SuppressWarnings("removal")
     static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, VIngameOverlays.FACTION_LEVEL_ID, VIngameOverlays.FACTION_LEVEL_ELEMENT);
-        event.registerAbove(VanillaGuiLayers.BOSS_OVERLAY, VIngameOverlays.FACTION_RAID_BAR_ID, VIngameOverlays.FACTION_RAID_BAR_ELEMENT);
-        event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VIngameOverlays.BLOOD_BAR_ID, VIngameOverlays.BLOOD_BAR_ELEMENT);
-        event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID, VIngameOverlays.ACTION_COOLDOWN_ELEMENT);
-        event.registerAboveAll(VIngameOverlays.ACTION_DURATION_ID, VIngameOverlays.ACTION_DURATION_ELEMENT);
+        event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, VIngameOverlays.FACTION_LEVEL_ID, new FactionLevelOverlay());
+        event.registerAbove(VanillaGuiLayers.BOSS_OVERLAY, VIngameOverlays.FACTION_RAID_BAR_ID, VampirismModClient.getINSTANCE().getBossInfoOverlay());
+        event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VIngameOverlays.BLOOD_BAR_ID, new BloodBarOverlay());
+        event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID, new ActionCooldownOverlay<>());
+        event.registerAboveAll(VIngameOverlays.ACTION_DURATION_ID, new ActionDurationOverlay<>());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.RAGE, new RageOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.DISGUISE, new DisguiseOverlay());
