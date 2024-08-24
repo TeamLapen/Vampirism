@@ -6,12 +6,12 @@ import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.client.VIngameOverlays;
 import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
-import de.teamlapen.vampirism.client.gui.overlay.*;
+import de.teamlapen.vampirism.client.gui.overlay.CustomBossEventOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.proxy.ClientProxy;
@@ -76,8 +76,6 @@ public class VampirismModClient {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-
-        setupApi();
     }
 
     public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
@@ -116,14 +114,6 @@ public class VampirismModClient {
 
     public void clearBossBarOverlay() {
         this.bossInfoOverlay.clear();
-    }
-
-    private void setupApi() {
-        VIngameOverlays.FACTION_RAID_BAR_ELEMENT = this.bossInfoOverlay;
-        VIngameOverlays.BLOOD_BAR_ELEMENT = new BloodBarOverlay();
-        VIngameOverlays.FACTION_LEVEL_ELEMENT = new FactionLevelOverlay();
-        VIngameOverlays.ACTION_COOLDOWN_ELEMENT = new ActionCooldownOverlay();
-        VIngameOverlays.ACTION_DURATION_ELEMENT = new ActionDurationOverlay();
     }
 
     public VampirismHUDOverlay getOverlay() {
