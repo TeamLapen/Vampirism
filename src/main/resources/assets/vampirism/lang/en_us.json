@@ -1091,6 +1091,7 @@
   "command.vampirism.test.skill.alreadyenabled": "Skill is already enabled (%s)",
   "command.vampirism.test.skill.parent": "Parent Skill must be enabled (%s)",
   "command.vampirism.test.skill.parents": "Parent Skill must be enabled (%s or %s)",
+  "command.vampirism.test.skill.parents.disabled": "Parent Skills must be enabled",
   "command.vampirism.test.skill.nopoints": "No skill points remaining",
   "command.vampirism.test.skill.othernode": "The other skill is enabled",
   "command.vampirism.test.skill.otherfaction": "Your faction doesn't permit this skill",

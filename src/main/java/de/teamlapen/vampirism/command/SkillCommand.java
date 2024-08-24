@@ -27,7 +27,6 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.List;
 
 public class SkillCommand extends BasicCommand {
 
@@ -128,15 +127,7 @@ public class SkillCommand extends BasicCommand {
                 commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.enabled", skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow() + " (" + skill.value().getName().getString() + ")"), false);
             }
             case ALREADY_ENABLED -> commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.value().getName()), false);
-            case PARENT_NOT_ENABLED -> {
-                List<Holder<ISkill<?>>> skills = skillHandler.getParentSkills(skill);
-                if (skills == null || skills.isEmpty()) return 0;
-                if (skills.size() == 1) {
-                    commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parent", skills.getFirst().unwrapKey().map(ResourceKey::location).orElseThrow()));
-                } else {
-                    commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parents", skills.get(0).unwrapKey().map(ResourceKey::location).orElseThrow(), skills.get(2).unwrapKey().map(ResourceKey::location).orElseThrow()));
-                }
-            }
+            case PARENT_NOT_ENABLED -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parents.disabled"));
             case NO_POINTS -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.nopoints"));
             case OTHER_NODE_SKILL -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.othernode"));
             case NOT_FOUND -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.otherfaction"));

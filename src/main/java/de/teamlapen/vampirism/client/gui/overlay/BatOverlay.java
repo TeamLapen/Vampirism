@@ -19,7 +19,7 @@ public class BatOverlay extends TextureOverlay {
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
         if (this.mc.player != null && VampirismConfig.CLIENT.enableHudBatOverlayRendering.get()) {
             IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get(this.mc.player).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.BAT.get())) {
+            if (actionHandler.isActionActive(VampireActions.BAT)) {
                 renderTextureOverlay(graphics, BAT_TEXTURE, 1.0F);
             }
         }

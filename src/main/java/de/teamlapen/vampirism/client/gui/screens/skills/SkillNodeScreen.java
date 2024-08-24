@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.ActionSkill;
@@ -302,34 +301,6 @@ public class SkillNodeScreen {
             RenderSystem.enableBlend();
             graphics.blit(getSkillIconLocation(hoveredSkill.value()), x + scrollX + 5, this.y + scrollY + 5, 0, 0, 16, 16, 16, 16);
         }
-    }
-
-    /**
-     * Adds additional elements to the skill description
-     *
-     * @param skill index of the skill
-     * @return skill description
-     */
-    private List<FormattedCharSequence> getSkillDescription(int skill) {
-        List<FormattedCharSequence> description = this.descriptions[skill];
-        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(this.skillNode.elements().get(skill));
-
-        List<Holder<ISkill<?>>> lockingSkills = null;
-        ChatFormatting lockingColor = ChatFormatting.BLACK;
-        if (!this.skillNode.node().value().lockingNodes().isEmpty()) {
-            lockingSkills = getLockingSkills(this.skillNode);
-            lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? ChatFormatting.DARK_GRAY : lockingSkills.stream().anyMatch(skillHandler::isSkillEnabled) ? ChatFormatting.DARK_RED : ChatFormatting.YELLOW;
-        }
-        if (lockingSkills != null) {
-            int l = 29 + 27;
-            int size = Math.max(l + minecraft.font.width(titles[skill]), 120) - 20;
-            description = new ArrayList<>(description);
-            description.addAll(Language.getInstance().getVisualOrder(this.findOptimalLines(Component.translatable("text.vampirism.skill.excluding").withStyle(lockingColor), size)));
-            for (Holder<ISkill<?>> lockingSkill : lockingSkills) {
-                description.addAll(Language.getInstance().getVisualOrder(this.findOptimalLines(Component.literal("  ").append(lockingSkill.value().getName().copy().withStyle(lockingColor)), size)));
-            }
-        }
-        return description;
     }
 
     private ResourceLocation getSkillIconLocation(@NotNull ISkill skill) {

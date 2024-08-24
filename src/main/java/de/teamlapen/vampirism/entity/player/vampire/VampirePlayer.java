@@ -584,11 +584,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public void onChangedDimension(ResourceKey<Level> from, ResourceKey<Level> to) {
-
-    }
-
-    @Override
     public boolean onDeadlyHit(@NotNull DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
@@ -669,6 +664,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public void onJoinWorld() {
+        super.onJoinWorld();
         if (getLevel() > 0) {
             ticksInSun = 0;
             if (wasDead) {
@@ -683,6 +679,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     protected void onLevelReset(boolean client) {
+        super.onLevelReset(client);
         this.refinementHandler.reset();
         this.removeEntityAttributes();
     }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
@@ -122,8 +123,8 @@ public class VampirismEventFactory {
         NeoForge.EVENT_BUS.post(event);
     }
 
-    public static <T extends ISkillPlayer<T>> void fireSkillEnableEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill, boolean fromLoading) {
-        var event = new SkillEvents.SkillEnableEvent<>(factionPlayer, skill, fromLoading);
+    public static <T extends ISkillPlayer<T>> void fireSkillEnableEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree, boolean fromLoading) {
+        var event = new SkillEvents.SkillEnableEvent<>(factionPlayer, skill, skillTree, fromLoading);
         NeoForge.EVENT_BUS.post(event);
     }
 

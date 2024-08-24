@@ -27,5 +27,6 @@ public class ModSkillTreeProvider extends TagsProvider<ISkillTree> {
         this.tag(ModSkillTreeTags.VAMPIRE).add(VampireSkills.Trees.LEVEL, VampireSkills.Trees.LORD);
         this.tag(ModSkillTreeTags.LEVEL).add(HunterSkills.Trees.LEVEL, VampireSkills.Trees.LEVEL);
         this.tag(ModSkillTreeTags.LORD).add(HunterSkills.Trees.LORD, VampireSkills.Trees.LORD);
+        this.tag(ModSkillTreeTags.DEFAULT).addTag(ModSkillTreeTags.LEVEL).addTag(ModSkillTreeTags.LORD);
     }
 }

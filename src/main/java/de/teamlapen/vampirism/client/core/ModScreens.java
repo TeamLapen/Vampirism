@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.client.VIngameOverlays;
-import de.teamlapen.vampirism.client.gui.overlay.*;
+import de.teamlapen.vampirism.client.gui.overlay.BatOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.DisguiseOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.RageOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.SunOverlay;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -45,7 +48,6 @@ public class ModScreens {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.RAGE, new RageOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.DISGUISE, new DisguiseOverlay());
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.NEARBY_VAMPIRE, new NearbyVampireOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VIngameOverlays.SUN, new SunOverlay());
     }
 }

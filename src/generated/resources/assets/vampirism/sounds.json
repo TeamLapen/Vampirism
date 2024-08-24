@@ -49,6 +49,12 @@
       "vampirism:reserved/block/bubbles_3"
     ]
   },
+  "block.coffin_lid": {
+    "sounds": [
+      "vampirism:cc/block/coffin_lid_slide"
+    ],
+    "subtitle": "subtitles.vampirism.coffin_lid"
+  },
   "block.grinder": {
     "sounds": [
       "vampirism:cc/block/grinder"
@@ -70,12 +76,6 @@
         "stream": true
       }
     ]
-  },
-  "coffin_lid": {
-    "sounds": [
-      "vampirism:cc/block/coffin_lid_slide"
-    ],
-    "subtitle": "subtitles.vampirism.coffin_lid"
   },
   "entity.bat_swarm": {
     "sounds": [

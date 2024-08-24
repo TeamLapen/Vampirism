@@ -8,7 +8,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,9 +25,29 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
     Result canSkillBeEnabled(Holder<ISkill<?>> skill, Holder<ISkillTree> skillTree);
 
     /**
+     * Only use this if you have no access to the skill tree.
+     * <p>
+     * This will select any skill tree that contains the skill
+     *
+     * @deprecated Use {@link #canSkillBeEnabled(Holder, Holder)} instead
+     */
+    @Deprecated
+    Result canSkillBeEnabled(Holder<ISkill<?>> skill);
+
+    /**
      * Disables the given skill
      */
-    void disableSkill(Holder<ISkill<T>> skill, ISkillTree skillTree);
+    void disableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree);
+
+    /**
+     * Only use this if you have no access to the skill tree.
+     * <p>
+     * This will select any skill tree that contains the skill
+     *
+     * @deprecated Use {@link #disableSkill(Holder, Holder)} instead
+     */
+    @Deprecated
+    void disableSkill(Holder<ISkill<T>> skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
@@ -37,14 +56,22 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
         enableSkill(skill, skillTree, false);
     }
 
+    /**
+     * Only use this if you have no access to the skill tree.
+     * <p>
+     * This will select any skill tree that contains the skill
+     *
+     * @deprecated Use {@link #enableSkill(Holder, Holder)} instead
+     */
+    @Deprecated
+    void enableSkill(Holder<ISkill<T>> skill);
+
     void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree, boolean fromLoading);
 
     /**
      * @return The count of additional skills that can be currently unlocked
      */
     int getLeftSkillPoints(Holder<ISkillTree> tree);
-
-    List<Holder<ISkill<?>>> getParentSkills(Holder<ISkill<?>> skill);
 
     boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill);
 

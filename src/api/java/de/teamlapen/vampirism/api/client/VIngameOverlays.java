@@ -58,6 +58,5 @@ public class VIngameOverlays {
     public static final ResourceLocation RAGE = VResourceLocation.mod("rage");
     public static final ResourceLocation BAT = VResourceLocation.mod("bat");
     public static final ResourceLocation DISGUISE = VResourceLocation.mod("disguise");
-    public static final ResourceLocation NEARBY_VAMPIRE = VResourceLocation.mod("nearby_vampire");
     public static final ResourceLocation SUN = VResourceLocation.mod("sun");
 }

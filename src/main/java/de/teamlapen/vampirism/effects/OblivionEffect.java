@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.effects;
 
 import de.teamlapen.lib.lib.util.LogUtil;
-import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -21,7 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class OblivionEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends VampirismEffect {
@@ -43,11 +41,11 @@ public class OblivionEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> exten
                 entityLivingBaseIn.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
                 return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler ->
                 {
-                    Optional<ISkillNode> nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
+                    var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
                     if (nodeOPT.isPresent()) {
-                        for (Holder<ISkill<?>> element : nodeOPT.get().skills()) {
+                        for (Holder<ISkill<?>> element : nodeOPT.get().getValue().skills()) {
                             //noinspection unchecked
-                            handler.disableSkill((Holder<ISkill<T>>) (Object) element);
+                            handler.disableSkill((Holder<ISkill<T>>) (Object) element, nodeOPT.get().getKey());
                             player.awardStat(ModStats.SKILL_FORGOTTEN.get().get(element.value()));
                         }
                         return true;

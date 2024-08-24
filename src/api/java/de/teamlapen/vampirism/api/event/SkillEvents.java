@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.event;
 
+import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -98,12 +99,14 @@ public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>
      */
     public static class SkillEnableEvent<T extends ISkillPlayer<T>> extends SkillEvents<T, ISkill<T>> {
 
+        private final Holder<ISkillTree> skillTree;
         private final boolean fromLoading;
 
         @ApiStatus.Internal
         @SuppressWarnings("unchecked")
-        public SkillEnableEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill, boolean fromLoading) {
+        public SkillEnableEvent(@NotNull T factionPlayer, @NotNull Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree, boolean fromLoading) {
             super(factionPlayer, (Holder<ISkill<T>>) skill);
+            this.skillTree = skillTree;
             this.fromLoading = fromLoading;
         }
 
@@ -114,6 +117,10 @@ public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>
             return fromLoading;
         }
 
+
+        public Holder<ISkillTree> getSkillTree() {
+            return skillTree;
+        }
     }
 
 }

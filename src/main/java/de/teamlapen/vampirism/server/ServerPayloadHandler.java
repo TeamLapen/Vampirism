@@ -244,7 +244,7 @@ public class ServerPayloadHandler {
                 Holder<ISkill<?>> skill = msg.skill();
                 if (skill != null) {
                     ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
-                    ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
+                    ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill, msg.skillTree());
                     if (result == ISkillHandler.Result.OK) {
                         //noinspection unchecked
                         skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill, msg.skillTree());

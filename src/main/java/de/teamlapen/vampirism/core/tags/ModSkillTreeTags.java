@@ -11,6 +11,7 @@ public class ModSkillTreeTags {
     public static final TagKey<ISkillTree> VAMPIRE = tag("faction/vampire");
     public static final TagKey<ISkillTree> LEVEL = tag("type/level");
     public static final TagKey<ISkillTree> LORD = tag("type/lord");
+    public static final TagKey<ISkillTree> DEFAULT = tag("default");
 
     private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
         return TagKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod(name));

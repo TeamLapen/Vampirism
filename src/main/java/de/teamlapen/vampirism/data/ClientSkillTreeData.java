@@ -65,6 +65,14 @@ public class ClientSkillTreeData implements ISkillTreeData {
     }
 
     @Override
+    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Holder<ISkillTree> skillTree, Holder<ISkill<?>> skill) {
+        if (skill.value().allowedSkillTrees().map(skillTree::is, skillTree::is)) {
+            return getConfiguration(skillTree).getNode(skill);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Holder<ISkillNode>> getParent(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
         SkillTreeConfiguration treeConfig = node.getTreeConfig();
         for (SkillTreeConfiguration.SkillTreeNodeConfiguration child : treeConfig.children()) {

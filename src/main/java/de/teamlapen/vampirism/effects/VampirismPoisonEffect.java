@@ -1,16 +1,12 @@
 package de.teamlapen.vampirism.effects;
 
-import de.teamlapen.vampirism.client.extensions.EffectExtensions;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 
 public class VampirismPoisonEffect extends VampirismEffect {
@@ -38,11 +34,6 @@ public class VampirismPoisonEffect extends VampirismEffect {
         } else {
             return true;
         }
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(EffectExtensions.POISON);
     }
 
     public static MobEffectInstance createThrowableEffect() {

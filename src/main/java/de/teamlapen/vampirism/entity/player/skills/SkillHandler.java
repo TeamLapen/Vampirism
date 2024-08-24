@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.lib.lib.util.LiveMap;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -29,6 +30,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +42,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     private static final String NBT_KEY = "skill_handler";
     private final static Logger LOGGER = LogManager.getLogger();
     private final Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>> enabledSkills = new HashMap<>();
+    private final LiveMap<Holder<ISkill<T>>> skills = new LiveMap<>(enabledSkills);
     private final T player;
     private final Holder<? extends IPlayableFaction<T>> faction;
     private final ISkillPointProvider skillPoints = new SkillPoints();
@@ -53,8 +56,8 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         this.treeData = ISkillTreeData.getData(player.asEntity().level());
     }
 
-    public @NotNull Optional<ISkillNode> anyLastNode() {
-        return unlockedTrees.stream().flatMap(s -> this.treeData.getAnyLastNode(s, this::isNodeEnabled).stream()).findAny();
+    public @NotNull Optional<Pair<Holder<ISkillTree>, ISkillNode>> anyLastNode() {
+        return unlockedTrees.stream().flatMap(s -> this.treeData.getAnyLastNode(s, l -> isNodeEnabled(s, l)).map(x -> Pair.of(s, x)).stream()).findAny();
     }
 
     public ISkillTreeData getTreeData() {
@@ -74,14 +77,14 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> node = unlockedTrees.stream().flatMap(x -> treeData.getNodeForSkill(unlockedTrees, skill).stream()).findFirst();
+        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> node = unlockedTrees.stream().flatMap(x -> treeData.getNodeForSkill(skillTree, skill).stream()).findFirst();
         if (node.isPresent()) {
             if (isSkillNodeLocked(node.get().node().value())) {
                 return Result.LOCKED_BY_OTHER_NODE;
             }
-            if (this.treeData.isRoot(this.unlockedTrees, node.get()) || this.treeData.getParent(node.get()).stream().anyMatch(x -> isNodeEnabled(x.value()))) {
+            if (this.treeData.isRoot(this.unlockedTrees, node.get()) || this.treeData.getParent(node.get()).stream().anyMatch(x -> isNodeEnabled(skillTree, x.value()))) {
                 if (getLeftSkillPoints(skillTree) >= skill.value().getSkillPointCost()) {
-                    return isNodeEnabled(node.get().node().value()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
+                    return isNodeEnabled(skillTree, node.get().node().value()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
                 } else {
                     return Result.NO_POINTS;
                 }
@@ -93,6 +96,21 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
             LOGGER.warn("Node for skill {} could not be found", skill);
             return Result.NOT_FOUND;
         }
+    }
+
+    @Override
+    public Result canSkillBeEnabled(Holder<ISkill<?>> skill) {
+        return this.treeData.getNodeForSkill(unlockedTrees, skill).map(s -> canSkillBeEnabled(skill, s.getTreeConfig().skillTree())).orElse(Result.NOT_FOUND);
+    }
+
+    @Override
+    public void disableSkill(Holder<ISkill<T>> skill) {
+        this.treeData.getNodeForSkill(unlockedTrees, (Holder<ISkill<?>>) (Object) skill).ifPresent(a  -> disableSkill(skill, a.getTreeConfig().skillTree()));
+    }
+
+    @Override
+    public void enableSkill(Holder<ISkill<T>> skill) {
+        this.treeData.getNodeForSkill(unlockedTrees, (Holder<ISkill<?>>) (Object) skill).ifPresent(a  -> enableSkill(skill, a.getTreeConfig().skillTree()));
     }
 
     public void disableAllSkills() {
@@ -117,10 +135,11 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
 
     @Override
     public void enableSkill(@NotNull Holder<ISkill<T>> skill, Holder<ISkillTree>  tree, boolean fromLoading) {
-        if (!enabledSkills.contains(skill)) {
-            VampirismEventFactory.fireSkillEnableEvent(player, skill, fromLoading);
+        List<Holder<ISkill<T>>> skills = this.enabledSkills.computeIfAbsent(tree, x -> new ArrayList<>());
+        if (!skills.contains(skill)) {
+            VampirismEventFactory.fireSkillEnableEvent(player, skill, tree, fromLoading);
             skill.value().onEnable(player);
-            enabledSkills.add(skill);
+            skills.add(skill);
             if (!fromLoading) {
                 this.player.asEntity().awardStat(ModStats.SKILL_UNLOCKED.get().get(skill.value()));
             }
@@ -149,10 +168,10 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
-        var enabledSkills = new ArrayList<>(this.enabledSkills);
+        var enabledSkills = this.enabledSkills.getOrDefault(tree, Collections.emptyList());
         for (Holder<ISkill<T>> enabledSkill : enabledSkills) {
             if (enabledSkill.value().allowedSkillTrees().map(tree::is, tree::is)) {
-                this.disableSkill(enabledSkill);
+                this.disableSkill(enabledSkill, tree);
             }
         }
         this.unlockedTrees.remove(tree);
@@ -168,7 +187,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         if (this.skillPoints.ignoreSkillPointLimit(this.player, tree)) {
             return Integer.MAX_VALUE;
         }
-        return Math.max(0, this.skillPoints.getSkillPoints(this.player, tree) - this.enabledSkills.stream().map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
+        return Math.max(0, this.skillPoints.getSkillPoints(this.player, tree) - this.enabledSkills.values().stream().flatMap(Collection::stream).map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
     }
 
     public void reset() {
@@ -177,25 +196,19 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         this.dirty = true;
     }
 
-    @Override
-    public List<Holder<ISkill<?>>> getParentSkills(@NotNull Holder<ISkill<?>> skill) {
-        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> nodeForSkill = this.treeData.getNodeForSkill(this.unlockedTrees, skill);
-        return nodeForSkill.flatMap(this.treeData::getParent).stream().flatMap(x -> x.value().skills().stream()).collect(Collectors.toList());
-    }
-
     public T getPlayer() {
         return player;
     }
 
     public boolean noSkillEnabled() {
-        List<ISkill<?>> list = this.unlockedTrees.stream().map(this.treeData::root).flatMap(x -> x.elements().stream()).map(Holder::value).collect(Collectors.toList());
+        var defaultSkills = this.unlockedTrees.stream().collect(Collectors.toMap(x -> x, x -> this.treeData.root(x).elements()));
         //noinspection SuspiciousMethodCalls
-        return this.enabledSkills.isEmpty() || new HashSet<>(list).containsAll(this.enabledSkills);
+        return this.enabledSkills.isEmpty() || this.enabledSkills.entrySet().stream().allMatch(x -> defaultSkills.containsKey(x.getKey()) && new HashSet<>(defaultSkills.get(x.getKey())).containsAll(x.getValue()));
     }
 
     @SuppressWarnings("unchecked")
-    public boolean isNodeEnabled(@NotNull ISkillNode node) {
-        for (Holder<ISkill<T>> s : enabledSkills) {
+    public boolean isNodeEnabled(Holder<ISkillTree> skillTree, @NotNull ISkillNode node) {
+        for (Holder<ISkill<T>> s : enabledSkills.getOrDefault(skillTree, Collections.emptyList())) {
             if (node.containsSkill((Holder<ISkill<?>>) (Object) s)) return true;
         }
         return false;
@@ -204,12 +217,12 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill) {
-        return enabledSkills.containsAll(skill);
+        return skills.containsAll(skill);
     }
 
     @Override
     public boolean isSkillEnabled(Holder<ISkill<?>> skill) {
-        return enabledSkills.contains(skill);
+        return skills.contains(skill);
     }
 
     public boolean isSkillNodeLocked(@NotNull ISkillNode nodeIn) {
@@ -219,13 +232,18 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("skills")) {
-            for (String id : nbt.getCompound("skills").getAllKeys()) {
-                ModRegistries.SKILLS.getHolder(ResourceLocation.parse(id)).ifPresentOrElse(holder -> {
-                    //noinspection unchecked
-                    enableSkill((Holder<ISkill<T>>) (Object) holder, true);
-                }, () -> LOGGER.warn("Skill {} does not exist anymore", id));
+        if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
+            HolderLookup.RegistryLookup<ISkillTree> skillTrees = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_TREE);
+            CompoundTag skillsTag = nbt.getCompound("skills");
+            for (String id : skillsTag.getAllKeys()) {
+                Optional<Holder.Reference<ISkillTree>> skillTree = skillTrees.get(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, ResourceLocation.parse(id)));
+                skillTree.ifPresent(tree -> {
+                    ListTag list = skillsTag.getList(id, Tag.TAG_STRING);
+                    list.stream().map(Tag::getAsString).map(ResourceLocation::parse).map(ModRegistries.SKILLS::getHolder).flatMap(Optional::stream).forEach(skill -> {
+                        enableSkill((Holder<ISkill<T>>) (Object) skill, tree, true);
+                    });
+                });
             }
         }
 
@@ -242,19 +260,23 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
 
-            //noinspection unchecked
-            List<Holder<ISkill<T>>> old = (List<Holder<ISkill<T>>>) enabledSkills.clone();
-            for (String id : nbt.getCompound("skills").getAllKeys()) {
-                ModRegistries.SKILLS.getHolder(ResourceLocation.parse(id)).ifPresent(holder -> {
-                    if (old.contains(holder)) {
-                        old.remove(holder);
-                    } else {
-                        enableSkill((Holder<ISkill<T>>) (Object) holder, true);
-                    }
+            HolderLookup.RegistryLookup<ISkillTree> skillTrees = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_TREE);
+            var old = enabledSkills.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, x -> new ArrayList<>(x.getValue())));
+            CompoundTag skillsTag = nbt.getCompound("skills");
+            for (String id : skillsTag.getAllKeys()) {
+                Optional<Holder.Reference<ISkillTree>> skillTree = skillTrees.get(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, ResourceLocation.parse(id)));
+                skillTree.ifPresent(tree -> {
+                    ArrayList<Holder<ISkill<T>>> oldSkill = old.getOrDefault(tree, new ArrayList<>());
+                    ListTag list = skillsTag.getList(id, Tag.TAG_STRING);
+                    list.stream().map(Tag::getAsString).map(ResourceLocation::parse).map(ModRegistries.SKILLS::getHolder).flatMap(Optional::stream).forEach(skill -> {
+                        if (oldSkill.contains(skill)) {
+                            oldSkill.remove(skill);
+                        } else {
+                            enableSkill((Holder<ISkill<T>>) (Object) skill, tree, true);
+                        }
+                    });
+                    oldSkill.forEach(skill -> disableSkill(skill, tree));
                 });
-            }
-            for (Holder<ISkill<T>> skill : old) {
-                disableSkill(skill);
             }
         }
 
@@ -275,13 +297,17 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
-        for (Holder<ISkill<T>> skill : enabledSkills) {
-            skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
+        for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
+            ListTag list = new ListTag();
+            for (Holder<ISkill<T>> skill : entry.getValue()) {
+                list.add(StringTag.valueOf(skill.getRegisteredName()));
+            }
+            skills.put(entry.getKey().getRegisteredName(), list);
         }
         nbt.put("skills", skills);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
+            unlockedTrees.add(StringTag.valueOf(tree.getRegisteredName()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
         return nbt;
@@ -291,13 +317,17 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
         CompoundTag nbt = new CompoundTag();
         CompoundTag skills = new CompoundTag();
-        for (Holder<ISkill<T>> skill : enabledSkills) {
-            skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> skills.putBoolean(id, true));
+        for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
+            ListTag list = new ListTag();
+            for (Holder<ISkill<T>> skill : entry.getValue()) {
+                list.add(StringTag.valueOf(skill.getRegisteredName()));
+            }
+            skills.put(entry.getKey().getRegisteredName(), list);
         }
         nbt.put("skills", skills);
         ListTag unlockedTrees = new ListTag();
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(RegUtil.id(getPlayer().asEntity().level(), tree.value()).toString()));
+            unlockedTrees.add(StringTag.valueOf(tree.getRegisteredName()));
         }
         nbt.put("unlocked_trees", unlockedTrees);
         return nbt;
@@ -326,13 +356,13 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         }
 
         @Override
-        public int getSkillPoints(IFactionPlayer<?> factionPlayer, ISkillTree tree) {
+        public int getSkillPoints(IFactionPlayer<?> factionPlayer, Holder<ISkillTree> tree) {
             return this.provider.values().stream().mapToInt(x -> Math.max(0, x.getSkillPoints(factionPlayer, tree))).sum();
         }
 
         @Override
-        public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer, ISkillTree tree) {
-            return this.provider.values().stream().anyMatch(l -> l.ignoreSkillPointLimit(factionPlayer));
+        public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer, Holder<ISkillTree> tree) {
+            return this.provider.values().stream().anyMatch(l -> l.ignoreSkillPointLimit(factionPlayer, tree));
         }
     }
 }
