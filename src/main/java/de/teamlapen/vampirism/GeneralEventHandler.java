@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Handles all events used in central parts of the mod
@@ -115,6 +117,14 @@ public class GeneralEventHandler {
         int missing = ModLootTables.checkAndResetInsertedAll();
         if (missing > 0) {
             LOGGER.warn("LootTables Failed to inject {} loottables", missing);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLevelLoad(LevelEvent.Load event) {
+        if (event.getLevel() instanceof ServerLevel level) {
+            LOGGER.info("Replacing DistanceManager.chunksToUpdateFutures for level {} with concurrent set.", level.dimension());
+            level.getChunkSource().chunkMap.getDistanceManager().chunksToUpdateFutures = ConcurrentHashMap.newKeySet();
         }
     }
 }

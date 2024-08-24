@@ -11,6 +11,7 @@
     "BeaconBlockEntityMixin",
     "CrossbowItemMixin",
     "EntitySubPredicateTypesAccessor",
+    "GoalSelectorMixin",
     "IngredientAccessor",
     "ItemMixin",
     "LivingEntityAccessor",
