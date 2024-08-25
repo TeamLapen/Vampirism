@@ -20,7 +20,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
           cache: 'gradle'
       - name: Determine Crowdin branch
@@ -39,11 +39,5 @@ jobs:
         uses: crowdin/github-action@v1
         with:
           crowdin_branch_name: ${{ steps.get_crowdin_branch.outputs.crowdin_branch }}
-        env:
-          CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}
-      - name: Install Crowdin CLI
-        run: npm i -g @crowdin/cli
-      - name: Pre-translate
-        run: crowdin pre-translate -b ${{ steps.get_crowdin_branch.outputs.crowdin_branch }} --translate-with-perfect-match-only --translate-untranslated-only --method=tm
         env:
           CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}
