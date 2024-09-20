@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -34,6 +35,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -279,4 +281,25 @@ public class Helper {
         return true;
     }
 
+    /**
+     * Call this in Item inventoryTick to make Vampires drop this item and get a short poison effect when held
+     *
+     * @param stack  item
+     * @param entity Entity holding the item
+     * @param held   Whether it is currently selected
+     * @return If entity is vampire
+     */
+    public static boolean handleHeldNonVampireItem(ItemStack stack, Entity entity, boolean held) {
+        if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8 && (held || living.getOffhandItem() == stack)) {
+            if (Helper.isVampire(entity)) {
+                ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                if (entity instanceof Player player) {
+                    player.getInventory().removeItem(stack);
+                    player.drop(stack, true);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }

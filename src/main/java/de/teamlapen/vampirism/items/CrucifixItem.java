@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -21,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -101,15 +99,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean held) {
-        if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8 && (living.getOffhandItem() == stack || living.getMainHandItem() == stack)) {
-            if (Helper.isVampire(entity)) {
-                ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
-                if (entity instanceof Player player) {
-                    player.getInventory().removeItem(stack);
-                    player.drop(stack, true);
-                }
-            }
-        }
+        Helper.handleHeldNonVampireItem(stack, entity, held);
     }
 
     protected boolean affectsEntity(@NotNull LivingEntity e) {

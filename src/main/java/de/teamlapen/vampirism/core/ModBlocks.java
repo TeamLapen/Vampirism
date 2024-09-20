@@ -58,7 +58,7 @@ public class ModBlocks {
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new);
     public static final DeferredBlock<CursedEarthBlock> CURSED_EARTH = registerWithItem("cursed_earth", CursedEarthBlock::new);
     public static final DeferredBlock<FirePlaceBlock> FIRE_PLACE = registerWithItem("fire_place", FirePlaceBlock::new);
-    public static final DeferredBlock<GarlicBlock> GARLIC = registerWithItem("garlic", GarlicBlock::new);
+    public static final DeferredBlock<GarlicBlock> GARLIC = registerWithItem("garlic", GarlicBlock::new, (b) -> new GarlicBlock.GarlicItem(b, new Item.Properties()));
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = registerWithItem("garlic_diffuser_improved", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.IMPROVED));
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.NORMAL));
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", () -> new GarlicDiffuserBlock(GarlicDiffuserBlock.Type.WEAK));

@@ -5,12 +5,13 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -72,5 +73,18 @@ public class GarlicBlock extends CropBlock {
     @Override
     protected ItemLike getBaseSeedId() {
         return ModBlocks.GARLIC;
+    }
+
+    public static class GarlicItem extends BlockItem {
+
+        public GarlicItem(Block pBlock, Properties pProperties) {
+            super(pBlock, pProperties);
+        }
+
+        @Override
+        public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean held) {
+            Helper.handleHeldNonVampireItem(stack, entity, held);
+        }
+
     }
 }
