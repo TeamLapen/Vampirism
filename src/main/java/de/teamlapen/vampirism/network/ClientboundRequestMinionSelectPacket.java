@@ -14,10 +14,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements CustomPacketPayload {
@@ -46,7 +48,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
 
     public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(new ResourceLocation(REFERENCE.MODID, "request_minion_select"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRequestMinionSelectPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8.map(Action::valueOf, s -> s.name), ClientboundRequestMinionSelectPacket::action,
+            ByteBufCodecs.STRING_UTF8.map(Action::valueOf, Action::name), ClientboundRequestMinionSelectPacket::action,
             ByteBufferCodecUtil.pair(ByteBufCodecs.VAR_INT, ComponentSerialization.STREAM_CODEC).apply(ByteBufCodecs.collection(i -> new ArrayList<>())), ClientboundRequestMinionSelectPacket::minions,
             ClientboundRequestMinionSelectPacket::new
     );
@@ -57,18 +59,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
         return TYPE;
     }
 
-    public enum Action implements StringRepresentable {
-        CALL("call");
-
-        private final String name;
-
-        Action(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public @NotNull String getSerializedName() {
-            return this.name;
-        }
+    public enum Action {
+        CALL
     }
 }
