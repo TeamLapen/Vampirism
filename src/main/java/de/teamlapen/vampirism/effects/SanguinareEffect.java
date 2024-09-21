@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.effects;
 
 import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.client.extensions.EffectExtensions;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -16,12 +15,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import net.neoforged.neoforge.common.EffectCure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.function.Consumer;
 
 
 public class SanguinareEffect extends VampirismEffect {
@@ -73,11 +70,6 @@ public class SanguinareEffect extends VampirismEffect {
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration == 2;
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(EffectExtensions.SANGUINARE);
     }
 
 }
