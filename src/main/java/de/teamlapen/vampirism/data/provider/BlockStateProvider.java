@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.*;
@@ -285,7 +284,7 @@ public class BlockStateProvider extends net.neoforged.neoforge.client.model.gene
         simpleBlock(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get(), models().cubeAll("incapacitated_vulnerable_remains", modLoc("block/incapacitated_vulnerable_remains")));
         simpleBlock(ModBlocks.VULNERABLE_REMAINS.get(), models().cubeAll("vulnerable_remains", modLoc("block/vulnerable_remains")));
         simpleBlock(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get(), models().cubeAll("active_vulnerable_remains", modLoc("block/active_vulnerable_remains")));
-        simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")));
+        simpleBlock(ModBlocks.CURSED_HANGING_ROOTS.get(), models().cross("cursed_hanging_roots", modLoc("block/cursed_hanging_roots")).renderType(cutout));
         simpleBlock(ModBlocks.MOTHER.get(), models().cubeAll("mother", modLoc("block/mother")));
         simpleBlock(ModBlocks.MOTHER_TROPHY.get(), models().getExistingFile(modLoc("block/mother_trophy")));
         simpleBlock(ModBlocks.FOG_DIFFUSER.get(), models().withExistingParent("fog_diffuser_normal", modLoc("block/fog_diffuser")).renderType(cutout));
