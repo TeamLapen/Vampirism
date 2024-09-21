@@ -66,7 +66,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             return false;
         }
         if (player instanceof ServerPlayer playerMp) {
-            playerMp.disconnect();
+            playerMp.removeVehicle();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
         AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
