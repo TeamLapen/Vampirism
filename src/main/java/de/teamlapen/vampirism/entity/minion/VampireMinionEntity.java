@@ -142,7 +142,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    public @NotNull ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
+    public @NotNull ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, @NotNull FoodProperties properties) {
         return stack;
     }
 

@@ -232,12 +232,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     @NotNull
     @Override
-    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
-        if (stack.getFoodProperties(this) != null) {
-            float healAmount = properties.nutrition() / 2f;
-            this.heal(healAmount);
-        }
-        return super.eat(world, stack);
+    public ItemStack eat(@NotNull Level world, @NotNull ItemStack stack, @NotNull FoodProperties properties) {
+        float healAmount = properties.nutrition() / 2f;
+        this.heal(healAmount);
+        return super.eat(world, stack, properties);
     }
 
     /**
