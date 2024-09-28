@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -12,7 +13,9 @@ import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
@@ -46,7 +49,6 @@ import java.util.Set;
 
 public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusiveItem, IFactionLevelItem<IHunterPlayer> {
 
-    private final static String baseRegName = "crucifix";
     private final TIER tier;
     /**
      * All crucifix items are added to this set. This is used to add cooldown for all existing crucifix items at once.
@@ -91,8 +93,17 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level world, @NotNull Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.consume(itemstack);
+        if (Helper.isHunter(player)) {
+            SkillHandler<IHunterPlayer> skillHandler = HunterPlayer.get(player).getSkillHandler();
+            if (skillHandler.isSkillEnabled(HunterSkills.CRUCIFIX_REPEL)) {
+                activePush(world, player, itemstack);
+                applyCooldown(player, getCooldown(itemstack) * 2);
+            } else {
+                player.startUsingItem(hand);
+            }
+            return InteractionResultHolder.consume(itemstack);
+        }
+        return InteractionResultHolder.fail(itemstack);
     }
 
     @Override
@@ -112,6 +123,15 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
                 }
             }
         }
+        if (held && entity instanceof Player player && !player.getCooldowns().isOnCooldown(this) && Helper.isHunter(player) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+            passivePush(world, player, stack, true);
+        }
+    }
+
+    protected void applyCooldown(LivingEntity entity, int cooldown) {
+        if (entity instanceof Player player) {
+            all_crucifix.forEach(item -> player.getCooldowns().addCooldown(item, cooldown));
+        }
     }
 
     protected boolean affectsEntity(@NotNull LivingEntity e) {
@@ -121,9 +141,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int p_77615_4_) {
-        if (entity instanceof Player) {
-            all_crucifix.forEach(item -> ((Player) entity).getCooldowns().addCooldown(item, getCooldown(stack)));
-        }
+        applyCooldown(entity, getCooldown(stack));
     }
 
     protected int getCooldown(ItemStack stack) {
@@ -160,12 +178,16 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
         return 1;
     }
 
-    protected double determineSlowdown(int entityTier) {
-        return switch (tier) {
+    protected double determineSlowdown(int entityTier, boolean reducedStrength) {
+        var slowdown = switch (tier) {
             case NORMAL -> entityTier > 1 ? 0.1 : 0.5;
             case ENHANCED -> entityTier > 2 ? 0.1 : 0.5;
             case ULTIMATE -> entityTier > 3 ? 0.3 : 0.5;
         };
+        if (reducedStrength) {
+            slowdown *= 0.25;
+        }
+        return slowdown;
     }
 
     protected int getRange(ItemStack stack) {
@@ -178,14 +200,18 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, int count) {
-        for (LivingEntity nearbyEntity : entity.level().getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
+        passivePush(level, entity, stack, false);
+    }
+
+    protected void passivePush(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, boolean reducedStrength) {
+        for (LivingEntity nearbyEntity : level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
             Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
             Vec3 oldDelta = nearbyEntity.getDeltaMovement();
             Vec3 horizontalDelta = oldDelta.multiply(1, 0, 1);
             double parallelScale = baseVector.dot(horizontalDelta);
             if (parallelScale > 0) {
                 Vec3 parallelPart = baseVector.scale(parallelScale); //Part of delta that is parallel to baseVector
-                double scale = determineSlowdown(determineEntityTier(nearbyEntity));
+                double scale = determineSlowdown(determineEntityTier(nearbyEntity), reducedStrength);
                 Vec3 newDelta = oldDelta.subtract(parallelPart.scale(scale)); //Substract parallel part from old Delta (scaled to still allow some movement)
                 if (newDelta.lengthSqr() > oldDelta.lengthSqr()) { //Just to make sure we do not speed up the movement even though this should not be possible
                     newDelta = Vec3.ZERO;
@@ -199,6 +225,20 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
                 nearbyEntity.setDeltaMovement(newDelta);
             }
+        }
+    }
+
+    public void activePush(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack) {
+        for (LivingEntity nearbyEntity : level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
+            Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
+            Vec3 oldDelta = nearbyEntity.getDeltaMovement();
+                double scale = determineSlowdown(determineEntityTier(nearbyEntity), false);
+                Vec3 newDelta = oldDelta.subtract(baseVector.scale(scale * 3));
+                Vec3 collisionDelta = ((EntityAccessor) nearbyEntity).invoke_collide(newDelta);
+                if (collisionDelta.y != newDelta.y && newDelta.y < 0) {
+                    newDelta = newDelta.multiply(1, 0, 1);
+                }
+                nearbyEntity.setDeltaMovement(newDelta);
         }
     }
 

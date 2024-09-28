@@ -81,6 +81,7 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.register("crucifix_repel", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -134,7 +135,7 @@ public class HunterSkills {
             context.register(ALCHEMY3, new SkillNode(GARLIC_DIFFUSER));
             context.register(ALCHEMY4, new SkillNode(PURIFIED_GARLIC, GARLIC_DIFFUSER_IMPROVED));
             context.register(ALCHEMY5, new SkillNode(ENHANCED_BLESSING, ULTIMATE_CRUCIFIX));
-            context.register(ALCHEMY6, new SkillNode(HUNTER_AWARENESS));
+            context.register(ALCHEMY6, new SkillNode(HUNTER_AWARENESS, CRUCIFIX_REPEL));
 
             context.register(POTION1, new SkillNode(MULTITASK_BREWING));
             context.register(POTION2, new SkillNode(DURABLE_BREWING, CONCENTRATED_BREWING));

@@ -106,9 +106,10 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 graphics.renderItem(stack, x, y);
                 graphics.renderItemDecorations(this.font, stack, x, y, null);
             }
+
+            this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
         }
 
-        this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
 
         this.renderTooltip(graphics, mouseX, mouseY);
         if (this.menu.areRefinementsAvailable()) {
