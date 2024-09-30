@@ -91,7 +91,9 @@ public class ModParticles {
      * @param zOffset       Used for random offset
      * @param speed         Direction is randomized but multiplied by x/y/zOffset
      * @return Number of players this has been sent to.
+     * @deprecated Use {@link ServerLevel#sendParticles(ParticleOptions, double, double, double, int, double, double, double, double)} directly
      */
+    @Deprecated
     public static int spawnParticlesServer(Level worldIn, @NotNull ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         assert worldIn instanceof ServerLevel : "Calling spawnParticlesServer on client side is pointless";
         if (worldIn instanceof ServerLevel) {

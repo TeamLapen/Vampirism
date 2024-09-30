@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -32,7 +31,7 @@ import java.util.List;
  * <p>
  * Damages directly hit entities but also has a small area of effect damage
  */
-public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
+public class DarkBloodProjectileEntity extends HomingProjectile {
 
     protected float directDamage = 4;
     protected float indirectDamage = 2;
@@ -46,17 +45,6 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
         super(type, worldIn);
     }
 
-    /**
-     * Copies the location from shooter.
-     * Adds a small random to the motion
-     */
-    public DarkBloodProjectileEntity(@NotNull Level worldIn, @NotNull LivingEntity shooter, Vec3 accel) {
-        super(ModEntities.DARK_BLOOD_PROJECTILE.get(), shooter, accel, worldIn);
-    }
-
-    /**
-     * Does not add a small random to the motion
-     */
     public DarkBloodProjectileEntity(@NotNull Level worldIn, double x, double y, double z, Vec3 accel) {
         super(ModEntities.DARK_BLOOD_PROJECTILE.get(), x, y, z, accel, worldIn);
     }
@@ -90,9 +78,9 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
             }
         }
-        if (!this.level().isClientSide) {
-            ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
-            ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(new GenericParticleOptions(VResourceLocation.mc("spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
+            serverLevel.sendParticles(new GenericParticleOptions(VResourceLocation.mc("spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
             this.level().playSound(null, getX(), getY(), getZ(), ModSounds.BLOOD_PROJECTILE_HIT.get(), SoundSource.PLAYERS, 1f, 1f);
         }
         this.discard();
@@ -153,12 +141,12 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide) {
+        if (this.level() instanceof ServerLevel serverLevel) {
             Vec3 center = this.position();
-            ModParticles.spawnParticlesClient(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
+            serverLevel.sendParticles(new GenericParticleOptions(VResourceLocation.mc("spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, (getRandom().nextDouble()) * 2 - 1,(getRandom().nextDouble()) * 2 - 1,(getRandom().nextDouble()) * 2 - 1, 1);
 
             if (this.tickCount % 3 == 0) {
-                ModParticles.spawnParticleClient(this.level(), new GenericParticleOptions(VResourceLocation.mc("effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+                serverLevel.sendParticles(new GenericParticleOptions(VResourceLocation.mc("effect_4"), 12, 0xC01010, 0.4f), center.x, center.y, center.z, 5, 0,0,0, 1);
             }
         }
 
