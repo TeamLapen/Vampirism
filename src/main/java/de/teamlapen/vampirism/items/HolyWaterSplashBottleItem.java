@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
+import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.core.Direction;
@@ -65,13 +66,16 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     protected void impactBlocks(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+        Level level = bottleEntity.getCommandSenderWorld();
+        if (level.getBiome(bottleEntity.blockPosition()).is(ModBiomeTags.HasFaction.IS_FACTION_BIOME)) {
+            return;
+        }
         int size = switch (getVampirismTier()) {
             case NORMAL -> 1;
             case ENHANCED -> 2;
             case ULTIMATE -> 3;
         };
         AABB impactArea = bottleEntity.getBoundingBox().inflate(size);
-        Level level = bottleEntity.getCommandSenderWorld();
         UtilLib.forEachBlockPos(impactArea, pos -> {
             BlockState state = level.getBlockState(pos);
             Block block = state.getBlock();
