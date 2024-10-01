@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 public class BadOmenEffect extends MobEffect {
 
     private final Holder<? extends IFaction<?>> faction;
+    @Nullable
+    private String factionDescriptionId;
 
     /**
      * Call this if onDeath of an entity that might carry a faction banner.
