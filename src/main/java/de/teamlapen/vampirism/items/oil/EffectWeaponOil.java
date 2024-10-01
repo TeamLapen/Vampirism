@@ -58,7 +58,7 @@ public class EffectWeaponOil extends WeaponOil {
     @Override
     public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltips) {
         tooltips.add(Component.empty());
-        tooltips.add(Component.translatable("text.vampirism.oil.effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
+        tooltips.add(Component.translatable("text.vampirism.oil.weapon_effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.add(getEffectDescriptionWithDash(getEffectInstance(), context));
     }
 
