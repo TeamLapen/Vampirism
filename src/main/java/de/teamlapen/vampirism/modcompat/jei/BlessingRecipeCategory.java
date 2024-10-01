@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
@@ -17,7 +16,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,9 +42,15 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
         return Component.translatable("text.vampirism.blessing");
     }
 
+
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return 123;
+    }
+
+    @Override
+    public int getHeight() {
+        return 79;
     }
 
     @Override
@@ -56,11 +60,14 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableItem.Rec
 
     @Override
     public void draw(BlessableItem.@NotNull Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        background.draw(graphics);
+        graphics.pose().pushPose();
         if (recipe.enhanced()) {
             Minecraft minecraft = Minecraft.getInstance();
             graphics.drawString(minecraft.font, Component.translatable("gui.vampirism.skill_required"), 15, 52, Color.gray.getRGB(), false);
             graphics.drawString(minecraft.font, HunterSkills.ENHANCED_BLESSING.get().getName(), 15, 52 + minecraft.font.lineHeight + 2, Color.gray.getRGB(), false);
         }
+        graphics.pose().popPose();
     }
 
     @Override

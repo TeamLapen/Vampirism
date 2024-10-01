@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -56,6 +55,8 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
 
     @Override
     public void draw(@NotNull JEIPotionMix recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.background.draw(graphics);
+        graphics.pose().pushPose();
         this.blazeHeat.draw(graphics, 1, 35);
         this.bubbles.draw(graphics, 3, 4);
         this.arrow.draw(graphics, 80, 10);
@@ -81,12 +82,17 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
             graphics.drawString(minecraft.font, HunterSkills.EFFICIENT_BREWING.get().getName(), x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight;
         }
+        graphics.pose().popPose();
     }
 
-    @NotNull
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return 128;
+    }
+
+    @Override
+    public int getHeight() {
+        return 106;
     }
 
     @NotNull
@@ -116,21 +122,4 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 15).addItemStack(recipe.getPotionOutput()).setBackground(this.slotDrawable, -1, -1);
     }
 
-    private static class BrewingBubblesTickTimer implements ITickTimer {
-        private static final int[] BUBBLE_LENGTHS = new int[] {29, 23, 18, 13, 9, 5, 0};
-        private final @NotNull ITickTimer internalTimer;
-
-        public BrewingBubblesTickTimer(@NotNull IGuiHelper guiHelper) {
-            this.internalTimer = guiHelper.createTickTimer(14, BUBBLE_LENGTHS.length - 1, false);
-        }
-
-        public int getMaxValue() {
-            return BUBBLE_LENGTHS[0];
-        }
-
-        public int getValue() {
-            int timerValue = this.internalTimer.getValue();
-            return BUBBLE_LENGTHS[timerValue];
-        }
-    }
 }

@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
-import de.teamlapen.vampirism.util.OilUtils;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -63,10 +61,14 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         return this.localizedName;
     }
 
-    @NotNull
     @Override
-    public IDrawable getBackground() {
-        return this.background;
+    public int getWidth() {
+        return 149;
+    }
+
+    @Override
+    public int getHeight() {
+        return 110;
     }
 
     @NotNull
@@ -88,6 +90,8 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.background.draw(graphics);
+        graphics.pose().pushPose();
         AlchemyTableRecipe recipe = holder.value();
         this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
@@ -112,5 +116,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
             y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
 
         }
+
+        graphics.pose().popPose();
     }
 }

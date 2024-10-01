@@ -54,6 +54,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
 
     @Override
     public void draw(@NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.background.draw(graphics);
+        graphics.pose().pushPose();
         IWeaponTableRecipe recipe = holder.value();
 
         int x = 2;
@@ -86,12 +88,17 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
 
         }
+        graphics.pose().popPose();
     }
 
-    @NotNull
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getHeight() {
+        return 110;
+    }
+
+    @Override
+    public int getWidth() {
+        return 134;
     }
 
     @NotNull

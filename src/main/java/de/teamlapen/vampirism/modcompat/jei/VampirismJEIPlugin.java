@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.items.BlessableItem;
 import de.teamlapen.vampirism.items.component.AppliedOilContent;
-import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.modcompat.jei.categories.FogDiffuserRecipeCategory;
 import de.teamlapen.vampirism.modcompat.jei.categories.GarlicDiffuserRecipeCategory;
@@ -32,6 +31,9 @@ import de.teamlapen.vampirism.modcompat.jei.recipes.maker.BloodSieveRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.FogDiffuserRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GarlicDiffuserRecipeMaker;
 import de.teamlapen.vampirism.modcompat.jei.recipes.maker.GrinderRecipeMaker;
+import de.teamlapen.vampirism.modcompat.jei.subtypes.BloodBottleInterpreter;
+import de.teamlapen.vampirism.modcompat.jei.subtypes.BloodContainerInterpreter;
+import de.teamlapen.vampirism.modcompat.jei.subtypes.ContainedOilInterpreter;
 import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.util.OilUtils;
@@ -40,8 +42,6 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
-import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
@@ -52,7 +52,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -135,32 +134,9 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), OilNBT.INSTANCE);
-        registration.registerSubtypeInterpreter(ModItems.BLOOD_BOTTLE.get(), BloodNBT.INSTANCE);
-    }
-
-    private static class OilNBT implements IIngredientSubtypeInterpreter<ItemStack> {
-        public static final OilNBT INSTANCE = new OilNBT();
-
-        private OilNBT() {
-        }
-
-        @Override
-        public @NotNull String apply(@NotNull ItemStack itemStack, @NotNull UidContext context) {
-            return Optional.ofNullable(itemStack.get(ModDataComponents.OIL)).map(OilContent::oil).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElse(IIngredientSubtypeInterpreter.NONE);
-        }
-    }
-
-    private static class BloodNBT implements IIngredientSubtypeInterpreter<ItemStack> {
-        public static final BloodNBT INSTANCE = new BloodNBT();
-
-        private BloodNBT() {
-        }
-
-        @Override
-        public @NotNull String apply(@NotNull ItemStack itemStack, @NotNull UidContext context) {
-            return Optional.ofNullable(itemStack.get(ModDataComponents.BOTTLE_BLOOD)).map(BottleBlood::blood).map(Object::toString).orElse(IIngredientSubtypeInterpreter.NONE);
-        }
+        registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), new ContainedOilInterpreter());
+        registration.registerSubtypeInterpreter(ModItems.BLOOD_BOTTLE.get(), new BloodBottleInterpreter());
+        registration.registerSubtypeInterpreter(ModBlocks.BLOOD_CONTAINER.asItem(), new BloodContainerInterpreter());
     }
 
     @Override

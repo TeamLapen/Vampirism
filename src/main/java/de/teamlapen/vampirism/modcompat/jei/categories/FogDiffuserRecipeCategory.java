@@ -44,8 +44,13 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
     }
 
     @Override
-    public @NotNull IDrawable getBackground() {
-        return this.background;
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 
     @Override
@@ -61,6 +66,8 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
 
     @Override
     public void draw(FogDiffuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        this.background.draw(guiGraphics);
+        guiGraphics.pose().pushPose();
         this.slot.draw(guiGraphics);
 
         int burnDuration = recipe.getBurnTime() / 20;
@@ -74,5 +81,6 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
         }
 
         guiGraphics.drawString(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
+        guiGraphics.pose().popPose();
     }
 }

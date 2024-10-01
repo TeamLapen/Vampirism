@@ -44,8 +44,13 @@ public class GrinderRecipeCategory implements IRecipeCategory<GrinderRecipe> {
     }
 
     @Override
-    public @NotNull IDrawable getBackground() {
-        return this.background;
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
     }
 
     @Override
@@ -61,6 +66,8 @@ public class GrinderRecipeCategory implements IRecipeCategory<GrinderRecipe> {
 
     @Override
     public void draw(GrinderRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        this.background.draw(guiGraphics);
+        guiGraphics.pose().pushPose();
         this.slot.draw(guiGraphics);
 
         int blood = recipe.itemBlood().blood();
@@ -68,5 +75,6 @@ public class GrinderRecipeCategory implements IRecipeCategory<GrinderRecipe> {
         MutableComponent text = Component.translatable("gui.vampirism.jei.category.grinder.blood", blood);
 
         guiGraphics.drawString(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
+        guiGraphics.pose().popPose();
     }
 }

@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.modcompat.jei.recipes.BloodSieveRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -22,8 +21,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
+import static de.teamlapen.vampirism.modcompat.jei.AlchemicalCauldronRecipeCategory.fixSprite;
+
 public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecipe> {
-    private static final ResourceLocation PROGRESS = VResourceLocation.loc("jei", "textures/jei/gui/gui_vanilla.png");
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
     public static final int width = 78;
     public static final int height = 18;
@@ -32,22 +32,15 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     private final IDrawable slot;
     private final IDrawable icon;
     private final Component localizedName;
-    private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
+    private final @NotNull IDrawableAnimated arrow;
 
     public BloodSieveRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.drawableBuilder(BACKGROUND, 0, 0, width, height).setTextureSize(width, height).build();
         this.slot = guiHelper.getSlotDrawable();
         this.icon = guiHelper.createDrawableItemStack(ModBlocks.BLOOD_SIEVE.toStack());
-        this.localizedName = Component.translatable("block.vampirism.blood_grinder");
-        this.cachedArrows = CacheBuilder.newBuilder()
-                .maximumSize(25)
-                .build(new CacheLoader<>() {
-                    @Override
-                    public @NotNull IDrawableAnimated load(@NotNull Integer cookTime) {
-                        return guiHelper.drawableBuilder(PROGRESS, 82, 128, 24, 17)
-                                .buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false);
-                    }
-                });
+        this.localizedName = Component.translatable("block.vampirism.blood_sieve");
+        IDrawableStatic arrowDrawable = guiHelper.drawableBuilder(fixSprite(AlchemicalCauldronScreen.BURN_PROGRESS_SPRITE), 0, 0, 24, 16).setTextureSize(24, 16).build();
+        this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
     }
 
     @Override
@@ -61,8 +54,13 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     }
 
     @Override
-    public @NotNull IDrawable getBackground() {
-        return this.background;
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
     }
 
     @Override
@@ -81,7 +79,10 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
 
     @Override
     public void draw(@NotNull BloodSieveRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        this.background.draw(guiGraphics);
+        guiGraphics.pose().pushPose();
         this.slot.draw(guiGraphics);
-        this.cachedArrows.getUnchecked(50).draw(guiGraphics, 26, 1);
+        this.arrow.draw(guiGraphics, 26, 1);
+        guiGraphics.pose().popPose();
     }
 }

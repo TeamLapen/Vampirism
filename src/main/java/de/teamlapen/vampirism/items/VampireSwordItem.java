@@ -126,7 +126,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         if (!(entityLiving instanceof Player player)) return stack;
         VampirePlayer vampire = VampirePlayer.get(player);
         int amount = (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
-        if (((Player) entityLiving).isCreative() || vampire.useBlood(amount, false)) {
+        if (player.isCreative() || vampire.useBlood(amount, false)) {
             this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
         }
         if (getChargePercentage(stack) == 1) {
@@ -174,7 +174,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
         return !Helper.isVampire(entity);
     }
 

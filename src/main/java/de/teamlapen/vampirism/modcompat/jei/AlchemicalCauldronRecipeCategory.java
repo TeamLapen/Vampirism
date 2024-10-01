@@ -53,12 +53,14 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
         this.bubbles = guiHelper.createAnimatedDrawable(bubblesDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
     }
 
-    private static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
+    public static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
         return spriteLoc.withPrefix("textures/gui/sprites/").withSuffix(".png");
     }
 
     @Override
     public void draw(@NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.background.draw(graphics);
+        graphics.pose().pushPose();
         AlchemicalCauldronRecipe recipe = holder.value();
         this.flame.draw(graphics, 19, 27);
         this.arrow.draw(graphics, 41, 25);
@@ -79,13 +81,17 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
             }
             y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
         }
+        graphics.pose().popPose();
     }
 
-
-    @NotNull
     @Override
-    public IDrawable getBackground() {
-        return this.background;
+    public int getHeight() {
+        return 103;
+    }
+
+    @Override
+    public int getWidth() {
+        return 120;
     }
 
     @NotNull

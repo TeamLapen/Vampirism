@@ -46,6 +46,9 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
     @Override
     public void draw(@NotNull Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+
+        this.background.draw(graphics);
+        graphics.pose().pushPose();
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
@@ -66,13 +69,17 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
             prerequisites.append(Component.translatable("text.vampirism.task.prerequisites.none"));
         }
         y += UtilLib.renderMultiLine(minecraft.font, graphics, prerequisites, 160, x, y, Color.GRAY.getRGB());
-
+        graphics.pose().popPose();
     }
 
-    @NotNull
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getHeight() {
+        return 122;
+    }
+
+    @Override
+    public int getWidth() {
+        return 168;
     }
 
     @NotNull
