@@ -31,7 +31,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundTaskStatusPacket.TYPE, ClientboundTaskStatusPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleTaskStatusPacket(msg, context));
         registrar.playToClient(ClientboundTaskPacket.TYPE, ClientboundTaskPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleTaskPacket(msg, context));
         registrar.playToClient(ClientboundUpdateMultiBossEventPacket.TYPE, ClientboundUpdateMultiBossEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateMultiBossInfoPacket(msg, context));
-        registrar.commonToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
+        registrar.playToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
         registrar.playToClient(ClientboundBossEventSoundPacket.TYPE, ClientboundBossEventSoundPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context));
         registrar.playToClient(ClientboundSkillTreePacket.TYPE, ClientboundSkillTreePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSkillTreePacket(msg, context));
         registrar.playToClient(ClientboundUpdateGarlicEmitterPacket.TYPE, ClientboundUpdateGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context));
