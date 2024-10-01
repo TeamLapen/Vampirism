@@ -48,6 +48,7 @@ import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleOptions;
+import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
@@ -875,6 +876,13 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 player.level().getProfiler().push("vampirism_bloodupdate");
                 this.bloodStats.onUpdate();
                 player.level().getProfiler().pop();
+            }
+
+            if (event.getEntity().level().isClientSide && getTicksInSun() > 0 && !event.getEntity().hasEffect(ModEffects.SUNSCREEN)) {
+                int i = event.getEntity().isInvisible() ? 15 : 4;
+                if (event.getEntity().getRandom().nextInt(i) == 0) {
+                    event.getEntity().level().addParticle(new GenericParticleOptions(VResourceLocation.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
+                }
             }
         }
     }
