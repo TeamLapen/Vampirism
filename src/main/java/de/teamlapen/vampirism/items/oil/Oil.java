@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items.oil;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -15,16 +14,6 @@ public class Oil implements IOil {
 
     public Oil(int color) {
         this.color = color;
-    }
-
-    @Override
-    public boolean canEffect(ItemStack stack, LivingEntity entity) {
-        return false;
-    }
-
-    @Override
-    public float getAdditionalDamage(ItemStack stack, LivingEntity entity, float damage) {
-        return 0;
     }
 
     @Override
