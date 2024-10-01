@@ -76,7 +76,7 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             tooltip.add(Component.empty());
-            tooltip.add(Component.translatable("When equipped:").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltip.add(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
             for (Holder<IRefinement> holder : set.getRefinements()) {
                 IRefinement refinement = holder.value();
                 AttributeModifier attributeModifier = refinement.createAttributeModifier(refinement.getModifierValue());

@@ -31,7 +31,6 @@ import java.util.Collection;
 public class SkillCommand extends BasicCommand {
 
     private static final SimpleCommandExceptionType NO_FACTION = new SimpleCommandExceptionType(Component.translatable("command.vampirism.test.skill.noinfaction"));
-    private static final SimpleCommandExceptionType NO_SKILLS = new SimpleCommandExceptionType(Component.translatable("command.vampirism.test.skill.no_skills"));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return create(Commands.literal("skills"), buildContext);

@@ -50,7 +50,7 @@ public class ModEntitySelectors {
                 }
             }
             throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), factionID);
-        }, (parser) -> true, Component.translatable("vampirism.argument.entity.options.faction.desc"));
+        }, (parser) -> true, Component.translatable("text.vampirism.argument.entity.options.faction.desc"));
 
         EntitySelectorOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();
@@ -67,7 +67,7 @@ public class ModEntitySelectors {
                 throw EntitySelectorOptions.ERROR_LEVEL_NEGATIVE.createWithContext(reader);
             }
 
-        }, (parser) -> true, Component.translatable("vampirism.argument.entity.options.level.desc"));
+        }, (parser) -> true, Component.translatable("text.vampirism.argument.entity.options.level.desc"));
 
     }
 }

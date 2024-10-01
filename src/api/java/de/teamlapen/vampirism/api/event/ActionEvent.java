@@ -85,7 +85,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         }
 
         /**
-         * @return The message that is shown to the player if the event is cancelled
+         * @return The message that is shown to the player if the event is canceled
          */
         @NotNull
         public Component getCancelMessage() {
@@ -93,7 +93,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         }
 
         /**
-         * sets the message that is shown to the player if the event is cancelled
+         * sets the message shown to the player if the event is canceled
          * */
         public void setCancelMessage(@NotNull Component message) {
             this.cancelMessage = message;

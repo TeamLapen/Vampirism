@@ -210,7 +210,7 @@ public class ModKeys {
         } else {
             IAction<?> value = action.value();
             if (!IFaction.is(player.getFaction(), value.factions())) {
-                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.wrong_faction", player.getFaction().value().getName()), true);
+                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.wrong_faction"), true);
             } else {
                 VampirismMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }
