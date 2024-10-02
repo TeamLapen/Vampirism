@@ -75,6 +75,13 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
+    public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        for (AttachmentType<IPlayerEventListener> listener : listeners) {
+            Optional.ofNullable(event.getEntity().getData(listener)).ifPresent(IPlayerEventListener::onRespawn);
+        }
+    }
+
+    @SubscribeEvent
     public void onLivingUpdate(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> type : listeners) {

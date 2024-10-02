@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -315,6 +316,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
      */
     @Override
     public @NotNull IActionResult toggleAction(@NotNull Holder<? extends IAction<T>> action, IAction.@NotNull ActivationContext context) {
+        if (Helper.hasActionDisableEffectActive(this.player)) return IActionResult.DISABLED_EFFECT;
         if (activeTimers.containsKey(action)) {
             deactivateAction((Holder<ILastingAction<T>>) action);
             dirty = true;
@@ -322,11 +324,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         } else if (cooldownTimers.containsKey(action)) {
             return IActionResult.ON_COOLDOWN;
         } else {
-            if (this.player.asEntity().isSpectator()) return IActionResult.RESTRICTED;
-            if (!isActionUnlocked(action)) return IActionResult.NOT_UNLOCKED;
-            if (!isActionAllowedPermission(action)) return IActionResult.DISALLOWED_PERMISSION;
-
-            IActionResult r = action.value().canUse(player);
+            IActionResult r = checkDefaultToggleConditions(action);
             if (r.successful()) {
                 /*
                  * Only lasting actions have a duration, so regular actions will return a duration of -1.
@@ -354,6 +352,15 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
             }
             return r;
         }
+    }
+
+    public @NotNull IActionResult checkDefaultToggleConditions(@NotNull Holder<? extends IAction<T>> action) {
+        if (this.player.asEntity().isSpectator()) return IActionResult.RESTRICTED;
+        if (!isActionUnlocked(action)) return IActionResult.NOT_UNLOCKED;
+        if (!isActionAllowedPermission(action)) return IActionResult.DISALLOWED_PERMISSION;
+        if (Helper.hasActionDisableEffectActive(this.player)) return IActionResult.DISABLED_EFFECT;
+
+        return action.value().canUse(player);
     }
 
     @Override

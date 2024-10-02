@@ -21,8 +21,12 @@ public class ModEffectTypeProvider extends TagsProvider<MobEffect> {
         super(output, Registries.MOB_EFFECT, provider, REFERENCE.MODID, existingFileHelper);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(ModEffectTags.HUNTER_POTION_RESISTANCE).add(MobEffects.BLINDNESS.unwrapKey().orElseThrow(), MobEffects.CONFUSION.unwrapKey().orElseThrow(), MobEffects.HUNGER.unwrapKey().orElseThrow(), MobEffects.POISON.unwrapKey().orElseThrow(), ModEffects.FREEZE.getKey());
+        this.tag(ModEffectTags.DISABLES_ACTIONS_HUNTER).addTag(ModEffectTags.DISABLES_ACTIONS);
+        this.tag(ModEffectTags.DISABLES_ACTIONS_VAMPIRE).addTag(ModEffectTags.DISABLES_ACTIONS);
+        this.tag(ModEffectTags.DISABLES_ACTIONS).add(ModEffects.RESURRECTION_FATIGUE.getKey());
     }
 }

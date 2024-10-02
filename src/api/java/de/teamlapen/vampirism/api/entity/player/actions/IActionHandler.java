@@ -105,6 +105,8 @@ public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> {
      */
     IActionResult toggleAction(Holder<? extends IAction<T>> action, IAction.ActivationContext context);
 
+    IActionResult checkDefaultToggleConditions(Holder<? extends IAction<T>> action);
+
     /**
      * Deactivate a lasting action, if it was active.
      */

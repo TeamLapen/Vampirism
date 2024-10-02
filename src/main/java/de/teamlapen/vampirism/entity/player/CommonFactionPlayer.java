@@ -4,12 +4,14 @@ import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +65,13 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @MustBeInvokedByOverriders
     @Override
     public void onDeath(DamageSource src) {
-        this.actionHandler.deactivateAllActions();
+        this.actionHandler.resetTimers();
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
+    public void onRespawn() {
+        this.player.addEffect(new MobEffectInstance(ModEffects.RESURRECTION_FATIGUE, 300));
     }
 
     @MustBeInvokedByOverriders

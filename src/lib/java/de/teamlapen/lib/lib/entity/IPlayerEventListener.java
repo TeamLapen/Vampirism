@@ -65,4 +65,8 @@ public interface IPlayerEventListener {
     default void onUpdatePlayer(PlayerTickEvent event) {
 
     }
+
+    default void onRespawn() {
+
+    }
 }

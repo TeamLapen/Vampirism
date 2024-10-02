@@ -50,7 +50,7 @@ public class SanguinareEffect extends VampirismEffect {
     }
 
     @Override
-    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
+    public void fillEffectCures(@NotNull Set<EffectCure> cures, @NotNull MobEffectInstance effectInstance) {
         cures.add(ModItems.GARLIC_CURE);
     }
 

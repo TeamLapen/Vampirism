@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.util;
 import com.mojang.authlib.minecraft.MinecraftProfileTextures;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -18,6 +19,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.tags.ModBiomeTags;
 import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
+import de.teamlapen.vampirism.core.tags.ModEffectTags;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
@@ -37,6 +39,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -296,6 +299,11 @@ public class Helper {
             }
         }
         return true;
+    }
+
+    public static boolean hasActionDisableEffectActive(IFactionPlayer<?> player) {
+        TagKey<MobEffect> mobEffectTagKey = player.getTag(VampirismTags.CommonKeys.ACTION_DISABLES).orElse(ModEffectTags.DISABLES_ACTIONS);
+        return player.asEntity().getActiveEffectsMap().keySet().stream().anyMatch(s -> s.is(mobEffectTagKey));
     }
 
 }

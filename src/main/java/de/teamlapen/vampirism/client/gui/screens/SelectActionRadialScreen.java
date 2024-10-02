@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -75,8 +76,8 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
     public void drawSlice(IRadialMenuSlot<Holder<IAction<?>>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         @SuppressWarnings("unchecked")
         Holder<IAction<T>> iActionHolder = (Holder<IAction<T>>) (Object) slot.primarySlotIcon();
-        float actionPercentage = actionHandler.getPercentageForAction(iActionHolder);
-        if (!iActionHolder.value().canUse(this.player).successful()) {
+        float actionPercentage = this.actionHandler.getPercentageForAction(iActionHolder);
+        if (Helper.hasActionDisableEffectActive(player) || !this.player.getActionHandler().checkDefaultToggleConditions(iActionHolder).successful()) {
             actionPercentage = -1;
         }
         if (actionPercentage == 0) {

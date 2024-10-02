@@ -10,21 +10,28 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.EffectCure;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Base class for Vampirism's potions
  */
 public class VampirismEffect extends MobEffect {
+
+    private boolean disableDefaultCures = false;
+    private final Set<EffectCure> effectCures = new HashSet<>();
+
     public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor) {
         super(effectType, potionColor);
     }
 
     @Override
-    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
-        if (this != ModEffects.ARMOR_REGENERATION.get() && this != ModEffects.NEONATAL.get() && this != ModEffects.DISGUISE_AS_VAMPIRE.get()) {
+    public void fillEffectCures(@NotNull Set<EffectCure> cures, @NotNull MobEffectInstance effectInstance) {
+        if (!disableDefaultCures) {
             super.fillEffectCures(cures, effectInstance);
         }
+        cures.addAll(effectCures);
     }
 
     @Override
@@ -40,5 +47,15 @@ public class VampirismEffect extends MobEffect {
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return this == ModEffects.ARMOR_REGENERATION.get() && duration % 100 == 1;
+    }
+
+    public VampirismEffect addEffectCures(EffectCure... cures) {
+        effectCures.addAll(Arrays.asList(cures));
+        return this;
+    }
+
+    public VampirismEffect disableDefaultCures() {
+        disableDefaultCures = true;
+        return this;
     }
 }

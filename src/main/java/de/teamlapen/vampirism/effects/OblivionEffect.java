@@ -31,7 +31,7 @@ public class OblivionEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> exten
     }
 
     @Override
-    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
+    public void fillEffectCures(@NotNull Set<EffectCure> cures, @NotNull MobEffectInstance effectInstance) {
     }
 
     @Override

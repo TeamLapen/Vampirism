@@ -195,6 +195,7 @@
   "text.vampirism.action.bat_swarm.no_bat_mode": "You are not in bat mode",
   "text.vampirism.action.teleport.no_target": "Invalid teleport position",
   "text.vampirism.action.lord_range.no_target": "No entities in range",
+  "text.vampirism.action.active_effect": "You are currently unable to use actions due to an active effect",
   "__comment": "util",
   "itemGroup.vampirism": "Vampirism",
   "action.vampirism.cancel": "Cancel",
