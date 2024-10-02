@@ -43,9 +43,18 @@ public interface IFaction<T extends IFactionEntity> {
     IFactionVillage getVillageData();
 
     /**
+     * To register a tag with a faction use {@link de.teamlapen.vampirism.api.event.AddFactionTagEvent#addRegistryTag(net.minecraft.resources.ResourceKey, net.minecraft.tags.TagKey)}
+     *
      * @return a tag key for the given registry associated with this faction if any is registered
      */
-    <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey);
+    <Z> Optional<TagKey<Z>> getRegistryTag(ResourceKey<? extends Registry<Z>> registryKey);
+
+    /**
+     * To register a tag with a faction use {@link de.teamlapen.vampirism.api.event.AddFactionTagEvent#addTag(net.minecraft.resources.ResourceKey, net.minecraft.tags.TagKey)}
+     *
+     * @return a tag key for the given resource key associated with this faction if any is registered
+     */
+    <Z> Optional<TagKey<Z>> getTag(ResourceKey<Z> registryKey);
 
     @SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
     static boolean is(@Nullable Holder<? extends IFaction<?>> first, @Nullable Holder<? extends IFaction<?>> second) {

@@ -6,12 +6,17 @@ import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -45,6 +50,16 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Att
             return false;
         }
         return player.level().isClientSide;
+    }
+
+    @Override
+    public <Z> Optional<TagKey<Z>> getTag(ResourceKey<Z> key) {
+        return this.getFaction().value().getTag(key);
+    }
+
+    @Override
+    public <Z> Optional<TagKey<Z>> getRegistryTag(ResourceKey<? extends Registry<Z>> key) {
+        return this.getFaction().value().getRegistryTag(key);
     }
 
     @MustBeInvokedByOverriders

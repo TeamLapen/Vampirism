@@ -6,15 +6,9 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
 
@@ -23,7 +17,6 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     protected @Nullable TextColor chatColor;
     protected String name;
     protected String namePlural;
-    protected Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
 
     @Override
     public IFactionBuilder<T> color(int color) {
@@ -69,9 +62,4 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
         return new Faction<>(this);
     }
 
-    @Override
-    public <Z> IFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag) {
-        this.factionTags.put(registryKey, tag);
-        return this;
-    }
 }

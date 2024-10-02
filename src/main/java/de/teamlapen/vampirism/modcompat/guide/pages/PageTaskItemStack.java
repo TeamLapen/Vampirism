@@ -5,7 +5,6 @@ import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.maxanier.guideapi.page.PageItemStack;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -24,7 +23,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +44,7 @@ public class PageTaskItemStack extends PageItemStack {
             List<FormattedText> text = new ArrayList<>();
             Component newLine = Component.literal("\n");
             if (holder.is(ModTaskTags.HAS_FACTION)) {
-                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", ModRegistries.FACTIONS.stream().filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
+                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", ModRegistries.FACTIONS.stream().filter(x -> x.getRegistryTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " "));
             } else {
                 text.add(Component.translatable("text.vampirism.task.reward_obtain_all"));
             }

@@ -446,7 +446,7 @@ public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDef
     }
 
     private boolean matchesFaction(@NotNull Holder<Task> task) {
-        return !task.is(ModTaskTags.HAS_FACTION) || this.faction.value().getTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(ModTaskTags.HAS_FACTION) || this.faction.value().getRegistryTag(VampirismRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

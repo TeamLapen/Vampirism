@@ -10,8 +10,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,7 +26,6 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final Component namePlural;
     @NotNull
     private final TextColor chatColor;
-    private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
 
     Faction(FactionBuilder<T> builder) {
         this.color = builder.color;
@@ -36,7 +33,6 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
         this.name = Component.translatable(Objects.requireNonNull(builder.name));
         this.namePlural = Component.translatable(Objects.requireNonNull(builder.namePlural));
-        this.factionTags = Collections.unmodifiableMap(builder.factionTags);
     }
 
     @Override
@@ -65,8 +61,12 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey) {
-        //noinspection unchecked
-        return (Optional<TagKey<Z>>) (Object) Optional.ofNullable(factionTags.get(registryKey));
+    public <Z> Optional<TagKey<Z>> getTag(ResourceKey<Z> registryKey) {
+        return FactionTags.getTag(this, registryKey);
+    }
+
+    @Override
+    public <Z> Optional<TagKey<Z>> getRegistryTag(ResourceKey<? extends Registry<Z>> registryKey) {
+        return FactionTags.getRegistryTag(this, registryKey);
     }
 }

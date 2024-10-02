@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.neutral.INeutralPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
+import de.teamlapen.vampirism.api.event.AddFactionTagEvent;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.registries.DeferredFaction;
 import de.teamlapen.vampirism.api.registries.DeferredFactionRegister;
@@ -51,12 +52,6 @@ public class ModFactions {
             .refinementItem(IRefinementItem.AccessorySlotType.AMULET, ModItems.AMULET::get)
             .refinementItem(IRefinementItem.AccessorySlotType.RING, ModItems.RING::get)
             .refinementItem(IRefinementItem.AccessorySlotType.OBI_BELT, ModItems.OBI_BELT::get)
-            .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
-            .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE)
-            .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
-            .addTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
-            .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
-            .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
             .village(VampireVillage.vampireVillage().build())
             .lord(new LordPlayerBuilder<IVampirePlayer>()
                     .lordTitle(new LordTitles.VampireTitles()).lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).build())
@@ -68,12 +63,6 @@ public class ModFactions {
             .name("text.vampirism.hunter")
             .namePlural("text.vampirism.hunters")
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-            .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
-            .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
-            .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
-            .addTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
-            .addTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
-            .addTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
             .village(HunterVillage.hunterVillage().build())
             .lord(new LordPlayerBuilder<IHunterPlayer>()
                     .lordTitle(new LordTitles.HunterTitles()).lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
@@ -102,6 +91,25 @@ public class ModFactions {
     static void register(IEventBus bus) {
         FACTIONS.register(bus);
         MINIONS.register(bus);
+    }
+
+    static void onFactionTags(AddFactionTagEvent event) {
+        if (event.getFaction().is(ModFactionTags.IS_VAMPIRE)) {
+            event.addRegistryTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
+            event.addRegistryTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE);
+            event.addRegistryTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE);
+            event.addRegistryTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE);
+            event.addRegistryTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE);
+            event.addRegistryTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE);
+        }
+        if (event.getFaction().is(ModFactionTags.IS_HUNTER)) {
+            event.addRegistryTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME);
+            event.addRegistryTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER);
+            event.addRegistryTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER);
+            event.addRegistryTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER);
+            event.addRegistryTag(VampirismRegistries.Keys.TASK, ModTaskTags.IS_HUNTER);
+            event.addRegistryTag(VampirismRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER);
+        }
     }
 
 }

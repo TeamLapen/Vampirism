@@ -41,7 +41,7 @@ public class FactionRegistry implements IFactionRegistry {
         } else if (entity instanceof IFactionEntity factionEntity) {
             return factionEntity.getFaction();
         }
-        return ModRegistries.FACTIONS.holders().filter(s -> s.value().getTag(Registries.ENTITY_TYPE).flatMap(BuiltInRegistries.ENTITY_TYPE::getTag).filter(tag -> entity.getType().is(tag)).isPresent()).findFirst().orElse(null);
+        return ModRegistries.FACTIONS.holders().filter(s -> s.value().getRegistryTag(Registries.ENTITY_TYPE).flatMap(BuiltInRegistries.ENTITY_TYPE::getTag).filter(tag -> entity.getType().is(tag)).isPresent()).findFirst().orElse(null);
     }
 
     @Nullable

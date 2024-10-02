@@ -6,9 +6,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -76,5 +80,15 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * Might be called with oldLevel=newLevel to reset things
      */
     void onLevelChanged(int newLevel, int oldLevel);
+
+    /**
+     * returns the tag key for the given key from the faction {@link de.teamlapen.vampirism.api.entity.factions.IFaction#getTag(net.minecraft.resources.ResourceKey)}
+     */
+    <Z> Optional<TagKey<Z>> getTag(ResourceKey<Z> key);
+
+    /**
+     * returns the registry tag key for the given key from the faction {@link de.teamlapen.vampirism.api.entity.factions.IFaction#getRegistryTag(net.minecraft.resources.ResourceKey)}
+     */
+    <Z> Optional<TagKey<Z>> getRegistryTag(ResourceKey<? extends Registry<Z>> key);
 
 }

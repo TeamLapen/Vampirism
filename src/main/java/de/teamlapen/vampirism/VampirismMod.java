@@ -4,7 +4,6 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.storage.IAttachedSyncable;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -22,6 +21,7 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionTags;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -47,7 +47,6 @@ import de.teamlapen.vampirism.world.BloodConversionRegistry;
 import de.teamlapen.vampirism.world.biome.OverworldModifications;
 import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -213,6 +212,7 @@ public class VampirismMod {
     }
 
     private void setup(final @NotNull FMLCommonSetupEvent event) {
+        FactionTags.collectTags();
         onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
