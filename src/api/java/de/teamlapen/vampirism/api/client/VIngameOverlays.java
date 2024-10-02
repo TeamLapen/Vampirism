@@ -48,4 +48,12 @@ public class VIngameOverlays {
     public static final ResourceLocation BAT = VResourceLocation.mod("bat");
     public static final ResourceLocation DISGUISE = VResourceLocation.mod("disguise");
     public static final ResourceLocation SUN = VResourceLocation.mod("sun");
+    /**
+     * Horizontal blood bar overlay for each held item
+     */
+    public static final ResourceLocation BLOOD_CHARGED = VResourceLocation.mod("blood_charged");
+    /**
+     * Vertical charged crossbow bolts overlay for each held item
+     */
+    public static final ResourceLocation TECH_CROSSBOW_CHARGED = VResourceLocation.mod("tech_crossbow_charged");
 }

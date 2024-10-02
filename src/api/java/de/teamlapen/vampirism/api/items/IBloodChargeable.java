@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.VampirismDataComponents;
+import de.teamlapen.vampirism.api.components.IBloodCharged;
 import net.minecraft.world.item.ItemStack;
 
 public interface IBloodChargeable {
@@ -26,6 +28,7 @@ public interface IBloodChargeable {
      * @return the charge percentage of the item
      */
     default float getChargePercentage(ItemStack stack) {
-        return canBeCharged(stack) ? 0 : 1;
+        IBloodCharged bloodCharge = stack.get(VampirismDataComponents.BLOOD_CHARGED.get());
+        return bloodCharge != null ? bloodCharge.charged() : 0;
     }
 }

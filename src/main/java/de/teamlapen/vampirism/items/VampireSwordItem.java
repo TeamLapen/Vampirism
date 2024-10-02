@@ -278,16 +278,6 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     protected abstract float getChargeUsage();
 
     /**
-     * Gets the charged value from the tag compound
-     *
-     * @return Value between 0 and 1
-     */
-    @Override
-    public float getChargePercentage(@NotNull ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged();
-    }
-
-    /**
      * @return Charging factor multiplied with amount to get charge percentage
      */
     protected abstract float getChargingFactor(ItemStack stack);
