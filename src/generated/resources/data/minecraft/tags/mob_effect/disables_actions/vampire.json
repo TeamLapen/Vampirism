@@ -1,5 +1,6 @@
 {
   "values": [
-    "#minecraft:disables_actions"
+    "#minecraft:disables_actions",
+    "vampirism:crucifix_suppression"
   ]
 }

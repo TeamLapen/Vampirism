@@ -832,4 +832,13 @@ public class UtilLib {
         tag.putString(key, value);
         return tag;
     }
+
+    public static int indexOf(Object[] array, Object obj) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(obj)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

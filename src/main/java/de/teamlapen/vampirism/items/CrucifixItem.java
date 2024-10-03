@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -34,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -103,12 +106,42 @@ public class CrucifixItem extends Item implements IItemWithTier, IFactionExclusi
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean held) {
-        if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8 && (living.getOffhandItem() == stack || living.getMainHandItem() == stack)) {
-            if (Helper.isVampire(entity)) {
-                ((LivingEntity) entity).addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+        if (entity instanceof LivingEntity living && entity.tickCount % 16 == 8) {
+            if (Helper.isVampire(living) && (living.getOffhandItem() == stack || living.getMainHandItem() == stack)) {
+                living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
                 if (entity instanceof Player player) {
                     player.getInventory().removeItem(stack);
                     player.drop(stack, true);
+                }
+            }
+            if (Helper.isHunter(living) && held && living instanceof Player player && all_crucifix.stream().noneMatch(s -> player.getCooldowns().isOnCooldown(s))) {
+                var nearbyVampires = living.level().getEntities(entity, new AABB(living.blockPosition()).inflate(6), Helper::isVampire);
+                var viewVector = living.getViewVector(1.0F).normalize();
+                for (Entity e : nearbyVampires) {
+                    if (e instanceof Player other && player.hasLineOfSight(other)) {
+                        var targetVector = other.position().subtract(living.position());
+                        TIER tier = getVampirismTier();
+                        if (IRefinementHandler.get(other).filter(s -> s.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)).isPresent()) {
+                            int i = UtilLib.indexOf(TIER.values(), tier);
+                            if (i > 0) {
+                                tier = TIER.values()[i - 1];
+                            } else if(i == 0) {
+                                continue;
+                            }
+                        }
+
+                        double distance = targetVector.lengthSqr();
+                        double degrees = Math.toDegrees(Math.cos(viewVector.dot(targetVector.normalize())));
+                        boolean effect = switch (tier) {
+                            case ULTIMATE -> (distance < 100 && degrees < 20) || (distance < 56 && degrees < 55) || (distance < 25 && degrees < 70);
+                            case ENHANCED -> (distance < 56 && degrees < 45) || (distance < 25 && degrees < 55);
+                            case NORMAL -> (distance < 25 && degrees < 45);
+                        };
+                        if (effect) {
+                            VampirePlayer vampirePlayer = VampirePlayer.get(other);
+                            vampirePlayer.effectCrucifixSuppression();
+                        }
+                    }
                 }
             }
         }

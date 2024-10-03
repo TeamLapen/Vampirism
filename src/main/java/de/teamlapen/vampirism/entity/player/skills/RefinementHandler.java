@@ -168,6 +168,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
 
     @Override
     public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
+        params.markForAllPlayer();
         CompoundTag nbt = new CompoundTag();
         ListTag refinementItems = new ListTag();
         for (int i = 0; i < this.refinementItems.size(); i++) {

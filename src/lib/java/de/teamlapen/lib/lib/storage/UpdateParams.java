@@ -1,6 +1,13 @@
 package de.teamlapen.lib.lib.storage;
 
-public record UpdateParams(boolean isForAllPlayer, boolean ignoreChanges) {
+public final class UpdateParams {
+    private boolean isForAllPlayer;
+    private final boolean ignoreChanges;
+
+    private UpdateParams(boolean isForAllPlayer, boolean ignoreChanges) {
+        this.isForAllPlayer = isForAllPlayer;
+        this.ignoreChanges = ignoreChanges;
+    }
 
     public static UpdateParams defaults() {
         return new UpdateParams(false, false);
@@ -16,6 +23,18 @@ public record UpdateParams(boolean isForAllPlayer, boolean ignoreChanges) {
 
     public static UpdateParams all() {
         return new UpdateParams(true, true);
+    }
+
+    public boolean isForAllPlayer() {
+        return isForAllPlayer;
+    }
+
+    public boolean ignoreChanges() {
+        return ignoreChanges;
+    }
+
+    public void markForAllPlayer() {
+        this.isForAllPlayer = true;
     }
 
 }

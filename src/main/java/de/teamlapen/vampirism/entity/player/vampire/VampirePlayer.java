@@ -168,6 +168,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private Component dbnoMessage;
     private final Disguise disguise;
     private final RefinementHandler<IVampirePlayer> refinementHandler;
+    private int crucifixTicks;
 
     public VampirePlayer(Player player) {
         super(player);
@@ -860,6 +861,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (remainingBarkTicks > 0) {
             --remainingBarkTicks;
         }
+        if (crucifixTicks > 0) {
+            --crucifixTicks;
+            if (this.player.tickCount % 10 == 8 && crucifixTicks > 30) {
+                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 30));
+            }
+        }
         world.getProfiler().pop();
     }
 
@@ -1371,6 +1378,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
             HelperLib.sync(minion);
         }));
+    }
+
+    public void effectCrucifixSuppression() {
+        this.crucifixTicks = Math.max(this.crucifixTicks + 25, 70);
     }
 
     private class VisionStatus implements ISyncableSaveData {

@@ -41,6 +41,7 @@ public class ModEffects {
     );
     public static final DeferredHolder<MobEffect, BleedingEffect> BLEEDING = EFFECTS.register("bleeding", () -> new BleedingEffect(MobEffectCategory.HARMFUL, 0x740000));
     public static final DeferredHolder<MobEffect, MobEffect> RESURRECTION_FATIGUE = EFFECTS.register("resurrection_fatigue", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0x8B0000).disableDefaultCures());
+    public static final DeferredHolder<MobEffect, MobEffect> CRUCIFIX_SUPPRESSION = EFFECTS.register("crucifix_suppression", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0x8B0000).disableDefaultCures());
 
     static void register(IEventBus bus) {
         EFFECTS.register(bus);
