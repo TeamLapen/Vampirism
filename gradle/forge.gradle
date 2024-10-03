@@ -96,6 +96,12 @@ runs {
         systemProperty 'vampirism_target', 'dev_data'
         programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
+
+    create("client2") {
+        configure(runs.client)
+        arguments '--username', 'Dev2'
+        workingDirectory "runs/client2"
+    }
 }
 
 subsystems {
