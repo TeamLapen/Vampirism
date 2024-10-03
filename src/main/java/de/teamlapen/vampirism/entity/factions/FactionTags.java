@@ -12,6 +12,8 @@ import net.minecraft.tags.TagKey;
 import net.neoforged.fml.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public class FactionTags {
@@ -24,7 +26,8 @@ public class FactionTags {
     }
 
     private static void addFaction(Holder<IFaction<?>> faction) {
-        ModLoader.postEventWithReturn(new AddFactionTagEvent(faction)).getTags().forEach((key, tag) -> registeredTags.put(faction.value(), key, tag));
+        Map<ResourceKey<?>, TagKey<?>> row = registeredTags.row(faction.value());
+        ModLoader.postEventWithReturn(new AddFactionTagEvent(faction, Collections.unmodifiableMap(row))).getTags().forEach(row::putIfAbsent);
     }
 
     @SuppressWarnings("unchecked")
@@ -45,5 +48,13 @@ public class FactionTags {
     @SuppressWarnings("unchecked")
     public static <T> Optional<TagKey<T>> getRegistryTag(IFaction<?> faction, ResourceKey<? extends Registry<T>> key) {
         return Optional.ofNullable((TagKey<T>) registeredTags.get(faction, key));
+    }
+
+    @ApiStatus.Internal
+    public static void addFaction(IFaction<?> faction, Map<ResourceKey<?>, TagKey<?>> defaultTags) {
+        if (registeredTags.containsRow(faction)) {
+            throw new IllegalStateException("Faction " + faction + " already registered. Use the AddFactionTagEvent to add tags to a faction");
+        }
+        registeredTags.row(faction).putAll(defaultTags);
     }
 }

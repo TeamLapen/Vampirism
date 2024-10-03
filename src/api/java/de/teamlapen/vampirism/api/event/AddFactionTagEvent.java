@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,10 +24,11 @@ public class AddFactionTagEvent extends Event implements IModBusEvent {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final Holder<IFaction<?>> faction;
-    private final Map<ResourceKey<?>, TagKey<?>> tags = new HashMap<>();
+    private final Map<ResourceKey<?>, TagKey<?>> tags;
 
-    public AddFactionTagEvent(Holder<IFaction<?>> faction) {
+    public AddFactionTagEvent(Holder<IFaction<?>> faction, Map<ResourceKey<?>, TagKey<?>> defaultTags) {
         this.faction = faction;
+        this.tags = defaultTags;
     }
 
     /**

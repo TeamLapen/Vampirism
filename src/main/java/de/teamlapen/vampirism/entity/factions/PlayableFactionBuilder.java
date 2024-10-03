@@ -6,7 +6,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFactionBuilder;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +79,19 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     }
 
     @Override
+    public <Z> PlayableFactionBuilder<T> addTag(ResourceKey<Z> key, TagKey<Z> tag) {
+        return (PlayableFactionBuilder<T>) super.addTag(key, tag);
+    }
+
+    @Override
+    public <Z> PlayableFactionBuilder<T> addRegistryTag(ResourceKey<? extends Registry<Z>> key, TagKey<Z> tag) {
+        return (PlayableFactionBuilder<T>) super.addRegistryTag(key, tag);
+    }
+
+    @Override
     public @NotNull PlayableFaction<T> build() {
-        return new PlayableFaction<>(this);
+        var faction = new PlayableFaction<>(this);
+        FactionTags.addFaction(faction, this.tags);
+        return faction;
     }
 }

@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 public interface IFactionBuilder<T extends IFactionEntity> {
@@ -59,6 +62,13 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @return the builder
      */
     IFactionBuilder<T> namePlural(@NotNull String namePluralKey);
+
+    <Z> IFactionBuilder<T> addTag(ResourceKey<Z> key, TagKey<Z> tag);
+
+    /**
+     * Adds a tag for the given registry
+     */
+    <Z> IFactionBuilder<T> addRegistryTag(ResourceKey<? extends Registry<Z>> key, TagKey<Z> tag);
 
     /**
      * finish the building and registers the faction with values from the builder
