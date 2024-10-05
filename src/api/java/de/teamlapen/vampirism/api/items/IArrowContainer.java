@@ -23,7 +23,7 @@ public interface IArrowContainer {
 
     /**
      * Adds multiple arrows to the container.
-     * @param arrowStacks The arrows to add. Added arrows are removed from the list.
+     * @param arrowStacks The arrows to add. Added arrows are removed from the list, if the list supports it (e.g. ArrayList)
      */
     void addArrows(ItemStack container, List<ItemStack> arrowStacks);
 
