@@ -302,17 +302,20 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     public int suggestEntityLevel(@NotNull Difficulty d) {
-        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+        //Currently, this is not called when the entity is spawned by a command or spawn egg  to guarantee a spawn-> See finalizeSpawn
 
+        //We want to distribute the baron levels between player levels 5 (from here on you need pure blood for leveling and 14 {@link de.teamlapen.vampirism.REFERENCE.HIGHEST_VAMPIRE_LEVEL}
+        int avg = Math.round(((d.avgPercLevel / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        int max = Math.round(((d.maxPercLevel / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        int min = Math.round(((d.minPercLevel / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        //Values may be <0 leading to entity spawn being canceled
         return switch (random.nextInt(7)) {
             case 0 -> min;
             case 1 -> max + 1;
             case 2 -> avg;
             case 3 -> avg + 1;
             case 4, 5 -> random.nextInt(MAX_LEVEL + 1);
-            default -> random.nextInt(max + 2 - min) + min;
+            default -> random.nextInt(max - min + 2) + min; //Even if values are negative max> min -> argument is >=2)
         };
     }
 
