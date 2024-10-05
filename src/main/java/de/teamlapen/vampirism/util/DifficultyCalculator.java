@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Calculates a (local) difficulity based on the player faction levels
+ * Calculates a (local) difficulty based on the player faction levels
  */
 public class DifficultyCalculator {
 
     /**
-     * Can be null if no players are found
+     * Can be null if no alive players are found
      *
      * @return a difficulty level based on the given player's faction levels
      */
@@ -31,15 +31,17 @@ public class DifficultyCalculator {
         int min = Integer.MAX_VALUE;
         int max = 0;
         int sum = 0;
+        int playerCount = 0;
         for (Player p : playerList) {
             if (!p.isAlive()) continue;
+            playerCount++;
             FactionPlayerHandler handler = FactionPlayerHandler.get(p);
             int pLevel = handler.getCurrentLevel();
             if (pLevel == 0) {
                 min = 0;
                 continue;
             }
-            int level = (int) (pLevel / (float) handler.getCurrentFaction().getHighestReachableLevel());
+            int level = Math.round(pLevel / (float) handler.getCurrentFaction().getHighestReachableLevel() * 100F);
             if (level < min) {
                 min = level;
             }
@@ -48,7 +50,11 @@ public class DifficultyCalculator {
             }
             sum += max;
         }
-        return new Difficulty(min, max, Math.round(sum / (float) playerList.size()));
+        //Careful, if no player is alive `min` may still be Integer.MAX_VALUE and playerCount is 0
+        if (playerCount == 0) {
+            return null;
+        }
+        return new Difficulty(min, max, Math.round(sum / (float) playerCount));
     }
 
     /**
