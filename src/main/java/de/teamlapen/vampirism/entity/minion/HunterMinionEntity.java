@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.minion;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.HelperLib;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
