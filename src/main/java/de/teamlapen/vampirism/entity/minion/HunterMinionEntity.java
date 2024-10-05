@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.minion;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.HelperLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -222,7 +221,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (stack.getItem() instanceof IVampirismCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
                 var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance()));
+                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
                 return clip;
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();

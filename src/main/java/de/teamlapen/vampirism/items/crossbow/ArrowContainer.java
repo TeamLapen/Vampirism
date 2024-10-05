@@ -68,7 +68,11 @@ public class ArrowContainer extends Item implements IArrowContainer {
             ItemStack stack = iterator.next();
             if (arrows.size() >= maxCount) break;
             arrows.add(stack);
-            iterator.remove();
+            try {
+                iterator.remove();
+            } catch (UnsupportedOperationException e) {
+                //Not all lists allow removing items via the iterator
+            }
         }
         container.set(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.of(arrows));
     }
