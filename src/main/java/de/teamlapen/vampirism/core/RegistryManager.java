@@ -69,6 +69,7 @@ public class RegistryManager {
         ModDataComponents.register(eventBus);
         ModArmorMaterials.register(eventBus);
         ModFactions.register(eventBus);
+        ModDimensions.register(eventBus);
     }
 
     @SubscribeEvent

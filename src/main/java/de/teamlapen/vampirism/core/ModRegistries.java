@@ -58,7 +58,9 @@ public class ModRegistries {
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)
             .add(SKILL_TREE, ModSkills::createSkillTrees)
-            .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments);
+            .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
+            .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapTypes)
+            .add(Registries.LEVEL_STEM, ModDimensions::bootstrapLevels);
 
     static void registerRegistries(NewRegistryEvent event) {
         event.register(SKILLS);

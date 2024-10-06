@@ -1,0 +1,10 @@
+{
+  "type": "vampirism:underworld",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "vampirism:underworld"
+    },
+    "settings": "minecraft:end"
+  }
+}
