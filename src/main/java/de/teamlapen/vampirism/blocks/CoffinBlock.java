@@ -12,9 +12,10 @@ import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -48,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -230,7 +232,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             } else {
                 final BlockPos finalPos = pos;
                 BlockState finalState = state;
-                player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
+                player.startSleepInBed(state.getValue(VERTICAL) ? pos.below() : pos).ifLeft(sleepResult1 -> {
                     if (sleepResult1 != null) {
                         player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                     }
@@ -270,11 +272,24 @@ public class CoffinBlock extends VampirismBlockContainer {
                     return;
                 }
             }
-            player.setPos(blockPos.getX() + x, blockPos.getY() - 1, blockPos.getZ() + z);
-            player.setBoundingBox(new AABB(blockPos.getX() + x - 0.2, blockPos.getY() - 0.8, blockPos.getZ() + z - 0.2, blockPos.getX() + x + 0.2, blockPos.getY() + 0.4, blockPos.getZ() + z + 0.2));
+            player.setPos(blockPos.getX() + x, blockPos.getY() - 0.05, blockPos.getZ() + z);
+            player.setBoundingBox(new AABB(blockPos.getX() + x - 0.2, blockPos.getY() + 0.15, blockPos.getZ() + z - 0.2, blockPos.getX() + x + 0.2, blockPos.getY() + 1.3, blockPos.getZ() + z + 0.2));
         } else {
             player.setPos(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D);
             player.setBoundingBox(((EntityAccessor) player).getDimensions().makeBoundingBox(blockPos.getX() + 0.5D, blockPos.getY() + 0.2D, blockPos.getZ() + 0.5D).deflate(0.3));
+        }
+    }
+
+    @Override
+    public @NotNull Optional<ServerPlayer.RespawnPosAngle> getRespawnPosition(BlockState state, @NotNull EntityType<?> type, @NotNull LevelReader levelReader, @NotNull BlockPos pos, float orientation) {
+        if (state.getValue(VERTICAL)) {
+            if (state.getValue(PART) == CoffinPart.HEAD) {
+                pos = pos.below();
+            }
+            pos = pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+            return Optional.of(ServerPlayer.RespawnPosAngle.of(pos.getCenter(), pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())));
+        } else {
+            return Optional.of(ServerPlayer.RespawnPosAngle.of(pos.getCenter(), pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite())));
         }
     }
 

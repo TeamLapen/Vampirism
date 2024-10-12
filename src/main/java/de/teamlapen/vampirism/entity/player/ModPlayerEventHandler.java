@@ -16,10 +16,7 @@ import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -59,6 +56,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
@@ -429,18 +427,6 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeCheck(@NotNull CanPlayerSleepEvent event) {
-        if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
-            boolean day = Helper.isDay(event.getLevel());
-            if (!day && event.getProblem() == null) {
-                event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
-            } else if (day && (event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW || event.getProblem() == Player.BedSleepingProblem.OTHER_PROBLEM)) {
-                event.setProblem(null);
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void canContinueToSleep(CanContinueSleepingEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
             boolean day = Helper.isDay(event.getEntity().level());
@@ -468,7 +454,7 @@ public class ModPlayerEventHandler {
     }
 
     /**
-     * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
+     * Checks if the player is allowed to use that item ({@link de.teamlapen.vampirism.api.items.IFactionLevelItem}) and cancels the event if not.
      *
      * @return If it is allowed to use the item
      */
@@ -528,5 +514,39 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
         FactionPlayerHandler.get(event.getEntity()).checkSkillTreeLocks();
+    }
+
+    @SubscribeEvent
+    public void canStartSleeping(CanPlayerSleepEvent event) {
+        if (Helper.isVampire(event.getEntity()) && event.getState().is(ModTags.Blocks.COFFIN)) {
+            switch (event.getProblem()) {
+                case OTHER_PROBLEM, NOT_POSSIBLE_HERE, TOO_FAR_AWAY:
+                    return;
+                case null, default:
+                    if (event.getState().getValue(CoffinBlock.VERTICAL)) {
+                        BlockPos relative = event.getPos().relative(event.getState().getValue(HorizontalDirectionalBlock.FACING).getOpposite());
+                        if (obstructedAt(event.getLevel(), relative) || obstructedAt(event.getLevel(), relative.above())) {
+                            event.setProblem(Player.BedSleepingProblem.OBSTRUCTED);
+                            return;
+                        }
+                    } else {
+                        BlockPos above = event.getPos().above();
+                        if (obstructedAt(event.getLevel(), above) || obstructedAt(event.getLevel(), above.relative(event.getState().getValue(HorizontalDirectionalBlock.FACING).getOpposite()))) {
+                            event.setProblem(Player.BedSleepingProblem.OBSTRUCTED);
+                            return;
+                        }
+                    }
+                    event.getEntity().setRespawnPosition(event.getLevel().dimension(), event.getPos(), event.getEntity().getYRot(), false, true);
+                    if (!Helper.isDay(event.getLevel())) {
+                        event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
+                    } else {
+                        event.setProblem(null);
+                    }
+            }
+        }
+    }
+
+    private static boolean obstructedAt(Level level, BlockPos pos) {
+        return level.getBlockState(pos).isSuffocating(level, pos);
     }
 }
