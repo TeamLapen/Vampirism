@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -19,10 +20,7 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -36,6 +34,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
 import de.teamlapen.vampirism.util.TotemHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -62,8 +61,10 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -86,6 +87,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static net.minecraft.world.entity.player.Player.BedSleepingProblem.*;
 
 /**
  * Event handler for player related events
@@ -544,5 +547,49 @@ public class ModPlayerEventHandler {
         if (event.getNewGameMode() == GameType.SPECTATOR) {
             FactionPlayerHandler.getOpt(event.getEntity()).ifPresent(handler -> handler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getActionHandler().deactivateAllActions()));
         }
+    }
+
+    @SubscribeEvent
+    public void canStartSleeping(PlayerSleepInBedEvent event) {
+        BlockPos pos = event.getPos();
+        Level level = event.getEntity().level();
+        BlockState state = event.getEntity().level().getBlockState(pos);
+        if (Helper.isVampire(event.getEntity()) && state.is(ModTags.Blocks.COFFIN)) {
+            if (!level.dimensionType().natural()) {
+                event.setResult(NOT_POSSIBLE_HERE);
+            } else if (!bedInRange(event.getEntity(), pos, state.getValue(CoffinBlock.VERTICAL) ? Direction.DOWN : state.getValue(HorizontalDirectionalBlock.FACING).getOpposite())) {
+                event.setResult(TOO_FAR_AWAY);
+            } else if (state.getValue(CoffinBlock.VERTICAL)) {
+                BlockPos relative = event.getPos().relative(state.getValue(HorizontalDirectionalBlock.FACING).getOpposite());
+                if (obstructedAt(level, relative) || obstructedAt(level, relative.above())) {
+                    event.setResult(Player.BedSleepingProblem.OBSTRUCTED);
+                    return;
+                }
+            } else {
+                BlockPos above = event.getPos().above();
+                if (obstructedAt(level, above) || obstructedAt(level, above.relative(state.getValue(HorizontalDirectionalBlock.FACING).getOpposite()))) {
+                    event.setResult(Player.BedSleepingProblem.OBSTRUCTED);
+                    return;
+                }
+            }
+            if (!net.minecraftforge.event.ForgeEventFactory.fireSleepingTimeCheck(event.getEntity(), event.getOptionalPos())) {
+                event.setResult(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
+            } else {
+                event.setResult((Player.BedSleepingProblem) null);
+            }
+        }
+    }
+
+    private static boolean obstructedAt(Level level, BlockPos pos) {
+        return level.getBlockState(pos).isSuffocating(level, pos);
+    }
+
+    private static boolean bedInRange(Player player, BlockPos pos ,Direction direction) {
+        return isReachableBedBlock(player, pos) && isReachableBedBlock(player, pos.relative(direction));
+    }
+
+    private static boolean isReachableBedBlock(Player player, BlockPos pPos) {
+        Vec3 vec3 = Vec3.atBottomCenterOf(pPos);
+        return Math.abs(player.getX() - vec3.x()) <= 3.0D && Math.abs(player.getY() - vec3.y()) <= 2.0D && Math.abs(player.getZ() - vec3.z()) <= 3.0D;
     }
 }
