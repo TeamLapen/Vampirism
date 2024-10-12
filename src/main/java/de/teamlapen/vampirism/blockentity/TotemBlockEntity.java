@@ -1058,7 +1058,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         if (entity instanceof VampireBaseEntity vampire) {
             vampire.setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
         }
-        List<? extends Player> players = this.level.players();
+        List<? extends Player> players = new ArrayList<>(this.level.players());
         players.removeIf(Player::isSpectator);
         if (entity != null && !UtilLib.spawnEntityInWorld((ServerLevel) this.level, this.getVillageAreaReduced(), entity, 50, players, MobSpawnType.EVENT)) {
             entity.discard();
