@@ -1,0 +1,24 @@
+{
+  "target_pool": "repurposed_structures:villages/giant_taiga/houses",
+  "fallback": "repurposed_structures:villages/giant_taiga/terminators",
+  "elements": [
+    {
+      "weight": 400,
+      "element": {
+        "location": "vampirism:village/giant_taiga/houses/hunter_trainer",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "location": "vampirism:village/totem",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

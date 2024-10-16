@@ -1,0 +1,15 @@
+{
+  "target_pool": "repurposed_structures:villages/warped/houses",
+  "fallback": "repurposed_structures:villages/warped/terminators",
+  "elements": [
+    {
+      "weight": 400,
+      "element": {
+        "location": "vampirism:village/warped/houses/hunter_trainer",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
