@@ -17,7 +17,7 @@ public class MistSmokeParticle extends SimpleAnimatedParticle {
         this.friction = 0.92F;
         this.quadSize = 0.5F;
         this.setAlpha(0.8F);
-        this.setColor(1, 1, 1);
+        this.setColor(0.3f, 0.3f, 0.3f);
         this.lifetime = (int)((double)(this.quadSize * 12.0F) / (Math.random() * 0.8F + 0.2F));
         this.setSpriteFromAge(pSprites);
         this.hasPhysics = false;

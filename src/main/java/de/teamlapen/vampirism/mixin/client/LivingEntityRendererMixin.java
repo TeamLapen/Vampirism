@@ -44,6 +44,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
     private void changeColor(EntityModel instance, PoseStack poseStack, VertexConsumer consumer, int i1, int i2, int i3, Operation<Void> original, @Share("mist") LocalBooleanRef mist) {
-        original.call(instance, poseStack, consumer, i1, i2, mist.get() ? FastColor.ARGB32.color(0,255,255,255) : i3);
+        original.call(instance, poseStack, consumer, i1, i2, mist.get() ? FastColor.ARGB32.color(10,255,255,255) : i3);
     }
 }

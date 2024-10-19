@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.items.CrucifixItem;
 import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.util.Helper;
@@ -250,6 +251,9 @@ public class RenderHandler implements ResourceManagerReloadListener {
                     event.setCanceled(true);
                 }
             }
+        }
+        if (entity instanceof Player player && VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.HALF_INVULNERABLE)) {
+            event.setCanceled(true);
         }
     }
 
