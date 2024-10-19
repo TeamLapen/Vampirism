@@ -3,7 +3,7 @@
   "biomes": "#vampirism:has_spawn/vampire",
   "excludedBiomes": "#vampirism:no_spawn/vampire",
   "spawners": {
-    "category": "monster",
+    "category": "vampirism:vampire",
     "super": {
       "type": "vampirism:vampire",
       "maxCount": 3,

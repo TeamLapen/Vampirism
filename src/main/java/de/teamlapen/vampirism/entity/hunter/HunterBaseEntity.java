@@ -15,7 +15,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.npc.Npc;
@@ -46,15 +45,6 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
         super(type, world);
         this.countAsMonster = countAsMonster;
     }
-
-    @Override
-    public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonster) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
-    }
-
 
     @Override
     public void die(@NotNull DamageSource cause) {

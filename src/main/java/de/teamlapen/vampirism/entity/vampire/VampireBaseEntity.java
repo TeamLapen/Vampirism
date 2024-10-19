@@ -212,14 +212,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonsterForSpawn) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
-    }
-
-    @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
         BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
