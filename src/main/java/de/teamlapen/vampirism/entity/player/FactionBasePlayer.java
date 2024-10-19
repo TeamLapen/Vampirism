@@ -145,14 +145,18 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> implements 
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
-        tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT(provider));
+        if (taskManager != null) {
+            tag.put(this.taskManager.nbtKey(), this.taskManager.serializeNBT(provider));
+        }
         return tag;
     }
 
     @MustBeInvokedByOverriders
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        this.taskManager.deserializeNBT(provider, nbt.getCompound(this.taskManager.nbtKey()));
+        if (taskManager != null) {
+            this.taskManager.deserializeNBT(provider, nbt.getCompound(this.taskManager.nbtKey()));
+        }
     }
 
     @MustBeInvokedByOverriders
