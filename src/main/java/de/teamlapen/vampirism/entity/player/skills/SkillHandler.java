@@ -371,7 +371,7 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         }
 
         if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
-            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_LIST);
+            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_COMPOUND);
             for (int i = 0; i < refinements.size(); i++) {
                 CompoundTag stackNbt = refinements.getCompound(i);
                 int slot = stackNbt.getInt("slot");
