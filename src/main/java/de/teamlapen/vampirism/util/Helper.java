@@ -32,7 +32,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,16 +63,9 @@ public class Helper {
      */
     public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world, @Nullable ProfilerFiller profiler) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().hasSunDamage(world, entity.blockPosition())) {
-            if (!(world instanceof Level) || !((Level) world).isRaining()) {
-                //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                if (isDay(world)) {
-                    BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
-                    if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !LevelFog.getOpt(((Level) world)).map(vw -> vw.isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()))).orElse(false);
-                    }
-                }
-            }
+        if (world instanceof Level level && !level.isRaining() && VampirismAPI.sundamageRegistry().hasSunDamage(world, entity.blockPosition()) && isDay(world)) {
+            BlockPos pos = new BlockPos(entity.getBlockX(), entity.getBlockY() + (int) entity.getEyeHeight(), entity.getBlockZ());
+            return canBlockSeeSun(world, pos) && !LevelFog.get(level).isInsideArtificialVampireFogArea(pos);
         }
         return false;
     }
