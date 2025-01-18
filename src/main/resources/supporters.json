@@ -101,13 +101,16 @@
   },
   {
     "faction": "vampirism:hunter",
-    "name": "Vampire Evader",
-    "texture": "ElectricEvader",
-    "type": 1,
+    "name": "Forsaken Edelweiss",
+    "texture": "Edelvveiss",
+    "type": 15,
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "equipment": "axe",
+      "hasCloak": "false",
+      "body": "14"
     }
   },
   {
