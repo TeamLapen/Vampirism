@@ -306,7 +306,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         int max = Math.round(((d.maxPercLevel() / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel() / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
         //Values may be <0 leading to entity spawn being canceled
-        LogManager.getLogger().warn("Level " + avg + " / " + max + " / " + min + " / " + d.maxPercLevel());
         return switch (random.nextInt(7)) {
             case 0 -> min;
             case 1 -> max + 1;
