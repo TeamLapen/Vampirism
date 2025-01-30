@@ -37,19 +37,9 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     protected final int MOVE_TO_RESTRICT_PRIO = 3;
-    private final boolean countAsMonster;
 
-    public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, Level world, boolean countAsMonster) {
+    public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, Level world, @Deprecated(forRemoval = true) boolean countAsMonster) {
         super(type, world);
-        this.countAsMonster = countAsMonster;
-    }
-
-    @Override
-    public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonster) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
     }
 
     @Override

@@ -58,7 +58,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
-    private final boolean countAsMonsterForSpawn;
     protected @NotNull EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
@@ -77,10 +76,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
      */
-    public VampireBaseEntity(EntityType<? extends VampireBaseEntity> type, Level world, boolean countAsMonsterForSpawn) {
+    public VampireBaseEntity(EntityType<? extends VampireBaseEntity> type, Level world, @Deprecated(forRemoval = true) boolean countAsMonsterForSpawn) {
         super(type, world);
-        this.countAsMonsterForSpawn = countAsMonsterForSpawn;
-
     }
 
     @Override
@@ -204,14 +201,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
         return super.doHurtTarget(entity);
-    }
-
-    @Override
-    public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonsterForSpawn) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
     }
 
     @Override
