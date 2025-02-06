@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,11 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
     private final @NotNull TIER tier;
 
     public HunterCoatItem(@NotNull Holder<net.minecraft.world.item.ArmorMaterial> material, @NotNull ArmorItem.Type type, @NotNull TIER tier) {
-        super(material, type, new Properties());
+        super(material, type, new Item.Properties().durability(type.getDurability(switch (tier) {
+            case NORMAL -> 15;
+            case ENHANCED -> 20;
+            case ULTIMATE -> 25;
+        })));
         this.tier = tier;
     }
 

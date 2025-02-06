@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;

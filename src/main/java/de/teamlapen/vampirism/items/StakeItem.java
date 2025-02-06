@@ -79,4 +79,9 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
 
         return super.hurtEnemy(stack, target, attacker);
     }
+
+    @Override
+    public boolean isEnchantable(ItemStack pStack) {
+        return false;
+    }
 }

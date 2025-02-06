@@ -3,9 +3,12 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -27,5 +30,10 @@ public class SingleCrossbowItem extends VampirismCrossbowItem {
     @Override
     public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
+    }
+
+    @Override
+    public boolean isPrimaryItemFor(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
+        return enchantment.is(ModTags.Enchantments.SINGLE_CROSSBOW) || super.isPrimaryItemFor(stack, enchantment);
     }
 }

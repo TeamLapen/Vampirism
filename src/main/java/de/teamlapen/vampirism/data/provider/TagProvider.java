@@ -274,6 +274,7 @@ public class TagProvider {
             tag(ItemTags.SWORDS).addTags(ModTags.Items.HEART_STRIKER, ModTags.Items.HEART_SEEKER);
             tag(ModTags.Items.VAMPIRE_SLAYER_ITEMS).addTag(ItemTags.SWORDS).add(ModItems.PITCHFORK.get());
             tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
+            tag(ItemTags.AXES).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
             tag(ModTags.Items.CROSSBOW_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
             tag(ModTags.Items.CROSSBOWS).addTags(ModTags.Items.BASIC_CROSSBOWS, ModTags.Items.ENHANCED_CROSSBOWS, ModTags.Items.SINGLE_CROSSBOWS, ModTags.Items.DOUBLE_CROSSBOWS, ModTags.Items.TECH_CROSSBOWS);
             tag(ModTags.Items.BASIC_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
@@ -290,7 +291,7 @@ public class TagProvider {
             tag(ModTags.Items.HUNTER_COAT_NORMAL).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get());
             tag(ModTags.Items.HUNTER_COAT_ENHANCED).add(ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get());
             tag(ModTags.Items.HUNTER_COAT_ULTIMATE).add(ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
-            tag(ItemTags.HEAD_ARMOR).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get());
+            tag(ItemTags.HEAD_ARMOR).add(ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.HUNTER_HAT_HEAD_0.get(), ModItems.HUNTER_HAT_HEAD_1.get());
             tag(ItemTags.CHEST_ARMOR).add(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get()).addTag(ModTags.Items.VAMPIRE_CLOAK);
             tag(ItemTags.LEG_ARMOR).add(ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get());
             tag(ItemTags.FOOT_ARMOR).add(ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
@@ -539,6 +540,11 @@ public class TagProvider {
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
             this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
             this.tag(ModTags.Enchantments.CROSSBOW_INCOMPATIBLE).add(Enchantments.INFINITY);
+            this.tag(EnchantmentTags.NON_TREASURE).add(ModEnchantments.VAMPIRE_SLAYER, ModEnchantments.ARROW_FRUGALITY);
+            this.tag(ModTags.Enchantments.SINGLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.INFINITY);
+            this.tag(ModTags.Enchantments.DOUBLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.INFINITY);
+            this.tag(ModTags.Enchantments.TECH_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER);
+
         }
     }
 }

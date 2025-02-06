@@ -69,6 +69,10 @@ public abstract class RefinementItem extends Item implements IRefinementItem, Mo
         this.type = type;
     }
 
+    @Override
+    public int getEnchantmentValue(@NotNull ItemStack stack) {
+        return 10;
+    }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {

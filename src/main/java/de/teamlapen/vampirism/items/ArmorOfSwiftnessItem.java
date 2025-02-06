@@ -40,7 +40,11 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     public ArmorOfSwiftnessItem(@NotNull Holder<net.minecraft.world.item.ArmorMaterial> material, @NotNull ArmorItem.Type type, @NotNull TIER tier) {
-        super(material, type, new Item.Properties());
+        super(material, type, new Item.Properties().durability(type.getDurability(switch (tier) {
+            case NORMAL -> 5;
+            case ENHANCED -> 6;
+            case ULTIMATE -> 7;
+        })));
         this.tier = tier;
         Supplier<ItemAttributeModifiers> defaultModifiers = ((ArmorItemAccessor) this).getDefaultModifiers();
         defaultModifiers = Suppliers.compose( (ItemAttributeModifiers modifiers) -> modifiers.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier(VResourceLocation.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),  EquipmentSlotGroup.bySlot(type.getSlot())), defaultModifiers::get);

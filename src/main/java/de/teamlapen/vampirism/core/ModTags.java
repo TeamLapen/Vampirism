@@ -282,6 +282,10 @@ public class ModTags {
     public static class Enchantments {
         public static final TagKey<Enchantment> CROSSBOW_INCOMPATIBLE = tag("crossbow_incompatible");
 
+        public static final TagKey<Enchantment> TECH_CROSSBOW = tag("tech_crossbow");
+        public static final TagKey<Enchantment> SINGLE_CROSSBOW = tag("tech_crossbow");
+        public static final TagKey<Enchantment> DOUBLE_CROSSBOW = tag("tech_crossbow");
+
         private static @NotNull TagKey<Enchantment> tag(@NotNull String name) {
             return TagKey.create(Registries.ENCHANTMENT, mod(name));
         }

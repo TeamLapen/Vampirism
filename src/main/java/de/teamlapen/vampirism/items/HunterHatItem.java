@@ -10,6 +10,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public class HunterHatItem extends HunterArmorItem {
     private final HatType type;
 
     public HunterHatItem(HatType type, Holder<ArmorMaterial> armorMaterial) {
-        super(armorMaterial, Type.HELMET, new Properties());
+        super(armorMaterial, Type.HELMET, new Item.Properties().durability(15));
         this.type = type;
     }
 
