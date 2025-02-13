@@ -15,7 +15,7 @@ As a vampire, you can select from various eye types, which are rendered above yo
 
 | Parameter | Type      | Description         |
 |:----------|:----------|:--------------------|
-| type      | `Integer` | The fang texture id |
+| type      | `Integer` | The eye texture id |
 
 ## Permissions
 
