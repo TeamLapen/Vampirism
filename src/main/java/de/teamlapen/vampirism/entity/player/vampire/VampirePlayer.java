@@ -103,8 +103,9 @@ import java.util.function.Predicate;
 public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
     private static final String NBT_KEY = "vampire_player";
     public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
+    private static final ResourceLocation LEVEL_DAMAGE_UUID = VResourceLocation.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static int FEED_TIMER = 20;
+    private final static int FEED_TIMER = 2020;
     /**
      * Keys for NBT values
      */
@@ -1190,6 +1191,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
         LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        AttributeInstance attribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        attribute.removeModifier(LEVEL_DAMAGE_UUID);
+        int damage = level >= 7 ? level >= 14 ? 2 : 1 : 0;
+        if (damage > 0) {
+            attribute.addPermanentModifier(new AttributeModifier(LEVEL_DAMAGE_UUID, damage, AttributeModifier.Operation.ADD_VALUE));
+        }
     }
 
     /**
