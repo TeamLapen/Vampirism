@@ -103,8 +103,9 @@ import java.util.function.Predicate;
 public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements IVampirePlayer {
 
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
+    private static final UUID LEVEL_DAMAGE_UUID = UUID.fromString("9314d3f4-f73f-458f-86ae-139f5714cee7");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static int FEED_TIMER = 20;
+    private final static int FEED_TIMER = 2020;
     /**
      * Keys for NBT values
      */
@@ -1235,6 +1236,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
         LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION.get(), "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_BASE, false);
+        AttributeInstance attribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        attribute.removeModifier(LEVEL_DAMAGE_UUID);
+        int damage = level >= 7 ? level >= 14 ? 2 : 1 : 0;
+        if (damage > 0) {
+            attribute.addPermanentModifier(new AttributeModifier(LEVEL_DAMAGE_UUID, "Vampire Level Damage", damage, AttributeModifier.Operation.ADDITION));
+        }
     }
 
     /**

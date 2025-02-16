@@ -105,7 +105,7 @@ public class BloodStats implements IBloodStats {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {
                 float f = Math.min(this.bloodSaturationLevel, 6F);
-                player.heal(f / 6F);
+                player.heal((f / 6F) * getHealModifier());
                 this.addExhaustion(f);
                 this.bloodTimer = 0;
             }
@@ -113,7 +113,7 @@ public class BloodStats implements IBloodStats {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
-                player.heal(1.0F);
+                player.heal(getHealModifier());
                 this.addExhaustion(6F);
                 this.bloodTimer = 0;
             }
@@ -135,6 +135,10 @@ public class BloodStats implements IBloodStats {
             return true;
         }
         return false;
+    }
+
+    private float getHealModifier() {
+        return 1 + VampirePlayer.getOpt(this.player).map(s -> s.getLevel() / (float) s.getMaxLevel()).orElse(0f) * 0.5f;
     }
 
     /**

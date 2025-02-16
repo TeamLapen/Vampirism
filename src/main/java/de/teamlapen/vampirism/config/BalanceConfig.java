@@ -108,6 +108,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
     public final ForgeConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ForgeConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ForgeConfigSpec.DoubleValue vsSmallAttackDamageMultiplier;
     public final ForgeConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
     public final ForgeConfigSpec.DoubleValue vsNeonatalReduction;
     public final ForgeConfigSpec.DoubleValue vsDbnoReduction;
@@ -185,6 +186,9 @@ public class BalanceConfig {
     public final ForgeConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
     public final ForgeConfigSpec.BooleanValue vaHissingEnabled;
     public final ForgeConfigSpec.IntValue vaHissingCooldown;
+    public final ForgeConfigSpec.BooleanValue vaJumpBoostEnabled;
+    public final ForgeConfigSpec.IntValue vaJumpBoostCooldown;
+    public final ForgeConfigSpec.IntValue vaJumpBoostDuration;
 
     public final ForgeConfigSpec.IntValue miResourceCooldown;
     public final ForgeConfigSpec.DoubleValue miResourceCooldownOfflineMult;
@@ -329,6 +333,7 @@ public class BalanceConfig {
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
         vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
+        vsSmallAttackDamageMultiplier = builder.comment("Damage to multiply as total (value + 1)").defineInRange("smallAttackDamageMultiplier", 0.1f,0,1);
         vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
         vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5, 0, 1024);
         vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, 0, 1024);
@@ -338,7 +343,7 @@ public class BalanceConfig {
         builder.category("vampirePlayer", "vp");
         vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
         vpAttackSpeedMaxMod = builder.defineInRange("attackSpeedMaxMod", 0.15, 0, 2);
-        vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
+        vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.5, 0, 5);
         vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
         vpBloodExhaustionFactor = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("bloodExhaustionFactor", 0.7, 0, 5);
         vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
@@ -411,6 +416,9 @@ public class BalanceConfig {
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
         vaHissingCooldown = builder.comment("In seconds").defineInRange("hissingCooldown", 60, 0, 10000);
         vaHissingEnabled = builder.define("hissingEnabled", true);
+        vaJumpBoostEnabled = builder.define("jumpBoostEnabled", true);
+        vaJumpBoostCooldown = builder.comment("In seconds").defineInRange("jumpBoostCooldown", 0, 0, 10000);
+        vaJumpBoostDuration = builder.comment("In seconds").defineInRange("jumpBoostDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
 
 
         builder.category("minions", "mi");

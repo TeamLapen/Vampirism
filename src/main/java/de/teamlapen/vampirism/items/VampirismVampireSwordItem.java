@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Streams;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -51,9 +52,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -160,6 +163,15 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
         //Vampire Finisher skill
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER)) {
             double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * VampirePlayer.getOpt(player).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (h.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d).orElse(0d);
+            List<IItemWithTier.TIER> hunterCoatArmor = Streams.stream(target.getArmorSlots()).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getVampirismTier()).toList();
+            if (hunterCoatArmor.size() == 4) {
+                var level = hunterCoatArmor.stream().min(Comparator.comparingInt(Enum::ordinal)).orElse(IItemWithTier.TIER.NORMAL);
+                relTh *= (1- switch (level) {
+                    case NORMAL -> 0.25f;
+                    case ENHANCED -> 0.3f;
+                    case ULTIMATE -> 0.35f;
+                });
+            }
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 DamageHandler.hurtModded(target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
@@ -254,7 +266,7 @@ public abstract class VampirismVampireSwordItem extends VampirismSwordItem imple
     }
 
     /**
-     * Updated during {@link net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent}
+     * Updated during {@link LivingEquipmentChangeEvent}
      *
      * @return True if the cached value was updated
      */

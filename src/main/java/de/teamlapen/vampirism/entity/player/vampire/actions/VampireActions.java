@@ -27,6 +27,7 @@ public class VampireActions {
     public static final RegistryObject<RageVampireAction> VAMPIRE_RAGE = ACTIONS.register("vampire_rage", RageVampireAction::new);
     public static final RegistryObject<HissingAction> HISSING = ACTIONS.register("hissing", HissingAction::new);
     public static final RegistryObject<InfectAction> INFECT = ACTIONS.register("infect", InfectAction::new);
+    public static final RegistryObject<JumpBoostAction> JUMP_BOOST = ACTIONS.register("jump_boost", JumpBoostAction::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

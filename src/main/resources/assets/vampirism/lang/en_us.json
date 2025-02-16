@@ -420,6 +420,7 @@
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_speed.desc": "Increases the movement speed of nearby faction members",
   "action.vampirism.lord_attack_speed.desc": "Increases the attack speed of nearby faction members",
+  "action.vampirism.jump_boost": "Jump Boost",
   "__comment": "skills",
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.creeper_avoided": "Avoided by Creepers",
