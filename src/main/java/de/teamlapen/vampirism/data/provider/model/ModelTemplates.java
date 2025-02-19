@@ -42,4 +42,8 @@ public class ModelTemplates extends net.minecraft.client.data.models.model.Model
     public static ModelTemplate create(ResourceLocation modelName, TextureSlot... textures) {
         return net.minecraft.client.data.models.model.ModelTemplates.create(modelName.toString(), textures);
     }
+
+    public static ModelTemplate copy(ModelTemplate template, ResourceLocation renderType) {
+        return template.extend().renderType(renderType).build();
+    }
 }

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -42,7 +43,7 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
             BeaconRenderer.renderBeaconBeam(matrixStack, iRenderTypeBuffer, TEXTURE_BEACON_BEAM, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
         } else {
             Holder<? extends IFaction<?>> faction = te.getControllingFaction();
-            if (faction != null) {
+            if (!IFaction.isNeutral(faction)) {
                 renderFactionName(faction.value(), matrixStack, iRenderTypeBuffer, i);
             }
         }
@@ -60,11 +61,9 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
         matrixStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
         matrixStack.scale(-0.025f, -0.025f, -0.025f);
         Matrix4f matrix4f = matrixStack.last().pose();
-        float f1 = 0; //Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25f);
-        int j = (int) (f1 * 255f) << 24;
         Font font = Minecraft.getInstance().font;
         float nameOffset = (float) (-font.width(displayNameIn) / 2);
-        font.drawInBatch(displayNameIn, nameOffset, 0, 553648127, false, matrix4f, iRenderTypeBuffer, Font.DisplayMode.SEE_THROUGH, j, packedLight);
+        font.drawInBatch(displayNameIn, nameOffset, 0, 553648127, false, matrix4f, iRenderTypeBuffer, Font.DisplayMode.SEE_THROUGH, 0, packedLight);
         font.drawInBatch(displayNameIn, nameOffset, 0, -1, false, matrix4f, iRenderTypeBuffer, Font.DisplayMode.SEE_THROUGH, 0, packedLight);
         matrixStack.popPose();
     }
