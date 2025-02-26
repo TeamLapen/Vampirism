@@ -93,7 +93,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     }
 
     protected void createCursedEarthPath() {
-        ResourceLocation pathModel = ModModelTemplates.DIRT_PATH.create(ModBlocks.CURSED_EARTH_PATH.get(), new TextureMapping().put(TextureSlot.PARTICLE, mod("block/cursed_earth")).put(TextureSlot.DOWN, mod("block/cursed_earth")).put(TextureSlot.SIDE, mod("block/cursed_earth_path_side")).put(TextureSlot.UP, mod("block/cursed_earth_path_top")), this.modelOutput);
+        ResourceLocation pathModel = ModModelTemplates.DIRT_PATH.create(ModBlocks.CURSED_EARTH_PATH.get(), new TextureMapping().put(TextureSlot.PARTICLE, mod("block/cursed_earth")).put(TextureSlot.BOTTOM, mod("block/cursed_earth")).put(TextureSlot.SIDE, mod("block/cursed_earth_path_side")).put(TextureSlot.TOP, mod("block/cursed_earth_path_top")), this.modelOutput);
         this.blockStateOutput.accept(createRotatedVariant(ModBlocks.CURSED_EARTH_PATH.get(), pathModel));
         createDefaultBlockItem(ModBlocks.CURSED_EARTH_PATH.get(), pathModel);
     }

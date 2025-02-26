@@ -25,7 +25,7 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate TOTEM = create(mod("totem_top"), ModTextureSlots.OUTER);
     public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend().renderType(VResourceLocation.mc("cutout")).build();
     public static final ModelTemplate ALCHEMICAL_CAULDRON = create(mod("alchemy_cauldron_liquid"), ModTextureSlots.LIQUID);
-    public static final ModelTemplate DIRT_PATH = create("dirt_path", TextureSlot.UP, TextureSlot.DOWN, TextureSlot.SIDE, TextureSlot.PARTICLE);
+    public static final ModelTemplate DIRT_PATH = create("dirt_path", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE, TextureSlot.PARTICLE);
     public static final ModelTemplate CRUCIFIX = createItem(mod("crucifix"), TextureSlot.TEXTURE, TextureSlot.PARTICLE);
     public static final ModelTemplate HUNTER_AXE = createItem(mod("hunter_axe"), TextureSlot.TEXTURE);
     public static final ModelTemplate HEART_STRIKER = createItem(mod("heart_striker_model"), ModTextureSlots.TEXTURE_2);
