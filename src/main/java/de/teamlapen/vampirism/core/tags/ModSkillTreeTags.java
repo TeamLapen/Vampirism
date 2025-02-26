@@ -16,5 +16,4 @@ public class ModSkillTreeTags {
     private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
         return TagKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod(name));
     }
-
 }

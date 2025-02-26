@@ -45,6 +45,7 @@ public class RegistryManager {
         ModParticles.register(eventBus);
         ModPotions.register(eventBus);
         ModRecipes.register(eventBus);
+        ModMapDecorations.register(eventBus);
         ModRefinements.register(eventBus);
         ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);

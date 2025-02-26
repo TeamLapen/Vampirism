@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class MigrationData {
 
-
     @SubscribeEvent
     public static void fix(NewRegistryEvent event) {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
@@ -22,6 +21,7 @@ public class MigrationData {
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
         fixEffects(new Mapping(ModEffects.EFFECTS));
+        fixPoiTypes(new Mapping(ModVillage.POI_TYPES));
     }
 
     public record Mapping(DeferredRegister<?> register) {
@@ -126,5 +126,9 @@ public class MigrationData {
 
     private static void fixEffects(@NotNull Mapping mapping) {
         mapping.remap("vampirism:thirst", "hunger");
+    }
+
+    private static void fixPoiTypes(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
     }
 }

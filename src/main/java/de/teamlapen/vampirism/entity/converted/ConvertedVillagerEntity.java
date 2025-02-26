@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.entity.villager.Trades;
+import de.teamlapen.vampirism.entity.villager.VampirismTrades;
 import de.teamlapen.vampirism.mixin.accessor.VillagerAccessor;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -45,6 +45,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -262,8 +263,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     protected void updateTrades() {
         super.updateTrades();
-        if (!this.getOffers().isEmpty() && this.getRandom().nextInt(3) == 0) {
-            this.addOffersFromItemListings(this.getOffers(), Trades.converted_trades, 1);
+        VillagerProfession profession = this.getVillagerData().getProfession();
+        if (!this.getOffers().isEmpty() && profession != ModVillage.VAMPIRE_EXPERT.get() && profession != VillagerProfession.BUTCHER && this.getRandom().nextInt(3) == 0) {
+            this.addOffersFromItemListings(this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
         }
     }
 

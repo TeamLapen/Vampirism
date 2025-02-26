@@ -1,0 +1,53 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.compass"
+        },
+        "id": "minecraft:compass",
+        "item": {
+          "count": 1,
+          "id": "minecraft:compass"
+        }
+      },
+      {
+        "type": "vampirism:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 64,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "vampirism:entity",
+        "amount": 8,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      }
+    ]
+  },
+  "rewards": {
+    "type": "vampirism:map",
+    "decorationType": "vampirism:ancient_remains",
+    "destination": "vampirism:on_ancient_remains_maps",
+    "displayName": "filled_map.vampirism.ancient_remains"
+  },
+  "title": {
+    "translate": "task.vampirism.ancient_remains_map"
+  },
+  "unlocker": [
+    {
+      "type": "vampirism:lord_level",
+      "exact": false,
+      "reqLordLevel": 1
+    }
+  ]
+}
