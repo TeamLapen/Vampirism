@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -347,10 +348,28 @@ public class ModPlayerEventHandler {
             }
         }
 
-        // reduce damage dor vampires
+        // reduce damage for vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
-            float mod = (float) (0.4 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
+            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
             event.setAmount(event.getAmount() * (1-mod));
+        }
+
+        if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {
+            float swiftnessChange = (float) Streams.stream(player.getArmorSlots()).filter(s -> s.is(ModTags.Items.ARMOR_OF_SWIFTNESS)).mapToDouble(x -> 0.025d).sum();
+            if (swiftnessChange == 0.1f) {
+                swiftnessChange = 0.2f;
+            }
+            if (player.getRandom().nextFloat() < swiftnessChange) {
+                event.setCanceled(true);
+                return;
+            }
+            if (event.getSource().getEntity() != null && !Helper.isHunter(event.getSource().getEntity())) {
+                float coatReduction = (float) Streams.stream(player.getArmorSlots()).filter(s -> s.is(ModTags.Items.HUNTER_COAT)).mapToDouble(x -> 0.025d).sum();
+                if (coatReduction == 0.1f) {
+                    coatReduction = 0.2f;
+                }
+                event.setAmount(event.getAmount() * (1f - coatReduction));
+            }
         }
     }
 

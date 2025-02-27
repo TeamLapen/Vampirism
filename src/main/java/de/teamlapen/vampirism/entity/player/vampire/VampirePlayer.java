@@ -105,7 +105,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     public final static UUID NATURAL_ARMOR_UUID = UUID.fromString("17dcf6d2-30ac-4730-b16a-528353d0abe5");
     private static final UUID LEVEL_DAMAGE_UUID = UUID.fromString("9314d3f4-f73f-458f-86ae-139f5714cee7");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static int FEED_TIMER = 2020;
+    private final static int FEED_TIMER = 20;
     /**
      * Keys for NBT values
      */

@@ -53,9 +53,9 @@ public class MigrationData {
 
     public static void fixPotions(@NotNull MissingMappingsEvent.Mapping<Potion> mapping) {
         switch (mapping.getKey().toString()) {
-            case "vampirism:long_strong_resistance", "vampirism:very_long_resistance" -> mapping.remap(ModPotions.LONG_RESISTANCE.get());
-            case "vampirism:very_strong_resistance" -> mapping.remap(ModPotions.STRONG_RESISTANCE.get());
-            case "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst", "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> mapping.ignore();
+            case "vampirism:long_strong_resistance", "vampirism:very_long_resistance", "vampirism:long_resistance", "vampirism:strong_resistance", "vampirism:resistance", "vampirism:very_strong_resistance",
+                 "vampirism:thirst", "vampirism:long_thirst", "vampirism:strong_thirst", "vampirism:very_long_thirst",
+                 "vampirism:very_strong_thirst", "vampirism:long_strong_thirst" -> mapping.ignore();
             case "vampirism:very_strong_harming" -> mapping.remap(Potions.STRONG_HARMING);
         }
     }

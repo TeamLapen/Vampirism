@@ -95,6 +95,7 @@ public class ModTags {
         public static final TagKey<Item> NO_SPAWN = tag("no_spawn");
         public static final TagKey<Item> VAMPIRE_SPAWN = tag("vampire_spawn");
         public static final TagKey<Item> VAMPIRE_BEACON_PAYMENT_ITEM = tag("vampire_beacon_payment_item");
+        public static final TagKey<Item> ARMOR_OF_SWIFTNESS = tag("armor/armor_of_swiftness");
 
         private static @NotNull TagKey<Item> tag(@NotNull ResourceLocation resourceLocation) {
             return ItemTags.create(resourceLocation);
