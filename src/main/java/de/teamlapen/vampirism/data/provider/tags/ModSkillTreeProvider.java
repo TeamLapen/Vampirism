@@ -16,8 +16,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModSkillTreeProvider extends TagsProvider<ISkillTree> {
 
-    protected ModSkillTreeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, VampirismRegistries.Keys.SKILL_TREE, provider, REFERENCE.MODID, existingFileHelper);
+    protected ModSkillTreeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, VampirismRegistries.Keys.SKILL_TREE, provider, REFERENCE.MODID);
     }
 
     @Override

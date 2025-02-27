@@ -11,25 +11,25 @@ import java.util.concurrent.CompletableFuture;
 
 public class TagProvider {
 
-    public static void register(DataGenerator gen, @NotNull GatherDataEvent.Client event, PackOutput output, CompletableFuture<HolderLookup.Provider> future, @SuppressWarnings("removal") net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, future, existingFileHelper);
+    public static void register(DataGenerator gen, @NotNull GatherDataEvent.Client event, PackOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(output, future);
         gen.addProvider(true, blockTagsProvider);
-        gen.addProvider(true, new ModItemTagsProvider(output, future, blockTagsProvider.contentsGetter(), existingFileHelper));
-        gen.addProvider(true, new ModEntityTypeTagsProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModFluidTagsProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModBiomeTagsProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModPoiTypeProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModVillageProfessionProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModDamageTypeProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModTasksProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModStructuresProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModSkillTreeProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModEffectTypeProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModEnchantmentProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModFactionProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModActionTagsProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new ModGameEventProvider(output, future, existingFileHelper));
-        gen.addProvider(true, new DataComponentTagsProvider(output, future, existingFileHelper));
+        gen.addProvider(true, new ModItemTagsProvider(output, future, blockTagsProvider.contentsGetter()));
+        gen.addProvider(true, new ModEntityTypeTagsProvider(output, future));
+        gen.addProvider(true, new ModFluidTagsProvider(output, future));
+        gen.addProvider(true, new ModBiomeTagsProvider(output, future));
+        gen.addProvider(true, new ModPoiTypeProvider(output, future));
+        gen.addProvider(true, new ModVillageProfessionProvider(output, future));
+        gen.addProvider(true, new ModDamageTypeProvider(output, future));
+        gen.addProvider(true, new ModTasksProvider(output, future));
+        gen.addProvider(true, new ModStructuresProvider(output, future));
+        gen.addProvider(true, new ModSkillTreeProvider(output, future));
+        gen.addProvider(true, new ModEffectTypeProvider(output, future));
+        gen.addProvider(true, new ModEnchantmentProvider(output, future));
+        gen.addProvider(true, new ModFactionProvider(output, future));
+        gen.addProvider(true, new ModActionTagsProvider(output, future));
+        gen.addProvider(true, new ModGameEventProvider(output, future));
+        gen.addProvider(true, new DataComponentTagsProvider(output, future));
     }
 
 }

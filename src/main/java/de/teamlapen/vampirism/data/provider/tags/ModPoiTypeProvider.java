@@ -14,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModPoiTypeProvider extends PoiTypeTagsProvider {
 
-    public ModPoiTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModPoiTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, REFERENCE.MODID);
     }
 
     @Override

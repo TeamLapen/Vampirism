@@ -57,7 +57,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
@@ -120,10 +120,10 @@ public class VampirismMod {
         NeoForgeMod.enableMergedAttributeTooltips();
     }
 
-    public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
-        event.addListener(new SingleJigsawReloadListener());
-        event.addListener(new SundamageReloadListener(event.getRegistryAccess()));
-        event.addListener(new SkillTreeReloadListener());
+    public void onAddReloadListenerEvent(@NotNull AddServerReloadListenersEvent event) {
+        event.addListener(SingleJigsawReloadListener.SINGLE_JIGSAW_ID, new SingleJigsawReloadListener());
+        event.addListener(SundamageReloadListener.SUNDAMAGE_ID, new SundamageReloadListener(event.getRegistryAccess()));
+        event.addListener(SkillTreeReloadListener.SKILL_TREE_ID, new SkillTreeReloadListener());
     }
 
     private void checkEnv() {

@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.core.Holder;
@@ -36,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class SundamageReloadListener implements PreparableReloadListener {
-
+    public static final ResourceLocation SUNDAMAGE_ID = VResourceLocation.mod("sundamage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String directory = "vampirism";
     private static final String fileName = "no_sun_damage.json";

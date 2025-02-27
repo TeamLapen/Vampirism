@@ -24,8 +24,6 @@ public class DataProvider {
     public static void onGatherData(GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
-        @SuppressWarnings("removal")
-        net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         CompletableFuture<HolderLookup.Provider> lookupProviderFuture = event.getLookupProvider();
 
@@ -33,9 +31,9 @@ public class DataProvider {
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(packOutput, lookupProviderFuture, ModRegistries.DATA_BUILDER, Set.of(REFERENCE.MODID));
         lookupProviderFuture = provider.getRegistryProvider();
         generator.addProvider(true, provider);
-        TagProvider.register(generator, event, packOutput, lookupProviderFuture, existingFileHelper);
+        TagProvider.register(generator, event, packOutput, lookupProviderFuture);
         generator.addProvider(true, LootTablesProvider.getProvider(packOutput, lookupProviderFuture));
-        generator.addProvider(true, new AdvancementProvider(packOutput, lookupProviderFuture, existingFileHelper));
+        generator.addProvider(true, new AdvancementProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new RecipesProvider.Runner(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModelProvider(packOutput));
         generator.addProvider(true, new SingleJigsawPiecesProvider(packOutput, REFERENCE.MODID));
@@ -43,7 +41,7 @@ public class DataProvider {
         generator.addProvider(true, new SkillTreeProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new DataMapsProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new LootModifierGenerator(packOutput, lookupProviderFuture));
-        generator.addProvider(true, new SoundDefinitionProvider(packOutput, existingFileHelper));
+        generator.addProvider(true, new SoundDefinitionProvider(packOutput));
         generator.addProvider(true, new EquipmentAssetProvider(packOutput));
     }
 }

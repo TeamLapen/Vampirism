@@ -26,6 +26,7 @@ import java.util.concurrent.Executor;
 
 public class SingleJigsawReloadListener implements PreparableReloadListener {
 
+    public static final ResourceLocation SINGLE_JIGSAW_ID = VResourceLocation.mod("single_jigsaw_pieces");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String directory = "vampirism";
     private static final String fileName = "single_jigsaw_pieces.json";

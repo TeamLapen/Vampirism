@@ -16,8 +16,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModBiomeTagsProvider extends BiomeTagsProvider {
 
-    public ModBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, REFERENCE.MODID);
     }
 
     @SuppressWarnings("unchecked")

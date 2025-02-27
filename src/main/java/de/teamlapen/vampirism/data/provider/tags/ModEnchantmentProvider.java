@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModEnchantmentProvider extends TagsProvider<Enchantment> {
 
-    public ModEnchantmentProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.ENCHANTMENT, provider, REFERENCE.MODID, existingFileHelper);
+    public ModEnchantmentProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.ENCHANTMENT, provider, REFERENCE.MODID);
     }
 
     @Override

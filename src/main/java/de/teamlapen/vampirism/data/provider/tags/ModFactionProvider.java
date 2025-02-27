@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModFactionProvider extends TagsProvider<IFaction<?>> {
 
-    public ModFactionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, VampirismRegistries.Keys.FACTION, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModFactionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, VampirismRegistries.Keys.FACTION, lookupProvider, REFERENCE.MODID);
     }
 
     @SuppressWarnings("unchecked")

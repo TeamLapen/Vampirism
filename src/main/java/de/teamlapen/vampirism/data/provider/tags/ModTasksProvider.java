@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModTasksProvider extends TagsProvider<Task> {
 
-    protected ModTasksProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, VampirismRegistries.Keys.TASK, provider, REFERENCE.MODID, existingFileHelper);
+    protected ModTasksProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, VampirismRegistries.Keys.TASK, provider, REFERENCE.MODID);
     }
 
     @Override

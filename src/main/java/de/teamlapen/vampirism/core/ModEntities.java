@@ -43,61 +43,62 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
  * Handles all entity registrations and reference.
  */
 public class ModEntities {
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, REFERENCE.MODID);
+    public static final DeferredRegister.Entities ENTITY_TYPES = DeferredRegister.createEntities(REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends Converter>> CONVERTING_HELPER = DeferredRegister.create(VampirismRegistries.Keys.ENTITY_CONVERTER, REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITIONS = DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, REFERENCE.MODID);
     public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZER = DeferredRegister.create(NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, REFERENCE.MODID);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<BasicHunterEntity>> HUNTER = prepareEntityType("hunter", () -> EntityType.Builder.of(BasicHunterEntity::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<HunterTrainerEntity>> HUNTER_TRAINER = prepareEntityType("hunter_trainer", () -> EntityType.Builder.of(HunterTrainerEntity::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedHunterEntity>> ADVANCED_HUNTER = prepareEntityType("advanced_hunter", () -> EntityType.Builder.of(AdvancedHunterEntity::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<VampireBaronEntity>> VAMPIRE_BARON = prepareEntityType("vampire_baron", () -> EntityType.Builder.of(VampireBaronEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<BasicVampireEntity>> VAMPIRE = prepareEntityType("vampire", () -> EntityType.Builder.of(BasicVampireEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedVampireEntity>> ADVANCED_VAMPIRE = prepareEntityType("advanced_vampire", () -> EntityType.Builder.of(AdvancedVampireEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity<?>>> CONVERTED_CREATURE = prepareEntityType("converted_creature", () -> EntityType.Builder.of(ConvertedCreatureEntity::new, MobCategory.CREATURE), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<DummyBittenAnimalEntity>> DUMMY_CREATURE = prepareEntityType("dummy_creature", () -> EntityType.Builder.of(DummyBittenAnimalEntity::new, MobCategory.CREATURE), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<BlindingBatEntity>> BLINDING_BAT = prepareEntityType("blinding_bat", () -> EntityType.Builder.of(BlindingBatEntity::new, MobCategory.AMBIENT).sized(0.5F, 0.9F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedHunterEntity.IMob>> ADVANCED_HUNTER_IMOB = prepareEntityType("advanced_hunter_imob", () -> EntityType.Builder.of(AdvancedHunterEntity.IMob::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedVampireEntity.IMob>> ADVANCED_VAMPIRE_IMOB = prepareEntityType("advanced_vampire_imob", () -> EntityType.Builder.of(AdvancedVampireEntity.IMob::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity.IMob<?>>> CONVERTED_CREATURE_IMOB = prepareEntityType("converted_creature_imob", () -> EntityType.Builder.of(ConvertedCreatureEntity.IMob::new, MobCategory.CREATURE), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedSheepEntity>> CONVERTED_SHEEP = prepareEntityType("converted_sheep", () -> EntityType.Builder.of(ConvertedSheepEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCowEntity>> CONVERTED_COW = prepareEntityType("converted_cow", () -> EntityType.Builder.of(ConvertedCowEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<CrossbowArrowEntity>> CROSSBOW_ARROW = prepareEntityType("crossbow_arrow", () -> EntityType.Builder.<CrossbowArrowEntity>of(CrossbowArrowEntity::new, MobCategory.MISC).sized(0.5F, 0.5F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<DarkBloodProjectileEntity>> DARK_BLOOD_PROJECTILE = prepareEntityType("dark_blood_projectile", () -> EntityType.Builder.<DarkBloodProjectileEntity>of(DarkBloodProjectileEntity::new, MobCategory.MISC).sized(0.6F, 0.6F).fireImmune(), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<DummyHunterTrainerEntity>> HUNTER_TRAINER_DUMMY = prepareEntityType("hunter_trainer_dummy", () -> EntityType.Builder.of(DummyHunterTrainerEntity::new, MobCategory.MISC).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<AreaParticleCloudEntity>> PARTICLE_CLOUD = prepareEntityType("particle_cloud", () -> EntityType.Builder.of(AreaParticleCloudEntity::new, MobCategory.MISC).sized(6.0F, 0.5F).fireImmune(), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<SoulOrbEntity>> SOUL_ORB = prepareEntityType("soul_orb", () -> EntityType.Builder.<SoulOrbEntity>of(SoulOrbEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).fireImmune(), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ThrowableItemEntity>> THROWABLE_ITEM = prepareEntityType("throwable_item", () -> EntityType.Builder.<ThrowableItemEntity>of(ThrowableItemEntity::new, MobCategory.MISC).sized(0.25F, 0.25F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<BasicVampireEntity.IMob>> VAMPIRE_IMOB = prepareEntityType("vampire_imob", () -> EntityType.Builder.of(BasicVampireEntity.IMob::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<BasicHunterEntity.IMob>> HUNTER_IMOB = prepareEntityType("hunter_imob", () -> EntityType.Builder.of(BasicHunterEntity.IMob::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<AggressiveVillagerEntity>> VILLAGER_ANGRY = prepareEntityType("villager_angry", () -> EntityType.Builder.of(AggressiveVillagerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedVillagerEntity>> VILLAGER_CONVERTED = prepareEntityType("villager_converted", () -> EntityType.Builder.of(ConvertedVillagerEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6F, 1.95F), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedHorseEntity>> CONVERTED_HORSE = prepareEntityType("converted_horse", () -> EntityType.Builder.of(ConvertedHorseEntity::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<VampireMinionEntity>> VAMPIRE_MINION = prepareEntityType("vampire_minion", () -> EntityType.Builder.of(VampireMinionEntity::new, MobCategory.CREATURE).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedDonkeyEntity>> CONVERTED_DONKEY = prepareEntityType("converted_donkey", () -> EntityType.Builder.of(ConvertedDonkeyEntity::new, MobCategory.CREATURE).sized(1.3964844F, 1.5F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedMuleEntity>> CONVERTED_MULE = prepareEntityType("converted_mule", () -> EntityType.Builder.of(ConvertedMuleEntity::new, MobCategory.CREATURE).sized(1.3964844F, 1.5F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<HunterMinionEntity>> HUNTER_MINION = prepareEntityType("hunter_minion", () -> EntityType.Builder.of(HunterMinionEntity::new, MobCategory.CREATURE).sized(0.6f, 1.95f), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<VampireTaskMasterEntity>> TASK_MASTER_VAMPIRE = prepareEntityType("task_master_vampire", () -> EntityType.Builder.of(VampireTaskMasterEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.6f, 1.95f), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<HunterTaskMasterEntity>> TASK_MASTER_HUNTER = prepareEntityType("task_master_hunter", () -> EntityType.Builder.of(HunterTaskMasterEntity::new, VEnums.HUNTER_CATEGORY.getValue()).sized(0.6f, 1.95f), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<SitEntity>> dummy_sit_entity = prepareEntityType("dummy_sit_entity", () -> EntityType.Builder.of(SitEntity::new, MobCategory.MISC).sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedFoxEntity>> CONVERTED_FOX = prepareEntityType("converted_fox", () -> EntityType.Builder.of(ConvertedFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = prepareEntityType("converted_goat", () -> EntityType.Builder.of(ConvertedGoatEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<VulnerableRemainsDummyEntity>> VULNERABLE_REMAINS_DUMMY = prepareEntityType("vulnerable_remains_dummy", () -> EntityType.Builder.of(VulnerableRemainsDummyEntity::new, MobCategory.MISC).sized(1.02f, 1.02f).setTrackingRange(10).setUpdateInterval(20), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<RemainsDefenderEntity>> REMAINS_DEFENDER = prepareEntityType("remains_defender", () -> EntityType.Builder.of(RemainsDefenderEntity::new, MobCategory.MISC).sized(0.3f, 0.3f).setTrackingRange(10).setUpdateInterval(20), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<GhostEntity>> GHOST = prepareEntityType("ghost", () -> EntityType.Builder.of(GhostEntity::new, VEnums.VAMPIRE_CATEGORY.getValue()).sized(0.35F, 0.5F).setTrackingRange(10).setUpdateInterval(20).fireImmune(), true);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCamelEntity>> CONVERTED_CAMEL = prepareEntityType("converted_camel", () -> EntityType.Builder.of(ConvertedCamelEntity::new, MobCategory.CREATURE).sized(1.7F, 2.375F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCatEntity>> CONVERTED_CAT = prepareEntityType("converted_cat", () -> EntityType.Builder.of(ConvertedCatEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<Boat>> DARK_SPRUCE_BOAT = prepareEntityType("dark_spruce_boat", () -> EntityType.Builder.of(EntityType.boatFactory(ModItems.DARK_SPRUCE_BOAT::get), MobCategory.MISC).noLootTable().sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<Boat>> CURSED_SPRUCE_BOAT = prepareEntityType("cursed_spruce_boat", () -> EntityType.Builder.of(EntityType.boatFactory(ModItems.CURSED_SPRUCE_BOAT::get), MobCategory.MISC).noLootTable().sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ChestBoat>> DARK_SPRUCE_CHEST_BOAT = prepareEntityType("dark_spruce_chest_boat", () -> EntityType.Builder.of(EntityType.chestBoatFactory(ModItems.DARK_SPRUCE_CHEST_BOAT::get), MobCategory.MISC).noLootTable().sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10), false);
-    public static final DeferredHolder<EntityType<?>, EntityType<ChestBoat>> CURSED_SPRUCE_CHEST_BOAT = prepareEntityType("cursed_spruce_chest_boat", () -> EntityType.Builder.of(EntityType.chestBoatFactory(ModItems.CURSED_SPRUCE_CHEST_BOAT::get), MobCategory.MISC).noLootTable().sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10), false);
+    public static final DeferredHolder<EntityType<?>, EntityType<BasicHunterEntity>> HUNTER = registerEntityType("hunter", BasicHunterEntity::new, VEnums.HUNTER_CATEGORY.getValue(), (d) -> d.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<HunterTrainerEntity>> HUNTER_TRAINER = registerEntityType("hunter_trainer", HunterTrainerEntity::new, VEnums.HUNTER_CATEGORY.getValue(), (b) -> b.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedHunterEntity>> ADVANCED_HUNTER = registerEntityType("advanced_hunter", AdvancedHunterEntity::new, VEnums.HUNTER_CATEGORY.getValue(), b -> b.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<VampireBaronEntity>> VAMPIRE_BARON = registerEntityType("vampire_baron", VampireBaronEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), b ->b.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<BasicVampireEntity>> VAMPIRE = registerEntityType("vampire", BasicVampireEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), b -> b.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedVampireEntity>> ADVANCED_VAMPIRE = registerEntityType("advanced_vampire", AdvancedVampireEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(),b -> b.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity<?>>> CONVERTED_CREATURE = registerEntityType("converted_creature", ConvertedCreatureEntity::new, MobCategory.CREATURE , EntityType.Builder::noSummon);
+    public static final DeferredHolder<EntityType<?>, EntityType<DummyBittenAnimalEntity>> DUMMY_CREATURE = registerEntityType("dummy_creature", DummyBittenAnimalEntity::new, MobCategory.CREATURE);
+    public static final DeferredHolder<EntityType<?>, EntityType<BlindingBatEntity>> BLINDING_BAT = registerEntityType("blinding_bat", BlindingBatEntity::new, MobCategory.AMBIENT, x -> x.sized(0.5F, 0.9F));
+    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedHunterEntity.IMob>> ADVANCED_HUNTER_IMOB = registerEntityType("advanced_hunter_imob", AdvancedHunterEntity.IMob::new, VEnums.HUNTER_CATEGORY.getValue(),x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<AdvancedVampireEntity.IMob>> ADVANCED_VAMPIRE_IMOB = registerEntityType("advanced_vampire_imob", AdvancedVampireEntity.IMob::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity.IMob<?>>> CONVERTED_CREATURE_IMOB = registerEntityType("converted_creature_imob", ConvertedCreatureEntity.IMob::new, MobCategory.CREATURE, EntityType.Builder::noSummon);
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedSheepEntity>> CONVERTED_SHEEP = registerEntityType("converted_sheep", ConvertedSheepEntity::new, MobCategory.CREATURE, x -> x.sized(0.9F, 1.3F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCowEntity>> CONVERTED_COW = registerEntityType("converted_cow", ConvertedCowEntity::new, MobCategory.CREATURE, x -> x.sized(0.9F, 1.4F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<CrossbowArrowEntity>> CROSSBOW_ARROW = registerEntityType("crossbow_arrow", CrossbowArrowEntity::new, MobCategory.MISC, x -> x.sized(0.5F, 0.5F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<DarkBloodProjectileEntity>> DARK_BLOOD_PROJECTILE = registerEntityType("dark_blood_projectile", DarkBloodProjectileEntity::new, MobCategory.MISC, x -> x.sized(0.6F, 0.6F).fireImmune().noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<DummyHunterTrainerEntity>> HUNTER_TRAINER_DUMMY = registerEntityType("hunter_trainer_dummy", DummyHunterTrainerEntity::new, MobCategory.MISC, x -> x.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<AreaParticleCloudEntity>> PARTICLE_CLOUD = registerEntityType("particle_cloud", AreaParticleCloudEntity::new, MobCategory.MISC, x -> x.sized(6.0F, 0.5F).fireImmune().noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<SoulOrbEntity>> SOUL_ORB = registerEntityType("soul_orb", SoulOrbEntity::new, MobCategory.MISC, x -> x.sized(0.25F, 0.25F).fireImmune().noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ThrowableItemEntity>> THROWABLE_ITEM = registerEntityType("throwable_item", ThrowableItemEntity::new, MobCategory.MISC, x -> x.sized(0.25F, 0.25F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<BasicVampireEntity.IMob>> VAMPIRE_IMOB = registerEntityType("vampire_imob", BasicVampireEntity.IMob::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<BasicHunterEntity.IMob>> HUNTER_IMOB = registerEntityType("hunter_imob", BasicHunterEntity.IMob::new, VEnums.HUNTER_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<AggressiveVillagerEntity>> VILLAGER_ANGRY = registerEntityType("villager_angry", AggressiveVillagerEntity::new, MobCategory.CREATURE, x -> x.sized(0.6F, 1.95F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedVillagerEntity>> VILLAGER_CONVERTED = registerEntityType("villager_converted", ConvertedVillagerEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedHorseEntity>> CONVERTED_HORSE = registerEntityType("converted_horse", ConvertedHorseEntity::new, MobCategory.CREATURE, x -> x.sized(1.3964844F, 1.6F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<VampireMinionEntity>> VAMPIRE_MINION = registerEntityType("vampire_minion", VampireMinionEntity::new, MobCategory.CREATURE, x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedDonkeyEntity>> CONVERTED_DONKEY = registerEntityType("converted_donkey", ConvertedDonkeyEntity::new, MobCategory.CREATURE, x -> x.sized(1.3964844F, 1.5F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedMuleEntity>> CONVERTED_MULE = registerEntityType("converted_mule", ConvertedMuleEntity::new, MobCategory.CREATURE, x -> x.sized(1.3964844F, 1.5F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<HunterMinionEntity>> HUNTER_MINION = registerEntityType("hunter_minion", HunterMinionEntity::new, MobCategory.CREATURE, x -> x.sized(0.6f, 1.95f).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<VampireTaskMasterEntity>> TASK_MASTER_VAMPIRE = registerEntityType("task_master_vampire", VampireTaskMasterEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f));
+    public static final DeferredHolder<EntityType<?>, EntityType<HunterTaskMasterEntity>> TASK_MASTER_HUNTER = registerEntityType("task_master_hunter", HunterTaskMasterEntity::new, VEnums.HUNTER_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f));
+    public static final DeferredHolder<EntityType<?>, EntityType<SitEntity>> dummy_sit_entity = registerEntityType("dummy_sit_entity", SitEntity::new, MobCategory.MISC, x -> x.sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedFoxEntity>> CONVERTED_FOX = registerEntityType("converted_fox", ConvertedFoxEntity::new, MobCategory.CREATURE, x -> x.sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = registerEntityType("converted_goat", ConvertedGoatEntity::new, MobCategory.CREATURE, x -> x.sized(0.9F, 1.3F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<VulnerableRemainsDummyEntity>> VULNERABLE_REMAINS_DUMMY = registerEntityType("vulnerable_remains_dummy", VulnerableRemainsDummyEntity::new, MobCategory.MISC, x -> x.sized(1.02f, 1.02f).setTrackingRange(10).setUpdateInterval(20).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<RemainsDefenderEntity>> REMAINS_DEFENDER = registerEntityType("remains_defender", RemainsDefenderEntity::new, MobCategory.MISC, x -> x.sized(0.3f, 0.3f).setTrackingRange(10).setUpdateInterval(20).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<GhostEntity>> GHOST = registerEntityType("ghost", GhostEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.35F, 0.5F).setTrackingRange(10).setUpdateInterval(20).fireImmune());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCamelEntity>> CONVERTED_CAMEL = registerEntityType("converted_camel", ConvertedCamelEntity::new, MobCategory.CREATURE, x -> x.sized(1.7F, 2.375F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCatEntity>> CONVERTED_CAT = registerEntityType("converted_cat", ConvertedCatEntity::new, MobCategory.CREATURE, x -> x.sized(0.6F, 0.7F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<Boat>> DARK_SPRUCE_BOAT = registerEntityType("dark_spruce_boat", EntityType.boatFactory(ModItems.DARK_SPRUCE_BOAT::get), MobCategory.MISC, x -> x.sized(1.375f,0.5625f).noLootTable().eyeHeight(0.5625f).clientTrackingRange(10).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<Boat>> CURSED_SPRUCE_BOAT = registerEntityType("cursed_spruce_boat", EntityType.boatFactory(ModItems.CURSED_SPRUCE_BOAT::get), MobCategory.MISC, x -> x.sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10).noLootTable().noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ChestBoat>> DARK_SPRUCE_CHEST_BOAT = registerEntityType("dark_spruce_chest_boat", EntityType.chestBoatFactory(ModItems.DARK_SPRUCE_CHEST_BOAT::get), MobCategory.MISC, x -> x.sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10).noLootTable().noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<ChestBoat>> CURSED_SPRUCE_CHEST_BOAT = registerEntityType("cursed_spruce_chest_boat", EntityType.chestBoatFactory(ModItems.CURSED_SPRUCE_CHEST_BOAT::get), MobCategory.MISC, x -> x.sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10).noLootTable().noSummon());
 
 
     public static final DeferredHolder<MapCodec<? extends Converter>, MapCodec<? extends Converter>> DEFAULT_CONVERTER = CONVERTING_HELPER.register("default", () -> DefaultConverter.CODEC);
@@ -186,14 +187,12 @@ public class ModEntities {
         event.add(EntityType.PLAYER, ModAttributes.DBNO_DURATION);
     }
 
-    private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> prepareEntityType(String id, @NotNull Supplier<EntityType.Builder<T>> builder, boolean spawnable) {
-        return ENTITY_TYPES.register(id, () -> {
-            EntityType.Builder<T> type = builder.get().setTrackingRange(80).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true);
-            if (!spawnable) {
-                type.noSummon();
-            }
-            return type.build(ResourceKey.create(Registries.ENTITY_TYPE, VResourceLocation.mod(id)));
-        });
+    public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category) {
+        return registerEntityType(name, factory, category, UnaryOperator.identity());
+    }
+
+    public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder) {
+        return ENTITY_TYPES.registerEntityType(name, factory, category, b -> builder.apply(b.clientTrackingRange(80).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true)));
     }
 
     public static @NotNull Set<EntityType<?>> getAllEntities() {

@@ -10,8 +10,8 @@ import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 
 public class SoundDefinitionProvider extends SoundDefinitionsProvider {
 
-    protected SoundDefinitionProvider(PackOutput output, @SuppressWarnings("removal") net.neoforged.neoforge.common.data.ExistingFileHelper helper) {
-        super(output, VReference.MODID, helper);
+    protected SoundDefinitionProvider(PackOutput output) {
+        super(output, VReference.MODID);
     }
 
     @Override
