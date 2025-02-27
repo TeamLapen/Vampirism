@@ -84,6 +84,7 @@ public class ModFactions {
     public static final DeferredFaction<INeutralPlayer, IPlayableFaction<INeutralPlayer>> NEUTRAL = FACTIONS.registerFaction(VampirismFactions.Keys.NEUTRAL.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<INeutralPlayer>>) (Object) ModAttachments.NEUTRAL_PLAYER)
             .name("text.vampirism.neutral")
             .namePlural("text.vampirism.neutral")
+            .color(new Color(254, 254, 254).getRGB())
             .build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->

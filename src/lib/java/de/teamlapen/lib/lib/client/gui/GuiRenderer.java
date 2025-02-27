@@ -47,6 +47,12 @@ public class GuiRenderer {
 
     }
 
+    public static void blitSprite(GuiGraphics graphics, ResourceLocation texture, int textureWidth, int textureHeight, int uPosition, int vPosition, int x, int y, int uWidth, int vHeight, int color) {
+        graphics.enableScissor(x, y, x+ uWidth, y+vHeight);
+        graphics.blitSprite(RenderType::guiTextured, texture, x- uPosition, y - vPosition, textureWidth, textureHeight, color);
+        graphics.disableScissor();
+    }
+
     public static void resetColor() {
         RenderSystem.setShaderColor(1,1,1,1);
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -85,6 +86,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -95,6 +97,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static de.teamlapen.vampirism.util.TotemHelper.*;
 
@@ -370,11 +373,9 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         }
         this.forceVillageUpdate = true;
         ListTag list = compound.getList("captureInfo", 10);
-        for (Tag inbt : list) {
-            Color color = new Color(((CompoundTag) inbt).getInt("color"), true);
-            float perc = ((CompoundTag) inbt).getFloat("perc");
-            this.captureInfo.setPercentage(color, perc);
-        }
+        var infors = Streams.stream(list.iterator()).map(inbt -> (CompoundTag) inbt).map(tag -> Triple.of(new Color(tag.getInt("color"), true), tag.getFloat("perc"), tag.getInt("position"))).sorted(Comparator.comparingInt(Triple::getRight)).toList();
+        this.captureInfo.setColors(infors.stream().map(Triple::getLeft).toArray(Color[]::new));
+        infors.forEach(x -> this.captureInfo.setPercentage(x.getLeft(), x.getMiddle()));
         this.timeSinceLastRaid = compound.getLong("timeSinceLastRaid");
     }
 
@@ -471,12 +472,15 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
         }
         ListTag list = new ListTag();
-        for (Map.Entry<Color, Float> entry : this.captureInfo.getEntries().entrySet()) {
+        int position = 0;
+        for (var entry : this.captureInfo.getColors()) {
+            float percentage = this.captureInfo.getEntries().getOrDefault(entry, 0f);
             CompoundTag nbt = new CompoundTag();
-            nbt.putInt("color", entry.getKey().getRGB());
-            nbt.putFloat("perc", entry.getValue());
+            nbt.putInt("color", entry.getRGB());
+            nbt.putFloat("perc", percentage);
+            nbt.putInt("position", position++);
             list.add(nbt);
-        }
+        };
         compound.put("captureInfo", list);
         compound.putInt("badOmenTriggered", this.badOmenLevel);
         compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
