@@ -26,8 +26,8 @@ public class MigrationData {
 
     public record Mapping(DeferredRegister<?> register) {
         public void remap(String id, String newId) {
-                remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
-            }
+            remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
+        }
 
         public void remap(ResourceLocation id, ResourceLocation object) {
             register.addAlias(id, object);
@@ -44,9 +44,6 @@ public class MigrationData {
     }
 
     private static void fixPotions(@NotNull Mapping mapping) {
-        mapping.remap("vampirism:long_strong_resistance", "vampirism:long_resistance");
-        mapping.remap("vampirism:very_long_resistance", "vampirism:long_resistance");
-        mapping.remap("vampirism:very_strong_resistance", "vampirism:strong_resistance");
         mapping.remap("vampirism:very_strong_harming", "strong_harming");
     }
 

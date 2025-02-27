@@ -64,9 +64,6 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_HEALTH_BOOST = POTIONS.register("very_long_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 48000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALTH_BOOST = POTIONS.register("very_strong_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 400, 2)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HEALTH_BOOST = POTIONS.register("long_strong_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 1200, 1)));
-    public static final DeferredHolder<Potion, HunterPotion> RESISTANCE = POTIONS.register("resistance", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1800)));
-    public static final DeferredHolder<Potion, HunterPotion> LONG_RESISTANCE = POTIONS.register("long_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 4800)));
-    public static final DeferredHolder<Potion, HunterPotion> STRONG_RESISTANCE = POTIONS.register("strong_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1800, 1)));
     public static final DeferredHolder<Potion, Potion> GARLIC = POTIONS.register("garlic", () -> new Potion(new MobEffectInstance(ModEffects.GARLIC, 1200)));
 
     //Vampire
@@ -128,9 +125,6 @@ public class ModPotions {
         veryStrong(STRONG_HEALTH_BOOST, VERY_STRONG_HEALTH_BOOST);
         veryDurable(VERY_STRONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST);
         veryStrong(VERY_LONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST);
-        master(RESISTANCE, () -> Ingredient.of(Items.GOLDEN_APPLE), 20, 10);
-        durable(RESISTANCE, LONG_RESISTANCE);
-        strong(RESISTANCE, STRONG_RESISTANCE);
     }
 
     private static void durable(Holder<Potion> in, Holder<Potion> out) {

@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.entity.player;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
+import com.mojang.datafixers.util.Either;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -320,10 +323,28 @@ public class ModPlayerEventHandler {
             }
         }
 
-        // reduce damage dor vampires
+        // reduce damage for vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
-            float mod = (float) (0.4 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
+            float mod = (float) (0.2 * (VampirePlayer.getOpt(player).map(s -> (float)s.getLevel()/ (float)s.getMaxLevel())).orElse(0f));
             d.setNewDamage(d.getNewDamage() * (1 - mod));
+        }
+
+        if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {
+            float swiftnessDodgeChance = (float) Streams.stream(player.getArmorSlots()).filter(s -> s.is(ModTags.Items.ARMOR_OF_SWIFTNESS)).mapToDouble(x -> 0.025d).sum();
+            if (swiftnessDodgeChance == 0.1f) {
+                swiftnessDodgeChance = 0.2f;
+            }
+            if (player.getRandom().nextFloat() < swiftnessDodgeChance) {
+                event.setNewDamage(0);
+                return;
+            }
+            if (event.getSource().getEntity() != null && !Helper.isHunter(event.getSource().getEntity())) {
+                float coatReduction = (float) Streams.stream(player.getArmorSlots()).filter(s -> s.is(ModTags.Items.HUNTER_COAT)).mapToDouble(x -> 0.025d).sum();
+                if (coatReduction == 0.1f) {
+                    coatReduction = 0.2f;
+                }
+                event.setNewDamage(event.getNewDamage() * (1f - coatReduction));
+            }
         }
     }
 

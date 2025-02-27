@@ -105,7 +105,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
     private static final ResourceLocation LEVEL_DAMAGE_UUID = VResourceLocation.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static int FEED_TIMER = 2020;
+    private final static int FEED_TIMER = 20;
     /**
      * Keys for NBT values
      */
