@@ -29,9 +29,10 @@ public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
     }
 
     @Override
-    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction up) {
+    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction hitDirection) {
         if (shootingEntity != null) {
             if (shootingEntity.level() instanceof ServerLevel level && shootingEntity.isAlive()) {
+                BlockPos teleportPosition = blockPos.relative(hitDirection);
                 if (shootingEntity instanceof ServerPlayer player) {
                     if (player.connection.getConnection().isConnected() && player.level() == arrowEntity.level() && !player.isSleeping()) {
 
@@ -39,12 +40,12 @@ public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
                             player.stopRiding();
                         }
 
-                        player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                        player.teleportTo(teleportPosition.getX(), teleportPosition.getY(), teleportPosition.getZ());
                         player.fallDistance = 0.0F;
                         DamageHandler.hurtVanilla(level, player, DamageSources::fall, 1);
                     }
                 } else {
-                    shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+                    shootingEntity.teleportTo(teleportPosition.getX(), teleportPosition.getY(), teleportPosition.getZ());
                     shootingEntity.fallDistance = 0.0F;
                 }
             }

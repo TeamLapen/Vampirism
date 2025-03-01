@@ -60,6 +60,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
         } else {
             arrowEntity.pickup = AbstractArrow.Pickup.DISALLOWED;
         }
+        arrowEntity.setOwner(shooter);
         return arrowEntity;
     }
 
