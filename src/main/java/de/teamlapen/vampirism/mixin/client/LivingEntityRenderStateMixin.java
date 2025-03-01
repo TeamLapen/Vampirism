@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.mixin.client;
 
-import de.teamlapen.vampirism.client.renderer.entity.state.ConvertedOverlayRenderState;
-import de.teamlapen.vampirism.client.renderer.entity.state.VampirismRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.*;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
@@ -12,130 +11,126 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(LivingEntityRenderState.class)
-public class LivingEntityRenderStateMixin implements ConvertedOverlayRenderState, VampirismRenderState {
+public class LivingEntityRenderStateMixin implements IVampirismRenderState {
 
     @Unique
-    public ResourceLocation convertedOverlay;
+    public ResourceLocation vampirism$convertedOverlay;
     @Unique
-    public ResourceLocation overlay;
+    public ResourceLocation vampirism$overlay;
     @Unique
-    private int blood;
+    private int vampirism$blood;
     @Unique
-    private boolean poisonousBlood;
+    private boolean vampirism$poisonousBlood;
     @Unique
-    private boolean isHunter;
+    private boolean vampirism$isHunter;
     @Unique
-    private boolean sleepingInCoffin;
+    private boolean vampirism$sleepingInCoffin;
     @Unique
-    private float attackTime;
+    private float vampirism$attackTime;
     @Unique
-    private HumanoidArm attackArm = HumanoidArm.RIGHT;
+    private HumanoidArm vampirism$attackArm = HumanoidArm.RIGHT;
     @Unique
-    private Bat bat;
-
-    @Override
-    public @Nullable ResourceLocation overlay() {
-        return this.overlay;
-    }
-
-    @Override
-    public void setOverlay(@Nullable ResourceLocation overlay) {
-        this.overlay = overlay;
-    }
-
-    @Override
-    public @Nullable ResourceLocation convertedOverlay() {
-        return convertedOverlay;
-    }
-
-    @Override
-    public void setConvertedOverlay(@Nullable ResourceLocation overlay) {
-        convertedOverlay = overlay;
-    }
-
-
+    private Bat vampirism$bat;
     @Unique
-    VampirismPlayerAttributes vampirismAttributes;
+    private VampirismPlayerAttributes vampirism$vampirismAttributes;
 
     @Override
-    public VampirismPlayerAttributes vampirismAttributes() {
-        return vampirismAttributes;
+    public @Nullable ResourceLocation vampirism$overlay() {
+        return this.vampirism$overlay;
     }
 
     @Override
-    public void vampirismAttributes(VampirismPlayerAttributes attributes) {
-        this.vampirismAttributes = attributes;
-    }
-
-
-
-    @Override
-    public int vampirismBlood() {
-        return this.blood;
+    public void vampirism$overlay(@Nullable ResourceLocation overlay) {
+        this.vampirism$overlay = overlay;
     }
 
     @Override
-    public void vampirismBlood(int blood) {
-        this.blood = blood;
+    public @Nullable ResourceLocation vampirism$convertedOverlay() {
+        return vampirism$convertedOverlay;
     }
 
     @Override
-    public boolean vampirismPoisonousBlood() {
-        return this.poisonousBlood;
+    public void vampirism$convertedOverlay(@Nullable ResourceLocation overlay) {
+        vampirism$convertedOverlay = overlay;
     }
 
     @Override
-    public void vampirismPoisonousBlood(boolean poisonous) {
-        this.poisonousBlood = poisonous;
+    public VampirismPlayerAttributes vampirism$attributes() {
+        return vampirism$vampirismAttributes;
     }
 
     @Override
-    public boolean isHunter() {
-        return this.isHunter;
+    public void vampirism$attributes(VampirismPlayerAttributes attributes) {
+        this.vampirism$vampirismAttributes = attributes;
     }
 
     @Override
-    public void setHunter(boolean hunter) {
-        this.isHunter = hunter;
+    public int vampirism$blood() {
+        return this.vampirism$blood;
     }
 
     @Override
-    public boolean sleepingInCoffin() {
-        return this.sleepingInCoffin;
+    public void vampirism$blood(int blood) {
+        this.vampirism$blood = blood;
     }
 
     @Override
-    public void sleepingInCoffin(boolean sleepingInCoffin) {
-        this.sleepingInCoffin = sleepingInCoffin;
+    public boolean vampirism$poisonousBlood() {
+        return this.vampirism$poisonousBlood;
     }
 
     @Override
-    public float vampirismAttackTime() {
-        return this.attackTime;
+    public void vampirism$poisonousBlood(boolean poisonous) {
+        this.vampirism$poisonousBlood = poisonous;
     }
 
     @Override
-    public void setVampirismAttackTime(float attackTime) {
-        this.attackTime = attackTime;
+    public boolean vampirism$hunter() {
+        return this.vampirism$isHunter;
     }
 
     @Override
-    public HumanoidArm vampirismAttackArm() {
-        return this.attackArm;
+    public void vampirism$hunter(boolean hunter) {
+        this.vampirism$isHunter = hunter;
     }
 
     @Override
-    public void setVampirismAttackArm(HumanoidArm arm) {
-        this.attackArm = arm;
+    public boolean sleeping$inCoffin() {
+        return this.vampirism$sleepingInCoffin;
     }
 
     @Override
-    public Bat vampirismBat() {
-        return this.bat;
+    public void sleeping$inCoffin(boolean sleepingInCoffin) {
+        this.vampirism$sleepingInCoffin = sleepingInCoffin;
     }
 
     @Override
-    public void setVampirismBat(Bat bat) {
-        this.bat = bat;
+    public float vampirism$attackTime() {
+        return this.vampirism$attackTime;
+    }
+
+    @Override
+    public void vampirism$attackTime(float attackTime) {
+        this.vampirism$attackTime = attackTime;
+    }
+
+    @Override
+    public HumanoidArm vampirism$attackArm() {
+        return this.vampirism$attackArm;
+    }
+
+    @Override
+    public void vampirism$attackArm(HumanoidArm arm) {
+        this.vampirism$attackArm = arm;
+    }
+
+    @Override
+    public Bat vampirism$bat() {
+        return this.vampirism$bat;
+    }
+
+    @Override
+    public void vampirism$bat(Bat bat) {
+        this.vampirism$bat = bat;
     }
 }

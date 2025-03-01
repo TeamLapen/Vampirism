@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items.crossbow.arrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +31,7 @@ public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBeh
 
     @Override
     public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
-        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 40, 1));
+        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 100, 1));
     }
 
     @Override
