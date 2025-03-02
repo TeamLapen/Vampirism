@@ -28,11 +28,6 @@ public class DoubleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
-        return (stack -> stack.getItem() instanceof IVampirismCrossbowArrow<?>);
-    }
-
-    @Override
     protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
         var first = super.tryLoadProjectiles(pShooter, pCrossbowStack);
         var second = super.tryLoadProjectiles(pShooter, pCrossbowStack);

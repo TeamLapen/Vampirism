@@ -27,11 +27,6 @@ public class SingleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
-        return (stack -> stack.getItem() instanceof IVampirismCrossbowArrow<?>);
-    }
-
-    @Override
     public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
         return doubleCrossbow ? 2f : 0.4f;
     }

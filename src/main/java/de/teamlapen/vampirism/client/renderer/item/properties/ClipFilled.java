@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.items.component.ContainedProjectiles;
+import de.teamlapen.vampirism.items.component.QuarrelPouchContents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,12 @@ public record ClipFilled() implements RangeSelectItemModelProperty {
     @Override
     public float get(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int light) {
         ContainedProjectiles container = stack.getOrDefault(ModDataComponents.CONTAINED_PROJECTILES, ContainedProjectiles.EMPTY);
-        return Math.clamp(container.getProjectiles().size() / (float) container.getMaxCount(), 0, 1);
+        QuarrelPouchContents pouch = stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
+        if (!container.getProjectiles().isEmpty()) {
+            return Math.clamp(container.getProjectiles().size() / (float) container.getMaxCount(), 0, 1);
+        } else {
+            return Math.clamp(pouch.getCount() / (float) QuarrelPouchContents.MAX_ITEMS, 0, 1);
+        }
     }
 
     @Override

@@ -7,6 +7,9 @@ import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.items.QuarrelPouch;
+import de.teamlapen.vampirism.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.network.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.util.Helper;
@@ -18,10 +21,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
@@ -36,7 +41,8 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         Player player = Minecraft.getInstance().player;
         ItemStack crossbowStack = player.getMainHandItem();
         if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
-            var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item))).collect(Collectors.toList());
+            @NotNull Map<Item, @NotNull Integer> list = player.getInventory().items.stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.getItems().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
+            var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
             ammoTypes.add(new AmmoType(null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
         }

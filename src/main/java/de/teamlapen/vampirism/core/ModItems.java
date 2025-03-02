@@ -259,6 +259,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> MOTHER_CORE = register("mother_core", (prop) -> new Item(prop.rarity(Rarity.UNCOMMON)));
     public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK = register("candle_stick", (prop) -> new StandingAndWallBlockItem(ModBlocks.CANDLE_STICK.get(), ModBlocks.WALL_CANDLE_STICK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<Item> QUARREL_POUCH = register("quarrel_pouch", (prop) -> new QuarrelPouch(prop.stacksTo(1)));
 
     static void registerCraftingRecipes(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();

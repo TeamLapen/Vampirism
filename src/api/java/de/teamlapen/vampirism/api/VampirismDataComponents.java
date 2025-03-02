@@ -50,5 +50,6 @@ public class VampirismDataComponents {
         public static final ResourceLocation FACTION_SLAYER = VResourceLocation.mod("faction_slayer");
         public static final ResourceLocation DROP_VAMPIRE_SOUL = VResourceLocation.mod("drop_vampire_soul");
         public static final ResourceLocation PURE_LEVEL = VResourceLocation.mod("pure_level");
+        public static final ResourceLocation QUARREL_POUCH_CONTENTS = VResourceLocation.mod("quarrel_pouch_contents");
     }
 }

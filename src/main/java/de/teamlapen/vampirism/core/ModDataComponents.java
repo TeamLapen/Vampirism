@@ -10,7 +10,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
-import net.minecraft.world.food.FoodProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -38,6 +37,7 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FactionSlayer>>  FACTION_SLAYER = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.FACTION_SLAYER.getPath(), builder -> builder.persistent(FactionSlayer.CODEC).networkSynchronized(FactionSlayer.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> DROP_VAMPIRE_SOUL = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.DROP_VAMPIRE_SOUL.getPath(), builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PureLevel>> PURE_LEVEL = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.PURE_LEVEL.getPath(), builder -> builder.persistent(PureLevel.CODEC).networkSynchronized(PureLevel.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<QuarrelPouchContents>> QUARREL_POUCH_CONTENTS = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.QUARREL_POUCH_CONTENTS.getPath(), b -> b.persistent(QuarrelPouchContents.CODEC).networkSynchronized(QuarrelPouchContents.STREAM_CODEC));
 
     static void register(IEventBus eventBus) {
         ITEM_DATA_COMPONENTS.register(eventBus);

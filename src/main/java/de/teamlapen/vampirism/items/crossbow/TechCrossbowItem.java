@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.items.crossbow;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.items.QuarrelPouch;
 import de.teamlapen.vampirism.items.component.FactionRestriction;
 import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.core.Holder;
@@ -33,10 +35,12 @@ public class TechCrossbowItem extends HunterCrossbowItem {
         super(properties.repairable(Tags.Items.INGOTS_IRON).component(ModDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(requiredSkill).build()), arrowVelocity, chargeTime, itemTier);
     }
 
-    @Nonnull
     @Override
-    public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return stack -> stack.getItem() instanceof IArrowContainer && !((IArrowContainer) stack.getItem()).getArrows(stack).isEmpty();
+    public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
+        if (projectile.getItem() instanceof IArrowContainer container) {
+            return !container.getArrows(projectile).isEmpty();
+        }
+        return false;
     }
 
     @Override
