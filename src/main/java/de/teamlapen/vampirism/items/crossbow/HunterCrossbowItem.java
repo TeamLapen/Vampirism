@@ -149,12 +149,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
-
-        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
-            crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
-        } else {
-            availableProjectiles.clear();
-        }
+        availableProjectiles.clear();
         return shootingProjectiles;
     }
 

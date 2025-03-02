@@ -30,6 +30,6 @@
   "slots": [
     "mainhand"
   ],
-  "supported_items": "#vampirism:enchantable/crossbow",
+  "supported_items": "#vampirism:enchantable/tech_crossbow",
   "weight": 1
 }

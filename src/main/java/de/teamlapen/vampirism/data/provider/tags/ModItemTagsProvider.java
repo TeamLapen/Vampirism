@@ -81,6 +81,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.VAMPIRE_SLAYER_ITEMS).addTag(ItemTags.SWORDS).add(ModItems.PITCHFORK.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
         tag(ModItemTags.CROSSBOW_ENCHANTABLE).addTag(ModItemTags.CROSSBOWS);
+        tag(ModItemTags.TECH_CROSSBOW_ENCHANTABLE).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         tag(ModItemTags.CROSSBOWS).addTags(ModItemTags.BASIC_CROSSBOWS, ModItemTags.ENHANCED_CROSSBOWS, ModItemTags.SINGLE_CROSSBOWS, ModItemTags.DOUBLE_CROSSBOWS, ModItemTags.TECH_CROSSBOWS);
         tag(ModItemTags.BASIC_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
         tag(ModItemTags.ENHANCED_CROSSBOWS).add(ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());

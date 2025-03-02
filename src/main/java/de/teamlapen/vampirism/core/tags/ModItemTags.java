@@ -32,6 +32,7 @@ public class ModItemTags {
     public static final TagKey<Item> HEART_STRIKER = tag("swords/heart_striker");
     public static final TagKey<Item> VAMPIRE_SLAYER_ITEMS = tag("enchantable/vampire_slayer");
     public static final TagKey<Item> CROSSBOW_ENCHANTABLE = tag("enchantable/crossbow");
+    public static final TagKey<Item> TECH_CROSSBOW_ENCHANTABLE = tag("enchantable/tech_crossbow");
 
     public static final TagKey<Item> SINGLE_CROSSBOWS = tag("crossbows/single");
     public static final TagKey<Item> DOUBLE_CROSSBOWS = tag("crossbows/double");
