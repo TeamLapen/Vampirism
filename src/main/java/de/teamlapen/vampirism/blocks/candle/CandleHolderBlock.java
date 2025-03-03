@@ -13,9 +13,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,6 +27,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -215,7 +217,25 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         return candle;
     }
 
+    /**
+     * Required to prevent empty candle holders from being lit up.
+     */
+    @Override
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+        ItemStack itemStack = context.getItemInHand();
+        if (!itemStack.canPerformAction(itemAbility))
+            return null;
+
+        if (ItemAbilities.FIRESTARTER_LIGHT == itemAbility) {
+            if (this.canBeLit(state)) {
+                return state.setValue(BlockStateProperties.LIT, true);
+            }
+        }
+
+        return null;
+    }
+
     public boolean isEmpty() {
-        return this.candle.get() == null || this.emptyBlock != null;
+        return this.candle.get() == null;
     }
 }
