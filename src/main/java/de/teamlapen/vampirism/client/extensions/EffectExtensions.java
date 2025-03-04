@@ -52,17 +52,26 @@ public class EffectExtensions {
 
         @Override
         public boolean renderInventoryIcon(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull GuiGraphics graphics, int x, int y, int blitOffset) {
-            return true;
+            if (instance instanceof EffectInstanceWithSource withSource) {
+                return !(!withSource.hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.getSource()));
+            }
+            return false;
         }
 
         @Override
         public boolean renderInventoryText(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull GuiGraphics graphics, int x, int y, int blitOffset) {
-            return true;
+            if (instance instanceof EffectInstanceWithSource withSource) {
+                return !(!withSource.hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.getSource()));
+            }
+            return false;
         }
 
         @Override
         public boolean renderGuiIcon(@NotNull MobEffectInstance instance, @NotNull Gui gui, @NotNull GuiGraphics graphics, int x, int y, float z, float alpha) {
-            return true;
+            if (instance instanceof EffectInstanceWithSource withSource) {
+                return !(!withSource.hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.getSource()));
+            }
+            return false;
         }
     };
 
