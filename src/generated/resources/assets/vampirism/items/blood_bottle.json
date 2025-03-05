@@ -70,6 +70,6 @@
       "type": "minecraft:model",
       "model": "vampirism:item/blood_bottle_0"
     },
-    "property": "vampirism:bloodfilled"
+    "property": "vampirism:blood_filled"
   }
 }

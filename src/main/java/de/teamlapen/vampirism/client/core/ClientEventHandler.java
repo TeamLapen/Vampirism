@@ -77,7 +77,6 @@ public class ClientEventHandler {
         FactionRestriction.addTooltipIfExist(event.getEntity(), event.getItemStack(), event.getToolTip());
     }
 
-
     @SubscribeEvent
     public void onJoined(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientSkillTreeData.reset();

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.client.renderer.item.properties.BloodFilled;
 import de.teamlapen.vampirism.client.renderer.item.properties.ClipFilled;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.properties.numeric.CrossbowPull;
 import net.minecraft.resources.ResourceLocation;
@@ -20,9 +21,9 @@ import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 
-public class ModItemModelGenerators extends net.minecraft.client.data.models.ItemModelGenerators {
+public class ModItemModelGenerators extends ItemModelGenerators {
 
-    public ModItemModelGenerators(net.minecraft.client.data.models.ItemModelGenerators generator) {
+    public ModItemModelGenerators(ItemModelGenerators generator) {
         super(generator.itemModelOutput, generator.modelOutput);
     }
 
