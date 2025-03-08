@@ -51,7 +51,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_book_nbt"
+              "function": "vampirism:set_vampire_book",
+              "tag": "vampirism:non_treasure"
             }
           ],
           "name": "vampirism:vampire_book"

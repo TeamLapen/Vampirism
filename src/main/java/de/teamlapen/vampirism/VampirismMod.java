@@ -217,7 +217,6 @@ public class VampirismMod {
         NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
 
         SupporterManager.init();
-        VampireBookManager.getInstance().init();
         ModEntitySelectors.registerSelectors();
         event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         event.enqueueWork(ModStats::registerFormatter);

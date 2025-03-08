@@ -196,7 +196,7 @@ public class ModItems {
     public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK, prop));
 
     public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", Item::new);
-    public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
+    public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", (prop) -> new VampireBookItem(prop.rarity(Rarity.UNCOMMON).stacksTo(1)));
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = register("vampire_fang", VampireFangItem::new);
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", (prop) -> new VampirismItemBloodFoodItem(prop.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 

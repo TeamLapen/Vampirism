@@ -13,7 +13,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_book_nbt"
+              "function": "vampirism:set_vampire_book",
+              "tag": "vampirism:is_general"
             }
           ],
           "name": "vampirism:vampire_book",
