@@ -24,7 +24,7 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> SUNSCREEN = EFFECTS.register("sunscreen", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 0xFFF100).addAttributeModifier(ModAttributes.SUNDAMAGE, ModEffects.SUNSCREEN.getId(), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0x999900));
     public static final DeferredHolder<MobEffect, MobEffect> FIRE_PROTECTION = EFFECTS.register("fire_protection", () -> new VampirismEffect(MobEffectCategory.BENEFICIAL, 14981690));
-    public static final DeferredHolder<MobEffect, MobEffect> GARLIC = EFFECTS.register("garlic", () -> new VampirismEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
+    public static final DeferredHolder<MobEffect, MobEffect> GARLIC = EFFECTS.register("garlic", GarlicEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonEffect(0x4E9331));
     public static final DeferredHolder<MobEffect, MobEffect> FREEZE = EFFECTS.register("freeze", FreezeEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new VampirismEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
