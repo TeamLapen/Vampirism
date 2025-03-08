@@ -83,7 +83,8 @@
     "texture": "piklach",
     "type": 0,
     "status": "Contributor",
-    "bookId": "vampirism:pyromaniacs_diary",
+    "bookId": "pyropik",
+    "book": "vampirism:pyromaniacs_diary",
     "appearance": {
       "hat": "hat_0"
     }
@@ -182,7 +183,8 @@
     "texture": "S_olace",
     "type": 15,
     "status": "Temporary",
-    "bookId": "vampirism:sinister_intentions",
+    "bookId": "s_olace",
+    "book": "vampirism:sinister_intentions",
     "appearance": {
       "eye": "15"
     }
@@ -215,7 +217,8 @@
     "texture": "Volqonah",
     "type": 15,
     "status": "Temporary",
-    "bookId": "vampirism:valorous_tale",
+    "bookId": "volqonah",
+    "book": "vampirism:valorous_tale",
     "appearance": {
       "eye": "15"
     }

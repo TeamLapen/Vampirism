@@ -16,11 +16,11 @@ public class SupporterDeserializer implements JsonDeserializer<Supporter> {
 
         String name = object.get("name").getAsString();
         String texture = object.get("texture").getAsString();
-        String bookId = null;
-        if (object.has("bookId")) {
-            JsonElement bookId1 = object.get("bookId");
+        String book = null;
+        if (object.has("book")) {
+            JsonElement bookId1 = object.get("book");
             if (!bookId1.isJsonNull()) {
-                bookId = bookId1.getAsString();
+                book = bookId1.getAsString();
             }
         }
         JsonElement appearanceJson = object.get("appearance");
@@ -30,6 +30,6 @@ public class SupporterDeserializer implements JsonDeserializer<Supporter> {
         } else {
             appearance = Map.of();
         }
-        return new Supporter(ResourceLocation.parse(faction), name, texture, bookId, appearance);
+        return new Supporter(ResourceLocation.parse(faction), name, texture, book, appearance);
     }
 }
