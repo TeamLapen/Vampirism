@@ -232,7 +232,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             }
 
-            this.children.add(new RewardWidget(3 + getRowWidth() - 45, 3, item));
+            this.children.add(RewardWidget.create(3 + getRowWidth() - 45, 3, item));
             this.children.add(new TaskActionButton(getRowWidth() - 25, 4));
         }
 
@@ -342,8 +342,14 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             private final ITaskInstance rewardInstance;
             private final Component reward;
 
-            public RewardWidget(int pX, int pY, @NotNull ITaskInstance rewardInstance) {
-                super(pX, pY, rewardInstance.getReward() instanceof ItemReward.Instance(ItemStack reward1) ? reward1 : PAPER);
+            // for some reason the jvm throws an error when doing this in the constructor, so outsourcing this here
+            public static RewardWidget create(int pX, int pY, @NotNull ITaskInstance rewardInstance) {
+                ItemStack itemStack = rewardInstance.getReward() instanceof ItemReward.Instance(ItemStack reward1) ? reward1 : Items.PAPER.getDefaultInstance();
+                return new RewardWidget(pX, pY, rewardInstance, itemStack);
+            }
+
+            private RewardWidget(int pX, int pY, @NotNull ITaskInstance rewardInstance, ItemStack reward) {
+                super(pX, pY, reward);
                 this.rewardInstance = rewardInstance;
                 this.reward = Component.translatable(Util.makeDescriptionId("task", rewardInstance.getTask().location()) + ".reward");
                 this.setTooltip(new MultilineTooltip(createTooltip(Item.TooltipContext.of(Minecraft.getInstance().level))));
