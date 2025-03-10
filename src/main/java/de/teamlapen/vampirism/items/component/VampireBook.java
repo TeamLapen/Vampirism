@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModVampireBooks;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
+import de.teamlapen.vampirism.util.VampireBookLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -82,14 +82,6 @@ public record VampireBook(ResourceLocation id, ResourceLocation itemModel, Resou
     }
 
     public List<MutableComponent> text() {
-        if (pages() > 1) {
-            List<MutableComponent> contents = new ArrayList<>();
-            for (int i = 1; i <= pages(); i++) {
-                contents.add(Component.translatable("vampire_book." + id().toLanguageKey() + ".text." + i));
-            }
-            return contents;
-        } else {
-            return List.of(Component.translatable("vampire_book." + id().toLanguageKey() + ".text"));
-        }
+        return VampireBookLoader.loadBookContents(this).stream().map(Component::literal).toList();
     }
 }
