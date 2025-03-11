@@ -5,15 +5,18 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 
+import java.util.List;
 import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
@@ -244,9 +247,9 @@ public class VampirismCreativeTab {
 
         private void addDecorativeBlocks() {
             addBlock(FIRE_PLACE);
-            addItemGen(ModItems.CANDLE_STICK);
-            addItemGen(ModItems.CANDELABRA);
-            addItemGen(ModItems.CHANDELIER);
+            addCandleHolders(Helper.STANDING_AND_WALL_CANDLE_STICKS.stream().map(pair -> pair.getFirst().asItem()).toList());
+            addCandleHolders(Helper.STANDING_AND_WALL_CANDELABRAS.stream().map(pair -> pair.getFirst().asItem()).toList());
+            addCandleHolders(Helper.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
             addBlock(CROSS);
             addBlock(TOMBSTONE1);
             addBlock(TOMBSTONE2);
@@ -354,6 +357,12 @@ public class VampirismCreativeTab {
             addItem(CRUCIFIX_NORMAL);
             addItem(CRUCIFIX_ENHANCED);
             addItem(CRUCIFIX_ULTIMATE);
+        }
+
+        private void addCandleHolders(List<Item> allCandles) {
+            for (int i = 0; i < allCandles.size(); i++) {
+                output.accept(allCandles.get(i), i <= 1 ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+            }
         }
     }
 
