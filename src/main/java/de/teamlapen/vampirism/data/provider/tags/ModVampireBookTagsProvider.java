@@ -42,15 +42,16 @@ public class ModVampireBookTagsProvider extends TagsProvider<IVampireBook> {
                 ROYAL_RIVALRY,
                 CENTURY_OF_EVOLUTION,
                 OBSERVATION_ON_VAMPIRES,
+                INFUSION_BREAKTHROUGH,
                 CASE_STUDY_ONE,
                 DEAR_MARTHA,
                 WANTED,
                 CASE_FILE_144
         );
         this.tag(ModVampireBookTags.NON_TREASURE).add(
-                PYROMANIACS_DIARY,
                 SINISTER_INTENTIONS,
-                VALOROUS_TALE
+                VALOROUS_TALE,
+                PYROMANIACS_DIARY
         );
     }
 }

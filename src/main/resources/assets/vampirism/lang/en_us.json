@@ -1645,6 +1645,8 @@
   "vampire_book.vampirism.wanted.author": "Kae din Saarin",
   "vampire_book.vampirism.case_file_144": "Case File #144",
   "vampire_book.vampirism.case_file_144.author": "Guard Nenna",
+  "vampire_book.vampirism.infusion_breakthrough": "Blood Infusion Breakthrough",
+  "vampire_book.vampirism.infusion_breakthrough.author": "Hnat Feldsher",
   "__comment": "configuration",
   "vampirism.configuration.entity-rendering": "Entity Rendering",
   "vampirism.configuration.advancedMobPlayerFaces": "Render Advanced Mob Player Faces",
