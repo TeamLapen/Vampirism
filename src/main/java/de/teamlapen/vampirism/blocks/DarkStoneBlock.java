@@ -51,6 +51,8 @@ public class DarkStoneBlock extends VampirismBlock {
                 if (!player.hasInfiniteMaterials()) {
                     stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(blood - 3));
                 }
+
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
 
