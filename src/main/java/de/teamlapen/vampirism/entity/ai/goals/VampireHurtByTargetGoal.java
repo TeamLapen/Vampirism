@@ -28,7 +28,7 @@ public class VampireHurtByTargetGoal extends HurtByTargetGoal {
 
         for (Mob possibleDefender : list) {
             LivingEntity attacker = mob.getLastHurtByMob();
-            if (possibleDefender != mob && possibleDefender.getType().is(ModEntityTags.COMRADE_DEFENDING_VAMPIRES) && attacker != null && !Helper.isVampire(attacker) && possibleDefender.getTarget() == null && !possibleDefender.isAlliedTo(attacker)) {
+            if (possibleDefender != mob && possibleDefender.getType().is(ModEntityTags.ALERTABLE_VAMPIRES) && attacker != null && !Helper.isVampire(attacker) && possibleDefender.getTarget() == null && !possibleDefender.isAlliedTo(attacker)) {
                 this.alertOther(possibleDefender, attacker);
             }
         }
