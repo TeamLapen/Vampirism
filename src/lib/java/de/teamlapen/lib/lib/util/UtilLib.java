@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -750,6 +751,24 @@ public class UtilLib {
         }
 
         return i;
+    }
+
+    public static int countItemWithComponent(@NotNull Inventory inventory, @NotNull ItemStack stack, boolean strict) {
+        if (strict) {
+            return countItemWithComponent(inventory, stack);
+        } else {
+            DataComponentPredicate dataComponentPredicate = DataComponentPredicate.allOf(stack.getComponents());
+            int i = 0;
+
+            for (int j = 0; j < inventory.getContainerSize(); ++j) {
+                ItemStack itemstack = inventory.getItem(j);
+                if (ItemStack.isSameItem(itemstack, stack) && dataComponentPredicate.test(itemstack)) {
+                    i += itemstack.getCount();
+                }
+            }
+
+            return i;
+        }
     }
 
     public static void forEachBlockPos(AABB area, Consumer<BlockPos> action) {

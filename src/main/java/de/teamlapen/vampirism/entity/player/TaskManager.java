@@ -376,7 +376,7 @@ public class TaskManager implements ITaskManager, ISavable {
             case ITEMS -> {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 neededStat = stack.getCount();
-                actualStat = UtilLib.countItemWithComponent(this.player.getInventory(), stack);
+                actualStat = UtilLib.countItemWithComponent(this.player.getInventory(), stack, false);
             }
             case BOOLEAN -> {
                 if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
