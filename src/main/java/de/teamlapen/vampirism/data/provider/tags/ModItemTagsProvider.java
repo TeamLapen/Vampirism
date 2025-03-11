@@ -58,8 +58,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         copy(BlockTags.SLABS, ItemTags.SLABS);
         copy(BlockTags.WALLS, ItemTags.WALLS);
         copy(ModBlockTags.GARLIC, ModItemTags.GARLIC);
-        copy(ModBlockTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS);
-        copy(ModBlockTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS);
 
         tag(ModItemTags.CROSSBOW_ARROW).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_GARLIC.get());
         tag(ModItemTags.HUNTER_INTEL).add(ModItems.HUNTER_INTEL_0.get(), ModItems.HUNTER_INTEL_1.get(), ModItems.HUNTER_INTEL_2.get(), ModItems.HUNTER_INTEL_3.get(), ModItems.HUNTER_INTEL_4.get(), ModItems.HUNTER_INTEL_5.get(), ModItems.HUNTER_INTEL_6.get(), ModItems.HUNTER_INTEL_7.get(), ModItems.HUNTER_INTEL_8.get(), ModItems.HUNTER_INTEL_9.get());
@@ -110,5 +108,12 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.CROSSBOW_REPAIRABLE).addTag(Tags.Items.STRINGS);
         tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
         tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get()).addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook"));
+
+        addCompatibilityTags();
+    }
+
+    private void addCompatibilityTags() {
+        copy(ModBlockTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS);
+        copy(ModBlockTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS);
     }
 }

@@ -180,8 +180,13 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         Helper.HANGING_CHANDELIERS.forEach(block -> tag(ModBlockTags.CHANDELIER).add(block));
         tag(BlockTags.CANDLES).addTag(ModBlockTags.CANDLE_STICK).addTag(ModBlockTags.CANDELABRA).addTag(ModBlockTags.CHANDELIER);
 
+        addCompatibilityTags();
+    }
+
+    private void addCompatibilityTags() {
         tag(ModBlockTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS).add(ModBlocks.GARLIC.get());
         tag(ModBlockTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS).add(ModBlocks.GARLIC.get());
+
         tag(ModBlockTags.Compatibility.TRAY_HEAT_SOURCES).add(ModBlocks.FIRE_PLACE.get());
     }
 }
