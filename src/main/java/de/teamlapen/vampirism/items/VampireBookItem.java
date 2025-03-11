@@ -46,7 +46,7 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        tooltipComponents.add(VampireBook.get(stack).author().withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
         tooltipComponents.add((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
     }
 

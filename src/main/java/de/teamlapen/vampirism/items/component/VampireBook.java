@@ -14,7 +14,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -25,15 +24,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record VampireBook(ResourceLocation id, ResourceLocation itemModel, ResourceLocation backgroundTexture, int pages) implements IVampireBook {
+public record VampireBook(ResourceLocation id, ResourceLocation itemModel, ResourceLocation backgroundTexture) implements IVampireBook {
 
-    private static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown_id"), ModVampireBooks.DEFAULT_ITEM_MODEL, ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE, 1);
+    private static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown_id"), ModVampireBooks.DEFAULT_ITEM_MODEL, ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(IVampireBook::id),
             ResourceLocation.CODEC.optionalFieldOf("item_model", ModVampireBooks.DEFAULT_ITEM_MODEL).forGetter(IVampireBook::itemModel),
-            ResourceLocation.CODEC.optionalFieldOf("background_texture", ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE).forGetter(IVampireBook::backgroundTexture),
-            Codec.INT.optionalFieldOf("pages", 1).forGetter(IVampireBook::pages)
+            ResourceLocation.CODEC.optionalFieldOf("background_texture", ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE).forGetter(IVampireBook::backgroundTexture)
             ).apply(instance, VampireBook::new)
     );
 
@@ -41,7 +39,6 @@ public record VampireBook(ResourceLocation id, ResourceLocation itemModel, Resou
             ResourceLocation.STREAM_CODEC, IVampireBook::id,
             ResourceLocation.STREAM_CODEC, IVampireBook::itemModel,
             ResourceLocation.STREAM_CODEC, IVampireBook::backgroundTexture,
-            ByteBufCodecs.INT, IVampireBook::pages,
             VampireBook::new
     );
 

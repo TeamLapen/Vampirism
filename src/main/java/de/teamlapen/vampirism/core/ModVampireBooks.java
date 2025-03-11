@@ -30,13 +30,13 @@ public class ModVampireBooks {
     public static final ResourceKey<IVampireBook> CASE_FILE_144 = createKey("case_file_144");
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
-        register(context, HUNTERS_DIARY, 5);
+        register(context, HUNTERS_DIARY);
         register(context, MAIDS_DIARY);
         register(context, MY_MOTHER);
-        register(context, MAD_MANS_JOURNAL, 6);
+        register(context, MAD_MANS_JOURNAL);
         register(context, MY_PRINCE);
         register(context, PYROMANIACS_DIARY);
-        register(context, ROYAL_RIVALRY, 5);
+        register(context, ROYAL_RIVALRY);
         register(context, CENTURY_OF_EVOLUTION);
         register(context, OBSERVATION_ON_VAMPIRES);
         register(context, CASE_STUDY_ONE);
@@ -52,15 +52,11 @@ public class ModVampireBooks {
         return ResourceKey.create(VampirismRegistries.Keys.VAMPIRE_BOOK, VResourceLocation.mod(name));
     }
 
-    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, ResourceLocation itemModel, ResourceLocation backgroundTexture, int pages) {
-        context.register(id, new VampireBook(id.location(), itemModel, backgroundTexture, pages));
-    }
-
-    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, int pages) {
-        register(context, id, DEFAULT_ITEM_MODEL, DEFAULT_BACKGROUND_TEXTURE, pages);
+    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, ResourceLocation itemModel, ResourceLocation backgroundTexture) {
+        context.register(id, new VampireBook(id.location(), itemModel, backgroundTexture));
     }
 
     private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id) {
-        register(context, id, DEFAULT_ITEM_MODEL, DEFAULT_BACKGROUND_TEXTURE, 1);
+        register(context, id, DEFAULT_ITEM_MODEL, DEFAULT_BACKGROUND_TEXTURE);
     }
 }

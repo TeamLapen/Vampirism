@@ -15,8 +15,6 @@ public interface IVampireBook {
 
     ResourceLocation backgroundTexture();
 
-    int pages();
-
     boolean is(TagKey<IVampireBook> tag, RegistryAccess registryAccess);
 
     MutableComponent title();
