@@ -55,13 +55,6 @@ public class ItemExtensions {
         }
     };
 
-    public static final IClientItemExtensions VAMPIRE_CLOAK = new CustomArmorItemExtension() {
-        @Override
-        public ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack) {
-            return ModEntitiesRender.CLOAK;
-        }
-    };
-
     public static final IClientItemExtensions HUNTER_HAT = new CustomArmorItemExtension() {
 
         @Override

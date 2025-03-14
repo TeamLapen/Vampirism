@@ -87,12 +87,7 @@ public class ModVillage {
                 new VillagerTrades.ItemListing[]{
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), 1, 2, 5),
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 25), ModItems.BLOOD_INFUSED_IRON_INGOT.get(), new VampirismTrades.Price(1, 3), 8, 5),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), new ItemStack[]{
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_RED.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_RED_BLACK.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get())}, 1, 4, 5),
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), (ItemStack[]) Helper.VAMPIRE_CLOAKS.stream().map(ItemStack::new).toArray(), 1, 4, 5),
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(3, 10), new ItemStack[]{
                                 new ItemStack(ModBlocks.COFFIN_WHITE.get()),
                                 new ItemStack(ModBlocks.COFFIN_ORANGE.get()),
@@ -120,12 +115,7 @@ public class ModVillage {
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_SEEKER_ENHANCED.get(), 1, 1, 10),
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_STRIKER_ENHANCED.get(), 1, 1, 10)
                         }),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), new ItemStack[]{
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_RED.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_RED_BLACK.get()),
-                                new ItemStack(ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get())}, 1, 4, 10)
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), (ItemStack[]) Helper.VAMPIRE_CLOAKS.stream().map(ItemStack::new).toArray(), 1, 4, 10)
                 },
                 4,
                 new VillagerTrades.ItemListing[]{

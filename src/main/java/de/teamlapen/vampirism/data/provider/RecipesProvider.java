@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.recipes.ApplicableOilRecipe;
 import de.teamlapen.vampirism.recipes.CleanOilRecipe;
 import de.teamlapen.vampirism.recipes.ConfigCondition;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,6 +46,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -156,11 +158,14 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shapeless(RecipeCategory.MISC, ModItems.BLOOD_INFUSED_IRON_INGOT, 3).requires(tag(iron_ingot), 3).requires(Ingredient.of(pure_blood_0, pure_blood_1, pure_blood_2, pure_blood_3)).unlockedBy("has_iron", has(iron_ingot)).save(output, vampire("blood_infused_iron_ingot"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL.get()).pattern("GYG").pattern("YZY").pattern("XXX").define('X', obsidian).define('Y', planks).define('Z', blood_bottle).define('G', gold_ingot).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("blood_pedestal"));
 
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', blue_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_blue"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_RED.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', red_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_red"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', white_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_white"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', black_wool).define('Y', white_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_white_black"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_RED_BLACK.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', black_wool).define('Y', red_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_red_black"));
+        List<Item> vampireCloaks = Helper.VAMPIRE_CLOAKS.stream().map(Item::asItem).toList();
+        List<Item> coloredWool = List.of(Items.BLACK_WOOL, Items.BLUE_WOOL, Items.BROWN_WOOL, Items.CYAN_WOOL, Items.GRAY_WOOL, Items.GREEN_WOOL, Items.LIGHT_BLUE_WOOL, Items.LIGHT_GRAY_WOOL, Items.LIME_WOOL, Items.MAGENTA_WOOL, Items.ORANGE_WOOL, Items.PINK_WOOL, Items.PURPLE_WOOL, Items.RED_WOOL, Items.YELLOW_WOOL, Items.WHITE_WOOL);
+
+        colorWithDye(vampireCloaks, RecipeCategory.COMBAT, this::vampire);
+        for (int i = 0; i < vampireCloaks.size(); i++) {
+            vampireCloak(vampireCloaks.get(i), coloredWool.get(i));
+        }
+
         ItemStack blood_bottle_stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         blood_bottle_stack.setDamageValue(0);
         ShapedRecipeBuilder.shaped(itemLookup, RecipeCategory.MISC, blood_bottle_stack).pattern("XYX").pattern(" X ").define('X', glass).define('Y', rotten_flesh).unlockedBy("has_glass", has(glass)).save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))), vampire("blood_bottle"));
@@ -683,6 +688,10 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         smithingPure(ModItems.HEART_STRIKER_ENHANCED, 3, ModItems.HEART_STRIKER_ULTIMATE);
         smithingPure(ModItems.HEART_STRIKER_ENHANCED, 4, ModItems.HEART_STRIKER_ULTIMATE);
 
+    }
+
+    protected void vampireCloak(Item item, Item wool) {
+        shaped(RecipeCategory.COMBAT, item).define('W', wool).define('D', Tags.Items.GEMS_DIAMOND).define('P', ModItemTags.PURE_BLOOD).pattern("WDW").pattern("WPW").pattern("W W").unlockedBy("has_pure_blood", has(ModItemTags.PURE_BLOOD)).save(output, vampire(BuiltInRegistries.ITEM.getKey(item).getPath()));
     }
 
     private void smithingPure(ItemLike item, int level, ItemLike result) {

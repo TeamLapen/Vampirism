@@ -86,6 +86,11 @@ public class MigrationData {
         mapping.remap("vampirism:obsidian_armor_feet_ultimate", "vampirism:hunter_coat_feet_ultimate");
         mapping.remap("vampirism:item_garlic", "vampirism:garlic");
         mapping.remap("vampirism:item_candelabra", "vampirism:candelabra_normal");
+        mapping.remap("vampirism:vampire_cloak_black_blue", "vampirism:vampire_cloak_blue");
+        mapping.remap("vampirism:vampire_cloak_black_red", "vampirism:vampire_cloak_black");
+        mapping.remap("vampirism:vampire_cloak_black_white", "vampirism:vampire_cloak_black");
+        mapping.remap("vampirism:vampire_cloak_red_black", "vampirism:vampire_cloak_red");
+        mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {

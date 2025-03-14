@@ -23,11 +23,10 @@ public class EquipmentAssetProvider extends net.minecraft.client.data.models.Equ
         Stream.of(HUNTER_COAT_NORMAL, HUNTER_COAT_ENHANCED, HUNTER_COAT_ULTIMATE, SWIFTNESS_NORMAL, SWIFTNESS_ENHANCED, SWIFTNESS_ULTIMATE).forEach(asset -> {
             output.accept(asset, createDefaultArmor(asset));
         });
-        
-        Stream.of(VAMPIRE_CLOAK_BLACK_BLUE, VAMPIRE_CLOAK_BLACK_RED, VAMPIRE_CLOAK_BLACK_WHITE, VAMPIRE_CLOAK_RED_BLACK, VAMPIRE_CLOAK_WHITE_BLACK, VAMPIRE_CLOTH_BOOTS, VAMPIRE_CLOTH_LEGS, VAMPIRE_CLOTH_HAT, VAMPIRE_CLOTH_CROWN, HUNTER_HAT_0, HUNTER_HAT_1).forEach(asset -> {
+
+        Stream.of(VAMPIRE_CLOTH_BOOTS, VAMPIRE_CLOTH_LEGS, VAMPIRE_CLOTH_HAT, VAMPIRE_CLOTH_CROWN, HUNTER_HAT_0, HUNTER_HAT_1).forEach(asset -> {
             output.accept(asset, createCustomOnly(asset));
         });
-        
     }
 
     protected EquipmentClientInfo createDefaultArmor(ResourceKey<EquipmentAsset> asset) {

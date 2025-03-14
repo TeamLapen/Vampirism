@@ -308,14 +308,26 @@ public class VampirismCreativeTab {
             addItem(HUNTER_HAT_HEAD_0);
             addItem(HUNTER_HAT_HEAD_1);
 
-
             addItem(VAMPIRE_CLOTHING_CROWN);
             addItem(VAMPIRE_CLOTHING_HAT);
-            addItem(VAMPIRE_CLOAK_BLACK_BLUE);
-            addItem(VAMPIRE_CLOAK_BLACK_RED);
-            addItem(VAMPIRE_CLOAK_BLACK_WHITE);
-            addItem(VAMPIRE_CLOAK_RED_BLACK);
-            addItem(VAMPIRE_CLOAK_WHITE_BLACK);
+
+            addItem(VAMPIRE_CLOAK_WHITE);
+            addItem(VAMPIRE_CLOAK_LIGHT_GRAY);
+            addItem(VAMPIRE_CLOAK_GRAY);
+            addItem(VAMPIRE_CLOAK_BLACK);
+            addItem(VAMPIRE_CLOAK_BROWN);
+            addItem(VAMPIRE_CLOAK_RED);
+            addItem(VAMPIRE_CLOAK_ORANGE);
+            addItem(VAMPIRE_CLOAK_YELLOW);
+            addItem(VAMPIRE_CLOAK_LIME);
+            addItem(VAMPIRE_CLOAK_GREEN);
+            addItem(VAMPIRE_CLOAK_CYAN);
+            addItem(VAMPIRE_CLOAK_LIGHT_BLUE);
+            addItem(VAMPIRE_CLOAK_BLUE);
+            addItem(VAMPIRE_CLOAK_PURPLE);
+            addItem(VAMPIRE_CLOAK_MAGENTA);
+            addItem(VAMPIRE_CLOAK_PINK);
+
             addItem(VAMPIRE_CLOTHING_LEGS);
             addItem(VAMPIRE_CLOTHING_BOOTS);
 

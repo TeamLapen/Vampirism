@@ -8,17 +8,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.equipment.*;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class ModArmorMaterials {
 
@@ -32,11 +27,6 @@ public class ModArmorMaterials {
         public static final ResourceKey<EquipmentAsset> SWIFTNESS_ULTIMATE = createId("armor_of_swiftness_ultimate");
         public static final ResourceKey<EquipmentAsset> HUNTER_HAT_0 = createId("hunter_hat_0");
         public static final ResourceKey<EquipmentAsset> HUNTER_HAT_1 = createId("hunter_hat_1");
-        public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOAK_BLACK_BLUE = createId("vampire_cloak_black_blue");
-        public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOAK_BLACK_RED = createId("vampire_cloak_black_red");
-        public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOAK_BLACK_WHITE = createId("vampire_cloak_black_white");
-        public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOAK_RED_BLACK = createId("vampire_cloak_red_black");
-        public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOAK_WHITE_BLACK = createId("vampire_cloak_white_black");
 
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_CROWN = createId("vampire_clothing_crown");
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_HAT = createId("vampire_clothing_hat");
@@ -53,11 +43,6 @@ public class ModArmorMaterials {
     public static final ArmorMaterial VAMPIRE_CLOTH_HAT = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_HAT);
     public static final ArmorMaterial VAMPIRE_CLOTH_LEGS = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_LEGS);
     public static final ArmorMaterial VAMPIRE_CLOTH_BOOTS = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_BOOTS);
-    public static final ArmorMaterial VAMPIRE_CLOAK_BLACK_BLUE = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOAK_BLACK_BLUE);
-    public static final ArmorMaterial VAMPIRE_CLOAK_BLACK_RED = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOAK_BLACK_RED);
-    public static final ArmorMaterial VAMPIRE_CLOAK_BLACK_WHITE = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOAK_BLACK_WHITE);
-    public static final ArmorMaterial VAMPIRE_CLOAK_RED_BLACK = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOAK_RED_BLACK);
-    public static final ArmorMaterial VAMPIRE_CLOAK_WHITE_BLACK = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOAK_WHITE_BLACK);
     public static final ArmorMaterial NORMAL_HUNTER_COAT = register(4, createReduction(2, 6, 5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, Tags.Items.INGOTS_IRON, Asset.HUNTER_COAT_NORMAL );
     public static final ArmorMaterial ENHANCED_HUNTER_COAT = register(4, createReduction(3, 8, 6, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, Tags.Items.INGOTS_IRON, Asset.HUNTER_COAT_ENHANCED);
     public static final ArmorMaterial ULTIMATE_HUNTER_COAT = register(4, createReduction(3, 9, 9, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 2, 0, Tags.Items.GEMS_DIAMOND, Asset.HUNTER_COAT_ULTIMATE);
