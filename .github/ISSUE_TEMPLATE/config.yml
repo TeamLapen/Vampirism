@@ -3,6 +3,9 @@ contact_links:
   - name: Mod Discord
     url: https://discord.gg/wuamm4P
     about: If you are not sure about something, ask on Discord
+  - name: Wiki
+    url: https://wiki.vampirism.dev
+    about: Documentation about most of Vampirism's features
   - name: Vampirism Integrations
     url: https://github.com/TeamLapen/VampirismIntegrations
     about: Request integration with other mods here (No bugreports)
