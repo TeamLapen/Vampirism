@@ -57,7 +57,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public float getExplosionResistance() {
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 
