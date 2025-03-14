@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
-import de.teamlapen.vampirism.core.ModVampireBooks;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.util.VampireBookLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -24,21 +24,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record VampireBook(ResourceLocation id, ResourceLocation itemModel, ResourceLocation backgroundTexture) implements IVampireBook {
+public record VampireBook(ResourceLocation id, Component author) implements IVampireBook {
 
-    private static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown_id"), ModVampireBooks.DEFAULT_ITEM_MODEL, ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE);
+    public static final MutableComponent DEFAULT_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
+
+    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), DEFAULT_AUTHOR);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(IVampireBook::id),
-            ResourceLocation.CODEC.optionalFieldOf("item_model", ModVampireBooks.DEFAULT_ITEM_MODEL).forGetter(IVampireBook::itemModel),
-            ResourceLocation.CODEC.optionalFieldOf("background_texture", ModVampireBooks.DEFAULT_BACKGROUND_TEXTURE).forGetter(IVampireBook::backgroundTexture)
+            ComponentSerialization.CODEC.optionalFieldOf("author", DEFAULT_AUTHOR).forGetter(IVampireBook::author)
             ).apply(instance, VampireBook::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, IVampireBook> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, IVampireBook::id,
-            ResourceLocation.STREAM_CODEC, IVampireBook::itemModel,
-            ResourceLocation.STREAM_CODEC, IVampireBook::backgroundTexture,
+            ComponentSerialization.STREAM_CODEC, IVampireBook::author,
             VampireBook::new
     );
 
@@ -74,11 +74,7 @@ public record VampireBook(ResourceLocation id, ResourceLocation itemModel, Resou
         return Component.translatable("vampire_book." + id().toLanguageKey());
     }
 
-    public MutableComponent author() {
-        return Component.translatable("vampire_book." + id().toLanguageKey() + ".author");
-    }
-
-    public List<MutableComponent> text() {
+    public List<MutableComponent> contents() {
         return VampireBookLoader.loadBookContents(this).stream().map(Component::literal).toList();
     }
 }

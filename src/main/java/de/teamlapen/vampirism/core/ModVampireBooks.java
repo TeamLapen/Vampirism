@@ -5,12 +5,10 @@ import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.items.component.VampireBook;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 public class ModVampireBooks {
-    public static final ResourceLocation DEFAULT_ITEM_MODEL = VResourceLocation.mod("item/vampire_book");
-    public static final ResourceLocation DEFAULT_BACKGROUND_TEXTURE = VResourceLocation.mod("textures/gui/vampire_book.png");
 
     public static final ResourceKey<IVampireBook> MAIDS_DIARY = createKey("maids_diary");
     public static final ResourceKey<IVampireBook> MY_MOTHER = createKey("my_mother");
@@ -35,34 +33,42 @@ public class ModVampireBooks {
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
         register(context, MAIDS_DIARY);
         register(context, MY_MOTHER);
-        register(context, MAD_MANS_JOURNAL);
+        register(context, MAD_MANS_JOURNAL, true);
         register(context, MY_PRINCE);
         register(context, DEAR_MARTHA);
-        register(context, NOCTURNAL);
+        register(context, NOCTURNAL, true);
 
         register(context, HUNTERS_DIARY);
-        register(context, ROYAL_RIVALRY);
-        register(context, CENTURY_OF_EVOLUTION);
+        register(context, ROYAL_RIVALRY, true);
+        register(context, CENTURY_OF_EVOLUTION, "Matheo");
         register(context, OBSERVATION_ON_VAMPIRES);
-        register(context, INFUSION_BREAKTHROUGH);
+        register(context, INFUSION_BREAKTHROUGH, true);
         register(context, CASE_STUDY_ONE);
-        register(context, WANTED);
-        register(context, CASE_FILE_144);
+        register(context, WANTED, "Kae din Saarin");
+        register(context, CASE_FILE_144, true);
 
-        register(context, SINISTER_INTENTIONS);
+        register(context, SINISTER_INTENTIONS, "Sinister Solace");
         register(context, VALOROUS_TALE);
-        register(context, PYROMANIACS_DIARY);
+        register(context, PYROMANIACS_DIARY, "Pyromaniac Pik");
     }
 
     private static ResourceKey<IVampireBook> createKey(String name) {
         return ResourceKey.create(VampirismRegistries.Keys.VAMPIRE_BOOK, VResourceLocation.mod(name));
     }
 
-    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, ResourceLocation itemModel, ResourceLocation backgroundTexture) {
-        context.register(id, new VampireBook(id.location(), itemModel, backgroundTexture));
+    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, Component author) {
+        context.register(id, new VampireBook(id.location(), author));
+    }
+
+    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, boolean hasCustomAuthor) {
+        register(context, id, hasCustomAuthor ? Component.translatable("vampire_book." + id.location().toLanguageKey() + ".author") : VampireBook.DEFAULT_AUTHOR);
     }
 
     private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id) {
-        register(context, id, DEFAULT_ITEM_MODEL, DEFAULT_BACKGROUND_TEXTURE);
+        register(context, id, false);
+    }
+
+    private static void register(BootstrapContext<IVampireBook> context, ResourceKey<IVampireBook> id, String author) {
+        register(context, id, Component.literal(author));
     }
 }

@@ -34,7 +34,7 @@ public class VampireBookLoader {
     }
 
     private static String getContentsFilePath(IVampireBook vampireBook, String languageCode) {
-        return "assets/" + vampireBook.id().getNamespace() + "/vampire_books/" + vampireBook.id().getPath() + "/" + languageCode +".json";
+        return "/assets/" + vampireBook.id().getNamespace() + "/vampire_books/" + vampireBook.id().getPath() + "/" + languageCode +".json";
     }
 
     private static List<String> loadContentsFile(String path) {

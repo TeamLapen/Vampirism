@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.components.IVampireBook;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class VampireBookScreen extends Screen {
 
+    private final ResourceLocation backgroundTexture = VResourceLocation.mod("textures/gui/vampire_book.png");
     private final int xSize = 245;
     private final int ySize = 192;
     private int guiLeft, guiTop;
@@ -66,7 +69,7 @@ public class VampireBookScreen extends Screen {
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        GuiRenderer.blit(guiGraphics, vampireBook.backgroundTexture(), guiLeft, guiTop, xSize, ySize);
+        GuiRenderer.blit(guiGraphics, backgroundTexture, guiLeft, guiTop, xSize, ySize);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class VampireBookScreen extends Screen {
             }
         }, true));
 
-        content = vampireBook.text().stream().flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
+        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
     }
 
     public static void drawCenteredStringWithoutShadow(@NotNull GuiGraphics graphics, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
@@ -152,7 +155,7 @@ public class VampireBookScreen extends Screen {
      * @param lineWidth        Available width (pixel)
      * @param firstHeight      Available height on the first page (pixel)
      * @param subsequentHeight Available height on subsequent pages (pixel)
-     * @return Each list element should be drawn on a individual page. Lines are wrapped using '\n'
+     * @return Each list element should be drawn on an individual page. Lines are wrapped using '\n'
      */
     @SuppressWarnings({"JavadocReference"})
     private static @NotNull List<FormattedText> prepareForLongText(@NotNull Component text, int lineWidth, int firstHeight, int subsequentHeight) {
