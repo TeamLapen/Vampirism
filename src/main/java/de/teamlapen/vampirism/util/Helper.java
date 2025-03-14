@@ -292,4 +292,12 @@ public class Helper {
     public static final List<CandleHolderBlock> HANGING_CHANDELIERS = List.of(ModBlocks.CHANDELIER.get(), ModBlocks.CHANDELIER_NORMAL.get(), ModBlocks.CHANDELIER_WHITE.get(), ModBlocks.CHANDELIER_LIGHT_GRAY.get(), ModBlocks.CHANDELIER_GRAY.get(), ModBlocks.CHANDELIER_BLACK.get(), ModBlocks.CHANDELIER_BROWN.get(), ModBlocks.CHANDELIER_RED.get(), ModBlocks.CHANDELIER_ORANGE.get(), ModBlocks.CHANDELIER_YELLOW.get(), ModBlocks.CHANDELIER_LIME.get(), ModBlocks.CHANDELIER_GREEN.get(), ModBlocks.CHANDELIER_CYAN.get(), ModBlocks.CHANDELIER_LIGHT_BLUE.get(), ModBlocks.CHANDELIER_BLUE.get(), ModBlocks.CHANDELIER_MAGENTA.get(), ModBlocks.CHANDELIER_PURPLE.get(), ModBlocks.CHANDELIER_PINK.get());
 
     public static final List<VampireCloakItem> VAMPIRE_CLOAKS = List.of(ModItems.VAMPIRE_CLOAK_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLUE.get(), ModItems.VAMPIRE_CLOAK_BROWN.get(), ModItems.VAMPIRE_CLOAK_CYAN.get(), ModItems.VAMPIRE_CLOAK_GRAY.get(), ModItems.VAMPIRE_CLOAK_GREEN.get(), ModItems.VAMPIRE_CLOAK_LIGHT_BLUE.get(), ModItems.VAMPIRE_CLOAK_LIGHT_GRAY.get(), ModItems.VAMPIRE_CLOAK_LIME.get(), ModItems.VAMPIRE_CLOAK_MAGENTA.get(), ModItems.VAMPIRE_CLOAK_ORANGE.get(), ModItems.VAMPIRE_CLOAK_PINK.get(), ModItems.VAMPIRE_CLOAK_PURPLE.get(), ModItems.VAMPIRE_CLOAK_RED.get(), ModItems.VAMPIRE_CLOAK_YELLOW.get(), ModItems.VAMPIRE_CLOAK_WHITE.get());
+
+    public static ItemStack[] itemListToItemStacks(List<? extends Item> list) {
+        ItemStack[] array = new ItemStack[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = new ItemStack(list.get(i));
+        }
+        return array;
+    }
 }
