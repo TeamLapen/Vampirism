@@ -4,7 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.ModRegistryItems;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blocks.BushBlock;
+import de.teamlapen.vampirism.blocks.CursedRootsBlock;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.blocks.candle.*;
 import de.teamlapen.vampirism.blocks.diffuser.FogDiffuserBlock;
@@ -93,7 +93,7 @@ public class ModBlocks {
     public static final DeferredBlock<VampirismBlock> TOMBSTONE3 = registerWithItem("tombstone3", (prop) -> new VampirismSplitBlock(prop.mapColor(MapColor.STONE).pushReaction(PushReaction.DESTROY).strength(2, 6), BlockVoxelshapes.tomb3_base, BlockVoxelshapes.tomb3_top, true).markDecorativeBlock());
     public static final DeferredBlock<VampirismBlock> GRAVE_CAGE = registerWithItem("grave_cage", (prop) -> new VampirismHorizontalBlock(prop.mapColor(MapColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL), BlockVoxelshapes.grave_cage).markDecorativeBlock());
     public static final DeferredBlock<CursedGrass> CURSED_GRASS = registerWithItem("cursed_grass", (prop) -> new CursedGrass(prop.mapColor(MapColor.COLOR_BLACK).randomTicks().strength(0.6F).sound(SoundType.GRASS)));
-    public static final DeferredBlock<BushBlock> CURSED_ROOTS = registerWithItem("cursed_roots", (prop) -> flammable(new BushBlock(prop.mapColor(MapColor.COLOR_RED).isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().noCollission().instabreak().sound(SoundType.GRASS)), 60, 100));
+    public static final DeferredBlock<CursedRootsBlock> CURSED_ROOTS = registerWithItem("cursed_roots", (prop) -> flammable(new CursedRootsBlock(prop.mapColor(MapColor.COLOR_RED).isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().noCollission().instabreak().sound(SoundType.GRASS)), 60, 100));
     public static final DeferredBlock<FlowerPotBlock> POTTED_CURSED_ROOTS = registerPottedPlant("potted_cursed_roots", CURSED_ROOTS);
     public static final DeferredBlock<Block> DARK_SPRUCE_PLANKS = registerWithItem(ModRegistryItems.DARK_SPRUCE_PLANKS.getId().getPath(), (prop) -> new Block(prop.mapColor(MapColor.COLOR_GRAY).ignitedByLava().mapColor(MapColor.COLOR_GRAY).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final DeferredBlock<Block> CURSED_SPRUCE_PLANKS = registerWithItem(ModRegistryItems.CURSED_SPRUCE_PLANKS.getId().getPath(), (prop) -> new Block(prop.ignitedByLava().mapColor(MapColor.CRIMSON_HYPHAE).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
