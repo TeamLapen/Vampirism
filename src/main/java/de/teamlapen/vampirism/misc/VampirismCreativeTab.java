@@ -250,6 +250,7 @@ public class VampirismCreativeTab {
             addCandleHolders(Helper.STANDING_AND_WALL_CANDLE_STICKS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(Helper.STANDING_AND_WALL_CANDELABRAS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(Helper.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
+            addBlock(VAMPIRE_SOUL_LANTERN);
             addBlock(CROSS);
             addBlock(TOMBSTONE1);
             addBlock(TOMBSTONE2);

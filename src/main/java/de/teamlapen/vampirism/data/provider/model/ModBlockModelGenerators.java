@@ -48,6 +48,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
 
         createGarlicDiffuser();
         createCandleHolders();
+        createVampireSoulLantern();
         createCursedBark();
         createHunterTable();
         createCoffin();
@@ -69,8 +70,6 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createCursedEarthPath();
         createInfuser();
 
-
-        createLantern(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         createTintedLeaves(ModBlocks.DARK_SPRUCE_LEAVES.get(), TexturedModel.LEAVES, -1);
         ResourceLocation sunscreenModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.SUNSCREEN_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/cursed_earth")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel));
@@ -248,6 +247,34 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
             case WEST -> VariantProperties.Rotation.R270;
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
+    }
+
+    public void createVampireSoulLantern() {
+        VampireSoulLanternBlock block = ModBlocks.VAMPIRE_SOUL_LANTERN.get();
+        ResourceLocation model = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation hangingModel = ModelLocationUtils.getModelLocation(block, "_hanging");
+        this.registerSimpleFlatItemModel(block.asItem());
+
+        MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
+
+        Condition.TerminalCondition standing = Condition.condition().term(VampireSoulLanternBlock.HANGING, false);
+        Condition.TerminalCondition hanging = Condition.condition().term(VampireSoulLanternBlock.HANGING, true);
+
+        List.of(
+                Pair.of(Direction.NORTH, VariantProperties.Rotation.R0),
+                Pair.of(Direction.EAST, VariantProperties.Rotation.R90),
+                Pair.of(Direction.SOUTH, VariantProperties.Rotation.R180),
+                Pair.of(Direction.WEST, VariantProperties.Rotation.R270)
+        ).forEach(pair -> {
+            Direction direction = pair.getFirst();
+            VariantProperties.Rotation rotation = pair.getSecond();
+            Condition.TerminalCondition facing = Condition.condition().term(VampireSoulLanternBlock.HORIZONTAL_FACING, direction);
+
+            multiPartGenerator.with(Condition.and(facing, standing), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, rotation));
+            multiPartGenerator.with(Condition.and(facing, hanging), Variant.variant().with(VariantProperties.MODEL, hangingModel).with(VariantProperties.Y_ROT, rotation));
+        });
+
+        this.blockStateOutput.accept(multiPartGenerator);
     }
 
     protected void createMotherTrophy() {

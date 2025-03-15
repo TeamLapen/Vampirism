@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/template_lantern",
-  "textures": {
-    "lantern": "vampirism:block/vampire_soul_lantern"
-  }
-}
