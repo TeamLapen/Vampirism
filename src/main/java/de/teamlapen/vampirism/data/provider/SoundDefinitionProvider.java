@@ -23,8 +23,7 @@ public class SoundDefinitionProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.ENTITY_VAMPIRE_SCREAM, definition().subtitle("subtitles.vampirism.entity.vampire_scream").with(sound(mod("cc/entity/vampire_scream"))));
         this.add(ModSounds.VAMPIRE_BITE, definition().subtitle("subtitles.vampirism.player.bite").with(sound(mod("cc/entity/vampire_bite")), sound(mod("cc/entity/vampire_bite_long"))));
         this.add(ModSounds.VAMPIRE_FEEDING, definition().subtitle("subtitles.vampirism.player.feeding").with(sound(mod("cc/entity/vampire_feeding"))));
-        this.add(ModSounds.AMBIENT_BLOOD_DRIPPING, definition().with(sound(mod("cc/ambient/blood_dripping")).stream(), sound(mod("cc/ambient/blood_dripping2")).stream()));
-        addVariedSound(ModSounds.BLOOD_DRIP.get(), "cc/ambient/blood_drip/blood_drip", 6, true);
+        addVariedSound(ModSounds.BLOOD_DRIP.get(), "cc/ambient/blood_drip/blood_drip", 2, true);
         this.add(ModSounds.VAMPIRE_FOREST_AMBIENT, definition().with(sound(mod("reserved/ambient/vampire_forest")).stream()));
         this.add(ModSounds.COFFIN_LID, definition().subtitle("subtitles.vampirism.coffin_lid").with(sound(mod("cc/block/coffin_lid_slide"))));
         this.add(ModSounds.BAT_SWARM, definition().subtitle("subtitles.vampirism.bat_swarm").with(sound(mod("cc/fx/bat_swarm"))));

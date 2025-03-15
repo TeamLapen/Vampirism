@@ -197,6 +197,7 @@ The sounds used in this mod are individual licensed and may only be used outside
 | Slimey                    | Nebulasnails          | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)          | CC0            |
 | blood_sucker              | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution |
 | Organ Ambience, Calm, A   | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution |
+| two drops.WAV             | Millavsb              | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)              | CC0            |
 
 ##### Sit functionality - `sit` package
 
