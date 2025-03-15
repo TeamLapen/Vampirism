@@ -20,6 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -82,7 +83,7 @@ public class ModBlocks {
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_CRAFTED = registerWithItem("totem_top_crafted", (prop) -> new TotemTopBlock(prop, true, null));
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED = BLOCKS.registerBlock("totem_top_vampirism_vampire_crafted", (prop) -> new TotemTopBlock(prop, true, ModFactions.VAMPIRE));
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = BLOCKS.registerBlock("totem_top_vampirism_hunter_crafted", (prop) -> new TotemTopBlock(prop, true, ModFactions.HUNTER));
-    public static final DeferredBlock<VampirismFlowerBlock> VAMPIRE_ORCHID = registerWithItem("vampire_orchid", (prop) -> new VampirismFlowerBlock(prop, VampirismFlowerBlock.TYPE.ORCHID));
+    public static final DeferredBlock<VampirismFlowerBlock> VAMPIRE_ORCHID = registerWithItem("vampire_orchid", (prop) -> new VampirismFlowerBlock(prop, MobEffects.BLINDNESS, 7, true));
     public static final DeferredBlock<FlowerPotBlock> POTTED_VAMPIRE_ORCHID = registerPottedPlant("potted_vampire_orchid", VAMPIRE_ORCHID);
     public static final DeferredBlock<WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new);
     public static final DeferredBlock<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", (prop) -> new PotionTableBlock(prop.mapColor(MapColor.METAL).strength(1f).noOcclusion()));
