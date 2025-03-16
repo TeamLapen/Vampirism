@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 public class ModItemTags {
@@ -24,6 +25,8 @@ public class ModItemTags {
     public static final TagKey<Item> PURE_BLOOD = tag("pure_blood");
     public static final TagKey<Item> GARLIC = common("crops/garlic");
     public static final TagKey<Item> HEART = tag("heart");
+
+    public static final TagKey<Item> CREEPER_REPELLENT = tag("creeper_repellent");
 
     public static final TagKey<Item> HOLY_WATER = tag("holy_water");
     public static final TagKey<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");

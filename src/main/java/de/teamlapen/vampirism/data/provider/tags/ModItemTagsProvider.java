@@ -43,6 +43,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         copy(ModBlockTags.DARK_STONE_TILES, ModItemTags.DARK_STONE_TILES);
         copy(ModBlockTags.NO_SPAWN, ModItemTags.NO_SPAWN);
         copy(ModBlockTags.VAMPIRE_SPAWN, ModItemTags.VAMPIRE_SPAWN);
+        copy(ModBlockTags.CREEPER_REPELLENT, ModItemTags.CREEPER_REPELLENT);
         copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
         copy(BlockTags.LOGS, ItemTags.LOGS);
         copy(BlockTags.WOODEN_TRAPDOORS, ItemTags.WOODEN_TRAPDOORS);
