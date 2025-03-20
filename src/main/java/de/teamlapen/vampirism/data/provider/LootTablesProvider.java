@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.tags.ModStructureTags;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.MapUtil;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
 import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
@@ -18,6 +20,7 @@ import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
@@ -30,10 +33,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
-import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
+import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -266,6 +266,9 @@ public class LootTablesProvider {
                                 .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ENHANCED.get()).setWeight(20))
                                 .add(LootItem.lootTableItem(ModItems.HEART_SEEKER_ULTIMATE.get()).setWeight(10))
                                 .add(EmptyLootItem.emptyItem().setWeight(230)))
+                        .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                .add(EmptyLootItem.emptyItem().setWeight(18))
+                                .add(LootItem.lootTableItem(Items.MAP).apply(ExplorationMapFunction.makeExplorationMap().setDestination(ModStructureTags.ON_ANCIENT_REMAINS_MAPS).setMapDecoration(ModMapDecorations.ANCIENT_REMAINS).setSkipKnownStructures(true)).apply(SetNameFunction.setName(Component.translatable(MapUtil.getModTranslation("ancient_remains")), SetNameFunction.Target.ITEM_NAME)).setWeight(1)))
                 );
                 consumer.accept(ModLootTables.CHEST_HUNTER_OUTPOST_TENT, LootTable.lootTable()
                         .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 20))

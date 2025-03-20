@@ -69,6 +69,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -394,6 +395,15 @@ public class ModPlayerEventHandler {
             //if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeBroken()) {
             //    event.setUseItem(Event.Result.DENY);
             //}
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTick(PlayerTickEvent.Post event) {
+        Level level = event.getEntity().level();
+
+        if (!level.isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            ModAdvancements.TRIGGER_MAP_FOUND.get().trigger(serverPlayer, serverPlayer.getInventory());
         }
     }
 

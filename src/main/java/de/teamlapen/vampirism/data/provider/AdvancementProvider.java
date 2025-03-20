@@ -7,17 +7,22 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.ItemDataUtils;
+import de.teamlapen.vampirism.util.MapUtil;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -123,6 +128,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
         @SuppressWarnings("unused")
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+            HolderGetter<Item> itemRegistryLookup = holderProvider.lookupOrThrow(Registries.ITEM);
             HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = holderProvider.lookupOrThrow(Registries.BIOME);
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
             AdvancementHolder vampire_forest = Advancement.Builder.advancement()
@@ -136,6 +142,16 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .parent(vampire_forest)
                     .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_BOOK.get()))
                     .save(consumer, REFERENCE.MODID + ":main/ancient_knowledge");
+            AdvancementHolder domain_of_the_dead = Advancement.Builder.advancement()
+                    .display(ModBlocks.CANDLE_STICK_GRAY.get(), Component.translatable("advancement.vampirism.domain_of_the_dead"), Component.translatable("advancement.vampirism.domain_of_the_dead.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(vampire_forest)
+                    .addCriterion("in_crypt", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(holderProvider.lookupOrThrow(Registries.STRUCTURE).getOrThrow(ModStructures.CRYPT))))
+                    .save(consumer, REFERENCE.MODID + ":main/domain_of_the_dead");
+            AdvancementHolder reopening_old_wounds = Advancement.Builder.advancement()
+                    .display(MapUtil.getPreviewMap(MapUtil.getModTranslation("ancient_remains"), ModMapDecorations.ANCIENT_REMAINS), Component.translatable("advancement.vampirism.reopening_old_wounds"), Component.translatable("advancement.vampirism.reopening_old_wounds.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(domain_of_the_dead)
+                    .addCriterion("map", MapFoundCriterionTrigger.TriggerInstance.foundMap(ModMapDecorations.ANCIENT_REMAINS))
+                    .save(consumer, REFERENCE.MODID + ":main/reopening_old_wounds");
             AdvancementHolder regicide = Advancement.Builder.advancement()
                     .display(ModItems.PURE_BLOOD_0.get(), Component.translatable("advancement.vampirism.regicide"), Component.translatable("advancement.vampirism.regicide.desc"), null, AdvancementType.CHALLENGE, true, true, true)
                     .parent(vampire_forest)

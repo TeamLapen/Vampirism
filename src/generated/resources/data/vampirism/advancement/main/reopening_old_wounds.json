@@ -1,0 +1,34 @@
+{
+  "parent": "vampirism:main/domain_of_the_dead",
+  "criteria": {
+    "map": {
+      "conditions": {
+        "mapType": "vampirism:ancient_remains"
+      },
+      "trigger": "vampirism:map_found"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.reopening_old_wounds.desc"
+    },
+    "hidden": true,
+    "icon": {
+      "components": {
+        "minecraft:item_name": "{\"translate\":\"filled_map.vampirism.ancient_remains\"}",
+        "minecraft:map_color": 8721929
+      },
+      "count": 1,
+      "id": "minecraft:filled_map"
+    },
+    "title": {
+      "translate": "advancement.vampirism.reopening_old_wounds"
+    }
+  },
+  "requirements": [
+    [
+      "map"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

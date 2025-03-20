@@ -148,6 +148,34 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "decoration": "vampirism:ancient_remains",
+              "destination": "vampirism:on_ancient_remains_maps",
+              "function": "minecraft:exploration_map"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "filled_map.vampirism.ancient_remains"
+              },
+              "target": "item_name"
+            }
+          ],
+          "name": "minecraft:map"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "vampirism:chests/crypt"

@@ -12,7 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.component.MapItemColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
@@ -47,5 +49,17 @@ public class MapUtil {
         itemStack.set(DataComponents.MAP_COLOR, new MapItemColor(decorationType.value().mapColor()));
         itemStack.set(DataComponents.ITEM_NAME, Component.translatable(displayName));
         return itemStack;
+    }
+
+    public static boolean hasDecoration(Holder<MapDecorationType> mapDecoration, ItemStack itemStack, Level level) {
+        MapItemSavedData savedData = MapItem.getSavedData(itemStack, level);
+        if (savedData != null) {
+            for (MapDecoration decoration : savedData.getDecorations()) {
+                if (decoration.type() == mapDecoration) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

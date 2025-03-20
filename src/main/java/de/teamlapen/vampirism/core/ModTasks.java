@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
-import de.teamlapen.vampirism.core.tags.ModStructureTags;
 import de.teamlapen.vampirism.entity.player.tasks.TaskBuilder;
 import de.teamlapen.vampirism.entity.player.tasks.req.*;
 import de.teamlapen.vampirism.entity.player.tasks.reward.*;
@@ -15,7 +14,6 @@ import de.teamlapen.vampirism.entity.player.tasks.unlock.LordLvlUnlocker;
 import de.teamlapen.vampirism.entity.player.tasks.unlock.LvlUnlocker;
 import de.teamlapen.vampirism.entity.player.tasks.unlock.ParentUnlocker;
 import de.teamlapen.vampirism.util.ItemDataUtils;
-import de.teamlapen.vampirism.util.MapUtil;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -104,7 +102,6 @@ public class ModTasks {
     public static final ResourceKey<Task> H_KILL_2 = key("h_kill2");
 
     // Neutral
-    public static final ResourceKey<Task> ANCIENT_REMAINS_MAP = key("ancient_remains_map");
     public static final ResourceKey<Task> TOTEM_TOP = key("totem_top");
     public static final ResourceKey<Task> OBLIVION_POTION = key("oblivion_potion");
     public static final ResourceKey<Task> OBLIVION_POTION_PURE_BLOOD_1 = key("oblivion_potion_pure_blood_1");
@@ -171,7 +168,6 @@ public class ModTasks {
         context.register(H_KILL_2, TaskBuilder.builder(H_KILL_2).defaultTitle().addRequirement(ModEntityTags.VAMPIRE, 15).setReward(new ItemStack(Items.DIAMOND, 2)).build());
         context.register(H_CAPTURE_1, TaskBuilder.builder(H_CAPTURE_1).defaultTitle().addRequirement(ModStats.CAPTURE_VILLAGE.get(), 2).setReward(new ItemStack(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 10)).build());
 
-        context.register(ANCIENT_REMAINS_MAP, TaskBuilder.builder(ANCIENT_REMAINS_MAP).defaultTitle().unlockedBy(new LordLvlUnlocker(1)).addRequirement(ModEntities.VAMPIRE_BARON.get(), 8).addRequirement(new ItemStack(Items.GOLD_INGOT, 64)).addRequirement(new ItemStack(Items.COMPASS, 1)).setReward(new MapReward(ModStructureTags.ON_ANCIENT_REMAINS_MAPS, MapUtil.getModTranslation("ancient_remains"), ModMapDecorations.ANCIENT_REMAINS)).build());
         context.register(TOTEM_TOP, TaskBuilder.builder(TOTEM_TOP).defaultTitle().unlockedBy(new LvlUnlocker(5)).addRequirement(new ItemStack(Items.OBSIDIAN, 32)).addRequirement(new ItemStack(Items.DIAMOND, 1)).addRequirement(ModEntityTags.ZOMBIES, 32).setReward(new ItemStack(ModBlocks.TOTEM_TOP_CRAFTED.get())).build());
         context.register(OBLIVION_POTION, TaskBuilder.builder(OBLIVION_POTION).defaultTitle().addRequirement(ItemDataUtils.createPotion(Potions.POISON)).addRequirement(new ItemStack(ModItems.VAMPIRE_BLOOD_BOTTLE.get())).setReward(new ItemStack(ModItems.OBLIVION_POTION.get())).build());
         context.register(OBLIVION_POTION_PURE_BLOOD_1, TaskBuilder.builder(OBLIVION_POTION_PURE_BLOOD_1).defaultTitle().unlockedBy(new LvlUnlocker(1, 3)).addRequirement(ItemDataUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON)).addRequirement(new ItemStack(ModItems.PURE_BLOOD_0.get())).setReward(new ItemStack(ModItems.OBLIVION_POTION.get())).build());
