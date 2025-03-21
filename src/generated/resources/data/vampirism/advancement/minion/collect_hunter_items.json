@@ -15,7 +15,7 @@
     "hidden": true,
     "icon": {
       "count": 1,
-      "id": "minecraft:gold_nugget"
+      "id": "minecraft:bundle"
     },
     "title": {
       "translate": "advancement.vampirism.collect_hunter_items"

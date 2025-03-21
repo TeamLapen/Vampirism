@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -130,7 +131,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
             HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = holderProvider.lookupOrThrow(Registries.BIOME);
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
             AdvancementHolder vampire_forest = Advancement.Builder.advancement()
-                    .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModBlocks.DARK_SPRUCE_SAPLING.get(), Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
                     .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inBiome(biomeRegistryLookup.getOrThrow(ModBiomes.VAMPIRE_FOREST))))
                     .requirements(AdvancementRequirements.Strategy.OR)
@@ -252,7 +253,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_lord = Advancement.Builder.advancement()
-                    .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModItems.VAMPIRE_CLOTHING_CROWN.get(), Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
@@ -262,7 +263,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_blood");
             AdvancementHolder collect_hunter_items = Advancement.Builder.advancement()
-                    .display(Items.GOLD_NUGGET, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(Items.BUNDLE, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_HUNTER_ITEMS.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_hunter_items");
@@ -272,7 +273,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.PROTECT_LORD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/protect_lord");
             AdvancementHolder defend_area = Advancement.Builder.advancement()
-                    .display(Items.SHIELD, Component.translatable("advancement.vampirism.defend_area"), Component.translatable("advancement.vampirism.defend_area.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(Blocks.RED_BANNER, Component.translatable("advancement.vampirism.defend_area"), Component.translatable("advancement.vampirism.defend_area.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.DEFEND_AREA.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/defend_area");
