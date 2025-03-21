@@ -12,7 +12,6 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -182,7 +180,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             AdvancementHolder first_blood = Advancement.Builder.advancement()
-                    .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.SUCK_BLOOD))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
@@ -200,11 +198,16 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/resurrect");
             AdvancementHolder extra_storage = Advancement.Builder.advancement()
-                    .display(ModBlocks.BLOOD_CONTAINER.get(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodContainer(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.BLOOD_CONTAINER.get()))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/extra_storage");
+            AdvancementHolder plague_inc = Advancement.Builder.advancement()
+                    .display(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.plague_inc"), Component.translatable("advancement.vampirism.plague_inc.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(first_blood)
+                    .addCriterion("infected", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.INFECT))
+                    .save(consumer, REFERENCE.MODID + ":vampire/plague_inc");
             AdvancementHolder max_level = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.max_level_vampire"), Component.translatable("advancement.vampirism.max_level_vampire.desc"), null, AdvancementType.GOAL, true, true, true)
                     .parent(bat)
@@ -245,6 +248,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
 
     private static class MinionAdvancements implements VampirismAdvancementSubProvider {
 
+        @SuppressWarnings("unused")
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_lord = Advancement.Builder.advancement()
@@ -253,7 +257,7 @@ public class AdvancementProvider extends net.neoforged.neoforge.common.data.Adva
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             AdvancementHolder collect_blood = Advancement.Builder.advancement()
-                    .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_blood");

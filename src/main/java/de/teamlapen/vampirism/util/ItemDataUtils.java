@@ -1,7 +1,13 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.component.BottleBlood;
+import de.teamlapen.vampirism.items.component.ContainedFluid;
 import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -12,6 +18,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ItemDataUtils {
 
@@ -47,5 +54,18 @@ public class ItemDataUtils {
     public static ItemStack createOil(Item item, Holder<IOil> oil) {
         ItemStack itemStack = item.getDefaultInstance();
         return setOil(itemStack, oil);
+    }
+
+    public static ItemStack createBloodBottle(int blood) {
+        ItemStack itemStack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
+        itemStack.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(blood));
+        return itemStack;
+    }
+
+    public static ItemStack createFilledBloodContainer() {
+        ItemStack itemStack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get());
+        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
+        itemStack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
+        return itemStack;
     }
 }

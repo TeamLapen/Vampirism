@@ -22,6 +22,11 @@
     },
     "hidden": true,
     "icon": {
+      "components": {
+        "vampirism:bottle_blood": {
+          "blood": 9
+        }
+      },
       "count": 1,
       "id": "vampirism:blood_bottle"
     },
