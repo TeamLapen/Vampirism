@@ -130,7 +130,6 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
                     List<ConfiguredFeature<?, ?>> list = new ArrayList<>(level.registryAccess().lookup(Registries.BIOME).flatMap(x -> x.get(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures());
                     ConfiguredFeature<?, ?> cursedRoots= level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getValue(VampirismFeatures.CURSED_ROOT);
                     if (cursedRoots != null) list.add(cursedRoots);
-                    list = list.stream().filter(feature -> level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getResourceKey(feature).map(resourceKey -> !resourceKey.equals(VampirismFeatures.VAMPIRE_FLOWER)).orElse(true)).toList();
 
                     holder = ((RandomPatchConfiguration) list.get(level.random.nextInt(list.size())).config()).feature();
                 } else {
