@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.equipment.*;
 import net.neoforged.neoforge.common.Tags;
@@ -28,6 +29,7 @@ public class ModArmorMaterials {
         public static final ResourceKey<EquipmentAsset> HUNTER_HAT_0 = createId("hunter_hat_0");
         public static final ResourceKey<EquipmentAsset> HUNTER_HAT_1 = createId("hunter_hat_1");
 
+        public static final Map<DyeColor, ResourceKey<EquipmentAsset>> VAMPIRE_CLOAKS = Util.makeEnumMap(DyeColor.class, color -> createId("vampire_cloak_" + color.getSerializedName()));
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_CROWN = createId("vampire_clothing_crown");
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_HAT = createId("vampire_clothing_hat");
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_LEGS = createId("vampire_clothing_legs");

@@ -62,7 +62,7 @@
   ],
   "client": [
     "accessor.PostChainMixin",
-    "client.AbstractClientPlayerMixin",
+    "client.CapeLayerMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
     "client.KeyMappingMixin",

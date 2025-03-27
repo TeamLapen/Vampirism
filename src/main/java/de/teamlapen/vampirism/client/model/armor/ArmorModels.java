@@ -38,6 +38,7 @@ public class ArmorModels {
 
     static  {
         ImmutableMap.Builder<ModelLayerLocation, Function<ModelPart, VampirismArmorModel>> builder = ImmutableMap.builder();
+        builder.put(ModEntitiesRender.CLOAK, CloakModel::new);
         builder.put(ModEntitiesRender.CLOTHING_HAT, VampireHatModel::new);
         builder.put(ModEntitiesRender.CLOTHING_CROWN, ClothingCrownModel::new);
         builder.put(ModEntitiesRender.CLOTHING_BOOTS, ClothingBootsModel::new);

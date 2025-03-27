@@ -40,6 +40,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation BARON = new ModelLayerLocation(VResourceLocation.mod("baron"), "main");
     public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VResourceLocation.mod("baroness"), "main");
     public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baron"), "attire");
+    public static final ModelLayerLocation CLOAK = new ModelLayerLocation(VResourceLocation.mod("cloak"), "main");
     public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baroness"), "attire");
     public static final ModelLayerLocation CLOTHING_BOOTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "boots");
     public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(VResourceLocation.mod("clothing"), "crown");
@@ -116,6 +117,7 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(BARON, BaronModel::createLayer);
         event.registerLayerDefinition(BARONESS, BaronessModel::createLayer);
         event.registerLayerDefinition(BARON_ATTIRE, BaronAttireModel::createLayer);
+        event.registerLayerDefinition(CLOAK, CloakModel::createCloakLayer);
         event.registerLayerDefinition(BARONESS_ATTIRE, BaronessAttireModel::createLayer);
         event.registerLayerDefinition(CLOTHING_BOOTS, ClothingBootsModel::createLayer);
         event.registerLayerDefinition(CLOTHING_CROWN, ClothingCrownModel::createLayer);

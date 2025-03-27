@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 public class ModItemTags {
@@ -70,6 +69,8 @@ public class ModItemTags {
 
     public static final TagKey<Item> VAMPIRE_CLOTHING = tag("armors/vampire_clothing");
     public static final TagKey<Item> VAMPIRE_CLOAK = tag("armors/vampire_clothing/cloak");
+
+    public static final TagKey<Item> DISABLES_CAPE = tag("armors/disables_cape");
 
     public static final TagKey<Item> CROSSBOW_REPAIRABLE = tag("repairable/crossbow");
     public static final TagKey<Item> VAMPIRE_SWORD_REPAIRABLE_SIMPLE = tag("repairable/vampire_sword/simple");

@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.data.provider;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.EquipmentAssets;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -27,6 +29,10 @@ public class EquipmentAssetProvider extends net.minecraft.client.data.models.Equ
         Stream.of(VAMPIRE_CLOTH_BOOTS, VAMPIRE_CLOTH_LEGS, VAMPIRE_CLOTH_HAT, VAMPIRE_CLOTH_CROWN, HUNTER_HAT_0, HUNTER_HAT_1).forEach(asset -> {
             output.accept(asset, createCustomOnly(asset));
         });
+
+        for (Map.Entry<DyeColor, ResourceKey<EquipmentAsset>> entry : VAMPIRE_CLOAKS.entrySet()) {
+            output.accept(entry.getValue(), EquipmentClientInfo.builder().addMainHumanoidLayer(VResourceLocation.mod("cloak/" + entry.getKey().getName()), false).build());
+        }
     }
 
     protected EquipmentClientInfo createDefaultArmor(ResourceKey<EquipmentAsset> asset) {
@@ -36,6 +42,4 @@ public class EquipmentAssetProvider extends net.minecraft.client.data.models.Equ
     protected EquipmentClientInfo createCustomOnly(ResourceKey<EquipmentAsset> asset) {
         return EquipmentClientInfo.builder().addMainHumanoidLayer(asset.location(), false).build();
     }
-
-
 }
