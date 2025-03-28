@@ -140,7 +140,11 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             try {
                 return HatType.valueOf(value.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                return NONE;
+                return switch (value.toUpperCase(Locale.ROOT)) {
+                    case "HAT_0" -> TALL;
+                    case "HAT_1" -> BROAD;
+                    default -> NONE;
+                };
             }
         }
     }
