@@ -5,12 +5,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModTasks;
+import de.teamlapen.vampirism.core.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.items.component.FactionRestriction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -25,12 +27,12 @@ public class SingleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
-        return (stack -> stack.getItem() instanceof IVampirismCrossbowArrow<?>);
+    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
+        return doubleCrossbow ? 2f : 0.4f;
     }
 
     @Override
-    public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
-        return doubleCrossbow ? 2f : 0.4f;
+    public boolean supportsEnchantment(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
+        return super.supportsEnchantment(stack, enchantment) || enchantment.is(ModEnchantmentTags.SINGLE_HUNTER_CROSSBOW_COMPATIBLE);
     }
 }

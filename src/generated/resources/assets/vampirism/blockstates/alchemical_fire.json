@@ -85,22 +85,6 @@
           "y": 270
         }
       ]
-    },
-    {
-      "apply": [
-        {
-          "model": "vampirism:block/alchemical_fire_up0"
-        },
-        {
-          "model": "vampirism:block/alchemical_fire_up1"
-        },
-        {
-          "model": "vampirism:block/alchemical_fire_up_alt0"
-        },
-        {
-          "model": "vampirism:block/alchemical_fire_up_alt1"
-        }
-      ]
     }
   ]
 }

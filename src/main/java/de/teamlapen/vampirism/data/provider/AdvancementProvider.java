@@ -14,6 +14,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -29,22 +30,22 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class AdvancementProvider extends net.neoforged.neoforge.common.data.AdvancementProvider {
+public class AdvancementProvider extends net.minecraft.data.advancements.AdvancementProvider {
 
-    public AdvancementProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(packOutput, lookupProvider, existingFileHelper, List.of(new VampirismAdvancements()));
+    public AdvancementProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, List.of(new VampirismAdvancements()));
     }
 
     private interface VampirismAdvancementSubProvider {
         void generate(@NotNull AdvancementHolder root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer);
     }
 
-    private static class VampirismAdvancements implements net.neoforged.neoforge.common.data.AdvancementProvider.AdvancementGenerator {
+    private static class VampirismAdvancements implements AdvancementSubProvider {
 
         private final List<VampirismAdvancementSubProvider> subProvider = List.of(new MainAdvancements(), new HunterAdvancements(), new VampireAdvancements(), new MinionAdvancements());
 
         @Override
-        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> consumer, @SuppressWarnings("removal") @NotNull net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> consumer) {
 
             AdvancementHolder root = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("textures/block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)

@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class DataComponentTagsProvider extends TagsProvider<DataComponentType<?>> {
 
-    protected DataComponentTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.DATA_COMPONENT_TYPE, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    protected DataComponentTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, Registries.DATA_COMPONENT_TYPE, lookupProvider, REFERENCE.MODID);
     }
 
     @Override

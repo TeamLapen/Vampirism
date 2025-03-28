@@ -45,4 +45,8 @@ public class ModModelTemplates extends ModelTemplates {
     public static ModelTemplate create(ResourceLocation modelName, TextureSlot... textures) {
         return ModelTemplates.create(modelName.toString(), textures);
     }
+
+    public static ModelTemplate copy(ModelTemplate template, ResourceLocation renderType) {
+        return template.extend().renderType(renderType).build();
+    }
 }

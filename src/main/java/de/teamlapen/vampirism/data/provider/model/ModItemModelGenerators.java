@@ -35,6 +35,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateSpawnEggs();
         generateBloodBottle();
         generateAmmoClip();
+        generateQuarrelPouch();
         generateHunterIntel();
         generateAccessories();
         generateWeapons();
@@ -158,6 +159,15 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                         ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_1"), VResourceLocation.mod("item/arrow_clip1"))), 0.01f),
                         ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_2"), VResourceLocation.mod("item/arrow_clip2"))), 0.55f),
                         ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_3"), VResourceLocation.mod("item/arrow_clip3"))), 0.99f)
+                ));
+    }
+    protected void generateQuarrelPouch() {
+        this.itemModelOutput.accept(ModItems.QUARREL_POUCH.asItem(),
+                ItemModelUtils.rangeSelect(new ClipFilled(),
+                        ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_0"), VResourceLocation.mod("item/arrow_clip0"))),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_1"), VResourceLocation.mod("item/arrow_clip1"))), 0.01f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_2"), VResourceLocation.mod("item/arrow_clip2"))), 0.55f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_3"), VResourceLocation.mod("item/arrow_clip3"))), 0.99f)
                 ));
     }
 

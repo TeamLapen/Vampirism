@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.lib.client.gui.GuiRenderer;
+import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -84,15 +86,12 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
                     width = 182 - textureStart;
                 }
             }
-            RenderSystem.setShaderColor(color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
-            graphics.blitSprite(RenderType::guiTextured, BAR_PROGRESS_SPRITE, 182, 5, textureStart, 0, k + textureStart, j, width, 5);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            GuiRenderer.blitSprite(graphics, BAR_PROGRESS_SPRITE, 182, 5, textureStart, 0, k + textureStart, j, width, 5, color.getRGB());
             textureStart += width;
         }
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
-            RenderSystem.setShaderColor(1, 1, 1, 1);
             RenderSystem.enableBlend();
-            graphics.blitSprite(RenderType::guiTextured, BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal() - 1], k, j, 182, 5);
+            graphics.blitSprite(RenderType::guiTextured, BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal() - 1], k, j, 182, 5, -1);
             RenderSystem.disableBlend();
         }
     }

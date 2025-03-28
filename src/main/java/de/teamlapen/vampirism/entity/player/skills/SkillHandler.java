@@ -121,7 +121,11 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
                 skill.value().onDisable(player);
             }
         }
-        enabledSkills.clear();
+        for (var entry : enabledSkills.entrySet()) {
+            var root = this.treeData.root(entry.getKey());
+            Set<Holder<ISkill<?>>> rootSkills = new HashSet<>(root.elements());
+            entry.getValue().removeIf(x -> !rootSkills.contains(x));
+        }
         dirty = true;
     }
 

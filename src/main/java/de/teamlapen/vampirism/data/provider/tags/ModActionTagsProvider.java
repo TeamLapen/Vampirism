@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class ModActionTagsProvider extends TagsProvider<IAction<?>> {
 
 
-    protected ModActionTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(pOutput, VampirismRegistries.Keys.ACTION, pLookupProvider, VReference.MODID, existingFileHelper);
+    protected ModActionTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider) {
+        super(pOutput, VampirismRegistries.Keys.ACTION, pLookupProvider, VReference.MODID);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

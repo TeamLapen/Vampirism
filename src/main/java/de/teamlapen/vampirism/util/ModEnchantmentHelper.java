@@ -13,6 +13,6 @@ public class ModEnchantmentHelper {
         EnchantmentHelper.runIterationOnItem(stack, (enchantment, enchLevel) -> {
             enchantment.value().modifyItemFilteredCount(ModEnchantments.FRUGALITY_DATA.get(), level, enchLevel, stack, mutablefloat);
         });
-        return level.getRandom().nextInt(Math.max(2, 4 - mutablefloat.intValue())) == 0;
+        return level.getRandom().nextInt(Math.max(3, 5 - mutablefloat.intValue())) == 0;
     }
 }

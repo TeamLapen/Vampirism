@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeConfiguration;
 import de.teamlapen.vampirism.entity.player.skills.SkillTreeHolder;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class SkillTreeReloadListener extends SimpleJsonResourceReloadListener<SkillTreeConfiguration> {
+    public static final ResourceLocation SKILL_TREE_ID = VResourceLocation.mc("skill_tree");
     private static final String DIRECTORY = "vampirism/configured_skill_tree";
     private Map<ResourceLocation, SkillTreeConfiguration> configuration = ImmutableMap.of();
 

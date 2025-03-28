@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.client.model.armor.*;
 import de.teamlapen.vampirism.client.renderer.entity.*;
 import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.renderer.entity.state.ConvertedOverlayRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
@@ -152,7 +152,7 @@ public class ModEntitiesRender {
         }
     }
 
-    private static @NotNull <T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>, O extends LivingEntityRenderState & ConvertedOverlayRenderState, P extends EntityModel<O>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,U,Z> provider) {
+    private static @NotNull <T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>, O extends LivingEntityRenderState & IConvertedOverlayRenderState, P extends EntityModel<O>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,U,Z> provider) {
         return context -> {
             //noinspection unchecked
             var renderer = (LivingEntityRenderer<T, O, P>) provider.create(context);

@@ -3,11 +3,14 @@ package de.teamlapen.vampirism.items.crossbow;
 import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.items.QuarrelPouch;
 import de.teamlapen.vampirism.items.component.FactionRestriction;
+import de.teamlapen.vampirism.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
 import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.ChatFormatting;
@@ -60,30 +63,23 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
-        getAmmunition(stack).ifPresent(ammunition -> {
-            tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY));
-        });
+        getAmmunition(stack).ifPresent(ammunition -> tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
     public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles(@NotNull ItemStack stack) {
-        return getSupportedProjectiles(stack);
+        return getAllSupportedProjectiles();
     }
 
     @Override
     public @NotNull Predicate<ItemStack> getAllSupportedProjectiles(@NotNull ItemStack stack) {
-        return getSupportedProjectiles(stack);
+        return x -> testProjectile(stack, x);
     }
 
     @NotNull
     @Override
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
         return getAllSupportedProjectiles();
-    }
-
-    @Override
-    public int getDefaultProjectileRange() {
-        return 8;
     }
 
     public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
@@ -153,12 +149,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
-
-        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
-            crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
-        } else {
-            availableProjectiles.clear();
-        }
+        availableProjectiles.clear();
         return shootingProjectiles;
     }
 
@@ -229,7 +220,16 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
-        if (projectileStack.getItem() instanceof IArrowContainer container) {
+        if (projectileStack.getItem() instanceof QuarrelPouch) {
+            QuarrelPouchContents orDefault = projectileStack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
+            if (!orDefault.isEmpty()) {
+                QuarrelPouchContents.Mutable mutable = orDefault.asMutable();
+                ItemStack itemStack = getAmmunition(crossbowStack).map(mutable::getSpecific).orElseGet(mutable::getFirst);
+                projectileStack.set(ModDataComponents.QUARREL_POUCH_CONTENTS, mutable.toImmutable());
+                return List.of(itemStack);
+            }
+            return List.of();
+        } else if (projectileStack.getItem() instanceof IArrowContainer container) {
             if (shooter.hasInfiniteMaterials()) {
                 projectileStack = projectileStack.copy();
             }
@@ -282,18 +282,23 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         }
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public abstract Predicate<ItemStack> getAllSupportedProjectiles();
-
-    @Override
-    public Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow) {
-        return getAllSupportedProjectiles().and(stack -> {
-            if (canSelectAmmunition(crossbow)) {
-                return getAmmunition(crossbow).map(restriction -> stack.getItem() == restriction).orElse(true);
-            } else {
-                return true;
-            }
-        });
+    public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
+        if (projectile.getItem() instanceof IVampirismCrossbowArrow<?>) {
+            return testQuarrel(crossbow, projectile);
+        } else if (projectile.getItem() instanceof QuarrelPouch) {
+            return testQuarrelPouch(crossbow, projectile);
+        }
+        return false;
     }
+
+    public boolean testQuarrelPouch(ItemStack crossbow, ItemStack quarrelPouch) {
+        QuarrelPouchContents orDefault = quarrelPouch.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
+        ItemStack stack = getAmmunition(crossbow).map(orDefault::getSpecific).orElseGet(orDefault::getFirst);
+        return testProjectile(crossbow, stack);
+    }
+
+    public boolean testQuarrel(ItemStack crossbow, ItemStack quarrel) {
+        return getAmmunition(crossbow).map(quarrel::is).orElse(true);
+    }
+
 }

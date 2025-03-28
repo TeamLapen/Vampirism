@@ -14,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModGameEventProvider extends TagsProvider<GameEvent> {
 
-    public ModGameEventProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.GAME_EVENT, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModGameEventProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, Registries.GAME_EVENT, lookupProvider, REFERENCE.MODID);
     }
 
     @Override
