@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.client.ModClientEnums;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.armor.*;
-import de.teamlapen.vampirism.items.HunterHatItem;
 import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.mixin.client.accessor.ItemInHandRendererAccessor;
 import de.teamlapen.vampirism.util.HumanoidArmorLayerData;
@@ -66,9 +65,10 @@ public class ItemExtensions {
 
         @Override
         public ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack) {
-            return switch (((HunterHatItem) itemStack.getItem()).getHateType()) {
-                case TYPE_1 -> ModEntitiesRender.HUNTER_HAT0;
-                case TYPE_2 -> ModEntitiesRender.HUNTER_HAT1;
+            return switch (RegUtil.id(itemStack.getItem()).getPath()) {
+                case "hunter_hat_tall" -> ModEntitiesRender.HUNTER_HAT_TALL;
+                case "hunter_hat_broad" -> ModEntitiesRender.HUNTER_HAT_BROAD;
+                default -> ModEntitiesRender.GENERIC_BIPED;
             };
         }
     };

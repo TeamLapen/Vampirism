@@ -8,26 +8,20 @@ import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEnti
 import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.renderer.entity.state.ConvertedOverlayRenderState;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.entity.converted.ConvertedDonkeyEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 /**
  * Handles entity render registration
@@ -46,8 +40,8 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(VResourceLocation.mod("clothing"), "crown");
     public static final ModelLayerLocation CLOTHING_PANTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "pants");
     public static final ModelLayerLocation CLOTHING_HAT = new ModelLayerLocation(VResourceLocation.mod("clothing"), "hat");
-    public static final ModelLayerLocation HUNTER_HAT0 = new ModelLayerLocation(VResourceLocation.mod("hunter_hat0"), "main");
-    public static final ModelLayerLocation HUNTER_HAT1 = new ModelLayerLocation(VResourceLocation.mod("hunter_hat1"), "main");
+    public static final ModelLayerLocation HUNTER_HAT_TALL = new ModelLayerLocation(VResourceLocation.mod("hunter_hat_tall"), "main");
+    public static final ModelLayerLocation HUNTER_HAT_BROAD = new ModelLayerLocation(VResourceLocation.mod("hunter_hat_broad"), "main");
     public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VResourceLocation.mod("hunter_equipment"), "main");
     public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VResourceLocation.mod("villager_with_arms"), "main");
     public static final ModelLayerLocation GENERIC_BIPED = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
@@ -123,8 +117,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(CLOTHING_CROWN, ClothingCrownModel::createLayer);
         event.registerLayerDefinition(CLOTHING_PANTS, ClothingPantsModel::createLayer);
         event.registerLayerDefinition(CLOTHING_HAT, VampireHatModel::createLayer);
-        event.registerLayerDefinition(HUNTER_HAT0, HunterHatModel::createHat0Layer);
-        event.registerLayerDefinition(HUNTER_HAT1, HunterHatModel::createHat1Layer);
+        event.registerLayerDefinition(HUNTER_HAT_TALL, HunterHatModel::createTallHatLayer);
+        event.registerLayerDefinition(HUNTER_HAT_BROAD, HunterHatModel::createBroadHatLayer);
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
         event.registerLayerDefinition(GENERIC_BIPED, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64));
         event.registerLayerDefinition(GENERIC_BIPED_SLIM, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, true), 64, 64));

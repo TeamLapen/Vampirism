@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.entity.factions.Faction;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -43,8 +42,8 @@ public class ArmorModels {
         builder.put(ModEntitiesRender.CLOTHING_CROWN, ClothingCrownModel::new);
         builder.put(ModEntitiesRender.CLOTHING_BOOTS, ClothingBootsModel::new);
         builder.put(ModEntitiesRender.CLOTHING_PANTS, ClothingPantsModel::new);
-        builder.put(ModEntitiesRender.HUNTER_HAT0, HunterHatModel::new);
-        builder.put(ModEntitiesRender.HUNTER_HAT1, HunterHatModel::new);
+        builder.put(ModEntitiesRender.HUNTER_HAT_TALL, HunterHatModel::new);
+        builder.put(ModEntitiesRender.HUNTER_HAT_BROAD, HunterHatModel::new);
         builder.put(ModEntitiesRender.GENERIC_BIPED, DummyClothingModel::new);
         MODEL_CONSTRUCTORS = builder.build();
     }

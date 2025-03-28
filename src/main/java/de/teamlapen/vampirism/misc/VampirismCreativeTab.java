@@ -306,8 +306,8 @@ public class VampirismCreativeTab {
             addItem(HUNTER_COAT_LEGS_ULTIMATE);
             addItem(HUNTER_COAT_FEET_ULTIMATE);
 
-            addItem(HUNTER_HAT_HEAD_0);
-            addItem(HUNTER_HAT_HEAD_1);
+            addItem(HUNTER_HAT_TALL);
+            addItem(HUNTER_HAT_BROAD);
 
             addItem(VAMPIRE_CLOTHING_CROWN);
             addItem(VAMPIRE_CLOTHING_HAT);

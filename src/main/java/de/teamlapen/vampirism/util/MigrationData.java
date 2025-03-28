@@ -91,6 +91,8 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_cloak_black_white", "vampirism:vampire_cloak_black");
         mapping.remap("vampirism:vampire_cloak_red_black", "vampirism:vampire_cloak_red");
         mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
+        mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
+        mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {

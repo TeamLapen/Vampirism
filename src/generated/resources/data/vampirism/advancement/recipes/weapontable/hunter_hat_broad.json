@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:hunter_hat_head_0"
+        "recipe": "vampirism:hunter_hat_broad"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:hunter_hat_head_0"
+      "vampirism:hunter_hat_broad"
     ]
   }
 }

@@ -26,7 +26,7 @@ public class EquipmentAssetProvider extends net.minecraft.client.data.models.Equ
             output.accept(asset, createDefaultArmor(asset));
         });
 
-        Stream.of(VAMPIRE_CLOTH_BOOTS, VAMPIRE_CLOTH_LEGS, VAMPIRE_CLOTH_HAT, VAMPIRE_CLOTH_CROWN, HUNTER_HAT_0, HUNTER_HAT_1).forEach(asset -> {
+        Stream.of(VAMPIRE_CLOTH_BOOTS, VAMPIRE_CLOTH_LEGS, VAMPIRE_CLOTH_HAT, VAMPIRE_CLOTH_CROWN, HUNTER_HAT_TALL, HUNTER_HAT_BROAD).forEach(asset -> {
             output.accept(asset, createCustomOnly(asset));
         });
 

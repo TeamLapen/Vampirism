@@ -50,7 +50,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void createDefaultModels() {
-        Stream.of(ModItems.STAKE, ModItems.HUNTER_HAT_HEAD_0, ModItems.HUNTER_HAT_HEAD_1, ModItems.GARLIC_DIFFUSER_CORE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
+        Stream.of(ModItems.STAKE, ModItems.HUNTER_HAT_TALL, ModItems.HUNTER_HAT_BROAD, ModItems.GARLIC_DIFFUSER_CORE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
     }
 
     protected void createDefaultModel(Item item) {

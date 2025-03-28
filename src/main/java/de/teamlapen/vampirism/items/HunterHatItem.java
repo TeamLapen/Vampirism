@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import net.minecraft.core.Holder;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,21 +14,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * Simple headwear that look like a hunter head
+ * Simple headwear that look like a hunter hat
  */
 public class HunterHatItem extends HunterArmorItem {
-    private final HatType type;
 
-    public HunterHatItem(HatType type, ArmorMaterial armorMaterial, Item.Properties properties) {
-        super(armorMaterial, ArmorType.HELMET, properties.overrideDescription("item.vampirism.hunter_hat_head"));
-        this.type = type;
-    }
-
-    public HatType getHateType() {
-        return type;
+    public HunterHatItem(ArmorMaterial armorMaterial, Item.Properties properties) {
+        super(armorMaterial, ArmorType.HELMET, properties);
     }
 
     @Override
@@ -44,10 +36,5 @@ public class HunterHatItem extends HunterArmorItem {
                 }
             }
         }
-    }
-
-    public enum HatType {
-        TYPE_1,
-        TYPE_2
     }
 }

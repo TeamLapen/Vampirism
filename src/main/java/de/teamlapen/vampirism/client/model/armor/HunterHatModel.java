@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.client.model.armor;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -18,7 +15,7 @@ public class HunterHatModel extends VampirismArmorModel {
     private static final String HAT_TOP = "hat_top";
     private static final String HAT_BASE = "hat_top";
 
-    public static @NotNull LayerDefinition createHat0Layer() {
+    public static @NotNull LayerDefinition createTallHatLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition base = part.addOrReplaceChild(HAT_BASE, CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -9.0F, -6.0F, 12.0F, 1.0F, 12.0F), PartPose.ZERO);
@@ -26,7 +23,7 @@ public class HunterHatModel extends VampirismArmorModel {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    public static @NotNull LayerDefinition createHat1Layer() {
+    public static @NotNull LayerDefinition createBroadHatLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition base = part.addOrReplaceChild(HAT_BASE, CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, -9.0F, -8.0F, 16.0F, 1.0F, 16.0F), PartPose.ZERO);

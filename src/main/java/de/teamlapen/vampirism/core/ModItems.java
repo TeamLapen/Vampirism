@@ -147,8 +147,8 @@ public class ModItems {
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", (prop) -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ENHANCED, prop));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", (prop) -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ULTIMATE, prop));
 
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", (prop) -> new HunterHatItem(HunterHatItem.HatType.TYPE_1, ModArmorMaterials.HUNTER_HAT_0, prop));
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", (prop) -> new HunterHatItem(HunterHatItem.HatType.TYPE_2, ModArmorMaterials.HUNTER_HAT_1, prop));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_TALL = register("hunter_hat_tall", (prop) -> new HunterHatItem(ModArmorMaterials.HUNTER_HAT_TALL, prop));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_BROAD = register("hunter_hat_broad", (prop) -> new HunterHatItem(ModArmorMaterials.HUNTER_HAT_BROAD, prop));
 
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_0 = register("hunter_intel_0", (prop) -> new HunterIntelItem(0, prop));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_1 = register("hunter_intel_1", (prop) -> new HunterIntelItem(1, prop));

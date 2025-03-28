@@ -2,7 +2,7 @@
   "layers": {
     "humanoid": [
       {
-        "texture": "vampirism:hunter_hat_0"
+        "texture": "vampirism:hunter_hat_tall"
       }
     ]
   }

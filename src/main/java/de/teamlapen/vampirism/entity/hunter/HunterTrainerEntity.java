@@ -99,7 +99,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        this.setItemSlot(EquipmentSlot.HEAD, HatType.HAT_0.getHeadItem());
+        this.setItemSlot(EquipmentSlot.HEAD, HatType.TALL.getHeadItem());
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
