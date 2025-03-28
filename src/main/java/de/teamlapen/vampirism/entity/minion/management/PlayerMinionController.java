@@ -211,6 +211,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
                 } else {
                     m.claimMinionSlot(id, this);
                     m.copyPosition(p);
+                    checkDeathStatus(id, m);
                     p.level().addFreshEntity(m);
                     activateTask(id, MinionTasks.STAY.get());
                     return m;
@@ -220,6 +221,17 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
 
         }
         return null;
+    }
+
+    /**
+     * tmp fix to heal minions that are not dead but have negative health
+     */
+    @Deprecated
+    private void checkDeathStatus(int id, MinionEntity<?> minion) {
+        MinionData data = minions[id].data;
+        if (data.getHealth() <= 0) {
+            data.setHealth(data.getMaxHealth());
+        }
     }
 
     /**
@@ -371,7 +383,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             i.deathCooldown = 20 * VampirismConfig.BALANCE.miDeathRecoveryTime.get();
             getLord().flatMap(player -> player.getLordFaction().getPlayerCapability(player.getPlayer()).map(IFactionPlayer::getSkillHandler)).ifPresent(s -> {
                 if (s.isSkillEnabled(LordSkills.MINION_RECOVERY.get())) {
-                    i.deathCooldown *= (int) 0.8;
+                    i.deathCooldown = (int) (i.deathCooldown * 0.8f);
                 }
             });
             if (id < minionTokens.length) {
