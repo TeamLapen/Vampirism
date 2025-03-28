@@ -77,7 +77,7 @@ public class ModEnchantments {
         context.register(ARROW_FRUGALITY,
                 new Enchantment.Builder(
                         Enchantment.definition(
-                                items.getOrThrow(ModItemTags.CROSSBOW_ENCHANTABLE),
+                                items.getOrThrow(ModItemTags.TECH_CROSSBOW_ENCHANTABLE),
                                 1,
                                 2,
                                 Enchantment.dynamicCost(10, 5),

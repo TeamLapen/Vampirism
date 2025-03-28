@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModDamageTypeProvider extends TagsProvider<DamageType> {
 
-    public ModDamageTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.DAMAGE_TYPE, provider, REFERENCE.MODID, existingFileHelper);
+    public ModDamageTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.DAMAGE_TYPE, provider, REFERENCE.MODID);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.VampirismTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -55,6 +56,10 @@ public interface IFaction<T extends IFactionEntity> {
             return second == null;
         }
         return second != null && first.is((Holder) second);
+    }
+
+    static boolean isNeutral(@Nullable Holder<? extends IFaction<?>> holder) {
+        return holder == null || is(holder, VampirismTags.Factions.IS_NEUTRAL);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

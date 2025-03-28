@@ -35,6 +35,7 @@ public class ModItemTags {
 
     public static final TagKey<Item> VAMPIRE_SLAYER_ITEMS = tag("enchantable/vampire_slayer");
     public static final TagKey<Item> CROSSBOW_ENCHANTABLE = tag("enchantable/crossbow");
+    public static final TagKey<Item> TECH_CROSSBOW_ENCHANTABLE = tag("enchantable/tech_crossbow");
 
     public static final TagKey<Item> APPLICABLE_OIL_SWORD = tag("applicable_oil/sword");
     public static final TagKey<Item> APPLICABLE_OIL_PICKAXE = tag("applicable_oil/pickaxe");

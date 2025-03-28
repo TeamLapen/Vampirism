@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModFactionProvider extends TagsProvider<IFaction<?>> {
 
-    public ModFactionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, VampirismRegistries.Keys.FACTION, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModFactionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, VampirismRegistries.Keys.FACTION, lookupProvider, REFERENCE.MODID);
     }
 
     @SuppressWarnings("unchecked")
@@ -29,5 +29,7 @@ public class ModFactionProvider extends TagsProvider<IFaction<?>> {
         this.tag(ModFactionTags.HAS_LORD_SKILLS).add(ModFactions.VAMPIRE.getRawKey(), ModFactions.HUNTER.getRawKey());
         this.tag(ModFactionTags.ALL_FACTIONS).addTag(ModFactionTags.IS_HUNTER).addTag(ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.USE_GARLIC_BREAD).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_NEUTRAL);
+        this.tag(ModFactionTags.CAN_RAID).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_VAMPIRE);
+        this.tag(ModFactionTags.HAS_RANDOM_RAID).addTag(ModFactionTags.CAN_RAID);
     }
 }

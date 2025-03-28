@@ -16,8 +16,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModEffectTypeProvider extends TagsProvider<MobEffect> {
 
-    public ModEffectTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.MOB_EFFECT, provider, REFERENCE.MODID, existingFileHelper);
+    public ModEffectTypeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.MOB_EFFECT, provider, REFERENCE.MODID);
     }
 
     @Override

@@ -4,17 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
-import de.teamlapen.vampirism.client.renderer.entity.state.VampirismRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.IVampirismRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -63,7 +60,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
         HoldingEntityRenderState.extractHoldingEntityRenderState(entity, state, this.itemModelResolver);
         state.isUnhappy = entity.getUnhappyCounter() > 0;
         state.villagerData = entity.getVillagerData();
-        ((VampirismRenderState) state).setVampirismAttackTime(entity.getAttackAnim(p_361157_));
-        ((VampirismRenderState) state).setVampirismAttackArm(entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
+        ((IVampirismRenderState) state).vampirism$attackTime(entity.getAttackAnim(p_361157_));
+        ((IVampirismRenderState) state).vampirism$attackArm(entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
     }
 }

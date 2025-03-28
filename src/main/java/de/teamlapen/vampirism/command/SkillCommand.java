@@ -79,7 +79,9 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int disableall(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
-        ISkillHandler.get(asPlayer).ifPresent(ISkillHandler::reset);
+        ISkillHandler.get(asPlayer).ifPresent(x -> {
+            x.disableAllSkills();
+        });
         IRefinementHandler.get(asPlayer).ifPresent(IRefinementHandler::resetRefinements);
         commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.all_locked"), false);
         return 0;

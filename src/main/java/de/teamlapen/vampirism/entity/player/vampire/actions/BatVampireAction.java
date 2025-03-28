@@ -7,10 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModAttachments;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
@@ -61,7 +58,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_sun"));
         } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem()) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
-        } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE) {
+        } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
         } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));

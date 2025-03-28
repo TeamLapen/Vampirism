@@ -79,6 +79,8 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
 
     void reset();
 
+    void disableAllSkills();
+
     void updateUnlockedSkillTrees(Collection<Holder<ISkillTree>> skillTrees);
 
     Collection<Holder<ISkillTree>> unlockedSkillTrees();

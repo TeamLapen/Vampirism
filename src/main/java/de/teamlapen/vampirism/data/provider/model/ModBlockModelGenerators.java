@@ -381,24 +381,14 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     protected void createAlchemicalFire() {
         List<ResourceLocation> list = this.createFloorFireModels(ModBlocks.ALCHEMICAL_FIRE.get());
         List<ResourceLocation> list1 = this.createSideFireModels(ModBlocks.ALCHEMICAL_FIRE.get());
-        List<ResourceLocation> list2 = this.createTopFireModels(ModBlocks.ALCHEMICAL_FIRE.get());
         this.blockStateOutput
                 .accept(
                         MultiPartGenerator.multiPart(ModBlocks.ALCHEMICAL_FIRE.get())
                                 .with(wrapModels(list, p_387290_ -> p_387290_))
                                 .with(wrapModels(list1, p_386602_ -> p_386602_))
-                                .with(
-                                        wrapModels(list1, p_388679_ -> p_388679_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                                )
-                                .with(
-
-                                        wrapModels(list1, p_387956_ -> p_387956_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                                )
-                                .with(
-
-                                        wrapModels(list1, p_386620_ -> p_386620_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                                )
-                                .with(wrapModels(list2, p_387194_ -> p_387194_))
+                                .with(wrapModels(list1, p_388679_ -> p_388679_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)))
+                                .with(wrapModels(list1, p_387956_ -> p_387956_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)))
+                                .with(wrapModels(list1, p_386620_ -> p_386620_.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)))
                 );
     }
 

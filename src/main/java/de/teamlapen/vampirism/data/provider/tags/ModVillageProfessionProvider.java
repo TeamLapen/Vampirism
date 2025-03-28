@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModVillageProfessionProvider extends TagsProvider<VillagerProfession> {
 
-    public ModVillageProfessionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.VILLAGER_PROFESSION, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    public ModVillageProfessionProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, Registries.VILLAGER_PROFESSION, lookupProvider, REFERENCE.MODID);
     }
 
     @Override

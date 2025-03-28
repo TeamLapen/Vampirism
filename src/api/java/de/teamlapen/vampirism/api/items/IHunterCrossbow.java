@@ -42,14 +42,6 @@ public interface IHunterCrossbow extends ItemLike {
      */
     void setAmmunition(ItemStack crossbow, Item ammo);
 
-    /**
-     * gets a predicate to test all projectiles supported by the crossbow
-     *
-     * @param crossbow the crossbow
-     * @return a predicate that returns true if the given itemstack is a supported projectile
-     */
-    Predicate<ItemStack> getSupportedProjectiles(ItemStack crossbow);
-
     boolean canUseDoubleCrossbow(LivingEntity entity);
 
     float getInaccuracy(ItemStack stack, boolean doubleCrossbow);

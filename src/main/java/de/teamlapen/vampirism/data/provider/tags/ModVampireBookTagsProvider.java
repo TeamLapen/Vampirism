@@ -15,8 +15,8 @@ import static de.teamlapen.vampirism.core.ModVampireBooks.*;
 
 public class ModVampireBookTagsProvider extends TagsProvider<IVampireBook> {
 
-    protected ModVampireBookTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, VampirismRegistries.Keys.VAMPIRE_BOOK, lookupProvider, REFERENCE.MODID, existingFileHelper);
+    protected ModVampireBookTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, VampirismRegistries.Keys.VAMPIRE_BOOK, lookupProvider, REFERENCE.MODID);
     }
 
     @Override

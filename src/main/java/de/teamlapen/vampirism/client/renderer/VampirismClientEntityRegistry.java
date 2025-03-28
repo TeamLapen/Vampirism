@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
-import de.teamlapen.vampirism.client.renderer.entity.state.ConvertedOverlayRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.mixin.client.accessor.EntityRenderDispatcherAccessor;
 import de.teamlapen.vampirism.mixin.client.accessor.LivingEntityRendererAccessor;
@@ -21,7 +21,7 @@ public class VampirismClientEntityRegistry extends VampirismEntityRegistry {
     public VampirismClientEntityRegistry() {
     }
 
-    public <I extends LivingEntity, S extends LivingEntityRenderState & ConvertedOverlayRenderState, U extends EntityModel<S>> void syncOverlays() {
+    public <I extends LivingEntity, S extends LivingEntityRenderState & IConvertedOverlayRenderState, U extends EntityModel<S>> void syncOverlays() {
         for (EntityType<?> type : getConvertibleOverlay().keySet()) {
             LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).renderers().get(type);
             if (render == null) {

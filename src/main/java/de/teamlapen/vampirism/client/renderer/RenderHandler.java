@@ -1,50 +1,25 @@
 package de.teamlapen.vampirism.client.renderer;
 
-import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import de.teamlapen.lib.util.OptifineHandler;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.client.CustomBufferSource;
-import de.teamlapen.vampirism.client.renderer.entity.state.VampirismRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.IVampirismRenderState;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRefinements;
-import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.items.CrucifixItem;
-import de.teamlapen.vampirism.mixin.accessor.PostChainMixin;
 import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.MixinHooks;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
-import net.minecraft.Util;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.util.Mth;
-import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -52,10 +27,6 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * Handle most general rendering related stuff
@@ -149,7 +120,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, PlayerRenderState, PlayerModel> event) {
-        var vampirism = ((VampirismRenderState) event.getRenderState()).vampirismAttributes();
+        var vampirism = ((IVampirismRenderState) event.getRenderState()).vampirism$attributes();
         if (vampirism != null && vampirism.getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : event.getRenderState().distanceToCameraSq;
             if (dist > 64) {
@@ -177,8 +148,8 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre event) {
-        VampirismRenderState vampState = (VampirismRenderState) event.getRenderState();
-        VampirePlayerSpecialAttributes vAtt = vampState.vampirismAttributes().getVampSpecial();
+        IVampirismRenderState vampState = (IVampirismRenderState) event.getRenderState();
+        VampirePlayerSpecialAttributes vAtt = vampState.vampirism$attributes().getVampSpecial();
         if (vAtt.isDBNO) {
             event.getPoseStack().translate(1.2, 0, 0);
             PlayerModel m = event.getRenderer().getModel();
@@ -190,7 +161,7 @@ public class RenderHandler {
             m.leftLeg.visible = false;
             m.rightPants.visible = false;
             m.leftPants.visible = false;
-        } else if (vampState.sleepingInCoffin()) {
+        } else if (vampState.sleeping$inCoffin()) {
             //Shrink player, so they fit into the coffin model
             event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
         }
@@ -204,33 +175,19 @@ public class RenderHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre event) {
-        VampirismRenderState vampState = (VampirismRenderState) event.getRenderState();
-        VampirePlayerSpecialAttributes vAtt = vampState.vampirismAttributes().getVampSpecial();
+        IVampirismRenderState vampState = (IVampirismRenderState) event.getRenderState();
+        VampirePlayerSpecialAttributes vAtt = vampState.vampirism$attributes().getVampSpecial();
         if (vAtt.invisible) {
             event.setCanceled(true);
         } else if (vAtt.bat) {
             event.setCanceled(true);
-            var bat = vampState.vampirismBat();
+            var bat = vampState.vampirism$bat();
 
             float partialTicks = event.getPartialTick();
 
-            // Copy values
-            bat.yBodyRot = event.getRenderState().bodyRot;
             bat.tickCount = (int) event.getRenderState().ageInTicks;
-            bat.setXRot(event.getRenderState().xRot);
-            bat.setYRot(event.getRenderState().yRot);
-//            bat.yHeadRot = player.yHeadRot;
-//            bat.yRotO = player.yRotO;
-//            bat.xRotO = player.xRotO;
-//            bat.yHeadRotO = player.yHeadRotO;
             bat.setInvisible(event.getRenderState().isInvisible);
-
-            // Calculate render parameter
-            double d0 = Mth.lerp(partialTicks, bat.xOld, bat.getX());
-            double d1 = Mth.lerp(partialTicks, bat.yOld, bat.getY());
-            double d2 = Mth.lerp(partialTicks, bat.zOld, bat.getZ());
-            float f = Mth.lerp(partialTicks, bat.yRotO, bat.getYRot());
-            mc.getEntityRenderDispatcher().render(bat, d0, d1, d2, f, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(bat, partialTicks));
+            mc.getEntityRenderDispatcher().render(bat, 0, 0, 0, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(bat, partialTicks));
         }
     }
 

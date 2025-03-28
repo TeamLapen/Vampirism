@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.client.renderer.entity.state.VampirismRenderState;
+import de.teamlapen.vampirism.client.renderer.entity.state.IVampirismRenderState;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -9,10 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -50,16 +47,16 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel {
         this.leftArm.xRot = -0.75F;
         this.rightArm.xRot = -0.75F;
 
-        if (((VampirismRenderState)entityIn).vampirismAttackTime() > 0.0F) {
-            HumanoidArm enumhandside = ((VampirismRenderState)entityIn).vampirismAttackArm();
+        if (((IVampirismRenderState)entityIn).vampirism$attackTime() > 0.0F) {
+            HumanoidArm enumhandside = ((IVampirismRenderState)entityIn).vampirism$attackArm();
             ModelPart modelrenderer = this.getArmForSide(enumhandside);
             float f1;
-            f1 = 1.0F - ((VampirismRenderState)entityIn).vampirismAttackTime();
+            f1 = 1.0F - ((IVampirismRenderState)entityIn).vampirism$attackTime();
             f1 = f1 * f1;
             f1 = f1 * f1;
             f1 = 1.0F - f1;
             float f2 = Mth.sin(f1 * (float) Math.PI);
-            float f3 = Mth.sin(((VampirismRenderState)entityIn).vampirismAttackTime() * (float) Math.PI) * -(this.getHead().xRot - 0.7F) * 0.75F;
+            float f3 = Mth.sin(((IVampirismRenderState)entityIn).vampirism$attackTime() * (float) Math.PI) * -(this.getHead().xRot - 0.7F) * 0.75F;
             modelrenderer.xRot = (float) ((double) modelrenderer.xRot - ((double) f2 * 1.2D + (double) f3));
         }
     }

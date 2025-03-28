@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModStructuresProvider extends TagsProvider<Structure> {
 
-    protected ModStructuresProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @SuppressWarnings("removal") @Nullable net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Registries.STRUCTURE, provider, REFERENCE.MODID, existingFileHelper);
+    protected ModStructuresProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.STRUCTURE, provider, REFERENCE.MODID);
     }
 
     @Override

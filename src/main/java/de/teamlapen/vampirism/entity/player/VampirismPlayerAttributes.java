@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
 import net.minecraft.core.Holder;
@@ -24,9 +25,9 @@ public class VampirismPlayerAttributes {
     private final HunterPlayerSpecialAttribute huntSpecial = new HunterPlayerSpecialAttribute();
     public int vampireLevel = 0;
     public int hunterLevel = 0;
-    @Nullable
+    @NotNull
     @Deprecated
-    public Holder<? extends IPlayableFaction<?>> faction = null;
+    public Holder<? extends IPlayableFaction<?>> faction = ModFactions.NEUTRAL;
     public int lordLevel = 0;
 
     public @NotNull HunterPlayerSpecialAttribute getHuntSpecial() {
@@ -37,6 +38,7 @@ public class VampirismPlayerAttributes {
         return vampSpecial;
     }
 
+    @NotNull
     @SuppressWarnings({"RedundantCast", "unchecked"})
     public <T extends IFactionPlayer<T>> Holder<? extends IPlayableFaction<T>> faction() {
         return ((Holder<? extends IPlayableFaction<T>>) (Object) faction);

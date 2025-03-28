@@ -1,0 +1,33 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/quarrel_pouch_1"
+        },
+        "threshold": 0.01
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/quarrel_pouch_2"
+        },
+        "threshold": 0.55
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/quarrel_pouch_3"
+        },
+        "threshold": 0.99
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "vampirism:item/quarrel_pouch_0"
+    },
+    "property": "vampirism:clip_filled"
+  }
+}

@@ -323,6 +323,8 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_RED = register("chandelier_red", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_RED.get(), prop.useBlockDescriptionPrefix()));
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = register("chandelier_black", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_BLACK.get(), prop.useBlockDescriptionPrefix()));
 
+    public static final DeferredItem<Item> QUARREL_POUCH = register("quarrel_pouch", (prop) -> new QuarrelPouch(prop.stacksTo(1)));
+
     static <I extends Item> DeferredItem<I> register(final String name, ResourceKey<CreativeModeTab> tab, final Function<Item.Properties, ? extends I> sup) {
         DeferredItem<I> item = ITEMS.registerItem(name, sup);
         if (tab == VAMPIRISM_TAB_KEY) {
