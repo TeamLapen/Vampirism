@@ -17,13 +17,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 1.0,
-                "min": 0.5
-              },
-              "function": "minecraft:set_damage"
+              "function": "vampirism:set_blood",
+              "maxBlood": 9,
+              "minBlood": 4
             },
             {
               "count": 1.0,

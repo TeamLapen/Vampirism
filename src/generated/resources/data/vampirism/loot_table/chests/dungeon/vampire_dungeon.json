@@ -13,9 +13,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "damage": 1.0,
-              "function": "minecraft:set_damage"
+              "function": "vampirism:set_blood",
+              "maxBlood": 9,
+              "minBlood": 9
             }
           ],
           "name": "vampirism:blood_bottle",

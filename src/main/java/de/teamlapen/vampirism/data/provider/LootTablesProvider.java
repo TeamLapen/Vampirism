@@ -7,10 +7,7 @@ import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
 import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
-import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
-import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetOilFunction;
+import de.teamlapen.vampirism.world.loot.functions.*;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -101,7 +98,7 @@ public class LootTablesProvider {
             LootTable.Builder advanced_vampire = LootTable.lootTable()
                     .withPool(LootPool.lootPool().when(LootItemKilledByPlayerCondition.killedByPlayer()).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setWeight(1))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(1).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.5f, 1.0f))).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, ConstantValue.exactly(1f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(1).apply(SetBloodFunction.builder(4,9)).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, ConstantValue.exactly(1f)))))
                     .withPool(LootPool.lootPool().when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.1f, 0.015f)).setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(AddBookNbtFunction.builder())))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.05f, 0.01f))
@@ -205,7 +202,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_VAMPIRE_DUNGEON, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(7))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(35))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(ConstantValue.exactly(1f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(9))))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(70).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(30)))
@@ -219,7 +216,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_VAMPIRE_HUT, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 5))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(0, 5))))
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0, 1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(70).apply(AddBookNbtFunction.builder())))
                     .withPool(accessories(ConstantValue.exactly(2)))
@@ -233,7 +230,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.CHEST_VAMPIRE_ALTAR, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5, 8))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0,0.6f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(0, 5))))
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(10, 18))
                             .add(LootItem.lootTableItem(Items.GOLD_INGOT).setWeight(16))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT).setWeight(22).apply(SetItemDamageFunction.setDamage(ConstantValue.exactly(1f)))))
@@ -253,7 +250,7 @@ public class LootTablesProvider {
                             .add(LootItem.lootTableItem(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()).setWeight(15))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(40))
                             .add(LootItem.lootTableItem(ModBlocks.VAMPIRE_ORCHID.get()).setWeight(30))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0, 1f)))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(0, 9))))
                     .withPool(accessories(UniformGenerator.between(0, 1)))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).apply(AddBookNbtFunction.builder()).setWeight(30))
@@ -615,7 +612,7 @@ public class LootTablesProvider {
                     .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(0f, 4f))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
                             .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(15).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1f, 1f))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(15).apply(SetBloodFunction.builder(9)))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(5).apply(AddBookNbtFunction.builder()))
                             .add(EmptyLootItem.emptyItem().setWeight(40)))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -654,7 +651,7 @@ public class LootTablesProvider {
             consumer.accept(ModLootTables.JUNGLE_TEMPLE, LootTable.lootTable()
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(2))
                             .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).setWeight(20))
-                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1f, 1f))))
+                            .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(1)))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(20).apply(AddBookNbtFunction.builder()))
                             .add(LootItem.lootTableItem(ModItems.VAMPIRE_FANG.get()).setWeight(20))
                             .add(EmptyLootItem.emptyItem().setWeight(30)))

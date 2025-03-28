@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.world.loot.SmeltItemLootModifier;
 import de.teamlapen.vampirism.world.loot.conditions.*;
-import de.teamlapen.vampirism.world.loot.functions.AddBookNbtFunction;
-import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetItemBloodChargeFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetOilFunction;
+import de.teamlapen.vampirism.world.loot.functions.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -27,6 +24,7 @@ public class ModLoot {
     public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetItemBloodChargeFunction>> SET_ITEM_BLOOD_CHARGE = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> new LootItemFunctionType<>(SetItemBloodChargeFunction.CODEC));
     public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<RefinementSetFunction>> ADD_REFINEMENT_SET = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> new LootItemFunctionType<>(RefinementSetFunction.CODEC));
     public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetOilFunction>> SET_OIL = LOOT_FUNCTION_TYPES.register("set_oil", () -> new LootItemFunctionType<>(SetOilFunction.CODEC));
+    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetBloodFunction>> SET_BLOOD = LOOT_FUNCTION_TYPES.register("set_blood", () -> new LootItemFunctionType<>(SetBloodFunction.CODEC));
 
     public static final DeferredHolder<LootItemConditionType, LootItemConditionType> WITH_STAKE = LOOT_CONDITION_TYPES.register("with_stake", () -> new LootItemConditionType(StakeCondition.CODEC));
     public static final DeferredHolder<LootItemConditionType, LootItemConditionType> ADJUSTABLE_LEVEL = LOOT_CONDITION_TYPES.register("adjustable_level", () -> new LootItemConditionType(AdjustableLevelCondition.CODEC));
