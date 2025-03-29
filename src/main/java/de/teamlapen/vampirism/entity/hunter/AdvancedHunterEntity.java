@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.logging.LogUtils;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -31,6 +32,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
@@ -51,7 +53,6 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
@@ -334,13 +335,19 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
-        ResourceLocation headwearId = ResourceLocation.parse(appearance.get("headwear"));
-        Item headwear = BuiltInRegistries.ITEM.getValue(headwearId);
-        if (headwear == Items.AIR && !headwearId.equals(BuiltInRegistries.ITEM.getKey(Items.AIR))) {
-            HatType[] types = HatType.values();
-            headwear = types[random.nextInt(types.length)].getHeadItem().getItem();
+        String headwear = appearance.get("headwear");
+
+        HatType[] types = HatType.values();
+        Item randomHat = types[random.nextInt(types.length)].getHeadItem().getItem();
+
+        Item headwearItem = headwear == null ? randomHat : BuiltInRegistries.ITEM.getValue(ResourceKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.parse(headwear)));
+        if (headwearItem == null) {
+            headwearItem = randomHat;
+            LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear", headwear, supporter.name());
         }
-        this.setItemSlot(EquipmentSlot.HEAD, headwear.getDefaultInstance());
+
+        this.setItemSlot(EquipmentSlot.HEAD, headwearItem.getDefaultInstance());
+
         this.setDontDropEquipment();
     }
 
@@ -351,7 +358,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         type |= (Integer.parseInt(appearance.getOrDefault("body", "13")) & 0b11111111) << 1;
         return type;
     }
-
 
     @Override
     protected int getBaseExperienceReward(ServerLevel level) {
