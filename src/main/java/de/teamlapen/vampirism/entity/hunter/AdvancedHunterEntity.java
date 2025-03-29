@@ -334,11 +334,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
-        Item hat = Optional.of(appearance.get("headwear")).map(i -> BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(i))).orElseGet(() -> {
+        ResourceLocation headwearId = ResourceLocation.parse(appearance.get("headwear"));
+        Item headwear = BuiltInRegistries.ITEM.getValue(headwearId);
+        if (headwear == Items.AIR && !headwearId.equals(BuiltInRegistries.ITEM.getKey(Items.AIR))) {
             HatType[] types = HatType.values();
-            return types[random.nextInt(types.length)].getHeadItem().getItem();
-        });
-        this.setItemSlot(EquipmentSlot.HEAD, hat.getDefaultInstance());
+            headwear = types[random.nextInt(types.length)].getHeadItem().getItem();
+        }
+        this.setItemSlot(EquipmentSlot.HEAD, headwear.getDefaultInstance());
         this.setDontDropEquipment();
     }
 
