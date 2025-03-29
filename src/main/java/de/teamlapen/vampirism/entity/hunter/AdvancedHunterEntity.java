@@ -43,7 +43,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -52,6 +51,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
@@ -334,11 +334,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
-        HatType hat = Optional.ofNullable(appearance.get("hat")).map(HatType::get).orElseGet(() -> {
+        Item hat = Optional.of(appearance.get("headwear")).map(i -> BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(i))).orElseGet(() -> {
             HatType[] types = HatType.values();
-            return types[random.nextInt(types.length)];
+            return types[random.nextInt(types.length)].getHeadItem().getItem();
         });
-        this.setItemSlot(EquipmentSlot.HEAD, hat.getHeadItem());
+        this.setItemSlot(EquipmentSlot.HEAD, hat.getDefaultInstance());
         this.setDontDropEquipment();
     }
 

@@ -7,7 +7,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad"
     }
   },
   {
@@ -18,7 +19,8 @@
     "status": "Dev",
     "bookId": null,
     "appearance": {
-      "hat": "hat_0"
+      "hat": "hat_0",
+      "headwear": "vampirism:hunter_hat_tall"
     }
   },
   {
@@ -29,7 +31,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad"
     }
   },
   {
@@ -40,7 +43,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad"
     }
   },
   {
@@ -51,7 +55,8 @@
     "status": "Contributor",
     "bookId": null,
     "appearance": {
-      "hat": "none"
+      "hat": "none",
+      "headwear": "minecraft:air"
     }
   },
   {
@@ -62,7 +67,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad"
     }
   },
   {
@@ -74,6 +80,7 @@
     "bookId": null,
     "appearance": {
       "hat": "hat_0",
+      "headwear": "vampirism:hunter_hat_tall",
       "equipment": "axe_stake"
     }
   },
@@ -86,7 +93,8 @@
     "bookId": "pyropik",
     "book": "vampirism:pyromaniacs_diary",
     "appearance": {
-      "hat": "hat_0"
+      "hat": "hat_0",
+      "headwear": "vampirism:hunter_hat_tall"
     }
   },
   {
@@ -97,7 +105,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_0"
+      "hat": "hat_0",
+      "headwear": "vampirism:hunter_hat_tall"
     }
   },
   {
@@ -108,7 +117,8 @@
     "status": "Temporary",
     "bookId": null,
     "appearance": {
-      "hat": "hat_1"
+      "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad"
     }
   },
   {
@@ -243,6 +253,7 @@
     "bookId": null,
     "appearance": {
       "hat": "hat_1",
+      "headwear": "vampirism:hunter_hat_broad",
       "hasCloak": "true",
       "body": "12",
       "equipment": "double_axe"
@@ -257,6 +268,7 @@
     "bookId": null,
     "appearance": {
       "hat": "none",
+      "headwear": "minecraft:air",
       "equipment": "crossbow",
       "hasCloak": "true",
       "body": "8"
