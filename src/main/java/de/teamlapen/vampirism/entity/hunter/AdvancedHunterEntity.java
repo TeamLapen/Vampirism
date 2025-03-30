@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -336,17 +337,23 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
         String headwear = appearance.get("headwear");
+        Item headWearItem = null;
 
-        HatType[] types = HatType.values();
-        Item randomHat = types[random.nextInt(types.length)].getHeadItem().getItem();
-
-        Item headwearItem = headwear == null ? randomHat : BuiltInRegistries.ITEM.getValue(ResourceKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.parse(headwear)));
-        if (headwearItem == null) {
-            headwearItem = randomHat;
-            LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear", headwear, supporter.name());
+        if (headwear != null) {
+            ResourceLocation headWearId = ResourceLocation.tryParse(headwear);
+            if (headWearId == null) {
+                LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear", headwear, supporter.name());
+            } else {
+                headWearItem = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, headWearId));
+            }
         }
 
-        this.setItemSlot(EquipmentSlot.HEAD, headwearItem.getDefaultInstance());
+        if (headWearItem == null) {
+            HatType[] types = HatType.values();
+            headWearItem = types[random.nextInt(types.length)].getHeadItem().getItem();
+        }
+
+        this.setItemSlot(EquipmentSlot.HEAD, headWearItem.getDefaultInstance());
 
         this.setDontDropEquipment();
     }
