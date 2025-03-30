@@ -337,23 +337,26 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
         String headwear = appearance.get("headwear");
-        Item headWearItem = null;
+        Item headwearItem = null;
 
         if (headwear != null) {
             ResourceLocation headWearId = ResourceLocation.tryParse(headwear);
             if (headWearId == null) {
-                LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear", headwear, supporter.name());
+                LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the location is incorrect", headwear, supporter.name());
             } else {
-                headWearItem = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, headWearId));
+                headwearItem = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, headWearId));
+                if (headwearItem == null) {
+                    LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the item does not exist", headwear, supporter.name());
+                }
             }
         }
 
-        if (headWearItem == null) {
+        if (headwearItem == null) {
             HatType[] types = HatType.values();
-            headWearItem = types[random.nextInt(types.length)].getHeadItem().getItem();
+            headwearItem = types[random.nextInt(types.length)].getHeadItem().getItem();
         }
 
-        this.setItemSlot(EquipmentSlot.HEAD, headWearItem.getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.HEAD, headwearItem.getDefaultInstance());
 
         this.setDontDropEquipment();
     }
