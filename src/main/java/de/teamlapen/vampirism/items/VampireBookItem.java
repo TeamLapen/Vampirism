@@ -32,11 +32,21 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public @NotNull InteractionResult use(Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(VampireBook.get(stack)));
+        IVampireBook vampireBook = VampireBook.get(stack);
+
+        if (vampireBook.isEmpty()) {
+            if (level.isClientSide) {
+                player.displayClientMessage(Component.translatable("text.vampirism.vampire_book.failed_to_load"), true);
+            }
+            return InteractionResult.FAIL;
         }
+
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(vampireBook));
+        }
+
         return InteractionResult.SUCCESS_SERVER;
     }
 

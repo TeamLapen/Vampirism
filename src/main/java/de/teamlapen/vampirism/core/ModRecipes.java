@@ -60,6 +60,7 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlchemyTableRecipe>> ALCHEMICAL_TABLE = RECIPE_SERIALIZERS.register("alchemical_table", AlchemyTableRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ApplicableOilRecipe>> APPLICABLE_OIL = RECIPE_SERIALIZERS.register("applicable_oil", () -> new CustomRecipe.Serializer<>(ApplicableOilRecipe::new));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new CustomRecipe.Serializer<>(CleanOilRecipe::new));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<RerollVampireBookRecipe>> REROLL_VAMPIRE_BOOK = RECIPE_SERIALIZERS.register("reroll_vampire_book", () -> new CustomRecipe.Serializer<>(RerollVampireBookRecipe::new));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<InfuserRecipe>> INFUSER = RECIPE_SERIALIZERS.register("infuser", InfuserRecipe.Serializer::new);
 
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);

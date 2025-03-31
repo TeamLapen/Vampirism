@@ -129,6 +129,7 @@
   "text.vampirism.screen.unlocked_for_other_player": "Unlocked for other player",
   "text.vampirism.screen.lock_not_owner": "You are not the owner",
   "text.vampirism.cannot_access_menu": "You cannot access %s",
+  "text.vampirism.vampire_book.failed_to_load": "This book is empty, but can be recrafted into a random one",
   "gui.vampirism.jei.category.diffuser.burn_duration_seconds": "Burn Duration: %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_minutes": "Burn Duration: %sm %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_hours": "Burn Duration: %sh %sm %ss",

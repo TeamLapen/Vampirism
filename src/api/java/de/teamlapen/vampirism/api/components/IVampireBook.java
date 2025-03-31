@@ -16,6 +16,8 @@ public interface IVampireBook {
 
     boolean is(TagKey<IVampireBook> tag, RegistryAccess registryAccess);
 
+    boolean isEmpty();
+
     MutableComponent title();
 
     List<MutableComponent> contents();
