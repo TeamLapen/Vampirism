@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,11 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         tooltipComponents.add((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
         tooltipComponents.add((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
+    }
+
+    @Override
+    public @Nullable String getCreatorModId(HolderLookup.@NotNull Provider registries, @NotNull ItemStack itemStack) {
+        return VampireBook.get(itemStack).id().getNamespace();
     }
 
     @Override
