@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data.provider.model;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
+import de.teamlapen.vampirism.client.color.item.RefinementTint;
 import de.teamlapen.vampirism.client.renderer.item.properties.BloodFilled;
 import de.teamlapen.vampirism.client.renderer.item.properties.ClipFilled;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -181,9 +182,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateAccessories() {
-        this.itemModelOutput.accept(ModItems.RING.asItem(), ItemModelUtils.plainModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.RING.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_ring_layer0"), VResourceLocation.mod("item/vampire_ring_layer1")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.AMULET.asItem(), ItemModelUtils.plainModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.AMULET.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_amulet_layer0"), VResourceLocation.mod("item/vampire_amulet_layer1")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.OBI_BELT.asItem(), ItemModelUtils.plainModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OBI_BELT.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_obi_belt_layer0"), VResourceLocation.mod("item/vampire_obi_belt_layer1")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.RING.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.RING.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_ring_layer0"), VResourceLocation.mod("item/vampire_ring_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
+        this.itemModelOutput.accept(ModItems.AMULET.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.AMULET.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_amulet_layer0"), VResourceLocation.mod("item/vampire_amulet_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
+        this.itemModelOutput.accept(ModItems.OBI_BELT.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OBI_BELT.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_obi_belt_layer0"), VResourceLocation.mod("item/vampire_obi_belt_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
     }
 
     protected void generateWeapons() {
