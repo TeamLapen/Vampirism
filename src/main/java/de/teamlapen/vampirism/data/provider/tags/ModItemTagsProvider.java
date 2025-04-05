@@ -5,9 +5,11 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -31,7 +33,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     @SuppressWarnings("unchecked")
     @Override
     protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
-        copy(ModBlockTags.CURSED_EARTH, ModItemTags.CURSEDEARTH);
+        copy(ModBlockTags.CURSED_EARTH, ModItemTags.CURSED_EARTH);
         copy(ModBlockTags.DARK_SPRUCE_LOG, ModItemTags.DARK_SPRUCE_LOG);
         copy(ModBlockTags.CURSED_SPRUCE_LOG, ModItemTags.CURSED_SPRUCE_LOG);
         copy(ModBlockTags.DARK_STONE, ModItemTags.DARK_STONE);
@@ -41,6 +43,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         copy(ModBlockTags.DARK_STONE_TILES, ModItemTags.DARK_STONE_TILES);
         copy(ModBlockTags.NO_SPAWN, ModItemTags.NO_SPAWN);
         copy(ModBlockTags.VAMPIRE_SPAWN, ModItemTags.VAMPIRE_SPAWN);
+        copy(ModBlockTags.CREEPER_REPELLENT, ModItemTags.CREEPER_REPELLENT);
         copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
         copy(BlockTags.LOGS, ItemTags.LOGS);
         copy(BlockTags.WOODEN_TRAPDOORS, ItemTags.WOODEN_TRAPDOORS);
@@ -61,14 +64,15 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.CROSSBOW_ARROW).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_GARLIC.get());
         tag(ModItemTags.HUNTER_INTEL).add(ModItems.HUNTER_INTEL_0.get(), ModItems.HUNTER_INTEL_1.get(), ModItems.HUNTER_INTEL_2.get(), ModItems.HUNTER_INTEL_3.get(), ModItems.HUNTER_INTEL_4.get(), ModItems.HUNTER_INTEL_5.get(), ModItems.HUNTER_INTEL_6.get(), ModItems.HUNTER_INTEL_7.get(), ModItems.HUNTER_INTEL_8.get(), ModItems.HUNTER_INTEL_9.get());
         tag(ModItemTags.PURE_BLOOD).add(ModItems.PURE_BLOOD_0.get(), ModItems.PURE_BLOOD_1.get(), ModItems.PURE_BLOOD_2.get(), ModItems.PURE_BLOOD_3.get(), ModItems.PURE_BLOOD_4.get());
-        tag(ModItemTags.VAMPIRE_CLOAK).add(ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get(), ModItems.VAMPIRE_CLOAK_BLACK_RED.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_RED_BLACK.get(), ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get());
+        Helper.VAMPIRE_CLOAKS.forEach(item -> tag(ModItemTags.VAMPIRE_CLOAK).add(item));
+        tag(ModItemTags.DISABLES_CAPE).addTag(ModItemTags.VAMPIRE_CLOAK);
         tag(ItemTags.SMALL_FLOWERS).add(ModBlocks.VAMPIRE_ORCHID.get().asItem());
         tag(ModItemTags.HOLY_WATER).add(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get());
         tag(ModItemTags.HOLY_WATER_SPLASH).add(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
         tag(ItemTags.PIGLIN_LOVED).add(ModItems.VAMPIRE_CLOTHING_CROWN.get());
         tag(ModItemTags.HEART).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
         tag(ItemTags.BOATS).add(ModItems.DARK_SPRUCE_BOAT.get(), ModItems.CURSED_SPRUCE_BOAT.get());
-        tag(ModItemTags.APPLICABLE_OIL_ARMOR).add(Items.LEATHER_BOOTS, Items.LEATHER_LEGGINGS, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get(), ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOAK_RED_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_RED.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get());
+        tag(ModItemTags.APPLICABLE_OIL_ARMOR).addTag(ModItemTags.VAMPIRE_CLOAK).add(Items.LEATHER_BOOTS, Items.LEATHER_LEGGINGS, Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get(), ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get());
         tag(ModItemTags.APPLICABLE_OIL_PICKAXE);
         tag(ModItemTags.APPLICABLE_OIL_SWORD);
         tag(ItemTags.SIGNS).add(ModItems.DARK_SPRUCE_SIGN.get(), ModItems.CURSED_SPRUCE_SIGN.get());
@@ -100,10 +104,20 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ItemTags.CHEST_ARMOR).add(ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get()).addTag(ModItemTags.VAMPIRE_CLOAK);
         tag(ItemTags.LEG_ARMOR).add(ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get());
         tag(ItemTags.FOOT_ARMOR).add(ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
+        tag(ModItemTags.POWDER_SNOW_WALKABLE_BOOTS).addTags(ModItemTags.HUNTER_COAT, ModItemTags.ARMOR_OF_SWIFTNESS);
         tag(ModItemTags.VAMPIRE_CLOTHING).addTag(ModItemTags.VAMPIRE_CLOAK);
         tag(ModItemTags.HUNTER_ARMOR).addTags(ModItemTags.ARMOR_OF_SWIFTNESS, ModItemTags.HUNTER_COAT);
         tag(ModItemTags.ADVANCED_HUNTER_CROSSBOW_ARROWS).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_GARLIC.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
         tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
         tag(ModItemTags.CROSSBOW_REPAIRABLE).addTag(Tags.Items.STRINGS);
+        tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
+        tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get()).addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook"));
+
+        addCompatibilityTags();
+    }
+
+    private void addCompatibilityTags() {
+        copy(ModBlockTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS);
+        copy(ModBlockTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS, ModItemTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS);
     }
 }

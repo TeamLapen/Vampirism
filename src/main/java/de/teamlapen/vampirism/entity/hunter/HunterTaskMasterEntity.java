@@ -65,7 +65,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
-        this.setItemSlot(EquipmentSlot.HEAD, ModItems.HUNTER_HAT_HEAD_0.get().getDefaultInstance());
+        this.setItemSlot(EquipmentSlot.HEAD, ModItems.HUNTER_HAT_TALL.get().getDefaultInstance());
         return data;
     }
 
@@ -125,6 +125,5 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-
     }
 }

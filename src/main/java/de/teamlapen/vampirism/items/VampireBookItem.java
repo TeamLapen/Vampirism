@@ -1,14 +1,17 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.core.ModDataComponents;
-import de.teamlapen.vampirism.items.component.VampireBookContents;
+import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.components.IVampireBook;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.component.VampireBook;
 import de.teamlapen.vampirism.network.ClientboundOpenVampireBookPacket;
-import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.StringUtil;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,66 +20,70 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class VampireBookItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public VampireBookItem(Item.Properties properties) {
-        super(properties.rarity(Rarity.UNCOMMON).stacksTo(1));
+    private static final RandomSource RANDOM = RandomSource.create();
+
+    public VampireBookItem(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        VampireBookContents contents = stack.get(ModDataComponents.VAMPIRE_BOOK);
-        if (contents != null) {
-            String s = contents.author();
-            if (!StringUtil.isNullOrEmpty(s)) {
-                tooltip.add((Component.translatable("book.byAuthor", s)).withStyle(ChatFormatting.GRAY));
-            }
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        IVampireBook vampireBook = VampireBook.get(stack);
 
-            tooltip.add((Component.literal("Vampirism knowledge").withStyle(ChatFormatting.GRAY)));
+        if (vampireBook.isEmpty()) {
+            if (level.isClientSide) {
+                player.displayClientMessage(Component.translatable("text.vampirism.vampire_book.failed_to_load"), true);
+            }
+            return InteractionResult.FAIL;
         }
 
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(vampireBook));
+        }
+
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return VampireBook.get(stack).title();
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        tooltipComponents.add((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
+    }
+
+    @Override
+    public @Nullable String getCreatorModId(HolderLookup.@NotNull Provider registries, @NotNull ItemStack itemStack) {
+        return VampireBook.get(itemStack).id().getNamespace();
     }
 
     @Override
     public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        Collection<ItemStack> items = VampireBookManager.getInstance().getAllBookItems();
-        items.stream().findAny().ifPresent(stack -> output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY));
-        items.forEach(stack -> output.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
+        Optional<? extends HolderLookup.RegistryLookup<IVampireBook>> registryLookup = parameters.holders().lookup(VampirismRegistries.Keys.VAMPIRE_BOOK);
+
+        registryLookup.ifPresent(lookup -> {
+            List<Holder.Reference<IVampireBook>> list = lookup.listElements().toList();
+            output.accept(createBook(list.get(RANDOM.nextInt(0, list.size())).value()), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+            lookup.listElements().forEach(vampireBook -> output.accept(createBook(vampireBook.value()), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
+        });
     }
 
-    public ItemStack contentInstance(VampireBookManager.BookContext context) {
-        ItemStack stack = getDefaultInstance();
-        VampireBookContents.addFromBook(stack, context);
+    public static ItemStack createBook(IVampireBook vampireBook) {
+        ItemStack stack = new ItemStack(ModItems.VAMPIRE_BOOK.get());
+        VampireBook.addToStack(stack, vampireBook);
         return stack;
-    }
-
-    @NotNull
-    @Override
-    public Component getName(@NotNull ItemStack stack) {
-        VampireBookContents contents = stack.get(ModDataComponents.VAMPIRE_BOOK);
-        if (contents != null) {
-            if (!StringUtil.isNullOrEmpty(contents.title())) {
-                return Component.literal(contents.title());
-            }
-        }
-        return super.getName(stack);
     }
 
     public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }
-
-    @NotNull
-    @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(VampireBookContents.get(stack).id()));
-        }
-        return InteractionResult.SUCCESS_SERVER;
-    }
-
 }

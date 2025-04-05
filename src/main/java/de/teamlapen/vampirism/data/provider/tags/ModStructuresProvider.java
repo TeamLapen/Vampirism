@@ -21,6 +21,8 @@ public class ModStructuresProvider extends TagsProvider<Structure> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+        this.tag(ModStructureTags.ON_ANCIENT_REMAINS_MAPS).add(ModStructures.MOTHER);
+        this.tag(ModStructureTags.ON_CRYPT_MAPS).add(ModStructures.CRYPT);
         this.tag(ModStructureTags.HUNTER_OUTPOST).add(ModStructures.HUNTER_OUTPOST_BADLANDS, ModStructures.HUNTER_OUTPOST_DESERT, ModStructures.HUNTER_OUTPOST_PLAINS, ModStructures.HUNTER_OUTPOST_VAMPIRE_FOREST);
     }
 }

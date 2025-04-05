@@ -11,22 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:candle_stick"
-        }
-      ],
-      "rolls": 1.0
-    },
-    {
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:candle"
+          "name": "vampirism:candle_stick_normal"
         }
       ],
       "rolls": 1.0

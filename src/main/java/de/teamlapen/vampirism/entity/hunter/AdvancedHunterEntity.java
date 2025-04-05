@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.logging.LogUtils;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -16,9 +17,8 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
-import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
+import de.teamlapen.vampirism.entity.ai.goals.*;
+import de.teamlapen.vampirism.entity.ai.navigation.HunterPathNavigation;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerModelType;
@@ -27,11 +27,13 @@ import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
@@ -44,9 +46,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -334,11 +336,28 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
         this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
 
-        HatType hat = Optional.ofNullable(appearance.get("hat")).map(HatType::get).orElseGet(() -> {
+        String headwear = appearance.get("headwear");
+        Item headwearItem = null;
+
+        if (headwear != null) {
+            ResourceLocation headWearId = ResourceLocation.tryParse(headwear);
+            if (headWearId == null) {
+                LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the location is incorrect", headwear, supporter.name());
+            } else {
+                headwearItem = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, headWearId));
+                if (headwearItem == null) {
+                    LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the item does not exist", headwear, supporter.name());
+                }
+            }
+        }
+
+        if (headwearItem == null) {
             HatType[] types = HatType.values();
-            return types[random.nextInt(types.length)];
-        });
-        this.setItemSlot(EquipmentSlot.HEAD, hat.getHeadItem());
+            headwearItem = types[random.nextInt(types.length)].getHeadItem().getItem();
+        }
+
+        this.setItemSlot(EquipmentSlot.HEAD, headwearItem.getDefaultInstance());
+
         this.setDontDropEquipment();
     }
 
@@ -349,7 +368,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         type |= (Integer.parseInt(appearance.getOrDefault("body", "13")) & 0b11111111) << 1;
         return type;
     }
-
 
     @Override
     protected int getBaseExperienceReward(ServerLevel level) {
@@ -383,10 +401,16 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
+        return new HunterPathNavigation(this, level);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(1, new OpenGateGoal(this, true));
         this.goalSelector.addGoal(2, new RangedHunterCrossbowAttackGoal<>(this, 0.8, 100));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
 
@@ -395,7 +419,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, VampireBaseEntity.class, 17F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new HunterHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getSelector(getFaction(), true, false, false, false, null)));

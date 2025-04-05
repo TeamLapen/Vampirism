@@ -120,8 +120,8 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
 
     public enum HatType {
         NONE(null),
-        HAT_0(ModItems.HUNTER_HAT_HEAD_0),
-        HAT_1(ModItems.HUNTER_HAT_HEAD_1);
+        TALL(ModItems.HUNTER_HAT_TALL),
+        BROAD(ModItems.HUNTER_HAT_BROAD);
 
         private final Supplier<? extends Item> headItem;
 
@@ -134,14 +134,6 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
                 return ItemStack.EMPTY;
             }
             return this.headItem.get().getDefaultInstance();
-        }
-
-        public static @NotNull HatType get(String value) {
-            try {
-                return HatType.valueOf(value.toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                return NONE;
-            }
         }
     }
 }

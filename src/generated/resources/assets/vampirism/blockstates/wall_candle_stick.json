@@ -1,34 +1,18 @@
 {
   "variants": {
-    "facing=east,lit=false": {
+    "facing=east": {
       "model": "vampirism:block/wall_candle_stick",
       "y": 90
     },
-    "facing=east,lit=true": {
-      "model": "vampirism:block/wall_candle_stick",
-      "y": 90
-    },
-    "facing=north,lit=false": {
+    "facing=north": {
       "model": "vampirism:block/wall_candle_stick",
       "y": 0
     },
-    "facing=north,lit=true": {
-      "model": "vampirism:block/wall_candle_stick",
-      "y": 0
-    },
-    "facing=south,lit=false": {
+    "facing=south": {
       "model": "vampirism:block/wall_candle_stick",
       "y": 180
     },
-    "facing=south,lit=true": {
-      "model": "vampirism:block/wall_candle_stick",
-      "y": 180
-    },
-    "facing=west,lit=false": {
-      "model": "vampirism:block/wall_candle_stick",
-      "y": 270
-    },
-    "facing=west,lit=true": {
+    "facing=west": {
       "model": "vampirism:block/wall_candle_stick",
       "y": 270
     }

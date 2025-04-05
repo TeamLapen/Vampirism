@@ -1,20 +1,28 @@
 package de.teamlapen.vampirism.misc;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredItem;
 
+import java.util.List;
 import java.util.Set;
 
 import static de.teamlapen.vampirism.core.ModBlocks.*;
 import static de.teamlapen.vampirism.core.ModItems.*;
 
+@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class VampirismCreativeTab {
 
     public static CreativeModeTab.Builder builder(Set<ItemLike> allItems) {
@@ -239,7 +247,10 @@ public class VampirismCreativeTab {
 
         private void addDecorativeBlocks() {
             addBlock(FIRE_PLACE);
-            addBlock(CHANDELIER);
+            addCandleHolders(Helper.STANDING_AND_WALL_CANDLE_STICKS.stream().map(pair -> pair.getFirst().asItem()).toList());
+            addCandleHolders(Helper.STANDING_AND_WALL_CANDELABRAS.stream().map(pair -> pair.getFirst().asItem()).toList());
+            addCandleHolders(Helper.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
+            addBlock(VAMPIRE_SOUL_LANTERN);
             addBlock(CROSS);
             addBlock(TOMBSTONE1);
             addBlock(TOMBSTONE2);
@@ -247,7 +258,6 @@ public class VampirismCreativeTab {
             addBlock(GRAVE_CAGE);
             addBlock(VAMPIRE_RACK);
             addBlock(THRONE);
-            addItem(ITEM_CANDELABRA);
             addBlock(BAT_CAGE);
             addBlock(MOTHER_TROPHY);
 
@@ -296,17 +306,29 @@ public class VampirismCreativeTab {
             addItem(HUNTER_COAT_LEGS_ULTIMATE);
             addItem(HUNTER_COAT_FEET_ULTIMATE);
 
-            addItem(HUNTER_HAT_HEAD_0);
-            addItem(HUNTER_HAT_HEAD_1);
-
+            addItem(HUNTER_HAT_TALL);
+            addItem(HUNTER_HAT_BROAD);
 
             addItem(VAMPIRE_CLOTHING_CROWN);
             addItem(VAMPIRE_CLOTHING_HAT);
-            addItem(VAMPIRE_CLOAK_BLACK_BLUE);
-            addItem(VAMPIRE_CLOAK_BLACK_RED);
-            addItem(VAMPIRE_CLOAK_BLACK_WHITE);
-            addItem(VAMPIRE_CLOAK_RED_BLACK);
-            addItem(VAMPIRE_CLOAK_WHITE_BLACK);
+
+            addItem(VAMPIRE_CLOAK_WHITE);
+            addItem(VAMPIRE_CLOAK_LIGHT_GRAY);
+            addItem(VAMPIRE_CLOAK_GRAY);
+            addItem(VAMPIRE_CLOAK_BLACK);
+            addItem(VAMPIRE_CLOAK_BROWN);
+            addItem(VAMPIRE_CLOAK_RED);
+            addItem(VAMPIRE_CLOAK_ORANGE);
+            addItem(VAMPIRE_CLOAK_YELLOW);
+            addItem(VAMPIRE_CLOAK_LIME);
+            addItem(VAMPIRE_CLOAK_GREEN);
+            addItem(VAMPIRE_CLOAK_CYAN);
+            addItem(VAMPIRE_CLOAK_LIGHT_BLUE);
+            addItem(VAMPIRE_CLOAK_BLUE);
+            addItem(VAMPIRE_CLOAK_PURPLE);
+            addItem(VAMPIRE_CLOAK_MAGENTA);
+            addItem(VAMPIRE_CLOAK_PINK);
+
             addItem(VAMPIRE_CLOTHING_LEGS);
             addItem(VAMPIRE_CLOTHING_BOOTS);
 
@@ -349,5 +371,35 @@ public class VampirismCreativeTab {
             addItem(CRUCIFIX_ENHANCED);
             addItem(CRUCIFIX_ULTIMATE);
         }
+
+        private void addCandleHolders(List<Item> allCandles) {
+            for (int i = 0; i < allCandles.size(); i++) {
+                output.accept(allCandles.get(i), i <= 1 ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void addToExistingCreativeTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) {
+            event.accept(VAMPIRE_SPAWN_EGG);
+            event.accept(ADVANCED_VAMPIRE_SPAWN_EGG);
+            event.accept(VAMPIRE_BARON_SPAWN_EGG);
+            event.accept(TASK_MASTER_VAMPIRE_SPAWN_EGG);
+
+            event.accept(VAMPIRE_HUNTER_SPAWN_EGG);
+            event.accept(ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG);
+            event.accept(HUNTER_TRAINER_SPAWN_EGG);
+            event.accept(TASK_MASTER_HUNTER_SPAWN_EGG);
+
+            event.accept(GHOST_SPAWN_EGG);
+        } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
+            insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
+            insertAfter(IMPURE_BLOOD_BUCKET, BLOOD_BUCKET.get(), event);
+        }
+    }
+
+    private static void insertAfter(DeferredItem<?> item, Item insertAfterItem, BuildCreativeModeTabContentsEvent event) {
+        event.insertAfter(new ItemStack(insertAfterItem), new ItemStack(item.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
     }
 }

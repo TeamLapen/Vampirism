@@ -7,7 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "vampirism:oblivion_potion",
-          "weight": 5
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -33,13 +33,9 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 1.0,
-                "min": 0.0
-              },
-              "function": "minecraft:set_damage"
+              "function": "vampirism:set_blood",
+              "maxBlood": 9,
+              "minBlood": 0
             }
           ],
           "name": "vampirism:blood_bottle",
@@ -99,7 +95,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "vampirism:add_book_nbt"
+              "function": "vampirism:set_vampire_book",
+              "tag": "vampirism:is_vampire"
             }
           ],
           "name": "vampirism:vampire_book",
@@ -147,7 +144,35 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 200
+          "weight": 230
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "decoration": "vampirism:ancient_remains",
+              "destination": "vampirism:on_ancient_remains_maps",
+              "function": "minecraft:exploration_map"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "filled_map.vampirism.ancient_remains"
+              },
+              "target": "item_name"
+            }
+          ],
+          "name": "minecraft:map"
         }
       ],
       "rolls": 1.0

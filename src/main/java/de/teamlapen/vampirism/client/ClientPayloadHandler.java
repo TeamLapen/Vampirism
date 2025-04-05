@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.network.packet.garlic.ClientboundAddGarlicEmitterP
 import de.teamlapen.vampirism.network.packet.garlic.ClientboundRemoveGarlicEmitterPacket;
 import de.teamlapen.vampirism.network.packet.garlic.ClientboundUpdateGarlicEmitterPacket;
 import de.teamlapen.vampirism.proxy.ClientProxy;
-import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.fog.FogLevel;
 import de.teamlapen.vampirism.world.garlic.GarlicLevel;
 import net.minecraft.client.Minecraft;
@@ -37,7 +36,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleVampireBookPacket(ClientboundOpenVampireBookPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new VampireBookScreen(VampireBookManager.getInstance().getBookById(msg.bookId()))));
+        context.enqueueWork(() -> openScreen(new VampireBookScreen(msg.vampireBook())));
     }
 
     public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, IPayloadContext context) {

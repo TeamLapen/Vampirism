@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
@@ -23,11 +22,11 @@ import java.util.Optional;
  * Gui for the hunter table
  */
 public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
+    private static final ResourceLocation BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/book");
+    private static final ResourceLocation FANG_SLOT_SPRITE = VResourceLocation.mod("container/slot/fang");
+    private static final ResourceLocation PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
+    private static final ResourceLocation VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_table.png");
-    private static final ResourceLocation EMPTY_BOOK = VResourceLocation.mod("item/empty_book");
-    private static final ResourceLocation EMPTY_FANG = VResourceLocation.mod("item/empty_vampire_fang");
-    private static final ResourceLocation EMPTY_PURE_BLOOD = VResourceLocation.mod("item/empty_pure_blood");
-    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = VResourceLocation.mod("item/empty_vampire_book");
 
     private final CyclingSlotBackground bookIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground fangsIcon = new CyclingSlotBackground(1);
@@ -42,10 +41,10 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getTableRequirement();
-        this.bookIcon.tick(requirement.filter(s -> s.bookQuantity() > 0).map(s -> List.of(EMPTY_BOOK)).orElse(List.of()));
-        this.fangsIcon.tick(requirement.filter(s -> s.vampireFangQuantity() > 0).map(s -> List.of(EMPTY_FANG)).orElse(List.of()));
-        this.bloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(EMPTY_PURE_BLOOD)).orElse(List.of()));
-        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(EMPTY_VAMPIRE_BOOK)).orElse(List.of()));
+        this.bookIcon.tick(requirement.filter(s -> s.bookQuantity() > 0).map(s -> List.of(BOOK_SLOT_SPRITE)).orElse(List.of()));
+        this.fangsIcon.tick(requirement.filter(s -> s.vampireFangQuantity() > 0).map(s -> List.of(FANG_SLOT_SPRITE)).orElse(List.of()));
+        this.bloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(PURE_BLOOD_BOTTLE_SLOT_SPRITE)).orElse(List.of()));
+        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(VAMPIRE_BOOK_SLOT_SPRITE)).orElse(List.of()));
     }
 
     @Override

@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -66,7 +65,9 @@ public class AltarPillarBlock extends VampirismBlock {
         ItemStack heldItem = playerIn.getItemInHand(InteractionHand.MAIN_HAND);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
             if (!playerIn.getAbilities().instabuild) {
-                playerIn.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(type.fillerBlock));
+                if (!playerIn.getInventory().add(new ItemStack(type.fillerBlock))) {
+                    playerIn.drop(new ItemStack(type.fillerBlock), false);
+                }
             }
 
             worldIn.setBlockAndUpdate(pos, state.setValue(TYPE_PROPERTY, EnumPillarType.NONE));
@@ -94,7 +95,6 @@ public class AltarPillarBlock extends VampirismBlock {
 
     public enum EnumPillarType implements StringRepresentable {
         NONE(0, "none", 0, Blocks.AIR), STONE(1, "stone", 1, Blocks.STONE_BRICKS), IRON(2, "iron", 2, Blocks.IRON_BLOCK), GOLD(3, "gold", 3, Blocks.GOLD_BLOCK), BONE(4, "bone", 1.5F, Blocks.BONE_BLOCK);
-
 
         public final String name;
         public final Block fillerBlock;
@@ -130,6 +130,4 @@ public class AltarPillarBlock extends VampirismBlock {
             return getName();
         }
     }
-
-
 }

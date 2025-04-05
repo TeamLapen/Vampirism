@@ -1,15 +1,10 @@
 {
-  "ambient.blood_dripping": {
+  "ambient.blood_drip": {
     "sounds": [
-      {
-        "name": "vampirism:cc/ambient/blood_dripping",
-        "stream": true
-      },
-      {
-        "name": "vampirism:cc/ambient/blood_dripping2",
-        "stream": true
-      }
-    ]
+      "vampirism:cc/ambient/blood_drip/blood_drip_1",
+      "vampirism:cc/ambient/blood_drip/blood_drip_2"
+    ],
+    "subtitle": "subtitles.vampirism.ambient.blood_drip"
   },
   "ambient.forest": {
     "sounds": [

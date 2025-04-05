@@ -15,11 +15,10 @@ import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.recipes.ApplicableOilRecipe;
 import de.teamlapen.vampirism.recipes.CleanOilRecipe;
 import de.teamlapen.vampirism.recipes.ConfigCondition;
+import de.teamlapen.vampirism.recipes.RerollVampireBookRecipe;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -32,8 +31,6 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -50,7 +47,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -84,11 +81,6 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         ItemLike holy_water_bottle_normal = ModItems.HOLY_WATER_BOTTLE_NORMAL.get();
         ItemLike holy_water_bottle_enhanced = ModItems.HOLY_WATER_BOTTLE_ENHANCED.get();
         ItemLike holy_water_bottle_ultimate = ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get();
-        ItemLike string = Items.STRING;
-        ItemLike black_wool = Items.BLACK_WOOL;
-        ItemLike blue_wool = Items.BLUE_WOOL;
-        ItemLike white_wool = Items.WHITE_WOOL;
-        ItemLike red_wool = Items.RED_WOOL;
         ItemLike blood_bottle = ModItems.BLOOD_BOTTLE.get();
         ItemLike pure_blood_0 = ModItems.PURE_BLOOD_0.get();
         ItemLike pure_blood_1 = ModItems.PURE_BLOOD_1.get();
@@ -123,7 +115,6 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         TagKey<Item> heart = ModItemTags.HEART;
         TagKey<Item> beds = ItemTags.BEDS;
 
-
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER.get()).define('Z', hopper).define('Y', planks).define('D', diamond).define('X', iron_ingot).pattern(" Z ").pattern("YDY").pattern("YXY").unlockedBy("has_hopper", has(hopper)).save(output, general("blood_grinder"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_SIEVE.get()).define('X', iron_ingot).define('Q', Blocks.QUARTZ_BRICKS).define('Y', planks).define('Z', cauldron).pattern("XQX").pattern("YZY").pattern("YXY").unlockedBy("has_cauldron", has(cauldron)).save(output, general("blood_sieve"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING.get()).pattern(" X ").pattern("YYY").pattern(" Y ").define('X', vampire_book).define('Y', planks).unlockedBy("has_vampire_book", has(planks)).save(output, general("altar_cleansing"));
@@ -136,6 +127,7 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_BASE.get()).pattern("XYX").pattern("XYX").pattern("ZZZ").define('X', planks).define('Y', obsidian).define('Z', iron_ingot).unlockedBy("has_obsidian", has(obsidian)).save(output, general("totem_base"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_TOP_CRAFTED.get()).pattern("X X").pattern(" Y ").pattern("XZX").define('X', obsidian).define('Y', diamond).define('Z', vampire_book).unlockedBy("has_diamond", has(diamondBlock)).unlockedBy("has_obsidian", has(obsidian)).save(output, general("totem_top"));
         shaped(RecipeCategory.MISC, ModItems.UMBRELLA.get()).pattern("###").pattern("BAB").pattern(" A ").define('#', wool).define('A', stick).define('B', vampire_orchid).unlockedBy("has_wool", has(wool)).save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
+        SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, REFERENCE.MODID + ":reroll_vampire_book");
 
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMICAL_CAULDRON.get()).pattern("XZX").pattern("XXX").pattern("Y Y").define('X', iron_ingot).define('Y', stone_bricks).define('Z', garlic).unlockedBy("has_iron", has(iron_ingot)).save(output, hunter("alchemical_cauldron"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.POTION_TABLE.get()).pattern("XXX").pattern("Y Y").pattern("ZZZ").define('X', glass_bottle).define('Y', planks).define('Z', iron_ingot).unlockedBy("has_glass_bottle", has(glass_bottle)).save(output, hunter("potion_table"));
@@ -163,11 +155,14 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shapeless(RecipeCategory.MISC, ModItems.BLOOD_INFUSED_IRON_INGOT, 3).requires(tag(iron_ingot), 3).requires(Ingredient.of(pure_blood_0, pure_blood_1, pure_blood_2, pure_blood_3)).unlockedBy("has_iron", has(iron_ingot)).save(output, vampire("blood_infused_iron_ingot"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL.get()).pattern("GYG").pattern("YZY").pattern("XXX").define('X', obsidian).define('Y', planks).define('Z', blood_bottle).define('G', gold_ingot).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("blood_pedestal"));
 
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', blue_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_blue"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_RED.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', red_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_red"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', white_wool).define('Y', black_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_black_white"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', black_wool).define('Y', white_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_white_black"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOAK_RED_BLACK.get()).pattern("YZY").pattern("XAX").pattern("Y Y").define('X', black_wool).define('Y', red_wool).define('Z', diamond).define('A', pure_blood).unlockedBy("has_pure_blood", has(pure_blood)).save(output, vampire("vampire_cloak_red_black"));
+        List<Item> vampireCloaks = Helper.VAMPIRE_CLOAKS.stream().map(Item::asItem).toList();
+        List<Item> coloredWool = List.of(Items.BLACK_WOOL, Items.BLUE_WOOL, Items.BROWN_WOOL, Items.CYAN_WOOL, Items.GRAY_WOOL, Items.GREEN_WOOL, Items.LIGHT_BLUE_WOOL, Items.LIGHT_GRAY_WOOL, Items.LIME_WOOL, Items.MAGENTA_WOOL, Items.ORANGE_WOOL, Items.PINK_WOOL, Items.PURPLE_WOOL, Items.RED_WOOL, Items.YELLOW_WOOL, Items.WHITE_WOOL);
+
+        colorWithDye(vampireCloaks, RecipeCategory.COMBAT, this::vampire);
+        for (int i = 0; i < vampireCloaks.size(); i++) {
+            vampireCloak(vampireCloaks.get(i), coloredWool.get(i));
+        }
+
         ItemStack blood_bottle_stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         blood_bottle_stack.setDamageValue(0);
         ShapedRecipeBuilder.shaped(itemLookup, RecipeCategory.MISC, blood_bottle_stack).pattern("XYX").pattern(" X ").define('X', glass).define('Y', rotten_flesh).unlockedBy("has_glass", has(glass)).save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))), vampire("blood_bottle"));
@@ -182,10 +177,6 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_CROWN.get()).pattern("XYX").pattern("XXX").define('X', Items.GOLD_INGOT).define('Y', tag(heart)).unlockedBy("has_heart", has(heart)).unlockedBy("has_gold", has(Items.GOLD_INGOT)).save(output, vampire("vampire_clothing_crown"));
 
         shaped(RecipeCategory.DECORATIONS, ModBlocks.CROSS.get()).pattern(" X ").pattern("XYX").pattern(" X ").define('X', planks).define('Y', holy_water).unlockedBy("has_planks", has(planks)).unlockedBy("has_holy", has(holy_water)).save(output, hunter("cross"));
-        shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_CANDELABRA.get()).pattern("XXX").pattern("YYY").pattern("ZAZ").define('X', string).define('Y', Items.HONEYCOMB).define('Z', iron_ingot).define('A', gold_ingot).unlockedBy("has_honey", has(Items.HONEYCOMB)).unlockedBy("has_string", has(string)).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("candelabra"));
-        shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_CANDELABRA.get()).pattern("YYY").pattern("ZAZ").define('Y', ItemTags.CANDLES).define('Z', iron_ingot).define('A', gold_ingot).unlockedBy("has_honey", has(ItemTags.CANDLES)).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("candelabra_candles"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER.get()).pattern("XYX").pattern("ZYZ").pattern("BAB").define('X', string).define('Y', ModItems.ITEM_CANDELABRA.get()).define('Z', Items.HONEYCOMB).define('B', iron_ingot).define('A', gold_ingot).unlockedBy("has_string", has(string)).unlockedBy("has_honey", has(Items.HONEYCOMB)).unlockedBy("has_candelabra", has(ModItems.ITEM_CANDELABRA.get())).save(output, vampire("chandelier"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER.get()).pattern(" Y ").pattern("ZYZ").pattern("BAB").define('Y', ModItems.ITEM_CANDELABRA.get()).define('Z', ItemTags.CANDLES).define('B', iron_ingot).define('A', gold_ingot).unlockedBy("has_honey", has(ItemTags.CANDLES)).unlockedBy("has_candelabra", has(ModItems.ITEM_CANDELABRA.get())).save(output, vampire("chandelier_candle"));
         shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER.get()).pattern("XXX").pattern("XYX").pattern("ZAZ").define('X', blood_infused_iron_ingot).define('Y', garlic).define('Z', planks).define('A', Tags.Items.DUSTS_REDSTONE).unlockedBy("has_garlic", has(garlic)).unlockedBy("has_bloodiron", has(blood_infused_iron_ingot)).unlockedBy("has_redstone", has(Tags.Items.DUSTS_REDSTONE)).save(output, vampire("garlic_finder"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE2.get()).pattern("XX ").pattern("XYX").pattern("XXX").define('X', Blocks.COBBLESTONE).define('Y', Tags.Items.STONES).unlockedBy("has_coble", has(Blocks.COBBLESTONE)).unlockedBy("has_stone", has(Tags.Items.STONES)).save(output, general("tombstone2"));
         shapeless(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE1.get()).requires(ModBlocks.TOMBSTONE2.get()).unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2.get())).save(output, general("tombstone1"));
@@ -201,6 +192,9 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         generateRecipes(ModBlockFamilies.COBBLED_DARK_STONE, FeatureFlagSet.of(FeatureFlags.VANILLA));
         generateRecipes(ModBlockFamilies.DARK_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
         generateRecipes(ModBlockFamilies.PURPLE_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
+
+        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE_BRICKS.get(), 4).define('#', ModBlocks.DARK_STONE).pattern("##").pattern("##").unlockedBy("has_dark_stone", has(ModBlocks.DARK_STONE)).save(output);
+        shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PURPLE_STONE_BRICKS.get(), 8).requires(ModBlocks.DARK_STONE_BRICKS.get(), 8).requires(ModBlocks.VAMPIRE_ORCHID.get()).unlockedBy("has_dark_stone_bricks", has(ModBlocks.DARK_STONE_BRICKS.get())).save(output);
 
         planksFromLog(ModBlocks.DARK_SPRUCE_PLANKS.get(), ModItemTags.DARK_SPRUCE_LOG, 4);
         planksFromLog(ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModItemTags.CURSED_SPRUCE_LOG, 4);
@@ -236,10 +230,12 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE.get()).pattern("GGG").pattern("GPG").pattern("PPP").define('G', gold_ingot).define('P', planks).unlockedBy("has_gold", has(gold_ingot)).unlockedBy("has_planks", has(planks)).save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER.get()).pattern("XYX").pattern("YZY").pattern("OOO").define('X', cursed_spruce_planks).define('Y', diamond).define('O', obsidian).define('Z', mother_core).unlockedBy("has_diamond", has(diamond)).unlockedBy("has_cursed_plank", has(cursed_spruce_planks)).unlockedBy("has_mother_core", has(mother_core)).save(output, vampire("fog_diffuser"));
         shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON.get()).pattern("GGG").pattern("GCG").pattern("OOO").define('G', Items.GLASS).define('C', mother_core).define('O', obsidian).unlockedBy("has_mother_core", has(mother_core)).unlockedBy("has_obsidian", has(obsidian)).unlockedBy("has_glass", has(Items.GLASS)).save(output);
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN.get()).define('S', ModItems.SOUL_ORB_VAMPIRE).define('G', Items.GOLD_NUGGET).pattern("GGG").pattern("GSG").pattern("GGG").unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE)).save(output);
 
+        shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK.get()).pattern(" I ").pattern("NNN").define('I', iron_ingot).define('N', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(output);
+        shaped(RecipeCategory.DECORATIONS, ModItems.CANDELABRA.get()).pattern("III").pattern("NIN").define('I', iron_ingot).define('N', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(output);
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER.get()).pattern(" A ").pattern("ICI").define('C', ModItems.CANDELABRA.get()).define('I', iron_ingot).define('A', Blocks.CHAIN).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).unlockedBy("has_candelabra", has(ModItems.CANDELABRA.get())).save(output);
 
-        shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK.get()).pattern(" X ").pattern("YYY").define('X', iron_ingot).define('Y', Items.IRON_NUGGET).unlockedBy("has_iron", has(iron_ingot)).unlockedBy("has_nugget", has(Items.IRON_NUGGET)).save(output, vampire("candle_stick"));
-        shapeless(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN.get()).requires(ModItems.SOUL_ORB_VAMPIRE).requires(Items.SOUL_LANTERN).unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE)).unlockedBy("has_soul_lantern", has(Items.SOUL_LANTERN)).save(output);
         alchemyTable();
         stoneCutterRecipes();
         alchemyCauldron();
@@ -421,8 +417,8 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_CROSSBOW.get()).lava(2).skills(HunterSkills.MASTER_CRAFTSMANSHIP).pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', Tags.Items.INGOTS_IRON).define('Y', Tags.Items.STRINGS).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).lava(3).skills(HunterSkills.MASTER_CRAFTSMANSHIP).pattern("YXXY").pattern("YXXY").pattern(" XX ").pattern(" XX ").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Tags.Items.STRINGS).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW.get()).lava(5).skills(HunterSkills.MASTER_CRAFTSMANSHIP).pattern("YXXY").pattern("XZZX").pattern("XZZX").pattern(" XX ").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Tags.Items.STRINGS).define('Z', Tags.Items.GEMS_DIAMOND).save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_HEAD_0.get()).pattern(" YY ").pattern(" YY ").pattern("XXXX").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Items.BLACK_WOOL).save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_HEAD_1.get()).lava(1).pattern(" YY ").pattern("XXXX").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Items.BLACK_WOOL).save(output);
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_TALL.get()).pattern(" YY ").pattern(" YY ").pattern("XXXX").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Items.BLACK_WOOL).save(output);
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_BROAD.get()).lava(1).pattern(" YY ").pattern("XXXX").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Items.BLACK_WOOL).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.PITCHFORK.get()).pattern("X X").pattern("YYY").pattern(" Y ").pattern(" Y ").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', Tags.Items.RODS_WOODEN).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_POUCH.get()).lava(1).pattern("ILLI").pattern("PLLP").pattern("ILLI").define('I', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('L', Tags.Items.LEATHERS).define('P', ItemTags.PLANKS).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 2)).lava(5).pattern("XXZY").pattern("XXZY").pattern("  ZY").pattern("  Z ").define('X', Tags.Items.INGOTS_IRON).unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON)).define('Y', ModItemTags.GARLIC).define('Z', Tags.Items.RODS_WOODEN).save(output);
@@ -689,6 +685,10 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         smithingPure(ModItems.HEART_STRIKER_ENHANCED, 3, ModItems.HEART_STRIKER_ULTIMATE);
         smithingPure(ModItems.HEART_STRIKER_ENHANCED, 4, ModItems.HEART_STRIKER_ULTIMATE);
 
+    }
+
+    protected void vampireCloak(Item item, Item wool) {
+        shaped(RecipeCategory.COMBAT, item).define('W', wool).define('D', Tags.Items.GEMS_DIAMOND).define('P', ModItemTags.PURE_BLOOD).pattern("WDW").pattern("WPW").pattern("W W").unlockedBy("has_pure_blood", has(ModItemTags.PURE_BLOOD)).save(output, vampire(BuiltInRegistries.ITEM.getKey(item).getPath()));
     }
 
     private void smithingPure(ItemLike item, int level, ItemLike result) {

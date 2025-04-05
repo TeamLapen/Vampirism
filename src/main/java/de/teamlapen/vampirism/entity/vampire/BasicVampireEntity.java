@@ -456,7 +456,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, HunterBaseEntity.class, 17F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new VampireHurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getSelector(getFaction(), true, false, true, false, null)));

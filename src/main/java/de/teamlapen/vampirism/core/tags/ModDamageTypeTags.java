@@ -7,7 +7,6 @@ import net.minecraft.world.damagesource.DamageType;
 import org.jetbrains.annotations.NotNull;
 
 public class ModDamageTypeTags {
-
     public static final TagKey<DamageType> ENTITY_PHYSICAL = tag("entity_physical");
     public static final TagKey<DamageType> REMAINS_INVULNERABLE = tag("remains_invulnerable");
     public static final TagKey<DamageType> MOTHER_RESISTANT_TO = tag("mother_resistant_to");

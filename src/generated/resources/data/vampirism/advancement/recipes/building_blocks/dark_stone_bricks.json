@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dark_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:dark_stone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:dark_stone_bricks"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dark_stone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:dark_stone_bricks"
+    ]
+  }
+}

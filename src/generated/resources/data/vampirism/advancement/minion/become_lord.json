@@ -16,7 +16,7 @@
     "hidden": true,
     "icon": {
       "count": 1,
-      "id": "minecraft:paper"
+      "id": "vampirism:vampire_clothing_crown"
     },
     "title": {
       "translate": "advancement.vampirism.become_lord"

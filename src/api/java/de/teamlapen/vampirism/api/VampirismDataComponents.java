@@ -18,7 +18,7 @@ public class VampirismDataComponents {
 
     public static final Supplier<DataComponentType<IOilContent>> OIL_CONTENT = supplyDataComponent(VampirismDataComponents.Keys.OIL_CONTENTS);
     public static final Supplier<DataComponentType<IAppliedOilContent>> APPLIED_OIL = supplyDataComponent(VampirismDataComponents.Keys.APPLIED_OIL);
-    public static final Supplier<DataComponentType<IVampireBookContent>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
+    public static final Supplier<DataComponentType<IVampireBook>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
     public static final Supplier<DataComponentType<IContainedFluid>> BLOOD_CONTAINER = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CONTAINER);
     public static final Supplier<DataComponentType<IContainedProjectiles>> CONTAINED_PROJECTILES = supplyDataComponent(VampirismDataComponents.Keys.CONTAINED_PROJECTILES);
     public static final Supplier<DataComponentType<IEffectiveRefinementSet>> REFINEMENT_SET = supplyDataComponent(VampirismDataComponents.Keys.REFINEMENT_SET);

@@ -7,18 +7,22 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.ItemDataUtils;
+import de.teamlapen.vampirism.util.MapUtil;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -111,7 +115,7 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
             AdvancementHolder kill_resurrected_vampire = Advancement.Builder.advancement()
-                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire").append("\n").append(Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc")), null, AdvancementType.TASK, true, true, true)
+                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_hunter)
                     .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL)).subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
@@ -124,10 +128,11 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
         @SuppressWarnings("unused")
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+            HolderGetter<Item> itemRegistryLookup = holderProvider.lookupOrThrow(Registries.ITEM);
             HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = holderProvider.lookupOrThrow(Registries.BIOME);
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
             AdvancementHolder vampire_forest = Advancement.Builder.advancement()
-                    .display(Items.OAK_LOG, Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModBlocks.DARK_SPRUCE_SAPLING.get(), Component.translatable("advancement.vampirism.vampire_forest"), Component.translatable("advancement.vampirism.vampire_forest.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
                     .addCriterion("main", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inBiome(biomeRegistryLookup.getOrThrow(ModBiomes.VAMPIRE_FOREST))))
                     .requirements(AdvancementRequirements.Strategy.OR)
@@ -137,6 +142,16 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
                     .parent(vampire_forest)
                     .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_BOOK.get()))
                     .save(consumer, REFERENCE.MODID + ":main/ancient_knowledge");
+            AdvancementHolder domain_of_the_dead = Advancement.Builder.advancement()
+                    .display(ModBlocks.CANDLE_STICK_GRAY.get(), Component.translatable("advancement.vampirism.domain_of_the_dead"), Component.translatable("advancement.vampirism.domain_of_the_dead.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(vampire_forest)
+                    .addCriterion("in_crypt", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(holderProvider.lookupOrThrow(Registries.STRUCTURE).getOrThrow(ModStructures.CRYPT))))
+                    .save(consumer, REFERENCE.MODID + ":main/domain_of_the_dead");
+            AdvancementHolder reopening_old_wounds = Advancement.Builder.advancement()
+                    .display(MapUtil.getPreviewMap(MapUtil.getModTranslation("ancient_remains"), ModMapDecorations.ANCIENT_REMAINS), Component.translatable("advancement.vampirism.reopening_old_wounds"), Component.translatable("advancement.vampirism.reopening_old_wounds.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(domain_of_the_dead)
+                    .addCriterion("map", MapFoundCriterionTrigger.TriggerInstance.foundMap(ModMapDecorations.ANCIENT_REMAINS))
+                    .save(consumer, REFERENCE.MODID + ":main/reopening_old_wounds");
             AdvancementHolder regicide = Advancement.Builder.advancement()
                     .display(ModItems.PURE_BLOOD_0.get(), Component.translatable("advancement.vampirism.regicide"), Component.translatable("advancement.vampirism.regicide.desc"), null, AdvancementType.CHALLENGE, true, true, true)
                     .parent(vampire_forest)
@@ -167,7 +182,7 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             AdvancementHolder first_blood = Advancement.Builder.advancement()
-                    .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.SUCK_BLOOD))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
@@ -185,11 +200,16 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/resurrect");
             AdvancementHolder extra_storage = Advancement.Builder.advancement()
-                    .display(ModBlocks.BLOOD_CONTAINER.get(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodContainer(), Component.translatable("advancement.vampirism.extra_storage"), Component.translatable("advancement.vampirism.extra_storage.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("blood_container", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.BLOOD_CONTAINER.get()))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/extra_storage");
+            AdvancementHolder plague_inc = Advancement.Builder.advancement()
+                    .display(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.plague_inc"), Component.translatable("advancement.vampirism.plague_inc.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(first_blood)
+                    .addCriterion("infected", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.INFECT))
+                    .save(consumer, REFERENCE.MODID + ":vampire/plague_inc");
             AdvancementHolder max_level = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.max_level_vampire"), Component.translatable("advancement.vampirism.max_level_vampire.desc"), null, AdvancementType.GOAL, true, true, true)
                     .parent(bat)
@@ -230,20 +250,21 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
 
     private static class MinionAdvancements implements VampirismAdvancementSubProvider {
 
+        @SuppressWarnings("unused")
         @Override
         public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_lord = Advancement.Builder.advancement()
-                    .display(Items.PAPER, Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModItems.VAMPIRE_CLOTHING_CROWN.get(), Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             AdvancementHolder collect_blood = Advancement.Builder.advancement()
-                    .display(ModItems.BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_blood");
             AdvancementHolder collect_hunter_items = Advancement.Builder.advancement()
-                    .display(Items.GOLD_NUGGET, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(Items.BUNDLE, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_HUNTER_ITEMS.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_hunter_items");
@@ -253,7 +274,7 @@ public class AdvancementProvider extends net.minecraft.data.advancements.Advance
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.PROTECT_LORD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/protect_lord");
             AdvancementHolder defend_area = Advancement.Builder.advancement()
-                    .display(Items.SHIELD, Component.translatable("advancement.vampirism.defend_area"), Component.translatable("advancement.vampirism.defend_area.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(Blocks.RED_BANNER, Component.translatable("advancement.vampirism.defend_area"), Component.translatable("advancement.vampirism.defend_area.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.DEFEND_AREA.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/defend_area");

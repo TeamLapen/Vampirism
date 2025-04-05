@@ -4,9 +4,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/stairs_base",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
       "weight": 1

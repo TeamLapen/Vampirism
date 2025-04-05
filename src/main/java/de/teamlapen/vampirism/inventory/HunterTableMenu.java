@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFactions;
@@ -31,7 +30,6 @@ import java.util.stream.IntStream;
 public class HunterTableMenu extends ItemCombinerMenu {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<HunterLeveling.HunterTableRequirement> tableRequirement;
-
 
     public HunterTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.HUNTER_TABLE.get(), id, playerInventory, worldPosCallable, createInputSlotDefinitions(playerInventory.player));

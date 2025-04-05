@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "#c:ingots/iron",
+    "N": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "III",
+    "NIN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:candelabra"
+  }
+}

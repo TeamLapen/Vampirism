@@ -15,7 +15,7 @@
     "hidden": true,
     "icon": {
       "count": 1,
-      "id": "minecraft:shield"
+      "id": "minecraft:red_banner"
     },
     "title": {
       "translate": "advancement.vampirism.defend_area"

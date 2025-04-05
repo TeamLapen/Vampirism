@@ -43,6 +43,10 @@ public class CommonProxy implements IProxy {
         return "English";
     }
 
+    @Override
+    public String getActiveLanguageCode() {
+        return "en_us";
+    }
 
     @Override
     public @Nullable Level getWorldFromKey(@NotNull ResourceKey<Level> world) {

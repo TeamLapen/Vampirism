@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,5 +26,8 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
         tag(ModEntityTags.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
         tag(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER).add(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), ModEntities.GHOST.get());
         tag(ModEntityTags.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CAMEL.get(), ModEntities.CONVERTED_COW.get(), ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.CONVERTED_DONKEY.get(), ModEntities.CONVERTED_FOX.get(), ModEntities.CONVERTED_GOAT.get(), ModEntities.CONVERTED_HORSE.get(), ModEntities.CONVERTED_MULE.get(), ModEntities.CONVERTED_SHEEP.get(), ModEntities.VILLAGER_CONVERTED.get(), ModEntities.CONVERTED_CAT.get());
+        tag(ModEntityTags.ALERTABLE_HUNTERS).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
+        tag(ModEntityTags.ALERTABLE_VAMPIRES).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get());
+        tag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS).addTag(ModEntityTags.HUNTER);
     }
 }

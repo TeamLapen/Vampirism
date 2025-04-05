@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
@@ -30,9 +29,9 @@ import java.util.Optional;
  * Gui for the Hunter Trainer interaction
  */
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
+    private static final ResourceLocation INGOT_SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/slot/ingot");
+    private static final ResourceLocation HUNTER_INTEL_SLOT_SPRITE = VResourceLocation.mod("container/slot/hunter_intel");
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_trainer.png");
-    private static final ResourceLocation EMPTY_INGOT = VResourceLocation.mc("item/empty_slot_ingot");
-    private static final ResourceLocation EMPTY_INTEL = VResourceLocation.mod("item/empty_hunter_intel");
 
     private Button buttonLevelup;
 
@@ -54,9 +53,9 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getRequirement();
-        this.ironIcon.tick(requirement.filter(s -> s.ironQuantity() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
-        this.goldIcon.tick(requirement.filter(s -> s.goldQuantity() > 0).map(s -> List.of(EMPTY_INGOT)).orElse(List.of()));
-        this.hunterIntel.tick(requirement.map(s -> List.of(EMPTY_INTEL)).orElse(List.of()));
+        this.ironIcon.tick(requirement.filter(s -> s.ironQuantity() > 0).map(s -> List.of(INGOT_SLOT_SPRITE)).orElse(List.of()));
+        this.goldIcon.tick(requirement.filter(s -> s.goldQuantity() > 0).map(s -> List.of(INGOT_SLOT_SPRITE)).orElse(List.of()));
+        this.hunterIntel.tick(requirement.map(s -> List.of(HUNTER_INTEL_SLOT_SPRITE)).orElse(List.of()));
     }
 
     @Override

@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.world.gen.structure.mother.MotherPiece;
 import de.teamlapen.vampirism.world.gen.structure.mother.MotherStructure;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomBlockStateRule;
+import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomCandleLitProcessor;
 import de.teamlapen.vampirism.world.gen.structure.templatesystem.RandomStructureProcessor;
 import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarPieces;
 import de.teamlapen.vampirism.world.gen.structure.vampirealtar.VampireAltarStructure;
@@ -28,7 +29,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.WeightedRandomList;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
@@ -41,6 +41,7 @@ import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
+import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
@@ -50,6 +51,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.teamlapen.vampirism.world.gen.VanillaStructureModifications.singleJigsawPieceFunction;
@@ -74,6 +76,7 @@ public class ModStructures {
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomCandleLitProcessor>> RANDOM_CANDLE_LIT = STRUCTURE_PROCESSOR_TYPES.register("random_candle_lit", () -> () -> RandomCandleLitProcessor.CODEC);
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_camp"));
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("vampire_hut"));
@@ -86,7 +89,9 @@ public class ModStructures {
     public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("crypt"));
 
     public static final ResourceKey<StructureTemplatePool> HUNTER_TRAINER = createTemplatePool("village/entities/hunter_trainer");
+
     public static final ResourceKey<StructureProcessorList> TOTEM_FACTION = createProcessorList("totem_faction");
+    public static final ResourceKey<StructureProcessorList> CRYPT_DEGRADATION = createProcessorList("crypt_degradation");
 
     public static final ResourceKey<StructureSet> HUNTER_CAMP_SET = createStructureSetKey("hunter_camp");
     public static final ResourceKey<StructureSet> VAMPIRE_HUT_SET = createStructureSetKey("vampire_hut");
@@ -125,10 +130,17 @@ public class ModStructures {
     }
 
     static void createStructureProcessorLists(BootstrapContext<StructureProcessorList> context) {
-        StructureProcessor factionProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), 0.6f), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList()))));
-        StructureProcessor biomeTopBlockProcessor = new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState());
-
-        context.register(TOTEM_FACTION, new StructureProcessorList(ImmutableList.of(factionProcessor, biomeTopBlockProcessor)));
+        context.register(TOTEM_FACTION, new StructureProcessorList(ImmutableList.of(
+                new RandomStructureProcessor(ImmutableList.of(new RandomBlockStateRule(new RandomBlockMatchTest(ModBlocks.TOTEM_TOP.get(), 0.6f), AlwaysTrueTest.INSTANCE, ModBlocks.TOTEM_TOP.get().defaultBlockState(), TotemTopBlock.getBlocks().stream().filter((totemx) -> totemx != ModBlocks.TOTEM_TOP.get() && !totemx.isCrafted()).map(Block::defaultBlockState).collect(Collectors.toList())))),
+                new BiomeTopBlockProcessor(Blocks.DIRT.defaultBlockState())
+        )));
+        context.register(CRYPT_DEGRADATION, new StructureProcessorList(ImmutableList.of(
+                new RuleProcessor(ImmutableList.of(
+                        new ProcessorRule(new RandomBlockMatchTest(ModBlocks.DARK_STONE_BRICKS.get(), 0.3F), AlwaysTrueTest.INSTANCE, ModBlocks.CRACKED_DARK_STONE_BRICKS.get().defaultBlockState()),
+                        new ProcessorRule(new RandomBlockMatchTest(ModBlocks.DARK_STONE_TILES.get(), 0.3F), AlwaysTrueTest.INSTANCE, ModBlocks.CRACKED_DARK_STONE_TILES.get().defaultBlockState())
+                )),
+                new RandomCandleLitProcessor(0.7f)
+        )));
     }
 
     static void createStructureSets(BootstrapContext<StructureSet> context) {
@@ -159,6 +171,6 @@ public class ModStructures {
         context.register(HUNTER_OUTPOST_BADLANDS, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.HUNTER_OUTPOST_BADLANDS)).spawnOverrides(Map.of(VEnums.HUNTER_CATEGORY.getValue(), new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 80, 2, 4), new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 20, 1, 22))))).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(BadlandsHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
         context.register(VAMPIRE_ALTAR, new VampireAltarStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_ALTAR)).terrainAdapation(TerrainAdjustment.BEARD_BOX).build()));
         context.register(MOTHER, new MotherStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.MOTHER)).terrainAdapation(TerrainAdjustment.NONE).build()));
-        context.register(CRYPT, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Heightmap.Types.WORLD_SURFACE_WG));
+        context.register(CRYPT, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), Optional.empty(), 9, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Optional.of(Heightmap.Types.WORLD_SURFACE_WG), 80, List.of(), DimensionPadding.ZERO, LiquidSettings.IGNORE_WATERLOGGING));
     }
 }

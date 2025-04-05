@@ -1,0 +1,30 @@
+{
+  "parent": "vampirism:vampire/first_blood",
+  "criteria": {
+    "infected": {
+      "conditions": {
+        "action": "infect"
+      },
+      "trigger": "vampirism:vampire_action"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.plague_inc.desc"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "vampirism:vampire_blood_bottle"
+    },
+    "title": {
+      "translate": "advancement.vampirism.plague_inc"
+    }
+  },
+  "requirements": [
+    [
+      "infected"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

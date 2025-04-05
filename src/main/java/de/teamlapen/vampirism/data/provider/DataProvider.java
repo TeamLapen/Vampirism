@@ -3,11 +3,16 @@ package de.teamlapen.vampirism.data.provider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
-import de.teamlapen.vampirism.data.provider.model.ModelProvider;
+import de.teamlapen.vampirism.data.provider.model.ModModelProvider;
 import de.teamlapen.vampirism.data.provider.tags.TagProvider;
+import net.minecraft.DetectedVersion;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
@@ -35,7 +40,7 @@ public class DataProvider {
         generator.addProvider(true, LootTablesProvider.getProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new AdvancementProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new RecipesProvider.Runner(packOutput, lookupProviderFuture));
-        generator.addProvider(true, new ModelProvider(packOutput));
+        generator.addProvider(true, new ModModelProvider(packOutput));
         generator.addProvider(true, new SingleJigsawPiecesProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(true, new SundamageProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(true, new SkillTreeProvider(packOutput, lookupProviderFuture));
@@ -43,5 +48,6 @@ public class DataProvider {
         generator.addProvider(true, new LootModifierGenerator(packOutput, lookupProviderFuture));
         generator.addProvider(true, new SoundDefinitionProvider(packOutput));
         generator.addProvider(true, new EquipmentAssetProvider(packOutput));
+        generator.addProvider(true, new PackMetadataGenerator(packOutput).add(PackMetadataSection.TYPE, new PackMetadataSection(Component.literal("Vampirism resources"), DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES))));
     }
 }

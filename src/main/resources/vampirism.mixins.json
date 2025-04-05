@@ -19,6 +19,7 @@
     "MixinMobEffectInstance",
     "MixinPlayerEntity",
     "MixinPotionBrewing",
+    "MixinPowderSnowBlock",
     "NearestAttackableTargetGoalMixin",
     "NoiseGeneratorSettingsMixin",
     "SpawnStateMixin",
@@ -61,6 +62,7 @@
   ],
   "client": [
     "accessor.PostChainMixin",
+    "client.CapeLayerMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
     "client.KeyMappingMixin",

@@ -7,7 +7,6 @@ import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 
 public class ModBiomeTags {
-
     public static class HasFaction {
         public static final TagKey<Biome> IS_FACTION_BIOME = tag("has_faction");
         public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("has_faction/vampire");

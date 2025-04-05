@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:chain",
+    "C": "vampirism:candelabra",
+    "I": "#c:ingots/iron"
+  },
+  "pattern": [
+    " A ",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:chandelier"
+  }
+}

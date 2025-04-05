@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:item_candelabra"
+          "name": "vampirism:candelabra"
         }
       ],
       "rolls": 1.0

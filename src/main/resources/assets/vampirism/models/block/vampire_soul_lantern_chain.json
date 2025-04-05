@@ -1,0 +1,40 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"lantern": "vampirism:block/spirit_lantern",
+		"particle": "block/gold_block"
+	},
+	"render_type": "minecraft:cutout",
+	"elements": [
+		{
+			"from": [6.5, 11, 8],
+			"to": [9.5, 15, 8],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 1, 8]},
+			"faces": {
+				"north": {"uv": [6, 3, 9, 7], "texture": "#lantern"},
+				"south": {"uv": [6, 3, 9, 7], "texture": "#lantern"}
+			}
+		},
+		{
+			"from": [8, 10, 6.5],
+			"to": [8, 12, 9.5],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 1, 8]},
+			"faces": {
+				"east": {"uv": [6, 9, 9, 11], "texture": "#lantern"},
+				"west": {"uv": [6, 9, 9, 11], "texture": "#lantern"}
+			}
+		},
+		{
+			"from": [8, 14, 6.5],
+			"to": [8, 16, 9.5],
+			"shade": false,
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 1, 8]},
+			"faces": {
+				"east": {"uv": [6, 7, 9, 9], "texture": "#lantern"},
+				"west": {"uv": [6, 7, 9, 9], "texture": "#lantern"}
+			}
+		}
+	]
+}

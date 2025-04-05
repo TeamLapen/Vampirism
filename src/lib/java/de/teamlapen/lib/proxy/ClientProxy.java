@@ -39,6 +39,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public String getActiveLanguageCode() {
+        return Minecraft.getInstance().getLanguageManager().getSelected();
+    }
+
+    @Override
     public Level getWorldFromKey(ResourceKey<Level> world) {
         Level serverWorld = super.getWorldFromKey(world);
         if (serverWorld != null) return serverWorld;

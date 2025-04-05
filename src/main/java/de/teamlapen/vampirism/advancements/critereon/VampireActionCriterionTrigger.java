@@ -35,7 +35,8 @@ public class VampireActionCriterionTrigger extends SimpleCriterionTrigger<Vampir
         SUCK_BLOOD("suck_blood"),
         NONE("none"),
         KILL_FROZEN_HUNTER("kill_frozen_hunter"),
-        RESURRECT("resurrect");
+        RESURRECT("resurrect"),
+        INFECT("infect");
 
         private final String name;
 

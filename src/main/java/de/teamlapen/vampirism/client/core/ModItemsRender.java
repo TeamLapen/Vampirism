@@ -1,24 +1,15 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
-import de.teamlapen.vampirism.api.items.IArrowContainer;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.color.item.RefinementTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.BloodBottleItem;
-import de.teamlapen.vampirism.items.CrossbowArrowItem;
-import de.teamlapen.vampirism.items.component.BottleBlood;
-import de.teamlapen.vampirism.items.component.OilContent;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CrossbowItem;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -58,8 +49,8 @@ public class ModItemsRender {
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(ItemExtensions.HUNTER_HAT, ModItems.HUNTER_HAT_HEAD_0.get(), ModItems.HUNTER_HAT_HEAD_1.get());
-        event.registerItem(ItemExtensions.VAMPIRE_CLOAK, ModItems.VAMPIRE_CLOAK_BLACK_BLUE.get(), ModItems.VAMPIRE_CLOAK_BLACK_RED.get(), ModItems.VAMPIRE_CLOAK_RED_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_WHITE_BLACK.get());
+        Helper.VAMPIRE_CLOAKS.forEach(cloak -> event.registerItem(ItemExtensions.VAMPIRE_CLOAK, cloak));
+        event.registerItem(ItemExtensions.HUNTER_HAT, ModItems.HUNTER_HAT_TALL.get(), ModItems.HUNTER_HAT_BROAD.get());
         event.registerItem(ItemExtensions.VAMPIRE_CLOTHING, ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
         event.registerItem(ItemExtensions.HUNTER_CROSSBOW, ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         event.registerItem(ItemExtensions.CRUCIFIX, ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get());

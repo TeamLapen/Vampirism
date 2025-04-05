@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -21,32 +19,29 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 public class VampireBookScreen extends Screen {
 
-    private final static ResourceLocation pageTexture = VResourceLocation.mod("textures/gui/vampire_book.png");
+    private final ResourceLocation backgroundTexture = VResourceLocation.mod("textures/gui/vampire_book.png");
     private final int xSize = 245;
     private final int ySize = 192;
     private int guiLeft, guiTop;
     private PageButton buttonNext;
     private PageButton buttonPrev;
     private int pageNumber;
-    private final VampireBookManager.@NotNull BookInfo info;
+    private final @NotNull IVampireBook vampireBook;
     private List<FormattedText> content;
 
-
-    public VampireBookScreen(VampireBookManager.@NotNull BookInfo info) {
-        super(Component.literal(info.title()));
-        this.info = info;
+    public VampireBookScreen(@NotNull IVampireBook vampireBook) {
+        super(vampireBook.title());
+        this.vampireBook = vampireBook;
     }
 
-
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
 
@@ -71,9 +66,10 @@ public class VampireBookScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        GuiRenderer.blit(pGuiGraphics, pageTexture, guiLeft, guiTop, xSize, ySize);
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
+        GuiRenderer.blit(guiGraphics, backgroundTexture, guiLeft, guiTop, xSize, ySize);
     }
 
     @Override
@@ -94,8 +90,7 @@ public class VampireBookScreen extends Screen {
             }
         }, true));
 
-        content = Arrays.stream(info.content()).map(Component::literal).flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
-
+        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
     }
 
     public static void drawCenteredStringWithoutShadow(@NotNull GuiGraphics graphics, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
@@ -104,7 +99,7 @@ public class VampireBookScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (keyCode == GLFW.GLFW_KEY_BACKSPACE || keyCode == this.minecraft.options.keyUse.getKey().getValue()) {
+        if (this.minecraft != null && (keyCode == GLFW.GLFW_KEY_BACKSPACE || keyCode == this.minecraft.options.keyUse.getKey().getValue())) {
             this.minecraft.setScreen(null);
             return true;
         } else if ((keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_RIGHT) && pageNumber + 1 < content.size()) {
@@ -160,8 +155,9 @@ public class VampireBookScreen extends Screen {
      * @param lineWidth        Available width (pixel)
      * @param firstHeight      Available height on the first page (pixel)
      * @param subsequentHeight Available height on subsequent pages (pixel)
-     * @return Each list element should be drawn on a individual page. Lines are wrapped using '\n'
+     * @return Each list element should be drawn on an individual page. Lines are wrapped using '\n'
      */
+    @SuppressWarnings({"JavadocReference"})
     private static @NotNull List<FormattedText> prepareForLongText(@NotNull Component text, int lineWidth, int firstHeight, int subsequentHeight) {
         Font fontRenderer = Minecraft.getInstance().font;
         int firstCount = firstHeight / fontRenderer.lineHeight;
@@ -186,6 +182,7 @@ public class VampireBookScreen extends Screen {
      * @param elements The list ist not used itself, but the elements are passed to the new ITextProperties
      * @return a new ITextProperties that combines the given elements with a newline in between
      */
+    @SuppressWarnings("JavadocReference")
     private static @NotNull FormattedText combineWithNewLine(@NotNull List<FormattedText> elements) {
         FormattedText newLine = Component.literal("\n");
         List<FormattedText> copy = new ArrayList<>(elements.size() * 2);

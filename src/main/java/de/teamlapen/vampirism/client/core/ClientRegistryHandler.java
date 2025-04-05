@@ -4,11 +4,13 @@ import de.teamlapen.vampirism.client.renderer.item.properties.BloodFilled;
 import de.teamlapen.vampirism.client.renderer.item.properties.ClipFilled;
 import de.teamlapen.vampirism.client.renderer.item.tooltip.QuarrelPouchClientTooltip;
 import de.teamlapen.vampirism.items.tooltip.QuarrelPouchTooltip;
+import de.teamlapen.vampirism.client.renderer.item.properties.HasName;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -46,5 +48,10 @@ public class ClientRegistryHandler {
     @SubscribeEvent
     public static void registerTooltipRenderer(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(QuarrelPouchTooltip.class, QuarrelPouchClientTooltip::new);
+    }
+
+    @SubscribeEvent
+    public static void registerConditional(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(HasName.ID, HasName.CODEC);
     }
 }

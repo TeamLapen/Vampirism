@@ -5,20 +5,27 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.effects.VampirismPotion.HunterPotion;
+import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.brewing.BrewingRecipe;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -78,8 +85,16 @@ public class ModPotions {
     }
 
     static void registerPotionMixes(RegisterBrewingRecipesEvent event) {
+        PotionBrewing.Builder builder = event.getBuilder();
+
         registerPotionMixes(event.getRegistryAccess());
-        event.getBuilder().addMix(Potions.WATER, ModBlocks.GARLIC.get().asItem(), GARLIC);
+
+        builder.addMix(Potions.WATER, ModBlocks.GARLIC.get().asItem(), GARLIC);
+
+        builder.addRecipe(DataComponentIngredient.of(true, ItemDataUtils.createPotion(Potions.WATER)), Ingredient.of(ModItems.PURE_SALT), new ItemStack(ModItems.PURE_SALT_WATER.get()));
+        splashItemBottle(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get(), builder);
+        splashItemBottle(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), builder);
+        splashItemBottle(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), builder);
     }
 
     private static void registerPotionMixes(RegistryAccess registryAccess) {
@@ -149,5 +164,14 @@ public class ModPotions {
 
     private static void master(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
         VampirismAPI.extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
+    }
+
+    private static void splashItemBottle(Item item, Item resultSplashItem, PotionBrewing.Builder builder) {
+        builder.addRecipe(new BrewingRecipe(Ingredient.of(item), Ingredient.of(Items.GUNPOWDER), new ItemStack(resultSplashItem)) {
+            @Override
+            public boolean isInput(@NotNull ItemStack stack) {
+                return item.equals(stack.getItem());
+            }
+        });
     }
 }

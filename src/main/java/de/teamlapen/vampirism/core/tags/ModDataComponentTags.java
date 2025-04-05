@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.core.tags;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;

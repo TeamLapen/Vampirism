@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public abstract class ModDisplayItemGenerator implements CreativeModeTab.DisplayItemsGenerator {
-    protected CreativeModeTab.Output output;
+    public CreativeModeTab.Output output;
     @SuppressWarnings("FieldCanBeLocal")
-    protected CreativeModeTab.ItemDisplayParameters parameters;
+    public CreativeModeTab.ItemDisplayParameters parameters;
     protected final Set<ItemLike> items;
 
     public ModDisplayItemGenerator(Set<ItemLike> allItems) {

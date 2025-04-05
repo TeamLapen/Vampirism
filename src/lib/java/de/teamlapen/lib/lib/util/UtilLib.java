@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -582,6 +583,19 @@ public class UtilLib {
 
         });
         return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
+    }
+
+    public static Map<Direction, VoxelShape> getShapesRotatedFromNorth(VoxelShape shapeOnNorth) {
+        return new EnumMap<>(Direction.class) {{
+            put(Direction.NORTH, shapeOnNorth);
+            put(Direction.WEST, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
+            put(Direction.SOUTH, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.HUNDRED_EIGHTY));
+            put(Direction.EAST, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.NINETY));
+        }};
+    }
+
+    public static Pair<VoxelShape, VoxelShape> getShapesRotatedSymmetrically(VoxelShape shapeOnNorth) {
+        return Pair.of(shapeOnNorth, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.NINETY));
     }
 
     public static @NotNull VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {

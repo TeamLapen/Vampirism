@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "vampirism:block/chandelier_lime"
+    },
+    "lit=true": {
+      "model": "vampirism:block/chandelier_lime_lit"
+    }
+  }
+}

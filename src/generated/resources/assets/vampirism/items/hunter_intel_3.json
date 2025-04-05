@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:item/hunter_intel_3"
+    "model": "vampirism:item/hunter_intel"
   }
 }

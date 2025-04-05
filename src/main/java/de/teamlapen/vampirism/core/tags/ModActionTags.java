@@ -7,7 +7,6 @@ import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 public class ModActionTags {
-
     public static final TagKey<IAction<?>> DISABLE_BY_HOLY_WATER = tag("disabled_holy_water");
     public static final TagKey<IAction<?>> DISABLE_BY_NORMAL_HOLY_WATER = tag("disabled_holy_water/weak");
     public static final TagKey<IAction<?>> DISABLE_BY_ENHANCED_HOLY_WATER = tag("disabled_holy_water/enhanced");

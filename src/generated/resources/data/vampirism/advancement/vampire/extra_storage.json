@@ -26,6 +26,14 @@
     },
     "hidden": true,
     "icon": {
+      "components": {
+        "vampirism:blood_container": {
+          "fluid": {
+            "amount": 12600,
+            "id": "vampirism:blood"
+          }
+        }
+      },
       "count": 1,
       "id": "vampirism:blood_container"
     },

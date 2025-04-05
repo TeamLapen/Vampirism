@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": "#c:gems/diamond",
+    "P": "#vampirism:pure_blood",
+    "W": "minecraft:brown_wool"
+  },
+  "pattern": [
+    "WDW",
+    "WPW",
+    "W W"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:vampire_cloak_brown"
+  }
+}

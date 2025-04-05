@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/chandelier_filled",
+  "textures": {
+    "candle": "minecraft:block/gray_candle"
+  }
+}

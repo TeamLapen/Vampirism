@@ -28,6 +28,7 @@ public class TagProvider {
         gen.addProvider(true, new ModEnchantmentProvider(output, future));
         gen.addProvider(true, new ModFactionProvider(output, future));
         gen.addProvider(true, new ModActionTagsProvider(output, future));
+        gen.addProvider(true, new ModVampireBookTagsProvider(output, future));
         gen.addProvider(true, new ModGameEventProvider(output, future));
         gen.addProvider(true, new DataComponentTagsProvider(output, future));
     }

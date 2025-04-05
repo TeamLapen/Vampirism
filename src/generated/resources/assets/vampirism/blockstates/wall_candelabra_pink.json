@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=east,lit=false": {
+      "model": "vampirism:block/wall_candelabra_pink",
+      "y": 90
+    },
+    "facing=east,lit=true": {
+      "model": "vampirism:block/wall_candelabra_pink_lit",
+      "y": 90
+    },
+    "facing=north,lit=false": {
+      "model": "vampirism:block/wall_candelabra_pink",
+      "y": 0
+    },
+    "facing=north,lit=true": {
+      "model": "vampirism:block/wall_candelabra_pink_lit",
+      "y": 0
+    },
+    "facing=south,lit=false": {
+      "model": "vampirism:block/wall_candelabra_pink",
+      "y": 180
+    },
+    "facing=south,lit=true": {
+      "model": "vampirism:block/wall_candelabra_pink_lit",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "vampirism:block/wall_candelabra_pink",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "vampirism:block/wall_candelabra_pink_lit",
+      "y": 270
+    }
+  }
+}

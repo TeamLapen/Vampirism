@@ -4,20 +4,16 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/straight_1",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 1
+      "weight": 2
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/straight_2",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
       "weight": 3
@@ -26,9 +22,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/corner_1",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
       "weight": 2
@@ -37,31 +31,25 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/cross_1",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 3
+      "weight": 2
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/cross_2",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 3
+      "weight": 1
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/room_1",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
       "weight": 2
@@ -70,42 +58,34 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/room_2",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 2
+      "weight": 3
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/room_3",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 2
+      "weight": 3
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/room_4",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
-      "weight": 2
+      "weight": 3
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "vampirism:crypt/corridor/stairs_1",
-        "processors": {
-          "processors": []
-        },
+        "processors": "vampirism:crypt_degradation",
         "projection": "rigid"
       },
       "weight": 3

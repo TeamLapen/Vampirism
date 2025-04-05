@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.data.provider;
 
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.mc;
@@ -19,7 +23,7 @@ public class SoundDefinitionProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.ENTITY_VAMPIRE_SCREAM, definition().subtitle("subtitles.vampirism.entity.vampire_scream").with(sound(mod("cc/entity/vampire_scream"))));
         this.add(ModSounds.VAMPIRE_BITE, definition().subtitle("subtitles.vampirism.player.bite").with(sound(mod("cc/entity/vampire_bite")), sound(mod("cc/entity/vampire_bite_long"))));
         this.add(ModSounds.VAMPIRE_FEEDING, definition().subtitle("subtitles.vampirism.player.feeding").with(sound(mod("cc/entity/vampire_feeding"))));
-        this.add(ModSounds.AMBIENT_BLOOD_DRIPPING, definition().with(sound(mod("cc/ambient/blood_dripping")).stream(), sound(mod("cc/ambient/blood_dripping2")).stream()));
+        addVariedSound(ModSounds.BLOOD_DRIP.get(), "cc/ambient/blood_drip/blood_drip", 2, true);
         this.add(ModSounds.VAMPIRE_FOREST_AMBIENT, definition().with(sound(mod("reserved/ambient/vampire_forest")).stream()));
         this.add(ModSounds.COFFIN_LID, definition().subtitle("subtitles.vampirism.coffin_lid").with(sound(mod("cc/block/coffin_lid_slide"))));
         this.add(ModSounds.BAT_SWARM, definition().subtitle("subtitles.vampirism.bat_swarm").with(sound(mod("cc/fx/bat_swarm"))));
@@ -49,5 +53,21 @@ public class SoundDefinitionProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.LEVEL_UP, definition().with(sound(mod("reserved/fx/level_up"))));
         this.add(ModSounds.BUBBLES, definition().with(sound(mod("reserved/block/bubbles_1")), sound(mod("reserved/block/bubbles_2")), sound(mod("reserved/block/bubbles_3"))));
         this.add(ModSounds.UNLOCK_SKILLS, definition().with(sound(mod("reserved/fx/unlock_skills_1")), sound(mod("reserved/fx/unlock_skills_2")), sound(mod("reserved/fx/unlock_skills_3"))));
+    }
+
+    private void addVariedSound(SoundEvent sound, String fileName, int count, boolean hasSubtitle) {
+        SoundDefinition soundDefinition = definition();
+        if (hasSubtitle) {
+            soundDefinition.subtitle(getSubtitle(sound));
+        }
+        for (int i = 1; i <= count; i++) {
+            soundDefinition.with(SoundDefinition.Sound.sound(ResourceLocation.fromNamespaceAndPath(REFERENCE.MODID, fileName + "_" + i), SoundDefinition.SoundType.SOUND));
+        }
+
+        this.add(sound, soundDefinition);
+    }
+
+    private static String getSubtitle(SoundEvent sound) {
+        return "subtitles." + REFERENCE.MODID + "." + sound.location().getPath();
     }
 }

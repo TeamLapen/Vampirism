@@ -7,7 +7,6 @@ import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 public class ModTaskTags {
-
     public static final TagKey<Task> HAS_FACTION = tag("has_faction");
     public static final TagKey<Task> IS_VAMPIRE = tag("has_faction/vampire");
     public static final TagKey<Task> IS_HUNTER = tag("has_faction/hunter");

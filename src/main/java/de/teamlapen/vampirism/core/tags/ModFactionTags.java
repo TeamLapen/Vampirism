@@ -8,7 +8,6 @@ import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
 public class ModFactionTags {
-
     public static final TagKey<IFaction<?>> HOSTILE_TOWARDS_NEUTRAL = tag("hostile_towards_neutral");
     public static final TagKey<IFaction<?>> ALL_FACTIONS = VampirismTags.Factions.ALL_FACTIONS;
     public static final TagKey<IFaction<?>> IS_HUNTER = VampirismTags.Factions.IS_HUNTER;

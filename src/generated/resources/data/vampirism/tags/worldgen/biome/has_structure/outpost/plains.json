@@ -1,4 +1,7 @@
 {
+  "remove": [
+    "minecraft:pale_garden"
+  ],
   "values": [
     "#c:is_plains",
     "#minecraft:is_forest"

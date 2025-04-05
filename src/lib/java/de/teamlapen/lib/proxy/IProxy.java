@@ -37,6 +37,8 @@ public interface IProxy {
      */
     String getActiveLanguage();
 
+    String getActiveLanguageCode();
+
     /**
      * Try to obtain the world from the given key. Null if not loaded or not accessible (on client)
      */

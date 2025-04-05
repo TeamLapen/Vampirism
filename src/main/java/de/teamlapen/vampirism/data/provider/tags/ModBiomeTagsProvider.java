@@ -23,12 +23,12 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
     @SuppressWarnings("unchecked")
     @Override
     protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
-        tag(ModBiomeTags.HasStructure.HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE);
+        tag(ModBiomeTags.HasStructure.HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE).remove(Biomes.PALE_GARDEN);
         tag(ModBiomeTags.HasFaction.IS_FACTION_BIOME).addTags(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME);
         tag(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
         tag(ModBiomeTags.HasFaction.IS_HUNTER_BIOME);
         tag(ModBiomeTags.HasStructure.VAMPIRE_ALTAR).addTags(Tags.Biomes.IS_WASTELAND, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_RARE, Tags.Biomes.IS_SPOOKY, Tags.Biomes.IS_SWAMP, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
-        tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_PLAINS).addTags(Tags.Biomes.IS_PLAINS, BiomeTags.IS_FOREST);
+        tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_PLAINS).addTags(Tags.Biomes.IS_PLAINS, BiomeTags.IS_FOREST).remove(Biomes.PALE_GARDEN);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_DESERT).addTags(Tags.Biomes.IS_DESERT);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_VAMPIRE_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_BADLANDS).addTags(BiomeTags.IS_BADLANDS);

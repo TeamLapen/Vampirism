@@ -14,10 +14,8 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.effects.BadOmenEffect;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.ai.goals.AttackVillageGoal;
-import de.teamlapen.vampirism.entity.ai.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.ai.goals.ForceLookEntityGoal;
-import de.teamlapen.vampirism.entity.ai.goals.RangedHunterCrossbowAttackGoal;
+import de.teamlapen.vampirism.entity.ai.goals.*;
+import de.teamlapen.vampirism.entity.ai.navigation.HunterPathNavigation;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
@@ -51,6 +49,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -456,10 +455,16 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
+        return new HunterPathNavigation(this, level);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(1, new OpenGateGoal(this, true));
         this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(3, new RangedHunterCrossbowAttackGoal<>(this, 0.6, 60));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
@@ -469,7 +474,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, VampireBaseEntity.class, 17F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IHunterMob.class));
+        this.targetSelector.addGoal(1, new HunterHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, VampirismAPI.factionRegistry().getSelector(getFaction(), true, false, false, false, null)));

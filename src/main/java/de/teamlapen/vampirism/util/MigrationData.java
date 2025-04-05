@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class MigrationData {
 
-
     @SubscribeEvent
     public static void fix(NewRegistryEvent event) {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
@@ -22,6 +21,7 @@ public class MigrationData {
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
         fixEffects(new Mapping(ModEffects.EFFECTS));
+        fixPoiTypes(new Mapping(ModVillage.POI_TYPES));
     }
 
     public record Mapping(DeferredRegister<?> register) {
@@ -85,7 +85,14 @@ public class MigrationData {
         mapping.remap("vampirism:obsidian_armor_legs_ultimate", "vampirism:hunter_coat_legs_ultimate");
         mapping.remap("vampirism:obsidian_armor_feet_ultimate", "vampirism:hunter_coat_feet_ultimate");
         mapping.remap("vampirism:item_garlic", "vampirism:garlic");
-
+        mapping.remap("vampirism:item_candelabra", "vampirism:candelabra_normal");
+        mapping.remap("vampirism:vampire_cloak_black_blue", "vampirism:vampire_cloak_blue");
+        mapping.remap("vampirism:vampire_cloak_black_red", "vampirism:vampire_cloak_black");
+        mapping.remap("vampirism:vampire_cloak_black_white", "vampirism:vampire_cloak_black");
+        mapping.remap("vampirism:vampire_cloak_red_black", "vampirism:vampire_cloak_red");
+        mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
+        mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
+        mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
@@ -114,6 +121,7 @@ public class MigrationData {
         mapping.remap("castle_block_purple_brick_wall", "vampirism:purple_stone_brick_wall");
         mapping.remap("dark_spruce_pressure_place", "vampirism:dark_spruce_pressure_plate");
         mapping.remap("cursed_spruce_pressure_place", "vampirism:cursed_spruce_pressure_plate");
+        mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {
@@ -125,5 +133,9 @@ public class MigrationData {
 
     private static void fixEffects(@NotNull Mapping mapping) {
         mapping.remap("vampirism:thirst", "hunger");
+    }
+
+    private static void fixPoiTypes(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
     }
 }

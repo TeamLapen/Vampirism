@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record BloodFilled() implements RangeSelectItemModelProperty {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("bloodfilled");
+    public static final ResourceLocation ID = VResourceLocation.mod("blood_filled");
     public static final MapCodec<BloodFilled> CODEC = MapCodec.unit(BloodFilled::new);
 
     @Override

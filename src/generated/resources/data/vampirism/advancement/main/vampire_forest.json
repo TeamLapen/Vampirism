@@ -25,7 +25,7 @@
     "hidden": true,
     "icon": {
       "count": 1,
-      "id": "minecraft:oak_log"
+      "id": "vampirism:dark_spruce_sapling"
     },
     "title": {
       "translate": "advancement.vampirism.vampire_forest"

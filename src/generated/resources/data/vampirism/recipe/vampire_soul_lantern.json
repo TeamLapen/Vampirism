@@ -1,9 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "vampirism:soul_orb_vampire",
-    "minecraft:soul_lantern"
+  "key": {
+    "G": "minecraft:gold_nugget",
+    "S": "vampirism:soul_orb_vampire"
+  },
+  "pattern": [
+    "GGG",
+    "GSG",
+    "GGG"
   ],
   "result": {
     "count": 1,

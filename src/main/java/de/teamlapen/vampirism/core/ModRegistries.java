@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.api.util.SkillCallbacks;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.entity.player.skills.SkillTree;
+import de.teamlapen.vampirism.items.component.VampireBook;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
@@ -58,6 +59,7 @@ public class ModRegistries {
             .add(TASK, ModTasks::createTasks)
             .add(SKILL_NODE, ModSkills::createSkillNodes)
             .add(SKILL_TREE, ModSkills::createSkillTrees)
+            .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments);
 
     static void registerRegistries(NewRegistryEvent event) {
@@ -80,5 +82,6 @@ public class ModRegistries {
         event.dataPackRegistry(TASK, Task.CODEC, Task.CODEC);
         event.dataPackRegistry(SKILL_TREE, SkillTree.CODEC, SkillTree.CODEC);
         event.dataPackRegistry(SKILL_NODE, SkillNode.CODEC, SkillNode.CODEC);
+        event.dataPackRegistry(VAMPIRE_BOOK, VampireBook.CODEC, VampireBook.CODEC);
     }
 }

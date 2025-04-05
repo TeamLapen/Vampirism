@@ -8,7 +8,10 @@ import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -21,6 +24,7 @@ public class ModAdvancements {
     public static final DeferredHolder<CriterionTrigger<?>, SkillUnlockedCriterionTrigger> TRIGGER_SKILL_UNLOCKED = TRIGGERS.register("skill_unlocked", SkillUnlockedCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, MinionTaskCriterionTrigger> TRIGGER_MINION_ACTION = TRIGGERS.register("minion_action", MinionTaskCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, CuredVampireVillagerCriterionTrigger> TRIGGER_CURED_VAMPIRE_VILLAGER = TRIGGERS.register("cured_vampire_villager", CuredVampireVillagerCriterionTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, MapFoundCriterionTrigger> TRIGGER_MAP_FOUND = TRIGGERS.register("map_found", MapFoundCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_MOTHER_WIN = TRIGGERS.register("mother_win", PlayerTrigger::new);
 
     static void register(IEventBus bus) {

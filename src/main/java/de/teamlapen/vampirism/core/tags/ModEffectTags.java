@@ -12,5 +12,4 @@ public class ModEffectTags {
     private static @NotNull TagKey<MobEffect> tag(@NotNull String name) {
         return TagKey.create(Registries.MOB_EFFECT, VResourceLocation.mc(name));
     }
-
 }

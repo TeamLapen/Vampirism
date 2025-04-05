@@ -45,6 +45,7 @@ public class RegistryManager {
         ModParticles.register(eventBus);
         ModPotions.register(eventBus);
         ModRecipes.register(eventBus);
+        ModMapDecorations.register(eventBus);
         ModRefinements.register(eventBus);
         ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);
@@ -92,7 +93,6 @@ public class RegistryManager {
 
     public void registerForgeEventHandler() {
         IEventBus eventBus = NeoForge.EVENT_BUS;
-        eventBus.addListener(ModItems::registerCraftingRecipes);
         eventBus.addListener(ModCommands::registerCommands);
         eventBus.addListener(ModLootTables::onLootLoad);
         eventBus.addListener(ModPotions::registerPotionMixes);

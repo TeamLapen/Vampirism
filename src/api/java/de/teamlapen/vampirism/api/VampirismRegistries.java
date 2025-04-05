@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -63,7 +64,6 @@ public class VampirismRegistries {
         public static final ResourceKey<Registry<Task>> TASK = registryKey("tasks");
         public static final ResourceKey<Registry<ISkillNode>> SKILL_NODE = registryKey("skill_node");
         public static final ResourceKey<Registry<ISkillTree>> SKILL_TREE = registryKey("skill_tree");
+        public static final ResourceKey<Registry<IVampireBook>> VAMPIRE_BOOK = registryKey("vampire_book");
     }
-
-
 }

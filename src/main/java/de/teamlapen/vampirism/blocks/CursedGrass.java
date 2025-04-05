@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -10,6 +9,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
 import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
 import de.teamlapen.vampirism.mixin.accessor.SpreadingSnowyDirtBlockAccessor;
+import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -40,6 +40,7 @@ import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +85,6 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
         return super.canSustainPlant(state, level, soilPosition, facing, plant);
     }
 
-
     @Override
     public boolean isValidBonemealTarget(@NotNull LevelReader level, @NotNull BlockPos pPos, @NotNull BlockState pState) {
         return true;
@@ -127,10 +127,9 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
                 Holder<PlacedFeature> holder;
                 if (random.nextInt(8) == 0) {
                     BlockPos finalBlockpos = blockpos1;
-                    List<ConfiguredFeature<?, ?>> list = level.registryAccess().lookup(Registries.BIOME).flatMap(x -> x.get(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures();
-                    if (list.isEmpty()) {
-                        continue;
-                    }
+                    List<ConfiguredFeature<?, ?>> list = new ArrayList<>(level.registryAccess().lookup(Registries.BIOME).flatMap(x -> x.get(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures());
+                    ConfiguredFeature<?, ?> cursedRoots= level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getValue(VampirismFeatures.CURSED_ROOT);
+                    if (cursedRoots != null) list.add(cursedRoots);
 
                     holder = ((RandomPatchConfiguration) list.get(level.random.nextInt(list.size())).config()).feature();
                 } else {

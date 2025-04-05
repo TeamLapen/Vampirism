@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "vampirism:block/wall_candelabra",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "vampirism:block/wall_candelabra",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "vampirism:block/wall_candelabra",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/wall_candelabra",
+      "y": 270
+    }
+  }
+}

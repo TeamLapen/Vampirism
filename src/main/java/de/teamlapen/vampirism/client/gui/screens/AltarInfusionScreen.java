@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,11 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
-
+    private static final ResourceLocation PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
+    private static final ResourceLocation HUMAN_HEART_SLOT_SPRITE = VResourceLocation.mod("container/slot/human_heart");
+    private static final ResourceLocation VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/altar_of_infusion.png");
-    private static final ResourceLocation EMPTY_PURE_BLOOD = VResourceLocation.mod("item/empty_pure_blood");
-    private static final ResourceLocation EMPTY_HUMAN_HEART = VResourceLocation.mod("item/empty_human_heart");
-    private static final ResourceLocation EMPTY_VAMPIRE_BOOK = VResourceLocation.mod("item/empty_vampire_book");
 
     private final CyclingSlotBackground pureBloodIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground humanHeartIcon = new CyclingSlotBackground(1);
@@ -38,9 +35,9 @@ public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getRequirement();
-        this.pureBloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(EMPTY_PURE_BLOOD)).orElse(List.of()));
-        this.humanHeartIcon.tick(requirement.filter(s -> s.humanHeartQuantity() > 0).map(s -> List.of(EMPTY_HUMAN_HEART)).orElse(List.of()));
-        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(EMPTY_VAMPIRE_BOOK)).orElse(List.of()));
+        this.pureBloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(PURE_BLOOD_BOTTLE_SLOT_SPRITE)).orElse(List.of()));
+        this.humanHeartIcon.tick(requirement.filter(s -> s.humanHeartQuantity() > 0).map(s -> List.of(HUMAN_HEART_SLOT_SPRITE)).orElse(List.of()));
+        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(VAMPIRE_BOOK_SLOT_SPRITE)).orElse(List.of()));
     }
 
     @Override

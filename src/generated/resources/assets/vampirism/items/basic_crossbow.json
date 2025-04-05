@@ -5,7 +5,7 @@
       {
         "model": {
           "type": "minecraft:model",
-          "model": "vampirism:basic_crossbow_unloaded"
+          "model": "vampirism:item/basic_crossbow_unloaded"
         },
         "threshold": 0.99
       }

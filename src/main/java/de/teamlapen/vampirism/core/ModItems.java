@@ -17,8 +17,6 @@ import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.arrow.*;
 import de.teamlapen.vampirism.misc.VampirismCreativeTab;
-import de.teamlapen.vampirism.util.ItemDataUtils;
-import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -30,19 +28,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.brewing.BrewingRecipe;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -94,7 +86,7 @@ public class ModItems {
     public static final DeferredItem<TechCrossbowItem> BASIC_TECH_CROSSBOW = register("basic_tech_crossbow", (prop) -> new TechCrossbowItem(prop.durability(930), 1.6F, 40, ToolMaterial.DIAMOND, HunterSkills.WEAPON_TABLE));
 
     public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", (prop) -> new BloodBottleItem(prop.stacksTo(1).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
-    public static final DeferredItem<BucketItem> BLOOD_BUCKET = register("blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, (prop) -> new BucketItem(ModFluids.BLOOD.get(), prop.craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BucketItem> BLOOD_BUCKET = register("blood_bucket", null, (prop) -> new BucketItem(ModFluids.BLOOD.get(), prop.craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = register("blood_infused_raw_iron", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_GOLD = register("blood_infused_raw_gold", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_IRON_INGOT = register("blood_infused_iron_ingot", PureLevelItem::new);
@@ -155,8 +147,8 @@ public class ModItems {
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = register("hunter_coat_legs_enhanced", (prop) -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ENHANCED, prop));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = register("hunter_coat_legs_ultimate", (prop) -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ULTIMATE, prop));
 
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_0 = register("hunter_hat_head_0", (prop) -> new HunterHatItem(HunterHatItem.HatType.TYPE_1, ModArmorMaterials.HUNTER_HAT_0, prop));
-    public static final DeferredItem<HunterHatItem> HUNTER_HAT_HEAD_1 = register("hunter_hat_head_1", (prop) -> new HunterHatItem(HunterHatItem.HatType.TYPE_2, ModArmorMaterials.HUNTER_HAT_1, prop));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_TALL = register("hunter_hat_tall", (prop) -> new HunterHatItem(ModArmorMaterials.HUNTER_HAT_TALL, prop));
+    public static final DeferredItem<HunterHatItem> HUNTER_HAT_BROAD = register("hunter_hat_broad", (prop) -> new HunterHatItem(ModArmorMaterials.HUNTER_HAT_BROAD, prop));
 
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_0 = register("hunter_intel_0", (prop) -> new HunterIntelItem(0, prop));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_1 = register("hunter_intel_1", (prop) -> new HunterIntelItem(1, prop));
@@ -175,7 +167,7 @@ public class ModItems {
     public static final DeferredItem<InjectionItem> INJECTION_GARLIC = register("injection_garlic", (prop) -> new InjectionItem(InjectionItem.TYPE.GARLIC, prop));
     public static final DeferredItem<InjectionItem> INJECTION_SANGUINARE = register("injection_sanguinare", (prop) -> new InjectionItem(InjectionItem.TYPE.SANGUINARE, prop));
 
-    public static final DeferredItem<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", CreativeModeTabs.TOOLS_AND_UTILITIES, (prop) -> new BucketItem(ModFluids.IMPURE_BLOOD.get(), prop.craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BucketItem> IMPURE_BLOOD_BUCKET = register("impure_blood_bucket", null, (prop) -> new BucketItem(ModFluids.IMPURE_BLOOD.get(), prop.craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<Item> GARLIC_BREAD = register("garlic_bread", props -> new Item(props.food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.7F).build()).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = register("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -197,23 +189,39 @@ public class ModItems {
     public static final DeferredItem<StakeItem> STAKE = register("stake", StakeItem::new);
     public static final DeferredItem<ArrowContainer> ARROW_CLIP = register("tech_crossbow_ammo_package", (prop) -> new ArrowContainer(prop.stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())));
 
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_BLUE = register("vampire_cloak_black_blue", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKBLUE, prop));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_RED = register("vampire_cloak_black_red", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKRED, prop));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_BLACK_WHITE = register("vampire_cloak_black_white", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.BLACKWHITE, prop));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_RED_BLACK = register("vampire_cloak_red_black", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.REDBLACK, prop));
-    public static final DeferredItem<ColoredVampireClothingItem> VAMPIRE_CLOAK_WHITE_BLACK = register("vampire_cloak_white_black", (prop) -> new ColoredVampireClothingItem(ArmorType.CHESTPLATE, ColoredVampireClothingItem.EnumClothingColor.WHITEBLACK, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_WHITE = register("vampire_cloak_white", (prop) -> new VampireCloakItem(DyeColor.WHITE, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_ORANGE = register("vampire_cloak_orange", (prop) -> new VampireCloakItem(DyeColor.ORANGE, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_MAGENTA = register("vampire_cloak_magenta", (prop) -> new VampireCloakItem(DyeColor.MAGENTA, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_LIGHT_BLUE = register("vampire_cloak_light_blue", (prop) -> new VampireCloakItem(DyeColor.LIGHT_BLUE, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_YELLOW = register("vampire_cloak_yellow", (prop) -> new VampireCloakItem(DyeColor.YELLOW, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_LIME = register("vampire_cloak_lime", (prop) -> new VampireCloakItem(DyeColor.LIME, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_PINK = register("vampire_cloak_pink", (prop) -> new VampireCloakItem(DyeColor.PINK, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_GRAY = register("vampire_cloak_gray", (prop) -> new VampireCloakItem(DyeColor.GRAY, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_LIGHT_GRAY = register("vampire_cloak_light_gray", (prop) -> new VampireCloakItem(DyeColor.LIGHT_GRAY, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_CYAN = register("vampire_cloak_cyan", (prop) -> new VampireCloakItem(DyeColor.CYAN, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_PURPLE = register("vampire_cloak_purple", (prop) -> new VampireCloakItem(DyeColor.PURPLE, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BLUE = register("vampire_cloak_blue", (prop) -> new VampireCloakItem(DyeColor.BLUE, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BROWN = register("vampire_cloak_brown", (prop) -> new VampireCloakItem(DyeColor.BROWN, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_GREEN = register("vampire_cloak_green", (prop) -> new VampireCloakItem(DyeColor.GREEN, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_RED = register("vampire_cloak_red", (prop) -> new VampireCloakItem(DyeColor.RED, prop));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BLACK = register("vampire_cloak_black", (prop) -> new VampireCloakItem(DyeColor.BLACK, prop));
 
     public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = register("vampire_blood_bottle", Item::new);
-    public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", VampireBookItem::new);
+    public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = register("vampire_book", (prop) -> new VampireBookItem(prop.rarity(Rarity.UNCOMMON).stacksTo(1)));
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = register("vampire_fang", VampireFangItem::new);
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = register("weak_human_heart", (prop) -> new VampirismItemBloodFoodItem(prop.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = register("vampire_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.VAMPIRE.get(), prop));
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = register("vampire_hunter_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.HUNTER.get(), prop));
-    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_SPAWN_EGG = register("advanced_vampire_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.ADVANCED_VAMPIRE.get(), prop));
-    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG = register("advanced_vampire_hunter_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.ADVANCED_HUNTER.get(), prop));
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_BARON_SPAWN_EGG = register("vampire_baron_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.VAMPIRE_BARON.get(), prop));
-    public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = register("hunter_trainer_spawn_egg", CreativeModeTabs.SPAWN_EGGS, (prop) -> new SpawnEggItem(ModEntities.HUNTER_TRAINER.get(), prop));
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = register("vampire_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.VAMPIRE.get(), prop));
+    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_SPAWN_EGG = register("advanced_vampire_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.ADVANCED_VAMPIRE.get(), prop));
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_BARON_SPAWN_EGG = register("vampire_baron_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.VAMPIRE_BARON.get(), prop));
+    public static final DeferredItem<SpawnEggItem> TASK_MASTER_VAMPIRE_SPAWN_EGG = register("task_master_vampire_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.TASK_MASTER_VAMPIRE.get(), prop));
+
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = register("vampire_hunter_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.HUNTER.get(), prop));
+    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG = register("advanced_vampire_hunter_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.ADVANCED_HUNTER.get(), prop));
+    public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = register("hunter_trainer_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.HUNTER_TRAINER.get(), prop));
+    public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = register("task_master_hunter_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.TASK_MASTER_HUNTER.get(), prop));
+
+    public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = register("ghost_spawn_egg", null, (prop) -> new SpawnEggItem(ModEntities.GHOST.get(), prop));
 
     public static final DeferredItem<UmbrellaItem> UMBRELLA = register("umbrella", UmbrellaItem::new);
 
@@ -240,7 +248,6 @@ public class ModItems {
 
     public static final DeferredItem<Item> GARLIC_FINDER = register("garlic_finder", (prop) -> new Item(prop.rarity(Rarity.RARE)));
 
-    public static final DeferredItem<StandingAndWallBlockItem> ITEM_CANDELABRA = register("item_candelabra", (prop) -> new StandingAndWallBlockItem(ModBlocks.CANDELABRA.get(), ModBlocks.CANDELABRA_WALL.get(), Direction.DOWN, prop.overrideDescription(Util.makeDescriptionId("block", ModBlocks.CANDELABRA.getKey().location()))));
     public static final DeferredItem<SignItem> DARK_SPRUCE_SIGN = register("dark_spruce_sign", (prop) -> new SignItem(ModBlocks.DARK_SPRUCE_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_SIGN.get(), prop.useBlockDescriptionPrefix().stacksTo(16)));
     public static final DeferredItem<SignItem> CURSED_SPRUCE_SIGN = register("cursed_spruce_sign", (prop) -> new SignItem(ModBlocks.CURSED_SPRUCE_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_SIGN.get(), prop.useBlockDescriptionPrefix().stacksTo(16)));
 
@@ -258,36 +265,65 @@ public class ModItems {
     public static final DeferredItem<HangingSignItem> CURSED_SPRUCE_HANGING_SIGN = register("cursed_spruce_hanging_sign", (prop) -> new HangingSignItem(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), prop.useBlockDescriptionPrefix().stacksTo(16)));
 
     public static final DeferredItem<Item> MOTHER_CORE = register("mother_core", (prop) -> new Item(prop.rarity(Rarity.UNCOMMON)));
+
     public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK = register("candle_stick", (prop) -> new StandingAndWallBlockItem(ModBlocks.CANDLE_STICK.get(), ModBlocks.WALL_CANDLE_STICK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_NORMAL = register("candle_stick_normal", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_NORMAL.get(), ModBlocks.WALL_CANDLE_STICK_NORMAL.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_WHITE = register("candle_stick_white", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_WHITE.get(), ModBlocks.WALL_CANDLE_STICK_WHITE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_ORANGE = register("candle_stick_orange", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_ORANGE.get(), ModBlocks.WALL_CANDLE_STICK_ORANGE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_MAGENTA = register("candle_stick_magenta", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_MAGENTA.get(), ModBlocks.WALL_CANDLE_STICK_MAGENTA.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_LIGHT_BLUE = register("candle_stick_light_blue", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_LIGHT_BLUE.get(), ModBlocks.WALL_CANDLE_STICK_LIGHT_BLUE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_YELLOW = register("candle_stick_yellow", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_YELLOW.get(), ModBlocks.WALL_CANDLE_STICK_YELLOW.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_LIME = register("candle_stick_lime", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_LIME.get(), ModBlocks.WALL_CANDLE_STICK_LIME.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_PINK = register("candle_stick_pink", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_PINK.get(), ModBlocks.WALL_CANDLE_STICK_PINK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_GRAY = register("candle_stick_gray", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_GRAY.get(), ModBlocks.WALL_CANDLE_STICK_GRAY.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_LIGHT_GRAY = register("candle_stick_light_gray", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_LIGHT_GRAY.get(), ModBlocks.WALL_CANDLE_STICK_LIGHT_GRAY.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_CYAN = register("candle_stick_cyan", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_CYAN.get(), ModBlocks.WALL_CANDLE_STICK_CYAN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_PURPLE = register("candle_stick_purple", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_PURPLE.get(), ModBlocks.WALL_CANDLE_STICK_PURPLE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_BLUE = register("candle_stick_blue", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_BLUE.get(), ModBlocks.WALL_CANDLE_STICK_BLUE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_BROWN = register("candle_stick_brown", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_BROWN.get(), ModBlocks.WALL_CANDLE_STICK_BROWN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_GREEN = register("candle_stick_green", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_GREEN.get(), ModBlocks.WALL_CANDLE_STICK_GREEN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_RED = register("candle_stick_red", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_RED.get(), ModBlocks.WALL_CANDLE_STICK_RED.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_BLACK = register("candle_stick_black", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_BLACK.get(), ModBlocks.WALL_CANDLE_STICK_BLACK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA = register("candelabra", (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA.get(), ModBlocks.WALL_CANDELABRA.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_NORMAL = register("candelabra_normal", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_NORMAL.get(), ModBlocks.WALL_CANDELABRA_NORMAL.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_WHITE = register("candelabra_white", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_WHITE.get(), ModBlocks.WALL_CANDELABRA_WHITE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_ORANGE = register("candelabra_orange", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_ORANGE.get(), ModBlocks.WALL_CANDELABRA_ORANGE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_MAGENTA = register("candelabra_magenta", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_MAGENTA.get(), ModBlocks.WALL_CANDELABRA_MAGENTA.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_LIGHT_BLUE = register("candelabra_light_blue", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_LIGHT_BLUE.get(), ModBlocks.WALL_CANDELABRA_LIGHT_BLUE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_YELLOW = register("candelabra_yellow", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_YELLOW.get(), ModBlocks.WALL_CANDELABRA_YELLOW.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_LIME = register("candelabra_lime", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_LIME.get(), ModBlocks.WALL_CANDELABRA_LIME.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_PINK = register("candelabra_pink", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_PINK.get(), ModBlocks.WALL_CANDELABRA_PINK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_GRAY = register("candelabra_gray", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_GRAY.get(), ModBlocks.WALL_CANDELABRA_GRAY.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_LIGHT_GRAY = register("candelabra_light_gray", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_LIGHT_GRAY.get(), ModBlocks.WALL_CANDELABRA_LIGHT_GRAY.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_CYAN = register("candelabra_cyan", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_CYAN.get(), ModBlocks.WALL_CANDELABRA_CYAN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_PURPLE = register("candelabra_purple", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_PURPLE.get(), ModBlocks.WALL_CANDELABRA_PURPLE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_BLUE = register("candelabra_blue", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_BLUE.get(), ModBlocks.WALL_CANDELABRA_BLUE.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_BROWN = register("candelabra_brown", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_BROWN.get(), ModBlocks.WALL_CANDELABRA_BROWN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_GREEN = register("candelabra_green", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_GREEN.get(), ModBlocks.WALL_CANDELABRA_GREEN.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_RED = register("candelabra_red", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_RED.get(), ModBlocks.WALL_CANDELABRA_RED.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_BLACK = register("candelabra_black", null, (prop) -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_BLACK.get(), ModBlocks.WALL_CANDELABRA_BLACK.get(), Direction.DOWN, prop.useBlockDescriptionPrefix()));
+
+    public static final DeferredItem<BlockItem> CHANDELIER = register("chandelier", (prop) -> new BlockItem(ModBlocks.CHANDELIER.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_NORMAL = register("chandelier_normal", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_NORMAL.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_WHITE = register("chandelier_white", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_WHITE.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_ORANGE = register("chandelier_orange", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_ORANGE.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_MAGENTA = register("chandelier_magenta", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_MAGENTA.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_BLUE = register("chandelier_light_blue", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_LIGHT_BLUE.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_YELLOW = register("chandelier_yellow", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_YELLOW.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_LIME = register("chandelier_lime", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_LIME.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_PINK = register("chandelier_pink", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_PINK.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_GRAY = register("chandelier_gray", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_GRAY.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_GRAY = register("chandelier_light_gray", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_LIGHT_GRAY.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_CYAN = register("chandelier_cyan", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_CYAN.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_PURPLE = register("chandelier_purple", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_PURPLE.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_BLUE = register("chandelier_blue", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_BLUE.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_BROWN = register("chandelier_brown", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_BROWN.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_GREEN = register("chandelier_green", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_GREEN.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_RED = register("chandelier_red", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_RED.get(), prop.useBlockDescriptionPrefix()));
+    public static final DeferredItem<BlockItem> CHANDELIER_BLACK = register("chandelier_black", null, (prop) -> new BlockItem(ModBlocks.CHANDELIER_BLACK.get(), prop.useBlockDescriptionPrefix()));
+
     public static final DeferredItem<Item> QUARREL_POUCH = register("quarrel_pouch", (prop) -> new QuarrelPouch(prop.stacksTo(1)));
-
-    static void registerCraftingRecipes(RegisterBrewingRecipesEvent event) {
-        PotionBrewing.Builder builder = event.getBuilder();
-        // Brewing
-
-        builder.addRecipe(DataComponentIngredient.of(true, ItemDataUtils.createPotion(Potions.WATER)), Ingredient.of(PURE_SALT), new ItemStack(PURE_SALT_WATER.get()));
-
-        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_NORMAL.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_NORMAL.get())) {
-            @Override
-            public boolean isInput(@NotNull ItemStack stack) {
-
-                return HOLY_WATER_BOTTLE_NORMAL.get().equals(stack.getItem());
-            }
-        });
-        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ENHANCED.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get())) {
-            @Override
-            public boolean isInput(@NotNull ItemStack stack) {
-
-                return HOLY_WATER_BOTTLE_ENHANCED.get().equals(stack.getItem());
-            }
-        });
-        builder.addRecipe(new BrewingRecipe(Ingredient.of(HOLY_WATER_BOTTLE_ULTIMATE.get()), Ingredient.of(Items.GUNPOWDER), new ItemStack(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get())) {
-            @Override
-            public boolean isInput(@NotNull ItemStack stack) {
-                return HOLY_WATER_BOTTLE_ULTIMATE.get().equals(stack.getItem());
-            }
-        });
-    }
 
     static <I extends Item> DeferredItem<I> register(final String name, ResourceKey<CreativeModeTab> tab, final Function<Item.Properties, ? extends I> sup) {
         DeferredItem<I> item = ITEMS.registerItem(name, sup);
