@@ -40,7 +40,7 @@ public class StakeItem extends VampirismSwordItem {
         return false;
     }
 
-    public StakeItem(Item.Properties properties) {
+    public StakeItem(Properties properties) {
         super(ToolMaterial.WOOD, 1, -1, properties.component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
     }
 

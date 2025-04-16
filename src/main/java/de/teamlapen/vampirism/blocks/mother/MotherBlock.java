@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
-import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
@@ -24,18 +24,16 @@ import java.util.Optional;
 
 import static de.teamlapen.vampirism.blocks.HorizontalContainerBlock.createTickerHelper;
 
-public class MotherBlock extends VampirismBlock implements EntityBlock, IRemainsBlock {
+public class MotherBlock extends Block implements EntityBlock, IRemainsBlock {
 
-
-    public MotherBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.TERRACOTTA_BROWN).strength(5, 3600000.0F).sound(SoundType.CHAIN));
+    public MotherBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
     }
-
 
     private Optional<MotherBlockEntity> getBlockEntity(@NotNull BlockGetter level, @NotNull BlockPos pos) {
         var blockEntity = level.getBlockEntity(pos);
@@ -67,7 +65,7 @@ public class MotherBlock extends VampirismBlock implements EntityBlock, IRemains
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, boolean willHarvest, @NotNull FluidState fluid) {
         if (getBlockEntity(level, pos).map(MotherBlockEntity::isCanBeBroken).orElse(Boolean.TRUE)) {
             return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         }
@@ -79,5 +77,4 @@ public class MotherBlock extends VampirismBlock implements EntityBlock, IRemains
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.MOTHER.get(), MotherBlockEntity::serverTick);
     }
-
 }

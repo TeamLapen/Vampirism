@@ -28,6 +28,7 @@ public class ModDamageSources {
     private final DamageSource noBlood;
     private final DamageSource mother;
     private final DamageSource bleeding;
+    private final DamageSource leaveFaction;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.lookupOrThrow(Registries.DAMAGE_TYPE);
@@ -38,6 +39,7 @@ public class ModDamageSources {
         this.noBlood = init(ModDamageTypes.NO_BLOOD);
         this.mother = init(ModDamageTypes.MOTHER);
         this.bleeding = init(ModDamageTypes.BLEEDING);
+        this.leaveFaction = init(ModDamageTypes.LEAVE_FACTION);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -88,4 +90,7 @@ public class ModDamageSources {
         return this.bleeding;
     }
 
+    public DamageSource leaveFaction() {
+        return leaveFaction;
+    }
 }

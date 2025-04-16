@@ -57,7 +57,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     /**
-     * copied from {@link net.minecraft.world.level.block.SpreadingSnowyDirtBlock#randomTick(net.minecraft.world.level.block.state.BlockState, net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.util.RandomSource)} changing dirt to cursed earth
+     * copied from {@link SpreadingSnowyDirtBlock#randomTick(BlockState, ServerLevel, BlockPos, RandomSource)} changing dirt to cursed earth
      */
     @Override
     public void randomTick(@NotNull BlockState p_222508_, @NotNull ServerLevel p_222509_, @NotNull BlockPos p_222510_, @NotNull RandomSource p_222511_) {
@@ -96,7 +96,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     /**
-     * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(net.minecraft.server.level.ServerLevel, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState)}
+     * copied from {@link net.minecraft.world.level.block.GrassBlock#performBonemeal(ServerLevel, RandomSource, BlockPos, BlockState)}
      * and add a random flower
      * and use vampire forest as flower source
      */

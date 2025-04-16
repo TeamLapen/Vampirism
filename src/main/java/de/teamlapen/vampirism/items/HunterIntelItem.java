@@ -47,7 +47,7 @@ public class HunterIntelItem extends Item {
 
     private final int level;
 
-    public HunterIntelItem(int level, Item.Properties properties) {
+    public HunterIntelItem(int level, Properties properties) {
         super(ItemPropertiesExtension.descriptionWithout(properties, "_\\d"));
         this.level = level;
     }

@@ -30,32 +30,25 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
  */
 public class AltarInspirationBlock extends VampirismBlockContainer {
+
     public static final MapCodec<AltarInspirationBlock> CODEC = simpleCodec(AltarInspirationBlock::new);
-    protected static final VoxelShape altarShape = makeShape();
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0.25, 0, 0.25, 0.75, 0.0625, 0.75), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.75, 0, 0.1875, 0.875, 0.75, 0.8125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.125, 0.86875, 0.75, 0.25), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.75, 0.86875, 0.75, 0.875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.1875, 0.25, 0.75, 0.8125), BooleanOp.OR);
+    private static final VoxelShape SHAPE = Stream.of(Block.box(4, 0, 4, 12, 1, 12), Block.box(12, 0, 4, 14, 12, 12), Block.box(2.1, 0, 2, 13.9, 12, 4), Block.box(2.1, 0, 12, 13.9, 12, 14), Block.box(2, 0, 4, 4, 12, 12)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-        return shape;
-    }
-
-    public AltarInspirationBlock(Block.Properties properties) {
+    public AltarInspirationBlock(Properties properties) {
         super(properties);
     }
 
+    @Nullable
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new AltarInspirationBlockEntity(pos, state);
     }
 
     @NotNull
@@ -64,16 +57,9 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         return RenderShape.MODEL;
     }
 
-
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new AltarInspirationBlockEntity(pos, state);
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return altarShape;
+    protected @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return SHAPE;
     }
 
     @NotNull
@@ -105,5 +91,10 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 }

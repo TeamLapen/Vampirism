@@ -1,78 +1,21 @@
 {
-	"credit": "By Grid and FoxPrince",
-	"textures": {
-		"particle": "vampirism:block/weapon_table_hammer",
-		"potion": "vampirism:item/blood_bottle_9"
-	},
+	"credit": "Made by Grid and FoxPrince",
 	"render_type": "minecraft:cutout",
+	"textures": {
+		"bottle": "vampirism:item/vampire_blood_bottle"
+	},
 	"elements": [
 		{
-			"name": "Element",
-			"from": [
-				1,
-				10,
-				3
-			],
-			"to": [
-				7.5,
-				16,
-				3.0625
-			],
+			"from": [1, 9.6, 3],
+			"to": [7.5, 15.6, 3.0625],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -0.4, 0]},
 			"faces": {
-				"north": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#potion"
-				},
-				"east": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#potion"
-				},
-				"south": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#potion"
-				},
-				"west": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#potion"
-				},
-				"up": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#potion"
-				},
-				"down": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#potion"
-				}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#bottle"},
+				"east": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#bottle"},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#bottle"}
 			}
 		}
 	]

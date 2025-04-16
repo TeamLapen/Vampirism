@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TentMainBlock extends TentBlock implements EntityBlock {
 
-    public TentMainBlock(BlockBehaviour.Properties properties) {
+    public TentMainBlock(Properties properties) {
         super(properties);
     }
 

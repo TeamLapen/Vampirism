@@ -27,7 +27,7 @@ import de.teamlapen.vampirism.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
-import de.teamlapen.vampirism.items.OblivionItem;
+import de.teamlapen.vampirism.items.OblivionPotionItem;
 import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -164,7 +164,7 @@ public class ServerPayloadHandler {
                 case FINISH_SUCK_BLOOD -> VampirePlayer.get(player).endFeeding(true);
                 case RESET_SKILLS -> {
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get()));
-                    handler.getCurrentSkillPlayer().ifPresent(OblivionItem::applyEffect);
+                    handler.getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
                 }
                 case REVERT_BACK -> {
                     if (player.containerMenu instanceof RevertBackMenu menu) {

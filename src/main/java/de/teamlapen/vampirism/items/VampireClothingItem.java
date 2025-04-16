@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireClothingItem extends ArmorItem {
 
-    public VampireClothingItem(@NotNull ArmorType type, ArmorMaterial material, Item.Properties properties) {
+    public VampireClothingItem(@NotNull ArmorType type, ArmorMaterial material, Properties properties) {
         super(material, type, FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(properties));
     }
 

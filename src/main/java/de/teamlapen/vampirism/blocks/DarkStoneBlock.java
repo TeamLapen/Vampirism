@@ -3,28 +3,22 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.items.component.BottleBlood;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public class DarkStoneBlock extends VampirismBlock {
+public class DarkStoneBlock extends Block {
 
     public DarkStoneBlock(Properties properties) {
         super(properties);
@@ -57,15 +51,5 @@ public class DarkStoneBlock extends VampirismBlock {
         }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
-        super.appendHoverText(stack, context, tooltip, advanced);
-        if (stack.is(ModItemTags.NO_SPAWN)) {
-            tooltip.add(Component.translatable("block.vampirism.castle_block.no_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
-        } else if (stack.is(ModItemTags.VAMPIRE_SPAWN)) {
-            tooltip.add(Component.translatable("block.vampirism.castle_block.vampire_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
-        }
     }
 }

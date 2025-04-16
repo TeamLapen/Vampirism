@@ -74,7 +74,7 @@ public class GrinderBlock extends VampirismBlockContainer {
         return Shapes.or(h, e4);
     }
 
-    public GrinderBlock(BlockBehaviour.Properties properties) {
+    public GrinderBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 

@@ -66,7 +66,7 @@ public class TentItem extends Item {
 
     private final boolean spawner;
 
-    public TentItem(boolean spawner, Item.Properties properties) {
+    public TentItem(boolean spawner, Properties properties) {
         super(properties);
         this.spawner = spawner;
     }

@@ -57,7 +57,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
     }
 
-    public PedestalBlock(BlockBehaviour.Properties properties) {
+    public PedestalBlock(Properties properties) {
         super(properties);
     }
 

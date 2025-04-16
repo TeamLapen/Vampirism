@@ -10,11 +10,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -22,17 +20,17 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEffectConsumer {
+public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEffectConsumer {
 
     private final Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
 
-    public CursedSpruceBlock(BlockBehaviour.Properties properties, @NotNull Supplier<? extends LogBlock> strippedBlock, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
-        super(properties.mapColor(MapColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks().ignitedByLava(), strippedBlock);
+    public CursedSpruceBlock(Properties properties, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
+        super(properties);
         this.curedBlockSupplier = curedBlockSupplier;
     }
 
-    public CursedSpruceBlock(BlockBehaviour.Properties properties, @NotNull Supplier<? extends LogBlock> strippedBlock) {
-        this(properties, strippedBlock, null);
+    public CursedSpruceBlock(Properties properties) {
+        this(properties, null);
     }
 
     public boolean isCured() {

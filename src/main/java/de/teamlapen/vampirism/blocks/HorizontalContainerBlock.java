@@ -18,10 +18,6 @@ public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock 
         super(properties, shape);
     }
 
-    public HorizontalContainerBlock(Properties properties) {
-        super(properties);
-    }
-
     @Override
     public boolean triggerEvent(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, int p_49229_, int p_49230_) {
         super.triggerEvent(state, level, pos, p_49229_, p_49230_);

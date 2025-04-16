@@ -39,7 +39,7 @@ public class SieveBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d, e, f);
     }
 
-    public SieveBlock(BlockBehaviour.Properties properties) {
+    public SieveBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
     }

@@ -39,7 +39,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d);
     }
 
-    public PotionTableBlock(BlockBehaviour.Properties properties) {
+    public PotionTableBlock(Properties properties) {
         super(properties);
     }
 

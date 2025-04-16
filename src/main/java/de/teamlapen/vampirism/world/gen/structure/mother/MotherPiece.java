@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.structure.mother;
 
-import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModStructures;
 import net.minecraft.core.BlockPos;
@@ -11,6 +10,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -46,10 +46,10 @@ public class MotherPiece extends ScatteredFeaturePiece {
 
     protected void placeRoots(@NotNull WorldGenLevel level, @NotNull BoundingBox box, @NotNull RandomSource random) {
         BlockState state0 = ModBlocks.REMAINS.get().defaultBlockState();
-        BlockState state1 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(LogBlock.AXIS, Direction.Axis.Y);
-        BlockState state2 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(LogBlock.AXIS, Direction.Axis.Z);
-        BlockState state3 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(LogBlock.AXIS, Direction.Axis.X);
-        BlockState state4 = ModBlocks.CURSED_SPRUCE_LOG.get().defaultBlockState().setValue(LogBlock.AXIS, Direction.Axis.Y);
+        BlockState state1 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
+        BlockState state2 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
+        BlockState state3 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.X);
+        BlockState state4 = ModBlocks.CURSED_SPRUCE_LOG.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
         BlockState state5 = Blocks.AIR.defaultBlockState();
         BlockState state6 = ModBlocks.MOTHER.get().defaultBlockState();
 

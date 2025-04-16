@@ -35,8 +35,8 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     public static final EnumProperty<Type> EAST_TYPE = EnumProperty.create("east_type", Type.class);
     public static final BiMap<Direction, EnumProperty<Type>> SIDE_MAP = ImmutableBiMap.<Direction, EnumProperty<Type>>builder().put(Direction.UP, UP_TYPE).put(Direction.DOWN, DOWN_TYPE).put(Direction.EAST, EAST_TYPE).put(Direction.WEST, WEST_TYPE).put(Direction.NORTH, NORTH_TYPE).put(Direction.SOUTH, SOUTH_TYPE).build();
 
-    public DirectCursedBarkBlock(BlockBehaviour.Properties properties) {
-        super(properties.sound(SoundType.WOOD));
+    public DirectCursedBarkBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(UP_TYPE, Type.NONE)
                 .setValue(DOWN_TYPE, Type.NONE)

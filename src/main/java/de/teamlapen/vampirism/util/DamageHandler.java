@@ -193,4 +193,8 @@ public class DamageHandler {
     public static boolean kill(ServerLevel level, @NotNull Entity entity, int damage) {
         return hurtVanilla(level, entity, DamageSources::generic, damage);
     }
+
+    public static boolean kill(ServerLevel level, @NotNull Entity entity, Function<DamageSources, DamageSource> sourceFunc, int damage) {
+        return hurtVanilla(level, entity, sourceFunc, damage);
+    }
 }

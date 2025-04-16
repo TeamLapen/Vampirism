@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class VampireFangItem extends Item {
-    public VampireFangItem(Item.Properties properties) {
+    public VampireFangItem(Properties properties) {
         super(properties);
     }
 

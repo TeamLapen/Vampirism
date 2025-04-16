@@ -16,7 +16,7 @@ public class ModArmorItem extends Item {
         super(addAttributes(armorMaterial.humanoidProperties(properties, armorType), customModifiers));
     }
 
-    private static Item.Properties addAttributes(Item.Properties properties, ItemAttributeModifiers customModifiers) {
+    private static Properties addAttributes(Properties properties, ItemAttributeModifiers customModifiers) {
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         copyTo((ItemAttributeModifiers) properties.components.map.get(DataComponents.ATTRIBUTE_MODIFIERS), builder);
         copyTo(customModifiers, builder);

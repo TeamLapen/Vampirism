@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
  * dependent things
  */
 @ApiStatus.Internal
-public class RegistryManager {
+public class ModRegistryManager {
 
     private final IEventBus eventBus;
 
-    public RegistryManager(@NotNull IEventBus eventBus) {
+    public ModRegistryManager(@NotNull IEventBus eventBus) {
         this.eventBus = eventBus;
         this.eventBus.register(this);
     }
@@ -41,6 +41,7 @@ public class RegistryManager {
         ModStructures.register(eventBus);
         ModFluids.register(eventBus);
         ModItems.register(eventBus);
+        ModCreativeTabs.register(eventBus);
         ModLoot.register(eventBus);
         ModParticles.register(eventBus);
         ModPotions.register(eventBus);
@@ -85,7 +86,6 @@ public class RegistryManager {
         this.eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
         this.eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
         this.eventBus.addListener(ModEntities::onRegisterSpawns);
-        this.eventBus.addListener(ModItems::registerOtherCreativeTabItems);
         this.eventBus.addListener(ModRegistries::registerRegistries);
         this.eventBus.addListener(PackRepositories::registerPackRepository);
         this.eventBus.addListener(ModTiles::registerTileExtensions);

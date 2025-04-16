@@ -18,7 +18,7 @@ public class MinionUpgradeItem extends Item {
     private final int maxLevel;
     private final Holder<? extends IFaction<?>> faction;
 
-    public MinionUpgradeItem(int minLevel, int maxLevel, Holder<? extends IFaction<?>> faction, Item.Properties properties) {
+    public MinionUpgradeItem(int minLevel, int maxLevel, Holder<? extends IFaction<?>> faction, Properties properties) {
         super(properties);
         this.faction = faction;
         this.maxLevel = maxLevel;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.inventory.HunterTableMenu;
@@ -15,86 +14,32 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Table for hunter "education/leveling"
- */
+import java.util.List;
+import java.util.stream.Stream;
+
 public class HunterTableBlock extends VampirismHorizontalBlock {
-    public static final EnumProperty<TABLE_VARIANT> VARIANT = EnumProperty.create("variant", TABLE_VARIANT.class);
-    private static final VoxelShape NORTH = makeShape();
-    private static final VoxelShape NORTH_HAMMER = Shapes.or(makeShape(), makeHammerShape());
-    private static final VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
-    private static final VoxelShape EAST_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.NINETY);
-    private static final VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-    private static final VoxelShape SOUTH_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-    private static final VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
-    private static final VoxelShape WEST_HAMMER = UtilLib.rotateShape(NORTH_HAMMER, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape shape = Shapes.empty();
-        shape = Shapes.or(shape, Shapes.box(0.125, 0.625, 0.375, 0.5, 0.6875, 0.875));
-        shape = Shapes.or(shape, Shapes.box(0.125, 0.75, 0.375, 0.5, 0.8125, 0.875));
-        shape = Shapes.or(shape, Shapes.box(0.125, 0.6875, 0.375, 0.1875, 0.75, 0.875));
-        shape = Shapes.or(shape, Shapes.box(0.1875, 0.6875, 0.40625, 0.46875, 0.75, 0.84375));
-        shape = Shapes.or(shape, Shapes.box(0, 0.5, 0, 1, 0.625, 1));
-        shape = Shapes.or(shape, Shapes.box(0.0625, 0, 0.75, 0.25, 0.5, 0.9375));
-        shape = Shapes.or(shape, Shapes.box(0.75, 0, 0.75, 0.9375, 0.5, 0.9375));
-        shape = Shapes.or(shape, Shapes.box(0.75, 0, 0.0625, 0.9375, 0.5, 0.25));
-        shape = Shapes.or(shape, Shapes.box(0.0625, 0, 0.0625, 0.25, 0.5, 0.25));
+    public static final EnumProperty<TableVariant> VARIANT = EnumProperty.create("variant", TableVariant.class);
 
-        return shape;
-    }
+    private static final VoxelShape SHAPE = Stream.of(Block.box(1, 0, 1, 15, 8, 15), Block.box(0, 8, 0, 16, 10, 16), Block.box(2, 10, 6, 8, 13, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    private static @NotNull VoxelShape makeHammerShape() {
-        VoxelShape shape = Shapes.empty();
-        shape = Shapes.or(shape, Shapes.box(0.4375, 0, 0.5625, 0.75, 0.1875, 0.75));
-        shape = Shapes.or(shape, Shapes.box(0.5625, 0.1875, 0.625, 0.625, 0.624375, 0.6875));
-
-        return shape;
-    }
-
-    public static @NotNull TABLE_VARIANT getTierFor(boolean weapon_table, boolean potion_table, boolean cauldron) {
-        return weapon_table ? (potion_table ? (cauldron ? TABLE_VARIANT.COMPLETE : TABLE_VARIANT.WEAPON_POTION) : (cauldron ? TABLE_VARIANT.WEAPON_CAULDRON : TABLE_VARIANT.WEAPON)) : (potion_table ? (cauldron ? TABLE_VARIANT.POTION_CAULDRON : TABLE_VARIANT.POTION) : (cauldron ? TABLE_VARIANT.CAULDRON : TABLE_VARIANT.SIMPLE));
-    }
-
-    public HunterTableBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.WOOD).strength(0.5f).ignitedByLava().noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TABLE_VARIANT.SIMPLE));
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return switch (state.getValue(VARIANT)) {
-            default -> switch (state.getValue(FACING)) {
-                case EAST -> EAST;
-                case SOUTH -> SOUTH;
-                case WEST -> WEST;
-                default -> NORTH;
-            };
-            case WEAPON_CAULDRON, WEAPON_POTION, COMPLETE, WEAPON -> switch (state.getValue(FACING)) {
-                case EAST -> EAST_HAMMER;
-                case SOUTH -> SOUTH_HAMMER;
-                case WEST -> WEST_HAMMER;
-                default -> NORTH_HAMMER;
-            };
-        };
+    public HunterTableBlock(Properties properties) {
+        super(properties, SHAPE);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TableVariant.SIMPLE));
     }
 
     @Nullable
@@ -106,7 +51,7 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @Override
     public void neighborChanged(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @Nullable Orientation orientation, boolean isMoving) {
-        TABLE_VARIANT newVariant = determineTier(worldIn, pos, state.getValue(FACING));
+        TableVariant newVariant = determineTier(worldIn, pos, state.getValue(FACING));
         if (newVariant != state.getValue(VARIANT)) {
             worldIn.setBlock(pos, state.setValue(VARIANT, newVariant), 2);
         }
@@ -134,32 +79,55 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         builder.add(FACING, VARIANT);
     }
 
-    protected TABLE_VARIANT determineTier(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Direction facing) {
-        Block behind = world.getBlockState(pos.relative(facing)).getBlock();
-        Block left = world.getBlockState(pos.relative(facing.getClockWise())).getBlock();
-        Block right = world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock();
-        Block front = world.getBlockState(pos.relative(facing.getOpposite())).getBlock();
-        boolean weapon_table = left == ModBlocks.WEAPON_TABLE.get() || right == ModBlocks.WEAPON_TABLE.get() || behind == ModBlocks.WEAPON_TABLE.get() || front == ModBlocks.WEAPON_TABLE.get();
-        boolean potion_table = left == ModBlocks.POTION_TABLE.get() || right == ModBlocks.POTION_TABLE.get() || behind == ModBlocks.POTION_TABLE.get() || front == ModBlocks.POTION_TABLE.get();
-        boolean cauldron = left == ModBlocks.ALCHEMICAL_CAULDRON.get() || right == ModBlocks.ALCHEMICAL_CAULDRON.get() || behind == ModBlocks.ALCHEMICAL_CAULDRON.get() || front == ModBlocks.ALCHEMICAL_CAULDRON.get();
+    private TableVariant determineTier(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Direction facing) {
+        List<Block> relativeBlocks = List.of(
+                world.getBlockState(pos.relative(facing)).getBlock(),
+                world.getBlockState(pos.relative(facing.getClockWise())).getBlock(),
+                world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock(),
+                world.getBlockState(pos.relative(facing.getOpposite())).getBlock()
+        );
 
-        return getTierFor(weapon_table, potion_table, cauldron);
+        boolean weaponTable = relativeBlocks.contains(ModBlocks.WEAPON_TABLE.get());
+        boolean cauldron = relativeBlocks.contains(ModBlocks.ALCHEMICAL_CAULDRON.get());
+        boolean potionTable = relativeBlocks.contains(ModBlocks.POTION_TABLE.get());
+
+        int points = (weaponTable ? 1 : 0) + (cauldron ? 2 : 0) + (potionTable ? 4 : 0);
+
+        return TableVariant.getByPoints(points);
     }
 
-    public enum TABLE_VARIANT implements StringRepresentable {
-        SIMPLE("simple", 0), WEAPON("weapon", 1), CAULDRON("cauldron", 1), POTION("potion", 1), WEAPON_CAULDRON("weapon_cauldron", 2), WEAPON_POTION("weapon_potion", 2), POTION_CAULDRON("potion_cauldron", 2), COMPLETE("complete", 3);
+    public enum TableVariant implements StringRepresentable {
+        SIMPLE("simple", 0, 0),
+        WEAPON("weapon", 1, 1),
+        CAULDRON("cauldron", 1, 2),
+        POTION("potion", 1, 4),
+        WEAPON_CAULDRON("weapon_cauldron", 2, 3),
+        WEAPON_POTION("weapon_potion", 2, 5),
+        POTION_CAULDRON("potion_cauldron", 2, 6),
+        COMPLETE("complete", 3, 7);
+
         public final String name;
         public final int tier;
+        public final int requiredPoints;
 
-        TABLE_VARIANT(String n, int tier) {
-            this.name = n;
+        TableVariant(String name, int tier, int requiredPoints) {
+            this.name = name;
             this.tier = tier;
+            this.requiredPoints = requiredPoints;
         }
 
-        @NotNull
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return name;
+        }
+
+        public static TableVariant getByPoints(int points) {
+            for (TableVariant variant : values()) {
+                if (variant.requiredPoints == points) {
+                    return variant;
+                }
+            }
+            return SIMPLE;
         }
     }
 }

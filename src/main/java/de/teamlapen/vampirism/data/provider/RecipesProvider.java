@@ -16,7 +16,7 @@ import de.teamlapen.vampirism.recipes.ApplicableOilRecipe;
 import de.teamlapen.vampirism.recipes.CleanOilRecipe;
 import de.teamlapen.vampirism.recipes.ConfigCondition;
 import de.teamlapen.vampirism.recipes.RerollVampireBookRecipe;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +28,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -122,8 +123,8 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shaped(RecipeCategory.DECORATIONS, ModBlocks.FIRE_PLACE.get()).pattern(" X ").pattern("XYX").define('X', logs).define('Y', coal_block).unlockedBy("has_logs", has(logs)).save(output, general("fire_place"));
         shapeless(RecipeCategory.FOOD, ModItems.GARLIC_BREAD.get()).requires(garlic).requires(bread).unlockedBy("has_garlic", has(garlic)).unlockedBy("has_bread", has(bread)).save(output, general("garlic_bread"));
         shaped(RecipeCategory.MISC, ModItems.INJECTION_EMPTY.get()).pattern(" X ").pattern(" X ").pattern(" Y ").define('X', glass).define('Y', glass_pane).unlockedBy("has_glass", has(glass)).unlockedBy("has_glass_pane", has(glass_pane)).save(output, general("injection_0"));
-        shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC.get()).requires(injection_empty).requires(garlic).unlockedBy("has_injection", has(injection_empty)).save(output, general("injection_1"));
-        shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE.get()).requires(injection_empty).requires(vampire_fang, 8).unlockedBy("has_injection", has(injection_empty)).save(output, general("injection_2"));
+        shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC).requires(injection_empty).requires(garlic).unlockedBy("has_injection", has(injection_empty)).save(output, general("injection_1"));
+        shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE).requires(injection_empty).requires(vampire_fang, 8).unlockedBy("has_injection", has(injection_empty)).save(output, general("injection_2"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_BASE.get()).pattern("XYX").pattern("XYX").pattern("ZZZ").define('X', planks).define('Y', obsidian).define('Z', iron_ingot).unlockedBy("has_obsidian", has(obsidian)).save(output, general("totem_base"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_TOP_CRAFTED.get()).pattern("X X").pattern(" Y ").pattern("XZX").define('X', obsidian).define('Y', diamond).define('Z', vampire_book).unlockedBy("has_diamond", has(diamondBlock)).unlockedBy("has_obsidian", has(obsidian)).save(output, general("totem_top"));
         shaped(RecipeCategory.MISC, ModItems.UMBRELLA.get()).pattern("###").pattern("BAB").pattern(" A ").define('#', wool).define('A', stick).define('B', vampire_orchid).unlockedBy("has_wool", has(wool)).save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
@@ -155,7 +156,7 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shapeless(RecipeCategory.MISC, ModItems.BLOOD_INFUSED_IRON_INGOT, 3).requires(tag(iron_ingot), 3).requires(Ingredient.of(pure_blood_0, pure_blood_1, pure_blood_2, pure_blood_3)).unlockedBy("has_iron", has(iron_ingot)).save(output, vampire("blood_infused_iron_ingot"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL.get()).pattern("GYG").pattern("YZY").pattern("XXX").define('X', obsidian).define('Y', planks).define('Z', blood_bottle).define('G', gold_ingot).unlockedBy("has_gold", has(gold_ingot)).save(output, vampire("blood_pedestal"));
 
-        List<Item> vampireCloaks = Helper.VAMPIRE_CLOAKS.stream().map(Item::asItem).toList();
+        List<Item> vampireCloaks = ColorListsUtil.VAMPIRE_CLOAKS.stream().map(Item::asItem).toList();
         List<Item> coloredWool = List.of(Items.BLACK_WOOL, Items.BLUE_WOOL, Items.BROWN_WOOL, Items.CYAN_WOOL, Items.GRAY_WOOL, Items.GREEN_WOOL, Items.LIGHT_BLUE_WOOL, Items.LIGHT_GRAY_WOOL, Items.LIME_WOOL, Items.MAGENTA_WOOL, Items.ORANGE_WOOL, Items.PINK_WOOL, Items.PURPLE_WOOL, Items.RED_WOOL, Items.YELLOW_WOOL, Items.WHITE_WOOL);
 
         colorWithDye(vampireCloaks, RecipeCategory.COMBAT, this::vampire);
@@ -439,27 +440,25 @@ public class RecipesProvider extends de.teamlapen.vampirism.data.provider.parent
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 3).lava(1).requires(ModItems.CROSSBOW_ARROW_NORMAL, 3).requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE.get())).unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL)).save(output, "vampire_killer_arrow_3");
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ENHANCED.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).define('Y', Tags.Items.INGOTS_IRON).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("iron", has(Tags.Items.INGOTS_IRON)).unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get())).unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.CRUCIFIX_WIELDER).save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ULTIMATE.get()).pattern("XYYX").pattern("YZAY").pattern("XYYX").pattern("XYYX").define('X', ModItems.ITEM_ALCHEMICAL_FIRE.get()).define('Y', Tags.Items.STORAGE_BLOCKS_GOLD).define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()).define('A', ModItems.STAKE.get()).unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE.get())).unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD)).unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())).unlockedBy("stake", has(ModItems.STAKE.get())).skills(HunterSkills.ULTIMATE_CRUCIFIX).save(output);
-
-
     }
 
     private void coffins() {
         coffinFromWool(output, ModBlocks.COFFIN_WHITE.get(), Items.WHITE_WOOL, vampire("coffin_white"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_ORANGE.get(), Items.ORANGE_WOOL, Items.ORANGE_DYE, vampire("coffin_orange"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_MAGENTA.get(), Items.MAGENTA_WOOL, Items.MAGENTA_DYE, vampire("coffin_magenta"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_LIGHT_BLUE.get(), Items.LIGHT_BLUE_WOOL, Items.LIGHT_BLUE_DYE, vampire("coffin_light_blue"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_YELLOW.get(), Items.YELLOW_WOOL, Items.YELLOW_DYE, vampire("coffin_yellow"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_LIME.get(), Items.LIME_WOOL, Items.LIME_DYE, vampire("coffin_lime"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_PINK.get(), Items.PINK_WOOL, Items.PINK_DYE, vampire("coffin_pink"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_GRAY.get(), Items.GRAY_WOOL, Items.GRAY_DYE, vampire("coffin_gray"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_LIGHT_GRAY.get(), Items.LIGHT_GRAY_WOOL, Items.LIGHT_GRAY_DYE, vampire("coffin_light_gray"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_CYAN.get(), Items.CYAN_WOOL, Items.CYAN_DYE, vampire("coffin_cyan"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_PURPLE.get(), Items.PURPLE_WOOL, Items.PURPLE_DYE, vampire("coffin_purple"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_BLUE.get(), Items.BLUE_WOOL, Items.BLUE_DYE, vampire("coffin_blue"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_BROWN.get(), Items.BROWN_WOOL, Items.BROWN_DYE, vampire("coffin_brown"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_GREEN.get(), Items.GREEN_WOOL, Items.GREEN_DYE, vampire("coffin_green"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_RED.get(), Items.RED_WOOL, Items.RED_DYE, vampire("coffin_red"));
-        coffinFromWoolOrDye(output, ModBlocks.COFFIN_BLACK.get(), Items.BLACK_WOOL, Items.BLACK_DYE, vampire("coffin_black"));
+        ColorListsUtil.COFFINS.forEach(coffinBlock -> {
+            DyeColor color = coffinBlock.getColor();
+            if (color != DyeColor.WHITE) {
+                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color), vampire("coffin_" + color.getName()));
+            }
+        });
+    }
+
+    private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, String path) {
+        coffinFromWool(consumer, coffin, wool, path);
+        shapeless(RecipeCategory.DECORATIONS, coffin).requires(ModBlocks.COFFIN_WHITE.get()).requires(dye).unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE.get())).unlockedBy("has_dye", has(dye)).save(consumer, path + "_from_white");
+    }
+
+    private void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool, String path) {
+        shaped(RecipeCategory.DECORATIONS, coffin).pattern("XXX").pattern("YYY").pattern("XXX").define('X', ItemTags.PLANKS).define('Y', wool).unlockedBy("has_wool", has(wool)).save(consumer, path);
     }
 
     private void infuser() {

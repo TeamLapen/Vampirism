@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.core.BlockPos;
@@ -15,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -23,40 +22,23 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Placed in some churches
- */
 public class AltarCleansingBlock extends VampirismHorizontalBlock {
-    private static final VoxelShape SHAPEX = makeShape();
-    private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(1, 0, 5, 15, 1, 12);
-        VoxelShape b = Block.box(7, 1, 7, 9, 12, 11);
-        VoxelShape c = Block.box(1, 9, 3, 15, 14, 13);
-        VoxelShape r = Shapes.or(a, b);
-        return Shapes.or(r, c);
-    }
+    private static final Pair<VoxelShape, VoxelShape> SHAPES = UtilLib.getShapesRotatedSymmetrically(Shapes.or(Block.box(1, 0, 5, 15, 1, 12), Block.box(7, 1, 7, 9, 12, 11), Block.box(1, 9, 3, 15, 14, 13)));
 
-
-    public AltarCleansingBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion().overrideDescription("block.vampirism.church_altar"));
+    public AltarCleansingBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
-
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        Direction dir = blockState.getValue(FACING);
-        if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
-        return SHAPEZ;
+    protected @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH ? SHAPES.getFirst() : SHAPES.getSecond();
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext ctx) {
-        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+    public @Nullable BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @NotNull

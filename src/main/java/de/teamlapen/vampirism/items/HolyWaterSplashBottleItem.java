@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem, ProjectileItem {
 
-    public HolyWaterSplashBottleItem(TIER tier, Item.Properties properties) {
+    public HolyWaterSplashBottleItem(TIER tier, Properties properties) {
         super(tier, properties);
     }
 

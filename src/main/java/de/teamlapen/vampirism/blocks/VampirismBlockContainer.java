@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
 
-    public VampirismBlockContainer(Block.@NotNull Properties properties) {
+    public VampirismBlockContainer(@NotNull Properties properties) {
         super(properties);
 
     }

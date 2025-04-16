@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
-import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -15,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class RemainsBlock extends VampirismBlock implements BonemealableBlock, IRemainsBlock {
+public class RemainsBlock extends Block implements BonemealableBlock, IRemainsBlock {
 
     private final boolean vulnerable;
     private final boolean isVulnerability;

@@ -20,15 +20,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -49,6 +46,7 @@ import java.util.List;
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
 public class TotemTopBlock extends BaseEntityBlock {
+
     public static final MapCodec<TotemTopBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     Codec.BOOL.fieldOf("crafted").forGetter(TotemTopBlock::isCrafted),
@@ -56,31 +54,27 @@ public class TotemTopBlock extends BaseEntityBlock {
                     propertiesCodec()
             ).apply(inst, TotemTopBlock::new)
     );
+
+    private static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 10, 13), Block.box(1, 1, 1, 15, 9, 15));
+
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
-    private static final VoxelShape shape = makeShape();
 
     public static @NotNull List<TotemTopBlock> getBlocks() {
         return Collections.unmodifiableList(blocks);
-    }
-
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(3, 0, 3, 13, 10, 13);
-        VoxelShape b = Block.box(1, 1, 1, 15, 9, 15);
-        return Shapes.or(a, b);
     }
 
     @Nullable
     public final Holder<? extends IFaction<?>> faction;
     private final boolean crafted;
 
-    public TotemTopBlock(BlockBehaviour.Properties properties, boolean crafted, @Nullable Holder<? extends IFaction<?>> faction) {
-        this(crafted, faction, properties.mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    public TotemTopBlock(Properties properties, boolean crafted, @Nullable Holder<? extends IFaction<?>> faction) {
+        this(crafted, faction, properties);
     }
 
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Block.Properties properties) {
+    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Properties properties) {
         super(properties);
         this.faction = faction;
         this.crafted = crafted;
@@ -121,7 +115,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     @NotNull
     @Override
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return shape;
+        return SHAPE;
     }
 
     public boolean isCrafted() {

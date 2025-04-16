@@ -72,6 +72,5 @@ public class BatCageBlock extends BaseEntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection()).setValue(CONTAINS_BAT, true);
-
     }
 }

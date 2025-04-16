@@ -1,5 +1,5 @@
 {
   "exhaustion": 0.0,
-  "message_id": "vampirism.blood_loss",
+  "message_id": "vampirism.leave_faction",
   "scaling": "when_caused_by_living_non_player"
 }

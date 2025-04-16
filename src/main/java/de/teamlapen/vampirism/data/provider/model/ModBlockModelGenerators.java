@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer
 import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.ColorListsUtil;
 import net.minecraft.client.color.item.GrassColorSource;
 import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.blockstates.*;
@@ -143,7 +143,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     protected void createAltarPillar() {
         ResourceLocation model = ModelLocationUtils.decorateBlockModelLocation(modString("altar_pillar"));
         this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(ModBlocks.ALTAR_PILLAR.get())
-                .with(PropertyDispatch.property(AltarPillarBlock.TYPE_PROPERTY)
+                .with(PropertyDispatch.property(AltarPillarBlock.PILLAR_TYPE)
                         .select(AltarPillarBlock.EnumPillarType.NONE, Variant.variant().with(VariantProperties.MODEL, model))
                         .select(AltarPillarBlock.EnumPillarType.STONE, Variant.variant().with(VariantProperties.MODEL, ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_stone", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/stone_bricks")), this.modelOutput)))
                         .select(AltarPillarBlock.EnumPillarType.IRON, Variant.variant().with(VariantProperties.MODEL, ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_iron", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/iron_block")), this.modelOutput)))
@@ -161,8 +161,8 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.ALCHEMICAL_CAULDRON.get())
                 .with(Variant.variant().with(VariantProperties.MODEL, cauldron))
                 .with(Condition.condition().term(AlchemicalCauldronBlock.LIT, true), Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/alchemy_cauldron_fire")))
-                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, 1), Variant.variant().with(VariantProperties.MODEL, normal))
-                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, 2), Variant.variant().with(VariantProperties.MODEL, boiling)));
+                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.FILLED), Variant.variant().with(VariantProperties.MODEL, normal))
+                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.BOILING), Variant.variant().with(VariantProperties.MODEL, boiling)));
         createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
     }
 
@@ -185,8 +185,8 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createDefaultBlockItem(ModBlocks.CANDLE_STICK.get());
         createEmptyCandleHolder(ModBlocks.WALL_CANDLE_STICK.get());
 
-        for (int i = 1; i < Helper.STANDING_AND_WALL_CANDLE_STICKS.size(); i++) {
-            Pair<CandleHolderBlock, CandleHolderBlock> pair = Helper.STANDING_AND_WALL_CANDLE_STICKS.get(i);
+        for (int i = 1; i < ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.size(); i++) {
+            Pair<CandleHolderBlock, CandleHolderBlock> pair = ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.get(i);
             createCandleStick(pair.getFirst(), pair.getSecond(), pair.getFirst().getCandle().get());
             createDefaultBlockItem(pair.getFirst());
         }
@@ -195,8 +195,8 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createDefaultBlockItem(ModBlocks.CANDELABRA.get());
         createEmptyCandleHolder(ModBlocks.WALL_CANDELABRA.get());
 
-        for (int i = 1; i < Helper.STANDING_AND_WALL_CANDELABRAS.size(); i++) {
-            Pair<CandleHolderBlock, CandleHolderBlock> pair = Helper.STANDING_AND_WALL_CANDELABRAS.get(i);
+        for (int i = 1; i < ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.size(); i++) {
+            Pair<CandleHolderBlock, CandleHolderBlock> pair = ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.get(i);
             createCandelabra(pair.getFirst(), pair.getSecond(), pair.getFirst().getCandle().get());
             createDefaultBlockItem(pair.getFirst());
         }
@@ -204,8 +204,8 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createNonTemplateModelBlock(ModBlocks.CHANDELIER.get());
         createDefaultBlockItem(ModBlocks.CHANDELIER.get());
 
-        for (int i = 1; i < Helper.HANGING_CHANDELIERS.size(); i++) {
-            CandleHolderBlock block = Helper.HANGING_CHANDELIERS.get(i);
+        for (int i = 1; i < ColorListsUtil.HANGING_CHANDELIERS.size(); i++) {
+            CandleHolderBlock block = ColorListsUtil.HANGING_CHANDELIERS.get(i);
             createChandelier(block, block.getCandle().get());
             createDefaultBlockItem(block);
         }
@@ -371,9 +371,9 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         ResourceLocation hunterTableHammer = mod("block/hunter_table/hunter_table_hammer");
         var generator = MultiPartGenerator.multiPart(ModBlocks.HUNTER_TABLE.get());
         withHorizontalRotation(generator, null, hunterTable);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.POTION, HunterTableBlock.TABLE_VARIANT.POTION_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.COMPLETE), hunterTableBottle);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.CAULDRON, HunterTableBlock.TABLE_VARIANT.POTION_CAULDRON, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.COMPLETE), hunterTableGarlic);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TABLE_VARIANT.WEAPON, HunterTableBlock.TABLE_VARIANT.WEAPON_POTION, HunterTableBlock.TABLE_VARIANT.WEAPON_CAULDRON, HunterTableBlock.TABLE_VARIANT.COMPLETE), hunterTableHammer);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.POTION, HunterTableBlock.TableVariant.POTION_CAULDRON, HunterTableBlock.TableVariant.WEAPON_POTION, HunterTableBlock.TableVariant.COMPLETE), hunterTableBottle);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.CAULDRON, HunterTableBlock.TableVariant.POTION_CAULDRON, HunterTableBlock.TableVariant.WEAPON_CAULDRON, HunterTableBlock.TableVariant.COMPLETE), hunterTableGarlic);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.WEAPON, HunterTableBlock.TableVariant.WEAPON_POTION, HunterTableBlock.TableVariant.WEAPON_CAULDRON, HunterTableBlock.TableVariant.COMPLETE), hunterTableHammer);
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }

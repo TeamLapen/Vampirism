@@ -34,12 +34,12 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
                 minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getVampirismTier().ordinal());
             }
         }
-        return IItemWithTier.TIER.values()[minLevel];
+        return TIER.values()[minLevel];
     }
 
     private final @NotNull TIER tier;
 
-    public HunterCoatItem(@NotNull ArmorMaterial material, @NotNull ArmorType type, @NotNull TIER tier, Item.Properties properties) {
+    public HunterCoatItem(@NotNull ArmorMaterial material, @NotNull ArmorType type, @NotNull TIER tier, Properties properties) {
         super(material, type, properties);
         this.tier = tier;
     }

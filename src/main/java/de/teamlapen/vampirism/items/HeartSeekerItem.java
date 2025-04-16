@@ -22,7 +22,7 @@ public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, 
 
     private final @NotNull TIER tier;
 
-    public HeartSeekerItem(@NotNull ToolMaterial material, @NotNull TIER tier, float trainIncrease, Item.Properties properties) {
+    public HeartSeekerItem(@NotNull ToolMaterial material, @NotNull TIER tier, float trainIncrease, Properties properties) {
         super(material, 3, trainIncrease, properties);
         this.tier = tier;
     }

@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.items.consume;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.items.OblivionItem;
+import de.teamlapen.vampirism.items.OblivionPotionItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +28,7 @@ public class OblivionEffect implements ConsumeEffect {
     @Override
     public boolean apply(@NotNull Level level, @NotNull ItemStack itemstack, @NotNull LivingEntity livingEntity) {
         if (livingEntity instanceof Player player) {
-            FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(OblivionItem::applyEffect);
+            FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
         }
         if (livingEntity instanceof MinionEntity<?> minion) {
             minion.getMinionData().ifPresent(d -> d.upgradeStat(-1, minion));

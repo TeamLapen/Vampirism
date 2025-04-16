@@ -21,7 +21,7 @@ public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier,
 
     private final @NotNull TIER tier;
 
-    public HeartStrikerItem(@NotNull ToolMaterial material, @NotNull TIER tier, float trainSpeedIncrease, Item.Properties properties) {
+    public HeartStrikerItem(@NotNull ToolMaterial material, @NotNull TIER tier, float trainSpeedIncrease, Properties properties) {
         super(material, 3, trainSpeedIncrease , properties);
         this.tier = tier;
     }

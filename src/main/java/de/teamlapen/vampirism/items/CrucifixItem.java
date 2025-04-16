@@ -44,7 +44,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     private final TIER tier;
     private static final ResourceLocation COOLDOWN_GROUP = VResourceLocation.mod("crucifix");
 
-    public CrucifixItem(TIER tier, Item.Properties properties) {
+    public CrucifixItem(TIER tier, Properties properties) {
         super(FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(tier ==TIER.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
             case NORMAL -> 7;
             case ENHANCED -> 5;

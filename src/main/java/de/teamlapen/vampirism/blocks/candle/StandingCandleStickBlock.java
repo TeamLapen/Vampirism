@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.blocks.candle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -60,5 +62,10 @@ public class StandingCandleStickBlock extends CandleHolderBlock {
     @Override
     protected Iterable<Vec3> getParticleOffsets(BlockState state) {
         return PARTICLE_OFFSET;
+    }
+
+    @Override
+    public String getDescriptionKey() {
+        return BuiltInRegistries.ITEM.getKey(ModBlocks.CANDLE_STICK.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

@@ -57,7 +57,7 @@ public class PureBloodItem extends Item {
         };
     }
 
-    public PureBloodItem(int level, Item.Properties properties) {
+    public PureBloodItem(int level, Properties properties) {
         super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VResourceLocation.mod("pure_blood"))).component(DataComponents.CONSUMABLE, Consumables.defaultDrink()
                 .onConsume(
                         FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE)

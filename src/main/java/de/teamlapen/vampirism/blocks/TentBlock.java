@@ -46,7 +46,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * Part of a 2x2 block tent
  * Position property contains the position within the 4 block arrangement
  */
-public class TentBlock extends VampirismBlock {
+public class TentBlock extends Block {
     public static final EnumProperty<Direction> FACING = HORIZONTAL_FACING;
     /**
      * Arrangement
@@ -199,8 +199,8 @@ public class TentBlock extends VampirismBlock {
                 Block.box(0, 1, 0, 1, 15.85, 1));
     }
 
-    public TentBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());
+    public TentBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POSITION, 0).setValue(OCCUPIED, false));
     }
 

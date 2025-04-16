@@ -78,7 +78,7 @@ public class VampirismMod {
     public static boolean inDev = false;
     public static boolean inDataGen = false;
 
-    private final @NotNull RegistryManager registryManager;
+    private final @NotNull ModRegistryManager registryManager;
     private final IEventBus modBus;
     private final ModContainer modContainer;
 
@@ -90,7 +90,7 @@ public class VampirismMod {
         this.modBus = modEventBus;
         this.modContainer = modContainer;
 
-        this.registryManager = new RegistryManager(modEventBus);
+        this.registryManager = new ModRegistryManager(modEventBus);
 
         this.modBus.addListener(this::setup);
         this.modBus.addListener(this::enqueueIMC);
@@ -222,12 +222,13 @@ public class VampirismMod {
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
         event.enqueueWork(ModVillage::villagerTradeSetup);
-        event.enqueueWork(ModItems::registerDispenserBehaviourUnsafe);
+        event.enqueueWork(ModItems::registerDispenserBehaviour);
+        event.enqueueWork(ModBlocks::registerStrippables);
+        event.enqueueWork(ModBlocks::registerFlammables);
         TelemetryCollector.execute();
     }
 
     private void onInitStep(IInitListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         proxy.onInitStep(step, event);
     }
-
 }

@@ -44,7 +44,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
         return stack;
     }
 
-    public BloodBottleItem(Item.Properties properties) {
+    public BloodBottleItem(Properties properties) {
         super(properties);
     }
 

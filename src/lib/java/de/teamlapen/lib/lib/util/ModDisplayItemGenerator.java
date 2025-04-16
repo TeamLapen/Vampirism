@@ -1,5 +1,9 @@
 package de.teamlapen.lib.lib.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -8,54 +12,38 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 public abstract class ModDisplayItemGenerator implements CreativeModeTab.DisplayItemsGenerator {
     public CreativeModeTab.Output output;
-    @SuppressWarnings("FieldCanBeLocal")
     public CreativeModeTab.ItemDisplayParameters parameters;
-    protected final Set<ItemLike> items;
-
-    public ModDisplayItemGenerator(Set<ItemLike> allItems) {
-        this.items = allItems;
-    }
 
     @Override
-    public void accept(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public void accept(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.@NotNull Output output) {
         this.output = output;
         this.parameters = parameters;
 
-        this.addItemsToOutput();
-        this.items.forEach(output::accept);
+        this.addAll();
     }
 
-    protected abstract void addItemsToOutput();
+    protected abstract void addAll();
 
     protected void add(ItemLike item) {
-        this.items.remove(item.asItem());
         output.accept(item);
     }
 
     protected void add(ItemStack item) {
-        this.items.remove(item.getItem());
         output.accept(item);
     }
 
-    protected void addItem(DeferredHolder<Item, ? extends Item> item) {
-        add(item.get());
-    }
-
-    protected void addBlock(DeferredHolder<Block, ? extends Block> item) {
-        add(item.get());
+    protected void addIfPresent(ResourceLocation id) {
+        Item item = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, id));
+        if (item != null) add(item);
     }
 
     protected <T extends Item & CreativeTabItemProvider> void addItemGen(DeferredHolder<Item, T> item) {
-        this.items.remove(item.get());
         item.get().generateCreativeTab(this.parameters, this.output);
     }
 
     protected <T extends Block & CreativeTabItemProvider> void addBlockGen(DeferredHolder<Block, T> item) {
-        this.items.remove(item.get().asItem());
         item.get().generateCreativeTab(this.parameters, this.output);
     }
 

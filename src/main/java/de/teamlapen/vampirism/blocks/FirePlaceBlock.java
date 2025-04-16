@@ -13,56 +13,47 @@ import net.minecraft.world.level.LevelWriter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class FirePlaceBlock extends VampirismBlock {
-    private static final VoxelShape shape = makeShape();
+public class FirePlaceBlock extends Block {
 
-    private static @NotNull VoxelShape makeShape() {
-        return Block.box(0, 0.01, 0, 16, 4, 16);
-    }
+    private static final VoxelShape SHAPE = Block.box(0, 0.01, 0, 16, 4, 16);
 
-
-    public FirePlaceBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.WOOD).lightLevel(s -> 15).strength(1).ignitedByLava().noOcclusion());
-
+    public FirePlaceBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
-        if (rand.nextInt(24) == 0) {
-            worldIn.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, RandomSource random) {
+        if (random.nextInt(24) == 0) {
+            level.playLocalSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
         }
-
 
         for (int i = 0; i < 2; ++i) {
-            double d0 = (double) pos.getX() + rand.nextDouble();
-            double d1 = (double) pos.getY() + rand.nextDouble() * 0.5D + 0.5D;
-            double d2 = (double) pos.getZ() + rand.nextDouble();
-            worldIn.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            double d0 = (double) pos.getX() + random.nextDouble();
+            double d1 = (double) pos.getY() + random.nextDouble() * 0.5D + 0.5D;
+            double d2 = (double) pos.getZ() + random.nextDouble();
+            level.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
-
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return shape;
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldIn, @NotNull BlockPos pos) {
-        return worldIn.getBlockState(pos.below()).isFaceSturdy(worldIn, pos.below(), Direction.UP);
+    protected @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
-    public void onNeighborChange(@NotNull BlockState state, @NotNull LevelReader world, @NotNull BlockPos pos, BlockPos neighbor) {
-        if (!canSurvive(state, world, pos)) {
-            if (world instanceof LevelWriter) {
-                ((LevelWriter) world).destroyBlock(pos, true);
+    protected boolean canSurvive(@NotNull BlockState state, LevelReader level, BlockPos pos) {
+        return level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
+    }
+
+    @Override
+    public void onNeighborChange(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos, @NotNull BlockPos neighbor) {
+        if (!canSurvive(state, level, pos)) {
+            if (level instanceof LevelWriter) {
+                ((LevelWriter) level).destroyBlock(pos, true);
             }
         }
     }

@@ -303,7 +303,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         if (level != null) {
             super.setChanged();
             BlockState old = level.getBlockState(this.worldPosition);
-            BlockState state = old.setValue(AbstractFurnaceBlock.LIT, this.isBurning()).setValue(AlchemicalCauldronBlock.LIQUID, this.items.getFirst().isEmpty() ? 0 : this.isBurning() ? 2 : 1);
+            BlockState state = old.setValue(AbstractFurnaceBlock.LIT, this.isBurning()).setValue(AlchemicalCauldronBlock.LIQUID, this.items.getFirst().isEmpty() ? AlchemicalCauldronBlock.LiquidState.NONE : this.isBurning() ? AlchemicalCauldronBlock.LiquidState.BOILING : AlchemicalCauldronBlock.LiquidState.FILLED);
             if (old.equals(state)) {
                 this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
             } else {

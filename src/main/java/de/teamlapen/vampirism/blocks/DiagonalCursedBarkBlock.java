@@ -44,8 +44,8 @@ public class DiagonalCursedBarkBlock extends CursedBarkBlock {
     public static final BooleanProperty SOUTH_EAST = createProperty(Direction.SOUTH, Direction.EAST);
     public static final BooleanProperty EAST_NORTH = createProperty(Direction.EAST, Direction.NORTH);
 
-    public DiagonalCursedBarkBlock(BlockBehaviour.Properties properties) {
-        super(properties.sound(SoundType.EMPTY));
+    public DiagonalCursedBarkBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.defaultBlockState()
                 .setValue(UP_WEST, false)
                 .setValue(UP_NORTH, false)

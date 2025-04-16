@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -80,5 +82,10 @@ public class WallCandleStickBlock extends CandleHolderBlock {
     @Override
     protected Iterable<Vec3> getParticleOffsets(BlockState state) {
         return PARTICLE_OFFSET.get(state.getValue(FACING));
+    }
+
+    @Override
+    public String getDescriptionKey() {
+        return BuiltInRegistries.ITEM.getKey(ModBlocks.CANDLE_STICK.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

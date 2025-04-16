@@ -31,7 +31,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
 
     private final TIER tier;
 
-    public HunterAxeItem(ToolMaterial material, TIER tier, Item.Properties properties) {
+    public HunterAxeItem(ToolMaterial material, TIER tier, Properties properties) {
         super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(ModDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
         this.tier = tier;
     }

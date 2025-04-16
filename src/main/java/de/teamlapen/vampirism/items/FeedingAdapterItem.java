@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FeedingAdapterItem extends Item {
 
-    public FeedingAdapterItem(Item.Properties properties) {
+    public FeedingAdapterItem(Properties properties) {
         super(properties.stacksTo(1));
     }
 

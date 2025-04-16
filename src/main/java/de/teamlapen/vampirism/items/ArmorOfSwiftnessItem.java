@@ -38,7 +38,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
-    public ArmorOfSwiftnessItem(@NotNull ArmorMaterial material, @NotNull ArmorType type, @NotNull TIER tier, Item.Properties properties) {
+    public ArmorOfSwiftnessItem(@NotNull ArmorMaterial material, @NotNull ArmorType type, @NotNull TIER tier, Properties properties) {
         super(material, type, properties, ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(VResourceLocation.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.bySlot(type.getSlot())).build());
         this.tier = tier;
     }
@@ -55,7 +55,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if (pEntity.tickCount % 45 == 3 && pSlotId >= 36 && pSlotId <= 39 && pEntity instanceof Player player) {
             Equippable equippable = components().get(DataComponents.EQUIPPABLE);

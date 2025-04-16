@@ -4,13 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.BlockPropertiesExtension;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import de.teamlapen.vampirism.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +34,7 @@ public class GarlicDiffuserBlock extends DiffuserBlock {
 
     private final Type type;
 
-    public GarlicDiffuserBlock(BlockBehaviour.Properties properties, @NotNull Type type) {
+    public GarlicDiffuserBlock(Properties properties, @NotNull Type type) {
         this(type, BlockPropertiesExtension.descriptionWithout(properties, "_weak|_improved|_normal").mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
     }
 

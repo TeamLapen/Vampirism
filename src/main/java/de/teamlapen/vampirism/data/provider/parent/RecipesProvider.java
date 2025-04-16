@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.data.provider.parent;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.data.recipebuilder.*;
+import de.teamlapen.vampirism.util.ColorListsUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +27,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public abstract class RecipesProvider extends RecipeProvider {
-
-    protected List<Item> DYES = List.of(Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE, Items.RED_DYE, Items.YELLOW_DYE, Items.WHITE_DYE);
 
     protected HolderLookup.RegistryLookup<Item> itemLookup = this.registries.lookupOrThrow(Registries.ITEM);
 
@@ -52,18 +47,9 @@ public abstract class RecipesProvider extends RecipeProvider {
         return DataComponentIngredient.of(false, DataComponents.POTION_CONTENTS, new PotionContents(potion), Items.POTION);
     }
 
-    protected void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, String path) {
-        coffinFromWool(consumer, coffin, wool, path);
-        shapeless(RecipeCategory.DECORATIONS, coffin).requires(ModBlocks.COFFIN_WHITE.get()).requires(dye).unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE.get())).unlockedBy("has_dye", has(dye)).save(consumer, path + "_from_white");
-    }
-
-    protected void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool, String path) {
-        shaped(RecipeCategory.DECORATIONS, coffin).pattern("XXX").pattern("YYY").pattern("XXX").define('X', ItemTags.PLANKS).define('Y', wool).unlockedBy("has_wool", has(wool)).save(consumer, path);
-    }
-
     protected void colorWithDye(List<Item> dyeableItems, RecipeCategory category, Function<String, String> folder) {
-        for (int i = 0; i < DYES.size(); i++) {
-            Item dyeItem = DYES.get(i);
+        for (int i = 0; i < ColorListsUtil.DYES.size(); i++) {
+            Item dyeItem = ColorListsUtil.DYES.get(i);
             Item dyedItem = dyeableItems.get(i);
             Stream<Item> stream = dyeableItems.stream().filter(item -> !item.equals(dyedItem));
 
@@ -74,7 +60,6 @@ public abstract class RecipesProvider extends RecipeProvider {
     private void enchantment(ItemStack stack, int level, @NotNull Holder<Enchantment> enchantment) {
         stack.enchant(enchantment, level);
     }
-
 
     protected AlchemyTableRecipeBuilder alchemyTable(@NotNull Holder<IOil> oilStack) {
         return AlchemyTableRecipeBuilder.builder(this.itemLookup, oilStack);

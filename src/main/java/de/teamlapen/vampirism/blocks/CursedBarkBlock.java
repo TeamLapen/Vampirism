@@ -29,7 +29,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
 
     private static final VoxelShape shape = Shapes.empty();
 
-    public CursedBarkBlock(BlockBehaviour.Properties properties) {
+    public CursedBarkBlock(Properties properties) {
         super(properties.noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
