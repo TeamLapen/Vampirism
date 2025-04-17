@@ -4,19 +4,32 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.sit.SitEntity;
 import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.sit.SitUtil;
-import de.teamlapen.vampirism.util.VampirismVoxelShapes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.stream.Stream;
 
 public class ThroneBlock extends VampirismSplitBlock {
 
+    public static final VoxelShape BOTTOM_SHAPE = Stream.of(
+            Block.box(2.0, 0, 2.2, 13.5, 10.4, 14),
+            Block.box(2.0, 9, 1.2, 13.5, 16, 3),
+            Block.box(0.5, 13.5, 2.2, 2.7, 15.5, 14.2),
+            Block.box(13.3, 13.5, 2.2, 15.5, 15.5, 14.2)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    public static final VoxelShape TOP_SHAPE = Block.box(2.0, 0, 1.2, 13.5, 10, 3);
+
     public ThroneBlock(Properties properties) {
-        super(properties, VampirismVoxelShapes.THRONE_BOTTOM, VampirismVoxelShapes.THRONE_TOP, true);
+        super(properties, BOTTOM_SHAPE, TOP_SHAPE, true);
     }
 
     @Override

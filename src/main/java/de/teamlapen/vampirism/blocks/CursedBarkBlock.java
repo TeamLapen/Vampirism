@@ -25,8 +25,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
-    private static final VoxelShape shape = Shapes.empty();
-
     public CursedBarkBlock(Properties properties) {
         super(properties.noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
@@ -62,7 +60,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
 
     @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
-        return shape;
+        return Shapes.empty();
     }
 
     @Override

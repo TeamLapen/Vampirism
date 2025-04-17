@@ -22,7 +22,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class AltarCleansingBlock extends VampirismHorizontalBlock {
 
-    private static final Pair<VoxelShape, VoxelShape> SHAPES = UtilLib.getShapesRotatedSymmetrically(Shapes.or(Block.box(1, 0, 5, 15, 1, 12), Block.box(7, 1, 7, 9, 12, 11), Block.box(1, 9, 3, 15, 14, 13)));
+    private static final Pair<VoxelShape, VoxelShape> SHAPES = UtilLib.getShapesRotatedSymmetrically(Shapes.or(
+            Block.box(1, 0, 5, 15, 1, 12),
+            Block.box(7, 1, 7, 9, 12, 11),
+            Block.box(1, 9, 3, 15, 14, 13)
+    ));
 
     public AltarCleansingBlock(Properties properties) {
         super(properties);

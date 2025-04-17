@@ -34,7 +34,14 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     public static final EnumProperty<TableVariant> VARIANT = EnumProperty.create("variant", TableVariant.class);
 
-    private static final VoxelShape SHAPE = Stream.of(Block.box(1, 0, 1, 15, 8, 15), Block.box(0, 8, 0, 16, 10, 16), Block.box(2, 10, 6, 8, 13, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(0, 8, 0, 16, 10, 16),
+            Block.box(1, 0, 1, 4, 8, 4),
+            Block.box(12, 0, 1, 15, 8, 4),
+            Block.box(12, 0, 12, 15, 8, 15),
+            Block.box(1, 0, 12, 4, 8, 15),
+            Block.box(2, 10, 6, 8, 13, 14)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public HunterTableBlock(Properties properties) {
         super(properties, SHAPE);
@@ -49,16 +56,16 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, @Nullable Orientation orientation, boolean isMoving) {
-        TableVariant newVariant = determineTier(worldIn, pos, state.getValue(FACING));
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        TableVariant newVariant = determineTier(level, pos, state.getValue(FACING));
         if (newVariant != state.getValue(VARIANT)) {
-            worldIn.setBlock(pos, state.setValue(VARIANT, newVariant), 2);
+            level.setBlock(pos, state.setValue(VARIANT, newVariant), 2);
         }
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!worldIn.isClientSide) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!level.isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());
                 if (Helper.isHunter(serverPlayer)) {
@@ -77,12 +84,12 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
         builder.add(FACING, VARIANT);
     }
 
-    private TableVariant determineTier(LevelReader world, BlockPos pos, Direction facing) {
+    private TableVariant determineTier(LevelReader level, BlockPos pos, Direction facing) {
         List<Block> relativeBlocks = List.of(
-                world.getBlockState(pos.relative(facing)).getBlock(),
-                world.getBlockState(pos.relative(facing.getClockWise())).getBlock(),
-                world.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock(),
-                world.getBlockState(pos.relative(facing.getOpposite())).getBlock()
+                level.getBlockState(pos.relative(facing)).getBlock(),
+                level.getBlockState(pos.relative(facing.getClockWise())).getBlock(),
+                level.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock(),
+                level.getBlockState(pos.relative(facing.getOpposite())).getBlock()
         );
 
         boolean weaponTable = relativeBlocks.contains(ModBlocks.WEAPON_TABLE.get());

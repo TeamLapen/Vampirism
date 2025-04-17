@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.FactionCodec;
@@ -53,7 +54,10 @@ public class TotemTopBlock extends BaseEntityBlock {
             ).apply(inst, TotemTopBlock::new)
     );
 
-    private static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 10, 13), Block.box(1, 1, 1, 15, 9, 15));
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(3, 0, 3, 13, 10, 13),
+            Block.box(1, 1, 1, 15, 9, 15)
+    );
 
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
 
@@ -80,7 +84,7 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
+    public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
         return false;
     }
 
@@ -95,23 +99,23 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
     public float getExplosionResistance() {
         return Float.MAX_VALUE;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
-        if (worldIn.isClientSide) return;
-        BlockEntity tile = worldIn.getBlockEntity(pos);
-        if (tile instanceof TotemBlockEntity) {
-            ((TotemBlockEntity) tile).updateTileStatus();
-            worldIn.blockEvent(pos, this, 1, 0); //Notify client about render update
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        if (level.isClientSide) return;
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof TotemBlockEntity totemBlockEntity) {
+            totemBlockEntity.updateTileStatus();
+            level.blockEvent(pos, this, 1, 0); //Notify client about render update
         }
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return SHAPE;
     }
 
     public boolean isCrafted() {
@@ -125,35 +129,36 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!(newState.getBlock() instanceof TotemTopBlock)) {
-            worldIn.removeBlockEntity(pos);
+            level.removeBlockEntity(pos);
         }
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if (world.isClientSide) return InteractionResult.SUCCESS;
-        TotemBlockEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+
+        TotemBlockEntity blockEntity = getBlockEntity(level, pos);
+        if (blockEntity != null && level.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
             player.awardStat(ModStats.INTERACT_WITH_TOTEM.get());
-            t.initiateCapture(player);
+            blockEntity.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        TotemBlockEntity tile = getTile(world, pos);
-        if (tile != null) {
-            if (!tile.canPlayerRemoveBlock(player)) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        TotemBlockEntity blockEntity = getBlockEntity(level, pos);
+        if (blockEntity != null) {
+            if (!blockEntity.canPlayerRemoveBlock(player)) {
                 return false;
             }
         }
-        if (super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid)) {
-            if (tile != null && tile.getControllingFaction() != null) {
-                tile.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
+        if (super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid)) {
+            if (blockEntity != null && !blockEntity.getControllingFaction().is(ModFactions.NEUTRAL.getId())) {
+                blockEntity.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
             }
             return true;
         } else {
@@ -162,10 +167,8 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    private TotemBlockEntity getTile(Level world, BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof TotemBlockEntity) return (TotemBlockEntity) tile;
-        return null;
+    private TotemBlockEntity getBlockEntity(Level world, BlockPos pos) {
+        return world.getBlockEntity(pos) instanceof TotemBlockEntity totemBlockEntity ? totemBlockEntity : null;
     }
 
     @Nullable

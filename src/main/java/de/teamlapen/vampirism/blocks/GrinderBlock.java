@@ -26,8 +26,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class GrinderBlock extends VampirismBlockContainer {
+
     public static final MapCodec<GrinderBlock> CODEC = simpleCodec(GrinderBlock::new);
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);

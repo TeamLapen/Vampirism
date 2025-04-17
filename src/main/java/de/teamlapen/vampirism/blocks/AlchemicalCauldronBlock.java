@@ -35,7 +35,11 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
 
     public static final EnumProperty<LiquidState> LIQUID = EnumProperty.create("liquid", LiquidState.class);
 
-    private static final VoxelShape SHAPE = Shapes.or(Block.box(2, 0, 2, 14, 9, 14), Block.box(1, 9, 1, 15, 13, 15), Block.box(2, 13, 2, 14, 14, 14));
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(2, 0, 2, 14, 9, 14),
+            Block.box(1, 9, 1, 15, 13, 15),
+            Block.box(2, 13, 2, 14, 14, 14)
+    );
 
     public AlchemicalCauldronBlock(Properties properties) {
         super(properties);

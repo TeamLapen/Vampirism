@@ -23,8 +23,10 @@ import org.jetbrains.annotations.Nullable;
 public class SieveBlock extends VampirismBlockContainer {
 
     public static final MapCodec<SieveBlock> CODEC = simpleCodec(SieveBlock::new);
+
     public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
-    protected static final VoxelShape sieveShape = makeShape();
+
+    protected static final VoxelShape SHAPE = makeShape();
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
@@ -59,8 +61,8 @@ public class SieveBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return sieveShape;
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override

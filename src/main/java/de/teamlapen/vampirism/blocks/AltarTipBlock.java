@@ -13,7 +13,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class AltarTipBlock extends Block {
 
-    protected static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 3, 13), Block.box(4, 3, 4, 12, 4, 12), Block.box(5, 4, 5, 11, 5, 11), Block.box(6, 5, 6, 10, 6, 10), Block.box(7, 6, 7, 9, 7, 9));
+    protected static final VoxelShape SHAPE = Shapes.or(
+            Block.box(3, 0, 3, 13, 3, 13),
+            Block.box(4, 3, 4, 12, 4, 12),
+            Block.box(5, 4, 5, 11, 5, 11),
+            Block.box(6, 5, 6, 10, 6, 10),
+            Block.box(7, 6, 7, 9, 7, 9)
+    );
 
     public AltarTipBlock(Properties properties) {
         super(properties);

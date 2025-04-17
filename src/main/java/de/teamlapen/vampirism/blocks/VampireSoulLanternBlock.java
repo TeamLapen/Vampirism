@@ -19,15 +19,22 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VampireSoulLanternBlock extends LanternBlock {
 
     public static final EnumProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 2.0D, 11.0D), Block.box(5.0D, 5.0D, 5.0D, 11.0D, 7.0D, 11.0D), Block.box(6.0D, 2.0D, 6.0D, 10.0D, 8.0D, 10.0D));
-    private static final VoxelShape SHAPE_HANGING = Shapes.or(Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D), Block.box(5.0D, 7.0D, 5.0D, 11.0D, 9.0D, 11.0D), Block.box(6.0D, 4.0D, 6.0D, 10.0D, 10.0D, 10.0D));
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(5.0D, 0.0D, 5.0D, 11.0D, 2.0D, 11.0D),
+            Block.box(5.0D, 5.0D, 5.0D, 11.0D, 7.0D, 11.0D),
+            Block.box(6.0D, 2.0D, 6.0D, 10.0D, 8.0D, 10.0D)
+    );
+    private static final VoxelShape SHAPE_HANGING = Shapes.or(
+            Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D),
+            Block.box(5.0D, 7.0D, 5.0D, 11.0D, 9.0D, 11.0D),
+            Block.box(6.0D, 4.0D, 6.0D, 10.0D, 10.0D, 10.0D)
+    );
 
     public VampireSoulLanternBlock(Properties properties) {
         super(properties);
@@ -36,13 +43,13 @@ public class VampireSoulLanternBlock extends LanternBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
 
-        for(Direction direction : pContext.getNearestLookingDirections()) {
+        for(Direction direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
-                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP).setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection());
-                if (blockstate.canSurvive(pContext.getLevel(), pContext.getClickedPos())) {
+                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP).setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
+                if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
                     return blockstate.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
                 }
             }

@@ -26,6 +26,7 @@ public class VampirismSplitBlock extends Block {
 
     public static final EnumProperty<Direction> FACING = HORIZONTAL_FACING;
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
+    
     private final VoxelShape NORTH1;
     private final VoxelShape EAST1;
     private final VoxelShape SOUTH1;
@@ -35,7 +36,6 @@ public class VampirismSplitBlock extends Block {
     private final VoxelShape SOUTH2;
     private final VoxelShape WEST2;
     private final boolean vertical;
-
 
     public VampirismSplitBlock(Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
         super(properties);
@@ -51,12 +51,13 @@ public class VampirismSplitBlock extends Block {
         this.vertical = vertical;
     }
 
-    public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return p_149645_1_.getValue(PART) == Part.MAIN ? RenderShape.MODEL : RenderShape.INVISIBLE;
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return state.getValue(PART) == Part.MAIN ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         boolean main = state.getValue(PART) == Part.MAIN;
         return switch (state.getValue(FACING)) {
             case NORTH -> main ? NORTH1 : NORTH2;
@@ -70,66 +71,65 @@ public class VampirismSplitBlock extends Block {
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction enumfacing = context.getHorizontalDirection();
-        BlockPos blockpos = context.getClickedPos();
-        BlockPos blockpos1 = blockpos.relative(this.vertical ? Direction.UP : enumfacing);
-        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing) : null;
+        Direction direction = context.getHorizontalDirection();
+        BlockPos relativePos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
+        return context.getLevel().getBlockState(relativePos).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, direction) : null;
     }
 
     @Override
-    protected boolean isPathfindable(BlockState p_60475_, PathComputationType p_60478_) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState playerWillDestroy(Level world, BlockPos blockPos, BlockState blockState, Player player) {
-        if (!world.isClientSide && player.isCreative()) {
-            Part part = blockState.getValue(PART);
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            Part part = state.getValue(PART);
             if (part == Part.SUB) {
-                BlockPos blockpos = blockPos.relative(getOtherBlockDirection(blockState));
-                BlockState otherState = world.getBlockState(blockpos);
-                if (otherState.getBlock() == this && otherState.getValue(PART) == Part.MAIN) {
-                    world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                    world.levelEvent(player, 2001, blockpos, Block.getId(otherState));
+                BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
+                BlockState neighborState = level.getBlockState(blockpos);
+                if (neighborState.getBlock() == this && neighborState.getValue(PART) == Part.MAIN) {
+                    level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockpos, Block.getId(neighborState));
                 }
             }
         }
 
-        return super.playerWillDestroy(world, blockPos, blockState, player);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(world, pos, state, placer, itemStack);
-        if (!world.isClientSide) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+
+        if (!level.isClientSide) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
-            BlockState otherState = state.setValue(PART, Part.SUB);
+            BlockState neighborState = state.setValue(PART, Part.SUB);
             if (!this.vertical) {
-                otherState = otherState.setValue(FACING, otherState.getValue(FACING).getOpposite());
+                neighborState = neighborState.setValue(FACING, neighborState.getValue(FACING).getOpposite());
             }
-            world.setBlock(blockpos, otherState, 3);
-            world.blockUpdated(pos, Blocks.AIR);
-            state.updateNeighbourShapes(world, pos, 3);
+            level.setBlock(blockpos, neighborState, 3);
+            level.blockUpdated(pos, Blocks.AIR);
+            state.updateNeighbourShapes(level, pos, 3);
         }
-
     }
 
     @Override
-    protected BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos otherPos, BlockState otherState, RandomSource random) {
-        if (direction == getOtherBlockDirection(stateIn)) {
-            return otherState.getBlock() == this && otherState.getValue(PART) != stateIn.getValue(PART) ? updateFromOther(stateIn, otherState) : Blocks.AIR.defaultBlockState();
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction == getOtherBlockDirection(state)) {
+            return neighborState.getBlock() == this && neighborState.getValue(PART) != state.getValue(PART) ? state : Blocks.AIR.defaultBlockState();
         } else {
-            return super.updateShape(stateIn, worldIn, tickAccess, pos, direction, otherPos, otherState, random);
+            return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
         }
     }
 
@@ -138,15 +138,11 @@ public class VampirismSplitBlock extends Block {
         builder.add(FACING, PART);
     }
 
-    protected Direction getOtherBlockDirection(BlockState blockState) {
+    protected Direction getOtherBlockDirection(BlockState state) {
         if (vertical) {
-            return blockState.getValue(PART) == Part.MAIN ? Direction.UP : Direction.DOWN;
+            return state.getValue(PART) == Part.MAIN ? Direction.UP : Direction.DOWN;
         }
-        return blockState.getValue(FACING);
-    }
-
-    protected BlockState updateFromOther(BlockState thisState, BlockState otherState) {
-        return thisState;
+        return state.getValue(FACING);
     }
 
     public enum Part implements StringRepresentable {
@@ -170,5 +166,4 @@ public class VampirismSplitBlock extends Block {
             return name;
         }
     }
-
 }

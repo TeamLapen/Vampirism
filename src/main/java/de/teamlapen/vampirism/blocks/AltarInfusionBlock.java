@@ -36,7 +36,15 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
 
     public static final MapCodec<AltarInfusionBlock> CODEC = simpleCodec(AltarInfusionBlock::new);
 
-    private static final VoxelShape SHAPE = Stream.of(Block.box(5, 0, 5, 11, 4, 11), Block.box(1, 4, 1, 15, 7, 15), Block.box(5, 7, 5, 11, 13, 11), Block.box(1, 7, 13, 3, 13, 15), Block.box(1, 7, 1, 3, 13, 3), Block.box(13, 7, 1, 15, 13, 3), Block.box(13, 7, 13, 15, 13, 15)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(5, 0, 5, 11, 4, 11),
+            Block.box(1, 4, 1, 15, 7, 15),
+            Block.box(5, 7, 5, 11, 13, 11),
+            Block.box(1, 7, 13, 3, 13, 15),
+            Block.box(1, 7, 1, 3, 13, 3),
+            Block.box(13, 7, 1, 15, 13, 3),
+            Block.box(13, 7, 13, 15, 13, 15)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public AltarInfusionBlock(Properties properties) {
         super(properties);

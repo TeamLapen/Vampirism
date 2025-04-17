@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -13,29 +14,26 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
-
     public VampirismBlockContainer(Properties properties) {
         super(properties);
-
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (state.hasBlockEntity() && (state.is(newState.getBlock()) || !newState.hasBlockEntity())) {
-            this.clearContainer(state, worldIn, pos);
-            super.onRemove(state, worldIn, pos, newState, isMoving);
+            this.clearContainer(state, level, pos);
+            super.onRemove(state, level, pos, newState, movedByPiston);
         }
     }
 
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
-
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
     }
 
     /**
      * drop all items from the tileentity's inventory if {@code instanceof} {@link Container}
      */
-    protected void dropInventoryTileEntityItems(Level world, BlockPos pos) {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+    protected void dropInventoryTileEntityItems(Level level, BlockPos pos) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (!(tileEntity instanceof Container inventory)) {
             return;
         }
@@ -44,14 +42,13 @@ public abstract class VampirismBlockContainer extends BaseEntityBlock {
             ItemStack item = inventory.getItem(i);
 
             if (!item.isEmpty()) {
-                dropItem(world, pos, item);
+                dropItem(level, pos, item);
                 inventory.setItem(i, ItemStack.EMPTY);
             }
         }
     }
 
-    protected void dropItem(Level world, BlockPos pos, ItemStack stack) {
-        net.minecraft.world.Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+    protected void dropItem(Level level, BlockPos pos, ItemStack stack) {
+        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
-
 }

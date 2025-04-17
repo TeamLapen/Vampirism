@@ -28,8 +28,8 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, TentBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, TentBlockEntity::serverTick);
     }
 
     /**
@@ -37,7 +37,7 @@ public class TentMainBlock extends TentBlock implements EntityBlock {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type1, BlockEntityTicker<? super E> ticker) {
-        return ModTiles.TENT.get() == type1 ? (BlockEntityTicker<A>) ticker : null;
+    private static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> type, BlockEntityTicker<? super E> ticker) {
+        return ModTiles.TENT.get() == type ? (BlockEntityTicker<A>) ticker : null;
     }
 }

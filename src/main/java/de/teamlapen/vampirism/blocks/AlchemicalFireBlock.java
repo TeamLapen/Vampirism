@@ -84,7 +84,7 @@ public class AlchemicalFireBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, @Nullable Orientation p_365159_, boolean p_60514_) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
         if (!canSurvive(state, level, pos)) {
             level.removeBlock(pos, false);
         }

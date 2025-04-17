@@ -20,41 +20,24 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class PedestalBlock extends VampirismBlockContainer {
+
     public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
-    private static final VoxelShape pedestalShape = makeShape();
 
-    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
-        player.setItemInHand(hand, stack);
-        if (stack.getItem() instanceof VampireSwordItem) {
-            if (((VampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
-                ((VampireSwordItem) stack.getItem()).tryName(stack, player);
-            }
-        }
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
-        VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
-        VoxelShape c = Block.box(5, 2, 5, 11, 3, 11);
-        VoxelShape d = Block.box(6, 3, 6, 10, 7, 10);
-        VoxelShape e = Block.box(5, 7, 5, 11, 8, 11);
-        VoxelShape f = Block.box(3, 8, 3, 13, 9, 13);
-        VoxelShape g1 = Block.box(4, 9, 4, 5, 11, 5);
-        VoxelShape g2 = Block.box(11, 9, 4, 12, 11, 5);
-        VoxelShape g3 = Block.box(4, 9, 11, 5, 11, 12);
-        VoxelShape g4 = Block.box(11, 9, 11, 12, 11, 12);
-
-        return Shapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
-    }
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(1, 0, 1, 15, 2, 15),
+            Block.box(6, 2, 6, 10, 8, 10),
+            Block.box(3, 8, 3, 13, 9, 13)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public PedestalBlock(Properties properties) {
         super(properties);
@@ -70,7 +53,6 @@ public class PedestalBlock extends VampirismBlockContainer {
         return RenderShape.MODEL;
     }
 
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -79,13 +61,21 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return pedestalShape;
+        return SHAPE;
     }
 
+    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
+        player.setItemInHand(hand, stack);
+        if (stack.getItem() instanceof VampireSwordItem vampireSwordItem) {
+            if (vampireSwordItem.isFullyCharged(stack)) {
+                vampireSwordItem.tryName(stack, player);
+            }
+        }
+    }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return getTile(world, pos).filter(s -> player.getMainHandItem().isEmpty()).map(pedestal -> {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return getTile(level, pos).filter(s -> player.getMainHandItem().isEmpty()).map(pedestal -> {
             ItemStack stack2 = pedestal.extractItem(0, 1, false);
             player.awardStat(ModStats.ITEMS_FILLED_ON_BLOOD_PEDESTAL.get());
             takeItemPlayer(player, InteractionHand.MAIN_HAND, stack2);
@@ -94,8 +84,8 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return getTile(world, pos).filter(s -> !s.hasStack()).map(pedestal -> {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return getTile(level, pos).filter(s -> !s.hasStack()).map(pedestal -> {
             ItemStack stack2 = ItemStack.EMPTY;
             if (!pedestal.extractItem(0, 1, true).isEmpty()) {
                 stack2 = pedestal.extractItem(0, 1, false);
@@ -110,26 +100,26 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
-        PedestalBlockEntity tile = getTileEntity(worldIn, pos);
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
+        PedestalBlockEntity tile = getTileEntity(level, pos);
         if (tile != null && tile.hasStack()) {
-            dropItem(worldIn, pos, tile.removeStack());
+            dropItem(level, pos, tile.removeStack());
         }
     }
 
     @Nullable
-    private PedestalBlockEntity getTileEntity(BlockGetter world, BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PedestalBlockEntity) {
-            return (PedestalBlockEntity) tile;
+    private PedestalBlockEntity getTileEntity(BlockGetter level, BlockPos pos) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof PedestalBlockEntity pedestalBlockEntity) {
+            return pedestalBlockEntity;
         }
         return null;
     }
 
-    private Optional<PedestalBlockEntity> getTile(BlockGetter world, BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PedestalBlockEntity) {
-            return Optional.of((PedestalBlockEntity) tile);
+    private Optional<PedestalBlockEntity> getTile(BlockGetter level, BlockPos pos) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof PedestalBlockEntity pedestalBlockEntity) {
+            return Optional.of(pedestalBlockEntity);
         }
         return Optional.empty();
     }
@@ -141,13 +131,13 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState pState) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
-        var tile = getTileEntity(pLevel, pPos);
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        PedestalBlockEntity tile = getTileEntity(level, pos);
         if (tile != null) {
             return tile.getChargedProgress();
         }

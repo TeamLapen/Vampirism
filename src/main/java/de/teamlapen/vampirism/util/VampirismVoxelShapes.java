@@ -68,15 +68,6 @@ public class VampirismVoxelShapes {
 
     public static final VoxelShape VAMPIRE_RACK = Block.box(3, 0, 0, 13, 15.55, 3.23);
 
-    public static final VoxelShape THRONE_BOTTOM = Stream.of(
-            Block.box(2.0, 0, 2.2, 13.5, 10.4, 14),
-            Block.box(2.0, 9, 1.2, 13.5, 16, 3),
-            Block.box(0.5, 13.5, 2.2, 2.7, 15.5, 14.2),
-            Block.box(13.3, 13.5, 2.2, 15.5, 15.5, 14.2)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
-
-    public static final VoxelShape THRONE_TOP = Block.box(2.0, 0, 1.2, 13.5, 10, 3);
-
     public static final VoxelShape CROSS_BOTTOM = Stream.of(
             Block.box(1, 0, 1, 15, 2, 15),
             Block.box(3, 2, 3, 13, 3, 13),
