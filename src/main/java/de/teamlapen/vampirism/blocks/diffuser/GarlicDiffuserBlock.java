@@ -15,7 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,17 +40,17 @@ public class GarlicDiffuserBlock extends DiffuserBlock {
     }
 
     @Override
-    protected @NotNull MapCodec<? extends DiffuserBlock> codec() {
+    protected MapCodec<? extends DiffuserBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public @Nullable DiffuserBlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public @Nullable DiffuserBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new GarlicDiffuserBlockEntity(pos, state, strength, radius.get());
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         int chunks = 1 + 2 * radius.get();
         DescriptionUtil.addDescriptionTooltip(BuiltInRegistries.BLOCK.getKey(this).getPath(), tooltipComponents, chunks, chunks);
     }

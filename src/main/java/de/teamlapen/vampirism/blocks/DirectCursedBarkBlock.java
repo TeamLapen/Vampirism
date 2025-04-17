@@ -13,13 +13,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -48,7 +45,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (Helper.isVampire(entity) || (entity instanceof Player && ((Player) entity).getAbilities().invulnerable)) return;
         BlockPos targetPos = pos;
         for (Map.Entry<Direction, EnumProperty<Type>> entry : SIDE_MAP.entrySet()) {
@@ -59,13 +56,13 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
         moveEntityTo(level, entity, targetPos);
     }
 
-    private boolean canAttachTo(@NotNull BlockGetter blockReader, @NotNull BlockPos pos, @NotNull Direction direction) {
+    private boolean canAttachTo(BlockGetter blockReader, BlockPos pos, Direction direction) {
         BlockState blockstate = blockReader.getBlockState(pos);
         return blockstate.getBlock() instanceof CursedSpruceBlock cursedSpruce && !cursedSpruce.isCured();
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
+    public boolean canSurvive(BlockState state, LevelReader worldReader, BlockPos blockPos) {
         for (Map.Entry<Direction, EnumProperty<Type>> entry : SIDE_MAP.entrySet()) {
             if (state.getValue(entry.getValue()) != Type.NONE && this.canAttachTo(worldReader, blockPos.relative(entry.getKey()), entry.getKey().getOpposite())) {
                 return true;
@@ -74,9 +71,8 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
         return false;
     }
 
-    @NotNull
     @Override
-    public BlockState updateShape(@NotNull BlockState blockState, LevelReader levelReader, ScheduledTickAccess tickAccess, BlockPos pos, @NotNull Direction direction, @NotNull BlockPos pos2, @NotNull BlockState state2, RandomSource randomSource) {
+    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos pos2, BlockState state2, RandomSource randomSource) {
         EnumProperty<Type> property = SIDE_MAP.get(direction);
         if (blockState.getValue(property) != Type.NONE) {
             if (!canAttachTo(levelReader, pos2, direction.getOpposite())) {
@@ -98,13 +94,13 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction direction = context.getNearestLookingDirection();
         return this.defaultBlockState().setValue(SIDE_MAP.get(direction), Type.VERTICAL);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(SIDE_MAP.values().toArray(new Property[0]));
     }
 
@@ -112,7 +108,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
         VERTICAL, HORIZONTAL, NONE;
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
         }
     }

@@ -24,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -38,14 +37,14 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
 
     private final Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType;
 
-    public DiffuserBlock(@NotNull Properties properties, Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType) {
+    public DiffuserBlock(Properties properties, Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType) {
         super(properties);
         this.blockEntityType = blockEntityType;
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -57,19 +56,19 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected abstract @NotNull MapCodec<? extends DiffuserBlock> codec();
+    protected abstract MapCodec<? extends DiffuserBlock> codec();
 
     @Nullable
     @Override
-    public abstract DiffuserBlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state);
+    public abstract DiffuserBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     @Override
-    protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+    protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -80,12 +79,12 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+    protected BlockState mirror(BlockState state, Mirror mirror) {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 
     @Override
-    protected @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+    protected BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
@@ -95,15 +94,14 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack stack) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (placer instanceof Player player) {
             getBlockEntity(level, pos).ifPresent(entity -> entity.setOwned(player));
         }
     }
 
-    @NotNull
-    protected Optional<DiffuserBlockEntity> getBlockEntity(@NotNull BlockGetter level, BlockPos pos) {
+    protected Optional<DiffuserBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof DiffuserBlockEntity diffuser) {
             return Optional.of(diffuser);
@@ -112,7 +110,7 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         getBlockEntity(level, pos).ifPresent(blockEntity -> blockEntity.deactivateEffect(level, pos, level.getBlockState(pos)));
         super.onRemove(state, level, pos, newState, isMoving);
     }
@@ -123,19 +121,19 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+    public void attack(BlockState state, Level level, BlockPos pos, Player player) {
         getBlockEntity(level, pos).ifPresent(blockEntity -> blockEntity.onTouched(player));
     }
 
     @Override
-    public void playerDestroy(@NotNull Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity, @NotNull ItemStack tool) {
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         getBlockEntity(level, pos).ifPresent(blockEntity1 -> blockEntity1.onTouched(player));
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, this.blockEntityType.get(), level.isClientSide ? DiffuserBlockEntity::clientTick : DiffuserBlockEntity::serverTick);
     }
 }

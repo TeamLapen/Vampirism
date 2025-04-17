@@ -16,14 +16,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
@@ -34,7 +32,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 
-    protected void moveEntityTo(@NotNull Level level, @NotNull Entity entity, @NotNull BlockPos targetPos) {
+    protected void moveEntityTo(Level level, Entity entity, BlockPos targetPos) {
         if (targetPos.equals(entity.blockPosition())) return;
         Vec3 thrust = new Vec3(targetPos.getX(), targetPos.getY(), targetPos.getZ()).subtract(entity.getX(), entity.getY(), entity.getZ()).normalize().scale(0.04);
         if (!entity.onGround()) {
@@ -63,12 +61,12 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
     }
 
     @Override
-    public @NotNull VoxelShape getShape(@NotNull BlockState p_60555_, @NotNull BlockGetter p_60556_, @NotNull BlockPos p_60557_, @NotNull CollisionContext p_60558_) {
+    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return shape;
     }
 
     @Override
-    protected void spawnDestroyParticles(@NotNull Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
     }
 
     @Override

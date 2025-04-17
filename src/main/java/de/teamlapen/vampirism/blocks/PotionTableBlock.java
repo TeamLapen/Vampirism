@@ -18,20 +18,18 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PotionTableBlock extends VampirismBlockContainer {
     public static final MapCodec<PotionTableBlock> CODEC = simpleCodec(PotionTableBlock::new);
     protected static final VoxelShape shape = makeShape();
 
-    private static @NotNull VoxelShape makeShape() {
+    private static VoxelShape makeShape() {
         VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
         VoxelShape b = Block.box(1, 1, 1, 15, 2, 15);
         VoxelShape c = Block.box(2, 2, 2, 14, 9, 14);
@@ -48,27 +46,25 @@ public class PotionTableBlock extends VampirismBlockContainer {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PotionTableBlockEntity(pos, state);
     }
 
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, LivingEntity entity, @NotNull ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, blockPos, blockState, entity, stack);
         BlockEntity tile = world.getBlockEntity(blockPos);
         if (entity instanceof Player && tile instanceof PotionTableBlockEntity) {
@@ -76,9 +72,8 @@ public class PotionTableBlock extends VampirismBlockContainer {
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
         if (!worldIn.isClientSide && player instanceof ServerPlayer) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity potionTable) {
@@ -93,7 +88,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof PotionTableBlockEntity) {
             for (int i = 0; i < 8; ++i) {
@@ -104,7 +99,7 @@ public class PotionTableBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.POTION_TABLE.get(), PotionTableBlockEntity::tick);
     }
 }

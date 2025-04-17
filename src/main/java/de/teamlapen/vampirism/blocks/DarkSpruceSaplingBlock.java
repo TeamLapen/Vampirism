@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
 public class DarkSpruceSaplingBlock extends SaplingBlock {
 
@@ -29,7 +28,7 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
     }
 
     @Override
-    public InteractionResult useItemOn(ItemStack stack, @NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (stack.is(ModItemTags.PURE_BLOOD)) {
             stack.shrink(1);
             pLevel.setBlockAndUpdate(pPos, ModBlocks.CURSED_SPRUCE_SAPLING.get().defaultBlockState());
@@ -38,7 +37,7 @@ public class DarkSpruceSaplingBlock extends SaplingBlock {
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
-    public void advanceTree(@NotNull ServerLevel pLevel, @NotNull BlockPos pPos, BlockState pState, @NotNull RandomSource pRandom) {
+    public void advanceTree(ServerLevel pLevel, BlockPos pPos, BlockState pState, RandomSource pRandom) {
         if (pState.getValue(STAGE) == 0) {
             pLevel.setBlock(pPos, pState.cycle(STAGE), 4);
         } else {

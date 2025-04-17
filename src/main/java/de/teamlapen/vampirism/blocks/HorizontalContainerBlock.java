@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock implements EntityBlock {
@@ -19,14 +18,14 @@ public abstract class HorizontalContainerBlock extends VampirismHorizontalBlock 
     }
 
     @Override
-    public boolean triggerEvent(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, int p_49229_, int p_49230_) {
-        super.triggerEvent(state, level, pos, p_49229_, p_49230_);
+    public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        super.triggerEvent(state, level, pos, id, param);
         BlockEntity blockentity = level.getBlockEntity(pos);
-        return blockentity != null && blockentity.triggerEvent(p_49229_, p_49230_);
+        return blockentity != null && blockentity.triggerEvent(id, param);
     }
 
     @Nullable
-    public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         BlockEntity blockentity = level.getBlockEntity(pos);
         return blockentity instanceof MenuProvider ? (MenuProvider) blockentity : null;
     }

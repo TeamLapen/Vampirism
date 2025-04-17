@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -33,7 +32,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
     private static final VoxelShape pedestalShape = makeShape();
 
-    private static void takeItemPlayer(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack stack) {
+    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
         player.setItemInHand(hand, stack);
         if (stack.getItem() instanceof VampireSwordItem) {
             if (((VampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
@@ -42,7 +41,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         }
     }
 
-    private static @NotNull VoxelShape makeShape() {
+    private static VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
         VoxelShape c = Block.box(5, 2, 5, 11, 3, 11);
@@ -62,26 +61,24 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PedestalBlockEntity(pos, state);
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return pedestalShape;
     }
 
@@ -113,7 +110,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
+    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
         PedestalBlockEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.hasStack()) {
             dropItem(worldIn, pos, tile.removeStack());
@@ -121,7 +118,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private PedestalBlockEntity getTileEntity(@NotNull BlockGetter world, @NotNull BlockPos pos) {
+    private PedestalBlockEntity getTileEntity(BlockGetter world, BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof PedestalBlockEntity) {
             return (PedestalBlockEntity) tile;
@@ -129,8 +126,7 @@ public class PedestalBlock extends VampirismBlockContainer {
         return null;
     }
 
-    @NotNull
-    private Optional<PedestalBlockEntity> getTile(@NotNull BlockGetter world, @NotNull BlockPos pos) {
+    private Optional<PedestalBlockEntity> getTile(BlockGetter world, BlockPos pos) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof PedestalBlockEntity) {
             return Optional.of((PedestalBlockEntity) tile);
@@ -140,17 +136,17 @@ public class PedestalBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.BLOOD_PEDESTAL.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+    public boolean hasAnalogOutputSignal(BlockState pState) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
         var tile = getTileEntity(pLevel, pPos);
         if (tile != null) {
             return tile.getChargedProgress();

@@ -10,10 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
 public class ThroneBlock extends VampirismSplitBlock {
 
@@ -22,7 +20,7 @@ public class ThroneBlock extends VampirismSplitBlock {
     }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         Part part = state.getValue(PART);
         Direction oppFacing = state.getValue(FACING).getOpposite();
         player.awardStat(ModStats.INTERACT_WITH_THRONE.get());
@@ -37,7 +35,7 @@ public class ThroneBlock extends VampirismSplitBlock {
     }
 
     @Override
-    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         super.onRemove(state, level, pos, newState, movedByPiston);
         SitEntity entity = SitUtil.getSitEntity(level, pos);
         if (entity != null) {

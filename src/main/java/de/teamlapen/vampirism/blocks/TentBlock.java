@@ -21,21 +21,16 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -54,9 +49,9 @@ public class TentBlock extends Block {
      * 10
      */
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
-    private static final @NotNull Table<Direction, Integer, VoxelShape> shapes;
-    private static final @NotNull Map<Player.BedSleepingProblem, Component> sleepResults;
-    private static final @NotNull Table<Integer, Direction, Pair<Double, Double>> offsets;
+    private static final Table<Direction, Integer, VoxelShape> shapes;
+    private static final Map<Player.BedSleepingProblem, Component> sleepResults;
+    private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
 
     static {
         VoxelShape NORTH = makeShape();
@@ -113,11 +108,11 @@ public class TentBlock extends Block {
         sleepResults = sleepBuilder.build();
     }
 
-    public static void setTentSleepPosition(@NotNull Player player, @NotNull BlockPos blockPos, int position, Direction facing) {
+    public static void setTentSleepPosition(Player player, BlockPos blockPos, int position, Direction facing) {
         player.setPos(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
     }
 
-    private static @NotNull VoxelShape makeShape() {
+    private static VoxelShape makeShape() {
         return Shapes.or(
                 Block.box(0, 0, 0, 16, 1, 16),
                 Block.box(0.5, 1, 0, 1.4, 1.45, 16),
@@ -161,7 +156,7 @@ public class TentBlock extends Block {
         );
     }
 
-    private static @NotNull VoxelShape makeShapeBack2() {
+    private static VoxelShape makeShapeBack2() {
         return Shapes.or(
                 Block.box(15, 1, 0, 16, 15.85, 1),
                 Block.box(14, 1, 0, 15, 14.65, 1),
@@ -180,7 +175,7 @@ public class TentBlock extends Block {
                 Block.box(1, 1, 0, 2, 1.85, 1));
     }
 
-    private static @NotNull VoxelShape makeShapeBack1() {
+    private static VoxelShape makeShapeBack1() {
         return Shapes.or(
                 Block.box(14, 1, 0, 15, 1.85, 1),
                 Block.box(13, 1, 0, 14, 2.65, 1),
@@ -205,7 +200,7 @@ public class TentBlock extends Block {
     }
 
     @Override
-    public boolean canSurvive(@NotNull BlockState blockState, @NotNull LevelReader worldReader, @NotNull BlockPos blockPos) {
+    public boolean canSurvive(BlockState blockState, LevelReader worldReader, BlockPos blockPos) {
         return worldReader.getBlockState(blockPos).isAir();
     }
 
@@ -215,7 +210,7 @@ public class TentBlock extends Block {
     }
 
     @Override
-    public void fallOn(@NotNull Level worldIn, @NotNull BlockState state, @NotNull BlockPos pos, @NotNull Entity entityIn, float fallDistance) {
+    public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
         super.fallOn(worldIn, state, pos, entityIn, fallDistance * 0.7F);
     }
 
@@ -225,7 +220,7 @@ public class TentBlock extends Block {
     }
 
     @Override
-    public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
+    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos) {
         Direction thisFacing = state.getValue(FACING);
         int thisPos = state.getValue(POSITION);
         if (thisPos != 0) {
@@ -245,9 +240,8 @@ public class TentBlock extends Block {
         };
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockReader, BlockPos blockPos, CollisionContext context) {
         return shapes.get(blockState.getValue(FACING), blockState.getValue(POSITION));
     }
 
@@ -262,7 +256,7 @@ public class TentBlock extends Block {
     }
 
     @Override
-    public BlockState playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
@@ -288,7 +282,7 @@ public class TentBlock extends Block {
 
 
     @Override
-    public void updateEntityMovementAfterFallOn(@NotNull BlockGetter worldIn, @NotNull Entity entityIn) {
+    public void updateEntityMovementAfterFallOn(BlockGetter worldIn, Entity entityIn) {
         if (entityIn.isShiftKeyDown()) {
             super.updateEntityMovementAfterFallOn(worldIn, entityIn);
         } else {
@@ -301,9 +295,8 @@ public class TentBlock extends Block {
 
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState blockState, @NotNull Level world, @NotNull final BlockPos pos, @NotNull Player player, @NotNull BlockHitResult rayTraceResult) {
+    public InteractionResult useWithoutItem(BlockState blockState, Level world, final BlockPos pos, Player player, BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);
@@ -355,7 +348,7 @@ public class TentBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
     }
 

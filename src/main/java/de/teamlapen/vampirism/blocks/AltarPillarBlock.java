@@ -10,14 +10,12 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Pillar for Altar of Infusion structure
@@ -34,12 +32,12 @@ public class AltarPillarBlock extends Block {
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         EnumPillarType type = state.getValue(PILLAR_TYPE);
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
@@ -68,7 +66,7 @@ public class AltarPillarBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(PILLAR_TYPE);
     }
@@ -90,11 +88,10 @@ public class AltarPillarBlock extends Block {
             this.value = value;
         }
 
-        public @NotNull String getName() {
+        public String getName() {
             return getSerializedName();
         }
 
-        @NotNull
         @Override
         public String getSerializedName() {
             return name;
@@ -108,7 +105,7 @@ public class AltarPillarBlock extends Block {
         }
 
         @Override
-        public @NotNull String toString() {
+        public String toString() {
             return getName();
         }
     }

@@ -10,10 +10,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +21,9 @@ import java.util.stream.Collectors;
 
 public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEffectConsumer {
 
-    private final Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
+    private final @Nullable Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
 
-    public CursedSpruceBlock(Properties properties, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
+    public CursedSpruceBlock(Properties properties, @Nullable Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
         super(properties);
         this.curedBlockSupplier = curedBlockSupplier;
     }
@@ -48,7 +47,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEf
     }
 
     @Override
-    public void randomTick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         DirectCursedBarkBlock.Type type = null;
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
         Direction direction = null;
