@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,11 +21,11 @@ public class HunterIntelItem extends Item {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static @NotNull HunterIntelItem getIntelForExactlyLevel(int level) {
+    public static HunterIntelItem getIntelForExactlyLevel(int level) {
         return getIntelForLevel(level - 5);
     }
 
-    public static @NotNull HunterIntelItem getIntelForLevel(int level) {
+    public static HunterIntelItem getIntelForLevel(int level) {
         return switch (level) {
             case 0 -> ModItems.HUNTER_INTEL_0.get();
             case 1 -> ModItems.HUNTER_INTEL_1.get();
@@ -53,11 +52,11 @@ public class HunterIntelItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltips, TooltipFlag flagIn) {
         tooltips.add(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(": " + (level + 5))).withStyle(ChatFormatting.RED));
     }
 
-    public @NotNull Component getCustomName() {
+    public Component getCustomName() {
         return Component.translatable(this.getDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
     }
 
@@ -65,7 +64,7 @@ public class HunterIntelItem extends Item {
         return level;
     }
 
-    public boolean isFoil(@NotNull ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 

@@ -20,7 +20,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public boolean canBeApplied(@NotNull ItemStack stack) {
+    public boolean canBeApplied(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == VampirismConfig.BALANCE.itApplicableOilArmorReverse.get();
     }
 
@@ -35,7 +35,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
         tooltips.add(Component.empty());
         tooltips.add(Component.translatable("text.vampirism.oil.evasion_armor_desc").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.add(Component.literal("- ").append(Component.translatable("text.vampirism.oil.evasion_chance_desc")).withStyle(ChatFormatting.GRAY));

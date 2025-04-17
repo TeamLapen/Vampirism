@@ -15,26 +15,24 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class VampireClothingItem extends ArmorItem {
 
-    public VampireClothingItem(@NotNull ArmorType type, ArmorMaterial material, Properties properties) {
+    public VampireClothingItem(ArmorType type, ArmorMaterial material, Properties properties) {
         super(material, type, FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(properties));
     }
 
     @Override
-    public boolean canEquip(@NotNull ItemStack stack, @NotNull EquipmentSlot armorType, @NotNull LivingEntity entity) {
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
         return super.canEquip(stack, armorType, entity) && FactionRestriction.canUse(entity, stack, true);
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof LivingEntity living && pSlotId >= 36 && pSlotId <= 39) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {

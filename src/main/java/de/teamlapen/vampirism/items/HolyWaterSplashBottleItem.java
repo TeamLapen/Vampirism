@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.ThrowablePotionItem;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -45,7 +43,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     @Override
-    public void onImpact(@NotNull ThrowableItemEntity entity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    public void onImpact(ThrowableItemEntity entity, ItemStack stack, HitResult result, boolean remote) {
         if (!remote) {
             impactEntities(entity, stack, result, remote);
             impactBlocks(entity, stack, result, remote);
@@ -53,7 +51,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         }
     }
 
-    protected void impactEntities(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    protected void impactEntities(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult result, boolean remote) {
         AABB impactArea = bottleEntity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list1 = bottleEntity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, impactArea);
         @Nullable Entity thrower = bottleEntity.getOwner();
@@ -68,7 +66,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         }
     }
 
-    protected void impactBlocks(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    protected void impactBlocks(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult result, boolean remote) {
         Level level = bottleEntity.getCommandSenderWorld();
         if (level.getBiome(bottleEntity.blockPosition()).is(ModBiomeTags.HasFaction.IS_FACTION_BIOME)) {
             return;
@@ -89,9 +87,8 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level level, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResult use(Level level, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
 

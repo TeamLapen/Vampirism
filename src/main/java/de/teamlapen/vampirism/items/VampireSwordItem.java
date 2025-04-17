@@ -38,7 +38,6 @@ import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -50,13 +49,13 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      */
     private final float trainedAttackSpeedIncrease;
 
-    public VampireSwordItem(@NotNull ToolMaterial material, int attackDamage, float trainSpeedIncrease, @NotNull Properties prop) {
+    public VampireSwordItem(ToolMaterial material, int attackDamage, float trainSpeedIncrease, Properties prop) {
         super(material, attackDamage, material.speed(), FactionRestriction.apply(ModFactions.VAMPIRE, prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
         this.trainedAttackSpeedIncrease = trainSpeedIncrease;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
@@ -67,12 +66,12 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public boolean canBeCharged(@NotNull ItemStack stack) {
+    public boolean canBeCharged(ItemStack stack) {
         return getChargePercentage(stack) < 1f;
     }
 
     @Override
-    public int charge(@NotNull ItemStack stack, int amount) {
+    public int charge(ItemStack stack, int amount) {
         float factor = getChargingFactor(stack);
         float charge = getChargePercentage(stack);
         float actual = Math.min(factor * amount, 1f - charge);
@@ -83,18 +82,17 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     /**
      * Prevent the player from being asked to name this item
      */
-    public void doNotName(@NotNull ItemStack stack) {
+    public void doNotName(ItemStack stack) {
         stack.set(ModDataComponents.DO_NOT_NAME, Unit.INSTANCE);
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity p_344979_) {
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 40;
     }
 
-    @NotNull
     @Override
-    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
         if (!(entityLiving instanceof Player player)) return stack;
         VampirePlayer vampire = VampirePlayer.get(player);
         int amount = (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
@@ -108,7 +106,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER)) {
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
@@ -143,7 +141,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         return super.hurtEnemy(stack, target, attacker);
     }
 
-    public boolean isFullyCharged(@NotNull ItemStack stack) {
+    public boolean isFullyCharged(ItemStack stack) {
         return getChargePercentage(stack) == 1f;
     }
 
@@ -153,7 +151,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
             float charged = getChargePercentage(stack);
@@ -167,7 +165,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public void onUseTick(Level level, @NotNull LivingEntity player, ItemStack stack, int count) {
+    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int count) {
         if (player.getCommandSenderWorld().isClientSide) {
             if (count % 3 == 0) {
                 spawnChargingParticle(player, player.getMainHandItem().equals(stack));
@@ -185,7 +183,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @param value Is clamped between 0 and 1
      */
-    public void setCharged(@NotNull ItemStack stack, float value) {
+    public void setCharged(ItemStack stack, float value) {
         stack.set(ModDataComponents.BLOOD_CHARGED, stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged(value));
     }
 
@@ -194,14 +192,14 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @param value Clamped between 0 and 1
      */
-    public void setTrained(@NotNull ItemStack stack, @NotNull LivingEntity player, float value) {
+    public void setTrained(ItemStack stack, LivingEntity player, float value) {
         stack.set(ModDataComponents.VAMPIRE_SWORD, stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).addTraining(player.getUUID(), value));
     }
 
     /**
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
-    public void tryName(@NotNull ItemStack stack, @NotNull Player player) {
+    public void tryName(ItemStack stack, Player player) {
         if (!stack.has(DataComponents.CUSTOM_NAME) && player.level().isClientSide() && !stack.has(ModDataComponents.DO_NOT_NAME)) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
             player.level().playLocalSound((player).getX(), (player).getY(), (player).getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1f, 1f, false);
@@ -213,7 +211,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @return True if the cached value was updated
      */
-    public boolean updateTrainedCached(@NotNull ItemStack stack, @NotNull LivingEntity player) {
+    public boolean updateTrainedCached(ItemStack stack, LivingEntity player) {
         float cached = getTrained(stack);
         float trained = getTrained(stack, player);
         if (cached != trained) {
@@ -223,9 +221,8 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         return false;
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         VampirePlayer vampire = VampirePlayer.get(playerIn);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;
@@ -238,11 +235,11 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         return InteractionResult.PASS;
     }
 
-    protected float getAttackDamageModifier(@NotNull ItemStack stack) {
+    protected float getAttackDamageModifier(ItemStack stack) {
         return getChargePercentage(stack) > 0 ? 0.8f : 0;
     }
 
-    protected float getSpeedModifier(@NotNull ItemStack stack) {
+    protected float getSpeedModifier(ItemStack stack) {
         return getTrained(stack) * this.trainedAttackSpeedIncrease;
     }
 
@@ -251,7 +248,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      */
     protected abstract float getChargeUsage(ItemStack stack);
 
-    protected float getPurityArmorToughnessModifier(@NotNull ItemStack stack) {
+    protected float getPurityArmorToughnessModifier(ItemStack stack) {
         return switch (stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()) {
             case 0 -> 0;
             case 1 -> 0.035f;
@@ -261,7 +258,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         };
     }
 
-    protected float getPurityInteractionRangeModifier(@NotNull ItemStack stack) {
+    protected float getPurityInteractionRangeModifier(ItemStack stack) {
         return Math.clamp((stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()/4f) * 0.5f,0f,0.5f);
     }
 
@@ -271,7 +268,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      * @return Value between 0 and 1
      */
     @Override
-    public float getChargePercentage(@NotNull ItemStack stack) {
+    public float getChargePercentage(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged();
     }
 
@@ -285,7 +282,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @return Value between 0 and 1. Defaults to 0
      */
-    protected float getTrained(@NotNull ItemStack stack) {
+    protected float getTrained(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.TRAINING_CACHE, 0f);
     }
 
@@ -294,12 +291,12 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @return Value between 0 and 1. Defaults to 0
      */
-    protected float getTrained(@NotNull ItemStack stack, @Nullable LivingEntity player) {
+    protected float getTrained(ItemStack stack, @Nullable LivingEntity player) {
         if (player == null) return getTrained(stack);
         return stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).training().getOrDefault(player.getUUID(), 0f);
     }
 
-    private void spawnChargedParticle(@NotNull LivingEntity player, boolean mainHand) {
+    private void spawnChargedParticle(LivingEntity player, boolean mainHand) {
         Vec3 mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3 pos = mainPos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);
@@ -307,7 +304,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         }
     }
 
-    private void spawnChargingParticle(@NotNull LivingEntity player, boolean mainHand) {
+    private void spawnChargingParticle(LivingEntity player, boolean mainHand) {
         Vec3 pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getAttackAnim(1f) > 0f) return;
         pos = pos.add((player.getRandom().nextFloat() - 0.5f) * 0.1f, (player.getRandom().nextFloat() - 0.3f) * 0.9f, (player.getRandom().nextFloat() - 0.5f) * 0.1f);

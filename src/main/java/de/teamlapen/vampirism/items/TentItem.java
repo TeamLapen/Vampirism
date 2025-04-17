@@ -17,7 +17,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
 public class TentItem extends Item {
 
     @SuppressWarnings("DuplicateExpressions")
-    public static boolean placeAt(@NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull Direction dir, boolean force, boolean spawner) {
+    public static boolean placeAt(LevelAccessor world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -60,7 +59,7 @@ public class TentItem extends Item {
         return false;
     }
 
-    private static boolean canPlaceAt(@NotNull BlockState state, @NotNull Block block, @NotNull LevelAccessor world, int x, int y, int z) {
+    private static boolean canPlaceAt(BlockState state, Block block, LevelAccessor world, int x, int y, int z) {
         return state.canSurvive(world, new BlockPos(x, y, z));
     }
 
@@ -72,16 +71,15 @@ public class TentItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         if (spawner) {
             tooltip.add(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useOn(@NotNull UseOnContext ctx) {
+    public InteractionResult useOn(UseOnContext ctx) {
         if (ctx.getClickedFace() != Direction.UP) {
             return InteractionResult.PASS;
         }

@@ -26,7 +26,6 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class BlessableItem extends Item {
 
     private final static List<BlessableItem> BLESSABLE_ITEMS = new ArrayList<>();
 
-    public static @NotNull List<Recipe> getBlessableRecipes() {
+    public static List<Recipe> getBlessableRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         for (BlessableItem i : BLESSABLE_ITEMS) {
             recipes.add(new Recipe(false, i, i.blessedItem.get()));
@@ -55,7 +54,7 @@ public class BlessableItem extends Item {
     public record Recipe(boolean enhanced, BlessableItem input, Item output) {
     }
 
-    public BlessableItem(@NotNull Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
+    public BlessableItem(Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
         super(properties);
         this.blessedItem = blessedItem;
         this.enhancedBlessedItem = enhancedBlessedItem;
@@ -63,7 +62,7 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack pStack) {
+    public ItemUseAnimation getUseAnimation(ItemStack pStack) {
         return ItemUseAnimation.BLOCK;
     }
 
@@ -73,7 +72,7 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.ALTAR_CLEANSING.get()) {
             if (!Helper.isHunter(context.getPlayer())) return InteractionResult.PASS;
             context.getPlayer().startUsingItem(context.getHand());
@@ -85,7 +84,7 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration) {
+    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (pRemainingUseDuration == 300 && pLivingEntity.level().isClientSide() && pLivingEntity instanceof Player player) {
             HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
             if (att.blessingSoundReference != null) {
@@ -109,7 +108,7 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level world, @NotNull LivingEntity livingEntity) {
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity livingEntity) {
         if (enhancedBlessedItem != null && livingEntity instanceof Player player) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
             boolean enhanced = handler.isInFaction(ModFactions.HUNTER) && handler.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING)).orElse(false);
@@ -119,7 +118,7 @@ public class BlessableItem extends Item {
     }
 
     @Override
-    public boolean releaseUsing(@NotNull ItemStack pStack, @NotNull Level world, @NotNull LivingEntity entity, int duration) {
+    public boolean releaseUsing(ItemStack pStack, Level world, LivingEntity entity, int duration) {
         if (entity.level().isClientSide() && entity instanceof Player player) {
             HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
             if (att.blessingSoundReference != null) {

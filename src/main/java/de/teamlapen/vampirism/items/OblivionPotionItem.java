@@ -13,17 +13,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class OblivionPotionItem extends Item {
 
-    public OblivionPotionItem(@NotNull Properties properties) {
+    public OblivionPotionItem(Properties properties) {
         super(properties);
     }
 
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void applyEffect(@NotNull T factionPlayer) {
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void applyEffect(T factionPlayer) {
         Player player = factionPlayer.asEntity();
         ISkillHandler<?> skillHandler = factionPlayer.getSkillHandler();
         if (((SkillHandler<?>) skillHandler).noSkillEnabled()) {
@@ -37,7 +36,7 @@ public class OblivionPotionItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("text.vampirism.oblivion_potion.resets_skills").withStyle(ChatFormatting.GRAY));
     }

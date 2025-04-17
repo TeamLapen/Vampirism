@@ -19,7 +19,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SanguinareInjectionItem extends InjectionItem {
@@ -38,7 +37,7 @@ public class SanguinareInjectionItem extends InjectionItem {
             if (!level.isClientSide) {
                 player.openMenu(new SimpleMenuProvider(new MenuConstructor() {
                     @Override
-                    public @NotNull AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
+                    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
                         return new RevertBackMenu(i, inventory, ContainerLevelAccess.create(level, pos));
                     }
                 }, Component.empty()));

@@ -17,7 +17,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         IVampireBook vampireBook = VampireBook.get(stack);
 
@@ -51,23 +50,23 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return VampireBook.get(stack).title();
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
         tooltipComponents.add((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
-    public @Nullable String getCreatorModId(HolderLookup.@NotNull Provider registries, @NotNull ItemStack itemStack) {
+    public @Nullable String getCreatorModId(HolderLookup.Provider registries, ItemStack itemStack) {
         return VampireBook.get(itemStack).id().getNamespace();
     }
 
     @Override
-    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         Optional<? extends HolderLookup.RegistryLookup<IVampireBook>> registryLookup = parameters.holders().lookup(VampirismRegistries.Keys.VAMPIRE_BOOK);
 
         registryLookup.ifPresent(lookup -> {
@@ -83,7 +82,7 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
         return stack;
     }
 
-    public boolean isFoil(@NotNull ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 }

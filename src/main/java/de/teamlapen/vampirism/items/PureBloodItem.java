@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
@@ -9,11 +8,8 @@ import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.items.consume.BloodConsume;
-import de.teamlapen.vampirism.items.consume.BloodFoodProperties;
 import de.teamlapen.vampirism.items.consume.FactionBasedConsumeEffect;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -43,7 +39,7 @@ public class PureBloodItem extends Item {
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
 
-    public static @NotNull PureBloodItem getBloodItemForLevel(int level) {
+    public static PureBloodItem getBloodItemForLevel(int level) {
         return switch (level) {
             case 0 -> ModItems.PURE_BLOOD_0.get();
             case 1 -> ModItems.PURE_BLOOD_1.get();
@@ -68,7 +64,7 @@ public class PureBloodItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
@@ -76,7 +72,7 @@ public class PureBloodItem extends Item {
         return stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level();
     }
 
-    public @NotNull Component getCustomName(ItemStack stack) {
+    public Component getCustomName(ItemStack stack) {
         return Component.translatable(this.getDescriptionId().replaceAll("_\\d", "")).append(Component.literal(" " + (getLevel(stack) + 1)));
     }
 
@@ -87,13 +83,13 @@ public class PureBloodItem extends Item {
 
     @NotNull
     @Override
-    public ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
         return ItemUseAnimation.DRINK;
     }
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         int playerLevel = VampirismAPI.factionPlayerHandler(playerIn).getCurrentLevel(ModFactions.VAMPIRE);
         if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() < getLevel(getDefaultInstance())).isPresent()) {
             playerIn.startUsingItem(handIn);

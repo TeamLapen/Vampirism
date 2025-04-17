@@ -33,7 +33,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.UseCooldown;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -59,13 +58,13 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     @Override
-    public @NotNull ItemUseAnimation getUseAnimation(ItemStack p_77661_1_) {
+    public ItemUseAnimation getUseAnimation(ItemStack p_77661_1_) {
         return ItemUseAnimation.NONE;
     }
 
 
     @Override
-    public @NotNull InteractionResult use(Level world, @NotNull Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
@@ -89,7 +88,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
         }
     }
 
-    protected boolean affectsEntity(@NotNull LivingEntity e, Level level) {
+    protected boolean affectsEntity(LivingEntity e, Level level) {
         return e.getType().is(EntityTypeTags.UNDEAD) || Helper.isVampire(e);
     }
 
@@ -142,7 +141,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     @Override
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, int count) {
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int count) {
         if (level instanceof ServerLevel serverLevel) {
             for (LivingEntity nearbyEntity : serverLevel.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
                 Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix

@@ -2,19 +2,14 @@ package de.teamlapen.vampirism.items;
 
 
 import com.google.common.base.Suppliers;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class UmbrellaItem extends Item {

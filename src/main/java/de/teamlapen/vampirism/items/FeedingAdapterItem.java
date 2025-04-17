@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 
 public class FeedingAdapterItem extends Item {
 
@@ -24,19 +23,18 @@ public class FeedingAdapterItem extends Item {
     }
 
 
-    @NotNull
     @Override
-    public ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
         return ItemUseAnimation.DRINK;
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack pStack, @NotNull LivingEntity p_344979_) {
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
         return 15;
     }
 
     @Override
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity player, @NotNull ItemStack stack, int count) {
+    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int count) {
         if (!(player instanceof Player) || !player.isAlive()) {
             player.releaseUsingItem();
             return;
@@ -63,9 +61,8 @@ public class FeedingAdapterItem extends Item {
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         VampirePlayer vampire = VampirePlayer.get(playerIn);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;

@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,15 +28,14 @@ public class AlchemicalFireItem extends Item {
 
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
-    @NotNull
     @Override
-    public InteractionResult useOn(@NotNull UseOnContext ctx) {
+    public InteractionResult useOn(UseOnContext ctx) {
         BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
 
         if (ctx.getPlayer() != null && !ctx.getPlayer().mayUseItemAt(pos, ctx.getClickedFace(), ctx.getItemInHand())) {

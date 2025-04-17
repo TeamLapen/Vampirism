@@ -25,7 +25,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores blood
@@ -38,7 +37,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = AMOUNT * MULTIPLIER;
 
-    public static @NotNull ItemStack getStackWithBlood(int blood) {
+    public static ItemStack getStackWithBlood(int blood) {
         ItemStack stack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(blood));
         return stack;
@@ -49,17 +48,17 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public boolean supportsEnchantment(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
         return false;
     }
 
     @Override
-    public boolean isBookEnchantable(@NotNull ItemStack stack, @NotNull ItemStack book) {
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
 
     @Override
-    public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         if (world instanceof Level level) {
             return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) != null;
         }
@@ -67,7 +66,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         for (int i = 0; i <= BloodBottleItem.AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
             stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(i));
@@ -75,9 +74,8 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
         }
     }
 
-    @NotNull
     @Override
-    public ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
         if (entityLiving instanceof IVampire) {
             ItemStack copy = stack.copy();
             int blood = BloodHelper.getBlood(stack);
@@ -91,7 +89,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack stack, int count) {
+    public void onUseTick(Level level, LivingEntity pLivingEntity, ItemStack stack, int count) {
         if (pLivingEntity instanceof IVampire) return;
         ItemStack copy = stack.copy();
         int blood = BloodHelper.getBlood(stack);
@@ -115,9 +113,8 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         VampirePlayer vampire = VampirePlayer.get(playerIn);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;
@@ -130,7 +127,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public boolean isBarVisible(@NotNull ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return false;
     }
 }

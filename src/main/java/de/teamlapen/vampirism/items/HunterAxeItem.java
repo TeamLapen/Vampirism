@@ -18,7 +18,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -37,14 +36,14 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
     @Override
-    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         HolderLookup.RegistryLookup<Enchantment> enchantments = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
         output.accept(getEnchantedStack(enchantments));
     }
@@ -52,7 +51,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     /**
      * @return An {@link ItemStack} with the correct knockback enchantment applied
      */
-    public @NotNull ItemStack getEnchantedStack(HolderLookup.RegistryLookup<Enchantment> enchantments) {
+    public ItemStack getEnchantedStack(HolderLookup.RegistryLookup<Enchantment> enchantments) {
         ItemStack stack = new ItemStack(this);
         stack.enchant(enchantments.getOrThrow(Enchantments.KNOCKBACK), getKnockback());
         return stack;
@@ -64,7 +63,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     }
 
     @Override
-    public boolean isFoil(@NotNull ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 
