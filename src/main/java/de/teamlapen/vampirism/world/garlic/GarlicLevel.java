@@ -14,7 +14,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -120,7 +119,7 @@ public class GarlicLevel implements IGarlicChunkHandler {
     public record Emitter(EnumStrength strength, List<ChunkPos> pos) {
         public static Codec<Emitter> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        StringRepresentable.fromEnum(EnumStrength::values).fieldOf("strength").forGetter(s -> s.strength),
+                        EnumStrength.CODEC.fieldOf("strength").forGetter(s -> s.strength),
                         CodecUtil.CHUNK_POS.listOf().fieldOf("pos").forGetter(x -> x.pos)
                 ).apply(inst, Emitter::new)
         );

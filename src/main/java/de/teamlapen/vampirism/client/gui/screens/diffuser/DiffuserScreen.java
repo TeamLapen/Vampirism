@@ -27,8 +27,8 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     protected ProgressBar startupBar;
     private LockIconButton lock;
 
-    public DiffuserScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public DiffuserScreen(T menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     @Override
@@ -76,9 +76,9 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -103,11 +103,11 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderType::guiTextured, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, 0, this.xSize, this.ySize, 256, 256);
+    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderType::guiTextured, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
         if (this.menu.isLit()) {
             int l = Mth.ceil(this.menu.getLitProgress() * 13.0F) + 1;
-            pGuiGraphics.blitSprite(RenderType::guiTextured, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
+            guiGraphics.blitSprite(RenderType::guiTextured, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
         }
     }
 }

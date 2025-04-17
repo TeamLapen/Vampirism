@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,14 +32,9 @@ import java.util.function.Supplier;
 
 public abstract class DiffuserBlock extends VampirismBlockContainer {
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(1, 0, 1, 15, 2, 15);
-        VoxelShape b = Block.box(3, 2, 3, 13, 12, 13);
-        return Shapes.or(a, b);
-    }
-
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
-    private static final VoxelShape SHAPE = makeShape();
+
+    private static final VoxelShape SHAPE = Shapes.or(Block.box(1, 0, 1, 15, 2, 15), Block.box(3, 2, 3, 13, 12, 13));
 
     private final Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType;
 
@@ -51,12 +45,12 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHitResult) {
-        if (pLevel.isClientSide) {
+    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if (pPlayer instanceof ServerPlayer serverPlayer) {
-                getBlockEntity(pLevel, pPos).ifPresent(x -> serverPlayer.openMenu(x, x::writeExtraData));
+            if (player instanceof ServerPlayer serverPlayer) {
+                getBlockEntity(level, pos).ifPresent(blockEntity -> serverPlayer.openMenu(blockEntity, blockEntity::writeExtraData));
             }
             return InteractionResult.CONSUME;
         }
@@ -67,47 +61,44 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public abstract DiffuserBlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState);
+    public abstract DiffuserBlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state);
 
     @Override
-    public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
-        return SHAPE;
+    protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+        return RenderShape.MODEL;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
-        return RenderShape.MODEL;
+    protected @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return SHAPE;
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public @NotNull BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.setValue(FACING, pMirror.mirror(pState.getValue(FACING)));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
-        return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING);
+    protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @Nullable LivingEntity pPlacer, @NotNull ItemStack pStack) {
-        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        if (pPlacer instanceof Player player) {
-            getBlockEntity(pLevel, pPos).ifPresent(entity -> entity.setOwned(player));
+    protected @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer instanceof Player player) {
+            getBlockEntity(level, pos).ifPresent(entity -> entity.setOwned(player));
         }
     }
 
@@ -121,30 +112,30 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
-        getBlockEntity(worldIn, pos).ifPresent(s -> s.deactivateEffect(worldIn, pos, worldIn.getBlockState(pos)));
-        super.onRemove(state, worldIn, pos, newState, isMoving);
+    public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        getBlockEntity(level, pos).ifPresent(blockEntity -> blockEntity.deactivateEffect(level, pos, level.getBlockState(pos)));
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
-    protected void clearContainer(BlockState state, Level worldIn, BlockPos pos) {
-        dropInventoryTileEntityItems(worldIn, pos);
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
+        dropInventoryTileEntityItems(level, pos);
     }
 
     @Override
-    public void attack(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer) {
-        getBlockEntity(pLevel, pPos).ifPresent(pBlockEntity -> pBlockEntity.onTouched(pPlayer));
+    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+        getBlockEntity(level, pos).ifPresent(blockEntity -> blockEntity.onTouched(player));
     }
 
     @Override
-    public void playerDestroy(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull BlockPos pPos, @NotNull BlockState pState, @Nullable BlockEntity pBlockEntity, @NotNull ItemStack pTool) {
-        super.playerDestroy(pLevel, pPlayer, pPos, pState, pBlockEntity, pTool);
-        getBlockEntity(pLevel, pPos).ifPresent(pBlockEntity1 -> pBlockEntity1.onTouched(pPlayer));
+    public void playerDestroy(@NotNull Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity, @NotNull ItemStack tool) {
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+        getBlockEntity(level, pos).ifPresent(blockEntity1 -> blockEntity1.onTouched(player));
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, this.blockEntityType.get(), DiffuserBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, this.blockEntityType.get(), level.isClientSide ? DiffuserBlockEntity::clientTick : DiffuserBlockEntity::serverTick);
     }
 }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.util;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -11,19 +10,23 @@ import java.util.List;
 
 public class DescriptionUtil {
 
-    public static void addDescriptionTooltip(String key, String modId, List<Component> tooltipComponents) {
+    public static void addDescriptionTooltip(String key, String modId, List<Component> tooltipComponents, Object... parameters) {
         if (key.isEmpty()) return;
 
         tooltipComponents.add(Component.translatable("tooltip.vampirism.hold_shift_for_info").withStyle(ChatFormatting.DARK_GRAY));
 
         if (Screen.hasShiftDown()) {
-            List<String> lines = normalizeTextWidth(I18n.get(getTranslationKey(modId, key)), 40);
+            List<String> lines = normalizeTextWidth(Component.translatable(getTranslationKey(modId, key), parameters).getString(), 40);
 
             tooltipComponents.add(Component.empty());
             for (String line : lines) {
                 tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.GRAY));
             }
         }
+    }
+
+    public static void addDescriptionTooltip(String name, List<Component> tooltipComponents, Object... parameters) {
+        addDescriptionTooltip(name, REFERENCE.MODID, tooltipComponents, parameters);
     }
 
     public static void addDescriptionTooltip(String name, List<Component> tooltipComponents) {

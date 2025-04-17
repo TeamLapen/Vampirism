@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -70,7 +71,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
         super(pType, pPos, pBlockState);
     }
 
-    boolean isLit() {
+    public boolean isLit() {
         return this.litTime > 0;
     }
 
@@ -126,9 +127,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     @Override
     public void setItem(int pSlot, @NotNull ItemStack pStack) {
-        ItemStack itemstack = this.items.get(pSlot);
         this.items.set(pSlot, pStack);
-
     }
 
     @Override
@@ -147,11 +146,11 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
         if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFaction(player), faction)) {
+            return true;
+        } else {
             player.displayClientMessage(Component.translatable("text.vampirism.cannot_access_menu", displayName), true);
             player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
             return false;
-        } else {
-            return true;
         }
     }
 
@@ -193,6 +192,24 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
 
+    }
+
+    public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        /*
+        if (blockEntity.bootTimer == 0 && level.getGameTime() % 4 != 0) {
+            for (int i = 0; i < blockEntity.getParticleNumber(level, blockPos, blockState, blockEntity); i++) {
+                double x = blockPos.getX() - 0.15 + level.random.nextDouble() * 1.3;
+                double y = blockPos.getY() + 4 / 16d + level.random.nextDouble() / 3;
+                double z = blockPos.getZ() - 0.15 + level.random.nextDouble() * 1.3;
+
+                level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.02, 0.0);
+            }
+        }
+         */
+    }
+
+    public int getParticleNumber(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        return 3;
     }
 
     @Override

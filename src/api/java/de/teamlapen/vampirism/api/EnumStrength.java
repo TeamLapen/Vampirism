@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +12,20 @@ public enum EnumStrength implements StringRepresentable {
     WEAK("weak", 1),
     MEDIUM("medium", 2),
     STRONG("strong", 3);
+
+    public static final Codec<EnumStrength> CODEC = StringRepresentable.fromEnum(EnumStrength::values);
+
+    private final String name;
+    final int strength;
+
+    EnumStrength(String name, int strength) {
+        this.name = name;
+        this.strength = strength;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
 
     public static @NotNull EnumStrength getFromStrength(int strength) {
         for (EnumStrength s : values()) {
@@ -28,18 +43,6 @@ public enum EnumStrength implements StringRepresentable {
             }
         }
         return NONE;
-    }
-
-    private final String name;
-    final int strength;
-
-    EnumStrength(String name, int strength) {
-        this.name = name;
-        this.strength = strength;
-    }
-
-    public int getStrength() {
-        return strength;
     }
 
     /**
