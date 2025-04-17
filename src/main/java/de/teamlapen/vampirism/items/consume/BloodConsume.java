@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public record BloodConsume(int blood, float saturation, boolean useRemaining) implements ConsumeEffect {
 
@@ -32,12 +31,12 @@ public record BloodConsume(int blood, float saturation, boolean useRemaining) im
     );
 
     @Override
-    public @NotNull Type<? extends ConsumeEffect> getType() {
+    public Type<? extends ConsumeEffect> getType() {
         return ModItems.CONSUME_BLOOD_EFFECT.get();
     }
 
     @Override
-    public boolean apply(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
+    public boolean apply(Level level, ItemStack stack, LivingEntity entity) {
         IVampire vampire = null;
         if (entity instanceof Player player) {
             vampire = VampirePlayer.get(player);

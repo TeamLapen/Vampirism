@@ -38,7 +38,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEf
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier) {
         if (this.curedBlockSupplier != null) {
             BlockState newState = this.curedBlockSupplier.get().defaultBlockState();
             state.getValues().keySet().forEach((@SuppressWarnings("rawtypes") Property property) -> newState.setValue(property, state.getValue(property)));

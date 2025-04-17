@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-
-import com.google.common.base.Suppliers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -10,24 +8,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
-import java.util.function.Supplier;
-
 public class UmbrellaItem extends Item {
 
-    private final Supplier<ItemAttributeModifiers> mainHandAttributes;
-
     public UmbrellaItem(Properties properties) {
-        super(properties.stacksTo(1));
-
-        this.mainHandAttributes = Suppliers.memoize(() -> {
-            ItemAttributeModifiers.Builder builder1 = ItemAttributeModifiers.builder();
-            builder1.add(Attributes.MOVEMENT_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(this), -0.35, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND);
-            return builder1.build();
-        });
+        super(properties);
     }
 
     @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        return mainHandAttributes.get();
+        return ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(BuiltInRegistries.ITEM.getKey(this), -0.35, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND).build();
     }
 }

@@ -22,7 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -62,19 +61,18 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
         return Optional.ofNullable(stack.get(ModDataComponents.APPLIED_OIL));
     }
 
-    public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         addTooltipIfExist(VampirismMod.proxy.getClientPlayer(), stack, tooltip, flag);
     }
 
-
-    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         AppliedOilContent appliedOilContent = stack.get(ModDataComponents.APPLIED_OIL);
         if (appliedOilContent != null) {
             appliedOilContent.addTooltip(stack, tooltip, flag);
         }
     }
 
-    public void addTooltip(ItemStack stack, List<Component> tooltip, @NotNull TooltipFlag flag) {
+    public void addTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         ResourceLocation id = oil().getKey().location();
         MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
         if (oil().value().hasDuration()) {

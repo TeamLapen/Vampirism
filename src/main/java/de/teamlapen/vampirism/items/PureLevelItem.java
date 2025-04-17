@@ -22,7 +22,6 @@ public class PureLevelItem extends Item implements ModDisplayItemGenerator.Creat
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).level() + 1).withStyle(ChatFormatting.DARK_RED));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-
     }
 
     @Override

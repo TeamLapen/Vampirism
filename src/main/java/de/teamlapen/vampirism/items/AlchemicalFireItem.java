@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -22,33 +21,32 @@ import java.util.List;
  * @author maxanier
  */
 public class AlchemicalFireItem extends Item {
+    
     public AlchemicalFireItem(Properties properties) {
         super(properties);
     }
 
-
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
-        BlockPos pos = ctx.getClickedPos().relative(ctx.getClickedFace());
+    public InteractionResult useOn(UseOnContext context) {
+        BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
 
-        if (ctx.getPlayer() != null && !ctx.getPlayer().mayUseItemAt(pos, ctx.getClickedFace(), ctx.getItemInHand())) {
+        if (context.getPlayer() != null && !context.getPlayer().mayUseItemAt(pos, context.getClickedFace(), context.getItemInHand())) {
             return InteractionResult.FAIL;
         } else {
-            if (ctx.getLevel().isEmptyBlock(pos)) {
-                ctx.getLevel().playSound(ctx.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, ctx.getPlayer().getRandom().nextFloat() * 0.4F + 0.8F);
-                ctx.getLevel().setBlock(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
-                ctx.getItemInHand().shrink(1);
+            if (context.getPlayer() != null && context.getLevel().isEmptyBlock(pos) ) {
+                context.getLevel().playSound(context.getPlayer(), pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, context.getPlayer().getRandom().nextFloat() * 0.4F + 0.8F);
+                context.getLevel().setBlock(pos, ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState().setValue(AlchemicalFireBlock.AGE, 15), 11);
+                context.getItemInHand().shrink(1);
             }
 
             return InteractionResult.SUCCESS;
         }
     }
-
 }

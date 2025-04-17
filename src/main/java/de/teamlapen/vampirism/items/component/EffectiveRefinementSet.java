@@ -8,8 +8,9 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.Nullable;
 
-public record EffectiveRefinementSet(IRefinementSet set) implements IEffectiveRefinementSet {
+public record EffectiveRefinementSet(@Nullable IRefinementSet set) implements IEffectiveRefinementSet {
 
     public static final EffectiveRefinementSet EMPTY = new EffectiveRefinementSet(null);
     public static final Codec<EffectiveRefinementSet> CODEC = ModRegistries.REFINEMENT_SETS.byNameCodec().xmap(EffectiveRefinementSet::new, EffectiveRefinementSet::set);

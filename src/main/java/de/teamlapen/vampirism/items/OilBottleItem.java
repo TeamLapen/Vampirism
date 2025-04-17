@@ -41,8 +41,8 @@ public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGener
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
-        OilContent.getOil(stack).value().getDescription(stack, context, tooltips);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        OilContent.getOil(stack).value().getDescription(stack, context, tooltipComponents);
     }
 
     @Override

@@ -13,11 +13,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,12 +32,7 @@ public class SanguinareInjectionItem extends InjectionItem {
         }
         if (ModFactions.HUNTER.match(currentFaction)) {
             if (!level.isClientSide) {
-                player.openMenu(new SimpleMenuProvider(new MenuConstructor() {
-                    @Override
-                    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                        return new RevertBackMenu(i, inventory, ContainerLevelAccess.create(level, pos));
-                    }
-                }, Component.empty()));
+                player.openMenu(new SimpleMenuProvider((containerId, playerInventory, player1) -> new RevertBackMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos)), Component.empty()));
             }
             return false;
         }

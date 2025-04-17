@@ -18,7 +18,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,15 +27,15 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     public static final ToolMaterial ENHANCED = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 7.0F, 14, Tags.Items.GEMS_DIAMOND);
     public static final ToolMaterial ULTIMATE = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.3f, 8.0F, 14, Tags.Items.INGOTS_NETHERITE);
 
-    private final TIER tier;
+    private final Tier tier;
 
-    public HunterAxeItem(ToolMaterial material, TIER tier, Properties properties) {
+    public HunterAxeItem(ToolMaterial material, Tier tier, Properties properties) {
         super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(ModDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
         this.tier = tier;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
         tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltip, flagIn);
@@ -58,7 +57,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     }
 
     @Override
-    public TIER getVampirismTier() {
+    public Tier getVampirismTier() {
         return tier;
     }
 
@@ -75,7 +74,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
         };
     }
 
-    private static int getMinLevel(TIER tier) {
+    private static int getMinLevel(Tier tier) {
         return switch (tier) {
             case ULTIMATE -> 8;
             case ENHANCED -> 6;
@@ -83,7 +82,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
         };
     }
 
-    private static float getVampireMult(TIER tier) {
+    private static float getVampireMult(Tier tier) {
         return switch (tier) {
             case ULTIMATE -> 1.4F;
             case ENHANCED -> 1.3F;

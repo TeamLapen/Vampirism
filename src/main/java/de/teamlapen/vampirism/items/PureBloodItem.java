@@ -30,7 +30,6 @@ import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -38,6 +37,16 @@ public class PureBloodItem extends Item {
 
     public static final int COUNT = 5;
     private final static Logger LOGGER = LogManager.getLogger();
+
+    public PureBloodItem(int level, Properties properties) {
+        super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VResourceLocation.mod("pure_blood"))).component(DataComponents.CONSUMABLE, Consumables.defaultDrink()
+                .onConsume(
+                        FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE)
+                                .add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION)))
+                                .add(new BloodConsume(50, 0.4f + (0.15f * level), false))
+                                .build()
+                ).build()).component(ModDataComponents.PURE_LEVEL, new PureLevel(level)));
+    }
 
     public static PureBloodItem getBloodItemForLevel(int level) {
         return switch (level) {
@@ -53,19 +62,9 @@ public class PureBloodItem extends Item {
         };
     }
 
-    public PureBloodItem(int level, Properties properties) {
-        super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VResourceLocation.mod("pure_blood"))).component(DataComponents.CONSUMABLE, Consumables.defaultDrink()
-                .onConsume(
-                        FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE)
-                                .add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION)))
-                                .add(new BloodConsume(50, 0.4f + (0.15f * level), false))
-                                .build()
-                ).build()).component(ModDataComponents.PURE_LEVEL, new PureLevel(level)));
-    }
-
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
     public int getLevel(ItemStack stack) {
@@ -77,7 +76,7 @@ public class PureBloodItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 30;
     }
 
@@ -87,15 +86,14 @@ public class PureBloodItem extends Item {
         return ItemUseAnimation.DRINK;
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        int playerLevel = VampirismAPI.factionPlayerHandler(playerIn).getCurrentLevel(ModFactions.VAMPIRE);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        int playerLevel = VampirismAPI.factionPlayerHandler(player).getCurrentLevel(ModFactions.VAMPIRE);
         if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() < getLevel(getDefaultInstance())).isPresent()) {
-            playerIn.startUsingItem(handIn);
+            player.startUsingItem(hand);
             return InteractionResult.SUCCESS_SERVER;
         }
-        return super.use(worldIn, playerIn, handIn);
-    }
 
+        return super.use(level, player, hand);
+    }
 }

@@ -58,8 +58,8 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
-        if (world instanceof Level level) {
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader levelReader, BlockPos pos, Player player) {
+        if (levelReader instanceof Level level) {
             return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) != null;
         }
         return false;
@@ -75,52 +75,52 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
-        if (entityLiving instanceof IVampire) {
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+        if (livingEntity instanceof IVampire) {
             ItemStack copy = stack.copy();
             int blood = BloodHelper.getBlood(stack);
             int drink = Math.min(blood, MULTIPLIER);
             ItemStack[] result = new ItemStack[1];
             int amt = BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> result[0] = containerStack);
-            ((IVampire) entityLiving).drinkBlood(amt / MULTIPLIER, 0, new DrinkBloodContext(copy));
+            ((IVampire) livingEntity).drinkBlood(amt / MULTIPLIER, 0, new DrinkBloodContext(copy));
             return result[0];
         }
-        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() -> super.finishUsingItem(stack, worldIn, entityLiving));
+        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() -> super.finishUsingItem(stack, level, livingEntity));
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity pLivingEntity, ItemStack stack, int count) {
-        if (pLivingEntity instanceof IVampire) return;
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        if (livingEntity instanceof IVampire) return;
         ItemStack copy = stack.copy();
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.get((Player) pLivingEntity);
+        VampirePlayer vampire = VampirePlayer.get((Player) livingEntity);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
-            pLivingEntity.releaseUsingItem();
+            livingEntity.releaseUsingItem();
             return;
         }
 
-        if (blood > 0 && count == 1) {
-            InteractionHand activeHand = pLivingEntity.getUsedItemHand();
+        if (blood > 0 && remainingUseDuration == 1) {
+            InteractionHand activeHand = livingEntity.getUsedItemHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> pLivingEntity.setItemInHand(activeHand, containerStack)) > 0) {
+            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> livingEntity.setItemInHand(activeHand, containerStack)) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.45F, false, new DrinkBloodContext(copy));
             }
 
             blood = BloodHelper.getBlood(stack);
             if (blood > 0) {
-                pLivingEntity.startUsingItem(pLivingEntity.getUsedItemHand());
+                livingEntity.startUsingItem(livingEntity.getUsedItemHand());
             }
         }
     }
 
     @Override
-    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        VampirePlayer vampire = VampirePlayer.get(player);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;
 
         if (vampire.getBloodStats().needsBlood() && stack.getCount() == 1) {
-            playerIn.startUsingItem(handIn);
+            player.startUsingItem(hand);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

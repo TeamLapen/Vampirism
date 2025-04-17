@@ -41,6 +41,13 @@ public class RefinementItem extends Item implements IRefinementItem, ModDisplayI
     public static final int MAX_DAMAGE = 500;
     private static final RandomSource RANDOM = RandomSource.create();
 
+    private final AccessorySlotType type;
+
+    public RefinementItem(Properties properties, AccessorySlotType type) {
+        super(properties.durability(MAX_DAMAGE));
+        this.type = type;
+    }
+
     public static ItemStack getRandomRefinementItem(Holder<? extends IPlayableFaction<?>> faction) {
         List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
@@ -64,32 +71,25 @@ public class RefinementItem extends Item implements IRefinementItem, ModDisplayI
         return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElse(null);
     }
 
-    private final AccessorySlotType type;
-
-    public RefinementItem(Properties properties, AccessorySlotType type) {
-        super(properties.durability(MAX_DAMAGE));
-        this.type = type;
-    }
-
     @Override
     public HolderSet<IFaction<?>> getExclusiveFactions(ItemStack stack) {
         return FactionRestriction.get(stack).factions();
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipComponents, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            tooltip.add(Component.empty());
-            tooltip.add(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltipComponents.add(Component.empty());
+            tooltipComponents.add(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
             for (Holder<IRefinement> holder : set.getRefinements()) {
                 IRefinement refinement = holder.value();
                 AttributeModifier attributeModifier = refinement.createAttributeModifier(refinement.getModifierValue());
                 if (refinement.getAttribute() != null && attributeModifier != null)  {
-                    stack.addModifierTooltip(tooltip::add, VampirismMod.proxy.getClientPlayer(), refinement.getAttribute(), attributeModifier);
+                    stack.addModifierTooltip(tooltipComponents::add, VampirismMod.proxy.getClientPlayer(), refinement.getAttribute(), attributeModifier);
                 } else {
-                    tooltip.add(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
+                    tooltipComponents.add(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
                 }
             }
         }
@@ -125,15 +125,15 @@ public class RefinementItem extends Item implements IRefinementItem, ModDisplayI
     }
 
     @Override
-    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        if (!worldIn.isClientSide()) {
-            ItemStack stack = playerIn.getItemInHand(handIn);
-            if (IRefinementHandler.get(playerIn).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (IRefinementHandler.get(player).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
                 return InteractionResult.CONSUME;
             }
 
         }
-        return super.use(worldIn, playerIn, handIn);
+        return super.use(level, player, hand);
     }
 
     @Override
@@ -143,9 +143,7 @@ public class RefinementItem extends Item implements IRefinementItem, ModDisplayI
             ItemStack s = stack.copy();
             applyRefinementSet(s, set);
             return s;
-        }).forEach(item -> {
-            output.accept(item, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-        });
+        }).forEach(item -> output.accept(item, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
         output.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
     }
 }

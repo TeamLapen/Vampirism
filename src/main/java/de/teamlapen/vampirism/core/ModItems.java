@@ -55,17 +55,17 @@ public class ModItems {
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<AffectGarlic>> AFFECT_GARLIC = CONSUME_EFFECTS.register("affect_garlic", () -> new ConsumeEffect.Type<>(AffectGarlic.CODEC, AffectGarlic.STREAM_CODEC));
 
     // Weapons
-    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.registerItem("iron_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.IRON, IItemWithTier.TIER.NORMAL, 1.3f, props));
-    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.registerItem("diamond_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.DIAMOND, IItemWithTier.TIER.ENHANCED, 1.4f, props));
-    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.registerItem("netherite_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.NETHERITE, IItemWithTier.TIER.ULTIMATE, 1.5f, props));
+    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.registerItem("iron_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.IRON, IItemWithTier.Tier.NORMAL, 1.3f, props));
+    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.registerItem("diamond_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.DIAMOND, IItemWithTier.Tier.ENHANCED, 1.4f, props));
+    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.registerItem("netherite_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.5f, props));
 
-    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.registerItem("iron_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.IRON, IItemWithTier.TIER.NORMAL,1.25f, props));
-    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.registerItem("diamond_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.DIAMOND, IItemWithTier.TIER.ENHANCED, 1.3f, props));
-    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.registerItem("netherite_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.NETHERITE, IItemWithTier.TIER.ULTIMATE, 1.35f, props));
+    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.registerItem("iron_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.IRON, IItemWithTier.Tier.NORMAL,1.25f, props));
+    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.registerItem("diamond_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.DIAMOND, IItemWithTier.Tier.ENHANCED, 1.3f, props));
+    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.registerItem("netherite_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.35f, props));
 
-    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.registerItem("hunter_axe_normal",  props -> new HunterAxeItem(HunterAxeItem.NORMAL, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.registerItem("hunter_axe_enhanced",  props -> new HunterAxeItem(HunterAxeItem.ENHANCED, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.registerItem("hunter_axe_ultimate",  props -> new HunterAxeItem(HunterAxeItem.ULTIMATE, IItemWithTier.TIER.ULTIMATE, props));
+    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.registerItem("hunter_axe_normal",  props -> new HunterAxeItem(HunterAxeItem.NORMAL, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.registerItem("hunter_axe_enhanced",  props -> new HunterAxeItem(HunterAxeItem.ENHANCED, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.registerItem("hunter_axe_ultimate",  props -> new HunterAxeItem(HunterAxeItem.ULTIMATE, IItemWithTier.Tier.ULTIMATE, props));
 
     public static final DeferredItem<SingleCrossbowItem> BASIC_CROSSBOW = ITEMS.registerItem("basic_crossbow",  props -> new SingleCrossbowItem(props.durability(465), 1, 20, ToolMaterial.WOOD, HunterSkills.WEAPON_TABLE));
     public static final DeferredItem<DoubleCrossbowItem> BASIC_DOUBLE_CROSSBOW = ITEMS.registerItem("basic_double_crossbow",  props -> new DoubleCrossbowItem(props.durability(465), 1, 20, ToolMaterial.WOOD, HunterSkills.WEAPON_TABLE));
@@ -87,36 +87,36 @@ public class ModItems {
     public static final DeferredItem<SwordItem> PITCHFORK = ITEMS.registerItem("pitchfork", props -> new SwordItem(ToolMaterial.IRON, 6, -3, props));
     public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", StakeItem::new);
 
-    public static final DeferredItem<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.registerItem("crucifix_normal",  props -> new CrucifixItem(IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.registerItem("crucifix_enhanced",  props -> new CrucifixItem(IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.registerItem("crucifix_ultimate",  props -> new CrucifixItem(IItemWithTier.TIER.ULTIMATE, props));
+    public static final DeferredItem<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.registerItem("crucifix_normal",  props -> new CrucifixItem(IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.registerItem("crucifix_enhanced",  props -> new CrucifixItem(IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.registerItem("crucifix_ultimate",  props -> new CrucifixItem(IItemWithTier.Tier.ULTIMATE, props));
 
     // Armor
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal",  props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.registerItem("armor_of_swiftness_chest_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_chest_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.registerItem("armor_of_swiftness_feet_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.registerItem("armor_of_swiftness_feet_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_feet_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.registerItem("armor_of_swiftness_head_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.HELMET, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.registerItem("armor_of_swiftness_head_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.HELMET, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_head_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.HELMET, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.registerItem("armor_of_swiftness_legs_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.registerItem("armor_of_swiftness_legs_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_legs_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.TIER.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal",  props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.registerItem("armor_of_swiftness_chest_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_chest_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.registerItem("armor_of_swiftness_feet_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.registerItem("armor_of_swiftness_feet_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_feet_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.registerItem("armor_of_swiftness_head_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.registerItem("armor_of_swiftness_head_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_head_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.registerItem("armor_of_swiftness_legs_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.registerItem("armor_of_swiftness_legs_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_legs_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.ULTIMATE, props));
 
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.registerItem("hunter_coat_chest_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.registerItem("hunter_coat_chest_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.registerItem("hunter_coat_chest_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.registerItem("hunter_coat_feet_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.registerItem("hunter_coat_feet_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.registerItem("hunter_coat_feet_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.registerItem("hunter_coat_head_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.registerItem("hunter_coat_head_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.registerItem("hunter_coat_head_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.registerItem("hunter_coat_legs_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.registerItem("hunter_coat_legs_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.registerItem("hunter_coat_legs_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.TIER.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.registerItem("hunter_coat_chest_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.registerItem("hunter_coat_chest_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.registerItem("hunter_coat_chest_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.registerItem("hunter_coat_feet_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.registerItem("hunter_coat_feet_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.registerItem("hunter_coat_feet_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.registerItem("hunter_coat_head_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.registerItem("hunter_coat_head_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.registerItem("hunter_coat_head_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.registerItem("hunter_coat_legs_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.registerItem("hunter_coat_legs_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.registerItem("hunter_coat_legs_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.ULTIMATE, props));
 
     public static final DeferredItem<HunterArmorItem> HUNTER_HAT_TALL = ITEMS.registerItem("hunter_hat_tall",  props -> new HunterArmorItem(ModArmorMaterials.HUNTER_HAT_TALL, ArmorType.HELMET, props));
     public static final DeferredItem<HunterArmorItem> HUNTER_HAT_BROAD = ITEMS.registerItem("hunter_hat_broad",  props -> new HunterArmorItem(ModArmorMaterials.HUNTER_HAT_BROAD, ArmorType.HELMET, props));
@@ -162,12 +162,12 @@ public class ModItems {
     public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE = ITEMS.registerItem("garlic_diffuser_core", Item::new);
     public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE_IMPROVED = ITEMS.registerItem("garlic_diffuser_core_improved", Item::new);
 
-    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_bottle_ultimate",  props -> new HolyWaterBottleItem(IItemWithTier.TIER.ULTIMATE, props));
-    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_splash_bottle_normal",  props -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.NORMAL, props));
-    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_splash_bottle_enhanced",  props -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ENHANCED, props));
-    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_splash_bottle_ultimate",  props -> new HolyWaterSplashBottleItem(IItemWithTier.TIER.ULTIMATE, props));
+    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_bottle_ultimate",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_splash_bottle_normal",  props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_splash_bottle_enhanced",  props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_splash_bottle_ultimate",  props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.ULTIMATE, props));
 
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_0 = ITEMS.registerItem("hunter_intel_0",  props -> new HunterIntelItem(0, props));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_1 = ITEMS.registerItem("hunter_intel_1",  props -> new HunterIntelItem(1, props));
@@ -211,7 +211,7 @@ public class ModItems {
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = ITEMS.registerItem("vampire_book",  props -> new VampireBookItem(props.rarity(Rarity.UNCOMMON).stacksTo(1)));
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = ITEMS.registerItem("vampire_fang", VampireFangItem::new);
 
-    public static final DeferredItem<UmbrellaItem> UMBRELLA = ITEMS.registerItem("umbrella", UmbrellaItem::new);
+    public static final DeferredItem<UmbrellaItem> UMBRELLA = ITEMS.registerItem("umbrella", props -> new UmbrellaItem(props.stacksTo(1)));
 
     public static final DeferredItem<Item> HUNTER_MINION_EQUIPMENT = ITEMS.registerItem("hunter_minion_equipment", Item::new);
     public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("hunter_minion_upgrade_simple",  props -> new MinionUpgradeItem(1, 2, ModFactions.HUNTER, props));
@@ -223,7 +223,7 @@ public class ModItems {
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 
-    public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", FeedingAdapterItem::new);
+    public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", props -> new FeedingAdapterItem(props.stacksTo(1)));
     public static final DeferredItem<OblivionPotionItem> OBLIVION_POTION = ITEMS.registerItem("oblivion_potion", props -> new OblivionPotionItem(props.stacksTo(1).rarity(Rarity.UNCOMMON).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().onConsume(new OblivionEffect()).build())));
     public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder",  props -> new Item(props.rarity(Rarity.RARE)));
 

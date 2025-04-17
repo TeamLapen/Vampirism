@@ -14,6 +14,13 @@ import java.util.List;
 
 public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
+    private final Tier tier;
+
+    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, Properties properties) {
+        super(material, type, properties);
+        this.tier = tier;
+    }
+
     /**
      * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}
      * Checks if the player has this armor fully equipped
@@ -21,7 +28,7 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
      * @return if fully equipped the tier of the worst item, otherwise null
      */
     @Nullable
-    public static TIER isFullyEquipped(Player player) {
+    public static IItemWithTier.Tier isFullyEquipped(Player player) {
         int minLevel = 1000;
         for (ItemStack stack : player.getInventory().armor) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
@@ -30,23 +37,16 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
                 minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getVampirismTier().ordinal());
             }
         }
-        return TIER.values()[minLevel];
-    }
-
-    private final TIER tier;
-
-    public HunterCoatItem(ArmorMaterial material, ArmorType type, TIER tier, Properties properties) {
-        super(material, type, properties);
-        this.tier = tier;
+        return Tier.values()[minLevel];
     }
 
     @Override
-    public TIER getVampirismTier() {
+    public Tier getVampirismTier() {
         return tier;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
         super.appendHoverText(stack, context, tooltip, flagIn);
     }

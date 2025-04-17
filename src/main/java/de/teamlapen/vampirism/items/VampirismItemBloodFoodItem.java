@@ -17,11 +17,12 @@ public class VampirismItemBloodFoodItem extends Item {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
-        super.finishUsingItem(stack, worldIn, entityLiving);
-        if (!Helper.isVampire(entityLiving)) {
-            entityLiving.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 20));
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+        super.finishUsingItem(stack, level, livingEntity);
+        if (!Helper.isVampire(livingEntity)) {
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 20));
         }
+
         return stack;
     }
 }

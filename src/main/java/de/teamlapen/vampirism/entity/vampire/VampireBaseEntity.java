@@ -187,9 +187,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             for (ItemStack e : living.getArmorSlots()) {
                 if (e != null && e.getItem() instanceof HunterCoatItem) {
                     int j = 1;
-                    if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED)) {
+                    if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ENHANCED)) {
                         j = 2;
-                    } else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE)) {
+                    } else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ULTIMATE)) {
                         j = 3;
                     }
                     if (getRandom().nextInt((4 - j) * 2) == 0) {

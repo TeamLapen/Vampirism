@@ -8,12 +8,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class NormalBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
+
     @Override
     public int color() {
         return 0xFFFFFFFF;
@@ -35,7 +35,7 @@ public class NormalBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBeh
     }
 
     @Override
-    public float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter) {
+    public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
         return 2;
     }
 }

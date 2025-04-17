@@ -38,7 +38,7 @@ public class CursedEarthBlock extends Block implements HolyWaterEffectConsumer {
     }
 
     @Override
-    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier) {
         level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
     }
 }

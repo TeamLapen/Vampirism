@@ -55,14 +55,12 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
-        tooltip.add(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        tooltip.add(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-
-        super.appendHoverText(stack, context, tooltip, flagIn);
+        tooltipComponents.add(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        tooltipComponents.add(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
     }
 
     @Override
@@ -87,21 +85,23 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 40;
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
-        if (!(entityLiving instanceof Player player)) return stack;
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+        if (!(livingEntity instanceof Player player)) return stack;
+
         VampirePlayer vampire = VampirePlayer.get(player);
         int amount = (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
         if (player.isCreative() || vampire.useBlood(amount, false)) {
             this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
         }
         if (getChargePercentage(stack) == 1) {
-            tryName(stack, (Player) entityLiving);
+            tryName(stack, player);
         }
+
         return stack;
     }
 
@@ -151,24 +151,24 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
-        if (worldIn.isClientSide && (isSelected || itemSlot == 0)) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        //Try to minimize execution time, but tricky since offhand selection is not directly available, but it can only be off hand if itemSlot 0
+        if (level.isClientSide && (isSelected || slotId == 0)) {
             float charged = getChargePercentage(stack);
-            if (charged > 0 && entityIn.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entityIn instanceof LivingEntity) {
-                boolean secondHand = !isSelected && ((LivingEntity) entityIn).getItemInHand(InteractionHand.OFF_HAND).equals(stack);
+            if (charged > 0 && entity.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entity instanceof LivingEntity livingEntity) {
+                boolean secondHand = !isSelected && livingEntity.getItemInHand(InteractionHand.OFF_HAND).equals(stack);
                 if (isSelected || secondHand) {
-                    spawnChargedParticle((LivingEntity) entityIn, isSelected);
+                    spawnChargedParticle(livingEntity, isSelected);
                 }
             }
         }
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int count) {
-        if (player.getCommandSenderWorld().isClientSide) {
-            if (count % 3 == 0) {
-                spawnChargingParticle(player, player.getMainHandItem().equals(stack));
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        if (livingEntity.getCommandSenderWorld().isClientSide) {
+            if (remainingUseDuration % 3 == 0) {
+                spawnChargingParticle(livingEntity, livingEntity.getMainHandItem().equals(stack));
             }
         }
     }
@@ -222,13 +222,13 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     @Override
-    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        VampirePlayer vampire = VampirePlayer.get(player);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;
 
-        if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE) && (playerIn.isCreative() || vampire.getBloodLevel() >= (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
-            playerIn.startUsingItem(handIn);
+        if (this.canBeCharged(stack) && player.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE) && (player.isCreative() || vampire.getBloodLevel() >= (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? VampirismConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
+            player.startUsingItem(hand);
             return InteractionResult.SUCCESS;
         }
 
@@ -259,7 +259,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     protected float getPurityInteractionRangeModifier(ItemStack stack) {
-        return Math.clamp((stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()/4f) * 0.5f,0f,0.5f);
+        return Math.clamp((stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()/4f) * 0.5f, 0f, 0.5f);
     }
 
     /**
@@ -333,5 +333,4 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
             default -> 2f;
         };
     }
-
 }

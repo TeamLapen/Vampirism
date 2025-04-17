@@ -80,7 +80,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
     }
 
     @Override
-    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier) {
         level.destroyBlock(pos, false);
     }
 }

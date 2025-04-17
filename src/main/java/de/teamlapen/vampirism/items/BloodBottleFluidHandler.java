@@ -20,19 +20,19 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
 
-    /**
-     * Returns an amount which is a multiple of capacity%10
-     */
-    public static int getAdjustedAmount(int amt) {
-        return amt - amt % MULTIPLIER;
-    }
-
     private final int capacity;
     protected ItemStack container;
 
     public BloodBottleFluidHandler(ItemStack container, int capacity) {
         this.container = container;
         this.capacity = capacity;
+    }
+
+    /**
+     * Returns an amount which is a multiple of capacity%10
+     */
+    public static int getAdjustedAmount(int amt) {
+        return amt - amt % MULTIPLIER;
     }
 
     @Override

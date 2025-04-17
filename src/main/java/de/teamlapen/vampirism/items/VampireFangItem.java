@@ -20,27 +20,26 @@ public class VampireFangItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
-
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!level.isClientSide) {
             if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                playerIn.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
-                if (Helper.canBecomeVampire(playerIn)) {
-                    SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
+                if (Helper.canBecomeVampire(player)) {
+                    SanguinareEffect.addRandom(player, true);
+                    player.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
                 } else {
-                    if (Helper.isVampire(playerIn)) {
-                        playerIn.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);
+                    if (Helper.isVampire(player)) {
+                        player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(Component.translatable("text.vampirism.immune_to").append(Component.translatable(ModEffects.SANGUINARE.get().getDescriptionId())), true);
+                        player.displayClientMessage(Component.translatable("text.vampirism.immune_to").append(Component.translatable(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);
             }
         }
+
         return InteractionResult.SUCCESS_SERVER;
     }
-
 }

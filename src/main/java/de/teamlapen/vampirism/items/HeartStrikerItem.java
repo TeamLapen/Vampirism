@@ -14,21 +14,21 @@ public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier,
     public static final ToolMaterial DIAMOND = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -4.0f, 5.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);
     public static final ToolMaterial NETHERITE = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2500, -3.9f, 7.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);
 
-    private final TIER tier;
+    private final Tier tier;
 
-    public HeartStrikerItem(ToolMaterial material, TIER tier, float trainSpeedIncrease, Properties properties) {
+    public HeartStrikerItem(ToolMaterial material, Tier tier, float trainSpeedIncrease, Properties properties) {
         super(material, 3, trainSpeedIncrease , properties);
         this.tier = tier;
     }
 
     @Override
-    public TIER getVampirismTier() {
+    public Tier getVampirismTier() {
         return tier;
     }
 
     @Override
     public float getXpRepairRatio(ItemStack stack) {
-        return this.getVampirismTier() == TIER.ULTIMATE ? super.getXpRepairRatio(stack) / 2f : super.getXpRepairRatio(stack);
+        return this.getVampirismTier() == Tier.ULTIMATE ? super.getXpRepairRatio(stack) / 2f : super.getXpRepairRatio(stack);
     }
 
     @Override
