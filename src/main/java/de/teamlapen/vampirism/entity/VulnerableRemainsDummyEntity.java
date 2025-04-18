@@ -181,7 +181,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     public Optional<VulnerableRemainsBlockEntity> getTile() {
-        if (ownerPos != null) {
+        if (ownerPos != null && this.level().isLoaded(ownerPos)) { //Check if block is still loaded. Occasionally, this is called during chunk unload. #1490
             if (this.level().getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
                 return Optional.of(vr);
             }
