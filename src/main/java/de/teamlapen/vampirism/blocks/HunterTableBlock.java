@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -32,7 +31,9 @@ import java.util.stream.Stream;
 
 public class HunterTableBlock extends VampirismHorizontalBlock {
 
-    public static final EnumProperty<TableVariant> VARIANT = EnumProperty.create("variant", TableVariant.class);
+    public static final BooleanProperty WEAPON_TABLE = BooleanProperty.create("weapon_table");
+    public static final BooleanProperty ALCHEMICAL_CAULDRON = BooleanProperty.create("alchemical_cauldron");
+    public static final BooleanProperty POTION_TABLE = BooleanProperty.create("potion_table");
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.box(0, 8, 0, 16, 10, 16),
@@ -45,21 +46,20 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     public HunterTableBlock(Properties properties) {
         super(properties, SHAPE);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(VARIANT, TableVariant.SIMPLE));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WEAPON_TABLE, false).setValue(ALCHEMICAL_CAULDRON, false).setValue(POTION_TABLE, false));
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = context.getHorizontalDirection();
-        return this.defaultBlockState().setValue(FACING, facing).setValue(VARIANT, determineTier(context.getLevel(), context.getClickedPos(), facing));
+        return updateVariantValues(context.getLevel(), context.getClickedPos(), this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()));
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
-        TableVariant newVariant = determineTier(level, pos, state.getValue(FACING));
-        if (newVariant != state.getValue(VARIANT)) {
-            level.setBlock(pos, state.setValue(VARIANT, newVariant), 2);
+        BlockState newState = updateVariantValues(level, pos, state);
+        if (!newState.equals(state)) {
+            level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
         }
     }
 
@@ -81,58 +81,23 @@ public class HunterTableBlock extends VampirismHorizontalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, VARIANT);
+        super.createBlockStateDefinition(builder);
+        builder.add(WEAPON_TABLE, ALCHEMICAL_CAULDRON, POTION_TABLE);
     }
 
-    private TableVariant determineTier(LevelReader level, BlockPos pos, Direction facing) {
-        List<Block> relativeBlocks = List.of(
-                level.getBlockState(pos.relative(facing)).getBlock(),
-                level.getBlockState(pos.relative(facing.getClockWise())).getBlock(),
-                level.getBlockState(pos.relative(facing.getCounterClockWise())).getBlock(),
-                level.getBlockState(pos.relative(facing.getOpposite())).getBlock()
-        );
+    private static BlockState updateVariantValues(LevelReader level, BlockPos pos, BlockState state) {
+        List<Block> relativeBlocks = Stream.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST).map(direction -> level.getBlockState(pos.relative(direction)).getBlock()).toList();
 
-        boolean weaponTable = relativeBlocks.contains(ModBlocks.WEAPON_TABLE.get());
-        boolean cauldron = relativeBlocks.contains(ModBlocks.ALCHEMICAL_CAULDRON.get());
-        boolean potionTable = relativeBlocks.contains(ModBlocks.POTION_TABLE.get());
-
-        int points = (weaponTable ? 1 : 0) + (cauldron ? 2 : 0) + (potionTable ? 4 : 0);
-
-        return TableVariant.getByPoints(points);
+        return state.setValue(WEAPON_TABLE, relativeBlocks.contains(ModBlocks.WEAPON_TABLE.get()))
+                .setValue(ALCHEMICAL_CAULDRON, relativeBlocks.contains(ModBlocks.ALCHEMICAL_CAULDRON.get()))
+                .setValue(POTION_TABLE, relativeBlocks.contains(ModBlocks.POTION_TABLE.get()));
     }
 
-    public enum TableVariant implements StringRepresentable {
-        SIMPLE("simple", 0, 0),
-        WEAPON("weapon", 1, 1),
-        CAULDRON("cauldron", 1, 2),
-        POTION("potion", 1, 4),
-        WEAPON_CAULDRON("weapon_cauldron", 2, 3),
-        WEAPON_POTION("weapon_potion", 2, 5),
-        POTION_CAULDRON("potion_cauldron", 2, 6),
-        COMPLETE("complete", 3, 7);
-
-        public final String name;
-        public final int tier;
-        public final int requiredPoints;
-
-        TableVariant(String name, int tier, int requiredPoints) {
-            this.name = name;
-            this.tier = tier;
-            this.requiredPoints = requiredPoints;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
-
-        public static TableVariant getByPoints(int points) {
-            for (TableVariant variant : values()) {
-                if (variant.requiredPoints == points) {
-                    return variant;
-                }
-            }
-            return SIMPLE;
-        }
+    public static int getVariantValue(BlockState state) {
+        int value = 0;
+        if (state.hasProperty(WEAPON_TABLE) && state.getValue(WEAPON_TABLE)) value++;
+        if (state.hasProperty(ALCHEMICAL_CAULDRON) && state.getValue(ALCHEMICAL_CAULDRON)) value++;
+        if (state.hasProperty(POTION_TABLE) && state.getValue(POTION_TABLE)) value++;
+        return value;
     }
 }

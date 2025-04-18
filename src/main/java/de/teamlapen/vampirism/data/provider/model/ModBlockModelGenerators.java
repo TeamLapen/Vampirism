@@ -366,14 +366,14 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
 
     protected void createHunterTable() {
         ResourceLocation hunterTable = mod("block/hunter_table/hunter_table");
-        ResourceLocation hunterTableBottle = mod("block/hunter_table/hunter_table_bottle");
-        ResourceLocation hunterTableGarlic = mod("block/hunter_table/hunter_table_garlic");
         ResourceLocation hunterTableHammer = mod("block/hunter_table/hunter_table_hammer");
-        var generator = MultiPartGenerator.multiPart(ModBlocks.HUNTER_TABLE.get());
+        ResourceLocation hunterTableGarlic = mod("block/hunter_table/hunter_table_garlic");
+        ResourceLocation hunterTableBottle = mod("block/hunter_table/hunter_table_bottle");
+        MultiPartGenerator generator = MultiPartGenerator.multiPart(ModBlocks.HUNTER_TABLE.get());
         withHorizontalRotation(generator, null, hunterTable);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.POTION, HunterTableBlock.TableVariant.POTION_CAULDRON, HunterTableBlock.TableVariant.WEAPON_POTION, HunterTableBlock.TableVariant.COMPLETE), hunterTableBottle);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.CAULDRON, HunterTableBlock.TableVariant.POTION_CAULDRON, HunterTableBlock.TableVariant.WEAPON_CAULDRON, HunterTableBlock.TableVariant.COMPLETE), hunterTableGarlic);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.VARIANT, HunterTableBlock.TableVariant.WEAPON, HunterTableBlock.TableVariant.WEAPON_POTION, HunterTableBlock.TableVariant.WEAPON_CAULDRON, HunterTableBlock.TableVariant.COMPLETE), hunterTableHammer);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.WEAPON_TABLE, true), hunterTableHammer);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.ALCHEMICAL_CAULDRON, true), hunterTableGarlic);
+        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.POTION_TABLE, true), hunterTableBottle);
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }

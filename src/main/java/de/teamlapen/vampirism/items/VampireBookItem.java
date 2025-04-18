@@ -51,7 +51,8 @@ public class VampireBookItem extends Item implements ModDisplayItemGenerator.Cre
 
     @Override
     public Component getName(ItemStack stack) {
-        return VampireBook.get(stack).title();
+        IVampireBook vampireBook = VampireBook.get(stack);
+        return vampireBook.isEmpty() ? super.getName(stack) : vampireBook.title();
     }
 
     @Override
