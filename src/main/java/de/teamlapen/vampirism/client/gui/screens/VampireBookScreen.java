@@ -1,17 +1,21 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +29,17 @@ import java.util.stream.Collectors;
 
 public class VampireBookScreen extends Screen {
 
-    private final ResourceLocation backgroundTexture = VResourceLocation.mod("textures/gui/vampire_book.png");
-    private final int xSize = 245;
-    private final int ySize = 192;
-    private int guiLeft, guiTop;
-    private PageButton buttonNext;
-    private PageButton buttonPrev;
+    private final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/vampire_book.png");
+    private final ResourceLocation BACKGROUND_FIRST_PAGE = VResourceLocation.mod("textures/gui/vampire_book_first.png");
+    private final ResourceLocation BACKGROUND_LAST_PAGE = VResourceLocation.mod("textures/gui/vampire_book_last.png");
+
+    private final int xSize = 304;
+    private final int ySize = 210;
+    private int guiLeft;
+    private int guiTop;
+
+    private VampireBookPageButton buttonForward;
+    private VampireBookPageButton buttonBack;
     private int pageNumber;
     private final @NotNull IVampireBook vampireBook;
     private List<FormattedText> content;
@@ -41,107 +50,124 @@ public class VampireBookScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
-
-        if (pageNumber < content.size()) {
-            FormattedText toDraw = content.get(pageNumber);
-            Font fontRenderer = Minecraft.getInstance().font;
-
-            List<FormattedCharSequence> cutLines = fontRenderer.split(toDraw, 170);
-            int y = guiTop + 12 + 5;
-            for (FormattedCharSequence cut : cutLines) {
-                graphics.drawString(fontRenderer, cut, guiLeft + 44, y, 0, false);
-                y += 10;
-            }
-        }
-
-        drawCenteredStringWithoutShadow(graphics, font, String.format("%d/%d", pageNumber + 1, content.size()), guiLeft + xSize / 2, guiTop + 5 * ySize / 6, 0);
-        graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
-
-        buttonPrev.visible = pageNumber != 0;
-        buttonNext.visible = pageNumber != content.size() - 1 && !content.isEmpty();
-
-    }
-
-    @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        GuiRenderer.blit(guiGraphics, backgroundTexture, guiLeft, guiTop, xSize, ySize);
-    }
-
-    @Override
     protected void init() {
         super.init();
 
         guiLeft = (this.width - this.xSize) / 2;
         guiTop = (this.height - this.ySize) / 2;
 
-        this.addRenderableWidget(buttonNext = new PageButton(guiLeft + 4 * xSize / 6, guiTop + 5 * ySize / 6, true, (btn) -> {
+        buttonForward = this.addRenderableWidget(new VampireBookPageButton(guiLeft + xSize - 22 - VampireBookPageButton.WIDTH, guiTop + ySize - 12 - VampireBookPageButton.HEIGHT, true, button -> {
             if (pageNumber + 1 < content.size()) {
-                nextPage();
+                pageForward();
             }
-        }, true));
-        this.addRenderableWidget(buttonPrev = new PageButton(guiLeft + xSize / 5, guiTop + 5 * ySize / 6, false, (btn) -> {
+        }));
+        buttonBack = this.addRenderableWidget(new VampireBookPageButton(guiLeft + 22, guiTop + ySize - 12 - VampireBookPageButton.HEIGHT, false, button -> {
             if (pageNumber > 0) {
-                prevPage();
+                pageBack();
             }
-        }, true));
+        }));
 
-        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 164, 120, 120).stream()).collect(Collectors.toList());
-    }
-
-    public static void drawCenteredStringWithoutShadow(@NotNull GuiGraphics graphics, @NotNull Font p_238471_1_, @NotNull String p_238471_2_, int p_238471_3_, int p_238471_4_, int p_238471_5_) {
-        graphics.drawString(p_238471_1_, p_238471_2_, (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), p_238471_4_, p_238471_5_, false);
+        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 126, 160, 160).stream()).collect(Collectors.toList());
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int p_keyPressed_2_, int p_keyPressed_3_) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+
+        pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
+
+        if (pageNumber == 0) {
+            drawPage(graphics, guiLeft + 156, guiTop + 16, content.getFirst());
+            drawPageNumber(graphics, guiLeft + xSize - 79, "1");
+        } else {
+            int leftPageIndex = pageNumber;
+            int rightPageIndex = pageNumber + 1;
+
+            if (leftPageIndex < content.size()) {
+                drawPage(graphics, guiLeft + 20, guiTop + 16, content.get(leftPageIndex));
+                drawPageNumber(graphics, guiLeft + 79, String.valueOf((leftPageIndex + 1)));
+            }
+            if (rightPageIndex < content.size()) {
+                drawPage(graphics, guiLeft + 160, guiTop + 16, content.get(rightPageIndex));
+                drawPageNumber(graphics, guiLeft + xSize - 79, String.valueOf((rightPageIndex + 1)));
+            }
+        }
+
+        graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
+
+        buttonBack.visible = pageNumber > 0;
+        buttonForward.visible = content.size() % 2 == 0 ? (pageNumber < content.size() - 1) : (pageNumber < content.size() - 2);
+    }
+
+    private void drawPage(GuiGraphics graphics, int x, int y, FormattedText text) {
+        List<FormattedCharSequence> lines = this.font.split(text, 132);
+        int currentY = y;
+        for (FormattedCharSequence line : lines) {
+            graphics.drawString(this.font, line, x, currentY, 0, false);
+            currentY += 10;
+        }
+    }
+
+    private void drawPageNumber(GuiGraphics graphics, int x, String number) {
+        graphics.drawString(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - 22, 0, false);
+    }
+
+    @Override
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
+        guiGraphics.blit(RenderType::guiTextured, pageNumber == 0 ? BACKGROUND_FIRST_PAGE : (pageNumber + 1 >= content.size() ? BACKGROUND_LAST_PAGE : BACKGROUND), guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.minecraft != null && (keyCode == GLFW.GLFW_KEY_BACKSPACE || keyCode == this.minecraft.options.keyUse.getKey().getValue())) {
             this.minecraft.setScreen(null);
             return true;
         } else if ((keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_RIGHT) && pageNumber + 1 < content.size()) {
-            nextPage();
+            pageForward();
             return true;
         } else if ((keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_LEFT) && pageNumber > 0) {
-            prevPage();
+            pageBack();
             return true;
         }
-        return super.keyPressed(keyCode, p_keyPressed_2_, p_keyPressed_3_);
 
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-
-        if (pScrollY < 0) {
-            nextPage();
-        } else if (pScrollY > 0) {
-            prevPage();
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (scrollY < 0) {
+            pageForward();
+        } else if (scrollY > 0) {
+            pageBack();
         }
-        if (pScrollX < 0) {
-            nextPage();
-        } else if (pScrollX > 0) {
-            prevPage();
+        if (scrollX < 0) {
+            pageForward();
+        } else if (scrollX > 0) {
+            pageBack();
         }
 
-
-        return (pScrollX != 0 || pScrollY != 0) || super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
-
+        return (scrollX != 0 || scrollY != 0) || super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
-
-    public void nextPage() {
-        if (pageNumber != content.size() - 1 && !content.isEmpty()) {
-            pageNumber++;
+    public void pageBack() {
+        if (pageNumber == 1) {
+            pageNumber = 0;
+        } else if (pageNumber - 2 >= 0) {
+            pageNumber -= 2;
+        } else {
+            pageNumber = 0;
         }
     }
 
-    public void prevPage() {
-        if (pageNumber != 0) {
-            pageNumber--;
+    public void pageForward() {
+        if (pageNumber == 0) {
+            pageNumber = 1;
+        } else if (pageNumber + 2 < content.size()) {
+            pageNumber += 2;
+        } else if (pageNumber + 1 < content.size()) {
+            pageNumber += 1;
         }
     }
 
@@ -194,4 +220,38 @@ public class VampireBookScreen extends Screen {
         return FormattedText.composite(copy);
     }
 
+    public static class VampireBookPageButton extends Button {
+
+        private static final ResourceLocation PAGE_FORWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward_highlighted");
+        private static final ResourceLocation PAGE_FORWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward");
+        private static final ResourceLocation PAGE_BACKWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward_highlighted");
+        private static final ResourceLocation PAGE_BACKWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward");
+
+        private static final int WIDTH = 23;
+        private static final int HEIGHT = 13;
+
+        private final boolean isForward;
+
+        protected VampireBookPageButton(int x, int y, boolean isForward, Button.OnPress onPress) {
+            super(x, y, WIDTH, HEIGHT, CommonComponents.EMPTY, onPress, DEFAULT_NARRATION);
+            this.isForward = isForward;
+        }
+
+        @Override
+        public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            ResourceLocation resourcelocation;
+            if (this.isForward) {
+                resourcelocation = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
+            } else {
+                resourcelocation = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
+            }
+
+            guiGraphics.blitSprite(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), WIDTH, HEIGHT);
+        }
+
+        @Override
+        public void playDownSound(SoundManager handler) {
+            handler.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
+        }
+    }
 }
