@@ -34,7 +34,7 @@ public class VampireBookScreen extends Screen {
     private final ResourceLocation BACKGROUND_LAST_PAGE = VResourceLocation.mod("textures/gui/vampire_book_last.png");
 
     private final int xSize = 304;
-    private final int ySize = 210;
+    private final int ySize = 200;
     private int guiLeft;
     private int guiTop;
 
@@ -67,7 +67,7 @@ public class VampireBookScreen extends Screen {
             }
         }));
 
-        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 126, 160, 160).stream()).collect(Collectors.toList());
+        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 126, 150, 150).stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class VampireBookScreen extends Screen {
 
         if (pageNumber == 0) {
             drawPage(graphics, guiLeft + 156, guiTop + 16, content.getFirst());
-            drawPageNumber(graphics, guiLeft + xSize - 79, "1");
+            drawPageNumber(graphics, guiLeft + xSize - 83, "1");
         } else {
             int leftPageIndex = pageNumber;
             int rightPageIndex = pageNumber + 1;
