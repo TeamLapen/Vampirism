@@ -44,12 +44,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -77,11 +80,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.SystemNanoClock;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Clock;
+import java.util.*;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -89,54 +93,44 @@ import java.util.stream.StreamSupport;
  */
 public class ModPlayerEventHandler {
 
-    private final static Logger LOGGER = LogManager.getLogger(ModPlayerEventHandler.class);
-
     @SubscribeEvent
     public void blockDestroyed(BlockEvent.@NotNull BreakEvent event) {
-        if (!(event.getLevel() instanceof Level)) return;
+        if (!(event.getLevel() instanceof ServerLevel level)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
         if (VampirismConfig.SERVER.allowVillageDestroyBlocks.get()) return;
-        Set<BlockPos> positions = new HashSet<>();
-        BlockPos totemPos = TotemHelper.getTotemPosition(((Level) event.getLevel()).dimension(), event.getPos());
-        Block block = event.getState().getBlock();
-        //if the blockstate does not have a POI, but another blockstate of the specific block e.g. the bed, search for the blockstate in a 3x3x3 radius
-        //or the other way around
-        ImmutableList<BlockState> validStates = block.getStateDefinition().getPossibleStates();
-        if (validStates.size() > 1 && RegUtil.values(BuiltInRegistries.POINT_OF_INTEREST_TYPE).stream().flatMap(poiType -> poiType.matchingStates().stream()).anyMatch(validStates::contains)) {
-            for (int x = event.getPos().getX() - 1; x <= event.getPos().getX() + 1; ++x) {
-                for (int z = event.getPos().getZ() - 1; z <= event.getPos().getZ() + 1; ++z) {
-                    for (double y = event.getPos().getY() - 1; y <= event.getPos().getY() + 1; ++y) {
-                        BlockPos pos1 = new BlockPos(x, (int) y, z);
-                        if (((Level) event.getLevel()).isLoaded(pos1) && event.getLevel().getBlockState(pos1).getBlock() == block) {
-                            BlockPos totemPos1 = TotemHelper.getTotemPosition(((Level) event.getLevel()).dimension(), pos1);
-                            if (totemPos1 != null && totemPos == null) {
-                                totemPos = totemPos1;
-                            }
-                            positions.add(pos1);
-                        }
-                    }
-                }
+
+        List<BlockPos> positions = new ArrayList<>();
+        List<PoiRecord> inSquare = TotemHelper.findRecords(level, event.getPos()).toList();
+        if (!inSquare.isEmpty()) {
+            Block block = event.getState().getBlock();
+            Optional<PoiRecord> self = inSquare.stream().filter(x -> x.getPos() == event.getPos()).findAny();
+            if (self.isPresent()) {
+                positions.add(self.get().getPos());
+            } else {
+                positions.addAll(inSquare.stream().map(PoiRecord::getPos).filter(pos -> level.getBlockState(pos).getBlock() == block).toList());
             }
         }
-        //cancel the event and notify client about the failed block destroy.
-        //also notify client about wrong destroyed neighbor blocks (bed)
-        if (totemPos != null && event.getLevel().hasChunkAt(totemPos)) {
-            BlockEntity totem = (event.getLevel().getBlockEntity(totemPos));
-            if (totem instanceof TotemBlockEntity && ((TotemBlockEntity) totem).getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != ((TotemBlockEntity) totem).getControllingFaction()) {
-                event.setCanceled(true);
-                event.getPlayer().displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
-                if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
-                    positions.forEach(pos -> {
-                        player.connection.send(new ClientboundBlockUpdatePacket(event.getLevel(), pos));
-                        BlockEntity tileentity = event.getLevel().getBlockEntity(pos);
-                        if (tileentity != null) {
-                            Packet<?> pkt = tileentity.getUpdatePacket();
-                            if (pkt != null) {
-                                player.connection.send(pkt);
+
+        for (BlockPos position : positions) {
+            BlockPos totemPosition = TotemHelper.getTotemPosition(level.dimension(), position);
+            if (totemPosition != null && level.isLoaded(totemPosition)) {
+                BlockEntity totem = (event.getLevel().getBlockEntity(totemPosition));
+                if (totem instanceof TotemBlockEntity blockEntity && blockEntity.getControllingFaction() != null && VampirismPlayerAttributes.get(event.getPlayer()).faction != blockEntity.getControllingFaction()) {
+                    event.setCanceled(true);
+                    event.getPlayer().displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                    if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
+                        positions.forEach(pos -> {
+                            player.connection.send(new ClientboundBlockUpdatePacket(event.getLevel(), pos));
+                            BlockEntity tileentity = event.getLevel().getBlockEntity(pos);
+                            if (tileentity != null) {
+                                Packet<?> pkt = tileentity.getUpdatePacket();
+                                if (pkt != null) {
+                                    player.connection.send(pkt);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
