@@ -26,6 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
@@ -62,7 +63,6 @@ public class VampirismModClient {
 
         this.modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
 
-        NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
         NeoForge.EVENT_BUS.register(this.overlay);
         NeoForge.EVENT_BUS.register(this.renderHandler);
@@ -78,8 +78,9 @@ public class VampirismModClient {
         setupApi();
     }
 
-    public void onAddReloadListenerEvent(@NotNull AddReloadListenerEvent event) {
-        event.addListener(this.renderHandler);
+    @SubscribeEvent
+    public void onAddReloadListenerEvent(@NotNull RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(this.renderHandler);
     }
 
     public static VampirismModClient getINSTANCE() {
