@@ -33,12 +33,12 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
 
     public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
 
-    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR, ModVampireBooks.DIARY_BACKGROUND);
+    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR, ModVampireBooks.DIARY_BACKGROUND_ID);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(IVampireBook::id),
             ComponentSerialization.CODEC.optionalFieldOf("author", UNKNOWN_AUTHOR).forGetter(IVampireBook::author),
-            ResourceLocation.CODEC.optionalFieldOf("backgroundId", ModVampireBooks.DIARY_BACKGROUND).forGetter(IVampireBook::backgroundId)
+            ResourceLocation.CODEC.optionalFieldOf("backgroundId", ModVampireBooks.DIARY_BACKGROUND_ID).forGetter(IVampireBook::backgroundId)
             ).apply(instance, VampireBook::new)
     );
 
@@ -100,8 +100,6 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
 
     public record BookBackground(ResourceLocation texture, Optional<ResourceLocation> textureFirstPage, Optional<ResourceLocation> textureLastPage, boolean twoPages, int textureWidth, int textureHeight, IBookTextProperties textProperties, IBookPageNumbering pageNumbering) implements IBookBackground {
 
-        public static final BookBackground DEFAULT = new BookBackground(VResourceLocation.mod("textures/gui/diary.png"), Optional.of(VResourceLocation.mod("textures/gui/diary_first.png")), Optional.of(VResourceLocation.mod("textures/gui/diary_last.png")), true, 304, 200, BookTextProperties.DEFAULT, BookPageNumbering.DEFAULT);
-
         public static final Codec<IBookBackground> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(IBookBackground::texture),
                 ResourceLocation.CODEC.optionalFieldOf("textureFirstPage").forGetter(IBookBackground::textureFirstPage),
@@ -128,7 +126,7 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
 
     public record BookTextProperties(int textColor, int textWidth, int textHeight, int firstPageTextX, int leftPageTextX, int rightPageTextX, int textY) implements IBookTextProperties {
 
-        public static final BookTextProperties DEFAULT = new BookTextProperties(0x362511, 134, 150, 156, 20, 160, 16);
+        public static final IBookTextProperties DEFAULT = new BookTextProperties(0x362511, 134, 150, 156, 20, 160, 16);
 
         public static final Codec<IBookTextProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.optionalFieldOf("textColor", DEFAULT.textColor()).forGetter(IBookTextProperties::textColor),
@@ -154,7 +152,7 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
 
     public record BookPageNumbering(int pageNumberXOffset, int pageNumberYOffset, int pageButtonXOffset, int pageButtonYOffset) implements IBookPageNumbering {
 
-        public static final BookPageNumbering DEFAULT = new BookPageNumbering(79, 22, 22, 12);
+        public static final IBookPageNumbering DEFAULT = new BookPageNumbering(79, 22, 22, 12);
 
         public static final Codec<IBookPageNumbering> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.optionalFieldOf("pageNumberXOffset", DEFAULT.pageNumberXOffset()).forGetter(IBookPageNumbering::pageNumberXOffset),
@@ -198,11 +196,11 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
         }
 
         public Builder letter() {
-            return background(ModVampireBooks.LETTER_BACKGROUND);
+            return background(ModVampireBooks.LETTER_BACKGROUND_ID);
         }
 
         public VampireBook build() {
-            return new VampireBook(id.location(), author == null ? VampireBook.UNKNOWN_AUTHOR : author, backgroundTexture == null ? ModVampireBooks.DIARY_BACKGROUND : backgroundTexture);
+            return new VampireBook(id.location(), author == null ? VampireBook.UNKNOWN_AUTHOR : author, backgroundTexture == null ? ModVampireBooks.DIARY_BACKGROUND_ID : backgroundTexture);
         }
     }
 }

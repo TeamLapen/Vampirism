@@ -8,6 +8,7 @@ import com.mojang.serialization.JsonOps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.components.IVampireBook;
+import de.teamlapen.vampirism.core.ModVampireBooks;
 import de.teamlapen.vampirism.items.component.VampireBook;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.resources.ResourceLocation;
@@ -80,7 +81,7 @@ public class VampireBookLoader {
             LOGGER.error("Failed to start an input stream for background file: {}", path, exception);
         }
 
-        return VampireBook.BookBackground.DEFAULT;
+        return ModVampireBooks.DIARY_BACKGROUND;
     }
 
     private static String getBackgroundFilePath(ResourceLocation backgroundId) {

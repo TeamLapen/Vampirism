@@ -1,9 +1,8 @@
 {
   "texture": "vampirism:textures/gui/vampire_books/diary.png",
   "textureFirstPage": "vampirism:textures/gui/vampire_books/diary_first.png",
+  "textureHeight": 200,
   "textureLastPage": "vampirism:textures/gui/vampire_books/diary_last.png",
-  "twoPages": true,
   "textureWidth": 304,
-  "textureHeight": 200
+  "twoPages": true
 }
-
