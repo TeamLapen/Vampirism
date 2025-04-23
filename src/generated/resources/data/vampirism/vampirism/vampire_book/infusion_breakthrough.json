@@ -2,5 +2,6 @@
   "author": {
     "translate": "vampire_book.vampirism.infusion_breakthrough.author"
   },
+  "backgroundId": "vampirism:letter",
   "id": "vampirism:infusion_breakthrough"
 }

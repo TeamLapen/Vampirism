@@ -29,24 +29,25 @@ import java.util.stream.Collectors;
 
 public class VampireBookScreen extends Screen {
 
-    private final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/vampire_book.png");
-    private final ResourceLocation BACKGROUND_FIRST_PAGE = VResourceLocation.mod("textures/gui/vampire_book_first.png");
-    private final ResourceLocation BACKGROUND_LAST_PAGE = VResourceLocation.mod("textures/gui/vampire_book_last.png");
-
-    private final int xSize = 304;
-    private final int ySize = 200;
+    private final int xSize;
+    private final int ySize;
     private int guiLeft;
     private int guiTop;
 
     private VampireBookPageButton buttonForward;
     private VampireBookPageButton buttonBack;
-    private int pageNumber;
+
     private final @NotNull IVampireBook vampireBook;
+    private final IVampireBook.IBookBackground background;
     private List<FormattedText> content;
+    private int pageNumber;
 
     public VampireBookScreen(@NotNull IVampireBook vampireBook) {
         super(vampireBook.title());
         this.vampireBook = vampireBook;
+        this.background = vampireBook.background();
+        this.xSize = background.textureWidth();
+        this.ySize = background.textureHeight();
     }
 
     @Override
@@ -56,18 +57,18 @@ public class VampireBookScreen extends Screen {
         guiLeft = (this.width - this.xSize) / 2;
         guiTop = (this.height - this.ySize) / 2;
 
-        buttonForward = this.addRenderableWidget(new VampireBookPageButton(guiLeft + xSize - 22 - VampireBookPageButton.WIDTH, guiTop + ySize - 12 - VampireBookPageButton.HEIGHT, true, button -> {
+        buttonForward = this.addRenderableWidget(new VampireBookPageButton(guiLeft + xSize - background.pageNumbering().pageButtonXOffset() - VampireBookPageButton.WIDTH, guiTop + ySize - background.pageNumbering().pageButtonYOffset() - VampireBookPageButton.HEIGHT, true, button -> {
             if (pageNumber + 1 < content.size()) {
                 pageForward();
             }
         }));
-        buttonBack = this.addRenderableWidget(new VampireBookPageButton(guiLeft + 22, guiTop + ySize - 12 - VampireBookPageButton.HEIGHT, false, button -> {
+        buttonBack = this.addRenderableWidget(new VampireBookPageButton(guiLeft + background.pageNumbering().pageButtonXOffset(), guiTop + ySize - background.pageNumbering().pageButtonYOffset() - VampireBookPageButton.HEIGHT, false, button -> {
             if (pageNumber > 0) {
                 pageBack();
             }
         }));
 
-        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, 126, 150, 150).stream()).collect(Collectors.toList());
+        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, background.textProperties().textWidth() - 6, background.textProperties().textHeight(), background.textProperties().textHeight()).stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -76,47 +77,61 @@ public class VampireBookScreen extends Screen {
 
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
 
-        if (pageNumber == 0) {
-            drawPage(graphics, guiLeft + 156, guiTop + 16, content.getFirst());
-            drawPageNumber(graphics, guiLeft + xSize - 83, "1");
-        } else {
-            int leftPageIndex = pageNumber;
-            int rightPageIndex = pageNumber + 1;
+        if (background.twoPages()) {
+            if (pageNumber == 0) {
+                drawPage(graphics, guiLeft + background.textProperties().firstPageTextX(), guiTop + background.textProperties().textY(), content.getFirst());
+                drawPageNumber(graphics, guiLeft + xSize - background.pageNumbering().pageNumberXOffset(), String.valueOf((pageNumber + 1)));
+            } else {
+                int leftPageIndex = pageNumber;
+                int rightPageIndex = pageNumber + 1;
 
-            if (leftPageIndex < content.size()) {
-                drawPage(graphics, guiLeft + 20, guiTop + 16, content.get(leftPageIndex));
-                drawPageNumber(graphics, guiLeft + 79, String.valueOf((leftPageIndex + 1)));
+                if (leftPageIndex < content.size()) {
+                    drawPage(graphics, guiLeft + background.textProperties().leftPageTextX(), guiTop + background.textProperties().textY(), content.get(leftPageIndex));
+                    drawPageNumber(graphics, guiLeft + background.pageNumbering().pageNumberXOffset(), String.valueOf((leftPageIndex + 1)));
+                }
+                if (rightPageIndex < content.size()) {
+                    drawPage(graphics, guiLeft + background.textProperties().rightPageTextX(), guiTop + background.textProperties().textY(), content.get(rightPageIndex));
+                    drawPageNumber(graphics, guiLeft + xSize - background.pageNumbering().pageNumberXOffset(), String.valueOf((rightPageIndex + 1)));
+                }
             }
-            if (rightPageIndex < content.size()) {
-                drawPage(graphics, guiLeft + 160, guiTop + 16, content.get(rightPageIndex));
-                drawPageNumber(graphics, guiLeft + xSize - 79, String.valueOf((rightPageIndex + 1)));
+        } else {
+            if (pageNumber < content.size()) {
+                drawPage(graphics, guiLeft + background.textProperties().leftPageTextX(), guiTop + background.textProperties().textY(), content.get(pageNumber));
+                drawPageNumber(graphics, guiLeft + xSize / 2, String.valueOf(pageNumber + 1));
             }
         }
 
         graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
 
-        buttonBack.visible = pageNumber > 0;
-        buttonForward.visible = content.size() % 2 == 0 ? (pageNumber < content.size() - 1) : (pageNumber < content.size() - 2);
+        boolean atLastPage = pageNumber >= content.size() - 1;
+        boolean atFirstPage = pageNumber == 0;
+
+        buttonBack.visible = !atFirstPage;
+        if (background.twoPages()) {
+            buttonForward.visible = content.size() % 2 == 0 ? !atLastPage : (pageNumber < content.size() - 2);
+        } else {
+            buttonForward.visible = !atLastPage;
+        }
     }
 
     private void drawPage(GuiGraphics graphics, int x, int y, FormattedText text) {
-        List<FormattedCharSequence> lines = this.font.split(text, 132);
+        List<FormattedCharSequence> lines = this.font.split(text, background.textProperties().textWidth());
         int currentY = y;
         for (FormattedCharSequence line : lines) {
-            graphics.drawString(this.font, line, x, currentY, 0, false);
+            graphics.drawString(this.font, line, x, currentY, background.textProperties().textColor(), false);
             currentY += 10;
         }
     }
 
     private void drawPageNumber(GuiGraphics graphics, int x, String number) {
-        graphics.drawString(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - 22, 0, false);
+        graphics.drawString(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - background.pageNumbering().pageNumberYOffset(), background.textProperties().textColor(), false);
     }
 
     @Override
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        guiGraphics.blit(RenderType::guiTextured, pageNumber == 0 ? BACKGROUND_FIRST_PAGE : (pageNumber + 1 >= content.size() ? BACKGROUND_LAST_PAGE : BACKGROUND), guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+        guiGraphics.blit(RenderType::guiTextured, pageNumber == 0 ? background.textureFirstPage().orElseGet(background::texture) : (pageNumber + 1 >= content.size() ? background.textureLastPage().orElseGet(background::texture) : background.texture()), guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
     }
 
     @Override
@@ -152,22 +167,34 @@ public class VampireBookScreen extends Screen {
     }
 
     public void pageBack() {
-        if (pageNumber == 1) {
-            pageNumber = 0;
-        } else if (pageNumber - 2 >= 0) {
-            pageNumber -= 2;
+        if (background.twoPages()) {
+            if (pageNumber == 1) {
+                pageNumber = 0;
+            } else if (pageNumber - 2 >= 0) {
+                pageNumber -= 2;
+            } else {
+                pageNumber = 0;
+            }
         } else {
-            pageNumber = 0;
+            if (pageNumber > 0) {
+                pageNumber--;
+            }
         }
     }
 
     public void pageForward() {
-        if (pageNumber == 0) {
-            pageNumber = 1;
-        } else if (pageNumber + 2 < content.size()) {
-            pageNumber += 2;
-        } else if (pageNumber + 1 < content.size()) {
-            pageNumber += 1;
+        if (background.twoPages()) {
+            if (pageNumber == 0) {
+                pageNumber = 1;
+            } else if (pageNumber + 2 < content.size()) {
+                pageNumber += 2;
+            } else if (pageNumber + 1 < content.size()) {
+                pageNumber++;
+            }
+        } else {
+            if (pageNumber + 1 < content.size()) {
+                pageNumber++;
+            }
         }
     }
 
