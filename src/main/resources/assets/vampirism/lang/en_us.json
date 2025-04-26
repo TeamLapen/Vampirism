@@ -1148,6 +1148,7 @@
   "entity.vampirism.remains_defender": "Ancient Cristal",
   "entity.vampirism.ghost": "Ghost",
   "entity.vampirism.dark_blood_projectile": "Dark Blood Projectile",
+  "entity.vampirism.vulnerable_remains_dummy": "Vulnerable Remains",
   "__comment": "minion tasks",
   "minion_task.vampirism.protect_lord": "Defend Lord",
   "minion_task.vampirism.nothing": "Nothing",

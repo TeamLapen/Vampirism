@@ -226,9 +226,11 @@ public class MotherBlockEntity extends BlockEntity {
         List<Triple<BlockPos, BlockState, IRemainsBlock>> remaining = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).toList();
         if (!remaining.isEmpty()) {
             var remainingHealth = remaining.stream().mapToInt(s -> {
-                var entity = level.getBlockEntity(s.getLeft());
-                if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
-                    return vulnerable.getHealth();
+                if (this.level != null && this.level.isLoaded(s.getLeft())) { //Check whether still loaded
+                    var entity = level.getBlockEntity(s.getLeft());
+                    if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
+                        return vulnerable.getHealth();
+                    }
                 }
                 return VulnerableRemainsBlockEntity.MAX_HEALTH;
             }).sum();

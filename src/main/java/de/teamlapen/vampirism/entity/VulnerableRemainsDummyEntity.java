@@ -32,7 +32,7 @@ import java.util.Optional;
 public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader, IRemainsEntity {
 
     private BlockPos ownerPos = null;
-    private Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
+    private final Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
 
     public VulnerableRemainsDummyEntity(EntityType<VulnerableRemainsDummyEntity> type, Level pLevel) {
         super(type, pLevel);
@@ -181,7 +181,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     public Optional<VulnerableRemainsBlockEntity> getTile() {
-        if (ownerPos != null) {
+        if (ownerPos != null && this.level().isLoaded(ownerPos)) {
             if (this.level().getBlockEntity(ownerPos) instanceof VulnerableRemainsBlockEntity vr) {
                 return Optional.of(vr);
             }
