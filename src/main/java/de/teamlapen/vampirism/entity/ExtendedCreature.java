@@ -29,7 +29,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -252,7 +254,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
+            if (!villager.isSleeping()) {
+                ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.getRepresentingEntity(), villager);
+            }
         }
 
         return amt;
