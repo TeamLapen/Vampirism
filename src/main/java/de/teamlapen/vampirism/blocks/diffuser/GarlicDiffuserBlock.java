@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 public class GarlicDiffuserBlock extends DiffuserBlock {
 
+    // Replace the radius field with a config codec if needed in the future
     public static final MapCodec<GarlicDiffuserBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     propertiesCodec(),
