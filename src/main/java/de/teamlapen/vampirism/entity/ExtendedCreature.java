@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -232,7 +231,10 @@ public class ExtendedCreature implements IAttachment, IExtendedCreatureVampirism
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            if (!villager.isSleeping()) {
+                //If the villager is not sleeping, they know what you did and like you less
+                ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            }
         }
 
         return amt;
