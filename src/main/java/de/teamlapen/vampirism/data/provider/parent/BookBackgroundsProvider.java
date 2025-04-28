@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider.parent;
 
-import com.mojang.serialization.JsonOps;
-import de.teamlapen.vampirism.items.component.VampireBook.BookBackground;
+import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.misc.BookBackground;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -37,8 +37,8 @@ public abstract class BookBackgroundsProvider implements DataProvider {
 
         for (Map.Entry<ResourceLocation, BookBackground> entry : map.entrySet()) {
             Path path = this.pathProvider.json(entry.getKey());
-            BookBackground background = entry.getValue();
-            BookBackground.CODEC.encodeStart(JsonOps.INSTANCE, background).result().ifPresent(jsonElement -> futures.add(DataProvider.saveStable(output, jsonElement, path)));
+            JsonObject json = entry.getValue().encode();
+            futures.add(DataProvider.saveStable(output, json, path));
         }
 
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));

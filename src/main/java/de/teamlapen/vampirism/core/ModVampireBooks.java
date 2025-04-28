@@ -4,11 +4,10 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.items.component.VampireBook;
+import de.teamlapen.vampirism.misc.BookBackground;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.Optional;
 
 import static de.teamlapen.vampirism.items.component.VampireBook.builder;
 
@@ -16,28 +15,19 @@ public class ModVampireBooks {
 
     // Backgrounds
     public static final ResourceLocation DIARY_BACKGROUND_ID = VResourceLocation.mod("diary");
-    public static final VampireBook.BookBackground DIARY_BACKGROUND = new VampireBook.BookBackground(
-            VResourceLocation.mod("textures/gui/vampire_books/diary.png"),
-            Optional.of(VResourceLocation.mod("textures/gui/vampire_books/diary_first.png")),
-            Optional.of(VResourceLocation.mod("textures/gui/vampire_books/diary_last.png")),
-            true,
-            304,
-            200,
-            VampireBook.BookTextProperties.DEFAULT,
-            VampireBook.BookPageNumbering.DEFAULT
-    );
+    public static final BookBackground DIARY_BACKGROUND = BookBackground
+            .builder(VResourceLocation.mod("textures/gui/vampire_books/diary.png"), 304, 200)
+            .textureFirstPage(VResourceLocation.mod("textures/gui/vampire_books/diary_first.png"))
+            .textureLastPage(VResourceLocation.mod("textures/gui/vampire_books/diary_last.png"))
+            .build();
 
     public static final ResourceLocation LETTER_BACKGROUND_ID = VResourceLocation.mod("letter");
-    public static final VampireBook.BookBackground LETTER_BACKGROUND = new VampireBook.BookBackground(
-            VResourceLocation.mod("textures/gui/vampire_books/letter.png"),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            177,
-            200,
-            new VampireBook.BookTextProperties(0x362511, 154, 160, 156, 15, 160, 12),
-            new VampireBook.BookPageNumbering(88, 15, 10, 5)
-    );
+    public static final BookBackground LETTER_BACKGROUND = BookBackground
+            .builder(VResourceLocation.mod("textures/gui/vampire_books/letter.png"), 177, 200)
+            .twoPages(false)
+            .textWidth(154).textHeight(160).leftPageTextX(15).textY(12)
+            .pageNumberXOffset(88).pageNumberYOffset(15).pageButtonXOffset(10).pageButtonYOffset(5)
+            .build();
 
     // Vampire Books
     public static final ResourceKey<IVampireBook> MAIDS_DIARY = createKey("maids_diary");

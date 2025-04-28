@@ -9,8 +9,7 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.core.ModVampireBooks;
-import de.teamlapen.vampirism.items.component.VampireBook;
-import io.netty.handler.codec.DecoderException;
+import de.teamlapen.vampirism.misc.BookBackground;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,14 +62,14 @@ public class VampireBookLoader {
         return lines;
     }
 
-    public static VampireBook.IBookBackground loadBackground(ResourceLocation backgroundId) {
+    public static BookBackground loadBackground(ResourceLocation backgroundId) {
         String path = getBackgroundFilePath(backgroundId);
 
         try (InputStream inputStream = VampirismMod.class.getResourceAsStream(path)) {
             if (inputStream != null) {
                 try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
-                    return VampireBook.BookBackground.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(DecoderException::new);
+                    return BookBackground.decode(jsonElement.getAsJsonObject());
                 } catch (Exception exception) {
                     LOGGER.error("Failed to read background file '{}'", path, exception);
                 }
