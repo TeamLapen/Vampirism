@@ -156,6 +156,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        boolean hasChanged = false;
         if (blockEntity.litTime > 0) {
             blockEntity.litTime--;
             if (blockEntity.bootTimer > 0) {
@@ -175,7 +176,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             blockEntity.litDuration = burnDuration;
             fuelStack.shrink(1);
             blockEntity.items.set(SLOT_FUEL, fuelStack);
-            blockEntity.setChanged();
+            hasChanged = true;
         } else {
             int maxBootTimer = VampirismConfig.BALANCE.diffuserBootTime.get() * 20;
             if (blockEntity.bootTimer == 0) {
@@ -189,8 +190,13 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
         boolean shouldBeLit = blockEntity.bootTimer == 0 && blockEntity.litTime > 0;
         if (blockState.getValue(DiffuserBlock.LIT) != shouldBeLit) {
-            level.setBlock(blockPos, blockState.setValue(DiffuserBlock.LIT, shouldBeLit), Block.UPDATE_ALL);
-            blockEntity.setChanged();
+            blockState = blockState.setValue(DiffuserBlock.LIT, shouldBeLit);
+            level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
+            hasChanged = true;
+        }
+
+        if (hasChanged && !level.isClientSide) {
+            setChanged(level, blockPos, blockState);
         }
     }
 
