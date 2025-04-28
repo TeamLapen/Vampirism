@@ -4,13 +4,13 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.blocks.diffuser.DiffuserBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -180,9 +181,16 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             if (blockEntity.bootTimer == 0) {
                 blockEntity.deactivateEffect(level, blockPos, blockState);
                 blockEntity.bootTimer = maxBootTimer;
+
             } else if (blockEntity.bootTimer != maxBootTimer) {
                 blockEntity.bootTimer = maxBootTimer;
             }
+        }
+
+        boolean shouldBeLit = blockEntity.bootTimer == 0 && blockEntity.litTime > 0;
+        if (blockState.getValue(DiffuserBlock.LIT) != shouldBeLit) {
+            level.setBlock(blockPos, blockState.setValue(DiffuserBlock.LIT, shouldBeLit), Block.UPDATE_ALL);
+            blockEntity.setChanged();
         }
     }
 
@@ -192,20 +200,6 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
 
-    }
-
-    public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
-        /*
-        if (blockEntity.bootTimer == 0 && level.getGameTime() % 4 != 0) {
-            for (int i = 0; i < blockEntity.getParticleNumber(level, blockPos, blockState, blockEntity); i++) {
-                double x = blockPos.getX() - 0.15 + level.random.nextDouble() * 1.3;
-                double y = blockPos.getY() + 4 / 16d + level.random.nextDouble() / 3;
-                double z = blockPos.getZ() - 0.15 + level.random.nextDouble() * 1.3;
-
-                level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.02, 0.0);
-            }
-        }
-         */
     }
 
     public int getParticleNumber(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {

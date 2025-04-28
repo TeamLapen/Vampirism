@@ -5,7 +5,9 @@ import de.teamlapen.vampirism.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -32,6 +36,7 @@ import java.util.function.Supplier;
 public abstract class DiffuserBlock extends VampirismBlockContainer {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     private static final VoxelShape SHAPE = Shapes.or(Block.box(1, 0, 1, 15, 2, 15), Block.box(3, 2, 3, 13, 12, 13));
 
@@ -40,8 +45,11 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     public DiffuserBlock(Properties properties, Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType) {
         super(properties);
         this.blockEntityType = blockEntityType;
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
+
+    @Override
+    protected abstract MapCodec<? extends DiffuserBlock> codec();
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
@@ -56,7 +64,19 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected abstract MapCodec<? extends DiffuserBlock> codec();
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        getBlockEntity(level, pos).ifPresent(blockEntity -> {
+            if (state.getValue(LIT)) {
+                for (int i = 0; i < blockEntity.getParticleNumber(level, pos, state, blockEntity); i++) {
+                    double x = pos.getX() - 0.15 + level.random.nextDouble() * 1.3;
+                    double y = pos.getY() + 4 / 16d + level.random.nextDouble() / 3;
+                    double z = pos.getZ() - 0.15 + level.random.nextDouble() * 1.3;
+
+                    level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.02, 0.0);
+                }
+            }
+        });
+    }
 
     @Nullable
     @Override
@@ -90,7 +110,7 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, LIT);
     }
 
     @Override
@@ -134,6 +154,6 @@ public abstract class DiffuserBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, this.blockEntityType.get(), level.isClientSide ? DiffuserBlockEntity::clientTick : DiffuserBlockEntity::serverTick);
+        return createTickerHelper(blockEntityType, this.blockEntityType.get(), DiffuserBlockEntity::serverTick);
     }
 }
