@@ -14,5 +14,5 @@ public interface HolyWaterEffectConsumer {
     /**
      * Called when a block is affected by holy water splash bottle
      */
-    void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier);
+    void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier);
 }

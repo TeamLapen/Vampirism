@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
@@ -16,14 +14,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Garlic Plant
@@ -33,27 +26,24 @@ import org.jetbrains.annotations.NotNull;
  * @author Maxanier
  */
 public class GarlicBlock extends CropBlock {
-    private static final VoxelShape[] shape = makeShape();
 
-    private static VoxelShape @NotNull [] makeShape() {
-        return new VoxelShape[] {
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
-                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
-        };
-    }
+    private static final VoxelShape[] SHAPES = new VoxelShape[] {
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
+    };
 
-    public GarlicBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak().noCollission().isViewBlocking(UtilLib::never).pushReaction(PushReaction.DESTROY).sound(SoundType.CROP));
+    public GarlicBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             if (entity instanceof Player player) {
                 DamageHandler.affectVampireGarlicDirect(VampirePlayer.get(player), EnumStrength.WEAK);
@@ -63,13 +53,11 @@ public class GarlicBlock extends CropBlock {
         }
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return shape[state.getValue(this.getAgeProperty())];
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPES[state.getValue(this.getAgeProperty())];
     }
 
-    @NotNull
     @Override
     protected ItemLike getBaseSeedId() {
         return ModBlocks.GARLIC;

@@ -17,16 +17,19 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
 public class StakeItem extends VampirismSwordItem {
-    public static boolean canKillInstant(@NotNull LivingEntity target, LivingEntity attacker) {
+
+    public StakeItem(Properties properties) {
+        super(ToolMaterial.WOOD, 1, -1, properties.component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
+    }
+
+    public static boolean canKillInstantly(LivingEntity target, LivingEntity attacker) {
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player player && attacker.isAlive()) {
             instaKillLowHealth = FactionPlayerHandler.get(player).getCurrentSkillPlayer().filter(ac -> IFaction.is(ModFactions.HUNTER, ac.getFaction())).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.STAKE1)).orElse(false);
@@ -40,15 +43,11 @@ public class StakeItem extends VampirismSwordItem {
         return false;
     }
 
-    public StakeItem(Item.Properties properties) {
-        super(ToolMaterial.WOOD, 1, -1, properties.component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
-    }
-
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker.getCommandSenderWorld() instanceof ServerLevel level) {
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
-                if (canKillInstant(target, attacker)) {
+                if (canKillInstantly(target, attacker)) {
                     DamageHandler.hurtModded(level, target, sources -> sources.stake(attacker), 10000F);
                     if (attacker instanceof ServerPlayer player) {
                         player.awardStat(ModStats.KILLED_WITH_STAKE.get());
@@ -60,6 +59,7 @@ public class StakeItem extends VampirismSwordItem {
 
             }
         }
+
         return super.hurtEnemy(stack, target, attacker);
     }
 }

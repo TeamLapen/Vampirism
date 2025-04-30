@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.ConsumableListener;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public record BloodFoodProperties(int blood, float saturation, boolean canAlwaysEat) implements ConsumableListener {
 
@@ -44,7 +43,7 @@ public record BloodFoodProperties(int blood, float saturation, boolean canAlways
     );
 
     @Override
-    public void onConsume(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack, @NotNull Consumable consumable) {
+    public void onConsume(Level level, LivingEntity entity, ItemStack stack, Consumable consumable) {
         RandomSource randomsource = entity.getRandom();
         level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), consumable.sound().value(), SoundSource.NEUTRAL, 1.0F, randomsource.triangle(1.0F, 0.4F));
         switch (entity) {

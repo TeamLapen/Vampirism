@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.blocks.candle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -80,5 +82,10 @@ public class ChandelierBlock extends CandleHolderBlock {
     @Override
     public int getLitLightLevel() {
         return 15;
+    }
+
+    @Override
+    public String getDescriptionKey() {
+        return BuiltInRegistries.ITEM.getKey(ModBlocks.CHANDELIER.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

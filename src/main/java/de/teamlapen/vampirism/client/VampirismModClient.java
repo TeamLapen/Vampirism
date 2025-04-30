@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blocks.LogBlock;
 import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
@@ -20,7 +19,7 @@ import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.CoffinSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
-import de.teamlapen.vampirism.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -33,7 +32,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -100,8 +98,8 @@ public class VampirismModClient {
         VampirismMod.proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
         event.enqueueWork(ModBlocksRender::register);
         event.enqueueWork(() -> {
-            Sheets.addWoodType(LogBlock.DARK_SPRUCE);
-            Sheets.addWoodType(LogBlock.CURSED_SPRUCE);
+            Sheets.addWoodType(ModBlocks.WoodTypes.DARK_SPRUCE);
+            Sheets.addWoodType(ModBlocks.WoodTypes.CURSED_SPRUCE);
         });
     }
 

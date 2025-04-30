@@ -12,37 +12,33 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
-public class CursedEarthBlock extends VampirismBlock implements HolyWaterEffectConsumer {
+public class CursedEarthBlock extends Block implements HolyWaterEffectConsumer {
 
-    public CursedEarthBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.TERRACOTTA_BROWN).strength(0.5f, 2.0f).sound(SoundType.GRAVEL));
-
+    public CursedEarthBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public @NotNull InteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         Item heldItem = stack.getItem();
         if (heldItem instanceof HolyWaterBottleItem && !(heldItem instanceof HolyWaterSplashBottleItem)) {
             int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
             if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
                 stack.setCount(stack.getCount() - 1);
             }
-            worldIn.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
+            level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
             return InteractionResult.SUCCESS;
         }
-        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier) {
         level.setBlockAndUpdate(pos, Blocks.DIRT.defaultBlockState());
     }
 }

@@ -13,17 +13,15 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public OilBottleItem(@NotNull Properties properties) {
+    public OilBottleItem(Properties properties) {
         super(properties);
     }
 
-    @NotNull
     @Override
     public ItemStack getDefaultInstance() {
         ItemStack itemStack = new ItemStack(this);
@@ -32,30 +30,28 @@ public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGener
     }
 
     @Override
-    public @NotNull ItemStack withOil(@NotNull Holder<IOil> oil) {
+    public ItemStack withOil(Holder<IOil> oil) {
         return ItemDataUtils.createOil(this, oil);
     }
 
-    @NotNull
     @Override
-    public Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         OilContent oilContents = stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY);
         return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.location().getNamespace() + "." + s.location().getPath()).append(" ")).orElse(Component.empty());
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
-        OilContent.getOil(stack).value().getDescription(stack, context, tooltips);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        OilContent.getOil(stack).value().getDescription(stack, context, tooltipComponents);
     }
 
     @Override
-    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ModRegistries.OILS.listElements().map(l -> ItemDataUtils.createOil(this, l)).forEach(output::accept);
     }
 
-    @NotNull
     @Override
-    public Holder<IOil> getOil(@NotNull ItemStack stack) {
+    public Holder<IOil> getOil(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY).oil();
     }
 }

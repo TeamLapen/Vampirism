@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModStructureTags;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.MapUtil;
 import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
 import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
@@ -411,12 +411,12 @@ public class LootTablesProvider {
             this.dropSelf(ModBlocks.ALTAR_INSPIRATION.get());
             this.add(ModBlocks.ALTAR_PILLAR.get(), createSingleItemTable(ModBlocks.ALTAR_PILLAR.get())
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(ExplosionCondition.survivesExplosion())
-                            .add(LootItem.lootTableItem(Items.STONE_BRICKS).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "stone"))))
-                            .add(LootItem.lootTableItem(Items.IRON_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "iron"))))
-                            .add(LootItem.lootTableItem(Items.GOLD_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "gold"))))
-                            .add(LootItem.lootTableItem(Items.BONE_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.TYPE_PROPERTY, "bone"))))));
+                            .add(LootItem.lootTableItem(Items.STONE_BRICKS).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "stone"))))
+                            .add(LootItem.lootTableItem(Items.IRON_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "iron"))))
+                            .add(LootItem.lootTableItem(Items.GOLD_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "gold"))))
+                            .add(LootItem.lootTableItem(Items.BONE_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "bone"))))));
             this.dropSelf(ModBlocks.ALTAR_TIP.get());
-            CoffinBlock.COFFIN_BLOCKS.values().forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
+            ColorListsUtil.COFFINS.forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
             this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
             this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
             this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
@@ -564,9 +564,9 @@ public class LootTablesProvider {
             this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
             this.dropSelf(ModBlocks.INFUSER.get());
 
-            Helper.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
-            Helper.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));
-            Helper.HANGING_CHANDELIERS.forEach(this::dropSelf);
+            ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
+            ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));
+            ColorListsUtil.HANGING_CHANDELIERS.forEach(this::dropSelf);
         }
 
         @NotNull

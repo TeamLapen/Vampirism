@@ -2,13 +2,11 @@ package de.teamlapen.vampirism.items.component;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.components.ISwordTraining;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.Mth;
 
 import java.util.Collections;
 import java.util.HashMap;

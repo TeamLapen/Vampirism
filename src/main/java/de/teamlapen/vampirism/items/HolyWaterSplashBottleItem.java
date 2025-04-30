@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.ThrowablePotionItem;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,20 +38,20 @@ import java.util.List;
  */
 public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem, ProjectileItem {
 
-    public HolyWaterSplashBottleItem(TIER tier, Item.Properties properties) {
+    public HolyWaterSplashBottleItem(Tier tier, Properties properties) {
         super(tier, properties);
     }
 
     @Override
-    public void onImpact(@NotNull ThrowableItemEntity entity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    public void onImpact(ThrowableItemEntity entity, ItemStack stack, HitResult impact, boolean remote) {
         if (!remote) {
-            impactEntities(entity, stack, result, remote);
-            impactBlocks(entity, stack, result, remote);
+            impactEntities(entity, stack, impact);
+            impactBlocks(entity, stack, impact);
             entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), new PotionContents(Potions.MUNDANE).getColor());
         }
     }
 
-    protected void impactEntities(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    protected void impactEntities(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult impact) {
         AABB impactArea = bottleEntity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list1 = bottleEntity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, impactArea);
         @Nullable Entity thrower = bottleEntity.getOwner();
@@ -63,12 +61,12 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
                 if (thrower instanceof Player source && entity instanceof Player target && !source.canHarmPlayer(target)) {
                     continue;
                 }
-                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), result.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), impact.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
             }
         }
     }
 
-    protected void impactBlocks(@NotNull ThrowableItemEntity bottleEntity, ItemStack stack, @NotNull HitResult result, boolean remote) {
+    protected void impactBlocks(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult impact) {
         Level level = bottleEntity.getCommandSenderWorld();
         if (level.getBiome(bottleEntity.blockPosition()).is(ModBiomeTags.HasFaction.IS_FACTION_BIOME)) {
             return;
@@ -89,26 +87,24 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level level, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
-
-        level.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (player.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (level instanceof ServerLevel serverLevel) {
-            Projectile.spawnProjectileFromRotation(ThrowableItemEntity::new, serverLevel, stack, playerIn, -20, ThrowablePotionItem.PROJECTILE_SHOOT_POWER, 1);
+            Projectile.spawnProjectileFromRotation(ThrowableItemEntity::new, serverLevel, stack, player, -20, ThrowablePotionItem.PROJECTILE_SHOOT_POWER, 1);
         }
 
-        playerIn.awardStat(Stats.ITEM_USED.get(this));
-        stack.consume(1, playerIn);
-        return InteractionResult.SUCCESS;
+        player.awardStat(Stats.ITEM_USED.get(this));
+        stack.consume(1, player);
 
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public Projectile asProjectile(Level pLevel, Position pPos, ItemStack pStack, Direction pDirection) {
-        return new ThrowableItemEntity(pLevel, pPos.x(), pPos.y(), pPos.z(), pStack.copy());
+    public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
+        return new ThrowableItemEntity(level, pos.x(), pos.y(), pos.z(), stack.copy());
     }
 }

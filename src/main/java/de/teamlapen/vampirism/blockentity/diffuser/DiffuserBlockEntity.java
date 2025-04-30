@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.blocks.diffuser.DiffuserBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +72,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
         super(pType, pPos, pBlockState);
     }
 
-    boolean isLit() {
+    public boolean isLit() {
         return this.litTime > 0;
     }
 
@@ -126,9 +128,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     @Override
     public void setItem(int pSlot, @NotNull ItemStack pStack) {
-        ItemStack itemstack = this.items.get(pSlot);
         this.items.set(pSlot, pStack);
-
     }
 
     @Override
@@ -147,15 +147,16 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
         if (!player.isSpectator() && IFaction.is(VampirismAPI.factionRegistry().getFaction(player), faction)) {
+            return true;
+        } else {
             player.displayClientMessage(Component.translatable("text.vampirism.cannot_access_menu", displayName), true);
             player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
             return false;
-        } else {
-            return true;
         }
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        boolean hasChanged = false;
         if (blockEntity.litTime > 0) {
             blockEntity.litTime--;
             if (blockEntity.bootTimer > 0) {
@@ -175,15 +176,27 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             blockEntity.litDuration = burnDuration;
             fuelStack.shrink(1);
             blockEntity.items.set(SLOT_FUEL, fuelStack);
-            blockEntity.setChanged();
+            hasChanged = true;
         } else {
             int maxBootTimer = VampirismConfig.BALANCE.diffuserBootTime.get() * 20;
             if (blockEntity.bootTimer == 0) {
                 blockEntity.deactivateEffect(level, blockPos, blockState);
                 blockEntity.bootTimer = maxBootTimer;
+
             } else if (blockEntity.bootTimer != maxBootTimer) {
                 blockEntity.bootTimer = maxBootTimer;
             }
+        }
+
+        boolean shouldBeLit = blockEntity.bootTimer == 0 && blockEntity.litTime > 0;
+        if (blockState.getValue(DiffuserBlock.LIT) != shouldBeLit) {
+            blockState = blockState.setValue(DiffuserBlock.LIT, shouldBeLit);
+            level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
+            hasChanged = true;
+        }
+
+        if (hasChanged && !level.isClientSide) {
+            setChanged(level, blockPos, blockState);
         }
     }
 
@@ -193,6 +206,10 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
 
+    }
+
+    public int getParticleNumber(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        return 3;
     }
 
     @Override

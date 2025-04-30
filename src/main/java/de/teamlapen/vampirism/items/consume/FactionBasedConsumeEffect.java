@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.items.consume;
 
 import com.google.common.base.Preconditions;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.core.Holder;
@@ -23,20 +21,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public record FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, List<ConsumeEffect> effects) implements ConsumeEffect {
 
-    public static final MapCodec<FactionBasedConsumeEffect> CODEC = MapCodec.assumeMapUnsafe(RecordCodecBuilder.create(inst -> {
-        return inst.group(
-                RegistryCodecs.homogeneousList(VampirismRegistries.Keys.FACTION).fieldOf("faction").forGetter(FactionBasedConsumeEffect::faction),
-                ConsumeEffect.CODEC.listOf().fieldOf("effect").forGetter(FactionBasedConsumeEffect::effects)
-        ).apply(inst, FactionBasedConsumeEffect::new);
-    }));
+    public static final MapCodec<FactionBasedConsumeEffect> CODEC = MapCodec.assumeMapUnsafe(RecordCodecBuilder.create(inst -> 
+            inst.group(
+                    RegistryCodecs.homogeneousList(VampirismRegistries.Keys.FACTION).fieldOf("faction").forGetter(FactionBasedConsumeEffect::faction), 
+                    ConsumeEffect.CODEC.listOf().fieldOf("effect").forGetter(FactionBasedConsumeEffect::effects)
+            ).apply(inst, FactionBasedConsumeEffect::new)));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FactionBasedConsumeEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderSet(VampirismRegistries.Keys.FACTION), FactionBasedConsumeEffect::faction,
@@ -49,12 +44,12 @@ public record FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, List<Con
     }
 
     @Override
-    public @NotNull Type<? extends ConsumeEffect> getType() {
+    public Type<? extends ConsumeEffect> getType() {
         return ModItems.FACTION_BASED.get();
     }
 
     @Override
-    public boolean apply(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
+    public boolean apply(Level level, ItemStack stack, LivingEntity entity) {
         Holder<? extends IFaction<?>> faction1 = VampirismAPI.factionRegistry().getFaction(entity);
         if (IFaction.contains(faction, faction1)) {
            return effects.stream().allMatch(s -> s.apply(level, stack, entity));

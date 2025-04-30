@@ -17,8 +17,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,8 +25,15 @@ import java.util.List;
  */
 public class TentItem extends Item {
 
+    private final boolean spawner;
+
+    public TentItem(boolean spawner, Properties properties) {
+        super(properties);
+        this.spawner = spawner;
+    }
+
     @SuppressWarnings("DuplicateExpressions")
-    public static boolean placeAt(@NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull Direction dir, boolean force, boolean spawner) {
+    public static boolean placeAt(LevelAccessor world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -60,40 +65,32 @@ public class TentItem extends Item {
         return false;
     }
 
-    private static boolean canPlaceAt(@NotNull BlockState state, @NotNull Block block, @NotNull LevelAccessor world, int x, int y, int z) {
+    private static boolean canPlaceAt(BlockState state, Block block, LevelAccessor world, int x, int y, int z) {
         return state.canSurvive(world, new BlockPos(x, y, z));
     }
 
-    private final boolean spawner;
-
-    public TentItem(boolean spawner, Item.Properties properties) {
-        super(properties);
-        this.spawner = spawner;
-    }
-
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipComponents, flagIn);
         if (spawner) {
-            tooltip.add(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useOn(@NotNull UseOnContext ctx) {
-        if (ctx.getClickedFace() != Direction.UP) {
+    public InteractionResult useOn(UseOnContext context) {
+        if (context.getClickedFace() != Direction.UP) {
             return InteractionResult.PASS;
         }
-        if (ctx.getLevel().isClientSide) return InteractionResult.PASS;
+        if (context.getLevel().isClientSide) return InteractionResult.PASS;
 
-        ItemStack stack = ctx.getItemInHand();
-        Player player = ctx.getPlayer();
+        ItemStack stack = context.getItemInHand();
+        Player player = context.getPlayer();
 
-        Direction dir = player == null ? Direction.NORTH : Direction.fromYRot(ctx.getPlayer().getYRot());
-        boolean flag = placeAt(ctx.getLevel(), ctx.getClickedPos().above(), dir, false, false);
+        Direction dir = player == null ? Direction.NORTH : Direction.fromYRot(context.getPlayer().getYRot());
+        boolean flag = placeAt(context.getLevel(), context.getClickedPos().above(), dir, false, false);
         if (flag) {
-            BlockEntity tile = ctx.getLevel().getBlockEntity(ctx.getClickedPos().above());
+            BlockEntity tile = context.getLevel().getBlockEntity(context.getClickedPos().above());
             if (tile instanceof TentBlockEntity) {
                 if (spawner) {
                     ((TentBlockEntity) tile).setSpawn(true);

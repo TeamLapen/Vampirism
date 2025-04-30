@@ -13,36 +13,33 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class VampireFangItem extends Item {
-    public VampireFangItem(Item.Properties properties) {
+    public VampireFangItem(Properties properties) {
         super(properties);
     }
 
-    @NotNull
     @Override
-    public InteractionResult use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
-
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!level.isClientSide) {
             if (VampirismConfig.SERVER.disableFangInfection.get()) {
-                playerIn.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
+                player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
-                if (Helper.canBecomeVampire(playerIn)) {
-                    SanguinareEffect.addRandom(playerIn, true);
-                    playerIn.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
+                if (Helper.canBecomeVampire(player)) {
+                    SanguinareEffect.addRandom(player, true);
+                    player.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
                 } else {
-                    if (Helper.isVampire(playerIn)) {
-                        playerIn.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);
+                    if (Helper.isVampire(player)) {
+                        player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.displayClientMessage(Component.translatable("text.vampirism.immune_to").append(Component.translatable(ModEffects.SANGUINARE.get().getDescriptionId())), true);
+                        player.displayClientMessage(Component.translatable("text.vampirism.immune_to").append(Component.translatable(ModEffects.SANGUINARE.get().getDescriptionId())), true);
                     }
                 }
                 stack.shrink(1);
             }
         }
+
         return InteractionResult.SUCCESS_SERVER;
     }
-
 }

@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.util.FactionCodec;
@@ -20,21 +21,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -49,6 +45,7 @@ import java.util.List;
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
 public class TotemTopBlock extends BaseEntityBlock {
+
     public static final MapCodec<TotemTopBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     Codec.BOOL.fieldOf("crafted").forGetter(TotemTopBlock::isCrafted),
@@ -56,31 +53,30 @@ public class TotemTopBlock extends BaseEntityBlock {
                     propertiesCodec()
             ).apply(inst, TotemTopBlock::new)
     );
+
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(3, 0, 3, 13, 10, 13),
+            Block.box(1, 1, 1, 15, 9, 15)
+    );
+
     private static final List<TotemTopBlock> blocks = new ArrayList<>();
-    private static final VoxelShape shape = makeShape();
 
-    public static @NotNull List<TotemTopBlock> getBlocks() {
+    public static List<TotemTopBlock> getBlocks() {
         return Collections.unmodifiableList(blocks);
-    }
-
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(3, 0, 3, 13, 10, 13);
-        VoxelShape b = Block.box(1, 1, 1, 15, 9, 15);
-        return Shapes.or(a, b);
     }
 
     @Nullable
     public final Holder<? extends IFaction<?>> faction;
     private final boolean crafted;
 
-    public TotemTopBlock(BlockBehaviour.Properties properties, boolean crafted, @Nullable Holder<? extends IFaction<?>> faction) {
-        this(crafted, faction, properties.mapColor(MapColor.STONE).strength(12, 2000).sound(SoundType.STONE).pushReaction(PushReaction.BLOCK));
+    public TotemTopBlock(Properties properties, boolean crafted, @Nullable Holder<? extends IFaction<?>> faction) {
+        this(crafted, faction, properties);
     }
 
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Block.Properties properties) {
+    public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Properties properties) {
         super(properties);
         this.faction = faction;
         this.crafted = crafted;
@@ -88,19 +84,23 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
+    public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
         return false;
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
@@ -109,19 +109,13 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void neighborChanged(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull Orientation orientation, boolean isMoving) {
-        if (worldIn.isClientSide) return;
-        BlockEntity tile = worldIn.getBlockEntity(pos);
-        if (tile instanceof TotemBlockEntity) {
-            ((TotemBlockEntity) tile).updateTileStatus();
-            worldIn.blockEvent(pos, this, 1, 0); //Notify client about render update
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        if (level.isClientSide) return;
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof TotemBlockEntity totemBlockEntity) {
+            totemBlockEntity.updateTileStatus();
+            level.blockEvent(pos, this, 1, 0); //Notify client about render update
         }
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return shape;
     }
 
     public boolean isCrafted() {
@@ -130,41 +124,41 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModTiles.TOTEM.get().create(pos, state);
     }
 
     @Override
-    public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!(newState.getBlock() instanceof TotemTopBlock)) {
-            worldIn.removeBlockEntity(pos);
+            level.removeBlockEntity(pos);
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
-        if (world.isClientSide) return InteractionResult.SUCCESS;
-        TotemBlockEntity t = getTile(world, pos);
-        if (t != null && world.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+
+        TotemBlockEntity blockEntity = getBlockEntity(level, pos);
+        if (blockEntity != null && level.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
             player.awardStat(ModStats.INTERACT_WITH_TOTEM.get());
-            t.initiateCapture(player);
+            blockEntity.initiateCapture(player);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, boolean willHarvest, FluidState fluid) {
-        TotemBlockEntity tile = getTile(world, pos);
-        if (tile != null) {
-            if (!tile.canPlayerRemoveBlock(player)) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        TotemBlockEntity blockEntity = getBlockEntity(level, pos);
+        if (blockEntity != null) {
+            if (!blockEntity.canPlayerRemoveBlock(player)) {
                 return false;
             }
         }
-        if (super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid)) {
-            if (tile != null && tile.getControllingFaction() != null) {
-                tile.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
+        if (super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid)) {
+            if (blockEntity != null && !blockEntity.getControllingFaction().is(ModFactions.NEUTRAL.getId())) {
+                blockEntity.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
             }
             return true;
         } else {
@@ -173,15 +167,13 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    private TotemBlockEntity getTile(@NotNull Level world, @NotNull BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof TotemBlockEntity) return (TotemBlockEntity) tile;
-        return null;
+    private TotemBlockEntity getBlockEntity(Level world, BlockPos pos) {
+        return world.getBlockEntity(pos) instanceof TotemBlockEntity totemBlockEntity ? totemBlockEntity : null;
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.TOTEM.get(), level.isClientSide() ? TotemBlockEntity::clientTick : TotemBlockEntity::serverTick);
     }
 }

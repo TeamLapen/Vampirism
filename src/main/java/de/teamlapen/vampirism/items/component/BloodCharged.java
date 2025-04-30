@@ -3,10 +3,8 @@ package de.teamlapen.vampirism.items.component;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.components.IBloodCharged;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.Range;
 
 public record BloodCharged(float charged) implements IBloodCharged {
 

@@ -38,134 +38,6 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_bottle",
-        "y": 0
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "north"
-          },
-          {
-            "variant": "potion|potion_cauldron|weapon_potion|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_bottle",
-        "y": 90
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "east"
-          },
-          {
-            "variant": "potion|potion_cauldron|weapon_potion|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_bottle",
-        "y": 180
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "south"
-          },
-          {
-            "variant": "potion|potion_cauldron|weapon_potion|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_bottle",
-        "y": 270
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "west"
-          },
-          {
-            "variant": "potion|potion_cauldron|weapon_potion|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_garlic",
-        "y": 0
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "north"
-          },
-          {
-            "variant": "cauldron|potion_cauldron|weapon_cauldron|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_garlic",
-        "y": 90
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "east"
-          },
-          {
-            "variant": "cauldron|potion_cauldron|weapon_cauldron|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_garlic",
-        "y": 180
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "south"
-          },
-          {
-            "variant": "cauldron|potion_cauldron|weapon_cauldron|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/hunter_table/hunter_table_garlic",
-        "y": 270
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "west"
-          },
-          {
-            "variant": "cauldron|potion_cauldron|weapon_cauldron|complete"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
         "model": "vampirism:block/hunter_table/hunter_table_hammer",
         "y": 0
       },
@@ -175,7 +47,7 @@
             "facing": "north"
           },
           {
-            "variant": "weapon|weapon_potion|weapon_cauldron|complete"
+            "weapon_table": "true"
           }
         ]
       }
@@ -191,7 +63,7 @@
             "facing": "east"
           },
           {
-            "variant": "weapon|weapon_potion|weapon_cauldron|complete"
+            "weapon_table": "true"
           }
         ]
       }
@@ -207,7 +79,7 @@
             "facing": "south"
           },
           {
-            "variant": "weapon|weapon_potion|weapon_cauldron|complete"
+            "weapon_table": "true"
           }
         ]
       }
@@ -223,7 +95,135 @@
             "facing": "west"
           },
           {
-            "variant": "weapon|weapon_potion|weapon_cauldron|complete"
+            "weapon_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 0
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "north"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "east"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "south"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "west"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 0
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "north"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "east"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "south"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "west"
+          },
+          {
+            "potion_table": "true"
           }
         ]
       }

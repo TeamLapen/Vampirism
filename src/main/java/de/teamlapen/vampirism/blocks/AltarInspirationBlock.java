@@ -26,59 +26,48 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
  */
 public class AltarInspirationBlock extends VampirismBlockContainer {
+
     public static final MapCodec<AltarInspirationBlock> CODEC = simpleCodec(AltarInspirationBlock::new);
-    protected static final VoxelShape altarShape = makeShape();
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0.25, 0, 0.25, 0.75, 0.0625, 0.75), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.75, 0, 0.1875, 0.875, 0.75, 0.8125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.125, 0.86875, 0.75, 0.25), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.13125, 0, 0.75, 0.86875, 0.75, 0.875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.1875, 0.25, 0.75, 0.8125), BooleanOp.OR);
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(4, 0, 4, 12, 1, 12),
+            Block.box(12, 0, 4, 14, 12, 12),
+            Block.box(2.1, 0, 2, 13.9, 12, 4),
+            Block.box(2.1, 0, 12, 13.9, 12, 14),
+            Block.box(2, 0, 4, 4, 12, 12)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-        return shape;
-    }
-
-    public AltarInspirationBlock(Block.Properties properties) {
+    public AltarInspirationBlock(Properties properties) {
         super(properties);
     }
 
+    @Nullable
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @NotNull
-    @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
-        return RenderShape.MODEL;
-    }
-
-
-    @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AltarInspirationBlockEntity(pos, state);
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return altarShape;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!stack.isEmpty()) {
             Optional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
@@ -103,7 +92,12 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type, ModTiles.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 }

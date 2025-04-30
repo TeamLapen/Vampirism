@@ -8,7 +8,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class PureLevelBlockItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).level() + 1).withStyle(ChatFormatting.DARK_RED));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }

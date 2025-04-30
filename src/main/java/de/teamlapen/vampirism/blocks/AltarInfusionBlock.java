@@ -19,88 +19,59 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 /**
  * Altar of infusion
  */
 public class AltarInfusionBlock extends VampirismBlockContainer {
-    protected static final VoxelShape altarBase = makeShape();
-
-    private static @NotNull VoxelShape makeShape() {
-        //base
-        VoxelShape a = Block.box(5, 0, 5, 11, 4, 11);
-        VoxelShape b = Block.box(2, 4, 2, 14, 5, 14);
-        VoxelShape c = Block.box(1, 5, 1, 15, 6, 15);
-        //side
-        VoxelShape d1 = Block.box(1, 6, 1, 3, 7, 15);
-        VoxelShape d2 = Block.box(1, 6, 1, 15, 7, 3);
-        VoxelShape d3 = Block.box(15, 6, 3, 15, 7, 15);
-        VoxelShape d4 = Block.box(3, 6, 15, 15, 7, 15);
-        //pillar
-        VoxelShape e1 = Block.box(1, 6, 1, 3, 12, 3);
-        VoxelShape e2 = Block.box(13, 6, 1, 15, 12, 3);
-        VoxelShape e3 = Block.box(13, 6, 13, 15, 12, 15);
-        VoxelShape e4 = Block.box(1, 6, 13, 3, 12, 15);
-        //pillar top
-        VoxelShape f1 = Block.box(1, 12, 1, 2, 13, 2);
-        VoxelShape f2 = Block.box(14, 12, 1, 15, 13, 2);
-        VoxelShape f3 = Block.box(1, 12, 14, 2, 13, 15);
-        VoxelShape f4 = Block.box(14, 12, 14, 15, 13, 15);
-        //middle base
-        VoxelShape g = Block.box(5, 6, 5, 11, 7, 11);
-        //blood
-        VoxelShape h1 = Block.box(5, 9, 5, 11, 11, 11);
-        VoxelShape h2 = Block.box(7, 7, 7, 9, 13, 9);
-        VoxelShape h3 = Block.box(6, 8, 6, 10, 12, 10);
-
-        return Shapes.or(a, b, c, d1, d2, d3, d4, e1, e2, e3, e4, f1, f2, f3, f4, g, h1, h2, h3);
-    }
 
     public static final MapCodec<AltarInfusionBlock> CODEC = simpleCodec(AltarInfusionBlock::new);
 
-    public AltarInfusionBlock(BlockBehaviour.Properties properties) {
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(5, 0, 5, 11, 4, 11),
+            Block.box(1, 4, 1, 15, 7, 15),
+            Block.box(5, 7, 5, 11, 13, 11),
+            Block.box(1, 7, 13, 3, 13, 15),
+            Block.box(1, 7, 1, 3, 13, 3),
+            Block.box(13, 7, 1, 15, 13, 3),
+            Block.box(13, 7, 13, 15, 13, 15)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+    public AltarInfusionBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @NotNull
-    @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
-        return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AltarInfusionBlockEntity(pos, state);
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return altarBase;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
-
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(BlockState blockState, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-        AltarInfusionBlockEntity te = (AltarInfusionBlockEntity) worldIn.getBlockEntity(pos);
+        AltarInfusionBlockEntity te = (AltarInfusionBlockEntity) level.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
-        if (worldIn.isClientSide || te == null) return InteractionResult.SUCCESS;
+        if (level.isClientSide || te == null) return InteractionResult.SUCCESS;
         if (!Helper.isVampire(player)) {
             player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
             return InteractionResult.SUCCESS;
@@ -141,13 +112,18 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, @NotNull Level worldIn, BlockPos pos) {
-        dropInventoryTileEntityItems(worldIn, pos);
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
+        dropInventoryTileEntityItems(level, pos);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.ALTAR_INFUSION.get(), AltarInfusionBlockEntity::tick);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 }

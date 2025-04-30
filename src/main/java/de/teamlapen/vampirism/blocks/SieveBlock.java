@@ -12,23 +12,23 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SieveBlock extends VampirismBlockContainer {
 
     public static final MapCodec<SieveBlock> CODEC = simpleCodec(SieveBlock::new);
-    public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
-    protected static final VoxelShape sieveShape = makeShape();
 
-    private static @NotNull VoxelShape makeShape() {
+    public static final BooleanProperty PROPERTY_ACTIVE = BooleanProperty.create("active");
+
+    protected static final VoxelShape SHAPE = makeShape();
+
+    private static VoxelShape makeShape() {
         VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
         VoxelShape c = Block.box(5, 2, 5, 11, 12, 11);
@@ -39,42 +39,40 @@ public class SieveBlock extends VampirismBlockContainer {
         return Shapes.or(a, b, c, d, e, f);
     }
 
-    public SieveBlock(BlockBehaviour.Properties properties) {
+    public SieveBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(PROPERTY_ACTIVE, false));
     }
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
+        return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SieveBlockEntity(pos, state);
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return sieveShape;
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PROPERTY_ACTIVE);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null : createTickerHelper(type, ModTiles.SIEVE.get(), SieveBlockEntity::tick);
     }
 }

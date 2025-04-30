@@ -18,77 +18,64 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class PedestalBlock extends VampirismBlockContainer {
+
     public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
-    private static final VoxelShape pedestalShape = makeShape();
 
-    private static void takeItemPlayer(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack stack) {
-        player.setItemInHand(hand, stack);
-        if (stack.getItem() instanceof VampireSwordItem) {
-            if (((VampireSwordItem) stack.getItem()).isFullyCharged(stack)) {
-                ((VampireSwordItem) stack.getItem()).tryName(stack, player);
-            }
-        }
-    }
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(1, 0, 1, 15, 2, 15),
+            Block.box(6, 2, 6, 10, 8, 10),
+            Block.box(3, 8, 3, 13, 9, 13)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(1, 0, 1, 15, 1, 15);
-        VoxelShape b = Block.box(2, 1, 2, 14, 2, 14);
-        VoxelShape c = Block.box(5, 2, 5, 11, 3, 11);
-        VoxelShape d = Block.box(6, 3, 6, 10, 7, 10);
-        VoxelShape e = Block.box(5, 7, 5, 11, 8, 11);
-        VoxelShape f = Block.box(3, 8, 3, 13, 9, 13);
-        VoxelShape g1 = Block.box(4, 9, 4, 5, 11, 5);
-        VoxelShape g2 = Block.box(11, 9, 4, 12, 11, 5);
-        VoxelShape g3 = Block.box(4, 9, 11, 5, 11, 12);
-        VoxelShape g4 = Block.box(11, 9, 11, 12, 11, 12);
-
-        return Shapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
-    }
-
-    public PedestalBlock(BlockBehaviour.Properties properties) {
+    public PedestalBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
-
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PedestalBlockEntity(pos, state);
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return pedestalShape;
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
+    private static void takeItemPlayer(Player player, InteractionHand hand, ItemStack stack) {
+        player.setItemInHand(hand, stack);
+        if (stack.getItem() instanceof VampireSwordItem vampireSwordItem) {
+            if (vampireSwordItem.isFullyCharged(stack)) {
+                vampireSwordItem.tryName(stack, player);
+            }
+        }
+    }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        return getTile(world, pos).filter(s -> player.getMainHandItem().isEmpty()).map(pedestal -> {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return getTile(level, pos).filter(s -> player.getMainHandItem().isEmpty()).map(pedestal -> {
             ItemStack stack2 = pedestal.extractItem(0, 1, false);
             player.awardStat(ModStats.ITEMS_FILLED_ON_BLOOD_PEDESTAL.get());
             takeItemPlayer(player, InteractionHand.MAIN_HAND, stack2);
@@ -97,8 +84,8 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return getTile(world, pos).filter(s -> !s.hasStack()).map(pedestal -> {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return getTile(level, pos).filter(s -> !s.hasStack()).map(pedestal -> {
             ItemStack stack2 = ItemStack.EMPTY;
             if (!pedestal.extractItem(0, 1, true).isEmpty()) {
                 stack2 = pedestal.extractItem(0, 1, false);
@@ -113,45 +100,44 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
-        PedestalBlockEntity tile = getTileEntity(worldIn, pos);
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
+        PedestalBlockEntity tile = getTileEntity(level, pos);
         if (tile != null && tile.hasStack()) {
-            dropItem(worldIn, pos, tile.removeStack());
+            dropItem(level, pos, tile.removeStack());
         }
     }
 
     @Nullable
-    private PedestalBlockEntity getTileEntity(@NotNull BlockGetter world, @NotNull BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PedestalBlockEntity) {
-            return (PedestalBlockEntity) tile;
+    private PedestalBlockEntity getTileEntity(BlockGetter level, BlockPos pos) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof PedestalBlockEntity pedestalBlockEntity) {
+            return pedestalBlockEntity;
         }
         return null;
     }
 
-    @NotNull
-    private Optional<PedestalBlockEntity> getTile(@NotNull BlockGetter world, @NotNull BlockPos pos) {
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PedestalBlockEntity) {
-            return Optional.of((PedestalBlockEntity) tile);
+    private Optional<PedestalBlockEntity> getTile(BlockGetter level, BlockPos pos) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof PedestalBlockEntity pedestalBlockEntity) {
+            return Optional.of(pedestalBlockEntity);
         }
         return Optional.empty();
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.BLOOD_PEDESTAL.get(), level.isClientSide() ? PedestalBlockEntity::clientTick : PedestalBlockEntity::serverTick);
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
-        var tile = getTileEntity(pLevel, pPos);
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        PedestalBlockEntity tile = getTileEntity(level, pos);
         if (tile != null) {
             return tile.getChargedProgress();
         }

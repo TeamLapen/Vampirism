@@ -362,7 +362,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
             while ((temp = level.getBlockState(pPos.offset(0, -j - 1, 0))).getBlock().equals(ModBlocks.ALTAR_PILLAR.get())) {
-                AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.TYPE_PROPERTY);
+                AltarPillarBlock.EnumPillarType t = temp.getValue(AltarPillarBlock.PILLAR_TYPE);
                 if (type == null) {
                     type = t;
                     j++;

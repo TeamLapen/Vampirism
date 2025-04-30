@@ -19,16 +19,22 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VampireSoulLanternBlock extends LanternBlock {
 
     public static final EnumProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 2.0D, 11.0D), Block.box(5.0D, 5.0D, 5.0D, 11.0D, 7.0D, 11.0D), Block.box(6.0D, 2.0D, 6.0D, 10.0D, 8.0D, 10.0D));
-    private static final VoxelShape SHAPE_HANGING = Shapes.or(Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D), Block.box(5.0D, 7.0D, 5.0D, 11.0D, 9.0D, 11.0D), Block.box(6.0D, 4.0D, 6.0D, 10.0D, 10.0D, 10.0D));
+    private static final VoxelShape SHAPE = Shapes.or(
+            Block.box(5.0D, 0.0D, 5.0D, 11.0D, 2.0D, 11.0D),
+            Block.box(5.0D, 5.0D, 5.0D, 11.0D, 7.0D, 11.0D),
+            Block.box(6.0D, 2.0D, 6.0D, 10.0D, 8.0D, 10.0D)
+    );
+    private static final VoxelShape SHAPE_HANGING = Shapes.or(
+            Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D),
+            Block.box(5.0D, 7.0D, 5.0D, 11.0D, 9.0D, 11.0D),
+            Block.box(6.0D, 4.0D, 6.0D, 10.0D, 10.0D, 10.0D)
+    );
 
     public VampireSoulLanternBlock(Properties properties) {
         super(properties);
@@ -37,13 +43,13 @@ public class VampireSoulLanternBlock extends LanternBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
 
-        for(Direction direction : pContext.getNearestLookingDirections()) {
+        for(Direction direction : context.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
-                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP).setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection());
-                if (blockstate.canSurvive(pContext.getLevel(), pContext.getClickedPos())) {
+                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP).setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
+                if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
                     return blockstate.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
                 }
             }
@@ -53,7 +59,7 @@ public class VampireSoulLanternBlock extends LanternBlock {
     }
 
     @Override
-    protected @NotNull BlockState updateShape(BlockState state, @NotNull LevelReader level, @NotNull ScheduledTickAccess scheduledTickAccess, @NotNull BlockPos pos, @NotNull Direction direction, @NotNull BlockPos neighborPos, @NotNull BlockState neighborState, @NotNull RandomSource random) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -62,13 +68,13 @@ public class VampireSoulLanternBlock extends LanternBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(HORIZONTAL_FACING);
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState pState, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(BlockState pState, BlockGetter level, BlockPos pos, CollisionContext context) {
         return pState.getValue(HANGING) ? SHAPE_HANGING : SHAPE;
     }
 }

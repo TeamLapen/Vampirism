@@ -99,10 +99,7 @@ public class HunterTableMenu extends ItemCombinerMenu {
     }
 
     public boolean doesTableFulfillRequirement(HunterLeveling.HunterTableRequirement req) {
-        return req.requiredTableTier() <= this.access.evaluate((level, pos) -> {
-            var state = level.getBlockState(pos);
-            return state.hasProperty(HunterTableBlock.VARIANT) ? state.getValue(HunterTableBlock.VARIANT).tier : 0;
-        }, 0);
+        return req.requiredTableTier() <= this.access.evaluate((level, pos) -> HunterTableBlock.getVariantValue(level.getBlockState(pos)), 0);
     }
 
     public static class Factory implements IContainerFactory<HunterTableMenu> {

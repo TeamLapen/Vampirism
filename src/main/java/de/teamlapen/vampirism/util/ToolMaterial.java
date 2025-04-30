@@ -12,14 +12,14 @@ public class ToolMaterial {
 
     public static class Tiered extends SimpleTier {
 
-        private final IItemWithTier.TIER tier;
+        private final IItemWithTier.Tier tier;
 
-        public Tiered(IItemWithTier.TIER tier, TagKey<Block> incorrect, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
+        public Tiered(IItemWithTier.Tier tier, TagKey<Block> incorrect, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
             super(incorrect, uses, speed, damage, enchantmentValue, repairIngredient);
             this.tier = tier;
         }
 
-        public IItemWithTier.TIER getTier() {
+        public IItemWithTier.Tier getTier() {
             return tier;
         }
     }

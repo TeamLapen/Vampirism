@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.tags.ModPoiTypeTags;
 import de.teamlapen.vampirism.core.tags.ModStructureTags;
 import de.teamlapen.vampirism.entity.villager.VampirismTrades;
+import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.MapUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.schedule.ScheduleBuilder;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -87,25 +87,8 @@ public class ModVillage {
                 new VillagerTrades.ItemListing[]{
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), 1, 2, 5),
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 25), ModItems.BLOOD_INFUSED_IRON_INGOT.get(), new VampirismTrades.Price(1, 3), 8, 5),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), Helper.itemListToItemStacks(Helper.VAMPIRE_CLOAKS), 1, 4, 5),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(3, 10), new ItemStack[]{
-                                new ItemStack(ModBlocks.COFFIN_WHITE.get()),
-                                new ItemStack(ModBlocks.COFFIN_ORANGE.get()),
-                                new ItemStack(ModBlocks.COFFIN_MAGENTA.get()),
-                                new ItemStack(ModBlocks.COFFIN_LIGHT_BLUE.get()),
-                                new ItemStack(ModBlocks.COFFIN_YELLOW.get()),
-                                new ItemStack(ModBlocks.COFFIN_LIME.get()),
-                                new ItemStack(ModBlocks.COFFIN_PINK.get()),
-                                new ItemStack(ModBlocks.COFFIN_GRAY.get()),
-                                new ItemStack(ModBlocks.COFFIN_LIGHT_GRAY.get()),
-                                new ItemStack(ModBlocks.COFFIN_CYAN.get()),
-                                new ItemStack(ModBlocks.COFFIN_PURPLE.get()),
-                                new ItemStack(ModBlocks.COFFIN_BLUE.get()),
-                                new ItemStack(ModBlocks.COFFIN_BROWN.get()),
-                                new ItemStack(ModBlocks.COFFIN_GREEN.get()),
-                                new ItemStack(ModBlocks.COFFIN_RED.get()),
-                                new ItemStack(ModBlocks.COFFIN_BLACK.get())
-                        }, 1, 4, 5)
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(5, 20), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS), 1, 4, 5),
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(3, 15), ColorListsUtil.itemListToItemStacks(ColorListsUtil.COFFINS.stream().map(Block::asItem).toList()), 1, 4, 5),
                 },
                 3,
                 new VillagerTrades.ItemListing[]{
@@ -115,7 +98,7 @@ public class ModVillage {
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_SEEKER_ENHANCED.get(), 1, 1, 10),
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_STRIKER_ENHANCED.get(), 1, 1, 10)
                         }),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), Helper.itemListToItemStacks(Helper.VAMPIRE_CLOAKS), 1, 4, 10)
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS), 1, 4, 10)
                 },
                 4,
                 new VillagerTrades.ItemListing[]{

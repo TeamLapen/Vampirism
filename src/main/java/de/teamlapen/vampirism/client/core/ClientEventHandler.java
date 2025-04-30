@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
@@ -15,7 +16,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -26,6 +29,8 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Handle general client side events
@@ -48,11 +53,23 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onToolTip(@NotNull ItemTooltipEvent event) {
-        if (VampirismPotion.isHunterPotion(event.getItemStack(), true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (event.getEntity() == null || !Helper.isHunter(event.getEntity()))) {
-            event.getToolTip().add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
+    public void onItemToolTip(@NotNull ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        List<Component> tooltip = event.getToolTip();
+        Player player = event.getEntity();
+
+        AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
+        FactionRestriction.addTooltipIfExist(player, stack, tooltip);
+
+        if (VampirismPotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
+            tooltip.add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
 
+        if (stack.is(ModItemTags.NO_SPAWN)) {
+            tooltip.add(Component.translatable("block.vampirism.castle_block.no_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+        } else if (stack.is(ModItemTags.VAMPIRE_SPAWN)) {
+            tooltip.add(Component.translatable("block.vampirism.castle_block.vampire_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+        }
     }
 
     @SubscribeEvent
@@ -66,15 +83,6 @@ public class ClientEventHandler {
             event.register(VResourceLocation.mod("block/coffin/coffin_top_" + dye.getName()));
             event.register(VResourceLocation.mod("block/coffin/coffin_" + dye.getName()));
         }
-    }
-
-    /**
-     * This event will handle all items except {@link de.teamlapen.vampirism.api.items.IFactionLevelItem}s. Their oil
-     */
-    @SubscribeEvent
-    public void onItemToolTip(@NotNull ItemTooltipEvent event) {
-        AppliedOilContent.addTooltipIfExist(event.getEntity(), event.getItemStack(), event.getToolTip(), event.getFlags());
-        FactionRestriction.addTooltipIfExist(event.getEntity(), event.getItemStack(), event.getToolTip());
     }
 
     @SubscribeEvent
