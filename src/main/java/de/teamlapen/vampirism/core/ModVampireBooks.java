@@ -48,6 +48,7 @@ public class ModVampireBooks {
 
     public static final ResourceKey<IVampireBook> SINISTER_INTENTIONS = createKey("sinister_intentions");
     public static final ResourceKey<IVampireBook> VALOROUS_TALE = createKey("valorous_tale");
+    public static final ResourceKey<IVampireBook> ASHES_OF_PAST_DAWNS = createKey("ashes_of_past_dawns");
     public static final ResourceKey<IVampireBook> PYROMANIACS_DIARY = createKey("pyromaniacs_diary");
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
@@ -69,6 +70,7 @@ public class ModVampireBooks {
 
         register(context, builder(SINISTER_INTENTIONS).author("Sinister Solace"));
         register(context, builder(VALOROUS_TALE));
+        register(context, builder(ASHES_OF_PAST_DAWNS).customAuthor());
         register(context, builder(PYROMANIACS_DIARY).author("Pyromaniac Pik"));
     }
 
