@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookBackground;
+import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -40,6 +41,7 @@ public class VampireBookScreen extends Screen {
 
     private final @NotNull IVampireBook vampireBook;
     private final IBookBackground background;
+    private final List<IBookContents.IImageEntry> images;
     private List<FormattedText> content;
     private int pageNumber;
 
@@ -47,6 +49,7 @@ public class VampireBookScreen extends Screen {
         super(vampireBook.title());
         this.vampireBook = vampireBook;
         this.background = vampireBook.background();
+        this.images = vampireBook.images();
         this.xSize = background.textureWidth();
         this.ySize = background.textureHeight();
     }
@@ -143,6 +146,12 @@ public class VampireBookScreen extends Screen {
         }
 
         guiGraphics.blit(RenderType::guiTextured, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+
+        for (IBookContents.IImageEntry entry : images) {
+            if (entry.page() == pageNumber || (background.twoPages() && (entry.page() == pageNumber + 1))) {
+                guiGraphics.blit(RenderType::guiTextured, entry.texture(), guiLeft + entry.x(), guiTop + entry.y(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
+            }
+        }
     }
 
     @Override

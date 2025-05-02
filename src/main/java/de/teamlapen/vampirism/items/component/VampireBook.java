@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookBackground;
+import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModVampireBooks;
@@ -60,7 +61,6 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
         return registryAccess.lookupOrThrow(VampirismRegistries.Keys.VAMPIRE_BOOK).wrapAsHolder(this).is(tag);
     }
 
-    @Override
     public boolean isEmpty() {
         return this == VampireBook.EMPTY;
     }
@@ -85,8 +85,16 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
         return Component.translatable("vampire_book." + id().toLanguageKey());
     }
 
+    public IBookContents bookContents() {
+        return VampireBookLoader.loadBookContents(this);
+    }
+
     public List<MutableComponent> contents() {
-        return VampireBookLoader.loadBookContents(this).stream().map(Component::literal).toList();
+        return bookContents().contents().stream().map(Component::literal).toList();
+    }
+
+    public List<IBookContents.IImageEntry> images() {
+        return bookContents().images();
     }
 
     public IBookBackground background() {
@@ -120,10 +128,6 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
         public Builder background(ResourceLocation backgroundTexture) {
             this.backgroundTexture = backgroundTexture;
             return this;
-        }
-
-        public Builder letter() {
-            return background(ModVampireBooks.LETTER_BACKGROUND_ID);
         }
 
         public VampireBook build() {

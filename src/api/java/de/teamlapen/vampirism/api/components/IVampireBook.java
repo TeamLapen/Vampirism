@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.components;
 
 import de.teamlapen.vampirism.api.general.IBookBackground;
+import de.teamlapen.vampirism.api.general.IBookContents;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,7 +24,11 @@ public interface IVampireBook {
 
     MutableComponent title();
 
+    IBookContents bookContents();
+
     List<MutableComponent> contents();
+
+    List<IBookContents.IImageEntry> images();
 
     IBookBackground background();
 }

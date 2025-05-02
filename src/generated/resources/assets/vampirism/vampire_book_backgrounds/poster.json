@@ -1,0 +1,14 @@
+{
+  "leftPageTextX": 15,
+  "pageButtonXOffset": 10,
+  "pageButtonYOffset": 5,
+  "pageNumberXOffset": 88,
+  "pageNumberYOffset": 15,
+  "textHeight": 160,
+  "textWidth": 154,
+  "textY": 12,
+  "texture": "vampirism:textures/gui/vampire_books/poster.png",
+  "textureHeight": 200,
+  "textureWidth": 177,
+  "twoPages": false
+}

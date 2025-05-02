@@ -17,5 +17,6 @@ public class BookBackgroundsProvider extends de.teamlapen.vampirism.data.provide
     protected void registerBackgrounds(BiConsumer<ResourceLocation, BookBackground> output) {
         output.accept(ModVampireBooks.DIARY_BACKGROUND_ID, ModVampireBooks.DIARY_BACKGROUND);
         output.accept(ModVampireBooks.LETTER_BACKGROUND_ID, ModVampireBooks.LETTER_BACKGROUND);
+        output.accept(ModVampireBooks.POSTER_BACKGROUND_ID, ModVampireBooks.POSTER_BACKGROUND);
     }
 }

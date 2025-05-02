@@ -29,6 +29,14 @@ public class ModVampireBooks {
             .pageNumberXOffset(88).pageNumberYOffset(15).pageButtonXOffset(10).pageButtonYOffset(5)
             .build();
 
+    public static final ResourceLocation POSTER_BACKGROUND_ID = VResourceLocation.mod("poster");
+    public static final BookBackground POSTER_BACKGROUND = BookBackground
+            .builder(VResourceLocation.mod("textures/gui/vampire_books/poster.png"), 177, 200)
+            .twoPages(false)
+            .textWidth(154).textHeight(160).leftPageTextX(15).textY(12)
+            .pageNumberXOffset(88).pageNumberYOffset(15).pageButtonXOffset(10).pageButtonYOffset(5)
+            .build();
+
     // Vampire Books
     public static final ResourceKey<IVampireBook> MAIDS_DIARY = createKey("maids_diary");
     public static final ResourceKey<IVampireBook> MY_MOTHER = createKey("my_mother");
@@ -53,19 +61,19 @@ public class ModVampireBooks {
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
         register(context, builder(MAIDS_DIARY));
-        register(context, builder(MY_MOTHER).letter());
+        register(context, builder(MY_MOTHER).background(LETTER_BACKGROUND_ID));
         register(context, builder(MAD_MANS_JOURNAL).customAuthor());
         register(context, builder(MY_PRINCE));
-        register(context, builder(DEAR_MARTHA).letter());
+        register(context, builder(DEAR_MARTHA).background(LETTER_BACKGROUND_ID));
         register(context, builder(NOCTURNAL).customAuthor());
 
         register(context, builder(HUNTERS_DIARY));
         register(context, builder(ROYAL_RIVALRY).customAuthor());
         register(context, builder(CENTURY_OF_EVOLUTION).author("Matheo"));
         register(context, builder(OBSERVATION_ON_VAMPIRES));
-        register(context, builder(INFUSION_BREAKTHROUGH).customAuthor().letter());
+        register(context, builder(INFUSION_BREAKTHROUGH).customAuthor().background(LETTER_BACKGROUND_ID));
         register(context, builder(CASE_STUDY_ONE));
-        register(context, builder(WANTED).author("Kae din Saarin").letter());
+        register(context, builder(WANTED).author("Kae din Saarin").background(POSTER_BACKGROUND_ID));
         register(context, builder(CASE_FILE_144).customAuthor());
 
         register(context, builder(SINISTER_INTENTIONS).author("Sinister Solace"));
