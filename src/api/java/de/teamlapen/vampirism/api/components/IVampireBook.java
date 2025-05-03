@@ -16,8 +16,6 @@ public interface IVampireBook {
 
     Component author();
 
-    ResourceLocation backgroundId();
-
     boolean is(TagKey<IVampireBook> tag, RegistryAccess registryAccess);
 
     boolean isEmpty();
@@ -28,7 +26,7 @@ public interface IVampireBook {
 
     List<MutableComponent> contents();
 
-    List<IBookContents.IImageEntry> images();
-
     IBookBackground background();
+
+    List<IBookContents.IImageEntry> images();
 }

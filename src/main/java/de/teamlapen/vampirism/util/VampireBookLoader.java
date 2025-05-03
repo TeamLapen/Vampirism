@@ -39,6 +39,8 @@ public class VampireBookLoader {
 
         List<String> resultContents = !localizedContents.contents().isEmpty() ? localizedContents.contents() : defaultContents.contents();
 
+        ResourceLocation background = localizedContents.background() != null ? localizedContents.background() : (defaultContents.background() != null ? defaultContents.background() : ModVampireBooks.DIARY_BACKGROUND_ID);
+
         Map<Integer, IBookContents.IImageEntry> resultImages = new LinkedHashMap<>();
         for (IBookContents.IImageEntry entry : defaultContents.images()) {
             resultImages.put(entry.id(), entry);
@@ -47,7 +49,11 @@ public class VampireBookLoader {
             resultImages.put(entry.id(), entry);
         }
 
-        return new BookContents(resultContents.isEmpty() ? List.of("§4Failed to load the contents file: " + localizedPath + "§r") : resultContents, new ArrayList<>(resultImages.values()));
+        if (resultContents.isEmpty()) {
+            resultContents = List.of("§4Failed to load the contents file: " + localizedPath + "§r");
+        }
+
+        return new BookContents(resultContents, background, new ArrayList<>(resultImages.values()));
     }
 
     private static String getContentsFilePath(IVampireBook vampireBook, String languageCode) {

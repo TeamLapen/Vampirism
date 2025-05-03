@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.general.IBookBackground;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModDataComponents;
-import de.teamlapen.vampirism.core.ModVampireBooks;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.util.VampireBookLoader;
 import net.minecraft.core.Registry;
@@ -29,23 +28,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record VampireBook(ResourceLocation id, Component author, ResourceLocation backgroundId) implements IVampireBook {
+public record VampireBook(ResourceLocation id, Component author) implements IVampireBook {
 
     public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
 
-    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR, ModVampireBooks.DIARY_BACKGROUND_ID);
+    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(IVampireBook::id),
-            ComponentSerialization.CODEC.optionalFieldOf("author", UNKNOWN_AUTHOR).forGetter(IVampireBook::author),
-            ResourceLocation.CODEC.optionalFieldOf("backgroundId", ModVampireBooks.DIARY_BACKGROUND_ID).forGetter(IVampireBook::backgroundId)
+            ComponentSerialization.CODEC.optionalFieldOf("author", UNKNOWN_AUTHOR).forGetter(IVampireBook::author)
             ).apply(instance, VampireBook::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, IVampireBook> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, IVampireBook::id,
             ComponentSerialization.STREAM_CODEC, IVampireBook::author,
-            ResourceLocation.STREAM_CODEC, IVampireBook::backgroundId,
             VampireBook::new
     );
 
@@ -93,12 +90,12 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
         return bookContents().contents().stream().map(Component::literal).toList();
     }
 
-    public List<IBookContents.IImageEntry> images() {
-        return bookContents().images();
+    public IBookBackground background() {
+        return VampireBookLoader.loadBackground(bookContents().background());
     }
 
-    public IBookBackground background() {
-        return VampireBookLoader.loadBackground(backgroundId);
+    public List<IBookContents.IImageEntry> images() {
+        return bookContents().images();
     }
 
     public static VampireBook.Builder builder(ResourceKey<IVampireBook> id) {
@@ -109,7 +106,6 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
 
         public final ResourceKey<IVampireBook> id;
         public Component author;
-        public ResourceLocation backgroundTexture;
 
         public Builder(ResourceKey<IVampireBook> id) {
             this.id = id;
@@ -125,13 +121,8 @@ public record VampireBook(ResourceLocation id, Component author, ResourceLocatio
             return this;
         }
 
-        public Builder background(ResourceLocation backgroundTexture) {
-            this.backgroundTexture = backgroundTexture;
-            return this;
-        }
-
         public VampireBook build() {
-            return new VampireBook(id.location(), author == null ? VampireBook.UNKNOWN_AUTHOR : author, backgroundTexture == null ? ModVampireBooks.DIARY_BACKGROUND_ID : backgroundTexture);
+            return new VampireBook(id.location(), author == null ? VampireBook.UNKNOWN_AUTHOR : author);
         }
     }
 }

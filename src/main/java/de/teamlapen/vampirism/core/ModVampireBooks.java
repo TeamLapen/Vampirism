@@ -61,19 +61,19 @@ public class ModVampireBooks {
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
         register(context, builder(MAIDS_DIARY));
-        register(context, builder(MY_MOTHER).background(LETTER_BACKGROUND_ID));
+        register(context, builder(MY_MOTHER));
         register(context, builder(MAD_MANS_JOURNAL).customAuthor());
         register(context, builder(MY_PRINCE));
-        register(context, builder(DEAR_MARTHA).background(LETTER_BACKGROUND_ID));
+        register(context, builder(DEAR_MARTHA));
         register(context, builder(NOCTURNAL).customAuthor());
 
         register(context, builder(HUNTERS_DIARY));
         register(context, builder(ROYAL_RIVALRY).customAuthor());
         register(context, builder(CENTURY_OF_EVOLUTION).author("Matheo"));
         register(context, builder(OBSERVATION_ON_VAMPIRES));
-        register(context, builder(INFUSION_BREAKTHROUGH).customAuthor().background(LETTER_BACKGROUND_ID));
+        register(context, builder(INFUSION_BREAKTHROUGH).customAuthor());
         register(context, builder(CASE_STUDY_ONE));
-        register(context, builder(WANTED).author("Kae din Saarin").background(POSTER_BACKGROUND_ID));
+        register(context, builder(WANTED).author("Kae din Saarin"));
         register(context, builder(CASE_FILE_144).customAuthor());
 
         register(context, builder(SINISTER_INTENTIONS).author("Sinister Solace"));

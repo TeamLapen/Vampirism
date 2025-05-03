@@ -8,6 +8,8 @@ public interface IBookContents {
 
     List<String> contents();
 
+    ResourceLocation background();
+
     List<IImageEntry> images();
 
     interface IImageEntry {

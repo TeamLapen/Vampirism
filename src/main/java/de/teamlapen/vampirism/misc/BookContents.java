@@ -10,18 +10,23 @@ import java.util.List;
 
 import static de.teamlapen.vampirism.util.VampirismGsonHelper.*;
 
-public record BookContents(List<String> contents, List<IImageEntry> images) implements IBookContents {
+public record BookContents(List<String> contents, ResourceLocation background, List<IImageEntry> images) implements IBookContents {
 
-    public static final BookContents EMPTY = new BookContents(List.of(), List.of());
+    public static final BookContents EMPTY = new BookContents(List.of(), null, List.of());
 
     public static BookContents decode(JsonObject json) {
         List<String> contents = new ArrayList<>();
         List<IImageEntry> images = new ArrayList<>();
+        ResourceLocation background = null;
 
         if (json.has("contents") && json.get("contents").isJsonArray()) {
             for (JsonElement element : json.getAsJsonArray("contents")) {
                 contents.add(element.getAsString());
             }
+        }
+
+        if (json.has("background") && json.get("background").isJsonPrimitive()) {
+            background = ResourceLocation.parse(json.getAsJsonPrimitive("background").getAsString());
         }
 
         if (json.has("images") && json.get("images").isJsonArray()) {
@@ -30,7 +35,7 @@ public record BookContents(List<String> contents, List<IImageEntry> images) impl
             }
         }
 
-        return new BookContents(contents, images);
+        return new BookContents(contents, background, images);
     }
 
     public record ImageEntry(int id, ResourceLocation texture, int page, int x, int y, int width, int height) implements IBookContents.IImageEntry {
