@@ -170,22 +170,6 @@ public class VampireBookScreen extends Screen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (scrollY < 0) {
-            pageForward();
-        } else if (scrollY > 0) {
-            pageBack();
-        }
-        if (scrollX < 0) {
-            pageForward();
-        } else if (scrollX > 0) {
-            pageBack();
-        }
-
-        return (scrollX != 0 || scrollY != 0) || super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
-    }
-
     public void pageBack() {
         if (background.twoPages()) {
             if (pageNumber == 1) {
