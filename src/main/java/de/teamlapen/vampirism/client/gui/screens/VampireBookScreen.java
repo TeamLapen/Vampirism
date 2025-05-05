@@ -66,13 +66,17 @@ public class VampireBookScreen extends Screen {
                 pageForward();
             }
         }));
+        buttonForward.visible = false;
         buttonBack = this.addRenderableWidget(new VampireBookPageButton(guiLeft + background.pageButtonXOffset(), guiTop + ySize - background.pageButtonYOffset() - VampireBookPageButton.HEIGHT, false, button -> {
             if (pageNumber > 0) {
                 pageBack();
             }
         }));
+        buttonBack.visible = false;
 
         content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, background.textWidth() - 6, background.textHeight(), background.textHeight()).stream()).collect(Collectors.toList());
+
+        updatePageButtonVisibility();
     }
 
     @Override
@@ -107,6 +111,10 @@ public class VampireBookScreen extends Screen {
 
         graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
 
+        updatePageButtonVisibility();
+    }
+
+    private void updatePageButtonVisibility() {
         boolean atLastPage = pageNumber >= content.size() - 1;
         boolean atFirstPage = pageNumber == 0;
 
