@@ -10,23 +10,53 @@ import net.minecraft.tags.TagKey;
 
 import java.util.List;
 
+/**
+ * A component that stores vampire book data, its id and author.
+ */
 public interface IVampireBook {
 
+    /**
+     * The id of the book.
+     */
     ResourceLocation id();
 
+    /**
+     * The book author displayed in the description of the item.
+     */
     Component author();
 
+    /**
+     * @return If the book is tagged with a certain tag.
+     */
     boolean is(TagKey<IVampireBook> tag, RegistryAccess registryAccess);
 
+    /**
+     * @return If the book has no contents.
+     */
     boolean isEmpty();
 
+    /**
+     * The book title displayed as the item name.
+     */
     MutableComponent title();
 
+    /**
+     * The contents of the book. Stores its text, background id and images. Do not confuse it with {@code contents()}.
+     */
     IBookContents bookContents();
 
+    /**
+     * The pre-translated text of the book.
+     */
     List<MutableComponent> contents();
 
+    /**
+     * The background of the book.
+     */
     IBookBackground background();
 
+    /**
+     * A list of image entries, driven by the contents file, to be rendered on the specific pages of the book.
+     */
     List<IBookContents.IImageEntry> images();
 }

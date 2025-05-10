@@ -111,11 +111,25 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
             this.id = id;
         }
 
+        /**
+         * Sets the author using a translatable component key based on the book id.
+         * <p>
+         * The translation key will look like this:
+         * {@code vampire_book.<mod_id>.<book_id>.author}
+         * <p>
+         * Recommended to use for names that should be localized.
+         */
         public Builder customAuthor() {
             this.author = Component.translatable("vampire_book." + id.location().toLanguageKey() + ".author");
             return this;
         }
 
+        /**
+         * Sets the author using a literal component which is untranslatable.
+         * <p>
+         * Recommended to use for nicknames (e.g., {@code "Sinister Solace"}).
+         * Avoid using this for names that aren't problematic to localize.
+         */
         public Builder author(String author) {
             this.author = Component.literal(author);
             return this;
