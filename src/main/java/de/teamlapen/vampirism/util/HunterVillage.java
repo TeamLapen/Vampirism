@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +42,7 @@ public class HunterVillage {
 
     public static IFactionVillageBuilder hunterVillage() {
         return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
-                .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10)))
+                .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10), new CaptureEntityEntry<>(ModEntities.ADVANCED_HUNTER, 2)))
                 .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(ModEntities.TASK_MASTER_HUNTER)
