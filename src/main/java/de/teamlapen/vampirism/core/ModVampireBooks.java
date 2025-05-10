@@ -4,40 +4,13 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.items.component.VampireBook;
-import de.teamlapen.vampirism.misc.BookBackground;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 import static de.teamlapen.vampirism.items.component.VampireBook.builder;
 
 public class ModVampireBooks {
 
-    // Backgrounds
-    public static final ResourceLocation DIARY_BACKGROUND_ID = VResourceLocation.mod("diary");
-    public static final BookBackground DIARY_BACKGROUND = BookBackground
-            .builder(VResourceLocation.mod("textures/gui/vampire_books/diary.png"), 304, 200)
-            .textureFirstPage(VResourceLocation.mod("textures/gui/vampire_books/diary_first.png"))
-            .textureLastPage(VResourceLocation.mod("textures/gui/vampire_books/diary_last.png"))
-            .build();
-
-    public static final ResourceLocation LETTER_BACKGROUND_ID = VResourceLocation.mod("letter");
-    public static final BookBackground LETTER_BACKGROUND = BookBackground
-            .builder(VResourceLocation.mod("textures/gui/vampire_books/letter.png"), 177, 200)
-            .twoPages(false)
-            .textWidth(154).textHeight(160).leftPageTextX(15).textY(12)
-            .pageNumberXOffset(88).pageNumberYOffset(15).pageButtonXOffset(10).pageButtonYOffset(5)
-            .build();
-
-    public static final ResourceLocation POSTER_BACKGROUND_ID = VResourceLocation.mod("poster");
-    public static final BookBackground POSTER_BACKGROUND = BookBackground
-            .builder(VResourceLocation.mod("textures/gui/vampire_books/poster.png"), 177, 200)
-            .twoPages(false)
-            .textWidth(154).textHeight(160).leftPageTextX(15).textY(12)
-            .pageNumberXOffset(88).pageNumberYOffset(15).pageButtonXOffset(10).pageButtonYOffset(5)
-            .build();
-
-    // Vampire Books
     public static final ResourceKey<IVampireBook> MAIDS_DIARY = createKey("maids_diary");
     public static final ResourceKey<IVampireBook> MY_MOTHER = createKey("my_mother");
     public static final ResourceKey<IVampireBook> MAD_MANS_JOURNAL = createKey("mad_mans_journal");

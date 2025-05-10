@@ -20,9 +20,9 @@ public interface IBookContents {
 
         int page();
 
-        int x();
+        int xOffset();
 
-        int y();
+        int yOffset();
 
         int width();
 

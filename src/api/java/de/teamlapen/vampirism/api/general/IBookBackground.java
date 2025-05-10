@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.api.general;
 
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public interface IBookBackground {
 
     ResourceLocation texture();
 
-    @Nullable ResourceLocation textureFirstPage();
+    Optional<ResourceLocation> textureFirstPage();
 
-    @Nullable ResourceLocation textureLastPage();
+    Optional<ResourceLocation> textureLastPage();
 
     boolean twoPages();
 

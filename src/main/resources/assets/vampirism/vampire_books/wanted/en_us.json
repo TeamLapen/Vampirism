@@ -8,8 +8,8 @@
       "id": 1,
       "texture": "vampirism:textures/gui/vampire_books/images/wanted.png",
       "page": 0,
-      "x": 14,
-      "y": 14,
+      "xOffset": 14,
+      "yOffset": 14,
       "width": 149,
       "height": 39
     }

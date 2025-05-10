@@ -1,63 +1,106 @@
 package de.teamlapen.vampirism.misc;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.general.IBookBackground;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import static de.teamlapen.vampirism.util.VampirismGsonHelper.*;
+import java.util.Optional;
 
-public record BookBackground(ResourceLocation texture, @Nullable ResourceLocation textureFirstPage, @Nullable ResourceLocation textureLastPage, boolean twoPages, int textureWidth, int textureHeight, int textColor, int textWidth, int textHeight, int firstPageTextX, int leftPageTextX, int rightPageTextX, int textY, int pageNumberXOffset, int pageNumberYOffset, int pageButtonXOffset, int pageButtonYOffset) implements IBookBackground {
+public record BookBackground(ResourceLocation texture, Optional<ResourceLocation> textureFirstPage, Optional<ResourceLocation> textureLastPage, boolean twoPages, int textureWidth, int textureHeight, TextProperties textProperties, PageNumbering pageNumbering) implements IBookBackground {
 
-    public JsonObject encode() {
-        JsonObject json = new JsonObject();
+    public static final Codec<BookBackground> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("texture").forGetter(BookBackground::texture),
+            ResourceLocation.CODEC.optionalFieldOf("textureFirstPage").forGetter(BookBackground::textureFirstPage),
+            ResourceLocation.CODEC.optionalFieldOf("textureLastPage").forGetter(BookBackground::textureLastPage),
+            Codec.BOOL.optionalFieldOf("twoPages", true).forGetter(BookBackground::twoPages),
+            Codec.INT.fieldOf("textureWidth").forGetter(BookBackground::textureWidth),
+            Codec.INT.fieldOf("textureHeight").forGetter(BookBackground::textureHeight),
+            TextProperties.CODEC.optionalFieldOf("textProperties", TextProperties.DEFAULT).forGetter(BookBackground::textProperties),
+            PageNumbering.CODEC.optionalFieldOf("pageNumbering", PageNumbering.DEFAULT).forGetter(BookBackground::pageNumbering)
+    ).apply(instance, BookBackground::new));
 
-        json.addProperty("texture", this.texture.toString());
-        if (this.textureFirstPage != null) {
-            json.addProperty("textureFirstPage", this.textureFirstPage.toString());
-        }
-        if (this.textureLastPage != null) {
-            json.addProperty("textureLastPage", this.textureLastPage.toString());
-        }
-        addProperty(json, "twoPages", this.twoPages, true);
-        json.addProperty("textureWidth", this.textureWidth);
-        json.addProperty("textureHeight", this.textureHeight);
+    public record TextProperties(int textColor, int textWidth, int textHeight, int firstPageTextX, int leftPageTextX, int rightPageTextX, int textY) {
 
-        addProperty(json, "textColor", this.textColor, 0x362511);
-        addProperty(json, "textWidth", this.textWidth, 134);
-        addProperty(json, "textHeight", this.textHeight, 150);
-        addProperty(json, "firstPageTextX", this.firstPageTextX, 156);
-        addProperty(json, "leftPageTextX", this.leftPageTextX, 20);
-        addProperty(json, "rightPageTextX", this.rightPageTextX, 160);
-        addProperty(json, "textY", this.textY, 16);
-        addProperty(json, "pageNumberXOffset", this.pageNumberXOffset, 79);
-        addProperty(json, "pageNumberYOffset", this.pageNumberYOffset, 22);
-        addProperty(json, "pageButtonXOffset", this.pageButtonXOffset, 22);
-        addProperty(json, "pageButtonYOffset", this.pageButtonYOffset, 12);
+        public static final TextProperties DEFAULT = new TextProperties(0x362511, 134, 150, 156, 20, 160, 16);
 
-        return json;
+        public static final Codec<TextProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.optionalFieldOf("textColor", DEFAULT.textColor()).forGetter(TextProperties::textColor),
+                Codec.INT.optionalFieldOf("textWidth", DEFAULT.textWidth()).forGetter(TextProperties::textWidth),
+                Codec.INT.optionalFieldOf("textHeight", DEFAULT.textHeight()).forGetter(TextProperties::textHeight),
+                Codec.INT.optionalFieldOf("firstPageTextX", DEFAULT.firstPageTextX()).forGetter(TextProperties::firstPageTextX),
+                Codec.INT.optionalFieldOf("leftPageTextX", DEFAULT.leftPageTextX()).forGetter(TextProperties::leftPageTextX),
+                Codec.INT.optionalFieldOf("rightPageTextX", DEFAULT.rightPageTextX()).forGetter(TextProperties::rightPageTextX),
+                Codec.INT.optionalFieldOf("textY", DEFAULT.textY()).forGetter(TextProperties::textY)
+        ).apply(instance, TextProperties::new));
     }
 
-    public static BookBackground decode(JsonObject json) {
-        return new BookBackground(
-                getAsResourceLocation(json, "texture"),
-                getAsResourceLocation(json, "textureFirstPage", null),
-                getAsResourceLocation(json, "textureLastPage", null),
-                getAsBoolean(json, "twoPages", true),
-                getAsInt(json, "textureWidth"),
-                getAsInt(json, "textureHeight"),
-                getAsInt(json, "textColor", 0x362511),
-                getAsInt(json, "textWidth", 134),
-                getAsInt(json, "textHeight", 150),
-                getAsInt(json, "firstPageTextX", 156),
-                getAsInt(json, "leftPageTextX", 20),
-                getAsInt(json, "rightPageTextX", 160),
-                getAsInt(json, "textY", 16),
-                getAsInt(json, "pageNumberXOffset", 79),
-                getAsInt(json, "pageNumberYOffset", 22),
-                getAsInt(json, "pageButtonXOffset", 22),
-                getAsInt(json, "pageButtonYOffset", 12)
-        );
+    public record PageNumbering(int pageNumberXOffset, int pageNumberYOffset, int pageButtonXOffset, int pageButtonYOffset) {
+
+        public static final PageNumbering DEFAULT = new PageNumbering(79, 22, 22, 12);
+
+        public static final Codec<PageNumbering> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.optionalFieldOf("pageNumberXOffset", DEFAULT.pageNumberXOffset()).forGetter(PageNumbering::pageNumberXOffset),
+                Codec.INT.optionalFieldOf("pageNumberYOffset", DEFAULT.pageNumberYOffset()).forGetter(PageNumbering::pageNumberYOffset),
+                Codec.INT.optionalFieldOf("pageButtonXOffset", DEFAULT.pageButtonXOffset()).forGetter(PageNumbering::pageButtonXOffset),
+                Codec.INT.optionalFieldOf("pageButtonYOffset", DEFAULT.pageButtonYOffset()).forGetter(PageNumbering::pageButtonYOffset)
+        ).apply(instance, PageNumbering::new));
+    }
+
+    @Override
+    public int textColor() {
+        return this.textProperties.textColor;
+    }
+
+    @Override
+    public int textWidth() {
+        return this.textProperties.textWidth;
+    }
+
+    @Override
+    public int textHeight() {
+        return this.textProperties.textHeight;
+    }
+
+    @Override
+    public int firstPageTextX() {
+        return this.textProperties.firstPageTextX;
+    }
+
+    @Override
+    public int leftPageTextX() {
+        return this.textProperties.leftPageTextX;
+    }
+
+    @Override
+    public int rightPageTextX() {
+        return this.textProperties.rightPageTextX;
+    }
+
+    @Override
+    public int textY() {
+        return this.textProperties.textY;
+    }
+
+    @Override
+    public int pageNumberXOffset() {
+        return this.pageNumbering.pageNumberXOffset;
+    }
+
+    @Override
+    public int pageNumberYOffset() {
+        return this.pageNumbering.pageNumberYOffset;
+    }
+
+    @Override
+    public int pageButtonXOffset() {
+        return this.pageNumbering.pageButtonXOffset;
+    }
+
+    @Override
+    public int pageButtonYOffset() {
+        return this.pageNumbering.pageButtonYOffset;
     }
 
     public static Builder builder(ResourceLocation texture, int textureWidth, int textureHeight) {
@@ -162,7 +205,7 @@ public record BookBackground(ResourceLocation texture, @Nullable ResourceLocatio
         }
 
         public BookBackground build() {
-            return new BookBackground(this.texture, this.textureFirstPage, this.textureLastPage, this.twoPages, this.textureWidth, this.textureHeight, this.textColor, this.textWidth, this.textHeight, this.firstPageTextX, this.leftPageTextX, this.rightPageTextX, this.textY, this.pageNumberXOffset, this.pageNumberYOffset, this.pageButtonXOffset, this.pageButtonYOffset);
+            return new BookBackground(this.texture, this.textureFirstPage != null ? Optional.of(this.textureFirstPage) : Optional.empty(), this.textureLastPage != null ? Optional.of(this.textureLastPage) : Optional.empty(), this.twoPages, this.textureWidth, this.textureHeight, new TextProperties(this.textColor, this.textWidth, this.textHeight, this.firstPageTextX, this.leftPageTextX, this.rightPageTextX, this.textY), new PageNumbering(this.pageNumberXOffset, this.pageNumberYOffset, this.pageButtonXOffset, this.pageButtonYOffset));
         }
     }
 }

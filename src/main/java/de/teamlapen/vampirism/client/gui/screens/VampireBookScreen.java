@@ -144,10 +144,10 @@ public class VampireBookScreen extends Screen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         ResourceLocation backgroundTexture = null;
-        if (pageNumber == 0) {
-            backgroundTexture = background.textureFirstPage();
-        } else if (pageNumber + 1 >= content.size()) {
-            backgroundTexture = background.textureLastPage();
+        if (pageNumber == 0 && background.textureFirstPage().isPresent()) {
+            backgroundTexture = background.textureFirstPage().get();
+        } else if (pageNumber + 1 >= content.size() && background.textureLastPage().isPresent()) {
+            backgroundTexture = background.textureLastPage().get();
         }
         if (backgroundTexture == null) {
             backgroundTexture = background.texture();
@@ -157,7 +157,7 @@ public class VampireBookScreen extends Screen {
 
         for (IBookContents.IImageEntry entry : images) {
             if (entry.page() == pageNumber || (background.twoPages() && (entry.page() == pageNumber + 1))) {
-                guiGraphics.blit(RenderType::guiTextured, entry.texture(), guiLeft + entry.x(), guiTop + entry.y(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
+                guiGraphics.blit(RenderType::guiTextured, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
             }
         }
     }

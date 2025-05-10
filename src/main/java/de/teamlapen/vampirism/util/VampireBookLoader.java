@@ -1,16 +1,17 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookContents;
-import de.teamlapen.vampirism.core.ModVampireBooks;
+import de.teamlapen.vampirism.data.provider.BookBackgroundsProvider;
 import de.teamlapen.vampirism.misc.BookBackground;
 import de.teamlapen.vampirism.misc.BookContents;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.codec.DecoderException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,12 +35,12 @@ public class VampireBookLoader {
         String defaultPath = getContentsFilePath(vampireBook, "en_us");
         String localizedPath = getContentsFilePath(vampireBook, language);
 
-        BookContents defaultContents = loadContentsFile(defaultPath);
-        BookContents localizedContents = language.equals("en_us") ? BookContents.EMPTY : loadContentsFile(localizedPath);
+        IBookContents defaultContents = loadContentsFile(defaultPath);
+        IBookContents localizedContents = language.equals("en_us") ? BookContents.EMPTY : loadContentsFile(localizedPath);
 
         List<String> resultContents = !localizedContents.contents().isEmpty() ? localizedContents.contents() : defaultContents.contents();
 
-        ResourceLocation background = localizedContents.background() != null ? localizedContents.background() : (defaultContents.background() != null ? defaultContents.background() : ModVampireBooks.DIARY_BACKGROUND_ID);
+        ResourceLocation background = localizedContents.background() != null ? localizedContents.background() : (defaultContents.background() != null ? defaultContents.background() : BookBackgroundsProvider.DIARY_BACKGROUND_ID);
 
         Map<Integer, IBookContents.IImageEntry> resultImages = new LinkedHashMap<>();
         for (IBookContents.IImageEntry entry : defaultContents.images()) {
@@ -60,13 +61,12 @@ public class VampireBookLoader {
         return "/assets/" + vampireBook.id().getNamespace() + "/vampire_books/" + vampireBook.id().getPath() + "/" + languageCode +".json";
     }
 
-    private static BookContents loadContentsFile(String path) {
+    private static IBookContents loadContentsFile(String path) {
         try (InputStream inputStream = VampirismMod.class.getResourceAsStream(path)) {
             if (inputStream != null) {
                 try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-                    JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-
-                    return BookContents.decode(json);
+                    JsonElement jsonElement = JsonParser.parseReader(reader);
+                    return BookContents.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(DecoderException::new);
                 } catch (Exception exception) {
                     LOGGER.warn("Failed to read vampire book file: {}", path, exception);
                 }
@@ -87,7 +87,7 @@ public class VampireBookLoader {
             if (inputStream != null) {
                 try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
-                    return BookBackground.decode(jsonElement.getAsJsonObject());
+                    return BookBackground.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow(DecoderException::new);
                 } catch (Exception exception) {
                     LOGGER.error("Failed to read background file '{}'", path, exception);
                 }
@@ -98,7 +98,7 @@ public class VampireBookLoader {
             LOGGER.error("Failed to start an input stream for background file: {}", path, exception);
         }
 
-        return ModVampireBooks.DIARY_BACKGROUND;
+        return BookBackgroundsProvider.DIARY_BACKGROUND;
     }
 
     private static String getBackgroundFilePath(ResourceLocation backgroundId) {
