@@ -7,9 +7,10 @@ import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookBackground;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
-import de.teamlapen.vampirism.util.VampireBookLoader;
+import de.teamlapen.vampirism.inventory.VampirismMenu;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -83,15 +84,15 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
     }
 
     public IBookContents bookContents() {
-        return VampireBookLoader.loadBookContents(this);
+        return VampirismModClient.getBookContent().getContentsFor(this);
     }
 
-    public List<MutableComponent> contents() {
+    public List<MutableComponent> translations() {
         return bookContents().contents().stream().map(Component::literal).toList();
     }
 
     public IBookBackground background() {
-        return VampireBookLoader.loadBackground(bookContents().background());
+        return VampirismModClient.getBookContent().getBackground(bookContents().background());
     }
 
     public List<IBookContents.IImageEntry> images() {

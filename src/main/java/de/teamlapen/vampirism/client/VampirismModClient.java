@@ -20,7 +20,8 @@ import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.CoffinSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
-import de.teamlapen.vampirism.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBookContentsReloadListener;
+import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -33,7 +34,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -60,6 +61,7 @@ public class VampirismModClient {
     private final RenderHandler renderHandler;
     private final BloodVisionRenderer bloodVisionRenderer;
     private final ArmorModels armorModels = new ArmorModels();
+    private final VampireBooks vampireBooks;
 
     public VampirismModClient(IEventBus modEventBus, ModContainer modContainer) {
         INSTANCE = this;
@@ -69,6 +71,7 @@ public class VampirismModClient {
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
         this.bloodVisionRenderer = new BloodVisionRenderer(Minecraft.getInstance());
+        this.vampireBooks = new VampireBooks();
 
         this.modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
 
@@ -91,8 +94,17 @@ public class VampirismModClient {
         }
     }
 
+    @SubscribeEvent
+    public void onAddReloadListenerEvent(@NotNull AddClientReloadListenersEvent event) {
+        this.vampireBooks.register(event);
+    }
+
     public static VampirismModClient getINSTANCE() {
         return INSTANCE;
+    }
+
+    public static VampireBooks getBookContent() {
+        return INSTANCE.vampireBooks;
     }
 
     @SubscribeEvent

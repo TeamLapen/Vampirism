@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.items.component.VampireBook;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 import static de.teamlapen.vampirism.items.component.VampireBook.builder;
 
@@ -31,6 +32,11 @@ public class ModVampireBooks {
     public static final ResourceKey<IVampireBook> VALOROUS_TALE = createKey("valorous_tale");
     public static final ResourceKey<IVampireBook> ASHES_OF_PAST_DAWNS = createKey("ashes_of_past_dawns");
     public static final ResourceKey<IVampireBook> PYROMANIACS_DIARY = createKey("pyromaniacs_diary");
+
+    public static final ResourceLocation DIARY_BACKGROUND = VResourceLocation.mod("diary");
+    public static final ResourceLocation LETTER_BACKGROUND = VResourceLocation.mod("letter");
+    public static final ResourceLocation POSTER_BACKGROUND = VResourceLocation.mod("poster");
+
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
         register(context, builder(MAIDS_DIARY));

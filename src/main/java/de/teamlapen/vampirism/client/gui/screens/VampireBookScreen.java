@@ -74,7 +74,7 @@ public class VampireBookScreen extends Screen {
         }));
         buttonBack.visible = false;
 
-        content = vampireBook.contents().stream().flatMap(v -> prepareForLongText(v, background.textWidth() - 6, background.textHeight(), background.textHeight()).stream()).collect(Collectors.toList());
+        content = vampireBook.translations().stream().flatMap(v -> prepareForLongText(v, background.textWidth() - 6, background.textHeight(), background.textHeight()).stream()).collect(Collectors.toList());
 
         updatePageButtonVisibility();
     }

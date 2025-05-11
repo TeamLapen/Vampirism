@@ -41,14 +41,14 @@ public interface IVampireBook {
     MutableComponent title();
 
     /**
-     * The contents of the book. Stores its text, background id and images. Do not confuse it with {@code contents()}.
+     * The contents of the book. Stores its text, background id and images.
      */
     IBookContents bookContents();
 
     /**
      * The pre-translated text of the book.
      */
-    List<MutableComponent> contents();
+    List<MutableComponent> translations();
 
     /**
      * The background of the book.

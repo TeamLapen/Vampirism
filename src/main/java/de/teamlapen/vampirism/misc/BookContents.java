@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.misc;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.general.IBookContents;
-import de.teamlapen.vampirism.data.provider.BookBackgroundsProvider;
+import de.teamlapen.vampirism.core.ModVampireBooks;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public record BookContents(List<String> contents, ResourceLocation background, L
 
     public static final Codec<IBookContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.listOf().fieldOf("contents").forGetter(IBookContents::contents),
-            ResourceLocation.CODEC.optionalFieldOf("background", BookBackgroundsProvider.DIARY_BACKGROUND_ID).forGetter(IBookContents::background),
+            ResourceLocation.CODEC.optionalFieldOf("background", ModVampireBooks.DIARY_BACKGROUND).forGetter(IBookContents::background),
             ImageEntry.CODEC.listOf().optionalFieldOf("images", List.of()).forGetter(IBookContents::images)
     ).apply(instance, BookContents::new));
 
