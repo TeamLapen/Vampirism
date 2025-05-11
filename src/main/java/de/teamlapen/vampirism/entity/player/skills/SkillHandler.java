@@ -192,7 +192,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
         if (this.skillPoints.ignoreSkillPointLimit(this.player, tree)) {
             return Integer.MAX_VALUE;
         }
-        return Math.max(0, this.skillPoints.getSkillPoints(this.player, tree) - this.enabledSkills.values().stream().flatMap(Collection::stream).map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
+        return Math.max(0, this.skillPoints.getSkillPoints(this.player, tree) - this.enabledSkills.entrySet().stream().filter(x -> x.getKey().is(tree.value().skillPointTag())).flatMap(s -> s.getValue().stream()).map(Holder::value).mapToInt(ISkill::getSkillPointCost).sum());
     }
 
     public void reset() {

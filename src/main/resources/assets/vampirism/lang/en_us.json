@@ -661,6 +661,8 @@
   "__comment": "gui texts",
   "text.vampirism.skills.gui_title": "Your skills",
   "text.vampirism.skills.points_left": "%d skill point(s) left",
+  "skill_tree.vampirism.default.skill_points": "%d skill points",
+  "skill_tree.vampirism.default.skill_point": "%d skill point",
   "text.vampirism.skill.resetall": "Reset skills",
   "text.vampirism.skill.unlocked": "Unlocked",
   "text.vampirism.skill.locked": "Locked by other skill:",

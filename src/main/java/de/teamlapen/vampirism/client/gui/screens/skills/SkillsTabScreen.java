@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -220,6 +219,18 @@ public class SkillsTabScreen {
 
     public int getRemainingPoints() {
         return this.skillHandler.getLeftSkillPoints(this.skillTree);
+    }
+
+    public Component getRemainingPointsText() {
+        int remainingPoints1 = this.getRemainingPoints();
+        Component remainingPoints;
+        var skillPointId = this.skillTree.value().skillPointTag().location();
+        if (remainingPoints1 == Integer.MAX_VALUE) {
+            remainingPoints = Component.translatable(skillPointId.toLanguageKey("skill_tree", "skill_points"), "∞");
+        } else {
+            remainingPoints = Component.translatable(skillPointId.toLanguageKey("skill_tree", remainingPoints1 == 1 ? "skill_point" : "skill_points"), remainingPoints1);
+        }
+        return remainingPoints;
     }
 
     public Holder<ISkillTree> getSkillTree() {
