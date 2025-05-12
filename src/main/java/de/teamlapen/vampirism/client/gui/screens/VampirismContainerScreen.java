@@ -122,7 +122,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
-            if (((AbstractContainerScreenAccessor) this).invoke_isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
+            if (((AbstractContainerScreenAccessor) this).invoke_isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && refinementRemoveButtons.containsKey(slot.getSlotIndex()) && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
                 this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
             }
         }

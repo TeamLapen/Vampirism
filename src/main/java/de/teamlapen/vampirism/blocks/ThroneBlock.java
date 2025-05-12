@@ -4,46 +4,53 @@ import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.sit.SitEntity;
 import de.teamlapen.vampirism.sit.SitHandler;
 import de.teamlapen.vampirism.sit.SitUtil;
-import de.teamlapen.vampirism.util.BlockVoxelshapes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.stream.Stream;
 
 public class ThroneBlock extends VampirismSplitBlock {
 
-    public ThroneBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.WOOD).ignitedByLava().pushReaction(PushReaction.DESTROY).strength(2, 3), BlockVoxelshapes.throneBottom, BlockVoxelshapes.throneTop, true);
-        markDecorativeBlock();
+    public static final VoxelShape BOTTOM_SHAPE = Stream.of(
+            Block.box(2.0, 0, 2.2, 13.5, 10.4, 14),
+            Block.box(2.0, 9, 1.2, 13.5, 16, 3),
+            Block.box(0.5, 13.5, 2.2, 2.7, 15.5, 14.2),
+            Block.box(13.3, 13.5, 2.2, 15.5, 15.5, 14.2)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+    public static final VoxelShape TOP_SHAPE = Block.box(2.0, 0, 1.2, 13.5, 10, 3);
+
+    public ThroneBlock(Properties properties) {
+        super(properties, BOTTOM_SHAPE, TOP_SHAPE, true);
     }
 
     @Override
-    public @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level world, BlockPos pos, Player player, BlockHitResult traceResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         Part part = state.getValue(PART);
         Direction oppFacing = state.getValue(FACING).getOpposite();
         player.awardStat(ModStats.INTERACT_WITH_THRONE.get());
-        if (part == Part.MAIN && (traceResult.getDirection() == Direction.UP || traceResult.getDirection() == oppFacing)) {
-            SitHandler.startSitting(player, world, pos, 0.5);
+        if (part == Part.MAIN && (hitResult.getDirection() == Direction.UP || hitResult.getDirection() == oppFacing)) {
+            SitHandler.startSitting(player, level, pos, 0.5);
             return InteractionResult.SUCCESS;
-        } else if (part == Part.SUB && traceResult.getDirection() == oppFacing && world.getBlockState(pos.below()).is(this)) {
-            SitHandler.startSitting(player, world, pos.below(), 0.5);
+        } else if (part == Part.SUB && hitResult.getDirection() == oppFacing && level.getBlockState(pos.below()).is(this)) {
+            SitHandler.startSitting(player, level, pos.below(), 0.5);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
 
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-        SitEntity entity = SitUtil.getSitEntity(pLevel, pPos);
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        SitEntity entity = SitUtil.getSitEntity(level, pos);
         if (entity != null) {
             entity.discard();
         }

@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -90,5 +92,10 @@ public class WallCandelabraBlock extends CandleHolderBlock {
     @Override
     public int getLitLightLevel() {
         return 12;
+    }
+
+    @Override
+    public String getDescriptionKey() {
+        return BuiltInRegistries.ITEM.getKey(ModBlocks.CANDELABRA.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

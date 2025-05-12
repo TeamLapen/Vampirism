@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class VampireCloakItem extends Item {
 
@@ -25,12 +24,12 @@ public class VampireCloakItem extends Item {
     }
 
     @Override
-    public boolean canEquip(@NotNull ItemStack stack, @NotNull EquipmentSlot armorType, @NotNull LivingEntity entity) {
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
         return super.canEquip(stack, armorType, entity) && FactionRestriction.canUse(entity, stack, true);
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (entity instanceof LivingEntity living && slotId >= 36 && slotId <= 39) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {

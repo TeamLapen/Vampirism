@@ -24,16 +24,12 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,14 +38,20 @@ import java.util.List;
  * Tileentity container that can store liquids.
  */
 public class BloodContainerBlock extends VampirismBlockContainer implements ModDisplayItemGenerator.CreativeTabItemProvider {
-    protected static final VoxelShape containerShape = Block.box(2, 0, 2, 14, 16, 14);
+
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 
-    public static FluidStack getFluidFromItemStack(@NotNull ItemStack stack) {
+    protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 16, 14);
+
+    public BloodContainerBlock(Properties properties) {
+        super(properties);
+    }
+
+    public static FluidStack getFluidFromItemStack(ItemStack stack) {
         return ContainedFluid.get(stack);
     }
 
-    public static void writeFluidToItemStack(@NotNull ItemStack stack, @NotNull FluidStack fluid) {
+    public static void writeFluidToItemStack(ItemStack stack, FluidStack fluid) {
         if (fluid.isEmpty()) {
             stack.remove(ModDataComponents.BLOOD_CONTAINER);
         } else {
@@ -57,53 +59,24 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         }
     }
 
-    public BloodContainerBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BloodContainerBlockEntity(pos, state);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        FluidStack fluidStack = ContainedFluid.get(stack);
-        if (!fluidStack.isEmpty()) {
-            tooltip.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack)).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
-    @Override
-    public void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        ItemStack stack = new ItemStack(this, 1);
-        output.accept(stack);
-        stack = stack.copy();
-        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
-        stack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
-        output.accept(stack);
-    }
-
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new BloodContainerBlockEntity(pos, state);
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return containerShape;
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
-    public void playerDestroy(@NotNull Level worldIn, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity te, @NotNull ItemStack heldStack) {
+    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get(), 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
@@ -115,7 +88,7 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, LivingEntity placer, @NotNull ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
         FluidStack fluid = getFluidFromItemStack(stack);
         if (!stack.isEmpty()) {
@@ -128,9 +101,8 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useItemOn(ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player playerIn, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getDirection()) && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getDirection()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
@@ -154,7 +126,25 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        ItemStack stack = new ItemStack(this, 1);
+        output.accept(stack);
+        stack = stack.copy();
+        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
+        stack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
+        output.accept(stack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        FluidStack fluidStack = ContainedFluid.get(stack);
+        if (!fluidStack.isEmpty()) {
+            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack)).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState pState) {
         return true;
     }
 
@@ -162,7 +152,12 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
      * @return 0-14
      */
     @Override
-    public int getAnalogOutputSignal(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
         return FluidUtil.getFluidHandler(pLevel, pPos, null).map(handler -> (int) ((handler.getFluidInTank(0).getAmount() * 14f) / (float) handler.getTankCapacity(0))).orElse(0);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 }

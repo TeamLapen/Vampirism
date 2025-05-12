@@ -14,6 +14,10 @@ public class REFERENCE {
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final QualifiedVersion VERSION = new QualifiedVersion(ModList.get().getModContainerById(MODID).map(s -> s.getModInfo().getVersion().toString()).orElse("1.0.0"));
 
+    // guideapi
+    public static final String GUIDEAPI_MODID = "guideapi_vp";
+    public static final String GUIDEBOOK_ID = "vampirism-guidebook";
+
     // changeable values
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
@@ -38,5 +42,4 @@ public class REFERENCE {
     public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final String SETTINGS_API = "https://api.vampirism.dev/api/v1";
-
 }

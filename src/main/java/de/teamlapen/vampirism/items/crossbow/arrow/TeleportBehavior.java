@@ -17,19 +17,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
+
     @Override
     public int color() {
         return 0xFF0b4d42;
     }
 
     @Override
-    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction hitDirection) {
+    public void onHitBlock(ItemStack arrow, BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction hitDirection) {
         if (shootingEntity != null) {
             if (shootingEntity.level() instanceof ServerLevel level && shootingEntity.isAlive()) {
                 BlockPos teleportPosition = blockPos.relative(hitDirection);
@@ -63,7 +63,7 @@ public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
     }
 
     @Override
-    public float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter) {
+    public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
         return 0.5f;
     }
 }

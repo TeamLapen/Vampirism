@@ -17,7 +17,7 @@ public class HunterPlayerSpecialAttribute {
      * Null if not fully equipped, otherwise min tier
      */
     @Nullable
-    public IItemWithTier.TIER fullHunterCoat;
+    public IItemWithTier.Tier fullHunterCoat;
     private boolean disguised = false;
     private int disguiseTicks = 0;
 

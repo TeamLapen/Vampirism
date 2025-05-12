@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
         tooltips.add(Component.empty());
         tooltips.add(Component.translatable("text.vampirism.oil.smelting_on_pickaxe").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.add(Component.literal("- ").append(Component.translatable("text.vampirism.oil.smelting_on_hit")).withStyle(ChatFormatting.GRAY));

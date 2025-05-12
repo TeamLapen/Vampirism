@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.lib.storage.Attachment;
 import de.teamlapen.lib.lib.storage.UpdateParams;
 import de.teamlapen.lib.lib.util.LogUtil;
-import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -30,6 +29,7 @@ import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.MinionWorldData;
+import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -424,7 +424,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
         setFactionAndLevel(ModFactions.NEUTRAL, 0);
         player.displayClientMessage(Component.translatable("command.vampirism.base.level.successful", player.getName(), oldFaction.value().getName(), 0), true);
         if (die) {
-            DamageHandler.kill((ServerLevel) this.player.level(), player, 10000);
+            DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
         }
     }
 

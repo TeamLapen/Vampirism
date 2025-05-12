@@ -18,28 +18,27 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.Stream;
+
 public class PotionTableBlock extends VampirismBlockContainer {
+
     public static final MapCodec<PotionTableBlock> CODEC = simpleCodec(PotionTableBlock::new);
-    protected static final VoxelShape shape = makeShape();
 
-    private static @NotNull VoxelShape makeShape() {
-        VoxelShape a = Block.box(0, 0, 0, 16, 1, 16);
-        VoxelShape b = Block.box(1, 1, 1, 15, 2, 15);
-        VoxelShape c = Block.box(2, 2, 2, 14, 9, 14);
-        VoxelShape d = Block.box(0, 9, 0, 16, 11, 16);
-        return Shapes.or(a, b, c, d);
-    }
+    protected static final VoxelShape SHAPE = Stream.of(
+            Block.box(0, 0, 0, 16, 2, 16),
+            Block.box(2, 2, 2, 14, 9, 14),
+            Block.box(0, 9, 0, 16, 10, 16)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public PotionTableBlock(BlockBehaviour.Properties properties) {
+    public PotionTableBlock(Properties properties) {
         super(properties);
     }
 
@@ -48,39 +47,36 @@ public class PotionTableBlock extends VampirismBlockContainer {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PotionTableBlockEntity(pos, state);
     }
 
-
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return shape;
-    }
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
 
-    @Override
-    public void setPlacedBy(@NotNull Level world, @NotNull BlockPos blockPos, @NotNull BlockState blockState, LivingEntity entity, @NotNull ItemStack stack) {
-        super.setPlacedBy(world, blockPos, blockState, entity, stack);
-        BlockEntity tile = world.getBlockEntity(blockPos);
-        if (entity instanceof Player && tile instanceof PotionTableBlockEntity) {
-            ((PotionTableBlockEntity) tile).setOwnerID((Player) entity);
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof PotionTableBlockEntity potionTableBlockEntity && placer instanceof Player player) {
+            potionTableBlockEntity.setOwnerID(player);
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
-        if (!worldIn.isClientSide && player instanceof ServerPlayer) {
-            BlockEntity tile = worldIn.getBlockEntity(pos);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide && player instanceof ServerPlayer) {
+            BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity potionTable) {
                 if (potionTable.canOpen(player)) {
                     player.openMenu(potionTable, buffer -> buffer.writeBoolean(potionTable.isExtended()));
@@ -93,18 +89,17 @@ public class PotionTableBlock extends VampirismBlockContainer {
     }
 
     @Override
-    protected void clearContainer(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos) {
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof PotionTableBlockEntity) {
+    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof PotionTableBlockEntity potionTableBlockEntity) {
             for (int i = 0; i < 8; ++i) {
-                this.dropItem(worldIn, pos, ((PotionTableBlockEntity) te).removeItemNoUpdate(i));
+                this.dropItem(level, pos, potionTableBlockEntity.removeItemNoUpdate(i));
             }
         }
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModTiles.POTION_TABLE.get(), PotionTableBlockEntity::tick);
     }
 }

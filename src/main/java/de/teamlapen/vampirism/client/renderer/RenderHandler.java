@@ -126,8 +126,8 @@ public class RenderHandler {
             if (dist > 64) {
                 event.setCanceled(true);
             } else if (dist > 16) {
-                IItemWithTier.TIER hunterCoatTier = vampirism.getHuntSpecial().fullHunterCoat;
-                if (hunterCoatTier == IItemWithTier.TIER.ENHANCED || hunterCoatTier == IItemWithTier.TIER.ULTIMATE) {
+                IItemWithTier.Tier hunterCoatTier = vampirism.getHuntSpecial().fullHunterCoat;
+                if (hunterCoatTier == IItemWithTier.Tier.ENHANCED || hunterCoatTier == IItemWithTier.Tier.ULTIMATE) {
                     event.setCanceled(true);
                 }
             }

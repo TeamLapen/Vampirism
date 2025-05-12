@@ -14,24 +14,26 @@ import java.util.List;
 public interface IItemWithTier extends ItemLike {
 
     default void addTierInformation(@NotNull List<Component> tooltip) {
-        TIER t = getVampirismTier();
-        if (t != TIER.NORMAL) {
-            ChatFormatting format = t == TIER.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
-            tooltip.add(Component.translatable("item.vampirism.item.tier." + t.getSerializedName().toLowerCase()).withStyle(format));
+        Tier tier = getVampirismTier();
+        if (tier != Tier.NORMAL) {
+            ChatFormatting format = tier == Tier.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
+            tooltip.add(Component.translatable("item.vampirism.item.tier." + tier.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 
     /**
      * @return The tier of the item stack
      */
-    TIER getVampirismTier();
+    Tier getVampirismTier();
 
-    enum TIER implements StringRepresentable {
-        NORMAL("normal"), ENHANCED("enhanced"), ULTIMATE("ultimate");
+    enum Tier implements StringRepresentable {
+        NORMAL("normal"),
+        ENHANCED("enhanced"),
+        ULTIMATE("ultimate");
 
         private final String name;
 
-        TIER(String name) {
+        Tier(String name) {
             this.name = name;
         }
 
@@ -45,5 +47,4 @@ public interface IItemWithTier extends ItemLike {
             return name;
         }
     }
-
 }

@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -27,13 +26,11 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,79 +39,77 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
 public class CoffinBlock extends VampirismBlockContainer {
+    
     public static final MapCodec<CoffinBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     DyeColor.CODEC.fieldOf("color").forGetter(b -> b.color),
                     propertiesCodec()
             ).apply(inst, CoffinBlock::new)
     );
-    public static final Map<DyeColor, CoffinBlock> COFFIN_BLOCKS = new HashMap<>();
-    public static final String name = "coffin";
+
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty CLOSED = BooleanProperty.create("closed");
     public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
-    private static final ShapeTable shapes = new ShapeTable();
+    
+    private static final ShapeTable SHAPES = new ShapeTable();
+    
     private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, Component.translatable("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.coffin.obstructed"));
 
-    public static boolean isOccupied(@NotNull BlockGetter world, @NotNull BlockPos pos) {
+    public CoffinBlock(Properties properties, DyeColor color) {
+        this(color, properties);
+    }
+
+    public static boolean isOccupied(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock() instanceof CoffinBlock && state.getValue(BedBlock.OCCUPIED);
     }
 
-    public static boolean isClosed(@NotNull BlockGetter world, @NotNull BlockPos pos) {
+    public static boolean isClosed(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock() instanceof CoffinBlock && state.getValue(CLOSED);
     }
 
-    public static boolean isHead(@NotNull BlockGetter world, @NotNull BlockPos pos) {
+    public static boolean isHead(BlockGetter world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         return state.getBlock() instanceof CoffinBlock && state.getValue(PART) == CoffinPart.HEAD;
     }
 
-    private static Direction getDirectionToOther(CoffinPart type, @NotNull Direction facing) {
+    private static Direction getDirectionToOther(CoffinPart type, Direction facing) {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
     }
 
     private final DyeColor color;
 
-    public CoffinBlock(BlockBehaviour.Properties properties, DyeColor color) {
-        this(color, properties.mapColor(MapColor.WOOD).strength(0.2f).noOcclusion().pushReaction(PushReaction.DESTROY).ignitedByLava());
-    }
-
-    public CoffinBlock(DyeColor color, Block.Properties properties) {
+    public CoffinBlock(DyeColor color, Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BedBlock.OCCUPIED, Boolean.FALSE).setValue(PART, CoffinPart.FOOT).setValue(FACING, Direction.NORTH).setValue(CLOSED, false).setValue(VERTICAL, false));
         this.color = color;
-        COFFIN_BLOCKS.put(color, this);
     }
 
     @Override
-    public @NotNull Direction getBedDirection(@NotNull BlockState state, LevelReader world, BlockPos pos) {
-        return state.getValue(HORIZONTAL_FACING);
+    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos) {
+        return state.getValue(FACING);
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
     @Nullable
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction enumfacing = context.getHorizontalDirection();
         boolean vertical = context.getClickedFace().getAxis() != Direction.Axis.Y;
         BlockPos blockpos = context.getClickedPos();
         BlockPos blockpos1 = blockpos.relative(vertical ? Direction.UP : enumfacing);
-        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, enumfacing).setValue(VERTICAL, vertical) : null;
+        return context.getLevel().getBlockState(blockpos1).canBeReplaced(context) ? this.defaultBlockState().setValue(FACING, enumfacing).setValue(VERTICAL, vertical) : null;
     }
 
     @Override
@@ -122,24 +117,23 @@ public class CoffinBlock extends VampirismBlockContainer {
         return false;
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return shapes.getShape(state.getValue(PART), state.getValue(CLOSED), state.getValue(VERTICAL), state.getValue(HORIZONTAL_FACING));
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPES.getShape(state.getValue(PART), state.getValue(CLOSED), state.getValue(VERTICAL), state.getValue(FACING));
     }
 
     @Override
-    public boolean isBed(@NotNull BlockState state, BlockGetter world, BlockPos pos, LivingEntity sleeper) {
+    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, LivingEntity sleeper) {
         return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
     }
 
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CoffinBlockEntity(pos, state, this.color);
     }
 
     @Override
-    public @NotNull BlockState playerWillDestroy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
         if (!worldIn.isClientSide && player.isCreative()) {
             CoffinPart part = state.getValue(PART);
@@ -157,7 +151,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity entity, @NotNull ItemStack itemStack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         super.setPlacedBy(worldIn, pos, state, entity, itemStack);
         if (!worldIn.isClientSide) {
             BlockPos blockpos = getOtherPos(pos, state);
@@ -167,19 +161,17 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
-    @NotNull
     @Override
-    public BlockState updateShape(@NotNull BlockState stateIn, LevelReader worldIn, ScheduledTickAccess tickAccess, BlockPos currentPos, @NotNull Direction facing, @NotNull BlockPos facingPos, @NotNull BlockState facingState, RandomSource random) {
-        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(VERTICAL) ? Direction.UP : stateIn.getValue(HORIZONTAL_FACING))) {
+    public BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
+        if (facing == getDirectionToOther(stateIn.getValue(PART), stateIn.getValue(VERTICAL) ? Direction.UP : stateIn.getValue(FACING))) {
             return facingState.getBlock() == this && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(BedBlock.OCCUPIED, facingState.getValue(BedBlock.OCCUPIED)) : Blocks.AIR.defaultBlockState();
         } else {
             return super.updateShape(stateIn, worldIn, tickAccess, currentPos, facing, facingPos, facingState, random);
         }
     }
 
-    @NotNull
     @Override
-    public InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
 
         if (worldIn.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -210,7 +202,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
             if (!BedBlock.canSetSpawn(worldIn)) {
                 worldIn.removeBlock(pos, false);
-                BlockPos blockpos = pos.relative(state.getValue(VERTICAL) ? Direction.DOWN : state.getValue(HORIZONTAL_FACING).getOpposite());
+                BlockPos blockpos = pos.relative(state.getValue(VERTICAL) ? Direction.DOWN : state.getValue(FACING).getOpposite());
                 if (worldIn.getBlockState(blockpos).is(this)) {
                     worldIn.removeBlock(blockpos, false);
                 }
@@ -233,12 +225,12 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
-    public static void setCoffinSleepPosition(@NotNull Player player, @NotNull BlockPos blockPos, @NotNull BlockState state) {
+    public static void setCoffinSleepPosition(Player player, BlockPos blockPos, BlockState state) {
         if (state.getValue(VERTICAL)) {
             player.setPose(Pose.STANDING);
             double x;
             double z;
-            switch (state.getValue(HORIZONTAL_FACING)) {
+            switch (state.getValue(FACING)) {
                 case NORTH -> {
                     x = 0.5;
                     z = 0.3;
@@ -271,7 +263,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
-    public @NotNull BlockPos getOtherPos(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockPos getOtherPos(BlockPos pos, BlockState state) {
         if (state.getValue(VERTICAL)) {
             if (state.getValue(PART) == CoffinPart.FOOT) {
                 return pos.above();
@@ -280,22 +272,22 @@ public class CoffinBlock extends VampirismBlockContainer {
             }
         } else {
             if (state.getValue(PART) == CoffinPart.FOOT) {
-                return pos.relative(state.getValue(HORIZONTAL_FACING));
+                return pos.relative(state.getValue(FACING));
             } else {
-                return pos.relative(state.getValue(HORIZONTAL_FACING).getOpposite());
+                return pos.relative(state.getValue(FACING).getOpposite());
             }
         }
     }
 
     @Override
-    public void setBedOccupied(BlockState state, @NotNull Level world, @NotNull BlockPos pos, LivingEntity sleeper, boolean occupied) {
+    public void setBedOccupied(BlockState state, Level world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
         super.setBedOccupied(state, world, pos, sleeper, occupied);
         world.setBlock(pos, world.getBlockState(pos).setValue(CLOSED, occupied), 3);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART, CLOSED, VERTICAL);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, BedBlock.OCCUPIED, PART, CLOSED, VERTICAL);
     }
 
     public DyeColor getColor() {
@@ -304,7 +296,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntity) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntity) {
         return state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.COFFIN.get(), CoffinBlockEntity::clientTickHead) : null;
     }
 
@@ -318,7 +310,6 @@ public class CoffinBlock extends VampirismBlockContainer {
             this.name = name;
         }
 
-        @NotNull
         public String getSerializedName() {
             return this.name;
         }
@@ -330,17 +321,17 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     public static class ShapeTable {
 
-        private final VoxelShape[][][] @NotNull [] shapes;
+        private final VoxelShape[][][] [] shapes;
 
         public ShapeTable() {
             this.shapes = buildShapes();
         }
 
-        public VoxelShape getShape(CoffinBlock.@NotNull CoffinPart part, boolean closed, boolean vertical, @NotNull Direction facing) {
+        public VoxelShape getShape(CoffinPart part, boolean closed, boolean vertical, Direction facing) {
             return shapes[part.ordinal()][closed ? 1 : 0][vertical ? 1 : 0][facing.get2DDataValue()];
         }
 
-        private VoxelShape[][][] @NotNull [] buildShapes() {
+        private VoxelShape[][][] [] buildShapes() {
             VoxelShape shape = Shapes.empty();
             shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.0625, 2), BooleanOp.OR);
             shape = Shapes.join(shape, Shapes.box(0.90625, 0.0625, 0.046875, 0.96875, 0.1875, 1.96875), BooleanOp.OR);
@@ -407,14 +398,14 @@ public class CoffinBlock extends VampirismBlockContainer {
             return shapes;
         }
 
-        private VoxelShape[][] @NotNull [] buildShapePart(VoxelShape shape, @NotNull VoxelShape shapeLid) {
+        private VoxelShape[][] [] buildShapePart(VoxelShape shape, VoxelShape shapeLid) {
             VoxelShape[][][] shapes = new VoxelShape[2][][];
             shapes[0] = buildShapeClosed(shape, shapeLid, false);
             shapes[1] = buildShapeClosed(shape, shapeLid, true);
             return shapes;
         }
 
-        private VoxelShape[] @NotNull [] buildShapeClosed(VoxelShape shape, @NotNull VoxelShape shapeLid, boolean closed) {
+        private VoxelShape[] [] buildShapeClosed(VoxelShape shape, VoxelShape shapeLid, boolean closed) {
             if (closed) {
                 shape = Shapes.or(shape, shapeLid);
             }
@@ -424,7 +415,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             return shapes;
         }
 
-        private VoxelShape @NotNull [] buildShapeVertical(VoxelShape shape, boolean vertical) {
+        private VoxelShape [] buildShapeVertical(VoxelShape shape, boolean vertical) {
             if (vertical) {
                 shape = UtilLib.rollShape(shape, Direction.NORTH);
             }
@@ -434,7 +425,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             return shapes;
         }
 
-        private VoxelShape buildShapeDirectional(@NotNull VoxelShape shape, @NotNull Direction direction) {
+        private VoxelShape buildShapeDirectional(VoxelShape shape, Direction direction) {
             return switch (direction) {
                 case NORTH -> shape;
                 case EAST -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.NINETY);

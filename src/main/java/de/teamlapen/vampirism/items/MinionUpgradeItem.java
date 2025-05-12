@@ -7,18 +7,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-
 public class MinionUpgradeItem extends Item {
+
     private final int minLevel;
     private final int maxLevel;
     private final Holder<? extends IFaction<?>> faction;
 
-    public MinionUpgradeItem(int minLevel, int maxLevel, Holder<? extends IFaction<?>> faction, Item.Properties properties) {
+    public MinionUpgradeItem(int minLevel, int maxLevel, Holder<? extends IFaction<?>> faction, Properties properties) {
         super(properties);
         this.faction = faction;
         this.maxLevel = maxLevel;
@@ -26,7 +24,7 @@ public class MinionUpgradeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         tooltip.add(Component.translatable("item.vampirism.minion_upgrade_item.desc").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(ChatFormatting.GRAY));

@@ -56,7 +56,7 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     protected @NotNull Component getDefaultName() {
-        return Component.translatable("block.vampirism.garlic_diffuser");
+        return getBlockState().getBlock().getName();
     }
 
     @Override
@@ -109,5 +109,10 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
             GarlicLevel.get(level).removeGarlicBlock(this.emitterId);
             this.emitterId = 0;
         }
+    }
+
+    @Override
+    public int getParticleNumber(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {
+        return 2 + 3 * strength.getStrength();
     }
 }

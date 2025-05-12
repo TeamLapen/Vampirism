@@ -4,8 +4,8 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -42,5 +42,8 @@ public interface ISkillTree {
 
     @NotNull
     Optional<ResourceLocation> background();
+
+    @NotNull
+    TagKey<ISkillTree> skillPointTag();
 
 }

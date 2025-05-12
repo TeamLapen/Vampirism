@@ -23,7 +23,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
         stack.set(ModDataComponents.VAMPIRE_BOOK.get(), vampireBook);
     }
 
-    public static @NotNull IVampireBook get(ItemStack stack) {
+    public static IVampireBook get(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.VAMPIRE_BOOK.get(), EMPTY);
     }
 

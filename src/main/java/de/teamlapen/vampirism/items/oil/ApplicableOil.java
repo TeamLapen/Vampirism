@@ -10,7 +10,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -24,12 +23,12 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
     }
 
     @Override
-    public int getDuration(@NotNull ItemStack stack) {
+    public int getDuration(ItemStack stack) {
         return AppliedOilContent.getAppliedOil(stack).filter(s -> s.oil().value() == this).map(AppliedOilContent::duration).orElse(0);
     }
 
     @Override
-    public boolean reduceDuration(@NotNull ItemStack stack, IApplicableOil oil, int amount) {
+    public boolean reduceDuration(ItemStack stack, IApplicableOil oil, int amount) {
         return OilUtils.reduceAppliedOilDuration(stack, oil, amount);
     }
 
@@ -39,7 +38,7 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
     }
 
     @Override
-    public @NotNull Optional<Component> getToolTipLine(ItemStack stack, @NotNull IApplicableOil oil, int duration, @NotNull TooltipFlag flag) {
+    public Optional<Component> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, TooltipFlag flag) {
         ResourceLocation id = RegUtil.id(oil);
         MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
         if (oil.hasDuration()) {

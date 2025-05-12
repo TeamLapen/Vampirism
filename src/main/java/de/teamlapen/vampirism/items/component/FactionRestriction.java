@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.ChatFormatting;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -27,22 +26,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.stream.Stream;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) {
 
     public static final FactionRestriction ALL = FactionRestriction.builder(ModFactionTags.ALL_FACTIONS).build();
-    public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst -> {
-        return inst.group(
-                RegistryCodecs.homogeneousList(VampirismRegistries.Keys.FACTION).fieldOf("factions").forGetter(FactionRestriction::factions),
-                RegistryCodecs.homogeneousList(VampirismRegistries.Keys.SKILL).optionalFieldOf("skills").forGetter(FactionRestriction::skills),
-                Codec.INT.optionalFieldOf("min_level").forGetter(FactionRestriction::minLevel)
-        ).apply(inst, FactionRestriction::new);
-    });
+    public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst ->
+            inst.group(
+                    RegistryCodecs.homogeneousList(VampirismRegistries.Keys.FACTION).fieldOf("factions").forGetter(FactionRestriction::factions),
+                    RegistryCodecs.homogeneousList(VampirismRegistries.Keys.SKILL).optionalFieldOf("skills").forGetter(FactionRestriction::skills),
+                    Codec.INT.optionalFieldOf("min_level").forGetter(FactionRestriction::minLevel)
+            ).apply(inst, FactionRestriction::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, FactionRestriction> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderSet(VampirismRegistries.Keys.FACTION), FactionRestriction::factions,
             ByteBufCodecs.optional(ByteBufCodecs.holderSet(VampirismRegistries.Keys.SKILL)), FactionRestriction::skills,
@@ -124,7 +119,6 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
     public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip) {
         addTooltipIfExist(VampirismMod.proxy.getClientPlayer(), stack, tooltip);
     }
-
 
     public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, List<Component> tooltip) {
         Stream<FactionRestriction> factionRestrictionStream = Stream.of(stack.get(ModDataComponents.FACTION_RESTRICTION));
@@ -224,8 +218,5 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         public Item.Properties apply(Item.Properties properties) {
             return properties.component(ModDataComponents.FACTION_RESTRICTION, build());
         }
-
-
     }
-
 }

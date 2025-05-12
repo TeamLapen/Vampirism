@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.component.ContainedProjectiles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SlotAccess;
@@ -17,7 +16,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,14 +37,14 @@ public class ArrowContainer extends Item implements IArrowContainer {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> texts, @NotNull TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> texts, TooltipFlag flag) {
         getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.add(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
         texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
         texts.add(Component.translatable("item.vampirism.arrow_clip.right_click").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return super.getName(stack).copy().append(" (" + getArrows(stack).size() + "/" + this.maxCount + ")");
     }
 
@@ -122,7 +120,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
     }
 
     @Override
-    public boolean overrideOtherStackedOnMe(@NotNull ItemStack container, @NotNull ItemStack otherStack, @NotNull Slot slot, @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
+    public boolean overrideOtherStackedOnMe(ItemStack container, ItemStack otherStack, Slot slot, ClickAction action, Player player, SlotAccess access) {
         if (action == ClickAction.SECONDARY && slot.allowModification(player)) {
             if (!otherStack.isEmpty()) {
                 int i = addArrows(container, otherStack);

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks.candle;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,6 +33,7 @@ import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -187,6 +189,24 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         }
     }
 
+    /**
+     * Required to prevent empty candle holders from being lit up.
+     */
+    @Override
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+        ItemStack itemStack = context.getItemInHand();
+        if (!itemStack.canPerformAction(itemAbility))
+            return null;
+
+        if (ItemAbilities.FIRESTARTER_LIGHT == itemAbility) {
+            if (this.canBeLit(state)) {
+                return state.setValue(BlockStateProperties.LIT, true);
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected boolean canBeLit(BlockState state) {
         return !state.getValue(WATERLOGGED) && !this.isEmpty() && super.canBeLit(state);
@@ -217,25 +237,16 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         return candle;
     }
 
-    /**
-     * Required to prevent empty candle holders from being lit up.
-     */
-    @Override
-    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
-        ItemStack itemStack = context.getItemInHand();
-        if (!itemStack.canPerformAction(itemAbility))
-            return null;
-
-        if (ItemAbilities.FIRESTARTER_LIGHT == itemAbility) {
-            if (this.canBeLit(state)) {
-                return state.setValue(BlockStateProperties.LIT, true);
-            }
-        }
-
-        return null;
-    }
-
     public boolean isEmpty() {
         return this.candle.get() == null;
+    }
+
+    public String getDescriptionKey() {
+        return "";
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        DescriptionUtil.addDescriptionTooltip(getDescriptionKey(), tooltipComponents);
     }
 }

@@ -23,24 +23,23 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class VampireBeaconBlock extends VampirismBlockContainer implements BeaconBeamBlock {
 
     public static final MapCodec<VampireBeaconBlock> CODEC = simpleCodec(VampireBeaconBlock::new);
 
-    public VampireBeaconBlock(@NotNull Properties properties) {
+    public VampireBeaconBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public @NotNull DyeColor getColor() {
+    public DyeColor getColor() {
         return DyeColor.RED;
     }
 
@@ -52,37 +51,38 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModTiles.VAMPIRE_BEACON.get(), VampireBeaconBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, ModTiles.VAMPIRE_BEACON.get(), VampireBeaconBlockEntity::tick);
     }
 
     @Override
-    public @NotNull InteractionResult useWithoutItem(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull BlockHitResult pHit) {
-        if (!pLevel.isClientSide) {
-            if (pPlayer instanceof ServerPlayer serverPlayer) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_ANCIENT_BEACON.get());
                 if (Helper.isHunter(serverPlayer)) {
-                    if (pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockentity) {
-                        pPlayer.openMenu(blockentity);
+                    if (level.getBlockEntity(pos) instanceof VampireBeaconBlockEntity vampireBeaconBlockEntity) {
+                        player.openMenu(vampireBeaconBlockEntity);
                     }
                 } else {
-                    pPlayer.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
                 }
                 return InteractionResult.CONSUME;
             }
         }
+
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
+    public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public void setPlacedBy(@NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (pStack.has(DataComponents.CUSTOM_NAME) && pLevel.getBlockEntity(pPos) instanceof VampireBeaconBlockEntity blockEntity) {
-            blockEntity.setCustomName(pStack.getHoverName());
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        if (stack.has(DataComponents.CUSTOM_NAME) && level.getBlockEntity(pos) instanceof VampireBeaconBlockEntity vampireBeaconBlockEntity) {
+            vampireBeaconBlockEntity.setCustomName(stack.getHoverName());
         }
     }
 }

@@ -7,8 +7,6 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.ByteBufferCodecUtil;
-import de.teamlapen.vampirism.util.CodecUtil;
 import de.teamlapen.vampirism.util.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import org.jetbrains.annotations.NotNull;
 
 public record AffectGarlic(EnumStrength strength, float multiplier, boolean ambient) implements ConsumeEffect {
 
@@ -43,12 +40,12 @@ public record AffectGarlic(EnumStrength strength, float multiplier, boolean ambi
     }
 
     @Override
-    public @NotNull Type<? extends ConsumeEffect> getType() {
+    public Type<? extends ConsumeEffect> getType() {
         return ModItems.AFFECT_GARLIC.get();
     }
 
     @Override
-    public boolean apply(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity) {
+    public boolean apply(Level level, ItemStack stack, LivingEntity entity) {
         if (Helper.isVampire(entity)) {
             IVampire vampire = null;
             if (entity instanceof IVampire) {

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items.crossbow.arrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -13,12 +12,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
+
     @Override
     public int color() {
         return 0xFFFFFFFF;
@@ -40,7 +39,7 @@ public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBeh
     }
 
     @Override
-    public float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter) {
+    public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
         return 1;
     }
 }

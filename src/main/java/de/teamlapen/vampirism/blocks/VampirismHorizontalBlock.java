@@ -16,8 +16,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Implements some basic horizontal rotation functionality. <br>
@@ -27,61 +28,50 @@ import org.jetbrains.annotations.Nullable;
  * {@code this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));} <br>
  * - Add {@code FACING} to {@link Block#createBlockStateDefinition(StateDefinition.Builder)}
  */
-public class VampirismHorizontalBlock extends VampirismBlock {
+public class VampirismHorizontalBlock extends Block {
+
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private final VoxelShape NORTH;
-    private final @NotNull VoxelShape EAST;
-    private final @NotNull VoxelShape SOUTH;
-    private final @NotNull VoxelShape WEST;
+
+    private final Map<Direction, VoxelShape> shapes;
 
     /**
      * @param shape Shape (collision box) for a north facing placement. Rotated shapes are derived from this
      */
-    public VampirismHorizontalBlock(Block.@NotNull Properties properties, VoxelShape shape) {
+    public VampirismHorizontalBlock(Properties properties, VoxelShape shape) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.shapes = UtilLib.getShapesRotatedFromNorth(shape);
 
-        NORTH = shape;
-        EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
-        SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
-    public VampirismHorizontalBlock(Block.@NotNull Properties properties) {
+    public VampirismHorizontalBlock(Properties properties) {
         this(properties, Shapes.block());
     }
 
-    @NotNull
     @Override
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case EAST -> EAST;
-            case SOUTH -> SOUTH;
-            case WEST -> WEST;
-            default -> NORTH;
-        };
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return shapes.get(state.getValue(FACING));
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
-    @NotNull
     @Override
-    public BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-    }
-
-    @NotNull
-    @Override
-    public BlockState rotate(@NotNull BlockState state, @NotNull Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 }

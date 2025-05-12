@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
-import de.teamlapen.vampirism.blocks.VampirismBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -15,16 +14,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public class RemainsBlock extends VampirismBlock implements BonemealableBlock, IRemainsBlock {
+public class RemainsBlock extends Block implements BonemealableBlock, IRemainsBlock {
 
     private final boolean vulnerable;
     private final boolean isVulnerability;
@@ -36,12 +35,12 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, @NotNull BlockState pState) {
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState) {
         return pLevel.getBlockState(pPos.below()).isAir();
     }
 
     @Override
-    public boolean isBonemealSuccess(@NotNull Level level, @NotNull RandomSource random, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
         return true;
     }
 
@@ -61,12 +60,12 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
     }
 
     @Override
-    public void performBonemeal(ServerLevel level, @NotNull RandomSource random, BlockPos pos, @NotNull BlockState state) {
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
         level.setBlockAndUpdate(pos.below(), ModBlocks.CURSED_HANGING_ROOTS.get().defaultBlockState());
     }
 
     @Override
-    public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+    public void attack(BlockState state, Level level, BlockPos pos, Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
             getMotherEntity(level, pos).ifPresent(a -> a.informAboutAttacker(serverPlayer));
         }
@@ -82,7 +81,7 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
     }
 
     @Override
-    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (random.nextInt(100) == 0) {
             if (MotherTreeStructure.findMother(level, pos).isEmpty()) {
                 level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
@@ -102,7 +101,7 @@ public class RemainsBlock extends VampirismBlock implements BonemealableBlock, I
         }
     }
 
-    private Optional<MotherBlockEntity> getMotherEntity(@NotNull LevelAccessor level, @NotNull BlockPos pos) {
+    private Optional<MotherBlockEntity> getMotherEntity(LevelAccessor level, BlockPos pos) {
         return MotherTreeStructure.findMother(level, pos).map(pair -> {
             BlockEntity blockEntity = level.getBlockEntity(pair.getLeft());
             if (blockEntity instanceof MotherBlockEntity mother) {

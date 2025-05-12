@@ -19,7 +19,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,23 +34,20 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
         this.behavior.appendHoverText(stack, context, components, tooltipFlag);
     }
 
-    @NotNull
     @Override
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull LivingEntity entity, ItemStack weapon) {
+    public AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity entity, @Nullable ItemStack weapon) {
         return createArrow(level, stack, entity, entity.position().add(0, entity.getEyeHeight(), 0), weapon);
     }
 
-    @NotNull
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @NotNull Position position, @Nullable ItemStack weapon) {
+    public AbstractArrow createArrow(Level level, ItemStack stack, Position position, @Nullable ItemStack weapon) {
         return createArrow(level, stack, null, position, weapon);
     }
 
-    @NotNull
-    public AbstractArrow createArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
+    public AbstractArrow createArrow(Level level, ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
         CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack, weapon);
         arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * VampirismConfig.BALANCE.crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
@@ -78,12 +74,12 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
     }
 
     @Override
-    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
+    public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity) {
         this.behavior.onHitBlock(arrow, blockPos, (AbstractArrow) arrowEntity, shootingEntity, Direction.UP);
     }
 
     @Override
-    public void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity, @NotNull Direction direction) {
+    public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
         this.behavior.onHitBlock(arrow, blockPos, (AbstractArrow) arrowEntity, shootingEntity, direction);
     }
 

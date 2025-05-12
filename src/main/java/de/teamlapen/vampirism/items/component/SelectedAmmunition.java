@@ -8,8 +8,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 
-public record SelectedAmmunition(Item item) implements ISelectedAmmunition {
+public record SelectedAmmunition(@Nullable Item item) implements ISelectedAmmunition {
 
     public static final SelectedAmmunition EMPTY = new SelectedAmmunition(null);
 

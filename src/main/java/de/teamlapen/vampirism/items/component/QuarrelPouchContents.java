@@ -14,9 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class QuarrelPouchContents implements TooltipComponent {
+public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComponent {
 
     public static final QuarrelPouchContents EMPTY = new QuarrelPouchContents(List.of());
     public static final int MAX_ITEMS = 256;
@@ -32,13 +31,8 @@ public class QuarrelPouchContents implements TooltipComponent {
         return DataResult.success(new QuarrelPouchContents(items));
     }
 
-    private final List<ItemStack> items;
-
-    public QuarrelPouchContents(List<ItemStack> items) {
-        this.items = items;
-    }
-
-    public List<ItemStack> getItems() {
+    @Override
+    public List<ItemStack> items() {
         return List.copyOf(items);
     }
 
@@ -111,13 +105,12 @@ public class QuarrelPouchContents implements TooltipComponent {
                 if (stack.getCount() <= remainingSpace) {
                     this.add(stack.copy());
                     stack.setCount(0);
-                    return true;
                 } else {
                     ItemStack itemStack = stack.copyWithCount(remainingSpace);
                     stack.shrink(remainingSpace);
                     this.add(itemStack);
-                    return true;
                 }
+                return true;
             }
             return false;
         }
@@ -162,6 +155,7 @@ public class QuarrelPouchContents implements TooltipComponent {
                 return this.items.removeFirst();
             }
         }
+
         public ItemStack getSpecific(Item item) {
             Optional<ItemStack> first = this.items.stream().filter(x -> x.is(item)).findFirst();
             if (first.isPresent()) {
@@ -180,5 +174,4 @@ public class QuarrelPouchContents implements TooltipComponent {
             return new QuarrelPouchContents(List.copyOf(this.items));
         }
     }
-
 }

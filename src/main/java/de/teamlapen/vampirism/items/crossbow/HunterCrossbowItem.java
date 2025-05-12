@@ -9,10 +9,8 @@ import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.QuarrelPouch;
-import de.teamlapen.vampirism.items.component.FactionRestriction;
 import de.teamlapen.vampirism.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.items.component.SelectedAmmunition;
-import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Registry;
@@ -35,7 +33,6 @@ import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -57,26 +54,25 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltips, flag);
         this.addAmmunitionTypeHoverText(stack, context, tooltips, flag);
     }
 
-    protected void addAmmunitionTypeHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltips, @NotNull TooltipFlag flag) {
+    protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
         getAmmunition(stack).ifPresent(ammunition -> tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
-    public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles(@NotNull ItemStack stack) {
+    public Predicate<ItemStack> getSupportedHeldProjectiles(ItemStack stack) {
         return getAllSupportedProjectiles();
     }
 
     @Override
-    public @NotNull Predicate<ItemStack> getAllSupportedProjectiles(@NotNull ItemStack stack) {
+    public Predicate<ItemStack> getAllSupportedProjectiles(ItemStack stack) {
         return x -> testProjectile(stack, x);
     }
 
-    @NotNull
     @Override
     public Predicate<ItemStack> getSupportedHeldProjectiles() {
         return getAllSupportedProjectiles();
@@ -173,7 +169,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     @Override
-    public boolean releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity entity, int pTimeCharged) {
+    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity entity, int pTimeCharged) {
         int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
         int useDuration = this.getUseDuration(itemStack, entity);
         int combinedChargingDuration = combinedUseDuration - pTimeCharged;

@@ -10,29 +10,26 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEffectConsumer {
+public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEffectConsumer {
 
-    private final Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
+    private final @Nullable Supplier<? extends CursedSpruceBlock> curedBlockSupplier;
 
-    public CursedSpruceBlock(BlockBehaviour.Properties properties, @NotNull Supplier<? extends LogBlock> strippedBlock, Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
-        super(properties.mapColor(MapColor.CRIMSON_HYPHAE).strength(2.0F).sound(SoundType.WOOD).randomTicks().ignitedByLava(), strippedBlock);
+    public CursedSpruceBlock(Properties properties, @Nullable Supplier<? extends CursedSpruceBlock> curedBlockSupplier) {
+        super(properties);
         this.curedBlockSupplier = curedBlockSupplier;
     }
 
-    public CursedSpruceBlock(BlockBehaviour.Properties properties, @NotNull Supplier<? extends LogBlock> strippedBlock) {
-        this(properties, strippedBlock, null);
+    public CursedSpruceBlock(Properties properties) {
+        this(properties, null);
     }
 
     public boolean isCured() {
@@ -41,7 +38,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.TIER tier) {
+    public void onHolyWaterEffect(Level level, BlockState state, BlockPos pos, ItemStack holyWaterStack, IItemWithTier.Tier tier) {
         if (this.curedBlockSupplier != null) {
             BlockState newState = this.curedBlockSupplier.get().defaultBlockState();
             state.getValues().keySet().forEach((@SuppressWarnings("rawtypes") Property property) -> newState.setValue(property, state.getValue(property)));
@@ -50,7 +47,7 @@ public class CursedSpruceBlock extends StrippableLogBlock implements HolyWaterEf
     }
 
     @Override
-    public void randomTick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         DirectCursedBarkBlock.Type type = null;
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
         Direction direction = null;

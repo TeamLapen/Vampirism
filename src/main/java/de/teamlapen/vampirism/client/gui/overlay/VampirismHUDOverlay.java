@@ -148,7 +148,7 @@ public class VampirismHUDOverlay {
                 }
                 if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
                     if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
-                        if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
+                        if (StakeItem.canKillInstantly((LivingEntity) entity, mc.player)) {
                             if (((LivingEntity) entity).getHealth() > 0) {
                                 this.renderStakeInstantKill(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
                                 event.setCanceled(true);

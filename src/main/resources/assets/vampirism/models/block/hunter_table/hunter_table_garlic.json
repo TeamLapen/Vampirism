@@ -1,78 +1,21 @@
 {
-	"credit": "By Grid and FoxPrince",
+	"credit": "Made by Grid and FoxPrince",
+	"render_type": "minecraft:cutout",
 	"textures": {
-		"particle": "vampirism:block/weapon_table_hammer",
 		"garlic": "vampirism:item/garlic"
 	},
-	"render_type": "minecraft:cutout",
 	"elements": [
 		{
-			"name": "Element",
-			"from": [
-				8.5,
-				9,
-				2
-			],
-			"to": [
-				15,
-				15,
-				2.0625
-			],
+			"from": [8.5, 9.6, 3],
+			"to": [15, 15.6, 3.0625],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7.5, -0.4, 0]},
 			"faces": {
-				"north": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#garlic"
-				},
-				"east": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"south": {
-					"uv": [
-						0,
-						0,
-						16,
-						16
-					],
-					"texture": "#garlic"
-				},
-				"west": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"up": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				},
-				"down": {
-					"uv": [
-						0,
-						0,
-						0,
-						0
-					],
-					"texture": "#garlic"
-				}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#garlic"},
+				"east": {"uv": [0, 0, 0, 0], "texture": "#garlic"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#garlic"},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#garlic"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#garlic"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#garlic"}
 			}
 		}
 	]

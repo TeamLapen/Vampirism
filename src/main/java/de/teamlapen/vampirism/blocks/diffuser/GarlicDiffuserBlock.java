@@ -1,111 +1,58 @@
 package de.teamlapen.vampirism.blocks.diffuser;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.BlockPropertiesExtension;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import de.teamlapen.vampirism.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class GarlicDiffuserBlock extends DiffuserBlock {
 
+    // Replace the radius field with a config codec if needed in the future
     public static final MapCodec<GarlicDiffuserBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
-                    StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(p -> p.type),
-                    propertiesCodec()
-            ).apply(inst, GarlicDiffuserBlock::new)
+                    propertiesCodec(),
+                    EnumStrength.CODEC.fieldOf("strength").forGetter(p -> p.strength),
+                    Codec.INT.fieldOf("radius").forGetter(p -> p.radius.get())
+            ).apply(inst, (properties, strength, radius) -> new GarlicDiffuserBlock(properties, strength, () -> radius))
     );
 
-    private final Type type;
+    private final EnumStrength strength;
+    private final Supplier<Integer> radius;
 
-    public GarlicDiffuserBlock(BlockBehaviour.Properties properties, @NotNull Type type) {
-        this(type, BlockPropertiesExtension.descriptionWithout(properties, "_weak|_improved|_normal").mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
-    }
-
-    public GarlicDiffuserBlock(@NotNull Type type, @NotNull Properties properties) {
+    public GarlicDiffuserBlock(Properties properties, EnumStrength strength, Supplier<Integer> radius) {
         super(properties, ModTiles.GARLIC_DIFFUSER::get);
-        this.type = type;
-    }
-
-    public Type getType() {
-        return type;
+        this.strength = strength;
+        this.radius = radius;
     }
 
     @Override
-    protected @NotNull MapCodec<? extends DiffuserBlock> codec() {
+    protected MapCodec<? extends DiffuserBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public @Nullable DiffuserBlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        EnumStrength strength;
-        int radius;
-        switch (type) {
-            case WEAK -> {
-                strength = EnumStrength.WEAK;
-                radius = VampirismConfig.BALANCE.hsGarlicDiffuserWeakDist.get();
-            }
-            case IMPROVED -> {
-                strength = EnumStrength.MEDIUM;
-                radius = VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist.get();
-            }
-            case NORMAL -> {
-                strength = EnumStrength.MEDIUM;
-                radius = VampirismConfig.BALANCE.hsGarlicDiffuserNormalDist.get();
-            }
-            default -> {
-                strength = EnumStrength.WEAK;
-                radius = 0;
-            }
-        }
-        return new GarlicDiffuserBlockEntity(pPos, pState, strength, radius);
+    public @Nullable DiffuserBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new GarlicDiffuserBlockEntity(pos, state, strength, radius.get());
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag advanced) {
-        if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(Component.translatable(getDescriptionId() + "." + type.getSerializedName()).withStyle(ChatFormatting.AQUA));
-        }
-
-        tooltip.add(Component.translatable("block.vampirism.garlic_diffuser.tooltip1").withStyle(ChatFormatting.GRAY));
-        int c = VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist == null /* During game start config is not yet set*/ ? 1 : 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffuserEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffuserWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffuserNormalDist.get()));
-        tooltip.add(Component.translatable("block.vampirism.garlic_diffuser.tooltip2", c, c).withStyle(ChatFormatting.GRAY));
-    }
-
-    public enum Type implements StringRepresentable {
-        NORMAL("normal"),
-        IMPROVED("improved"),
-        WEAK("weak");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        @NotNull
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        int chunks = 1 + 2 * radius.get();
+        DescriptionUtil.addDescriptionTooltip(BuiltInRegistries.BLOCK.getKey(this).getPath(), tooltipComponents, chunks, chunks);
     }
 }

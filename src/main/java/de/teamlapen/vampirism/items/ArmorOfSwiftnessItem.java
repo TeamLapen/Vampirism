@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -20,17 +19,14 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
-import org.checkerframework.checker.units.qual.A;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier {
 
-    private final @NotNull TIER tier;
+    private final Tier tier;
 
-    private static float getSpeedReduction(TIER tier) {
+    private static float getSpeedReduction(Tier tier) {
         return switch (tier) {
             case NORMAL -> 0.035f;
             case ENHANCED -> 0.075f;
@@ -38,32 +34,33 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
-    public ArmorOfSwiftnessItem(@NotNull ArmorMaterial material, @NotNull ArmorType type, @NotNull TIER tier, Item.Properties properties) {
+    public ArmorOfSwiftnessItem(ArmorMaterial material, ArmorType type, Tier tier, Properties properties) {
         super(material, type, properties, ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(VResourceLocation.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.bySlot(type.getSlot())).build());
         this.tier = tier;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        addTierInformation(tooltip);
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        addTierInformation(tooltipComponents);
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     @Override
-    public TIER getVampirismTier() {
+    public Tier getVampirismTier() {
         return tier;
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-        if (pEntity.tickCount % 45 == 3 && pSlotId >= 36 && pSlotId <= 39 && pEntity instanceof Player player) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+
+        if (entity.tickCount % 45 == 3 && slotId >= 36 && slotId <= 39 && entity instanceof Player player) {
             Equippable equippable = components().get(DataComponents.EQUIPPABLE);
             if (equippable != null && equippable.slot() == EquipmentSlot.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
-                for (ItemStack stack : player.getInventory().armor) {
-                    if (!stack.isEmpty() && stack.getItem() instanceof ArmorOfSwiftnessItem) {
+                for (ItemStack armorStack : player.getInventory().armor) {
+                    if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorOfSwiftnessItem) {
                         int b = getJumpBoost(getVampirismTier());
                         if (b < boost) {
                             boost = b;
@@ -85,7 +82,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
      *
      * @return -1 if none
      */
-    private int getJumpBoost(@NotNull TIER tier) {
+    private int getJumpBoost(Tier tier) {
         return switch (tier) {
             case ULTIMATE -> 1;
             case ENHANCED -> 0;
