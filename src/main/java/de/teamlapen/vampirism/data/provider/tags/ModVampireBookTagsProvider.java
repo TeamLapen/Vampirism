@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -51,6 +50,7 @@ public class ModVampireBookTagsProvider extends TagsProvider<IVampireBook> {
         this.tag(ModVampireBookTags.NON_TREASURE).add(
                 SINISTER_INTENTIONS,
                 VALOROUS_TALE,
+                ASHES_OF_PAST_DAWNS,
                 PYROMANIACS_DIARY
         );
     }

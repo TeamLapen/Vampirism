@@ -250,6 +250,7 @@
     "texture": "GridExpert",
     "type": 1,
     "status": "Contributor",
+    "book": "vampirism:ashes_of_past_dawns",
     "bookId": null,
     "appearance": {
       "hat": "hat_1",

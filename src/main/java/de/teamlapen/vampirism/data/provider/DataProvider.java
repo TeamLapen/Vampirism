@@ -48,6 +48,7 @@ public class DataProvider {
         generator.addProvider(true, new LootModifierGenerator(packOutput, lookupProviderFuture));
         generator.addProvider(true, new SoundDefinitionProvider(packOutput));
         generator.addProvider(true, new EquipmentAssetProvider(packOutput));
+        generator.addProvider(true, new BookBackgroundsProvider(packOutput));
         generator.addProvider(true, new PackMetadataGenerator(packOutput).add(PackMetadataSection.TYPE, new PackMetadataSection(Component.literal("Vampirism resources"), DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES))));
     }
 }
