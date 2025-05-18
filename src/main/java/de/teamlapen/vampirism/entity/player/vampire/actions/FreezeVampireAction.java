@@ -39,13 +39,13 @@ public class FreezeVampireAction extends DefaultVampireAction {
         freezeEntities(vampire);
         freezeBlocks(vampire);
         Player player = vampire.asEntity();
-        ModParticles.spawnParticlesServer(player.level(), ParticleTypes.SNOWFLAKE, player.getX(), player.getY(), player.getZ(), 60, 7, 4, 7, 0);
+        ModParticles.spawnParticlesServer(player.level(), ParticleTypes.SNOWFLAKE, player.getX(), player.getY(), player.getZ(), 300, 7, 4, 7, 0);
         return IActionResult.SUCCESS;
     }
 
     protected void freezeEntities(@NotNull IVampirePlayer vampire) {
         Player player = vampire.asEntity();
-        List<LivingEntity> l = player.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(7, 4, 7), vampire.getNonFriendlySelector(true, false));
+        List<LivingEntity> l = player.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(7, 4, 7), vampire.getNonFriendlySelector(true, true));
         for (LivingEntity entity : l) {
             if (player.equals(entity)) continue;
             entity.getCommandSenderWorld().playSound(null, entity.getX(), entity.getY(), entity.getZ(), ModSounds.FREEZE.get(), SoundSource.PLAYERS, 1f, 1f);
