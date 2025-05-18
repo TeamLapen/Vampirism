@@ -81,8 +81,9 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.register("armor_jump", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.register("crossbow_technique", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.register("artisan_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -113,6 +114,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> WEAPON4 = node("weapon4");
         public static final ResourceKey<ISkillNode> WEAPON5 = node("weapon5");
         public static final ResourceKey<ISkillNode> WEAPON6 = node("weapon6");
+        public static final ResourceKey<ISkillNode> WEAPON7 = node("weapon7");
 
         public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
         public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
@@ -151,6 +153,7 @@ public class HunterSkills {
             context.register(WEAPON4, new SkillNode(MASTER_CRAFTSMANSHIP));
             context.register(WEAPON5, new SkillNode(STAKE2));
             context.register(WEAPON6, new SkillNode(AXE2));
+            context.register(WEAPON7, new SkillNode(ARTISAN_CRAFTSMANSHIP));
 
             context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));

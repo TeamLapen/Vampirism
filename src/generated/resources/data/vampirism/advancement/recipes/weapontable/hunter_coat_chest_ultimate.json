@@ -11,21 +11,21 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_gold": {
+    "has_iron": {
       "conditions": {
         "items": [
           {
-            "items": "#c:ingots/gold"
+            "items": "#c:ingots/iron"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_leather": {
+    "has_netherite": {
       "conditions": {
         "items": [
           {
-            "items": "#c:leathers"
+            "items": "#c:ingots/netherite"
           }
         ]
       },
@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:armor_of_swiftness_chest_enhanced"
+        "recipe": "vampirism:hunter_coat_chest_ultimate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -41,14 +41,14 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_leather",
-      "has_garlic",
-      "has_gold"
+      "has_iron",
+      "has_netherite",
+      "has_garlic"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:armor_of_swiftness_chest_enhanced"
+      "vampirism:hunter_coat_chest_ultimate"
     ]
   }
 }

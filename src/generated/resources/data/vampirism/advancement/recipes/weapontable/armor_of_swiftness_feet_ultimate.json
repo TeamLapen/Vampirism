@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_garlic": {
+    "has_diamond": {
       "conditions": {
         "items": [
           {
-            "items": "#c:crops/garlic"
+            "items": "#c:gems/diamond"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_gold": {
+    "has_garlic": {
       "conditions": {
         "items": [
           {
-            "items": "#c:ingots/gold"
+            "items": "#c:crops/garlic"
           }
         ]
       },
@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:armor_of_swiftness_chest_enhanced"
+        "recipe": "vampirism:armor_of_swiftness_feet_ultimate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -43,12 +43,12 @@
       "has_the_recipe",
       "has_leather",
       "has_garlic",
-      "has_gold"
+      "has_diamond"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:armor_of_swiftness_chest_enhanced"
+      "vampirism:armor_of_swiftness_feet_ultimate"
     ]
   }
 }

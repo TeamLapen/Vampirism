@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "#minecraft:netherite_tool_materials",
+  "base": "vampirism:hunter_coat_legs_enhanced",
+  "result": {
+    "count": 1,
+    "id": "vampirism:hunter_coat_legs_ultimate"
+  },
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

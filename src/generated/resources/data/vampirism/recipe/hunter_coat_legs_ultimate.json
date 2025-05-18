@@ -1,0 +1,23 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": "#c:ingots/iron",
+    "Y": "#c:ingots/netherite",
+    "Z": "#c:crops/garlic"
+  },
+  "lava": 5,
+  "pattern": [
+    "XYYX",
+    "XZZX",
+    "XZZX",
+    "X  X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:hunter_coat_legs_ultimate"
+  },
+  "skill": [
+    "vampirism:artisan_craftsmanship"
+  ]
+}

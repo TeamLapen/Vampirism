@@ -1,0 +1,24 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "W": "#c:ingots/netherite",
+    "X": "#c:ingots/iron",
+    "Y": "#c:crops/garlic",
+    "Z": "#c:rods/wooden"
+  },
+  "lava": 5,
+  "pattern": [
+    "XWZY",
+    "XWZY",
+    "  ZY",
+    "  Z "
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:hunter_axe_ultimate"
+  },
+  "skill": [
+    "vampirism:artisan_craftsmanship"
+  ]
+}

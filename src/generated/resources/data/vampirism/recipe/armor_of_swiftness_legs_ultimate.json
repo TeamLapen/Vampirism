@@ -1,0 +1,23 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "X": "#c:leathers",
+    "Y": "#c:crops/garlic",
+    "Z": "#c:gems/diamond"
+  },
+  "lava": 5,
+  "pattern": [
+    "XXXX",
+    "XYYX",
+    "XZZX",
+    "X  X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:armor_of_swiftness_legs_ultimate"
+  },
+  "skill": [
+    "vampirism:artisan_craftsmanship"
+  ]
+}
