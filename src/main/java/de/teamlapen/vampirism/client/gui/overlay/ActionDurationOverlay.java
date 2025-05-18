@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -42,9 +44,7 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> implements Layered
                             //render gray transparent background for remaining duration
                             graphics.fillGradient(x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);
                             //render action icon transparent
-                            RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-                            graphics.blit(RenderType::guiTextured, loc, x, y, 0, 0, 0, 16, 16, 16, 16);
-                            RenderSystem.setShaderColor(1, 1, 1, 1f);
+                            GuiRenderer.blitColored(graphics, texture.get(), x, y,16,16, 16, 16, ARGB.colorFromFloat(0.5f,1,1,1));
                             x += 17;
                         }
                     }

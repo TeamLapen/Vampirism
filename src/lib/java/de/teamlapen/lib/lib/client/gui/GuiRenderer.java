@@ -20,6 +20,10 @@ public class GuiRenderer {
         graphics.blit(RenderType::guiTextured, texture, x, y, 0, 0, width, height, imageWidth, imageHeight);
     }
 
+    public static void blitColored(GuiGraphics graphics, ResourceLocation texture, int x, int y, int width, int height, int imageWidth, int imageHeight, int color) {
+        graphics.blit(RenderType::guiTextured, texture, x, y, 0, 0, width, height, imageWidth, imageHeight, color);
+    }
+
     public static void blitWithOffset(GuiGraphics graphics, ResourceLocation texture, int x, int y, int xOffset, int yOffset, int width, int height) {
         graphics.blit(RenderType::guiTextured, texture, x, y, xOffset, yOffset, width, height, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
     }
