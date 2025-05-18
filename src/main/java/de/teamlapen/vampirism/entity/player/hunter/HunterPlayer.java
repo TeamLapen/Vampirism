@@ -189,6 +189,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                 if (!OilUtils.getEquippedArmorOils(this.player).isEmpty()) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.POISON, 120, 0, false, false));
                 }
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP, HunterSkills.ARMOR_JUMP.getId());
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;
