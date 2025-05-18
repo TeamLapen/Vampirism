@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.neutral.NeutralPlayer;
+import de.teamlapen.vampirism.entity.player.vampire.InfectionStatus;
 import de.teamlapen.vampirism.entity.player.vampire.VampireBat;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.LevelDamage;
@@ -33,6 +34,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VampirePlayer>> VAMPIRE_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_PLAYER.getPath(), () -> AttachmentType.builder(new VampirePlayer.Factory()).serialize(new VampirePlayer.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<NeutralPlayer>> NEUTRAL_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEUTRAL_PLAYER.getPath(), () -> AttachmentType.builder(new NeutralPlayer.Factory()).serialize(new NeutralPlayer.Serializer()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<InfectionStatus>> INFECTION_STATUS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.INFECTION_STATUS.getPath(), () -> AttachmentType.builder(new InfectionStatus.Factory()).build());
 
     static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);

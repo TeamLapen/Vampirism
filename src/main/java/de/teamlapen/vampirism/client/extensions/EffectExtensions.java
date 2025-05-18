@@ -2,9 +2,14 @@ package de.teamlapen.vampirism.client.extensions;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +22,15 @@ public class EffectExtensions {
             return false;
         }
 
-//        @Override
+        @Override
+        public boolean renderInventoryText(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphics guiGraphics, int x, int y, int blitOffset) {
+            MutableComponent component = instance.getEffect().value().getDisplayName().copy();
+            guiGraphics.drawString(screen.getFont(), component, x + 10 + 18, y + 6, 16777215);
+            guiGraphics.drawString(screen.getFont(), Component.translatable("effect.duration.infinite"), x + 10 + 18, y + 6 + 10, 8355711);
+            return true;
+        }
+
+        //        @Override
 //        public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
 //            Component component = ((EffectRenderingInventoryScreenAccessor) screen).invoke_getEffectName(instance);
 //            graphics.drawString(screen.font, component, x + 10 + 18, y + 6, 16777215, true);

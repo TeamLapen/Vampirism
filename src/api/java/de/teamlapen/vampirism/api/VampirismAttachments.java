@@ -32,5 +32,6 @@ public class VampirismAttachments {
         public static final ResourceLocation FOG_HANDLER = VResourceLocation.mod("fog_handler");
         public static final ResourceLocation DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
         public static final ResourceLocation VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
+        public static final ResourceLocation INFECTION_STATUS = VResourceLocation.mod("infection_status");
     }
 }

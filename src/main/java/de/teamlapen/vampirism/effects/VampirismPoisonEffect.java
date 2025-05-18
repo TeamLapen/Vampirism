@@ -19,7 +19,7 @@ public class VampirismPoisonEffect extends VampirismEffect {
     }
 
     @Override
-    public boolean applyEffectTick(ServerLevel level, @NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(@NotNull ServerLevel level, @NotNull LivingEntity entityLivingBaseIn, int amplifier) {
         float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entityLivingBaseIn.getHealth() - 1, Math.max(1, amplifier));
         if (damage > 0) {
             DamageHandler.hurtVanilla(level, entityLivingBaseIn, DamageSources::magic, damage);

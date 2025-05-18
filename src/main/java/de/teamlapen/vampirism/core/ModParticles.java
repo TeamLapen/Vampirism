@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import de.teamlapen.vampirism.particle.GenericParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,44 +22,27 @@ import org.jetbrains.annotations.NotNull;
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, REFERENCE.MODID);
 
-    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> new ParticleType<>(false) {
-        @Override
-        public @NotNull MapCodec<FlyingBloodParticleOptions> codec() {
-            return FlyingBloodParticleOptions.CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, FlyingBloodParticleOptions> streamCodec() {
-            return FlyingBloodParticleOptions.STREAM_CODEC;
-        }
-    });
-    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> new ParticleType<>(false) {
-
-        @Override
-        public @NotNull MapCodec<FlyingBloodEntityParticleOptions> codec() {
-            return FlyingBloodEntityParticleOptions.CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, FlyingBloodEntityParticleOptions> streamCodec() {
-            return FlyingBloodEntityParticleOptions.STREAM_CODEC;
-        }
-    });
-    public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> new ParticleType<>(false) {
-
-        @Override
-        public @NotNull MapCodec<GenericParticleOptions> codec() {
-            return GenericParticleOptions.CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, GenericParticleOptions> streamCodec() {
-            return GenericParticleOptions.STREAM_CODEC;
-        }
-    });
+    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> create(FlyingBloodParticleOptions.CODEC,  FlyingBloodParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> create(GenericParticleOptions.CODEC, GenericParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));
 
     static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
+    }
+
+    private static <T extends ParticleOptions> ParticleType<T> create(MapCodec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
+        return new ParticleType<T>(false) {
+            @Override
+            public @NotNull MapCodec<T> codec() {
+                return codec;
+            }
+
+            @Override
+            public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+                return streamCodec;
+            }
+        };
     }
 
     public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, @NotNull RandomSource rand) {
