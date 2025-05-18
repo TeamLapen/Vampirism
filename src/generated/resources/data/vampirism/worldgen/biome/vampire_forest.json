@@ -36,8 +36,7 @@
     [],
     [
       "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface",
-      "vampirism:mod_lake_placed"
+      "minecraft:lake_lava_surface"
     ],
     [],
     [],
