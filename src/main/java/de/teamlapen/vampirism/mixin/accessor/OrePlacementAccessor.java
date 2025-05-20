@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrePlacementAccessor {
 
     @Invoker("commonOrePlacement")
-    static List<PlacementModifier> commonOrePlacement(int pCount, PlacementModifier pHeightRange) {
+    static List<PlacementModifier> invokeCommonOrePlacement(int count, PlacementModifier heightRange) {
         throw new IllegalStateException("Mixin failed to apply");
     }
 }

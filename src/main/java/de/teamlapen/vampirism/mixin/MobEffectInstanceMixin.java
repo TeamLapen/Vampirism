@@ -14,51 +14,52 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MobEffectInstance.class)
-public abstract class MixinMobEffectInstance implements EffectInstanceWithSource {
+public abstract class MobEffectInstanceMixin implements EffectInstanceWithSource {
 
     @Shadow
     private int duration;
+
     @Shadow
     @Nullable
     private MobEffectInstance hiddenEffect;
+
     @Unique
-    private @Nullable ResourceLocation source;
+    private @Nullable ResourceLocation vampirism$source;
 
     @Override
     @Nullable
-    public MobEffectInstance getHiddenEffect() {
+    public MobEffectInstance vampirism$getHiddenEffect() {
         return this.hiddenEffect;
     }
 
     @Override
     @Nullable
-    public ResourceLocation getSource() {
-        return this.source;
+    public ResourceLocation vampirism$getSource() {
+        return this.vampirism$source;
     }
 
     @Override
-    public void setSource(@Nullable ResourceLocation source) {
-        this.source = source;
+    public void vampirism$setSource(@Nullable ResourceLocation source) {
+        this.vampirism$source = source;
     }
 
     @Override
-    public boolean hasSource() {
-        return this.source != null;
+    public boolean vampirism$hasSource() {
+        return this.vampirism$source != null;
     }
 
     @Override
-    public void removeEffect() {
+    public void vampirism$removeEffect() {
         this.duration = 1;
     }
 
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(@NotNull MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {
-        this.source = ((EffectInstanceWithSource) other).getSource();
+        this.vampirism$source = ((EffectInstanceWithSource) other).vampirism$getSource();
     }
 
     @Inject(method = "setDetailsFrom(Lnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
     private void copySource1(@NotNull MobEffectInstance other, CallbackInfo ci) {
-        this.source = ((EffectInstanceWithSource) other).getSource();
+        this.vampirism$source = ((EffectInstanceWithSource) other).vampirism$getSource();
     }
-
 }

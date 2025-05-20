@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.mixin;
+package de.teamlapen.vampirism.mixin.client;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -24,12 +24,14 @@ import java.util.Date;
 import java.util.List;
 
 @Mixin(SplashManager.class)
-public class MixinSplashManager {
+public class SplashManagerMixin {
 
     @Unique
     private static final String VAMPIRISM_SPLASHES_LOCATION = "/assets/" + REFERENCE.MODID + "/texts/splashes.txt";
+
     @Unique
     private static final Logger vampirism$LOGGER = LogManager.getLogger();
+
     @Final
     @Shadow
     private List<String> splashes;

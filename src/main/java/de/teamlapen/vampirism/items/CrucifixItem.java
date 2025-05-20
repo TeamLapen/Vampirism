@@ -146,7 +146,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
                 }
                 //Unfortunately, Vanilla converts y-collision with ground into forward movement later on (in #move)
                 //Therefore, we check for collision here and remove any y component if entity would collide with ground
-                Vec3 collisionDelta = ((EntityAccessor) nearbyEntity).invoke_collide(newDelta);
+                Vec3 collisionDelta = ((EntityAccessor) nearbyEntity).invokeCollide(newDelta);
                 if (collisionDelta.y != newDelta.y && newDelta.y < 0) {
                     newDelta = newDelta.multiply(1, 0, 1);
                 }

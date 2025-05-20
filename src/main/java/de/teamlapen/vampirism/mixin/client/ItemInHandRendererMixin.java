@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.Constant;
 public class ItemInHandRendererMixin {
 
     @WrapOperation(method = "renderArmWithItem", constant = @Constant(classValue = CrossbowItem.class))
-    private boolean yourHandlerMethod(Object obj, Operation<Boolean> original) {
-        if (obj instanceof HunterCrossbowItem) {
+    private boolean skipHunterCrossbowRender(Object item, Operation<Boolean> original) {
+        if (item instanceof HunterCrossbowItem) {
             return false;
         }
-        return original.call(obj);
+        return original.call(item);
     }
 }

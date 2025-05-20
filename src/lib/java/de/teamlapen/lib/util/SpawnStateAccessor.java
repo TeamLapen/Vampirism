@@ -5,5 +5,5 @@ import net.minecraft.world.level.ChunkPos;
 
 public interface SpawnStateAccessor {
 
-    boolean canSpawnForCategoryLocalI(MobCategory category, ChunkPos chunkPos);
+    boolean vampirism$canSpawnForCategoryLocalI(MobCategory category, ChunkPos chunkPos);
 }

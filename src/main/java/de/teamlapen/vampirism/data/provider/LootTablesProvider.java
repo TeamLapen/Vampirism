@@ -401,7 +401,7 @@ public class LootTablesProvider {
     private static class ModBlockLootTables extends BlockLootSubProvider {
 
         protected ModBlockLootTables(HolderLookup.Provider lookupProvider) {
-            super(VanillaBlockLootAccessor.getEXPLOSION_RESISTANT(), FeatureFlags.REGISTRY.allFlags(), lookupProvider);
+            super(VanillaBlockLootAccessor.getExplosionResistantBlocks(), FeatureFlags.REGISTRY.allFlags(), lookupProvider);
         }
 
         @Override

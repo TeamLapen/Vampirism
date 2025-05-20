@@ -10,5 +10,5 @@ public interface GuiGraphicsAccessor extends de.teamlapen.lib.util.GuiGraphicsAc
 
     @Accessor("bufferSource")
     @Override
-    MultiBufferSource.BufferSource bufferSource();
+    MultiBufferSource.BufferSource getBufferSource();
 }

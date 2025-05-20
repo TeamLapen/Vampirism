@@ -509,7 +509,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
 
     private void updateCache() {
         player.refreshDisplayName();
-        VampirismPlayerAttributes atts = ((IVampirismPlayer) player).getVampAtts();
+        VampirismPlayerAttributes atts = ((IVampirismPlayer) player).vampirism$getVampAtts();
         atts.hunterLevel = getCurrentLevel(ModFactions.HUNTER);
         atts.vampireLevel = getCurrentLevel(ModFactions.VAMPIRE);
         atts.lordLevel = this.currentLordLevel;

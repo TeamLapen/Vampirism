@@ -15,7 +15,7 @@ public abstract class SpawnStateMixin implements SpawnStateAccessor {
 
     @Unique
     @Override
-    public boolean canSpawnForCategoryLocalI(MobCategory category, ChunkPos chunkPos) {
+    public boolean vampirism$canSpawnForCategoryLocalI(MobCategory category, ChunkPos chunkPos) {
         return canSpawnForCategoryLocal(category, chunkPos);
     }
 }

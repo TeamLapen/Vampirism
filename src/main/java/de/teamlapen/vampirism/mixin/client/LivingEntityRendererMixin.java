@@ -31,8 +31,8 @@ import java.util.Optional;
 public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> {
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("RETURN"))
-    private void applyConvertedRenderState(T entity, S state, float p_361157_, CallbackInfo ci) {
-        IVampirismRenderState renderState = (IVampirismRenderState) state;
+    private void applyConvertedRenderState(T entity, S reusedState, float partialTick, CallbackInfo ci) {
+        IVampirismRenderState renderState = (IVampirismRenderState) reusedState;
         if (ConvertedCreatureRenderer.renderOverlay) {
             Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(ResourceLocation::toString).map(s -> VampirismAPI.entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
                 renderState.vampirism$overlay(location);
@@ -62,7 +62,7 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
 
     @WrapOperation(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;shouldRenderLayers(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;)Z"))
     private boolean skipLayersInBloodVision(LivingEntityRenderer<T, S, M> instance, S state, Operation<Boolean> original) {
-        if (VampirismModClient.getINSTANCE().getBloodVisionRenderer().isInBloodVisionRendering()) {
+        if (VampirismModClient.getInstance().getBloodVisionRenderer().isInBloodVisionRendering()) {
             return false;
         } else {
             return original.call(instance, state);

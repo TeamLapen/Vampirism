@@ -8,13 +8,13 @@ import org.jetbrains.annotations.NotNull;
 public interface ItemPropertiesExtension {
 
     @NotNull
-    Item.Properties description(@NotNull DependantName<Item, String> dependant);
+    Item.Properties vampirism$description(@NotNull DependantName<Item, String> dependant);
 
     static Item.Properties withDescription(Item.Properties properties, DependantName<Item, String> dependant) {
-        return ((ItemPropertiesExtension) properties).description(dependant);
+        return ((ItemPropertiesExtension) properties).vampirism$description(dependant);
     }
 
     static Item.Properties descriptionWithout(Item.Properties properties, String regexPathReplace) {
-        return ((ItemPropertiesExtension) properties).description(item -> Util.makeDescriptionId("item", item.location().withPath(item.location().getPath().replaceAll(regexPathReplace, ""))));
+        return ((ItemPropertiesExtension) properties).vampirism$description(item -> Util.makeDescriptionId("item", item.location().withPath(item.location().getPath().replaceAll(regexPathReplace, ""))));
     }
 }

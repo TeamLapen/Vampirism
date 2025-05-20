@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(Entity.class)
-public class MixinEntity {
+public class EntityMixin {
 
     @Inject(method = "isCurrentlyGlowing", at = @At("RETURN"), cancellable = true)
     private void handleIsGlowing(@NotNull CallbackInfoReturnable<Boolean> cir) {
@@ -29,7 +29,6 @@ public class MixinEntity {
                 cir.setReturnValue(true);
             }
         }
-
     }
 
     @ModifyReturnValue(method = "getTicksRequiredToFreeze", at = @At("RETURN"))
@@ -42,7 +41,7 @@ public class MixinEntity {
 
     @Inject(method = "vibrationAndSoundEffectsFromBlock", at = @At("HEAD"), cancellable = true)
     private void test(BlockPos pPos, BlockState pState, boolean pPlayStepSound, boolean pBroadcastGameEvent, Vec3 pEntityPos, CallbackInfoReturnable<Boolean> cir) {
-        if (this instanceof IVampirismPlayer player && player.getVampAtts().getVampSpecial().darkStalker) {
+        if (this instanceof IVampirismPlayer player && player.vampirism$getVampAtts().getVampSpecial().darkStalker) {
             cir.setReturnValue(false);
         }
     }

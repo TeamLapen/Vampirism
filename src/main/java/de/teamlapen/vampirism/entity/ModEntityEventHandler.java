@@ -16,13 +16,11 @@ import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
-import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.HunterAxeItem;
 import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
@@ -60,7 +58,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -95,7 +92,7 @@ public class ModEntityEventHandler {
             @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                ((NearestTargetGoalModifier) target).ignoreVampires(e);
+                ((NearestTargetGoalModifier) target).vampirism$ignoreVampires(e);
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
@@ -197,7 +194,7 @@ public class ModEntityEventHandler {
                     }
                 }
                 if (mobTarget != null) {
-                    ((NearestTargetGoalModifier) mobTarget).ignoreFactionEntities();
+                    ((NearestTargetGoalModifier) mobTarget).vampirism$ignoreFactionEntities();
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");

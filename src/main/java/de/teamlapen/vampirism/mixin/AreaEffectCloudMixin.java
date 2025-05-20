@@ -37,5 +37,4 @@ public abstract class AreaEffectCloudMixin extends Entity {
                 .map(s -> VampirismPoisonEffect.createEffectCloudEffect())
                 .orElse(effectInstance);
     }
-
 }

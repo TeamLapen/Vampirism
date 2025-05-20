@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.mixin.accessor;
 
-
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;

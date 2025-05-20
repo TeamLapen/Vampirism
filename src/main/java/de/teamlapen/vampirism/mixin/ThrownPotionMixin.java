@@ -17,27 +17,27 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ThrownPotion.class)
-public abstract class ThrowablePotionMixin extends ThrowableItemProjectile {
+public abstract class ThrownPotionMixin extends ThrowableItemProjectile {
 
     @Unique
-    private LivingEntity tick_local_entityLiving;
+    private LivingEntity vampirism$currentAffectedEntity;
 
     @Deprecated
-    private ThrowablePotionMixin(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
+    private ThrownPotionMixin(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @ModifyVariable(method = "applySplash", at = @At(value = "STORE", ordinal = 0))
-    private LivingEntity l(LivingEntity e) {
-        return tick_local_entityLiving = e;
+    private LivingEntity setCurrentEntity(LivingEntity entity) {
+        return vampirism$currentAffectedEntity = entity;
     }
 
     @ModifyVariable(method = "applySplash", at = @At(value = "STORE", ordinal = 0))
-    private MobEffectInstance l(MobEffectInstance e) {
-        if (this.getItem().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && Helper.isVampire(tick_local_entityLiving)) {
+    private MobEffectInstance checkHunterPotions(MobEffectInstance effectInstance) {
+        if (this.getItem().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && Helper.isVampire(vampirism$currentAffectedEntity)) {
             return VampirismPoisonEffect.createThrowableEffect();
         } else {
-            return e;
+            return effectInstance;
         }
     }
 }

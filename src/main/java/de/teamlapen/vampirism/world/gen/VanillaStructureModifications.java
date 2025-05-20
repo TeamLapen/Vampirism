@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.mixin.JigsawPlacerMixin;
 import de.teamlapen.vampirism.mixin.accessor.ProcessorListsAccessor;
 import de.teamlapen.vampirism.mixin.accessor.StructureTemplatePoolAccessor;
 import net.minecraft.core.HolderGetter;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 /**
  * Vanilla structures are modified in the following ways:
  * 1) Village structures are modified to include totem and hunter trainer house. Furthermore, some temples are replaced with custom versions. This is done during common setup.
- * 2) Explicitely specified structture pieces are limit to once per structure  via {@link de.teamlapen.vampirism.mixin.MixinJigsawPlacer}.
+ * 2) Explicitely specified structture pieces are limit to once per structure  via {@link JigsawPlacerMixin}.
  */
 public class VanillaStructureModifications {
 

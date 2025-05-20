@@ -61,9 +61,9 @@ public class RenderHandler {
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
-                    ((CameraAccessor) event.getCamera()).invoke_move(0.2f, -0.2f, 0);
+                    ((CameraAccessor) event.getCamera()).invokeMove(0.2f, -0.2f, 0);
                 } else {
-                    ((CameraAccessor) event.getCamera()).invoke_move(0, -0.2f, 0);
+                    ((CameraAccessor) event.getCamera()).invokeMove(0, -0.2f, 0);
                 }
             });
         }

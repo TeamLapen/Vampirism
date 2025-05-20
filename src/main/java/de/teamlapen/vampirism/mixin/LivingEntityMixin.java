@@ -16,28 +16,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity {
-    private MixinLivingEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
-        super(type, worldIn);
-    }
+public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
-    public abstract boolean addEffect(MobEffectInstance effectInstanceIn);
+    public abstract boolean addEffect(MobEffectInstance effectInstance);
+
+    private LivingEntityMixin(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level level) {
+        super(type, level);
+    }
 
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "RETURN", ordinal = 1))
-    private void handleTotemOfUndying(DamageSource damageSourceIn, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    private void handleTotemOfUndying(DamageSource damageSource, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
             this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, 800, 5));
             this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 800, 4));
         }
     }
-
-//    @ModifyReturnValue(method = "canFreeze", at = @At("RETURN"))
-//    private boolean vampireFreeze(boolean original) {
-//        if (original && Helper.isVampire(this)) {
-//            return false;
-//        }
-//        return original;
-//    }
-
 }

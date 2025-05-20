@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public interface VibrationSystemUserMixin {
 
     @WrapOperation(method = "isValidVibration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;dampensVibrations()Z"))
-    private boolean modifyDampensVibrations(Entity instance, Operation<Boolean> original, Holder<GameEvent> pGameEvent) {
-        return (instance instanceof IVampirismPlayer player && player.getVampAtts().getVampSpecial().darkStalker && pGameEvent.is(ModGameEventTags.DARK_STALKER_IGNORE)) || original.call(instance);
+    private boolean modifyDampensVibrations(Entity instance, Operation<Boolean> original, Holder<GameEvent> gameEvent) {
+        return (instance instanceof IVampirismPlayer player && player.vampirism$getVampAtts().getVampSpecial().darkStalker && gameEvent.is(ModGameEventTags.DARK_STALKER_IGNORE)) || original.call(instance);
     }
 }

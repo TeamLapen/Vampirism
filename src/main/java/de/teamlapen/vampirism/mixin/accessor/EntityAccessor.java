@@ -18,7 +18,7 @@ public interface EntityAccessor {
     void setEyeHeight(float eyeHeight);
 
     @Invoker("collide")
-    Vec3 invoke_collide(Vec3 pVec);
+    Vec3 invokeCollide(Vec3 pVec);
 
     @Accessor("dimensions")
     EntityDimensions getDimensions();

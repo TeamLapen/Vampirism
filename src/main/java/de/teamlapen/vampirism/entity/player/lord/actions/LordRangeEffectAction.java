@@ -54,7 +54,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
     }
 
     protected int getEffectAmplifier(@NotNull T player) {
-        return ((IVampirismPlayer) player.asEntity()).getVampAtts().lordLevel - 1;
+        return ((IVampirismPlayer) player.asEntity()).vampirism$getVampAtts().lordLevel - 1;
     }
 
     @Override

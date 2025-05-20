@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BeaconBlockEntity.BeaconBeamSection.class)
-public interface BeaconBeamSectionyMixin {
+public interface BeaconBeamSectionMixin {
 
     @Invoker("increaseHeight")
-    void invoke_increaseHeight();
+    void invokeIncreaseHeight();
 }

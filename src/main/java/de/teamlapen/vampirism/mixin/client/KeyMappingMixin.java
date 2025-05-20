@@ -8,11 +8,12 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(KeyMapping.class)
 public class KeyMappingMixin implements KeyMappingAccessor {
+
     @Shadow private int clickCount;
 
     @Unique
     @Override
-    public void clicked() {
+    public void vampirism$clicked() {
         this.clickCount++;
     }
 }

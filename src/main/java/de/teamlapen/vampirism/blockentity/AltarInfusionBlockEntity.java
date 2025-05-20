@@ -248,7 +248,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isLocalPlayer()) {
-                    VampirismModClient.getINSTANCE().getOverlay().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
+                    VampirismModClient.getInstance().getOverlay().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
         }

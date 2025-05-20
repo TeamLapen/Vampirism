@@ -60,7 +60,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
      */
     @Override
     public void randomTick(BlockState p_222508_, ServerLevel p_222509_, BlockPos p_222510_, RandomSource p_222511_) {
-        if (!SpreadingSnowyDirtBlockAccessor.canBeGrass(p_222508_, p_222509_, p_222510_)) {
+        if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(p_222508_, p_222509_, p_222510_)) {
             if (!p_222509_.isAreaLoaded(p_222510_, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
             p_222509_.setBlockAndUpdate(p_222510_, ModBlocks.CURSED_EARTH.get().defaultBlockState());
         } else {
@@ -70,7 +70,7 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
 
                 for (int i = 0; i < 4; ++i) {
                     BlockPos blockpos = p_222510_.offset(p_222511_.nextInt(3) - 1, p_222511_.nextInt(5) - 3, p_222511_.nextInt(3) - 1);
-                    if (p_222509_.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && SpreadingSnowyDirtBlockAccessor.canPropagate(blockstate, p_222509_, blockpos)) {
+                    if (p_222509_.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && SpreadingSnowyDirtBlockAccessor.invokeCanPropagate(blockstate, p_222509_, blockpos)) {
                         p_222509_.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, p_222509_.getBlockState(blockpos.above()).is(Blocks.SNOW)));
                     }
                 }

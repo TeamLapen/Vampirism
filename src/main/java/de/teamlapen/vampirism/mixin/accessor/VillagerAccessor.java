@@ -20,5 +20,4 @@ public interface VillagerAccessor {
     static ImmutableList<MemoryModuleType<?>> getMemoryTypes() {
         throw new IllegalStateException("Mixin failed to apply");
     }
-
 }

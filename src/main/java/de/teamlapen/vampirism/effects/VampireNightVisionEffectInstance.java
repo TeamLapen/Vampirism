@@ -14,7 +14,7 @@ public class VampireNightVisionEffectInstance extends MobEffectInstance {
 
     public VampireNightVisionEffectInstance() {
         super(MobEffects.NIGHT_VISION, -1, 0, false, false, false);
-        ((EffectInstanceWithSource) this).setSource(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
+        ((EffectInstanceWithSource) this).vampirism$setSource(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
     }
 
     @Override

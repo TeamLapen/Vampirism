@@ -11,18 +11,18 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Player.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements IVampirismPlayer {
+public abstract class PlayerMixin extends LivingEntity implements IVampirismPlayer {
 
     @Unique
-    private final VampirismPlayerAttributes vampirismPlayerAttributes = new VampirismPlayerAttributes();
+    private final VampirismPlayerAttributes vampirism$vampirismPlayerAttributes = new VampirismPlayerAttributes();
 
-    private MixinPlayerEntity(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
+    private PlayerMixin(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
     }
 
     @Unique
     @Override
-    public VampirismPlayerAttributes getVampAtts() {
-        return vampirismPlayerAttributes;
+    public VampirismPlayerAttributes vampirism$getVampAtts() {
+        return vampirism$vampirismPlayerAttributes;
     }
 }

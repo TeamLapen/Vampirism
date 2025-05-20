@@ -18,12 +18,13 @@ import java.util.List;
 
 @Debug(export = true)
 @Mixin(JigsawPlacement.Placer.class)
-public abstract class MixinJigsawPlacer {
+public abstract class JigsawPlacerMixin {
+
     @Shadow
     @Final
     private List<? super PoolElementStructurePiece> pieces;
 
-    private MixinJigsawPlacer() {
+    private JigsawPlacerMixin() {
     }
 
     @ModifyExpressionValue(method = "tryPlacingChildren", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;", ordinal = 1))

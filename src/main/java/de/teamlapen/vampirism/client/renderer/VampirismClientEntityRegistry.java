@@ -23,7 +23,7 @@ public class VampirismClientEntityRegistry extends VampirismEntityRegistry {
 
     public <I extends LivingEntity, S extends LivingEntityRenderState & IConvertedOverlayRenderState, U extends EntityModel<S>> void syncOverlays() {
         for (EntityType<?> type : getConvertibleOverlay().keySet()) {
-            LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).renderers().get(type);
+            LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).getRenderers().get(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;

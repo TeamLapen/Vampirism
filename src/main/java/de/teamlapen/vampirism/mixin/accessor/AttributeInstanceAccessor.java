@@ -11,8 +11,8 @@ import java.util.Collection;
 public interface AttributeInstanceAccessor {
 
     @Invoker("removeModifier")
-    void invoke_removeModifier(AttributeModifier pModifier);
+    void invokeRemoveModifier(AttributeModifier pModifier);
 
     @Invoker("getModifiersOrEmpty")
-    Collection<AttributeModifier> getModifiers(AttributeModifier.Operation operation);
+    Collection<AttributeModifier> invokeGetModifiersOrEmpty(AttributeModifier.Operation operation);
 }

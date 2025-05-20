@@ -12,5 +12,5 @@ import java.util.Map;
 public interface PlayerAdvancementsAccessor {
 
     @Accessor("progress")
-    Map<AdvancementHolder, AdvancementProgress> getAdvancements();
+    Map<AdvancementHolder, AdvancementProgress> getProgress();
 }

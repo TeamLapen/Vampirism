@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BellBlock.class)
-public class MixinBellBlock {
+public class BellBlockMixin {
 
     @Inject(method = "onHit", at = @At(value = "RETURN", ordinal = 0))
     public void ringTotem(@NotNull Level world, BlockState state, BlockHitResult result, @Nullable Player player, boolean canRingBell, CallbackInfoReturnable<Boolean> cir) {

@@ -17,7 +17,7 @@ public class CodecModifications {
             public MobEffectInstance decode(RegistryFriendlyByteBuf p_320376_) {
                 MobEffectInstance decode = codec.decode(p_320376_);
                 if (p_320376_.readBoolean()) {
-                    ((EffectInstanceWithSource) decode).setSource(p_320376_.readResourceLocation());
+                    ((EffectInstanceWithSource) decode).vampirism$setSource(p_320376_.readResourceLocation());
                 }
                 return decode;
             }
@@ -25,7 +25,7 @@ public class CodecModifications {
             @Override
             public void encode(RegistryFriendlyByteBuf p_320158_, MobEffectInstance p_320396_) {
                 codec.encode(p_320158_, p_320396_);
-                ResourceLocation source = ((EffectInstanceWithSource) p_320396_).getSource();
+                ResourceLocation source = ((EffectInstanceWithSource) p_320396_).vampirism$getSource();
                 if (source != null) {
                     p_320158_.writeBoolean(true);
                     p_320158_.writeResourceLocation(source);

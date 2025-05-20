@@ -9,20 +9,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ThrowableProjectile.class)
 public abstract class ThrowableProjectileMixin extends Projectile {
 
-    protected ThrowableProjectileMixin(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected ThrowableProjectileMixin(EntityType<? extends Projectile> type, Level level) {
+        super(type, level);
     }
 
     @Override
-    public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
-        super.shootFromRotation(pShooter, pX, pY, pZ, pVelocity, pInaccuracy);
+    public void shootFromRotation(@NotNull Entity shooter, float x, float y, float z, float velocity, float inaccuracy) {
+        super.shootFromRotation(shooter, x, y, z, velocity, inaccuracy);
     }
 
     @SuppressWarnings("MixinAnnotationTarget")

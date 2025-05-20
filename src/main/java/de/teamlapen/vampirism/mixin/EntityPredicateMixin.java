@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(TargetingConditions.class)
-public class MixinEntityPredicate {
+public class EntityPredicateMixin {
 
     @Final
     @Shadow
     private boolean isCombat;
 
     @Inject(method = "test", at = @At("RETURN"), cancellable = true)
-    private void handleCanTarget_vampirism(ServerLevel level, LivingEntity attacker, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    private void ignoreIfDown(ServerLevel level, LivingEntity attacker, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && isCombat) {
             if (target instanceof Player && !(attacker instanceof IHunterMob)) {
                 if (VampirismPlayerAttributes.get((Player) target).getVampSpecial().isDBNO) {

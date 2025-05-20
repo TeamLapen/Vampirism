@@ -21,7 +21,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     private String translationId;
 
     public void addEffectInstance(@NotNull T player, @NotNull MobEffectInstance instance) {
-        ((EffectInstanceWithSource) instance).setSource(this.getRegistryName());
+        ((EffectInstanceWithSource) instance).vampirism$setSource(this.getRegistryName());
         player.asEntity().addEffect(instance);
     }
 
@@ -72,13 +72,13 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
         MobEffectInstance ins = player.asEntity().getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
-            if (insM.hasSource()) {
-                if (insM.getSource().equals(this.getRegistryName())) {
-                    insM.removeEffect();
+            if (insM.vampirism$hasSource()) {
+                if (insM.vampirism$getSource().equals(this.getRegistryName())) {
+                    insM.vampirism$removeEffect();
                     break;
                 }
             }
-            ins = insM.getHiddenEffect();
+            ins = insM.vampirism$getHiddenEffect();
         }
     }
 

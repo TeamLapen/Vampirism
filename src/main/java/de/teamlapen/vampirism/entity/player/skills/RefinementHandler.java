@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.lib.lib.storage.ISyncableSaveData;
 import de.teamlapen.lib.lib.storage.UpdateParams;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
@@ -21,7 +20,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -239,7 +237,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
                             AttributeInstance attributeInstance = this.player.asEntity().getAttribute(refinement.getAttribute());
                             AttributeModifier t = this.refinementModifier.remove(key);
                             if (t != null) {
-                                ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
+                                ((AttributeInstanceAccessor) attributeInstance).invokeRemoveModifier(t);
                                 double value = t.amount() - refinement.getModifierValue();
                                 if (value != 0) {
                                     attributeInstance.addTransientModifier(t = refinement.createAttributeModifier(value));

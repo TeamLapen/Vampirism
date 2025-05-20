@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
-import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionyMixin;
+import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionMixin;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -141,7 +141,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
                 } else if (beaconblockentity$beaconbeamsection != null) {
                     if (j1 == beaconblockentity$beaconbeamsection.getColor()) {
-                        ((BeaconBeamSectionyMixin) beaconblockentity$beaconbeamsection).invoke_increaseHeight();
+                        ((BeaconBeamSectionMixin) beaconblockentity$beaconbeamsection).invokeIncreaseHeight();
                     } else {
                         beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(
                                 ARGB.average(beaconblockentity$beaconbeamsection.getColor(), j1)
@@ -156,7 +156,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     break;
                 }
 
-                ((BeaconBeamSectionyMixin) beaconblockentity$beaconbeamsection).invoke_increaseHeight();
+                ((BeaconBeamSectionMixin) beaconblockentity$beaconbeamsection).invokeIncreaseHeight();
             }
 
             blockpos = blockpos.above();

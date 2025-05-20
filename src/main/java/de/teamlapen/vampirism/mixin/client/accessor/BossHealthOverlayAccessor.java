@@ -15,7 +15,7 @@ public interface BossHealthOverlayAccessor {
     @Accessor("events")
     Map<UUID, LerpingBossEvent> getEvents();
 
-    @Accessor()
+    @Accessor("OVERLAY_BACKGROUND_SPRITES")
     static ResourceLocation[] getOVERLAY_BACKGROUND_SPRITES() {
         throw new IllegalStateException("Mixin failed to apply");
     }
