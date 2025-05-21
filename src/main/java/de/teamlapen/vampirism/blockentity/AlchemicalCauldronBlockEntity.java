@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronMenu;
@@ -26,7 +26,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
@@ -125,7 +124,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
 
     public AlchemicalCauldronBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALCHEMICAL_CAULDRON.get(), pos, state);
+        super(ModBlockEntities.ALCHEMICAL_CAULDRON.get(), pos, state);
         this.recipeType = ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get();
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
         this.quickCheck = RecipeManager.createCheck(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get());

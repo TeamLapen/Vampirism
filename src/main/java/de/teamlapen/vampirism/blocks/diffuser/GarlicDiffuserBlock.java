@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +35,7 @@ public class GarlicDiffuserBlock extends DiffuserBlock {
     private final Supplier<Integer> radius;
 
     public GarlicDiffuserBlock(Properties properties, EnumStrength strength, Supplier<Integer> radius) {
-        super(properties, ModTiles.GARLIC_DIFFUSER::get);
+        super(properties, ModBlockEntities.GARLIC_DIFFUSER::get);
         this.strength = strength;
         this.radius = radius;
     }

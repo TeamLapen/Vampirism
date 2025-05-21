@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.inventory.BloodGrinderMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +49,7 @@ public class BloodGrinderBlockEntity extends InventoryBlockEntity {
     private int cooldownProcess = 0;
 
     public BloodGrinderBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.GRINDER.get(), pos, state, 1, BloodGrinderMenu.SELECTOR_INFOS);
+        super(ModBlockEntities.GRINDER.get(), pos, state, 1, BloodGrinderMenu.SELECTOR_INFOS);
         this.itemHandler = new SelectorInvWrapper(this);
     }
 

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.mixin.accessor.BeaconBeamSectionMixin;
@@ -111,7 +111,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     };
 
     public VampireBeaconBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ModTiles.VAMPIRE_BEACON.get(), pPos, pBlockState);
+        super(ModBlockEntities.VAMPIRE_BEACON.get(), pPos, pBlockState);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VampireBeaconBlockEntity pBlockEntity) {

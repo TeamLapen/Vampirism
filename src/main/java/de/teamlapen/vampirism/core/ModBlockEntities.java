@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.blockentity.*;
+import de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 
 
-public class ModTiles {
+public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, REFERENCE.MODID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TentBlockEntity>> TENT = BLOCK_ENTITY_TYPES.register("tent", () -> create(TentBlockEntity::new, ModBlocks.TENT_MAIN.get()));
@@ -39,13 +39,9 @@ public class ModTiles {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MotherBlockEntity>> MOTHER = BLOCK_ENTITY_TYPES.register("mother", () -> create(MotherBlockEntity::new, ModBlocks.MOTHER.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulnerableRemainsBlockEntity>> VULNERABLE_CURSED_ROOTED_DIRT = BLOCK_ENTITY_TYPES.register("vulnerable_cursed_rooted_dirt", () -> create(VulnerableRemainsBlockEntity::new, ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MotherTrophyBlockEntity>> MOTHER_TROPHY = BLOCK_ENTITY_TYPES.register("mother_trophy", () -> create(MotherTrophyBlockEntity::new, ModBlocks.MOTHER_TROPHY.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity>> FOG_DIFFUSER = BLOCK_ENTITY_TYPES.register("fog_diffuser", () -> create(de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity::new, ModBlocks.FOG_DIFFUSER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FogDiffuserBlockEntity>> FOG_DIFFUSER = BLOCK_ENTITY_TYPES.register("fog_diffuser", () -> create(de.teamlapen.vampirism.blockentity.diffuser.FogDiffuserBlockEntity::new, ModBlocks.FOG_DIFFUSER.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VampireBeaconBlockEntity>> VAMPIRE_BEACON = BLOCK_ENTITY_TYPES.register("vampire_beacon", () -> create(VampireBeaconBlockEntity::new, ModBlocks.VAMPIRE_BEACON.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InfuserBlockEntity>> INFUSER = BLOCK_ENTITY_TYPES.register("infuser", () -> create(InfuserBlockEntity::new, ModBlocks.INFUSER.get()));
-
-    static void register(IEventBus bus) {
-        BLOCK_ENTITY_TYPES.register(bus);
-    }
 
     private static <T extends BlockEntity> @NotNull BlockEntityType<T> create(BlockEntityType.@NotNull BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return new BlockEntityType<>(factoryIn, blocks);
@@ -56,4 +52,7 @@ public class ModTiles {
         event.modify(BlockEntityType.HANGING_SIGN, ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
     }
 
+    static void register(IEventBus bus) {
+        BLOCK_ENTITY_TYPES.register(bus);
+    }
 }

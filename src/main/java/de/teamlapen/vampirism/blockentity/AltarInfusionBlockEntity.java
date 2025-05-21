@@ -72,7 +72,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int targetLevel;
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
+        super(ModBlockEntities.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
     }
 
     /**

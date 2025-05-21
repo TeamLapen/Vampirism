@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -100,6 +100,6 @@ public class PotionTableBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.POTION_TABLE.get(), PotionTableBlockEntity::tick);
+        return createTickerHelper(type, ModBlockEntities.POTION_TABLE.get(), PotionTableBlockEntity::tick);
     }
 }

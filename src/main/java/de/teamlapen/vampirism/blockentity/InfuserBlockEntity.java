@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.vampirism.blockentity.slots.InfuserSlots;
 import de.teamlapen.vampirism.blocks.BloodInfuserBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.inventory.InfuserMenu;
 import de.teamlapen.vampirism.recipes.InfuserRecipe;
 import it.unimi.dsi.fastutil.Pair;
@@ -66,7 +66,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     };
 
     public InfuserBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModTiles.INFUSER.get(), pos, blockState);
+        super(ModBlockEntities.INFUSER.get(), pos, blockState);
         this.quickCheck = RecipeManager.createCheck(ModRecipes.INFUSER_TYPE.get());
     }
 

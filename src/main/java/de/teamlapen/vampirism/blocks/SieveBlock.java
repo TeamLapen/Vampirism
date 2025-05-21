@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.SieveBlockEntity;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -73,6 +73,6 @@ public class SieveBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, ModTiles.SIEVE.get(), SieveBlockEntity::tick);
+        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.SIEVE.get(), SieveBlockEntity::tick);
     }
 }

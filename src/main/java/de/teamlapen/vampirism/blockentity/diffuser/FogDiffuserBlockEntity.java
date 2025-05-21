@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blockentity.diffuser;
 import de.teamlapen.vampirism.api.datamaps.IFogDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.inventory.diffuser.FogDiffuserMenu;
 import de.teamlapen.vampirism.world.fog.FogLevel;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     public FogDiffuserBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ModTiles.FOG_DIFFUSER.get(), pPos, pBlockState);
+        super(ModBlockEntities.FOG_DIFFUSER.get(), pPos, pBlockState);
     }
 
     @Override

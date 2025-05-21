@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -143,6 +143,6 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModTiles.GRINDER.get(), BloodGrinderBlockEntity::serverTick);
+        return p_153212_.isClientSide() ? null : createTickerHelper(p_153214_, ModBlockEntities.GRINDER.get(), BloodGrinderBlockEntity::serverTick);
     }
 }

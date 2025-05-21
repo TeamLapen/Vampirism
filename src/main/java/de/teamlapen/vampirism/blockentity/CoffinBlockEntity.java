@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -26,11 +26,11 @@ public class CoffinBlockEntity extends BlockEntity {
     private boolean playLidSoundFlag;
 
     public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.COFFIN.get(), pos, state);
+        super(ModBlockEntities.COFFIN.get(), pos, state);
     }
 
     public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state, DyeColor color) {
-        super(ModTiles.COFFIN.get(), pos, state);
+        super(ModBlockEntities.COFFIN.get(), pos, state);
         this.color = color;
     }
 

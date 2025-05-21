@@ -49,7 +49,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -97,7 +96,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static de.teamlapen.vampirism.util.TotemHelper.*;
 
@@ -162,7 +160,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private CompletableFuture<BlockPos> closestVampireForest = null;
 
     public TotemBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.TOTEM.get(), pos, state);
+        super(ModBlockEntities.TOTEM.get(), pos, state);
     }
 
     public void abortCapture() {

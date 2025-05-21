@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.PotionTableMenu;
@@ -87,7 +87,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     };
 
     public PotionTableBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.POTION_TABLE.get(), pos, state);
+        super(ModBlockEntities.POTION_TABLE.get(), pos, state);
     }
 
     @Override

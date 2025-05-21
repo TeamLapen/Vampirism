@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.datamaps.IGarlicDiffuserFuel;
 import de.teamlapen.vampirism.core.ModDataMaps;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.inventory.diffuser.GarlicDiffuserMenu;
@@ -35,7 +35,7 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
     }
 
     public GarlicDiffuserBlockEntity(BlockPos pPos, BlockState pBlockState, EnumStrength strength, int radius) {
-        super(ModTiles.GARLIC_DIFFUSER.get(), pPos, pBlockState);
+        super(ModBlockEntities.GARLIC_DIFFUSER.get(), pPos, pBlockState);
         this.strength = strength;
         this.radius = radius;
     }

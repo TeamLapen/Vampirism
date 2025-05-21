@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
@@ -64,7 +64,7 @@ public class AltarInspirationBlockEntity extends BlockEntity implements FluidTan
     private final FluidTankWithListener tank;
 
     public AltarInspirationBlockEntity(@NotNull BlockPos pos, BlockState state) {
-        super(ModTiles.ALTAR_INSPIRATION.get(), pos, state);
+        super(ModBlockEntities.ALTAR_INSPIRATION.get(), pos, state);
         this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 

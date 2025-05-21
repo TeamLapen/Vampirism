@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -93,7 +93,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
     }
 
     @Override

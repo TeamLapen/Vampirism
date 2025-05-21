@@ -149,18 +149,18 @@ public class VampirismMod {
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.GRINDER.get(), (o, side) -> o.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.BLOOD_PEDESTAL.get(), (o, side) -> o);
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModTiles.SIEVE.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.POTION_TABLE.get(), new ICapabilityProvider<>() {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.GRINDER.get(), (o, side) -> o.getItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (o, side) -> o);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.SIEVE.get(), (o, side) -> o.getTank());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_TABLE.get(), new ICapabilityProvider<>() {
             @Override
             public @Nullable IItemHandler getCapability(@NotNull PotionTableBlockEntity object, @NotNull Direction context) {
                 return object.getCapability(object, context);
             }
         });
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModTiles.ALTAR_INFUSION.get(), (o, side) -> new InvWrapper(o));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (o, side) -> new InvWrapper(o));
     }
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {

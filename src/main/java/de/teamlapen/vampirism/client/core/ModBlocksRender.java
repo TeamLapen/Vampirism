@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
@@ -59,17 +59,17 @@ public class ModBlocksRender {
     }
 
     static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModTiles.COFFIN.get(), CoffinBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.ALTAR_INFUSION.get(), AltarInfusionBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.BLOOD_PEDESTAL.get(), PedestalBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.TOTEM.get(), TotemBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.GARLIC_DIFFUSER.get(), GarlicDiffuserBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.BAT_CAGE.get(), BatCageBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.MOTHER_TROPHY.get(), MotherTrophyBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.FOG_DIFFUSER.get(), FogDiffuserBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.VAMPIRE_BEACON.get(), VampireBeaconBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.BLOOD_CONTAINER.get(), BloodContainerBESR::new);
-        event.registerBlockEntityRenderer(ModTiles.ALTAR_INSPIRATION.get(), AltarInspirationBESR::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.COFFIN.get(), CoffinRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INFUSION.get(), AltarInfusionRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_PEDESTAL.get(), PedestalRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TOTEM.get(), TotemRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.GARLIC_DIFFUSER.get(), GarlicDiffuserRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.BAT_CAGE.get(), BatCageRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.MOTHER_TROPHY.get(), MotherTrophyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.FOG_DIFFUSER.get(), FogDiffuserRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.VAMPIRE_BEACON.get(), VampireBeaconRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_CONTAINER.get(), BloodContainerRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationRenderer::new);
     }
 
     private static void registerRenderType() {

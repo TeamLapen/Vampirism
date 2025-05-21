@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -56,7 +56,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModTiles.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.ALCHEMICAL_CAULDRON.get(), AlchemicalCauldronBlockEntity::serverTick);
     }
 
     @Nullable

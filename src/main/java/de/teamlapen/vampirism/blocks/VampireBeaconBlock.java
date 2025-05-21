@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -52,7 +52,7 @@ public class VampireBeaconBlock extends VampirismBlockContainer implements Beaco
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, ModTiles.VAMPIRE_BEACON.get(), VampireBeaconBlockEntity::tick);
+        return createTickerHelper(blockEntityType, ModBlockEntities.VAMPIRE_BEACON.get(), VampireBeaconBlockEntity::tick);
     }
 
     @Override

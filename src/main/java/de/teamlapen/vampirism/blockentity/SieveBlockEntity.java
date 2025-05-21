@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -31,7 +31,7 @@ public class SieveBlockEntity extends BlockEntity implements FluidTankWithListen
     private boolean active;
 
     public SieveBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.SIEVE.get(), pos, state);
+        super(ModBlockEntities.SIEVE.get(), pos, state);
         tank = new FilteringFluidTank(2 * FluidType.BUCKET_VOLUME).setListener(this);
         tank.setDrainable(false);
     }
