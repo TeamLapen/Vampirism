@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider.parent;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.data.recipebuilder.*;
+import de.teamlapen.vampirism.data.builder.*;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;

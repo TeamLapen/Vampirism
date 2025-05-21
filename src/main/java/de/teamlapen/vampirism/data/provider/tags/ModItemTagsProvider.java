@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagsProvider extends ItemTagsProvider {
+
     public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagsProvider) {
         super(output, lookupProvider, blockTagsProvider, REFERENCE.MODID);
     }

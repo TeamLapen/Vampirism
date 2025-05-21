@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class VampireBookBackgroundReloadListener extends SimpleJsonResourceReloadListener<BookBackground> {
+
     public static final ResourceLocation ID = VResourceLocation.mod("vampire_book_backgrounds");
 
     private Map<ResourceLocation, BookBackground> backgrounds = Map.of();

@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +27,8 @@ public class SingleJigsawReloadListener implements PreparableReloadListener {
 
     public static final ResourceLocation SINGLE_JIGSAW_ID = VResourceLocation.mod("single_jigsaw_pieces");
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String directory = "vampirism";
-    private static final String fileName = "single_jigsaw_pieces.json";
+    private static final String DIRECTORY = "vampirism";
+    private static final String FILE_NAME = "single_jigsaw_pieces.json";
     private static final int PATH_SUFFIX_LENGTH = ".json".length();
 
     public static final Codec<List<ResourceLocation>> CODEC = RecordCodecBuilder.create(inst -> inst.group(ResourceLocation.CODEC.listOf().fieldOf("single_pieces").forGetter(list -> list)).apply(inst, a -> a));
@@ -45,8 +44,8 @@ public class SingleJigsawReloadListener implements PreparableReloadListener {
 
     public @NotNull List<ResourceLocation> load(ResourceManager manager) {
         List<ResourceLocation> locations = new ArrayList<>();
-        for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(directory, location -> location.getPath().endsWith(fileName)).entrySet()) {
-            ResourceLocation resourceName = VResourceLocation.loc(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
+        for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(DIRECTORY, location -> location.getPath().endsWith(FILE_NAME)).entrySet()) {
+            ResourceLocation resourceName = VResourceLocation.loc(entry.getKey().getNamespace(), entry.getKey().getPath().substring(DIRECTORY.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);
@@ -60,5 +59,4 @@ public class SingleJigsawReloadListener implements PreparableReloadListener {
 
         return locations;
     }
-
 }
