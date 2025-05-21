@@ -83,15 +83,6 @@ public class GeneralEventHandler {
         MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
     }
 
-
-    @SubscribeEvent
-    public void onServerStarted(ServerStartedEvent event) {
-        int missing = ModLootTables.checkAndResetInsertedAll();
-        if (missing > 0) {
-            LOGGER.warn("LootTables Failed to inject {} loottables", missing);
-        }
-    }
-
     @SubscribeEvent
     public void onDatapackSync(OnDatapackSyncEvent event) {
         ClientboundSkillTreePacket skillTrees = ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations());

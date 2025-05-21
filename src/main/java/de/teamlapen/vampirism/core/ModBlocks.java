@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.data.provider.ModLootTableProvider;
 import de.teamlapen.vampirism.items.PureLevelBlockItem;
 import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.util.VampirismVoxelShapes;
@@ -355,7 +356,7 @@ public class ModBlocks {
      * - Register blockstate in {@link de.teamlapen.vampirism.data.provider.BlockStateProvider#registerStatesAndModels()} (pass existent model if desired)
      * - Maybe set render layer in the json model or blockstate generator.
      * - Register itemrender in {@link de.teamlapen.vampirism.data.provider.ItemModelGenerator#registerModels()}
-     * - Register loot table in {@link de.teamlapen.vampirism.data.provider.LootTablesProvider.ModBlockLootTables#addTables()}
+     * - Register loot table in {@link ModLootTableProvider.ModBlockLootTables#addTables()}
      * - Add lang keys
      * - Consider adding tool type in {@link de.teamlapen.vampirism.data.provider.tags.ModBlockTagsProvider}
      * - Run genData (twice?)

@@ -94,7 +94,6 @@ public class ModRegistryManager {
     public void registerForgeEventHandler() {
         IEventBus eventBus = NeoForge.EVENT_BUS;
         eventBus.addListener(ModCommands::registerCommands);
-        eventBus.addListener(ModLootTables::onLootLoad);
         eventBus.addListener(ModPotions::registerPotionMixes);
     }
 }

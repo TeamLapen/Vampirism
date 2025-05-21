@@ -37,7 +37,7 @@ public class DataProvider {
         lookupProviderFuture = provider.getRegistryProvider();
         generator.addProvider(true, provider);
         TagProvider.register(generator, event, packOutput, lookupProviderFuture);
-        generator.addProvider(true, LootTablesProvider.getProvider(packOutput, lookupProviderFuture));
+        generator.addProvider(true, ModLootTableProvider.getProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new AdvancementProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new RecipesProvider.Runner(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModModelProvider(packOutput));

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class SitEntity extends Entity {
 
     public static @NotNull SitEntity newEntity(@NotNull Level level, @NotNull BlockPos pos, double offset, Vec3 playerPos) {
-        SitEntity e = ModEntities.dummy_sit_entity.get().create(level, EntitySpawnReason.MOB_SUMMONED);
+        SitEntity e = ModEntities.SIT_DUMMY.get().create(level, EntitySpawnReason.MOB_SUMMONED);
         e.setPos(pos.getX() + 0.5D, pos.getY() + offset, pos.getZ() + 0.5D);
         e.noPhysics = true;
         e.setPlayerPos(playerPos);

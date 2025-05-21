@@ -5,10 +5,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionSubPredicate;
 import de.teamlapen.vampirism.advancements.critereon.PlayerFactionSubPredicate;
 import de.teamlapen.vampirism.api.VEnums;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.convertible.Converter;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.datamaps.EntityExistsCondition;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.*;
@@ -23,7 +21,6 @@ import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -42,7 +39,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -87,7 +83,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<HunterMinionEntity>> HUNTER_MINION = registerEntityType("hunter_minion", HunterMinionEntity::new, MobCategory.CREATURE, x -> x.sized(0.6f, 1.95f).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<VampireTaskMasterEntity>> TASK_MASTER_VAMPIRE = registerEntityType("task_master_vampire", VampireTaskMasterEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f));
     public static final DeferredHolder<EntityType<?>, EntityType<HunterTaskMasterEntity>> TASK_MASTER_HUNTER = registerEntityType("task_master_hunter", HunterTaskMasterEntity::new, VEnums.HUNTER_CATEGORY.getValue(), x -> x.sized(0.6f, 1.95f));
-    public static final DeferredHolder<EntityType<?>, EntityType<SitEntity>> dummy_sit_entity = registerEntityType("dummy_sit_entity", SitEntity::new, MobCategory.MISC, x -> x.sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<SitEntity>> SIT_DUMMY = registerEntityType("dummy_sit_entity", SitEntity::new, MobCategory.MISC, x -> x.sized(0.0001f, 0.0001f).setTrackingRange(256).setUpdateInterval(20).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<ConvertedFoxEntity>> CONVERTED_FOX = registerEntityType("converted_fox", ConvertedFoxEntity::new, MobCategory.CREATURE, x -> x.sized(0.6F, 0.7F).immuneTo(Blocks.SWEET_BERRY_BUSH).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<ConvertedGoatEntity>> CONVERTED_GOAT = registerEntityType("converted_goat", ConvertedGoatEntity::new, MobCategory.CREATURE, x -> x.sized(0.9F, 1.3F).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<VulnerableRemainsDummyEntity>> VULNERABLE_REMAINS_DUMMY = registerEntityType("vulnerable_remains_dummy", VulnerableRemainsDummyEntity::new, MobCategory.MISC, x -> x.sized(1.02f, 1.02f).setTrackingRange(10).setUpdateInterval(20).noSummon());

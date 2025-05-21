@@ -6,13 +6,35 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "vampirism:garlic",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:set_blood",
+              "maxBlood": 9,
+              "minBlood": 3
+            }
+          ],
+          "name": "vampirism:blood_bottle",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
           "functions": [
             {
               "function": "vampirism:set_vampire_book",
               "tag": "vampirism:is_general"
             }
           ],
-          "name": "vampirism:vampire_book"
+          "name": "vampirism:vampire_book",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 60
         }
       ],
       "rolls": 1.0
@@ -51,8 +73,8 @@
           "name": "vampirism:obi_belt"
         }
       ],
-      "rolls": 3.0
+      "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:inject/stronghold_library"
+  "random_sequence": "vampirism:chests/inject/desert_pyramid"
 }

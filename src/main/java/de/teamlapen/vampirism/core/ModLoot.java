@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.world.loot.SmeltItemLootModifier;
+import de.teamlapen.vampirism.world.loot.modifiers.SmeltItemLootModifier;
 import de.teamlapen.vampirism.world.loot.conditions.*;
 import de.teamlapen.vampirism.world.loot.functions.*;
 import net.minecraft.core.registries.Registries;
