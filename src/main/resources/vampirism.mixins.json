@@ -42,7 +42,6 @@
     "accessor.NearestAttackableTargetGoalAccessor",
     "accessor.ObjectiveCriteriaAccessor",
     "accessor.OrePlacementAccessor",
-    "accessor.PlayerAdvancementsAccessor",
     "accessor.ProcessorListsAccessor",
     "accessor.ProcessorRuleAccessor",
     "accessor.RegistriesDatapackGeneratorAccessor",

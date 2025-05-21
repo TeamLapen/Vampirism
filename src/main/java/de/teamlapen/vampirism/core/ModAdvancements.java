@@ -2,12 +2,9 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.*;
-import de.teamlapen.vampirism.mixin.accessor.PlayerAdvancementsAccessor;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.PlayerAdvancements;
-import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -26,14 +23,5 @@ public class ModAdvancements {
 
     static void register(IEventBus bus) {
         TRIGGERS.register(bus);
-    }
-
-    public static void revoke(PlayerTrigger trigger, ServerPlayer player) {
-        PlayerAdvancements advancements = player.getAdvancements();
-        ((PlayerAdvancementsAccessor) advancements).getProgress().entrySet().stream().filter(entry -> !entry.getValue().isDone()).forEach(advancementProgressEntry -> {
-            if (advancementProgressEntry.getKey().value().criteria().values().stream().anyMatch(pair -> pair.trigger().equals(trigger))) {
-                advancementProgressEntry.getValue().getCompletedCriteria().forEach(a -> advancements.revoke(advancementProgressEntry.getKey(), a));
-            }
-        });
     }
 }
