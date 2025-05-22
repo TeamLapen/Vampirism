@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "#c:crops/garlic",
-    "minecraft:bread"
+    "#c:foods/bread"
   ],
   "result": {
     "count": 1,

@@ -6,9 +6,9 @@
     "Y": "#c:glass_panes"
   },
   "pattern": [
-    " X ",
-    " X ",
-    " Y "
+    "X",
+    "X",
+    "Y"
   ],
   "result": {
     "count": 1,

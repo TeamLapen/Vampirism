@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_bloodiron": {
+    "has_blood_infused_iron": {
       "conditions": {
         "items": [
           {
@@ -42,7 +42,7 @@
     [
       "has_the_recipe",
       "has_garlic",
-      "has_bloodiron",
+      "has_blood_infused_iron",
       "has_redstone"
     ]
   ],

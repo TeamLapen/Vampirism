@@ -4,21 +4,21 @@
   "ingredients": [
     "minecraft:cyan_dye",
     [
-      "vampirism:vampire_cloak_black",
+      "vampirism:vampire_cloak_white",
+      "vampirism:vampire_cloak_orange",
+      "vampirism:vampire_cloak_magenta",
+      "vampirism:vampire_cloak_light_blue",
+      "vampirism:vampire_cloak_yellow",
+      "vampirism:vampire_cloak_lime",
+      "vampirism:vampire_cloak_pink",
+      "vampirism:vampire_cloak_gray",
+      "vampirism:vampire_cloak_light_gray",
+      "vampirism:vampire_cloak_purple",
       "vampirism:vampire_cloak_blue",
       "vampirism:vampire_cloak_brown",
-      "vampirism:vampire_cloak_gray",
       "vampirism:vampire_cloak_green",
-      "vampirism:vampire_cloak_light_blue",
-      "vampirism:vampire_cloak_light_gray",
-      "vampirism:vampire_cloak_lime",
-      "vampirism:vampire_cloak_magenta",
-      "vampirism:vampire_cloak_orange",
-      "vampirism:vampire_cloak_pink",
-      "vampirism:vampire_cloak_purple",
       "vampirism:vampire_cloak_red",
-      "vampirism:vampire_cloak_yellow",
-      "vampirism:vampire_cloak_white"
+      "vampirism:vampire_cloak_black"
     ]
   ],
   "result": {

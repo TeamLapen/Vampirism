@@ -20,7 +20,9 @@
   ],
   "result": {
     "components": {
-      "minecraft:damage": 0
+      "vampirism:bottle_blood": {
+        "blood": 0
+      }
     },
     "count": 1,
     "id": "vampirism:blood_bottle"

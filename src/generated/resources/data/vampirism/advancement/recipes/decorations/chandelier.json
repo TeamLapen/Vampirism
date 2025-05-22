@@ -21,16 +21,6 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_nugget": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:iron_nugget"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "vampirism:chandelier"
@@ -42,7 +32,6 @@
     [
       "has_the_recipe",
       "has_iron",
-      "has_nugget",
       "has_candelabra"
     ]
   ],

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "X": "#c:ingots/iron",
-    "Y": "minecraft:coal"
+    "Y": "#minecraft:coals"
   },
   "pattern": [
     " X ",

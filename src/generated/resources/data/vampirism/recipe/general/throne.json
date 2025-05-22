@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "minecraft:stick",
+    "X": "#c:rods/wooden",
     "Y": "minecraft:red_carpet",
     "Z": "#minecraft:planks"
   },

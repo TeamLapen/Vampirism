@@ -24,7 +24,24 @@ public class ColorListsUtil {
 
     public static final List<CoffinBlock> COFFINS = List.of(ModBlocks.COFFIN_BLACK.get(), ModBlocks.COFFIN_BLUE.get(), ModBlocks.COFFIN_BROWN.get(), ModBlocks.COFFIN_CYAN.get(), ModBlocks.COFFIN_GRAY.get(), ModBlocks.COFFIN_GREEN.get(), ModBlocks.COFFIN_LIGHT_BLUE.get(), ModBlocks.COFFIN_LIGHT_GRAY.get(), ModBlocks.COFFIN_LIME.get(), ModBlocks.COFFIN_MAGENTA.get(), ModBlocks.COFFIN_ORANGE.get(), ModBlocks.COFFIN_PINK.get(), ModBlocks.COFFIN_PURPLE.get(), ModBlocks.COFFIN_RED.get(), ModBlocks.COFFIN_YELLOW.get(), ModBlocks.COFFIN_WHITE.get());
 
-    public static final List<VampireCloakItem> VAMPIRE_CLOAKS = List.of(ModItems.VAMPIRE_CLOAK_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLUE.get(), ModItems.VAMPIRE_CLOAK_BROWN.get(), ModItems.VAMPIRE_CLOAK_CYAN.get(), ModItems.VAMPIRE_CLOAK_GRAY.get(), ModItems.VAMPIRE_CLOAK_GREEN.get(), ModItems.VAMPIRE_CLOAK_LIGHT_BLUE.get(), ModItems.VAMPIRE_CLOAK_LIGHT_GRAY.get(), ModItems.VAMPIRE_CLOAK_LIME.get(), ModItems.VAMPIRE_CLOAK_MAGENTA.get(), ModItems.VAMPIRE_CLOAK_ORANGE.get(), ModItems.VAMPIRE_CLOAK_PINK.get(), ModItems.VAMPIRE_CLOAK_PURPLE.get(), ModItems.VAMPIRE_CLOAK_RED.get(), ModItems.VAMPIRE_CLOAK_YELLOW.get(), ModItems.VAMPIRE_CLOAK_WHITE.get());
+    public static final Map<DyeColor, VampireCloakItem> VAMPIRE_CLOAKS = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
+        map.put(DyeColor.WHITE, ModItems.VAMPIRE_CLOAK_WHITE.get());
+        map.put(DyeColor.ORANGE, ModItems.VAMPIRE_CLOAK_ORANGE.get());
+        map.put(DyeColor.MAGENTA, ModItems.VAMPIRE_CLOAK_MAGENTA.get());
+        map.put(DyeColor.LIGHT_BLUE, ModItems.VAMPIRE_CLOAK_LIGHT_BLUE.get());
+        map.put(DyeColor.YELLOW, ModItems.VAMPIRE_CLOAK_YELLOW.get());
+        map.put(DyeColor.LIME, ModItems.VAMPIRE_CLOAK_LIME.get());
+        map.put(DyeColor.PINK, ModItems.VAMPIRE_CLOAK_PINK.get());
+        map.put(DyeColor.GRAY, ModItems.VAMPIRE_CLOAK_GRAY.get());
+        map.put(DyeColor.LIGHT_GRAY, ModItems.VAMPIRE_CLOAK_LIGHT_GRAY.get());
+        map.put(DyeColor.CYAN, ModItems.VAMPIRE_CLOAK_CYAN.get());
+        map.put(DyeColor.PURPLE, ModItems.VAMPIRE_CLOAK_PURPLE.get());
+        map.put(DyeColor.BLUE, ModItems.VAMPIRE_CLOAK_BLUE.get());
+        map.put(DyeColor.BROWN, ModItems.VAMPIRE_CLOAK_BROWN.get());
+        map.put(DyeColor.GREEN, ModItems.VAMPIRE_CLOAK_GREEN.get());
+        map.put(DyeColor.RED, ModItems.VAMPIRE_CLOAK_RED.get());
+        map.put(DyeColor.BLACK, ModItems.VAMPIRE_CLOAK_BLACK.get());
+    });
 
     public static final Map<DyeColor, Item> DYED_WOOL = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
         map.put(DyeColor.WHITE, Items.WHITE_WOOL);

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": "#c:ingots/iron",
-    "N": "minecraft:iron_nugget"
+    "N": "#c:nuggets/iron"
   },
   "pattern": [
     " I ",

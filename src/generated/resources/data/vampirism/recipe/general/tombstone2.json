@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "minecraft:cobblestone",
+    "X": "#c:cobblestones",
     "Y": "#c:stones"
   },
   "pattern": [

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider.parent;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.data.builder.*;
+import de.teamlapen.vampirism.items.VampireCloakItem;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -12,6 +13,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -27,14 +29,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public abstract class RecipesProvider extends RecipeProvider {
+public abstract class ExtendedRecipeProvider extends RecipeProvider {
 
     protected HolderLookup.RegistryLookup<Item> itemLookup = this.registries.lookupOrThrow(Registries.ITEM);
 
-    public RecipesProvider(HolderLookup.Provider registries, RecipeOutput output) {
+    public ExtendedRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         super(registries, output);
     }
 
@@ -47,14 +50,15 @@ public abstract class RecipesProvider extends RecipeProvider {
         return DataComponentIngredient.of(false, DataComponents.POTION_CONTENTS, new PotionContents(potion), Items.POTION);
     }
 
-    protected void colorWithDye(List<Item> dyeableItems, RecipeCategory category, Function<String, String> folder) {
-        for (int i = 0; i < ColorListsUtil.DYES.size(); i++) {
-            Item dyeItem = ColorListsUtil.DYES.get(i);
-            Item dyedItem = dyeableItems.get(i);
-            Stream<Item> stream = dyeableItems.stream().filter(item -> !item.equals(dyedItem));
-
-            this.shapeless(category, dyedItem).requires(dyeItem).requires(Ingredient.of(stream)).unlockedBy("has_needed_dye", has(dyeItem)).save(output, folder.apply("dye_" + BuiltInRegistries.ITEM.getKey(dyedItem).getPath()));
-        }
+    protected void colorWithDye(Map<DyeColor, ? extends Item> dyeableItems, RecipeCategory category, Function<String, String> folder) {
+        dyeableItems.keySet().forEach(dye -> {
+            Item dyedItem = dyeableItems.get(dye);
+            Item dyeItem = ColorListsUtil.DYE_ITEMS.get(dye);
+            Stream<Item> stream = dyeableItems.values().stream().map(Item::asItem).filter(item -> !item.equals(dyedItem));
+            if (dyedItem != null && dyeItem != null) {
+                this.shapeless(category, dyedItem).requires(dyeItem).requires(Ingredient.of(stream)).unlockedBy("has_needed_dye", has(dyeItem)).save(output, folder.apply("dye_" + BuiltInRegistries.ITEM.getKey(dyedItem).getPath()));
+            }
+        });
     }
 
     private void enchantment(ItemStack stack, int level, @NotNull Holder<Enchantment> enchantment) {
@@ -105,40 +109,12 @@ public abstract class RecipesProvider extends RecipeProvider {
         this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, BuiltInRegistries.ITEM.getKey(packed.getItem()).withSuffix(pathSuffix), null, BuiltInRegistries.ITEM.getKey(unpacked.getItem()).withSuffix(pathSuffix), null);
     }
 
-    protected void nineBlockStorageRecipes(
-            RecipeCategory unpackedCategory,
-            ItemStack unpacked,
-            RecipeCategory packedCategory,
-            ItemStack packed,
-            ResourceLocation packedName,
-            @Nullable String packedGroup,
-            ResourceLocation unpackedName,
-            @Nullable String unpackedGroup
-    ) {
-        this.shapeless(unpackedCategory, unpacked)
-                .requires(DataComponentIngredient.of(false, packed))
-                .group(unpackedGroup)
-                .unlockedBy(getHasName(packed.getItem()), this.has(packed.getItem()))
-                .save(this.output, ResourceKey.create(Registries.RECIPE, unpackedName));
-        ShapedRecipeBuilder.shaped(this.itemLookup, packedCategory, packed)
-                .define('#', DataComponentIngredient.of(false, unpacked))
-                .pattern("###")
-                .pattern("###")
-                .pattern("###")
-                .group(packedGroup)
-                .unlockedBy(getHasName(unpacked.getItem()), this.has(unpacked.getItem()))
-                .save(this.output, ResourceKey.create(Registries.RECIPE, packedName));
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, ResourceLocation packedName, @Nullable String packedGroup, ResourceLocation unpackedName, @Nullable String unpackedGroup) {
+        this.shapeless(unpackedCategory, unpacked).requires(DataComponentIngredient.of(false, packed)).group(unpackedGroup).unlockedBy(getHasName(packed.getItem()), this.has(packed.getItem())).save(this.output, ResourceKey.create(Registries.RECIPE, unpackedName));
+        ShapedRecipeBuilder.shaped(this.itemLookup, packedCategory, packed).define('#', DataComponentIngredient.of(false, unpacked)).pattern("###").pattern("###").pattern("###").group(packedGroup).unlockedBy(getHasName(unpacked.getItem()), this.has(unpacked.getItem())).save(this.output, ResourceKey.create(Registries.RECIPE, packedName));
     }
 
     protected void netheriteSmithing(Ingredient ingredient, RecipeCategory category, Ingredient material, ItemStack resultItem, String pathSuffix) {
-        ModdedSmithingTransformRecipeBuilder.smithing(
-                        Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
-                        ingredient,
-                        material,
-                        category,
-                        resultItem
-                )
-                .unlocks("has_netherite_ingot", this.has(ItemTags.NETHERITE_TOOL_MATERIALS))
-                .save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(resultItem.getItem()).withSuffix(pathSuffix).withSuffix("_smithing")));
+        ModdedSmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), ingredient, material, category, resultItem).unlocks("has_netherite_ingot", this.has(ItemTags.NETHERITE_TOOL_MATERIALS)).save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(resultItem.getItem()).withSuffix(pathSuffix).withSuffix("_smithing")));
     }
 }
