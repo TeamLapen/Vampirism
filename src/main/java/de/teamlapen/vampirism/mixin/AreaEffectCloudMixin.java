@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
+import de.teamlapen.vampirism.effects.VampirismPoisonMobEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.Holder;
@@ -34,7 +34,7 @@ public abstract class AreaEffectCloudMixin extends Entity {
                 .map(Holder::value)
                 .filter(VampirismPotion.HunterPotion.class::isInstance)
                 .filter(potion -> Helper.isVampire(entity))
-                .map(s -> VampirismPoisonEffect.createEffectCloudEffect())
+                .map(s -> VampirismPoisonMobEffect.createEffectCloudEffect())
                 .orElse(effectInstance);
     }
 }

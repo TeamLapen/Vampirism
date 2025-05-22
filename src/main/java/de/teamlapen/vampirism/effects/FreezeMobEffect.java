@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.effects;
 
-
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.server.level.ServerLevel;
@@ -9,31 +8,27 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import org.jetbrains.annotations.NotNull;
 
-public class FreezeEffect extends ConfigAwareEffect {
+public class FreezeMobEffect extends ConfigAwareMobEffect {
 
-
-    public FreezeEffect() {
-        super(MobEffectCategory.HARMFUL, 0xFFFFFF);
+    public FreezeMobEffect(MobEffectCategory category, int color) {
+        super(category, color);
         addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.FREEZE.getId(), () -> -VampirismConfig.BALANCE.vaFreezeAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override
-    public boolean applyEffectTick(@NotNull ServerLevel level, @NotNull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn.canFreeze()) {
-            entityLivingBaseIn.setTicksFrozen(Math.max(Math.min(entityLivingBaseIn.getTicksRequiredToFreeze(), Entity.BASE_TICKS_REQUIRED_TO_FREEZE) + 40, entityLivingBaseIn.getTicksFrozen()));
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+        if (entity.canFreeze()) {
+            entity.setTicksFrozen(Math.max(Math.min(entity.getTicksRequiredToFreeze(), Entity.BASE_TICKS_REQUIRED_TO_FREEZE) + 40, entity.getTicksFrozen()));
         }
         return true;
     }
-
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
-    @NotNull
     @Override
     protected String getOrCreateDescriptionId() {
         return "action.vampirism.freeze";

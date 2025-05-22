@@ -9,30 +9,30 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
 import java.util.function.Function;
 
 /**
  * Base class for Vampirism's potions
  */
-public class VampirismEffect extends MobEffect {
+public class VampirismMobEffect extends MobEffect {
 
-    public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor) {
-        super(effectType, potionColor);
+    public VampirismMobEffect(MobEffectCategory category, int color) {
+        super(category, color);
     }
-    public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor, ParticleOptions options) {
-        super(effectType, potionColor, options);
+
+    public VampirismMobEffect(MobEffectCategory category, int color, ParticleOptions particle) {
+        super(category, color, particle);
     }
-    public VampirismEffect(@NotNull MobEffectCategory effectType, int potionColor, Function<MobEffectInstance, ParticleOptions> options) {
-        super(effectType, potionColor, options);
+
+    public VampirismMobEffect(MobEffectCategory category, int color, Function<MobEffectInstance, ParticleOptions> particleFactory) {
+        super(category, color, particleFactory);
     }
 
     @Override
-    public boolean applyEffectTick(@NotNull ServerLevel level, @NotNull LivingEntity entityLivingBaseIn, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (this == ModEffects.ARMOR_REGENERATION.get()) {
-            if (entityLivingBaseIn instanceof Player player && entityLivingBaseIn.isAlive()) {
+            if (entity instanceof Player player && entity.isAlive()) {
                 VampirePlayer.get(player).requestNaturalArmorUpdate();
             }
         }

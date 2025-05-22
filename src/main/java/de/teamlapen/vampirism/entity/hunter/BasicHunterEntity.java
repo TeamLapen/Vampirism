@@ -5,14 +5,13 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.effects.BadOmenEffect;
+import de.teamlapen.vampirism.effects.VampirismBadOmenMobEffect;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.ai.navigation.HunterPathNavigation;
@@ -46,7 +45,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -192,7 +190,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
-            BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
+            VampirismBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
     }

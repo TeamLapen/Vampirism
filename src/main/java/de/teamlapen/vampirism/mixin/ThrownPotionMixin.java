@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.mixin;
 
-import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
+import de.teamlapen.vampirism.effects.VampirismPoisonMobEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.component.DataComponents;
@@ -35,7 +35,7 @@ public abstract class ThrownPotionMixin extends ThrowableItemProjectile {
     @ModifyVariable(method = "applySplash", at = @At(value = "STORE", ordinal = 0))
     private MobEffectInstance checkHunterPotions(MobEffectInstance effectInstance) {
         if (this.getItem().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && Helper.isVampire(vampirism$currentAffectedEntity)) {
-            return VampirismPoisonEffect.createThrowableEffect();
+            return VampirismPoisonMobEffect.createThrowableEffect();
         } else {
             return effectInstance;
         }

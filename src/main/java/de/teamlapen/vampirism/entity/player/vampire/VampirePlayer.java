@@ -29,7 +29,7 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -550,7 +550,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean tryInfect(IVampire vampire) {
         if (canBeInfected(vampire)) {
-            SanguinareEffect.addRandom(player, true);
+            SanguinareMobEffect.addRandom(player, true);
             return true;
         }
         return false;
