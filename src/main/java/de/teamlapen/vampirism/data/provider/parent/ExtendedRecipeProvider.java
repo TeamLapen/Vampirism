@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.data.provider.parent;
 
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.data.builder.*;
-import de.teamlapen.vampirism.items.VampireCloakItem;
 import de.teamlapen.vampirism.util.ColorListsUtil;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -20,7 +20,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
@@ -28,10 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
 
 public abstract class ExtendedRecipeProvider extends RecipeProvider {
 
@@ -61,8 +61,28 @@ public abstract class ExtendedRecipeProvider extends RecipeProvider {
         });
     }
 
-    private void enchantment(ItemStack stack, int level, @NotNull Holder<Enchantment> enchantment) {
-        stack.enchant(enchantment, level);
+    protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike toSmelt, ItemLike result, float experience) {
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200)
+                .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
+                .save(output, modString(name + "_from_smelting"));
+
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100)
+                .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
+                .save(output, modString(name + "_from_blasting"));
+    }
+
+    protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike[] toSmelt, ItemLike result, float experience) {
+        SimpleCookingRecipeBuilder smelting = SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200);
+        for (ItemLike item : toSmelt) {
+            smelting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
+        }
+        smelting.save(output, modString(name + "_from_smelting"));
+
+        SimpleCookingRecipeBuilder blasting = SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100);
+        for (ItemLike item : toSmelt) {
+            blasting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
+        }
+        blasting.save(output, modString(name + "_from_blasting"));
     }
 
     protected AlchemyTableRecipeBuilder alchemyTable(@NotNull Holder<IOil> oilStack) {

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:gold_nugget_from_accessory_blasting"
+        "recipe": "vampirism:gold_nugget_from_accessory_from_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:gold_nugget_from_accessory_blasting"
+      "vampirism:gold_nugget_from_accessory_from_blasting"
     ]
   }
 }

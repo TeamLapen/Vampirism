@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:dark_stone_from_cobbled_dark_stone_smelting"
+        "recipe": "vampirism:dark_stone_from_cobbled_dark_stone_from_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:dark_stone_from_cobbled_dark_stone_smelting"
+      "vampirism:dark_stone_from_cobbled_dark_stone_from_blasting"
     ]
   }
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.util.QualifiedVersion;
 import de.teamlapen.vampirism.api.VReference;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 
 /**
@@ -17,6 +18,7 @@ public class REFERENCE {
     // guideapi
     public static final String GUIDEAPI_MODID = "guideapi_vp";
     public static final String GUIDEBOOK_ID = "vampirism-guidebook";
+    public static final ResourceLocation GUIDEBOOK_LOCATION = ResourceLocation.fromNamespaceAndPath(GUIDEAPI_MODID, GUIDEBOOK_ID);
 
     // changeable values
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;

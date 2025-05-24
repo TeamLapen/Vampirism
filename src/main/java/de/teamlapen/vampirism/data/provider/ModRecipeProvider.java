@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -101,20 +100,70 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
         recipesWeaponTable();
         recipesInfuser();
 
-        BuiltInRegistries.ITEM.getOptional(VResourceLocation.loc("guideapi_vp", "vampirism-guidebook")).ifPresent(guideBook ->
+        BuiltInRegistries.ITEM.getOptional(REFERENCE.GUIDEBOOK_LOCATION).ifPresent(guideBook ->
                 shapeless(RecipeCategory.MISC, guideBook)
                         .requires(ModItems.VAMPIRE_FANG)
                         .requires(Items.BOOK)
                         .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                        .save(output.withConditions(new ModLoadedCondition("guideapi_vp")), modString("general/guidebook"))
+                        .save(output.withConditions(new ModLoadedCondition(REFERENCE.GUIDEAPI_MODID)), modString("general/guidebook"))
         );
 
-        SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, REFERENCE.MODID + ":applicable_oil");
-        SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, REFERENCE.MODID + ":clean_oil");
-        SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, REFERENCE.MODID + ":reroll_vampire_book");
+        SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
+        SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
+        SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, modString("reroll_vampire_book"));
     }
 
     private void recipesFunctionalBlocks() {
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INSPIRATION)
+                .pattern("X X")
+                .pattern("XYX")
+                .pattern("XXX")
+                .define('X', PLANKS)
+                .define('Y', ModBlocks.BLOOD_CONTAINER)
+                .unlockedBy("has_planks", has(PLANKS))
+                .unlockedBy("has_blood_container", has(ModBlocks.BLOOD_CONTAINER))
+                .save(output, vampire("altar_inspiration"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INFUSION)
+                .pattern("YZY")
+                .pattern("ZZZ")
+                .define('Y', GOLD_INGOT)
+                .define('Z', OBSIDIAN)
+                .unlockedBy("has_gold", has(GOLD_INGOT))
+                .save(output, vampire("altar_infusion"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_PILLAR)
+                .pattern("X X")
+                .pattern("   ")
+                .pattern("XXX")
+                .define('X', Blocks.STONE_BRICKS)
+                .unlockedBy("has_stones", has(Blocks.STONE_BRICKS))
+                .save(output, vampire("altar_pillar"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_TIP)
+                .pattern(" X ")
+                .pattern("XYX")
+                .define('X', IRON_INGOT)
+                .define('Y', IRON_BLOCK)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .save(output, vampire("altar_tip"));
+
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL)
+                .pattern("GYG")
+                .pattern("YZY")
+                .pattern("XXX")
+                .define('X', OBSIDIAN)
+                .define('Y', PLANKS)
+                .define('Z', ModItems.BLOOD_BOTTLE)
+                .define('G', GOLD_INGOT)
+                .unlockedBy("has_gold", has(GOLD_INGOT))
+                .save(output, vampire("blood_pedestal"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_CONTAINER)
+                .pattern("XYX")
+                .pattern("YZY")
+                .pattern("XYX")
+                .define('X', PLANKS)
+                .define('Y', GLASS)
+                .define('Z', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .save(output, vampire("blood_container"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER)
                 .pattern(" Z ")
                 .pattern("YDY")
@@ -135,6 +184,74 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Z', Blocks.CAULDRON)
                 .unlockedBy("has_cauldron", has(Blocks.CAULDRON))
                 .save(output, general("blood_sieve"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER)
+                .pattern("XYX")
+                .pattern("YZY")
+                .pattern("OOO")
+                .define('X', ModBlocks.CURSED_SPRUCE_PLANKS)
+                .define('Y', DIAMOND)
+                .define('O', OBSIDIAN)
+                .define('Z', ModItems.MOTHER_CORE)
+                .unlockedBy("has_diamond", has(DIAMOND))
+                .unlockedBy("has_cursed_plank", has(ModBlocks.CURSED_SPRUCE_PLANKS))
+                .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
+                .save(output, vampire("fog_diffuser"));
+
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.HUNTER_TABLE)
+                .pattern("XYW")
+                .pattern("ZZZ")
+                .pattern("Z Z")
+                .define('X', ModItems.VAMPIRE_FANG)
+                .define('Y', Items.BOOK)
+                .define('Z', PLANKS)
+                .define('W', GARLIC)
+                .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
+                .save(output, hunter("hunter_table"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.WEAPON_TABLE)
+                .pattern("X  ")
+                .pattern("YYY")
+                .pattern(" Z ")
+                .define('X', BUCKET)
+                .define('Y', IRON_INGOT)
+                .define('Z', IRON_BLOCK)
+                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
+                .save(output, hunter("weapon_table"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMICAL_CAULDRON)
+                .pattern("XZX")
+                .pattern("XXX")
+                .pattern("Y Y")
+                .define('X', IRON_INGOT)
+                .define('Y', Blocks.STONE_BRICKS)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .save(output, hunter("alchemical_cauldron"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.POTION_TABLE)
+                .pattern("XXX")
+                .pattern("Y Y")
+                .pattern("ZZZ")
+                .define('X', Items.GLASS_BOTTLE)
+                .define('Y', PLANKS)
+                .define('Z', IRON_INGOT)
+                .unlockedBy("has_glass_bottle", has(Items.GLASS_BOTTLE))
+                .save(output, hunter("potion_table"));
+        shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE)
+                .pattern("B  ")
+                .pattern("BBB")
+                .pattern("P P")
+                .define('B', Blocks.BASALT)
+                .define('P', PLANKS)
+                .unlockedBy("has_basalt", has(Blocks.BASALT))
+                .unlockedBy("has_planks", has(PLANKS))
+                .save(output);
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.MED_CHAIR)
+                .pattern("XYX")
+                .pattern("XXX")
+                .pattern("XZX")
+                .define('X', IRON_INGOT)
+                .define('Y', WOOL)
+                .define('Z', Items.GLASS_BOTTLE)
+                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
+                .save(output, hunter("item_med_chair"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
                 .pattern(" X ")
                 .pattern("YYY")
@@ -152,6 +269,39 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Z', Items.BOOK)
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output, general("altar_cleansing_new"));
+
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_NORMAL)
+                .pattern("XYX")
+                .pattern("YZY")
+                .pattern("OOO")
+                .define('X', PLANKS)
+                .define('Y', DIAMOND)
+                .define('O', OBSIDIAN)
+                .define('Z', ModItems.GARLIC_DIFFUSER_CORE)
+                .unlockedBy("has_diamond", has(DIAMOND))
+                .save(output, hunter("garlic_diffuser_normal"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_IMPROVED)
+                .pattern("XYX")
+                .pattern("YZY")
+                .pattern("OOO")
+                .define('X', PLANKS)
+                .define('Y', DIAMOND)
+                .define('Z', ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
+                .define('O', OBSIDIAN)
+                .unlockedBy("has_garlic_diffuser", has(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED))
+                .save(output, hunter("garlic_diffuser_improved"));
+        shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON)
+                .pattern("GGG")
+                .pattern("GCG")
+                .pattern("OOO")
+                .define('G', GLASS)
+                .define('C', ModItems.MOTHER_CORE)
+                .define('O', OBSIDIAN)
+                .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
+                .unlockedBy("has_obsidian", has(OBSIDIAN))
+                .unlockedBy("has_glass", has(GLASS))
+                .save(output);
+
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_BASE)
                 .pattern("XYX")
                 .pattern("XYX")
@@ -171,190 +321,6 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_diamond", has(DIAMOND_BLOCK))
                 .unlockedBy("has_obsidian", has(OBSIDIAN))
                 .save(output, general("totem_top"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMICAL_CAULDRON)
-                .pattern("XZX")
-                .pattern("XXX")
-                .pattern("Y Y")
-                .define('X', IRON_INGOT)
-                .define('Y', Blocks.STONE_BRICKS)
-                .define('Z', GARLIC)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, hunter("alchemical_cauldron"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.POTION_TABLE)
-                .pattern("XXX")
-                .pattern("Y Y")
-                .pattern("ZZZ")
-                .define('X', Items.GLASS_BOTTLE)
-                .define('Y', PLANKS)
-                .define('Z', IRON_INGOT)
-                .unlockedBy("has_glass_bottle", has(Items.GLASS_BOTTLE))
-                .save(output, hunter("potion_table"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_NORMAL)
-                .pattern("XYX")
-                .pattern("YZY")
-                .pattern("OOO")
-                .define('X', PLANKS)
-                .define('Y', DIAMOND)
-                .define('O', OBSIDIAN)
-                .define('Z', ModItems.GARLIC_DIFFUSER_CORE)
-                .unlockedBy("has_diamond", has(DIAMOND))
-                .save(output, hunter("garlic_diffuser_normal"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.HUNTER_TABLE)
-                .pattern("XYW")
-                .pattern("ZZZ")
-                .pattern("Z Z")
-                .define('X', ModItems.VAMPIRE_FANG)
-                .define('Y', Items.BOOK)
-                .define('Z', PLANKS)
-                .define('W', GARLIC)
-                .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                .save(output, hunter("hunter_table"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.MED_CHAIR)
-                .pattern("XYX")
-                .pattern("XXX")
-                .pattern("XZX")
-                .define('X', IRON_INGOT)
-                .define('Y', WOOL)
-                .define('Z', Items.GLASS_BOTTLE)
-                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .save(output, hunter("item_med_chair"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_IMPROVED)
-                .pattern("XYX")
-                .pattern("YZY")
-                .pattern("OOO")
-                .define('X', PLANKS)
-                .define('Y', DIAMOND)
-                .define('Z', ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
-                .define('O', OBSIDIAN)
-                .unlockedBy("has_garlic_diffuser", has(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED))
-                .save(output, hunter("garlic_diffuser_improved"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.WEAPON_TABLE)
-                .pattern("X  ")
-                .pattern("YYY")
-                .pattern(" Z ")
-                .define('X', BUCKET)
-                .define('Y', IRON_INGOT)
-                .define('Z', IRON_BLOCK)
-                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .save(output, hunter("weapon_table"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INFUSION)
-                .pattern("YZY")
-                .pattern("ZZZ")
-                .define('Y', GOLD_INGOT)
-                .define('Z', OBSIDIAN)
-                .unlockedBy("has_gold", has(GOLD_INGOT))
-                .save(output, vampire("altar_infusion"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INSPIRATION)
-                .pattern("X X")
-                .pattern("XYX")
-                .pattern("XXX")
-                .define('X', PLANKS)
-                .define('Y', ModBlocks.BLOOD_CONTAINER)
-                .unlockedBy("has_planks", has(PLANKS))
-                .unlockedBy("has_blood_container", has(ModBlocks.BLOOD_CONTAINER))
-                .save(output, vampire("altar_inspiration"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_PILLAR)
-                .pattern("X X")
-                .pattern("   ")
-                .pattern("XXX")
-                .define('X', Blocks.STONE_BRICKS)
-                .unlockedBy("has_stones", has(Blocks.STONE_BRICKS))
-                .save(output, vampire("altar_pillar"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_TIP)
-                .pattern(" X ")
-                .pattern("XYX")
-                .define('X', IRON_INGOT)
-                .define('Y', IRON_BLOCK)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("altar_tip"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_CONTAINER)
-                .pattern("XYX")
-                .pattern("YZY")
-                .pattern("XYX")
-                .define('X', PLANKS)
-                .define('Y', GLASS)
-                .define('Z', IRON_INGOT)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("blood_container"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL)
-                .pattern("GYG")
-                .pattern("YZY")
-                .pattern("XXX")
-                .define('X', OBSIDIAN)
-                .define('Y', PLANKS)
-                .define('Z', ModItems.BLOOD_BOTTLE)
-                .define('G', GOLD_INGOT)
-                .unlockedBy("has_gold", has(GOLD_INGOT))
-                .save(output, vampire("blood_pedestal"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER)
-                .pattern("XYX")
-                .pattern("YZY")
-                .pattern("OOO")
-                .define('X', ModBlocks.CURSED_SPRUCE_PLANKS)
-                .define('Y', DIAMOND)
-                .define('O', OBSIDIAN)
-                .define('Z', ModItems.MOTHER_CORE)
-                .unlockedBy("has_diamond", has(DIAMOND))
-                .unlockedBy("has_cursed_plank", has(ModBlocks.CURSED_SPRUCE_PLANKS))
-                .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
-                .save(output, vampire("fog_diffuser"));
-        shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON)
-                .pattern("GGG")
-                .pattern("GCG")
-                .pattern("OOO")
-                .define('G', GLASS)
-                .define('C', ModItems.MOTHER_CORE)
-                .define('O', OBSIDIAN)
-                .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
-                .unlockedBy("has_obsidian", has(OBSIDIAN))
-                .unlockedBy("has_glass", has(GLASS))
-                .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT)
-                .pattern(" W ")
-                .pattern("WBW")
-                .define('W', WOOL)
-                .define('B', BED)
-                .unlockedBy("has_wool", has(WOOL))
-                .unlockedBy("has_bed", has(BED))
-                .save(output);
-        shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE)
-                .pattern("B  ")
-                .pattern("BBB")
-                .pattern("P P")
-                .define('B', Blocks.BASALT)
-                .define('P', PLANKS)
-                .unlockedBy("has_basalt", has(Blocks.BASALT))
-                .unlockedBy("has_planks", has(PLANKS))
-                .save(output);
-
-        coffinFromWool(output, ModBlocks.COFFIN_WHITE.get(), Items.WHITE_WOOL, vampire("coffin_white"));
-        ColorListsUtil.COFFINS.forEach(coffinBlock -> {
-            DyeColor color = coffinBlock.getColor();
-            if (color != DyeColor.WHITE) {
-                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color), vampire("coffin_" + color.getName()));
-            }
-        });
-    }
-
-    private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, String path) {
-        coffinFromWool(consumer, coffin, wool, path);
-        shapeless(RecipeCategory.DECORATIONS, coffin)
-                .requires(ModBlocks.COFFIN_WHITE.get())
-                .requires(dye)
-                .unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE.get()))
-                .unlockedBy("has_dye", has(dye))
-                .save(consumer, path + "_from_white");
-    }
-
-    private void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool, String path) {
-        shaped(RecipeCategory.DECORATIONS, coffin)
-                .pattern("XXX")
-                .pattern("YYY")
-                .pattern("XXX")
-                .define('X', ItemTags.PLANKS)
-                .define('Y', wool)
-                .unlockedBy("has_wool", has(wool))
-                .save(consumer, path);
     }
 
     private void recipesDecorationalBlocks() {
@@ -365,7 +331,39 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Y', COAL_BLOCK)
                 .unlockedBy("has_logs", has(LOG))
                 .save(output, general("fire_place"));
-
+        shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK)
+                .pattern(" I ")
+                .pattern("NNN")
+                .define('I', IRON_INGOT)
+                .define('N', IRON_NUGGET)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_nugget", has(IRON_NUGGET))
+                .save(output);
+        shaped(RecipeCategory.DECORATIONS, ModItems.CANDELABRA)
+                .pattern("III")
+                .pattern("NIN")
+                .define('I', IRON_INGOT)
+                .define('N', IRON_NUGGET)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_nugget", has(IRON_NUGGET))
+                .save(output);
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER)
+                .pattern(" A ")
+                .pattern("ICI")
+                .define('C', ModItems.CANDELABRA)
+                .define('I', IRON_INGOT)
+                .define('A', Blocks.CHAIN)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_candelabra", has(ModItems.CANDELABRA))
+                .save(output);
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN)
+                .pattern("GGG")
+                .pattern("GSG")
+                .pattern("GGG")
+                .define('S', ModItems.SOUL_ORB_VAMPIRE)
+                .define('G', GOLD_NUGGET)
+                .unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE))
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.CROSS)
                 .pattern(" X ")
                 .pattern("XYX")
@@ -402,17 +400,6 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_coal", has(COAL))
                 .save(output, general("grave_cage"));
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.THRONE)
-                .pattern(" YZ")
-                .pattern("YYZ")
-                .pattern("XZX")
-                .define('Y', Blocks.RED_CARPET)
-                .define('Z', PLANKS)
-                .define('X', STICK)
-                .unlockedBy("has_stick", has(STICK))
-                .unlockedBy("has_planks", has(PLANKS))
-                .unlockedBy("has_wool", has(Blocks.RED_CARPET))
-                .save(output, general("throne"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_RACK)
                 .pattern("XYX")
                 .pattern("ABC")
@@ -428,6 +415,17 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_honey", has(Items.HONEYCOMB))
                 .unlockedBy("has_potion", has(Items.GLASS_BOTTLE))
                 .save(output, general("vampire_rack"));
+        shaped(RecipeCategory.DECORATIONS, ModBlocks.THRONE)
+                .pattern(" YZ")
+                .pattern("YYZ")
+                .pattern("XZX")
+                .define('Y', Blocks.RED_CARPET)
+                .define('Z', PLANKS)
+                .define('X', STICK)
+                .unlockedBy("has_stick", has(STICK))
+                .unlockedBy("has_planks", has(PLANKS))
+                .unlockedBy("has_wool", has(Blocks.RED_CARPET))
+                .save(output, general("throne"));
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE)
                 .pattern("GGG")
                 .pattern("GPG")
@@ -437,88 +435,89 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_gold", has(GOLD_INGOT))
                 .unlockedBy("has_planks", has(PLANKS))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK)
-                .pattern(" I ")
-                .pattern("NNN")
-                .define('I', IRON_INGOT)
-                .define('N', IRON_NUGGET)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .unlockedBy("has_nugget", has(IRON_NUGGET))
+
+        shaped(RecipeCategory.DECORATIONS, ModItems.ITEM_TENT)
+                .pattern(" W ")
+                .pattern("WBW")
+                .define('W', WOOL)
+                .define('B', BED)
+                .unlockedBy("has_wool", has(WOOL))
+                .unlockedBy("has_bed", has(BED))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModItems.CANDELABRA)
-                .pattern("III")
-                .pattern("NIN")
-                .define('I', IRON_INGOT)
-                .define('N', IRON_NUGGET)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .unlockedBy("has_nugget", has(IRON_NUGGET))
-                .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER)
-                .pattern(" A ")
-                .pattern("ICI")
-                .define('C', ModItems.CANDELABRA)
-                .define('I', IRON_INGOT)
-                .define('A', Blocks.CHAIN)
-                .unlockedBy("has_iron", has(IRON_INGOT))
-                .unlockedBy("has_candelabra", has(ModItems.CANDELABRA))
-                .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN)
-                .pattern("GGG")
-                .pattern("GSG")
-                .pattern("GGG")
-                .define('S', ModItems.SOUL_ORB_VAMPIRE)
-                .define('G', GOLD_NUGGET)
-                .unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE))
-                .save(output);
+
+        coffinFromWool(output, ModBlocks.COFFIN_WHITE, Items.WHITE_WOOL, vampire("coffin_white"));
+        ColorListsUtil.COFFINS.forEach(coffinBlock -> {
+            DyeColor color = coffinBlock.getColor();
+            if (color != DyeColor.WHITE) {
+                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color), vampire("coffin_" + color.getName()));
+            }
+        });
+    }
+
+    private void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool, String path) {
+        shaped(RecipeCategory.DECORATIONS, coffin)
+                .pattern("XXX")
+                .pattern("YYY")
+                .pattern("XXX")
+                .define('X', ItemTags.PLANKS)
+                .define('Y', wool)
+                .unlockedBy("has_wool", has(wool))
+                .save(consumer, path);
+    }
+
+    private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, String path) {
+        coffinFromWool(consumer, coffin, wool, path);
+        shapeless(RecipeCategory.DECORATIONS, coffin)
+                .requires(ModBlocks.COFFIN_WHITE)
+                .requires(dye)
+                .unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE))
+                .unlockedBy("has_dye", has(dye))
+                .save(consumer, path + "_from_white");
     }
 
     private void recipesBuildingBlocks() {
-        generateRecipes(ModBlockFamilies.DARK_SPRUCE_PLANKS, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.CURSED_SPRUCE_PLANKS, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.DARK_STONE, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.PURPLE_BRICKS, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.DARK_STONE_BRICKS, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.POLISHED_DARK_STONE, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.COBBLED_DARK_STONE, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.DARK_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
-        generateRecipes(ModBlockFamilies.PURPLE_STONE_TILES, FeatureFlagSet.of(FeatureFlags.VANILLA));
+        Stream.of(
+                ModBlockFamilies.DARK_SPRUCE_PLANKS,
+                ModBlockFamilies.CURSED_SPRUCE_PLANKS,
+                ModBlockFamilies.DARK_STONE,
+                ModBlockFamilies.PURPLE_BRICKS,
+                ModBlockFamilies.DARK_STONE_BRICKS,
+                ModBlockFamilies.POLISHED_DARK_STONE,
+                ModBlockFamilies.COBBLED_DARK_STONE,
+                ModBlockFamilies.DARK_STONE_TILES,
+                ModBlockFamilies.PURPLE_STONE_TILES
+        ).forEach(blockFamily -> generateRecipes(blockFamily, FeatureFlagSet.of(FeatureFlags.VANILLA)));
 
-        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE_BRICKS.get(), 4)
+        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE_BRICKS, 4)
                 .define('#', ModBlocks.DARK_STONE)
                 .pattern("##")
                 .pattern("##")
                 .unlockedBy("has_dark_stone", has(ModBlocks.DARK_STONE))
                 .save(output);
-        shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PURPLE_STONE_BRICKS.get(), 8)
-                .requires(ModBlocks.DARK_STONE_BRICKS.get(), 8)
-                .requires(ModBlocks.VAMPIRE_ORCHID.get())
-                .unlockedBy("has_dark_stone_bricks", has(ModBlocks.DARK_STONE_BRICKS.get()))
+        shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PURPLE_STONE_BRICKS, 8)
+                .requires(ModBlocks.DARK_STONE_BRICKS, 8)
+                .requires(ModBlocks.VAMPIRE_ORCHID)
+                .unlockedBy("has_dark_stone_bricks", has(ModBlocks.DARK_STONE_BRICKS))
                 .save(output);
 
-        planksFromLog(ModBlocks.DARK_SPRUCE_PLANKS.get(), ModItemTags.DARK_SPRUCE_LOG, 4);
-        planksFromLog(ModBlocks.CURSED_SPRUCE_PLANKS.get(), ModItemTags.CURSED_SPRUCE_LOG, 4);
-        woodFromLogs(ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.DARK_SPRUCE_LOG.get());
-        woodFromLogs(ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_LOG.get());
-        woodFromLogs(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
-        woodFromLogs(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
-        woodenBoat(ModItems.DARK_SPRUCE_BOAT.get(), ModBlocks.DARK_SPRUCE_PLANKS.get());
-        woodenBoat(ModItems.CURSED_SPRUCE_BOAT.get(), ModBlocks.CURSED_SPRUCE_PLANKS.get());
-        chestBoat(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), ModItems.DARK_SPRUCE_BOAT.get());
-        chestBoat(ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), ModItems.CURSED_SPRUCE_BOAT.get());
+        planksFromLog(ModBlocks.DARK_SPRUCE_PLANKS, ModItemTags.DARK_SPRUCE_LOG, 4);
+        planksFromLog(ModBlocks.CURSED_SPRUCE_PLANKS, ModItemTags.CURSED_SPRUCE_LOG, 4);
+        woodFromLogs(ModBlocks.DARK_SPRUCE_WOOD, ModBlocks.DARK_SPRUCE_LOG);
+        woodFromLogs(ModBlocks.CURSED_SPRUCE_WOOD, ModBlocks.CURSED_SPRUCE_LOG);
+        woodFromLogs(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD, ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
+        woodFromLogs(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD, ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
+        woodenBoat(ModItems.DARK_SPRUCE_BOAT, ModBlocks.DARK_SPRUCE_PLANKS);
+        woodenBoat(ModItems.CURSED_SPRUCE_BOAT, ModBlocks.CURSED_SPRUCE_PLANKS);
+        chestBoat(ModItems.DARK_SPRUCE_CHEST_BOAT, ModItems.DARK_SPRUCE_BOAT);
+        chestBoat(ModItems.CURSED_SPRUCE_CHEST_BOAT, ModItems.CURSED_SPRUCE_BOAT);
+        hangingSign(ModItems.DARK_SPRUCE_HANGING_SIGN, ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
+        hangingSign(ModItems.CURSED_SPRUCE_HANGING_SIGN, ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
 
-        hangingSign(ModItems.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
-        hangingSign(ModItems.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
-
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(), 0.1f, 200)
-                .unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get()))
-                .save(output, modString("dark_stone_from_cobbled_dark_stone_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.COBBLED_DARK_STONE.get()), RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE.get(), 0.1f, 100)
-                .unlockedBy("has_cobbled_dark_stone", has(ModBlocks.COBBLED_DARK_STONE.get()))
-                .save(output, modString("dark_stone_from_cobbled_dark_stone_blasting"));
+        smeltingAndBlasting(RecipeCategory.BUILDING_BLOCKS, "dark_stone_from_cobbled_dark_stone", ModBlocks.COBBLED_DARK_STONE, ModBlocks.DARK_STONE, 0.1f);
     }
 
     private void recipesMisc() {
-        shapeless(RecipeCategory.FOOD, ModItems.GARLIC_BREAD.get())
+        shapeless(RecipeCategory.FOOD, ModItems.GARLIC_BREAD)
                 .requires(GARLIC)
                 .requires(BREAD)
                 .unlockedBy("has_garlic", has(GARLIC))
@@ -557,24 +556,24 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_glass", has(GLASS))
                 .save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))), vampire("blood_bottle"));
 
-        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_0.get())
-                .requires(ModItems.PURE_BLOOD_1.get())
-                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE.get())
+        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_0)
+                .requires(ModItems.PURE_BLOOD_1)
+                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_1))
                 .save(output, hunter("pure_blood0"));
-        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_1.get())
-                .requires(ModItems.PURE_BLOOD_2.get())
-                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE.get())
+        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_1)
+                .requires(ModItems.PURE_BLOOD_2)
+                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_2))
                 .save(output, hunter("pure_blood1"));
-        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_2.get())
-                .requires(ModItems.PURE_BLOOD_3.get())
-                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE.get())
+        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_2)
+                .requires(ModItems.PURE_BLOOD_3)
+                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_3))
                 .save(output, hunter("pure_blood2"));
-        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_3.get())
-                .requires(ModItems.PURE_BLOOD_4.get())
-                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE.get())
+        shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_3)
+                .requires(ModItems.PURE_BLOOD_4)
+                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_4))
                 .save(output, hunter("pure_blood3"));
 
@@ -591,23 +590,16 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
 
         shapeless(RecipeCategory.DECORATIONS, ModItems.HOLY_WATER_BOTTLE_NORMAL, 2)
                 .requires(ModItems.HOLY_WATER_BOTTLE_ENHANCED)
-                .requires(ModItems.PURE_SALT_WATER.get())
-                .unlockedBy("has_enhanced_holy_water", has( ModItems.HOLY_WATER_BOTTLE_NORMAL))
+                .requires(ModItems.PURE_SALT_WATER)
+                .unlockedBy("has_enhanced_holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .save(output, "holy_water_bottle_normal_from_enhanced");
         shapeless(RecipeCategory.DECORATIONS, ModItems.HOLY_WATER_BOTTLE_ENHANCED, 2)
                 .requires(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
-                .requires(ModItems.PURE_SALT_WATER.get())
-                .unlockedBy("has_ultimate_holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
+                .requires(ModItems.PURE_SALT_WATER)
+                .unlockedBy("has_ultimate_holy_water", has(ModItems.HOLY_WATER_BOTTLE_ULTIMATE))
                 .save(output, "holy_water_bottle_enhanced_from_ultimate");
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModItems.AMULET, ModItems.RING), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 200)
-                .unlockedBy("has_amulet", has(ModItems.AMULET))
-                .unlockedBy("has_ring", has(ModItems.RING))
-                .save(output, modString("gold_nugget_from_accessory_smelting"));
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(ModItems.AMULET, ModItems.RING), RecipeCategory.MISC, Items.GOLD_NUGGET, 0.1f, 100)
-                .unlockedBy("has_amulet", has(ModItems.AMULET))
-                .unlockedBy("has_ring", has(ModItems.RING))
-                .save(output, modString("gold_nugget_from_accessory_blasting"));
+        smeltingAndBlasting(RecipeCategory.MISC, "gold_nugget_from_accessory", new ItemLike[] { ModItems.AMULET, ModItems.RING }, Items.GOLD_NUGGET, 0.1f);
         shapeless(RecipeCategory.COMBAT, Items.LEATHER)
                 .requires(ModItems.OBI_BELT)
                 .unlockedBy("has_obi_belt", has(ModItems.OBI_BELT))
@@ -615,7 +607,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
     }
 
     private void recipesTools() {
-        shaped(RecipeCategory.MISC, ModItems.UMBRELLA.get())
+        shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
                 .pattern("###")
                 .pattern("BAB")
                 .pattern(" A ")
@@ -625,7 +617,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_wool", has(WOOL))
                 .save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
 
-        shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER.get())
+        shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER)
                 .pattern("XXX")
                 .pattern("XYX")
                 .pattern("ZAZ")
@@ -638,7 +630,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_redstone", has(REDSTONE_DUST))
                 .save(output, vampire("garlic_finder"));
 
-        shaped(RecipeCategory.COMBAT, ModItems.STAKE.get())
+        shaped(RecipeCategory.COMBAT, ModItems.STAKE)
                 .pattern("X")
                 .pattern("Y")
                 .pattern("X")
@@ -646,14 +638,14 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Y', PLANKS)
                 .unlockedBy("has_sticks", has(STICK))
                 .save(output, hunter("stake"));
-        shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL.get(), 6)
+        shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL, 6)
                 .pattern("X")
                 .pattern("Y")
                 .define('X', IRON_INGOT)
                 .define('Y', STICK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .save(output, hunter("crossbow_arrow_normal"));
-        shapeless(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL.get())
+        shapeless(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL)
                 .requires(Items.ARROW)
                 .unlockedBy("has_arrow", has(Items.ARROW))
                 .save(output, hunter("crossbow_arrow_from_vanilla"));
@@ -667,7 +659,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
             }
         });
 
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_LEGS.get())
+        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_LEGS)
                 .pattern("XXX")
                 .pattern("X X")
                 .pattern("XYX")
@@ -676,7 +668,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.GRAY_WOOL))
                 .save(output, vampire("vampire_clothing_legs"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_BOOTS.get())
+        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_BOOTS)
                 .pattern("XYX")
                 .pattern("X X")
                 .define('X', Items.BROWN_WOOL)
@@ -684,7 +676,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.BROWN_WOOL))
                 .save(output, vampire("vampire_clothing_boots"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_HAT.get())
+        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_HAT)
                 .pattern("ZXX")
                 .pattern(" Y ")
                 .pattern("XXX")
@@ -694,7 +686,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.BLACK_WOOL))
                 .save(output, vampire("vampire_clothing_hat"));
-        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_CROWN.get())
+        shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_CROWN)
                 .pattern("XYX")
                 .pattern("XXX")
                 .define('X', Items.GOLD_INGOT)
@@ -703,14 +695,14 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_gold", has(Items.GOLD_INGOT))
                 .save(output, vampire("vampire_clothing_crown"));
 
-        shaped(RecipeCategory.COMBAT, ModItems.CRUCIFIX_NORMAL.get())
+        shaped(RecipeCategory.COMBAT, ModItems.CRUCIFIX_NORMAL)
                 .pattern("XY ")
                 .pattern("ZYZ")
                 .pattern(" Y ")
-                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL.get())
+                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL)
                 .define('Y', PLANKS)
                 .define('Z', STICK)
-                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get()))
+                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
                 .unlockedBy("stick", has(STICK))
                 .unlockedBy("planks", has(PLANKS))
                 .save(output, hunter("crucifix"));
@@ -728,49 +720,49 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
     }
 
     private void recipesStonecutter() {
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_BRICKS.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL.get(), ModBlocks.PURPLE_STONE_TILES.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_BRICKS.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_TILES.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.DARK_STONE_BRICKS.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.DARK_STONE_TILES.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.POLISHED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.DARK_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.COBBLED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.DARK_STONE_BRICKS.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE.get(), 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.DARK_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES.get(), ModBlocks.POLISHED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES.get(), ModBlocks.DARK_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.DARK_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.DARK_STONE_TILES.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_BRICKS.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.DARK_STONE_TILES.get());
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.COBBLED_DARK_STONE.get());
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_WALL, ModBlocks.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_SLAB, ModBlocks.PURPLE_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_STAIRS, ModBlocks.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES, ModBlocks.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL, ModBlocks.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL, ModBlocks.PURPLE_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB, ModBlocks.PURPLE_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB, ModBlocks.PURPLE_STONE_TILES, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS, ModBlocks.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS, ModBlocks.PURPLE_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.DARK_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.DARK_STONE_TILES, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_STAIRS, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_WALL, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB, ModBlocks.POLISHED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.DARK_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.POLISHED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.DARK_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.DARK_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.COBBLED_DARK_STONE);
     }
 
     private void recipesAlchemyTable() {
@@ -782,8 +774,8 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .save(output, modString("plant_oil"));
         alchemyTable(ModOils.VAMPIRE_BLOOD)
                 .plantOilIngredient()
-                .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
-                .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
+                .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE))
+                .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .save(output, modString("vampire_blood_oil"));
         alchemyTable(ModOils.HEALING)
                 .bloodOilIngredient()
@@ -843,7 +835,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .save(output, modString("luck_oil"));
         alchemyTable(ModOils.SMELT)
                 .bloodOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE.get()))
+                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
                 .save(output, modString("smelt_oil"));
         alchemyTable(ModOils.TELEPORT)
                 .bloodOilIngredient()
@@ -859,7 +851,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .save(output, modString("garlic_oil"));
         alchemyTable(ModOils.SPITFIRE)
                 .plantOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE.get()))
+                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
                 .save(output, modString("spitfire_oil"));
         alchemyTable(ModOils.BLEEDING)
                 .plantOilIngredient()
@@ -878,15 +870,15 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
                 .save(output);
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE.get(), 4)
+        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 4)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_NORMAL)
                 .save(output, modString("alchemical_fire_4"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE.get(), 5)
+        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 5)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .save(output, modString("alchemical_fire_5"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE.get(), 6)
+        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 6)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .save(output, modString("alchemical_fire_6"));
@@ -907,31 +899,31 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .withSkills(HunterSkills.PURIFIED_GARLIC)
                 .save(output);
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK)
-                .withFluid(ModItems.PURE_BLOOD_0.get())
+                .withFluid(ModItems.PURE_BLOOD_0)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(200)
                 .experience(0.1f)
                 .save(output, modString("blood_infused_iron_ingot_from_pure_blood_0"));
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK)
-                .withFluid(ModItems.PURE_BLOOD_1.get())
+                .withFluid(ModItems.PURE_BLOOD_1)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(180)
                 .experience(0.15f)
                 .save(output, modString("blood_infused_iron_ingot_from_pure_blood_1"));
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK)
-                .withFluid(ModItems.PURE_BLOOD_2.get())
+                .withFluid(ModItems.PURE_BLOOD_2)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(160)
                 .experience(0.2f)
                 .save(output, modString("blood_infused_iron_ingot_from_pure_blood_2"));
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK)
-                .withFluid(ModItems.PURE_BLOOD_3.get())
+                .withFluid(ModItems.PURE_BLOOD_3)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(140)
                 .experience(0.25f)
                 .save(output, modString("blood_infused_iron_ingot_from_pure_blood_3"));
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK)
-                .withFluid(ModItems.PURE_BLOOD_4.get())
+                .withFluid(ModItems.PURE_BLOOD_4)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(300)
                 .experience(0.3f)
@@ -941,7 +933,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
     private void recipesWeaponTable() {
         HolderLookup.RegistryLookup<Enchantment> enchantments = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
 
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL)
                 .lava(1)
                 .pattern("XZZX")
                 .pattern("XXXX")
@@ -953,7 +945,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED)
                 .lava(3)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XZZX")
@@ -967,7 +959,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XZZX")
@@ -981,7 +973,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL)
                 .lava(1)
                 .pattern("XZZX")
                 .pattern("XYYX")
@@ -992,7 +984,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED)
                 .lava(3)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XZZX")
@@ -1005,7 +997,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XZZX")
@@ -1018,7 +1010,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL)
                 .lava(1)
                 .pattern("XXXX")
                 .pattern("XYYX")
@@ -1030,7 +1022,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED)
                 .lava(3)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XXXX")
@@ -1043,7 +1035,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XXXX")
@@ -1056,7 +1048,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1067,7 +1059,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED)
                 .lava(3)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XXXX")
@@ -1081,7 +1073,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XXXX")
@@ -1100,7 +1092,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
         netheriteSmithing(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get());
         netheriteSmithing(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get());
 
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_NORMAL)
                 .lava(2)
                 .pattern("XWWX")
                 .pattern("XZZX")
@@ -1113,7 +1105,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ENHANCED)
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XWWX")
@@ -1127,7 +1119,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XWWX")
@@ -1142,7 +1134,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_NORMAL)
                 .lava(2)
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1154,7 +1146,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ENHANCED)
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XYYX")
@@ -1167,7 +1159,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XYYX")
@@ -1181,7 +1173,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_NORMAL)
                 .lava(2)
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1193,7 +1185,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ENHANCED)
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XYYX")
@@ -1206,7 +1198,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XYYX")
@@ -1220,7 +1212,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_NORMAL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_NORMAL)
                 .lava(2)
                 .pattern("    ")
                 .pattern("X  X")
@@ -1232,7 +1224,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ENHANCED)
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("    ")
@@ -1245,7 +1237,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ULTIMATE)
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("    ")
@@ -1265,7 +1257,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
         netheriteSmithing(ModItems.HUNTER_COAT_FEET_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ULTIMATE.get());
 
 
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_CROSSBOW)
                 .lava(1)
                 .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("YXXY")
@@ -1276,7 +1268,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Z', ItemTags.PLANKS)
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_DOUBLE_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_DOUBLE_CROSSBOW)
                 .lava(1)
                 .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("YXXY")
@@ -1288,7 +1280,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Z', ItemTags.PLANKS)
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_TECH_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_TECH_CROSSBOW)
                 .lava(5)
                 .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("YXXY")
@@ -1301,7 +1293,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .save(output);
 
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_CROSSBOW)
                 .lava(2)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("YXXY")
@@ -1311,7 +1303,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Y', Tags.Items.STRINGS)
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_DOUBLE_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_DOUBLE_CROSSBOW)
                 .lava(3)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("YXXY")
@@ -1322,7 +1314,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .define('Y', Tags.Items.STRINGS)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW)
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("YXXY")
@@ -1334,7 +1326,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Y', Tags.Items.STRINGS)
                 .define('Z', Tags.Items.GEMS_DIAMOND)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_TALL.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_TALL)
                 .pattern(" YY ")
                 .pattern(" YY ")
                 .pattern("XXXX")
@@ -1342,7 +1334,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .define('Y', Items.BLACK_WOOL)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_BROAD.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_BROAD)
                 .lava(1)
                 .pattern(" YY ")
                 .pattern("XXXX")
@@ -1350,7 +1342,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .define('Y', Items.BLACK_WOOL)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.PITCHFORK.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.PITCHFORK)
                 .pattern("X X")
                 .pattern("YYY")
                 .pattern(" Y ")
@@ -1359,7 +1351,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
                 .define('Y', Tags.Items.RODS_WOODEN)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_POUCH.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_POUCH)
                 .lava(1)
                 .pattern("ILLI")
                 .pattern("PLLP")
@@ -1408,112 +1400,112 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .save(output);
         netheriteSmithing(ModItems.HUNTER_AXE_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_AXE_ULTIMATE.get());
 
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 1)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "spitfire_arrow_1");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 2)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "spitfire_arrow_2");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE.get(), 3)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "spitfire_arrow_3");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT.get(), 1)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.TELEPORT), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.TELEPORT), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output);
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC.get(), 1)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "garlic_arrow_1");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC.get(), 2)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "garlic_arrow_2");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC.get(), 3)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "garlic_arrow_3");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING.get(), 1)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "bleeding_arrow_1");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING.get(), 2)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "bleeding_arrow_2");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING.get(), 3)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "bleeding_arrow_3");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 1)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "vampire_killer_arrow_1");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 2)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "vampire_killer_arrow_2");
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), 3)
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE.get()))
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
                 .save(output, "vampire_killer_arrow_3");
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ENHANCED.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ENHANCED)
                 .pattern("XYYX")
                 .pattern("YZAY")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL.get())
+                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL)
                 .define('Y', Tags.Items.INGOTS_IRON)
-                .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())
-                .define('A', ModItems.STAKE.get())
+                .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
+                .define('A', ModItems.STAKE)
                 .unlockedBy("iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL.get()))
-                .unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()))
-                .unlockedBy("stake", has(ModItems.STAKE.get()))
+                .unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
+                .unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
+                .unlockedBy("stake", has(ModItems.STAKE))
                 .skills(HunterSkills.CRUCIFIX_WIELDER)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ULTIMATE.get())
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ULTIMATE)
                 .pattern("XYYX")
                 .pattern("YZAY")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', ModItems.ITEM_ALCHEMICAL_FIRE.get())
+                .define('X', ModItems.ITEM_ALCHEMICAL_FIRE)
                 .define('Y', Tags.Items.STORAGE_BLOCKS_GOLD)
-                .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED.get())
-                .define('A', ModItems.STAKE.get())
-                .unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE.get()))
+                .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
+                .define('A', ModItems.STAKE)
+                .unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE))
                 .unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD))
-                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get()))
-                .unlockedBy("stake", has(ModItems.STAKE.get()))
+                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
+                .unlockedBy("stake", has(ModItems.STAKE))
                 .skills(HunterSkills.ULTIMATE_CRUCIFIX)
                 .save(output);
     }
