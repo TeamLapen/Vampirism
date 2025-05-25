@@ -24,6 +24,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -57,6 +58,10 @@ public class RegUtil {
 
     public static ResourceLocation id(@NotNull Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
+    }
+
+    public static ResourceLocation id(@NotNull ItemLike item) {
+        return BuiltInRegistries.ITEM.getKey(item.asItem());
     }
 
     public static ResourceLocation id(@NotNull Block block) {

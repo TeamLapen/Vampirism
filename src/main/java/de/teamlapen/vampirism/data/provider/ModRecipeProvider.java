@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModOils;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
-import de.teamlapen.vampirism.data.provider.parent.ExtendedRecipeProvider;
+import de.teamlapen.vampirism.data.provider.parent.VampirismRecipeProvider;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.items.VampireCloakItem;
@@ -54,7 +54,7 @@ import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
 
-public class ModRecipeProvider extends ExtendedRecipeProvider {
+public class ModRecipeProvider extends VampirismRecipeProvider {
 
     public static final TagKey<Item> IRON_INGOT = Tags.Items.INGOTS_IRON;
     public static final TagKey<Item> GOLD_INGOT = Tags.Items.INGOTS_GOLD;
@@ -93,7 +93,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
         recipesDecorationalBlocks();
         recipesBuildingBlocks();
         recipesMisc();
-        recipesTools();
+        recipesToolsAndArmor();
         recipesStonecutter();
         recipesAlchemyTable();
         recipesAlchemyCauldron();
@@ -606,30 +606,7 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .save(output, modString("leather_from_obi_belt"));
     }
 
-    private void recipesTools() {
-        shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
-                .pattern("###")
-                .pattern("BAB")
-                .pattern(" A ")
-                .define('#', WOOL)
-                .define('A', STICK)
-                .define('B', ModBlocks.VAMPIRE_ORCHID)
-                .unlockedBy("has_wool", has(WOOL))
-                .save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
-
-        shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER)
-                .pattern("XXX")
-                .pattern("XYX")
-                .pattern("ZAZ")
-                .define('X', ModItems.BLOOD_INFUSED_IRON_INGOT)
-                .define('Y', GARLIC)
-                .define('Z', PLANKS)
-                .define('A', REDSTONE_DUST)
-                .unlockedBy("has_garlic", has(GARLIC))
-                .unlockedBy("has_blood_infused_iron", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .unlockedBy("has_redstone", has(REDSTONE_DUST))
-                .save(output, vampire("garlic_finder"));
-
+    private void recipesToolsAndArmor() {
         shaped(RecipeCategory.COMBAT, ModItems.STAKE)
                 .pattern("X")
                 .pattern("Y")
@@ -638,6 +615,18 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .define('Y', PLANKS)
                 .unlockedBy("has_sticks", has(STICK))
                 .save(output, hunter("stake"));
+        shaped(RecipeCategory.COMBAT, ModItems.CRUCIFIX_NORMAL)
+                .pattern("XY ")
+                .pattern("ZYZ")
+                .pattern(" Y ")
+                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL)
+                .define('Y', PLANKS)
+                .define('Z', STICK)
+                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
+                .unlockedBy("stick", has(STICK))
+                .unlockedBy("planks", has(PLANKS))
+                .save(output, hunter("crucifix"));
+
         shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL, 6)
                 .pattern("X")
                 .pattern("Y")
@@ -650,14 +639,27 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_arrow", has(Items.ARROW))
                 .save(output, hunter("crossbow_arrow_from_vanilla"));
 
-        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, this::vampire);
-        ColorListsUtil.VAMPIRE_CLOAKS.keySet().forEach(dye -> {
-            VampireCloakItem cloakItem = ColorListsUtil.VAMPIRE_CLOAKS.get(dye);
-            Item woolItem = ColorListsUtil.DYED_WOOL.get(dye);
-            if (cloakItem != null && woolItem != null) {
-                vampireCloak(cloakItem, woolItem);
-            }
-        });
+        shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
+                .pattern("###")
+                .pattern("BAB")
+                .pattern(" A ")
+                .define('#', WOOL)
+                .define('A', STICK)
+                .define('B', ModBlocks.VAMPIRE_ORCHID)
+                .unlockedBy("has_wool", has(WOOL))
+                .save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
+        shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER)
+                .pattern("XXX")
+                .pattern("XYX")
+                .pattern("ZAZ")
+                .define('X', ModItems.BLOOD_INFUSED_IRON_INGOT)
+                .define('Y', GARLIC)
+                .define('Z', PLANKS)
+                .define('A', REDSTONE_DUST)
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_blood_infused_iron", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
+                .unlockedBy("has_redstone", has(REDSTONE_DUST))
+                .save(output, vampire("garlic_finder"));
 
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_LEGS)
                 .pattern("XXX")
@@ -695,17 +697,14 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_gold", has(Items.GOLD_INGOT))
                 .save(output, vampire("vampire_clothing_crown"));
 
-        shaped(RecipeCategory.COMBAT, ModItems.CRUCIFIX_NORMAL)
-                .pattern("XY ")
-                .pattern("ZYZ")
-                .pattern(" Y ")
-                .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL)
-                .define('Y', PLANKS)
-                .define('Z', STICK)
-                .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
-                .unlockedBy("stick", has(STICK))
-                .unlockedBy("planks", has(PLANKS))
-                .save(output, hunter("crucifix"));
+        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, this::vampire);
+        ColorListsUtil.VAMPIRE_CLOAKS.keySet().forEach(dye -> {
+            VampireCloakItem cloakItem = ColorListsUtil.VAMPIRE_CLOAKS.get(dye);
+            Item woolItem = ColorListsUtil.DYED_WOOL.get(dye);
+            if (cloakItem != null && woolItem != null) {
+                vampireCloak(cloakItem, woolItem);
+            }
+        });
     }
 
     protected void vampireCloak(Item item, Item wool) {
@@ -1511,472 +1510,50 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
     }
 
     private void recipesInfuser() {
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_IRON.toStack(), 0))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_0))
-                .input(Ingredient.of(Items.RAW_IRON))
-                .results(ModItems.VAMPIRE_BLOOD_BOTTLE.toStack())
-                .burnTime(200)
-                .unlockedBy("raw_iron", has(Items.RAW_IRON))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_0))
-                .save(this.output, modString("raw_iron_pure_0"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_IRON.toStack(), 1))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_1))
-                .input(Ingredient.of(Items.RAW_IRON))
-                .results(ModItems.PURE_BLOOD_0.toStack())
-                .burnTime(300)
-                .unlockedBy("raw_iron", has(Items.RAW_IRON))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_1))
-                .save(this.output, modString("raw_iron_pure_1"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_IRON.toStack(), 2))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_2))
-                .input(Ingredient.of(Items.RAW_IRON))
-                .results(ModItems.PURE_BLOOD_1.toStack())
-                .burnTime(400)
-                .unlockedBy("raw_iron", has(Items.RAW_IRON))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_2))
-                .save(this.output, modString("raw_iron_pure_2"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_IRON.toStack(), 3))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_3))
-                .input(Ingredient.of(Items.RAW_IRON))
-                .results(ModItems.PURE_BLOOD_2.toStack())
-                .burnTime(500)
-                .unlockedBy("raw_iron", has(Items.RAW_IRON))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_3))
-                .save(this.output, modString("raw_iron_pure_3"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_IRON.toStack(), 4))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_4))
-                .input(Ingredient.of(Items.RAW_IRON))
-                .results(ModItems.PURE_BLOOD_3.toStack())
-                .burnTime(600)
-                .unlockedBy("raw_iron", has(Items.RAW_IRON))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_4))
-                .save(this.output, modString("raw_iron_pure_4"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_GOLD.toStack(), 0))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_0))
-                .input(Ingredient.of(Items.RAW_GOLD))
-                .results(ModItems.VAMPIRE_BLOOD_BOTTLE.toStack())
-                .burnTime(200)
-                .unlockedBy("raw_gold", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_0))
-                .save(this.output, modString("raw_gold_pure_0"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_GOLD.toStack(), 1))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_1))
-                .input(Ingredient.of(Items.RAW_GOLD))
-                .results(ModItems.PURE_BLOOD_0.toStack())
-                .burnTime(300)
-                .unlockedBy("raw_gold", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_1))
-                .save(this.output, modString("raw_gold_pure_1"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_GOLD.toStack(), 2))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_2))
-                .input(Ingredient.of(Items.RAW_GOLD))
-                .results(ModItems.PURE_BLOOD_1.toStack())
-                .burnTime(400)
-                .unlockedBy("raw_gold", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_2))
-                .save(this.output, modString("raw_gold_pure_2"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_GOLD.toStack(), 3))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_3))
-                .input(Ingredient.of(Items.RAW_GOLD))
-                .results(ModItems.PURE_BLOOD_2.toStack())
-                .burnTime(500)
-                .unlockedBy("raw_gold", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_3))
-                .save(this.output, modString("raw_gold_pure_3"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_RAW_GOLD.toStack(), 4))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_4))
-                .input(Ingredient.of(Items.RAW_GOLD))
-                .results(ModItems.PURE_BLOOD_3.toStack())
-                .burnTime(600)
-                .unlockedBy("raw_gold", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_4))
-                .save(this.output, modString("raw_gold_pure_4"));
+        fiveTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
+        fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
+        fiveTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
 
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_DIAMOND.toStack(), 0))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_0))
-                .input(tag(Tags.Items.GEMS_DIAMOND))
-                .results(ModItems.VAMPIRE_BLOOD_BOTTLE.toStack())
-                .burnTime(200)
-                .unlockedBy("raw_diamonds", has(Tags.Items.GEMS_DIAMOND))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_0))
-                .save(this.output, modString("diamond_pure_0"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_DIAMOND.toStack(), 1))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_1))
-                .input(tag(Tags.Items.GEMS_DIAMOND))
-                .results(ModItems.PURE_BLOOD_0.toStack())
-                .burnTime(400)
-                .unlockedBy("raw_diamonds", has(Items.RAW_GOLD))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_1))
-                .save(this.output, modString("diamond_pure_1"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_DIAMOND.toStack(), 2))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_2))
-                .input(tag(Tags.Items.GEMS_DIAMOND))
-                .results(ModItems.PURE_BLOOD_1.toStack())
-                .burnTime(600)
-                .unlockedBy("raw_diamonds", has(Tags.Items.GEMS_DIAMOND))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_2))
-                .save(this.output, modString("diamond_pure_2"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_DIAMOND.toStack(), 3))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_3))
-                .input(tag(Tags.Items.GEMS_DIAMOND))
-                .results(ModItems.PURE_BLOOD_2.toStack())
-                .burnTime(800)
-                .unlockedBy("raw_diamonds", has(Tags.Items.GEMS_DIAMOND))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_3))
-                .save(this.output, modString("diamond_pure_3"));
-        infuser(PureLevel.pureBlood(ModItems.BLOOD_INFUSED_DIAMOND.toStack(), 4))
-                .ingredients(Ingredient.of(ModItems.PURE_BLOOD_4))
-                .input(tag(Tags.Items.GEMS_DIAMOND))
-                .results(ModItems.PURE_BLOOD_3.toStack())
-                .burnTime(1000)
-                .unlockedBy("raw_diamonds", has(Tags.Items.GEMS_DIAMOND))
-                .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_4))
-                .save(this.output, modString("diamond_pure_4"));
-        swordInfusing();
+        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
+        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
 
+        for (int i = 0; i < 5; i++) {
+            netheriteInfusionRecipe(i);
+        }
 
-        infusedIron(0);
-        infusedIron(1);
-        infusedIron(2);
-        infusedIron(3);
-        infusedIron(4);
-
-        infusedGold(0);
-        infusedGold(1);
-        infusedGold(2);
-        infusedGold(3);
-        infusedGold(4);
-
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, 0))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_0"));
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, 1))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_1"));
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, 2))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_2"));
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, 3))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_3"));
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, 4))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_4"));
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_NORMAL,0))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_seeker_normal_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_NORMAL,1))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_seeker_normal_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_NORMAL,2))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_seeker_normal_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_NORMAL,3))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_seeker_normal_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_NORMAL,4))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_seeker_normal_pure_4");
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ENHANCED,0))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_seeker_enhanced_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ENHANCED,1))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_seeker_enhanced_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ENHANCED,2))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_seeker_enhanced_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ENHANCED,3))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_seeker_enhanced_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ENHANCED,4))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_seeker_enhanced_pure_4");
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ULTIMATE,0))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_seeker_ultimate_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ULTIMATE,1))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_seeker_ultimate_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ULTIMATE,2))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_seeker_ultimate_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ULTIMATE,3))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_seeker_ultimate_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_SEEKER_ULTIMATE,4))
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_seeker_ultimate_pure_4");
-
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_NORMAL,0))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_striker_normal_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_NORMAL,1))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_striker_normal_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_NORMAL,2))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_striker_normal_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_NORMAL,3))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_striker_normal_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_NORMAL,4))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_iron_ingot", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
-                .save(output, "heart_striker_normal_pure_4");
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ENHANCED,0))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_striker_enhanced_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ENHANCED,1))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_striker_enhanced_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ENHANCED,2))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_striker_enhanced_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ENHANCED,3))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_striker_enhanced_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ENHANCED,4))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_DIAMOND))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_diamond", has(ModItems.BLOOD_INFUSED_DIAMOND))
-                .save(output, "heart_striker_enhanced_pure_4");
-
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ULTIMATE,0))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(0), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_striker_ultimate_pure_0");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ULTIMATE,1))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(1), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_striker_ultimate_pure_1");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ULTIMATE,2))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(2), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_striker_ultimate_pure_2");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ULTIMATE,3))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(3), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_striker_ultimate_pure_3");
-        ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(ModItems.HEART_STRIKER_ULTIMATE,4))
-                .pattern("XX")
-                .pattern("XX")
-                .pattern("YY")
-                .define('X', DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(4), ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .define('Y', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_blood_infused_netherite_ingot", has(ModItems.BLOOD_INFUSED_NETHERITE_INGOT))
-                .save(output, "heart_striker_ultimate_pure_4");
-
-        nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT,0) , RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, 0), "_purity_0");
-        nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT,1) , RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, 1), "_purity_1");
-        nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT,2) , RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, 2), "_purity_2");
-        nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT,3) , RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, 3), "_purity_3");
-        nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT,4) , RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK, 4), "_purity_4");
-
-        smithingPure(ModItems.HEART_SEEKER_ENHANCED, 0, ModItems.HEART_SEEKER_ULTIMATE);
-        smithingPure(ModItems.HEART_SEEKER_ENHANCED, 1, ModItems.HEART_SEEKER_ULTIMATE);
-        smithingPure(ModItems.HEART_SEEKER_ENHANCED, 2, ModItems.HEART_SEEKER_ULTIMATE);
-        smithingPure(ModItems.HEART_SEEKER_ENHANCED, 3, ModItems.HEART_SEEKER_ULTIMATE);
-        smithingPure(ModItems.HEART_SEEKER_ENHANCED, 4, ModItems.HEART_SEEKER_ULTIMATE);
-
-        smithingPure(ModItems.HEART_STRIKER_ENHANCED, 0, ModItems.HEART_STRIKER_ULTIMATE);
-        smithingPure(ModItems.HEART_STRIKER_ENHANCED, 1, ModItems.HEART_STRIKER_ULTIMATE);
-        smithingPure(ModItems.HEART_STRIKER_ENHANCED, 2, ModItems.HEART_STRIKER_ULTIMATE);
-        smithingPure(ModItems.HEART_STRIKER_ENHANCED, 3, ModItems.HEART_STRIKER_ULTIMATE);
-        smithingPure(ModItems.HEART_STRIKER_ENHANCED, 4, ModItems.HEART_STRIKER_ULTIMATE);
-
-    }
-
-    private void smithingPure(ItemLike item, int level, ItemLike result) {
-        netheriteSmithing(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), item), RecipeCategory.COMBAT, DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_NETHERITE_INGOT), PureLevel.pureBlood(result, level), "_purity_" + level);
-    }
-
-    private void infusedGold(int pureLevel) {
-        SimpleCookingRecipeBuilder
-                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(pureLevel), ModItems.BLOOD_INFUSED_RAW_GOLD), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_GOLD_INGOT, pureLevel), (float)Math.pow(2f, pureLevel), 200 + pureLevel * 100)
-                .unlockedBy("has_blood_infused_raw_gold", has(ModItems.BLOOD_INFUSED_RAW_GOLD))
-                .save(this.output, modString("raw_gold_pure_" + pureLevel + "_smelting"));
-        SimpleCookingRecipeBuilder
-                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(pureLevel), ModItems.BLOOD_INFUSED_RAW_GOLD), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_GOLD_INGOT, pureLevel),(float)Math.pow(2f, pureLevel), 100 + pureLevel * 50)
-                .unlockedBy("has_blood_infused_raw_gold", has(ModItems.BLOOD_INFUSED_RAW_GOLD))
-                .save(this.output, modString("raw_gold_pure_" + pureLevel + "_blasting"));
-    }
-
-    private void infusedIron(int pureLevel) {
-        SimpleCookingRecipeBuilder
-                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(pureLevel), ModItems.BLOOD_INFUSED_RAW_IRON), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT, pureLevel), (float)Math.pow(2f, pureLevel), 200 + pureLevel * 100)
-                .unlockedBy("has_blood_infused_raw_iron", has(ModItems.BLOOD_INFUSED_RAW_IRON))
-                .save(this.output, modString("raw_iron_pure_" + pureLevel + "_smelting"));
-        SimpleCookingRecipeBuilder
-                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(pureLevel), ModItems.BLOOD_INFUSED_RAW_IRON), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT, pureLevel),(float)Math.pow(2f, pureLevel), 100 + pureLevel * 50)
-                .unlockedBy("has_blood_infused_raw_iron", has(ModItems.BLOOD_INFUSED_RAW_IRON))
-                .save(this.output, modString("raw_iron_pure_" + pureLevel + "_blasting"));
-    }
-
-    private void swordInfusing() {
         Stream.of(ModItems.HEART_SEEKER_NORMAL, ModItems.HEART_SEEKER_ENHANCED, ModItems.HEART_SEEKER_ULTIMATE, ModItems.HEART_STRIKER_NORMAL, ModItems.HEART_STRIKER_ENHANCED, ModItems.HEART_STRIKER_ULTIMATE).forEach(item -> {
             for (int i = 1; i < 5; i++) {
                 swordInfuse(item, i);
             }
         });
+
+        String heartSeekerPattern = "X\nX\nY";
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_SEEKER_NORMAL, ModItems.BLOOD_INFUSED_IRON_INGOT, heartSeekerPattern);
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_SEEKER_ENHANCED, ModItems.BLOOD_INFUSED_DIAMOND, heartSeekerPattern);
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_SEEKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartSeekerPattern);
+
+        String heartStrikerPattern = "XX\nXX\nYY";
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_NORMAL, ModItems.BLOOD_INFUSED_IRON_INGOT, heartStrikerPattern);
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ENHANCED, ModItems.BLOOD_INFUSED_DIAMOND, heartStrikerPattern);
+        fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartStrikerPattern);
+
+        for (int i = 0; i < 5; i++) {
+            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(i == 4 ? ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModBlocks.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
+            smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
+        }
+    }
+
+    private void netheriteInfusionRecipe(int level) {
+        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, level))
+                .requires(Items.NETHERITE_SCRAP, 4)
+                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
+                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
+                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
+                .save(this.output, modString("netherite_scrap_pure_" + level));
     }
 
     private void swordInfuse(ItemLike item, @Range(from = 1, to = 4) int level) {
@@ -1987,6 +1564,10 @@ public class ModRecipeProvider extends ExtendedRecipeProvider {
                 .unlockedBy("has_pure_blood", has(PureBloodItem.getBloodItemForLevel(level)))
                 .input(CompoundIngredient.of(IntStream.range(0, level).mapToObj(x -> DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(x), item)).toArray(Ingredient[]::new)))
                 .save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(item.asItem()).withSuffix("_infuse_" + level + "_upgrade")));
+    }
+
+    private void smithingPure(ItemLike item, int level, ItemLike result) {
+        netheriteSmithing(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), item), RecipeCategory.COMBAT, DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_NETHERITE_INGOT), PureLevel.pureBlood(result, level), "_purity_" + level);
     }
 
 

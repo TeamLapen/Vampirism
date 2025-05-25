@@ -1,21 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "diamond": {
+    "has_blood_infused_iron_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "#c:gems/diamond"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_pure_blood": {
-      "conditions": {
-        "items": [
-          {
-            "items": "vampirism:pure_blood_1"
+            "items": "vampirism:blood_infused_raw_iron"
           }
         ]
       },
@@ -23,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:diamond_pure_1"
+        "recipe": "vampirism:blood_infused_raw_iron_pure_1_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "diamond",
-      "has_pure_blood"
+      "has_blood_infused_iron_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:diamond_pure_1"
+      "vampirism:blood_infused_raw_iron_pure_1_smelting"
     ]
   }
 }

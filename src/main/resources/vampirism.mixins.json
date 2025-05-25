@@ -44,7 +44,6 @@
     "accessor.OrePlacementAccessor",
     "accessor.ProcessorListsAccessor",
     "accessor.ProcessorRuleAccessor",
-    "accessor.RecipeProviderAccessor",
     "accessor.RegistriesDatapackGeneratorAccessor",
     "accessor.ShapedRecipeAccessor",
     "accessor.ShapedRecipeBuilderAccessor",
