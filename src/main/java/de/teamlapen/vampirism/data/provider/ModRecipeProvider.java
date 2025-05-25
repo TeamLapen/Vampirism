@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
@@ -21,6 +22,7 @@ import de.teamlapen.vampirism.recipes.RerollVampireBookRecipe;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import de.teamlapen.vampirism.util.RegUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -1402,84 +1404,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         netheriteSmithing(ModItems.HUNTER_AXE_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_AXE_ULTIMATE.get());
 
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 1)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("spitfire_arrow_1"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 2)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("spitfire_arrow_2"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 3)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("spitfire_arrow_3"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT, 1)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.TELEPORT), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output);
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 1)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("garlic_arrow_1"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 2)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("garlic_arrow_2"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 3)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("garlic_arrow_3"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 1)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("bleeding_arrow_1"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 2)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("bleeding_arrow_2"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 3)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("bleeding_arrow_3"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 1)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("vampire_killer_arrow_1"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 2)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("vampire_killer_arrow_2"));
-        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 3)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, modString("vampire_killer_arrow_3"));
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ENHANCED)
                 .pattern("XYYX")
                 .pattern("YZAY")
@@ -1510,6 +1434,27 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("stake", has(ModItems.STAKE))
                 .skills(HunterSkills.ULTIMATE_CRUCIFIX)
                 .save(output);
+
+        crossbowArrowRecipe(ModItems.CROSSBOW_ARROW_TELEPORT, ModOils.TELEPORT, 1);
+        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_SPITFIRE, ModOils.SPITFIRE);
+        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_GARLIC, ModOils.GARLIC);
+        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_BLEEDING, ModOils.BLEEDING);
+        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
+    }
+
+    private void upToThreeCrossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil) {
+        for (int i = 1; i <= 3; i++) {
+            crossbowArrowRecipe(arrow, oil, i);
+        }
+    }
+
+    private void crossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil, int quantity) {
+        shapelessWeaponTable(RecipeCategory.COMBAT, arrow, quantity)
+                .lava(1)
+                .requires(ModItems.CROSSBOW_ARROW_NORMAL, quantity)
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
+                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
+                .save(output, RegUtil.id(arrow) + "_" + quantity);
     }
 
     private void recipesInfuser() {

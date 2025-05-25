@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:vampire_killer_arrow_1"
+        "recipe": "vampirism:crossbow_arrow_garlic_3"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -33,7 +33,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:vampire_killer_arrow_1"
+      "vampirism:crossbow_arrow_garlic_3"
     ]
   }
 }

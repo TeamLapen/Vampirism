@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:crossbow_arrow_teleport"
+        "recipe": "vampirism:crossbow_arrow_bleeding_3"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -33,7 +33,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:crossbow_arrow_teleport"
+      "vampirism:crossbow_arrow_bleeding_3"
     ]
   }
 }
