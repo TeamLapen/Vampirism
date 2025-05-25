@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.recipes.ConfigCondition;
 import de.teamlapen.vampirism.recipes.RerollVampireBookRecipe;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.ItemDataUtils;
+import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -105,7 +107,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                         .requires(ModItems.VAMPIRE_FANG)
                         .requires(Items.BOOK)
                         .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                        .save(output.withConditions(new ModLoadedCondition(REFERENCE.GUIDEAPI_MODID)), modString("general/guidebook"))
+                        .save(output.withConditions(new ModLoadedCondition(REFERENCE.GUIDEAPI_MODID)), modString("vampirism_guidebook"))
         );
 
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
@@ -122,28 +124,28 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', ModBlocks.BLOOD_CONTAINER)
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_blood_container", has(ModBlocks.BLOOD_CONTAINER))
-                .save(output, vampire("altar_inspiration"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INFUSION)
                 .pattern("YZY")
                 .pattern("ZZZ")
                 .define('Y', GOLD_INGOT)
                 .define('Z', OBSIDIAN)
                 .unlockedBy("has_gold", has(GOLD_INGOT))
-                .save(output, vampire("altar_infusion"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_PILLAR)
                 .pattern("X X")
                 .pattern("   ")
                 .pattern("XXX")
                 .define('X', Blocks.STONE_BRICKS)
                 .unlockedBy("has_stones", has(Blocks.STONE_BRICKS))
-                .save(output, vampire("altar_pillar"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_TIP)
                 .pattern(" X ")
                 .pattern("XYX")
                 .define('X', IRON_INGOT)
                 .define('Y', IRON_BLOCK)
                 .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("altar_tip"));
+                .save(output);
 
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL)
                 .pattern("GYG")
@@ -154,7 +156,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', ModItems.BLOOD_BOTTLE)
                 .define('G', GOLD_INGOT)
                 .unlockedBy("has_gold", has(GOLD_INGOT))
-                .save(output, vampire("blood_pedestal"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_CONTAINER)
                 .pattern("XYX")
                 .pattern("YZY")
@@ -163,7 +165,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', GLASS)
                 .define('Z', IRON_INGOT)
                 .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("blood_container"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER)
                 .pattern(" Z ")
                 .pattern("YDY")
@@ -173,7 +175,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('D', DIAMOND)
                 .define('X', IRON_INGOT)
                 .unlockedBy("has_hopper", has(Blocks.HOPPER))
-                .save(output, general("blood_grinder"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_SIEVE)
                 .pattern("XQX")
                 .pattern("YZY")
@@ -183,7 +185,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', PLANKS)
                 .define('Z', Blocks.CAULDRON)
                 .unlockedBy("has_cauldron", has(Blocks.CAULDRON))
-                .save(output, general("blood_sieve"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER)
                 .pattern("XYX")
                 .pattern("YZY")
@@ -195,7 +197,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_diamond", has(DIAMOND))
                 .unlockedBy("has_cursed_plank", has(ModBlocks.CURSED_SPRUCE_PLANKS))
                 .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
-                .save(output, vampire("fog_diffuser"));
+                .save(output);
 
         shaped(RecipeCategory.DECORATIONS, ModBlocks.HUNTER_TABLE)
                 .pattern("XYW")
@@ -206,7 +208,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', PLANKS)
                 .define('W', GARLIC)
                 .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                .save(output, hunter("hunter_table"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.WEAPON_TABLE)
                 .pattern("X  ")
                 .pattern("YYY")
@@ -215,7 +217,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', IRON_INGOT)
                 .define('Z', IRON_BLOCK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .save(output, hunter("weapon_table"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMICAL_CAULDRON)
                 .pattern("XZX")
                 .pattern("XXX")
@@ -224,7 +226,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', Blocks.STONE_BRICKS)
                 .define('Z', GARLIC)
                 .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, hunter("alchemical_cauldron"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.POTION_TABLE)
                 .pattern("XXX")
                 .pattern("Y Y")
@@ -233,7 +235,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', PLANKS)
                 .define('Z', IRON_INGOT)
                 .unlockedBy("has_glass_bottle", has(Items.GLASS_BOTTLE))
-                .save(output, hunter("potion_table"));
+                .save(output);
         shaped(RecipeCategory.COMBAT, ModBlocks.ALCHEMY_TABLE)
                 .pattern("B  ")
                 .pattern("BBB")
@@ -251,7 +253,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', WOOL)
                 .define('Z', Items.GLASS_BOTTLE)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .save(output, hunter("item_med_chair"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
                 .pattern(" X ")
                 .pattern("YYY")
@@ -259,7 +261,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', ModItems.VAMPIRE_BOOK)
                 .define('Y', PLANKS)
                 .unlockedBy("has_vampire_book", has(PLANKS))
-                .save(output, general("altar_cleansing"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
                 .pattern("XZX")
                 .pattern("YYY")
@@ -268,7 +270,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', PLANKS)
                 .define('Z', Items.BOOK)
                 .unlockedBy("has_book", has(Items.BOOK))
-                .save(output, general("altar_cleansing_new"));
+                .save(output, modString("altar_cleansing_fang"));
 
         shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_NORMAL)
                 .pattern("XYX")
@@ -279,7 +281,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('O', OBSIDIAN)
                 .define('Z', ModItems.GARLIC_DIFFUSER_CORE)
                 .unlockedBy("has_diamond", has(DIAMOND))
-                .save(output, hunter("garlic_diffuser_normal"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_IMPROVED)
                 .pattern("XYX")
                 .pattern("YZY")
@@ -289,7 +291,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
                 .define('O', OBSIDIAN)
                 .unlockedBy("has_garlic_diffuser", has(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED))
-                .save(output, hunter("garlic_diffuser_improved"));
+                .save(output);
         shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON)
                 .pattern("GGG")
                 .pattern("GCG")
@@ -310,7 +312,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', OBSIDIAN)
                 .define('Z', IRON_INGOT)
                 .unlockedBy("has_obsidian", has(OBSIDIAN))
-                .save(output, general("totem_base"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOTEM_TOP_CRAFTED)
                 .pattern("X X")
                 .pattern(" Y ")
@@ -320,7 +322,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', ModItems.VAMPIRE_BOOK)
                 .unlockedBy("has_diamond", has(DIAMOND_BLOCK))
                 .unlockedBy("has_obsidian", has(OBSIDIAN))
-                .save(output, general("totem_top"));
+                .save(output);
     }
 
     private void recipesDecorationalBlocks() {
@@ -330,7 +332,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', LOG)
                 .define('Y', COAL_BLOCK)
                 .unlockedBy("has_logs", has(LOG))
-                .save(output, general("fire_place"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK)
                 .pattern(" I ")
                 .pattern("NNN")
@@ -372,11 +374,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', HOLY_WATER)
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_holy", has(HOLY_WATER))
-                .save(output, hunter("cross"));
+                .save(output);
         shapeless(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE1)
                 .requires(ModBlocks.TOMBSTONE2)
                 .unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2))
-                .save(output, general("tombstone1"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE2)
                 .pattern("XX ")
                 .pattern("XYX")
@@ -385,12 +387,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', STONE)
                 .unlockedBy("has_coble", has(COBBLESTONE))
                 .unlockedBy("has_stone", has(STONE))
-                .save(output, general("tombstone2"));
+                .save(output);
         shapeless(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE3)
                 .requires(ModBlocks.TOMBSTONE2)
                 .requires(Blocks.COBBLESTONE)
                 .unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2))
-                .save(output, general("tombstone3"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.GRAVE_CAGE)
                 .pattern(" X ")
                 .pattern("XYX")
@@ -399,7 +401,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', COAL)
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_coal", has(COAL))
-                .save(output, general("grave_cage"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_RACK)
                 .pattern("XYX")
                 .pattern("ABC")
@@ -414,7 +416,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_fangs", has(ModItems.VAMPIRE_FANG))
                 .unlockedBy("has_honey", has(Items.HONEYCOMB))
                 .unlockedBy("has_potion", has(Items.GLASS_BOTTLE))
-                .save(output, general("vampire_rack"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.THRONE)
                 .pattern(" YZ")
                 .pattern("YYZ")
@@ -425,7 +427,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_stick", has(STICK))
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_wool", has(Blocks.RED_CARPET))
-                .save(output, general("throne"));
+                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE)
                 .pattern("GGG")
                 .pattern("GPG")
@@ -445,16 +447,16 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_bed", has(BED))
                 .save(output);
 
-        coffinFromWool(output, ModBlocks.COFFIN_WHITE, Items.WHITE_WOOL, vampire("coffin_white"));
+        coffinFromWool(output, ModBlocks.COFFIN_WHITE, Items.WHITE_WOOL);
         ColorListsUtil.COFFINS.forEach(coffinBlock -> {
             DyeColor color = coffinBlock.getColor();
             if (color != DyeColor.WHITE) {
-                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color), vampire("coffin_" + color.getName()));
+                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color));
             }
         });
     }
 
-    private void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool, String path) {
+    private void coffinFromWool(RecipeOutput consumer, ItemLike coffin, ItemLike wool) {
         shaped(RecipeCategory.DECORATIONS, coffin)
                 .pattern("XXX")
                 .pattern("YYY")
@@ -462,17 +464,17 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', ItemTags.PLANKS)
                 .define('Y', wool)
                 .unlockedBy("has_wool", has(wool))
-                .save(consumer, path);
+                .save(consumer);
     }
 
-    private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye, String path) {
-        coffinFromWool(consumer, coffin, wool, path);
+    private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye) {
+        coffinFromWool(consumer, coffin, wool);
         shapeless(RecipeCategory.DECORATIONS, coffin)
                 .requires(ModBlocks.COFFIN_WHITE)
                 .requires(dye)
                 .unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE))
                 .unlockedBy("has_dye", has(dye))
-                .save(consumer, path + "_from_white");
+                .save(consumer, modString(RegUtil.id(coffin).getPath()) + "_from_white");
     }
 
     private void recipesBuildingBlocks() {
@@ -522,7 +524,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .requires(BREAD)
                 .unlockedBy("has_garlic", has(GARLIC))
                 .unlockedBy("has_bread", has(BREAD))
-                .save(output, general("garlic_bread"));
+                .save(output);
 
         shaped(RecipeCategory.MISC, ModItems.INJECTION_EMPTY)
                 .pattern("X")
@@ -532,21 +534,21 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', GLASS_PANE)
                 .unlockedBy("has_glass", has(GLASS))
                 .unlockedBy("has_glass_pane", has(GLASS_PANE))
-                .save(output, general("injection_0"));
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC)
                 .requires(ModItems.INJECTION_EMPTY)
                 .requires(GARLIC)
                 .unlockedBy("has_injection", has(ModItems.INJECTION_EMPTY))
-                .save(output, general("injection_1"));
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE)
                 .requires(ModItems.INJECTION_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
                 .unlockedBy("has_injection", has(ModItems.INJECTION_EMPTY))
-                .save(output, general("injection_2"));
+                .save(output);
 
         shapeless(RecipeCategory.MISC, Items.GLASS_BOTTLE)
                 .requires(ModItems.BLOOD_BOTTLE)
                 .unlockedBy("has_blood_bottle", has(ModItems.BLOOD_BOTTLE))
-                .save(output, vampire("blood_bottle_to_glass"));
+                .save(output, modString("blood_bottle_to_glass"));
 
         ShapedRecipeBuilder.shaped(itemLookup, RecipeCategory.MISC, ItemDataUtils.createBloodBottle(0))
                 .pattern("XYX")
@@ -554,50 +556,50 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', GLASS)
                 .define('Y', Items.ROTTEN_FLESH)
                 .unlockedBy("has_glass", has(GLASS))
-                .save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))), vampire("blood_bottle"));
+                .save(output.withConditions(new NotCondition(new ConfigCondition("auto_convert"))));
 
         shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_0)
                 .requires(ModItems.PURE_BLOOD_1)
                 .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_1))
-                .save(output, hunter("pure_blood0"));
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_1)
                 .requires(ModItems.PURE_BLOOD_2)
                 .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_2))
-                .save(output, hunter("pure_blood1"));
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_2)
                 .requires(ModItems.PURE_BLOOD_3)
                 .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_3))
-                .save(output, hunter("pure_blood2"));
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.PURE_BLOOD_3)
                 .requires(ModItems.PURE_BLOOD_4)
                 .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 .unlockedBy("has_pure_blood", has(ModItems.PURE_BLOOD_4))
-                .save(output, hunter("pure_blood3"));
+                .save(output);
 
         shapeless(RecipeCategory.MISC, ModItems.BLOOD_INFUSED_IRON_INGOT, 3)
                 .requires(tag(IRON_INGOT), 3)
                 .requires(ModItems.PURE_BLOOD_4)
                 .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("blood_infused_enhanced_iron_ingot"));
+                .save(output, modString("blood_infused_iron_ingot_pure_4"));
         shapeless(RecipeCategory.MISC, ModItems.BLOOD_INFUSED_IRON_INGOT, 3)
                 .requires(tag(IRON_INGOT), 3)
                 .requires(Ingredient.of(ModItems.PURE_BLOOD_0, ModItems.PURE_BLOOD_1, ModItems.PURE_BLOOD_2, ModItems.PURE_BLOOD_3))
                 .unlockedBy("has_iron", has(IRON_INGOT))
-                .save(output, vampire("blood_infused_iron_ingot"));
+                .save(output, modString("blood_infused_iron_ingot_pure_0_to_3"));
 
         shapeless(RecipeCategory.DECORATIONS, ModItems.HOLY_WATER_BOTTLE_NORMAL, 2)
                 .requires(ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .requires(ModItems.PURE_SALT_WATER)
                 .unlockedBy("has_enhanced_holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
-                .save(output, "holy_water_bottle_normal_from_enhanced");
+                .save(output, modString("holy_water_bottle_normal_from_enhanced"));
         shapeless(RecipeCategory.DECORATIONS, ModItems.HOLY_WATER_BOTTLE_ENHANCED, 2)
                 .requires(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .requires(ModItems.PURE_SALT_WATER)
                 .unlockedBy("has_ultimate_holy_water", has(ModItems.HOLY_WATER_BOTTLE_ULTIMATE))
-                .save(output, "holy_water_bottle_enhanced_from_ultimate");
+                .save(output, modString("holy_water_bottle_enhanced_from_ultimate"));
 
         smeltingAndBlasting(RecipeCategory.MISC, "gold_nugget_from_accessory", new ItemLike[] { ModItems.AMULET, ModItems.RING }, Items.GOLD_NUGGET, 0.1f);
         shapeless(RecipeCategory.COMBAT, Items.LEATHER)
@@ -614,7 +616,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', STICK)
                 .define('Y', PLANKS)
                 .unlockedBy("has_sticks", has(STICK))
-                .save(output, hunter("stake"));
+                .save(output);
         shaped(RecipeCategory.COMBAT, ModItems.CRUCIFIX_NORMAL)
                 .pattern("XY ")
                 .pattern("ZYZ")
@@ -625,7 +627,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
                 .unlockedBy("stick", has(STICK))
                 .unlockedBy("planks", has(PLANKS))
-                .save(output, hunter("crucifix"));
+                .save(output);
 
         shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL, 6)
                 .pattern("X")
@@ -633,11 +635,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', IRON_INGOT)
                 .define('Y', STICK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .save(output, hunter("crossbow_arrow_normal"));
+                .save(output);
         shapeless(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL)
                 .requires(Items.ARROW)
                 .unlockedBy("has_arrow", has(Items.ARROW))
-                .save(output, hunter("crossbow_arrow_from_vanilla"));
+                .save(output, modString("crossbow_arrow_from_vanilla"));
 
         shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
                 .pattern("###")
@@ -647,7 +649,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('A', STICK)
                 .define('B', ModBlocks.VAMPIRE_ORCHID)
                 .unlockedBy("has_wool", has(WOOL))
-                .save(output.withConditions(new ConfigCondition("umbrella")), general("umbrella"));
+                .save(output.withConditions(new ConfigCondition("umbrella")));
         shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER)
                 .pattern("XXX")
                 .pattern("XYX")
@@ -659,7 +661,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_garlic", has(GARLIC))
                 .unlockedBy("has_blood_infused_iron", has(ModItems.BLOOD_INFUSED_IRON_INGOT))
                 .unlockedBy("has_redstone", has(REDSTONE_DUST))
-                .save(output, vampire("garlic_finder"));
+                .save(output);
 
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_LEGS)
                 .pattern("XXX")
@@ -669,7 +671,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', tag(HEART))
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.GRAY_WOOL))
-                .save(output, vampire("vampire_clothing_legs"));
+                .save(output);
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_BOOTS)
                 .pattern("XYX")
                 .pattern("X X")
@@ -677,7 +679,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', tag(HEART))
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.BROWN_WOOL))
-                .save(output, vampire("vampire_clothing_boots"));
+                .save(output);
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_HAT)
                 .pattern("ZXX")
                 .pattern(" Y ")
@@ -687,7 +689,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', tag(HEART))
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_wool", has(Items.BLACK_WOOL))
-                .save(output, vampire("vampire_clothing_hat"));
+                .save(output);
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_CROWN)
                 .pattern("XYX")
                 .pattern("XXX")
@@ -695,9 +697,9 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', tag(HEART))
                 .unlockedBy("has_heart", has(HEART))
                 .unlockedBy("has_gold", has(Items.GOLD_INGOT))
-                .save(output, vampire("vampire_clothing_crown"));
+                .save(output);
 
-        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, this::vampire);
+        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, VResourceLocation::modString);
         ColorListsUtil.VAMPIRE_CLOAKS.keySet().forEach(dye -> {
             VampireCloakItem cloakItem = ColorListsUtil.VAMPIRE_CLOAKS.get(dye);
             Item woolItem = ColorListsUtil.DYED_WOOL.get(dye);
@@ -715,7 +717,8 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("WDW")
                 .pattern("WPW")
                 .pattern("W W")
-                .unlockedBy("has_pure_blood", has(ModItemTags.PURE_BLOOD)).save(output, vampire(BuiltInRegistries.ITEM.getKey(item).getPath()));
+                .unlockedBy("has_pure_blood", has(ModItemTags.PURE_BLOOD))
+                .save(output);
     }
 
     private void recipesStonecutter() {
@@ -1404,19 +1407,19 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "spitfire_arrow_1");
+                .save(output, modString("spitfire_arrow_1"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "spitfire_arrow_2");
+                .save(output, modString("spitfire_arrow_2"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_SPITFIRE, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.SPITFIRE), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "spitfire_arrow_3");
+                .save(output, modString("spitfire_arrow_3"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_TELEPORT, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL)
@@ -1428,55 +1431,55 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "garlic_arrow_1");
+                .save(output, modString("garlic_arrow_1"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "garlic_arrow_2");
+                .save(output, modString("garlic_arrow_2"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_GARLIC, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.GARLIC), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "garlic_arrow_3");
+                .save(output, modString("garlic_arrow_3"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "bleeding_arrow_1");
+                .save(output, modString("bleeding_arrow_1"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "bleeding_arrow_2");
+                .save(output, modString("bleeding_arrow_2"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_BLEEDING, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.BLEEDING), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "bleeding_arrow_3");
+                .save(output, modString("bleeding_arrow_3"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 1)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 1)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "vampire_killer_arrow_1");
+                .save(output, modString("vampire_killer_arrow_1"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 2)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 2)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "vampire_killer_arrow_2");
+                .save(output, modString("vampire_killer_arrow_2"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, 3)
                 .lava(1)
                 .requires(ModItems.CROSSBOW_ARROW_NORMAL, 3)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_KILLER), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, "vampire_killer_arrow_3");
+                .save(output, modString("vampire_killer_arrow_3"));
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.CRUCIFIX_ENHANCED)
                 .pattern("XYYX")
                 .pattern("YZAY")
@@ -1563,25 +1566,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .burnTime(200)
                 .unlockedBy("has_pure_blood", has(PureBloodItem.getBloodItemForLevel(level)))
                 .input(CompoundIngredient.of(IntStream.range(0, level).mapToObj(x -> DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(x), item)).toArray(Ingredient[]::new)))
-                .save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(item.asItem()).withSuffix("_infuse_" + level + "_upgrade")));
+                .save(this.output, ResourceKey.create(Registries.RECIPE, RegUtil.id(item.asItem()).withSuffix("_infuse_" + level + "_upgrade")));
     }
 
     private void smithingPure(ItemLike item, int level, ItemLike result) {
         netheriteSmithing(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), item), RecipeCategory.COMBAT, DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_NETHERITE_INGOT), PureLevel.pureBlood(result, level), "_purity_" + level);
     }
 
-
-    private String general(String path) {
-        return modString("general/" + path);
-    }
-
-    private String hunter(String path) {
-        return modString("hunter/" + path);
-    }
-
-    private String vampire(String path) {
-        return modString("vampire/" + path);
-    }
 
     public static class Runner extends RecipeProvider.Runner {
 

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pure_blood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#vampirism:pure_blood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:vampire_cloak_light_blue"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_pure_blood"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire_cloak_light_blue"
+    ]
+  }
+}
