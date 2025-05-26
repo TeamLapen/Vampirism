@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.data.provider.parent.VampirismRecipeProvider;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.items.VampireCloakItem;
-import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.recipes.ApplicableOilRecipe;
 import de.teamlapen.vampirism.recipes.CleanOilRecipe;
@@ -1442,21 +1441,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
     }
 
-    private void upToThreeCrossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil) {
-        for (int i = 1; i <= 3; i++) {
-            crossbowArrowRecipe(arrow, oil, i);
-        }
-    }
-
-    private void crossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil, int quantity) {
-        shapelessWeaponTable(RecipeCategory.COMBAT, arrow, quantity)
-                .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, quantity)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, RegUtil.id(arrow) + "_" + quantity);
-    }
-
     private void recipesInfuser() {
         fiveTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
         fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
@@ -1466,7 +1450,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
 
         for (int i = 0; i < 5; i++) {
-            netheriteInfusionRecipe(i);
+            shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, i))
+                    .requires(Items.NETHERITE_SCRAP, 4)
+                    .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(i), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
+                    .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
+                    .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
+                    .save(this.output, modString("netherite_scrap_pure_" + i));
         }
 
         Stream.of(ModItems.HEART_SEEKER_NORMAL, ModItems.HEART_SEEKER_ENHANCED, ModItems.HEART_SEEKER_ULTIMATE, ModItems.HEART_STRIKER_NORMAL, ModItems.HEART_STRIKER_ENHANCED, ModItems.HEART_STRIKER_ULTIMATE).forEach(item -> {
@@ -1493,15 +1482,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
             smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
             smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
         }
-    }
-
-    private void netheriteInfusionRecipe(int level) {
-        shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, level))
-                .requires(Items.NETHERITE_SCRAP, 4)
-                .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
-                .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
-                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
-                .save(this.output, modString("netherite_scrap_pure_" + level));
     }
 
     private void swordInfuse(ItemLike item, @Range(from = 1, to = 4) int level) {

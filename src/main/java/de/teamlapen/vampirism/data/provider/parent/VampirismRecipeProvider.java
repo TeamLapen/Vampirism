@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.builder.*;
 import de.teamlapen.vampirism.items.PureBloodItem;
+import de.teamlapen.vampirism.items.component.OilContent;
 import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.RegUtil;
@@ -13,7 +14,6 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
@@ -31,7 +31,6 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -195,6 +194,8 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     /**
+     * The pattern is written the same as in the shaped recipe builder, but all three lines should be in one line using {@code \n} separators. For example: {@code "X\nX\nY}.
+     * <p>
      * X - The metal or gem used in crafting.
      * Y - Stick.
      */
@@ -205,6 +206,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     /**
+     * The pattern is written the same as in the shaped recipe builder, but all three lines should be in one line using {@code \n} separators.
      * X - The metal or gem used in crafting.
      * Y - Stick.
      */
@@ -218,6 +220,27 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .define('Y', Tags.Items.RODS_WOODEN)
                 .unlockedBy("has_" + RegUtil.id(metalIngredient), has(metalIngredient))
                 .save(output, RegUtil.id(result) + "_pure_" + level);
+    }
+
+    /**
+     * Generates three recipes for a crossbow arrow with an oil effect with one, two and three arrows per oil bottle.
+     */
+    protected void upToThreeCrossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil) {
+        for (int i = 1; i <= 3; i++) {
+            crossbowArrowRecipe(arrow, oil, i);
+        }
+    }
+
+    /**
+     * Generates a recipe for a crossbow arrow with an oil effect. {@code quantity} refers to the number of arrows in the recipe for one oil item. It is recommended to make three recipes for one, two and three arrows (use {@link #upToThreeCrossbowArrowRecipe(net.minecraft.world.level.ItemLike, net.minecraft.core.Holder)}), although it depends on the oil value. Teleport arrow, for example, only allows one arrow for one oil bottle.
+     */
+    protected void crossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil, int quantity) {
+        shapelessWeaponTable(RecipeCategory.COMBAT, arrow, quantity)
+                .lava(1)
+                .requires(ModItems.CROSSBOW_ARROW_NORMAL, quantity)
+                .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
+                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
+                .save(output, RegUtil.id(arrow) + "_" + quantity);
     }
 
     protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, String pathSuffix) {
