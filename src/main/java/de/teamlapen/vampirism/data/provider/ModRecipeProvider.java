@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -418,10 +419,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
 
         coffinFromWool(output, ModBlocks.COFFIN_WHITE, Items.WHITE_WOOL);
-        ColorListsUtil.COFFINS.forEach(coffinBlock -> {
-            DyeColor color = coffinBlock.getColor();
+        ColorListsUtil.COFFINS.forEach(coffin -> {
+            DyeColor color = coffin.getColor();
             if (color != DyeColor.WHITE) {
-                coffinFromWoolOrDye(output, coffinBlock, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color));
+                coffinFromWoolOrDye(output, coffin, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color));
             }
         });
     }

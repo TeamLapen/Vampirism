@@ -13,8 +13,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class ColorListsUtil {
 
@@ -22,9 +22,26 @@ public class ColorListsUtil {
     public static final List<Pair<CandleHolderBlock, CandleHolderBlock>> STANDING_AND_WALL_CANDELABRAS = List.of(Pair.of(ModBlocks.CANDELABRA.get(), ModBlocks.WALL_CANDELABRA.get()), Pair.of(ModBlocks.CANDELABRA_NORMAL.get(), ModBlocks.WALL_CANDELABRA_NORMAL.get()), Pair.of(ModBlocks.CANDELABRA_WHITE.get(), ModBlocks.WALL_CANDELABRA_WHITE.get()), Pair.of(ModBlocks.CANDELABRA_LIGHT_GRAY.get(), ModBlocks.WALL_CANDELABRA_LIGHT_GRAY.get()), Pair.of(ModBlocks.CANDELABRA_GRAY.get(), ModBlocks.WALL_CANDELABRA_GRAY.get()), Pair.of(ModBlocks.CANDELABRA_BLACK.get(), ModBlocks.WALL_CANDELABRA_BLACK.get()), Pair.of(ModBlocks.CANDELABRA_BROWN.get(), ModBlocks.WALL_CANDELABRA_BROWN.get()), Pair.of(ModBlocks.CANDELABRA_RED.get(), ModBlocks.WALL_CANDELABRA_RED.get()), Pair.of(ModBlocks.CANDELABRA_ORANGE.get(), ModBlocks.WALL_CANDELABRA_ORANGE.get()), Pair.of(ModBlocks.CANDELABRA_YELLOW.get(), ModBlocks.WALL_CANDELABRA_YELLOW.get()), Pair.of(ModBlocks.CANDELABRA_LIME.get(), ModBlocks.WALL_CANDELABRA_LIME.get()), Pair.of(ModBlocks.CANDELABRA_GREEN.get(), ModBlocks.WALL_CANDELABRA_GREEN.get()), Pair.of(ModBlocks.CANDELABRA_CYAN.get(), ModBlocks.WALL_CANDELABRA_CYAN.get()), Pair.of(ModBlocks.CANDELABRA_LIGHT_BLUE.get(), ModBlocks.WALL_CANDELABRA_LIGHT_BLUE.get()), Pair.of(ModBlocks.CANDELABRA_BLUE.get(), ModBlocks.WALL_CANDELABRA_BLUE.get()), Pair.of(ModBlocks.CANDELABRA_MAGENTA.get(), ModBlocks.WALL_CANDELABRA_MAGENTA.get()), Pair.of(ModBlocks.CANDELABRA_PURPLE.get(), ModBlocks.WALL_CANDELABRA_PURPLE.get()), Pair.of(ModBlocks.CANDELABRA_PINK.get(), ModBlocks.WALL_CANDELABRA_PINK.get()));
     public static final List<CandleHolderBlock> HANGING_CHANDELIERS = List.of(ModBlocks.CHANDELIER.get(), ModBlocks.CHANDELIER_NORMAL.get(), ModBlocks.CHANDELIER_WHITE.get(), ModBlocks.CHANDELIER_LIGHT_GRAY.get(), ModBlocks.CHANDELIER_GRAY.get(), ModBlocks.CHANDELIER_BLACK.get(), ModBlocks.CHANDELIER_BROWN.get(), ModBlocks.CHANDELIER_RED.get(), ModBlocks.CHANDELIER_ORANGE.get(), ModBlocks.CHANDELIER_YELLOW.get(), ModBlocks.CHANDELIER_LIME.get(), ModBlocks.CHANDELIER_GREEN.get(), ModBlocks.CHANDELIER_CYAN.get(), ModBlocks.CHANDELIER_LIGHT_BLUE.get(), ModBlocks.CHANDELIER_BLUE.get(), ModBlocks.CHANDELIER_MAGENTA.get(), ModBlocks.CHANDELIER_PURPLE.get(), ModBlocks.CHANDELIER_PINK.get());
 
-    public static final List<CoffinBlock> COFFINS = List.of(ModBlocks.COFFIN_BLACK.get(), ModBlocks.COFFIN_BLUE.get(), ModBlocks.COFFIN_BROWN.get(), ModBlocks.COFFIN_CYAN.get(), ModBlocks.COFFIN_GRAY.get(), ModBlocks.COFFIN_GREEN.get(), ModBlocks.COFFIN_LIGHT_BLUE.get(), ModBlocks.COFFIN_LIGHT_GRAY.get(), ModBlocks.COFFIN_LIME.get(), ModBlocks.COFFIN_MAGENTA.get(), ModBlocks.COFFIN_ORANGE.get(), ModBlocks.COFFIN_PINK.get(), ModBlocks.COFFIN_PURPLE.get(), ModBlocks.COFFIN_RED.get(), ModBlocks.COFFIN_YELLOW.get(), ModBlocks.COFFIN_WHITE.get());
+    public static final List<CoffinBlock> COFFINS = List.of(
+            ModBlocks.COFFIN_WHITE.get(),
+            ModBlocks.COFFIN_LIGHT_GRAY.get(),
+            ModBlocks.COFFIN_GRAY.get(),
+            ModBlocks.COFFIN_BLACK.get(),
+            ModBlocks.COFFIN_BROWN.get(),
+            ModBlocks.COFFIN_RED.get(),
+            ModBlocks.COFFIN_ORANGE.get(),
+            ModBlocks.COFFIN_YELLOW.get(),
+            ModBlocks.COFFIN_LIME.get(),
+            ModBlocks.COFFIN_GREEN.get(),
+            ModBlocks.COFFIN_CYAN.get(),
+            ModBlocks.COFFIN_LIGHT_BLUE.get(),
+            ModBlocks.COFFIN_BLUE.get(),
+            ModBlocks.COFFIN_PURPLE.get(),
+            ModBlocks.COFFIN_MAGENTA.get(),
+            ModBlocks.COFFIN_PINK.get()
+    );
 
-    public static final Map<DyeColor, VampireCloakItem> VAMPIRE_CLOAKS = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
+    public static final Map<DyeColor, VampireCloakItem> VAMPIRE_CLOAKS = makeDyedMap(map -> {
         map.put(DyeColor.WHITE, ModItems.VAMPIRE_CLOAK_WHITE.get());
         map.put(DyeColor.ORANGE, ModItems.VAMPIRE_CLOAK_ORANGE.get());
         map.put(DyeColor.MAGENTA, ModItems.VAMPIRE_CLOAK_MAGENTA.get());
@@ -43,7 +60,7 @@ public class ColorListsUtil {
         map.put(DyeColor.BLACK, ModItems.VAMPIRE_CLOAK_BLACK.get());
     });
 
-    public static final Map<DyeColor, Item> DYED_WOOL = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
+    public static final Map<DyeColor, Item> DYED_WOOL = makeDyedMap(map -> {
         map.put(DyeColor.WHITE, Items.WHITE_WOOL);
         map.put(DyeColor.ORANGE, Items.ORANGE_WOOL);
         map.put(DyeColor.MAGENTA, Items.MAGENTA_WOOL);
@@ -62,7 +79,7 @@ public class ColorListsUtil {
         map.put(DyeColor.BLACK, Items.BLACK_WOOL);
     });
 
-    public static final Map<DyeColor, Item> DYE_ITEMS = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
+    public static final Map<DyeColor, Item> DYE_ITEMS = makeDyedMap(map -> {
         map.put(DyeColor.WHITE, Items.WHITE_DYE);
         map.put(DyeColor.ORANGE, Items.ORANGE_DYE);
         map.put(DyeColor.MAGENTA, Items.MAGENTA_DYE);
@@ -81,7 +98,39 @@ public class ColorListsUtil {
         map.put(DyeColor.BLACK, Items.BLACK_DYE);
     });
 
-    public static final List<Item> DYES = List.of(Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE, Items.RED_DYE, Items.YELLOW_DYE, Items.WHITE_DYE);
+    public static final List<DyeColor> COLOR_TAB_ORDER = List.of(
+            DyeColor.WHITE,
+            DyeColor.LIGHT_GRAY,
+            DyeColor.GRAY,
+            DyeColor.BLACK,
+            DyeColor.BROWN,
+            DyeColor.RED,
+            DyeColor.ORANGE,
+            DyeColor.YELLOW,
+            DyeColor.LIME,
+            DyeColor.GREEN,
+            DyeColor.CYAN,
+            DyeColor.LIGHT_BLUE,
+            DyeColor.BLUE,
+            DyeColor.PURPLE,
+            DyeColor.MAGENTA,
+            DyeColor.PINK
+    );
+
+    public static <T> List<T> sortByTabOrder(Map<DyeColor, T> map) {
+        List<T> sortedList = new ArrayList<>();
+        for (DyeColor color : COLOR_TAB_ORDER) {
+            T item = map.get(color);
+            if (item != null) {
+                sortedList.add(item);
+            }
+        }
+        return sortedList;
+    }
+
+    public static <T> Map<DyeColor, T> makeDyedMap(Consumer<EnumMap<DyeColor, T>> map)  {
+        return Util.make(Maps.newEnumMap(DyeColor.class), map);
+    }
 
     public static ItemStack[] itemListToItemStacks(List<? extends Item> list) {
         ItemStack[] array = new ItemStack[list.size()];

@@ -119,7 +119,7 @@ public class ModCreativeTabs {
             add(VAMPIRE_CLOTHING_CROWN);
             add(VAMPIRE_CLOTHING_HAT);
 
-            ColorListsUtil.VAMPIRE_CLOAKS.values().forEach(this::add);
+            ColorListsUtil.sortByTabOrder(ColorListsUtil.VAMPIRE_CLOAKS).forEach(this::add);
 
             add(VAMPIRE_CLOTHING_LEGS);
             add(VAMPIRE_CLOTHING_BOOTS);
