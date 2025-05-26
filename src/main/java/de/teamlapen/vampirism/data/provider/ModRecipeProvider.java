@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
@@ -21,15 +20,12 @@ import de.teamlapen.vampirism.recipes.RerollVampireBookRecipe;
 import de.teamlapen.vampirism.util.ColorListsUtil;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import de.teamlapen.vampirism.util.RegUtil;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
@@ -58,33 +54,6 @@ import java.util.stream.Stream;
 import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
 
 public class ModRecipeProvider extends VampirismRecipeProvider {
-
-    public static final TagKey<Item> IRON_INGOT = Tags.Items.INGOTS_IRON;
-    public static final TagKey<Item> GOLD_INGOT = Tags.Items.INGOTS_GOLD;
-    public static final TagKey<Item> COAL = ItemTags.COALS;
-    public static final TagKey<Item> DIAMOND = Tags.Items.GEMS_DIAMOND;
-    public static final TagKey<Item> REDSTONE_DUST = Tags.Items.DUSTS_REDSTONE;
-    public static final TagKey<Item> IRON_BLOCK = Tags.Items.STORAGE_BLOCKS_IRON;
-    public static final TagKey<Item> GOLD_BLOCK = Tags.Items.STORAGE_BLOCKS_GOLD;
-    public static final TagKey<Item> COAL_BLOCK = Tags.Items.STORAGE_BLOCKS_COAL;
-    public static final TagKey<Item> DIAMOND_BLOCK = Tags.Items.STORAGE_BLOCKS_DIAMOND;
-    public static final TagKey<Item> IRON_NUGGET = Tags.Items.NUGGETS_IRON;
-    public static final TagKey<Item> GOLD_NUGGET = Tags.Items.NUGGETS_GOLD;
-    public static final TagKey<Item> GARLIC = ModItemTags.GARLIC;
-    public static final TagKey<Item> BREAD = Tags.Items.FOODS_BREAD;
-    public static final TagKey<Item> HEART = ModItemTags.HEART;
-    public static final TagKey<Item> HOLY_WATER = ModItemTags.HOLY_WATER;
-    public static final TagKey<Item> BUCKET = Tags.Items.BUCKETS_EMPTY;
-    public static final TagKey<Item> PLANKS = ItemTags.PLANKS;
-    public static final TagKey<Item> LOG = ItemTags.LOGS;
-    public static final TagKey<Item> STICK = Tags.Items.RODS_WOODEN;
-    public static final TagKey<Item> STONE = Tags.Items.STONES;
-    public static final TagKey<Item> COBBLESTONE = Tags.Items.COBBLESTONES;
-    public static final TagKey<Item> GLASS = Tags.Items.GLASS_BLOCKS;
-    public static final TagKey<Item> GLASS_PANE = Tags.Items.GLASS_PANES;
-    public static final TagKey<Item> OBSIDIAN = Tags.Items.OBSIDIANS;
-    public static final TagKey<Item> WOOL = ItemTags.WOOL;
-    public static final TagKey<Item> BED = ItemTags.BEDS;
 
     protected ModRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         super(registries, output);
@@ -462,7 +431,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXX")
                 .pattern("YYY")
                 .pattern("XXX")
-                .define('X', ItemTags.PLANKS)
+                .define('X', PLANKS)
                 .define('Y', wool)
                 .unlockedBy("has_wool", has(wool))
                 .save(consumer);
@@ -694,10 +663,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         shaped(RecipeCategory.COMBAT, ModItems.VAMPIRE_CLOTHING_CROWN)
                 .pattern("XYX")
                 .pattern("XXX")
-                .define('X', Items.GOLD_INGOT)
+                .define('X', GOLD_INGOT)
                 .define('Y', tag(HEART))
                 .unlockedBy("has_heart", has(HEART))
-                .unlockedBy("has_gold", has(Items.GOLD_INGOT))
+                .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
 
         colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, VResourceLocation::modString);
@@ -713,12 +682,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     protected void vampireCloak(Item item, Item wool) {
         shaped(RecipeCategory.COMBAT, item)
                 .define('W', wool)
-                .define('D', Tags.Items.GEMS_DIAMOND)
-                .define('P', ModItemTags.PURE_BLOOD)
+                .define('D', DIAMOND)
+                .define('P', PURE_BLOOD)
                 .pattern("WDW")
                 .pattern("WPW")
                 .pattern("W W")
-                .unlockedBy("has_pure_blood", has(ModItemTags.PURE_BLOOD))
+                .unlockedBy("has_pure_blood", has(PURE_BLOOD))
                 .save(output);
     }
 
@@ -850,7 +819,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("evasion_oil"));
         alchemyTable(ModOils.GARLIC)
                 .plantOilIngredient()
-                .input(tag(ModItemTags.GARLIC))
+                .input(tag(GARLIC))
                 .save(output, modString("garlic_oil"));
         alchemyTable(ModOils.SPITFIRE)
                 .plantOilIngredient()
@@ -862,13 +831,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("bleeding_oil"));
         alchemyTable(ModOils.VAMPIRE_KILLER)
                 .oilIngredient(ModOils.GARLIC)
-                .input(tag(ModItemTags.HOLY_WATER))
+                .input(tag(HOLY_WATER))
                 .save(output, modString("vampire_killer_oil"));
     }
 
     private void recipesAlchemyCauldron() {
         cauldronRecipe(ModItems.PURE_SALT, 4)
-                .withIngredient(ModItemTags.GARLIC)
+                .withIngredient(GARLIC)
                 .withFluid(new FluidStack(Fluids.WATER, 1))
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
@@ -886,8 +855,8 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .save(output, modString("alchemical_fire_6"));
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE)
-                .withIngredient(ItemTags.WOOL)
-                .withFluid(ModItemTags.GARLIC)
+                .withIngredient(WOOL)
+                .withFluid(GARLIC)
                 .withSkills(HunterSkills.GARLIC_DIFFUSER)
                 .save(output);
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
@@ -897,8 +866,8 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .experience(2.0f)
                 .save(output);
         cauldronRecipe(ModItems.PURIFIED_GARLIC, 2)
-                .withIngredient(ModItemTags.GARLIC)
-                .withFluid(ModItemTags.HOLY_WATER)
+                .withIngredient(GARLIC)
+                .withFluid(HOLY_WATER)
                 .withSkills(HunterSkills.PURIFIED_GARLIC)
                 .save(output);
         cauldronRecipe(ModBlocks.BLOOD_INFUSED_IRON_BLOCK)
@@ -942,11 +911,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
                 .define('Z', potion(Potions.SWIFTNESS))
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED)
                 .lava(3)
@@ -955,12 +924,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.INGOTS_GOLD)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', GOLD_INGOT)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE)
                 .lava(5)
@@ -969,23 +938,23 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', DIAMOND)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL)
                 .lava(1)
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
                 .define('Z', potion(Potions.SWIFTNESS))
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED)
                 .lava(3)
@@ -993,12 +962,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.INGOTS_GOLD)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', GOLD_INGOT)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE)
                 .lava(5)
@@ -1006,12 +975,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XXXX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', DIAMOND)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL)
                 .lava(1)
@@ -1019,11 +988,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("    ")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
                 .define('Z', potion(Potions.SWIFTNESS))
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED)
                 .lava(3)
@@ -1031,12 +1000,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.INGOTS_GOLD)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', GOLD_INGOT)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE)
                 .lava(5)
@@ -1044,23 +1013,23 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', DIAMOND)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
                 .define('Z', potion(Potions.SWIFTNESS))
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED)
                 .lava(3)
@@ -1069,12 +1038,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.INGOTS_GOLD)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_gold", has(Tags.Items.INGOTS_GOLD))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', GOLD_INGOT)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE)
                 .lava(5)
@@ -1083,12 +1052,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.LEATHERS)
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
-                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .define('X', LEATHER)
+                .define('Y', GARLIC)
+                .define('Z', DIAMOND)
+                .unlockedBy("has_leather", has(LEATHER))
+                .unlockedBy("has_garlic", has(GARLIC))
+                .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         netheriteSmithing(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get());
         netheriteSmithing(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get());
@@ -1101,12 +1070,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.LEATHERS)
-                .define('Z', ModItemTags.GARLIC)
+                .define('X', IRON_INGOT)
+                .define('Y', LEATHER)
+                .define('Z', GARLIC)
                 .define('W', ModItems.VAMPIRE_FANG)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ENHANCED)
                 .lava(5)
@@ -1115,12 +1084,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.GEMS_DIAMOND)
-                .define('Z', ModItemTags.GARLIC)
+                .define('X', IRON_INGOT)
+                .define('Y', DIAMOND)
+                .define('Z', GARLIC)
                 .define('W', ModItems.VAMPIRE_FANG)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ULTIMATE)
                 .lava(5)
@@ -1129,13 +1098,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.INGOTS_NETHERITE)
-                .define('Z', ModItemTags.GARLIC)
+                .define('X', IRON_INGOT)
+                .define('Y', NETHERITE_INGOT)
+                .define('Z', GARLIC)
                 .define('W', ModItems.VAMPIRE_FANG)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_netherite", has(NETHERITE_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_NORMAL)
                 .lava(2)
@@ -1143,11 +1112,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Z', ModItemTags.GARLIC)
-                .define('Y', Tags.Items.LEATHERS)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Z', GARLIC)
+                .define('Y', LEATHER)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ENHANCED)
                 .lava(5)
@@ -1156,11 +1125,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Z', ModItemTags.GARLIC)
-                .define('Y', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Z', GARLIC)
+                .define('Y', DIAMOND)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_ULTIMATE)
                 .lava(5)
@@ -1169,12 +1138,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("X  X")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Z', ModItemTags.GARLIC)
-                .define('Y', Tags.Items.INGOTS_NETHERITE)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Z', GARLIC)
+                .define('Y', NETHERITE_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_netherite", has(NETHERITE_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_NORMAL)
                 .lava(2)
@@ -1182,11 +1151,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("    ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.LEATHERS)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', LEATHER)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ENHANCED)
                 .lava(5)
@@ -1195,11 +1164,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("    ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.GEMS_DIAMOND)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', DIAMOND)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ULTIMATE)
                 .lava(5)
@@ -1208,12 +1177,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern("    ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.INGOTS_NETHERITE)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', NETHERITE_INGOT)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_netherite", has(NETHERITE_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_NORMAL)
                 .lava(2)
@@ -1221,11 +1190,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("X  X")
                 .pattern("XZZX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.LEATHERS)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', LEATHER)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ENHANCED)
                 .lava(5)
@@ -1234,11 +1203,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("X  X")
                 .pattern("XZZX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.GEMS_DIAMOND)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', DIAMOND)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_ULTIMATE)
                 .lava(5)
@@ -1247,12 +1216,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("X  X")
                 .pattern("XZZX")
                 .pattern("XYYX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .define('Y', Tags.Items.INGOTS_NETHERITE)
-                .define('Z', ModItemTags.GARLIC)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .unlockedBy("has_netherite", has(Tags.Items.INGOTS_NETHERITE))
-                .unlockedBy("has_garlic", has(ModItemTags.GARLIC))
+                .define('X', IRON_INGOT)
+                .define('Y', NETHERITE_INGOT)
+                .define('Z', GARLIC)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .unlockedBy("has_netherite", has(NETHERITE_INGOT))
+                .unlockedBy("has_garlic", has(GARLIC))
                 .save(output);
         netheriteSmithing(ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_ULTIMATE.get());
         netheriteSmithing(ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_ULTIMATE.get());
@@ -1266,10 +1235,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YXXY")
                 .pattern(" ZZ ")
                 .pattern(" ZZ ")
-                .define('X', Tags.Items.INGOTS_IRON)
+                .define('X', IRON_INGOT)
                 .define('Y', Tags.Items.STRINGS)
-                .define('Z', ItemTags.PLANKS)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('Z', PLANKS)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_DOUBLE_CROSSBOW)
                 .lava(1)
@@ -1278,10 +1247,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YXXY")
                 .pattern(" ZZ ")
                 .pattern(" ZZ ")
-                .define('X', Tags.Items.INGOTS_IRON)
+                .define('X', IRON_INGOT)
                 .define('Y', Tags.Items.STRINGS)
-                .define('Z', ItemTags.PLANKS)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('Z', PLANKS)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_TECH_CROSSBOW)
                 .lava(5)
@@ -1290,10 +1259,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern(" XX ")
                 .pattern(" XX ")
-                .define('X', Tags.Items.INGOTS_IRON)
+                .define('X', IRON_INGOT)
                 .define('Y', Tags.Items.STRINGS)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('Z', DIAMOND)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
 
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_CROSSBOW)
@@ -1302,9 +1271,9 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YXXY")
                 .pattern(" XX ")
                 .pattern(" XX ")
-                .define('X', Tags.Items.INGOTS_IRON)
+                .define('X', IRON_INGOT)
                 .define('Y', Tags.Items.STRINGS)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_DOUBLE_CROSSBOW)
                 .lava(3)
@@ -1313,8 +1282,8 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YXXY")
                 .pattern(" XX ")
                 .pattern(" XX ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .define('Y', Tags.Items.STRINGS)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW)
@@ -1324,25 +1293,25 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XZZX")
                 .pattern("XZZX")
                 .pattern(" XX ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .define('Y', Tags.Items.STRINGS)
-                .define('Z', Tags.Items.GEMS_DIAMOND)
+                .define('Z', DIAMOND)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_TALL)
                 .pattern(" YY ")
                 .pattern(" YY ")
                 .pattern("XXXX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .define('Y', Items.BLACK_WOOL)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_HAT_BROAD)
                 .lava(1)
                 .pattern(" YY ")
                 .pattern("XXXX")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
                 .define('Y', Items.BLACK_WOOL)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.PITCHFORK)
@@ -1350,19 +1319,19 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YYY")
                 .pattern(" Y ")
                 .pattern(" Y ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .define('Y', Tags.Items.RODS_WOODEN)
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .define('Y', STICK)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_POUCH)
                 .lava(1)
                 .pattern("ILLI")
                 .pattern("PLLP")
                 .pattern("ILLI")
-                .define('I', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .define('L', Tags.Items.LEATHERS)
-                .define('P', ItemTags.PLANKS)
+                .define('I', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .define('L', LEATHER)
+                .define('P', PLANKS)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 1))
                 .lava(5)
@@ -1370,10 +1339,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XXZY")
                 .pattern("  ZY")
                 .pattern("  Z ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .define('Y', ModItemTags.GARLIC)
-                .define('Z', Tags.Items.RODS_WOODEN)
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .define('Y', GARLIC)
+                .define('Z', STICK)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ENHANCED.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 2))
                 .lava(5)
@@ -1382,11 +1351,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XWZY")
                 .pattern("  ZY")
                 .pattern("  Z ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .define('Y', ModItemTags.GARLIC)
-                .define('W', Tags.Items.GEMS_DIAMOND)
-                .define('Z', Tags.Items.RODS_WOODEN)
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .define('Y', GARLIC)
+                .define('W', DIAMOND)
+                .define('Z', STICK)
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ULTIMATE.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 3))
                 .lava(5)
@@ -1395,11 +1364,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XWZY")
                 .pattern("  ZY")
                 .pattern("  Z ")
-                .define('X', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron", has(Tags.Items.INGOTS_IRON))
-                .define('Y', ModItemTags.GARLIC)
-                .define('W', Tags.Items.INGOTS_NETHERITE)
-                .define('Z', Tags.Items.RODS_WOODEN)
+                .define('X', IRON_INGOT)
+                .unlockedBy("has_iron", has(IRON_INGOT))
+                .define('Y', GARLIC)
+                .define('W', NETHERITE_INGOT)
+                .define('Z', STICK)
                 .save(output);
         netheriteSmithing(ModItems.HUNTER_AXE_ENHANCED.get(), RecipeCategory.COMBAT, ModItems.HUNTER_AXE_ULTIMATE.get());
 
@@ -1409,10 +1378,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XYYX")
                 .pattern("XYYX")
                 .define('X', ModItems.HOLY_WATER_BOTTLE_NORMAL)
-                .define('Y', Tags.Items.INGOTS_IRON)
+                .define('Y', IRON_INGOT)
                 .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .define('A', ModItems.STAKE)
-                .unlockedBy("iron", has(Tags.Items.INGOTS_IRON))
+                .unlockedBy("iron", has(IRON_INGOT))
                 .unlockedBy("has_holy_water", has(ModItems.HOLY_WATER_BOTTLE_NORMAL))
                 .unlockedBy("has_holy_water_enhanced", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .unlockedBy("stake", has(ModItems.STAKE))
@@ -1424,11 +1393,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("XYYX")
                 .pattern("XYYX")
                 .define('X', ModItems.ITEM_ALCHEMICAL_FIRE)
-                .define('Y', Tags.Items.STORAGE_BLOCKS_GOLD)
+                .define('Y', GOLD_BLOCK)
                 .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .define('A', ModItems.STAKE)
                 .unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE))
-                .unlockedBy("gold", has(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .unlockedBy("gold", has(GOLD_BLOCK))
                 .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .unlockedBy("stake", has(ModItems.STAKE))
                 .skills(HunterSkills.ULTIMATE_CRUCIFIX)
