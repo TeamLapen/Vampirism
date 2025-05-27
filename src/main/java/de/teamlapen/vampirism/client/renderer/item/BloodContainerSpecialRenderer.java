@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.client.core.ModMaterials;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.items.component.ContainedFluid;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,22 +15,23 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BloodContainerSpecialRenderer implements SpecialModelRenderer<ContainedFluid> {
+public class BloodContainerSpecialRenderer implements SpecialModelRenderer<SimpleFluidContent> {
 
     @Override
-    public void render(@Nullable ContainedFluid fluid, @NotNull ItemDisplayContext context, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, boolean hasFoil) {
-        if (fluid != null && !fluid.fluid().isEmpty()) {
+    public void render(@Nullable SimpleFluidContent fluid, @NotNull ItemDisplayContext context, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, boolean hasFoil) {
+        if (fluid != null && !fluid.isEmpty()) {
             Material material = null;
-            if (fluid.fluid().is(ModFluids.BLOOD)) {
+            if (fluid.is(ModFluids.BLOOD)) {
                 material = ModMaterials.BLOOD_MATERIAL;
-            } else if (fluid.fluid().is(ModFluids.IMPURE_BLOOD)) {
+            } else if (fluid.is(ModFluids.IMPURE_BLOOD)) {
                 material = ModMaterials.IMPURE_BLOOD_MATERIAL;
             }
             if (material != null) {
-                var filled = Math.clamp(fluid.fluid().getAmount() / (float) BloodContainerBlockEntity.CAPACITY, 0f, 1f);
+                var filled = Math.clamp(fluid.getAmount() / (float) BloodContainerBlockEntity.CAPACITY, 0f, 1f);
                 stack.pushPose();
                 stack.translate(0.5, 1/16f, 0.5);
                 stack.scale(10f/16f,14f/16f,10f/16f);
@@ -43,7 +43,7 @@ public class BloodContainerSpecialRenderer implements SpecialModelRenderer<Conta
     }
 
     @Override
-    public @Nullable ContainedFluid extractArgument(ItemStack stack) {
+    public @Nullable SimpleFluidContent extractArgument(ItemStack stack) {
         return stack.get(ModDataComponents.BLOOD_CONTAINER.get());
     }
 

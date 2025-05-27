@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.component.ContainedFluid;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -28,8 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,14 +49,14 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
     }
 
     public static FluidStack getFluidFromItemStack(ItemStack stack) {
-        return ContainedFluid.get(stack);
+        return stack.getOrDefault(ModDataComponents.BLOOD_CONTAINER.get(), SimpleFluidContent.EMPTY).copy();
     }
 
     public static void writeFluidToItemStack(ItemStack stack, FluidStack fluid) {
         if (fluid.isEmpty()) {
             stack.remove(ModDataComponents.BLOOD_CONTAINER);
         } else {
-            stack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
+            stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
         }
     }
 
@@ -81,7 +82,7 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         if (te != null) {
             FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
-                writeFluidToItemStack(stack, fluid);
+                stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
             }
         }
         popResource(worldIn, pos, stack);
@@ -131,15 +132,15 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         output.accept(stack);
         stack = stack.copy();
         FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
-        stack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
+        stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
         output.accept(stack);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        FluidStack fluidStack = ContainedFluid.get(stack);
+        var fluidStack = stack.getOrDefault(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.EMPTY);
         if (!fluidStack.isEmpty()) {
-            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack)).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
+            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack.copy())).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
         }
     }
 

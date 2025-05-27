@@ -12,6 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -22,7 +23,7 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<OilContent>> OIL = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.OIL_CONTENTS.getPath(), () -> DataComponentType.<OilContent>builder().persistent(OilContent.CODEC).networkSynchronized(OilContent.STREAM_CODEC).cacheEncoding().build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<AppliedOilContent>> APPLIED_OIL = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.APPLIED_OIL.getPath(), () -> DataComponentType.<AppliedOilContent>builder().persistent(AppliedOilContent.CODEC).networkSynchronized(AppliedOilContent.STREAM_CODEC).cacheEncoding().build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<IVampireBook>> VAMPIRE_BOOK = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.VAMPIRE_BOOK.getPath(), () -> DataComponentType.<IVampireBook>builder().persistent(VampireBook.CODEC).networkSynchronized(VampireBook.STREAM_CODEC).cacheEncoding().build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ContainedFluid>> BLOOD_CONTAINER = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BLOOD_CONTAINER.getPath(), (builder) -> builder.persistent(ContainedFluid.CODEC).networkSynchronized(ContainedFluid.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> BLOOD_CONTAINER = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BLOOD_CONTAINER.getPath(), (builder) -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ContainedProjectiles>> CONTAINED_PROJECTILES = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CONTAINED_PROJECTILES.getPath(), (builder) -> builder.persistent(ContainedProjectiles.CODEC).networkSynchronized(ContainedProjectiles.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<EffectiveRefinementSet>> REFINEMENT_SET = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.REFINEMENT_SET.getPath(), (builder) -> builder.persistent(EffectiveRefinementSet.CODEC).networkSynchronized(EffectiveRefinementSet.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> DO_NOT_NAME = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.DO_NOT_NAME.getPath(), (builder) -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
