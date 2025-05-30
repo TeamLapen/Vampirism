@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +43,7 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     private ItemStack internalStack;
 
     public PedestalBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.BLOOD_PEDESTAL.get(), pos, state);
+        super(ModBlockEntities.BLOOD_PEDESTAL.get(), pos, state);
         this.internalStack = ItemStack.EMPTY;
     }
 

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": "vampirism:mother_core",
-    "G": "minecraft:glass",
+    "G": "#c:glass_blocks",
     "O": "#c:obsidians"
   },
   "pattern": [

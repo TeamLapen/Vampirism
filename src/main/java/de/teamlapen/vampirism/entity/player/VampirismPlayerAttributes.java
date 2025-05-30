@@ -6,19 +6,19 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
+import de.teamlapen.vampirism.mixin.PlayerMixin;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Cache frequently accessed values from the player capabilities.
- * Injected into {@link Player} via Mixin {@link de.teamlapen.vampirism.mixin.MixinPlayerEntity}
+ * Injected into {@link Player} via Mixin {@link PlayerMixin}
  * If you need 100% guaranteed correct values, use the capabilities instead. Otherwise, prefer this for performance reason
  */
 public class VampirismPlayerAttributes {
     public static VampirismPlayerAttributes get(@NotNull Player player) {
-        return ((IVampirismPlayer) player).getVampAtts();
+        return ((IVampirismPlayer) player).vampirism$getVampAtts();
     }
 
     private final VampirePlayerSpecialAttributes vampSpecial = new VampirePlayerSpecialAttributes();

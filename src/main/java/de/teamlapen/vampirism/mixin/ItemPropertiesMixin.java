@@ -15,7 +15,7 @@ public class ItemPropertiesMixin implements ItemPropertiesExtension {
 
     @Unique
     @Override
-    public Item.@NotNull Properties description(@NotNull DependantName<Item, String> dependant) {
+    public Item.@NotNull Properties vampirism$description(@NotNull DependantName<Item, String> dependant) {
         this.descriptionId = dependant;
         return (Item.Properties) (Object) this;
     }

@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.effects.BadOmenEffect;
+import de.teamlapen.vampirism.effects.VampirismBadOmenMobEffect;
 import de.teamlapen.vampirism.entity.IEntityFollower;
 import de.teamlapen.vampirism.entity.ai.goals.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -41,7 +41,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.player.Player;
@@ -220,7 +219,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
-            BadOmenEffect.handlePotentialBannerKill(cause.getEntity(), this);
+            VampirismBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
     }

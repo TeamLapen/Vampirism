@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.inventory.RevertBackMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -41,7 +41,7 @@ public class SanguinareInjectionItem extends InjectionItem {
                 if (VampirismConfig.SERVER.disableFangInfection.get()) {
                     player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
-                    SanguinareEffect.addRandom(player, true, true);
+                    SanguinareMobEffect.addRandom(player, true, true);
                     player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
                     return true;
                 }

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -40,8 +39,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
     private static final ResourceLocation SPEED_MODIFIER = VResourceLocation.mod("not_in_block");
@@ -79,7 +76,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         NearestAttackableTargetGoal<Player> goal = new NearestAttackableTargetGoal<>(this, Player.class, 0, false, false, VampirismAPI.factionRegistry().getSelector(ModFactions.VAMPIRE, true, false, true, true, null));
-        ((NearestTargetGoalModifier) goal).ignoreLineOfSight();
+        ((NearestTargetGoalModifier) goal).vampirism$ignoreLineOfSight();
         this.targetSelector.addGoal(3, goal);
         NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, VampirismAPI.factionRegistry().getSelector(ModFactions.VAMPIRE, false, true, false, true, null)) {
             @Override
@@ -87,7 +84,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
                 return super.getFollowDistance() / 2;
             }
         };
-        ((NearestTargetGoalModifier) goal2).ignoreLineOfSight();
+        ((NearestTargetGoalModifier) goal2).vampirism$ignoreLineOfSight();
         this.targetSelector.addGoal(4, goal2);
         this.targetSelector.addGoal(8, new DefendLeaderGoal<>(this));
     }

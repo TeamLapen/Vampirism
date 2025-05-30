@@ -81,7 +81,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
             this.headerPressed = -1;
         }
         for (int i = 0; i < this.iconSprites.length; i++) {
-            ResourceLocation loc = this.headerPressed == i ? StatsScreenAccessor.getSLOT_SPRITE() : StatsScreenAccessor.getHEADER_SPRITE();
+            ResourceLocation loc = this.headerPressed == i ? StatsScreenAccessor.getSlotSprite() : StatsScreenAccessor.getHeaderSprite();
             pGuiGraphics.blitSprite(RenderType::guiTextured, loc, pX + getColumnX(i) - 18, pY + 1, 0, 18, 18);
 
         }
@@ -89,7 +89,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
 
         if (this.sortColumn != null) {
             int j = getColumnX(this.getColumnIndex(this.sortColumn)) - 36;
-            ResourceLocation resourcelocation1 = this.sortOrder == 1 ? StatsScreenAccessor.getSORT_UP_SPRITE() : StatsScreenAccessor.getSORT_DOWN_SPRITE();
+            ResourceLocation resourcelocation1 = this.sortOrder == 1 ? StatsScreenAccessor.getSortUpSprite() : StatsScreenAccessor.getSortDownSprite();
             pGuiGraphics.blitSprite(RenderType::guiTextured, resourcelocation1, pX + j, pY + 1, 0, 18, 18);
         }
 
@@ -275,7 +275,7 @@ public class ActionStatisticsList extends ObjectSelectionList<ActionStatisticsLi
         }
 
         protected void renderStat(GuiGraphics pGuiGraphics, @Nullable Stat<?> pStat, int pX, int pY, boolean pEvenRow) {
-            Component component = pStat == null ? StatsScreenAccessor.getNO_VALUE_DISPLAY() : Component.literal(pStat.format(screen.getStats().getValue(pStat)));
+            Component component = pStat == null ? StatsScreenAccessor.getNoValueDisplay() : Component.literal(pStat.format(screen.getStats().getValue(pStat)));
             pGuiGraphics.drawString(font, component, pX - font.width(component), pY + 5, pEvenRow ? 16777215 : 9474192);
         }
     }

@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;
@@ -297,7 +297,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntity) {
-        return state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModTiles.COFFIN.get(), CoffinBlockEntity::clientTickHead) : null;
+        return state.getValue(PART) == CoffinPart.HEAD ? createTickerHelper(blockEntity, ModBlockEntities.COFFIN.get(), CoffinBlockEntity::clientTickHead) : null;
     }
 
     public enum CoffinPart implements StringRepresentable {

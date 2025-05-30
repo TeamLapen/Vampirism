@@ -22,7 +22,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
 import de.teamlapen.vampirism.core.tags.ModProfessionTags;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.effects.SanguinareEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -49,7 +49,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -97,7 +96,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static de.teamlapen.vampirism.util.TotemHelper.*;
 
@@ -162,7 +160,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private CompletableFuture<BlockPos> closestVampireForest = null;
 
     public TotemBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.TOTEM.get(), pos, state);
+        super(ModBlockEntities.TOTEM.get(), pos, state);
     }
 
     public void abortCapture() {
@@ -1229,7 +1227,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             for (Villager villager : villagerEntities) {
                 if (!fullConvert) {
                     if (RNG.nextInt(2) == 1) continue;
-                    SanguinareEffect.addRandom(villager, false);
+                    SanguinareMobEffect.addRandom(villager, false);
                 } else {
                     villager.addEffect(new SanguinareEffectInstance(11));
                 }

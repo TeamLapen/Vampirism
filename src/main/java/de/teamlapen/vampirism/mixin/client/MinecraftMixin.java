@@ -29,6 +29,7 @@ public class MinecraftMixin {
     @Final
     @Shadow
     public Gui gui;
+
     @Shadow
     @Nullable
     public LocalPlayer player;

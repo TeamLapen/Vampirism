@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.InfuserBlockEntity;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -58,7 +58,7 @@ public class BloodInfuserBlock extends BaseEntityBlock {
     }
 
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type){
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.INFUSER.get(), InfuserBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.INFUSER.get(), InfuserBlockEntity::serverTick);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class BloodInfuserBlock extends BaseEntityBlock {
     }
 
     protected void openContainer(Level level, BlockPos pos, Player player) {
-        level.getBlockEntity(pos, ModTiles.INFUSER.get()).ifPresent(player::openMenu);
+        level.getBlockEntity(pos, ModBlockEntities.INFUSER.get()).ifPresent(player::openMenu);
     }
 
     @Override

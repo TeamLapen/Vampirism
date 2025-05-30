@@ -5,7 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class TentBlockEntity extends BlockEntity {
     private boolean advanced = false;
 
     public TentBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.TENT.get(), pos, state);
+        super(ModBlockEntities.TENT.get(), pos, state);
         this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VEnums.HUNTER_CATEGORY.getValue()).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.ADVANCED_HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VEnums.HUNTER_CATEGORY.getValue()).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
     }

@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModFactionTags;
-import de.teamlapen.vampirism.effects.VampirismPoisonEffect;
+import de.teamlapen.vampirism.effects.VampirismPoisonMobEffect;
 import de.teamlapen.vampirism.effects.VampirismPotion;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -267,7 +267,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
                 if (contents.potion().map(s -> s.value() instanceof VampirismPotion.HunterPotion).orElse(false) && StreamSupport.stream(contents.getAllEffects().spliterator(), false).map(MobEffectInstance::getEffect).map(Holder::value).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON, Integer.MAX_VALUE, VampirismPoisonEffect.DEADLY_AMPLIFIER));
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON, Integer.MAX_VALUE, VampirismPoisonMobEffect.DEADLY_AMPLIFIER));
                 }
             }
         }

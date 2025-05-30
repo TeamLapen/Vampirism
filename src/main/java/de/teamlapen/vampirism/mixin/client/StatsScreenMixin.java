@@ -17,14 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(StatsScreen.class)
 public abstract class StatsScreenMixin extends Screen {
 
-    @Shadow
-    public abstract void setActiveList(@Nullable ObjectSelectionList<?> pActiveList);
-
     @Unique
     private ActionStatisticsList vampirism$actionStatisticsList;
 
-    private StatsScreenMixin(Component pTitle) {
-        super(pTitle);
+    @Shadow
+    public abstract void setActiveList(@Nullable ObjectSelectionList<?> pActiveList);
+
+    private StatsScreenMixin(Component title) {
+        super(title);
     }
 
     @Inject(method = "initLists()V", at = @At("RETURN"))

@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "vampirism:config",
+        "option": "auto_convert"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "#c:glass_blocks",
+    "Y": "minecraft:rotten_flesh"
+  },
+  "pattern": [
+    "XYX",
+    " X "
+  ],
+  "result": {
+    "components": {
+      "vampirism:bottle_blood": {
+        "blood": 0
+      }
+    },
+    "count": 1,
+    "id": "vampirism:blood_bottle"
+  }
+}

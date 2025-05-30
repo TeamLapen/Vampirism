@@ -49,7 +49,7 @@ public class InfectionStatus {
         } else if (duration / (float) totalTicks < 0.5f) {
             if (this.entity.getEffect(MobEffects.HUNGER) == null) {
                 MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.HUNGER, MobEffectInstance.INFINITE_DURATION);
-                ((EffectInstanceWithSource) mobEffectInstance).setSource(ModEffects.SANGUINARE.getId());
+                ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(ModEffects.SANGUINARE.getId());
                 this.entity.addEffect(mobEffectInstance);
             }
         }
@@ -61,8 +61,8 @@ public class InfectionStatus {
 
     private void finish() {
         MobEffectInstance effect = this.entity.getEffect(MobEffects.HUNGER);
-        if (effect instanceof EffectInstanceWithSource withSource && withSource.getSource() == ModEffects.SANGUINARE.getId()) {
-            withSource.removeEffect();
+        if (effect instanceof EffectInstanceWithSource withSource && withSource.vampirism$getSource() == ModEffects.SANGUINARE.getId()) {
+            withSource.vampirism$removeEffect();
         }
         if (this.entity instanceof PathfinderMob) {
             ExtendedCreature.getSafe(this.entity).ifPresent(IExtendedCreatureVampirism::makeVampire);

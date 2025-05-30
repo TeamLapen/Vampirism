@@ -16,7 +16,7 @@ public class MigrationData {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
         fixSkillsHunter(new Mapping(HunterSkills.SKILLS));
         fixPotions(new Mapping(ModPotions.POTIONS));
-        fixTiles(new Mapping(ModTiles.BLOCK_ENTITY_TYPES));
+        fixTiles(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
         fixItems(new Mapping(ModItems.ITEMS));
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));

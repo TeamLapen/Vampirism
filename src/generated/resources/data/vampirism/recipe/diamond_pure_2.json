@@ -1,6 +1,6 @@
 {
   "type": "vampirism:infuser",
-  "cookingtime": 600,
+  "cookingtime": 400,
   "ingredient1": "vampirism:pure_blood_2",
   "ingredient2": "vampirism:pure_blood_2",
   "ingredient3": "vampirism:pure_blood_2",

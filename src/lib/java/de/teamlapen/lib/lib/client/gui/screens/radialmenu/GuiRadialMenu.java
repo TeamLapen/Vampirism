@@ -28,34 +28,23 @@
 
 package de.teamlapen.lib.lib.client.gui.screens.radialmenu;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.util.GuiGraphicsAccessor;
-import de.teamlapen.lib.util.KeyMappingAccessor;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 //@EventBusSubscriber(Dist.CLIENT)
 public abstract class GuiRadialMenu<T> extends Screen {
@@ -281,7 +270,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         endAngle = (float) Math.toRadians(endAngle);
         angle = endAngle - startAngle;
 
-        var buffer = ((GuiGraphicsAccessor)guiGraphics).bufferSource().getBuffer(RenderType.gui());
+        var buffer = ((GuiGraphicsAccessor)guiGraphics).getBufferSource().getBuffer(RenderType.gui());
 
         for (int i = 0; i < sections; i++) {
             float angle1 = startAngle + (i / (float) sections) * angle;

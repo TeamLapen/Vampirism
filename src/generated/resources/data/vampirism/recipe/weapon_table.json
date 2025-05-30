@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "#c:buckets/empty",
+    "Y": "#c:ingots/iron",
+    "Z": "#c:storage_blocks/iron"
+  },
+  "pattern": [
+    "X  ",
+    "YYY",
+    " Z "
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:weapon_table"
+  }
+}

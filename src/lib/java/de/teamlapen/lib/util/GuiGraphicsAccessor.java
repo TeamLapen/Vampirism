@@ -4,5 +4,5 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface GuiGraphicsAccessor {
 
-    MultiBufferSource.BufferSource bufferSource();
+    MultiBufferSource.BufferSource getBufferSource();
 }

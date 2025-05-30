@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.SunscreenBeaconBlockEntity;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.SUNSCREEN_BEACON.get(), SunscreenBeaconBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.SUNSCREEN_BEACON.get(), SunscreenBeaconBlockEntity::serverTick);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class VampireVillagerHostilesSensor extends VillagerHostilesSensor {
 
     static {
         //Adding values will probably not work outside Dev as hasPresence is not called for some reason
-        hostiles = Maps.newHashMap(VillagerHostilesSensorAccessor.getACCEPTABLE_DISTANCE_FROM_HOSTILES());
+        hostiles = Maps.newHashMap(VillagerHostilesSensorAccessor.getAcceptableDistanceFromHostiles());
         hostiles.remove(EntityType.ZOMBIE);
         hostiles.remove(EntityType.ZOMBIE_VILLAGER);
         hostiles.remove(EntityType.DROWNED);

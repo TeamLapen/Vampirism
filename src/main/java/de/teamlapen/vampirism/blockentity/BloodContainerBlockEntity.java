@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -32,7 +32,7 @@ public class BloodContainerBlockEntity extends BlockEntity implements FluidTankW
     private final FluidTankWithListener tank;
 
     public BloodContainerBlockEntity(@NotNull BlockPos pos, BlockState state) {
-        super(ModTiles.BLOOD_CONTAINER.get(), pos, state);
+        super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, state);
         this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.BLOOD.get().isSame(fluidStack.getFluid()) || ModFluids.IMPURE_BLOOD.get().isSame(fluidStack.getFluid())).setListener(this);
 
     }

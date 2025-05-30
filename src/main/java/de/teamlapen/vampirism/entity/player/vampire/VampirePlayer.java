@@ -29,7 +29,7 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.effects.VampireNightVisionEffectInstance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -459,7 +459,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public int getLevel() {
-        return ((IVampirismPlayer) player).getVampAtts().vampireLevel;
+        return ((IVampirismPlayer) player).vampirism$getVampAtts().vampireLevel;
     }
 
     @Override
@@ -481,7 +481,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      */
     @NotNull
     public VampirePlayerSpecialAttributes getSpecialAttributes() {
-        return ((IVampirismPlayer) player).getVampAtts().getVampSpecial();
+        return ((IVampirismPlayer) player).vampirism$getVampAtts().getVampSpecial();
     }
 
     @Override
@@ -550,7 +550,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean tryInfect(IVampire vampire) {
         if (canBeInfected(vampire)) {
-            SanguinareEffect.addRandom(player, true);
+            SanguinareMobEffect.addRandom(player, true);
             return true;
         }
         return false;
@@ -1037,19 +1037,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) VampirismConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
-                double baseArmor = ((AttributeInstanceAccessor) armorAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
-                double baseToughness = ((AttributeInstanceAccessor) toughnessAtt).getModifiers(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseArmor = ((AttributeInstanceAccessor) armorAtt).invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = ((AttributeInstanceAccessor) toughnessAtt).invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
                 if (modArmor != null && targetArmor != modArmor.amount()) {
-                    ((AttributeInstanceAccessor) armorAtt).invoke_removeModifier(modArmor);
+                    ((AttributeInstanceAccessor) armorAtt).invokeRemoveModifier(modArmor);
                     modArmor = null;
                 }
                 if (targetArmor != 0 && modArmor == null) {
                     armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetArmor, AttributeModifier.Operation.ADD_VALUE));
                 }
                 if (modToughness != null && targetToughness != modToughness.amount()) {
-                    ((AttributeInstanceAccessor) toughnessAtt).invoke_removeModifier(modToughness);
+                    ((AttributeInstanceAccessor) toughnessAtt).invokeRemoveModifier(modToughness);
                     modToughness = null;
                 }
                 if (targetToughness != 0 && modToughness == null) {

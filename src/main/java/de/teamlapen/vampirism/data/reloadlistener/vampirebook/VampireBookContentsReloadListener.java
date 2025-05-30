@@ -3,8 +3,6 @@ package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.misc.BookContents;
@@ -24,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VampireBookContentsReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent>> {
+
     public static final ResourceLocation ID = VResourceLocation.mod("vampire_book_contents");
     private static final Logger LOGGER = LogUtils.getLogger();
 

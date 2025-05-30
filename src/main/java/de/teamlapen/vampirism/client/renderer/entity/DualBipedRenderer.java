@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.renderer.entity.state.PlayerSkinRenderState;
 import de.teamlapen.vampirism.mixin.client.accessor.HumanoidArmorLayerAccessor;
 import de.teamlapen.vampirism.util.TextureComparator;
 import net.minecraft.client.Minecraft;
@@ -13,11 +12,8 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -119,15 +115,15 @@ public abstract class DualBipedRenderer<T extends Mob, S extends PlayerRenderSta
                 case WIDE -> pOuterModel;
             };
 
-            ((HumanoidArmorLayerAccessor<S, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.chestEquipment, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.legsEquipment, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.feetEquipment, EquipmentSlot.FEET, pPackedLight, this.getArmorModel(EquipmentSlot.FEET, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, M, A>) this).invoke_renderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.headEquipment, EquipmentSlot.HEAD, pPackedLight, this.getArmorModel(EquipmentSlot.HEAD, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.chestEquipment, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.legsEquipment, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.feetEquipment, EquipmentSlot.FEET, pPackedLight, this.getArmorModel(EquipmentSlot.FEET, innerModel, outerModel));
+            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.headEquipment, EquipmentSlot.HEAD, pPackedLight, this.getArmorModel(EquipmentSlot.HEAD, innerModel, outerModel));
         }
 
         private A getArmorModel(EquipmentSlot slot, A innerModel, A outerModel) {
             //noinspection rawtypes
-            return ((HumanoidArmorLayerAccessor) this).invoke_usesInnerModel(slot) ? innerModel : outerModel;
+            return ((HumanoidArmorLayerAccessor) this).invokeUsesInnerModel(slot) ? innerModel : outerModel;
         }
     }
 

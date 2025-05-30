@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.effects.SanguinareEffect;
+import de.teamlapen.vampirism.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DamageHandler;
@@ -192,7 +192,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     @Override
     public boolean tryInfect(IVampire vampire) {
         if (canBeInfected(vampire)) {
-            SanguinareEffect.addRandom(entity, false);
+            SanguinareMobEffect.addRandom(entity, false);
             return true;
         }
         return false;

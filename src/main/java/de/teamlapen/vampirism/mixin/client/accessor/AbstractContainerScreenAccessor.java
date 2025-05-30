@@ -11,9 +11,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AbstractContainerScreenAccessor {
 
     @Invoker("isHovering")
-    boolean invoke_isHovering(Slot pSlot, double pMouseX, double pMouseY);
+    boolean invokeIsHovering(Slot slot, double mouseX, double mouseY);
 
     @Accessor("draggingItem")
     ItemStack getDraggingItem();
-
 }

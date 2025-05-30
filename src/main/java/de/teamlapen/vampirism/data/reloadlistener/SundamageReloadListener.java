@@ -21,7 +21,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -37,10 +36,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class SundamageReloadListener implements PreparableReloadListener {
+
     public static final ResourceLocation SUNDAMAGE_ID = VResourceLocation.mod("sundamage");
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String directory = "vampirism";
-    private static final String fileName = "no_sun_damage.json";
+    private static final String DIRECTORY = "vampirism";
+    private static final String FILE_NAME = "no_sun_damage.json";
     private static final int PATH_SUFFIX_LENGTH = ".json".length();
 
     private final RegistryAccess registryAccess;
@@ -56,8 +56,8 @@ public class SundamageReloadListener implements PreparableReloadListener {
 
     private SundamageRegistry.Settings load(@NotNull ResourceManager manager) {
         List<RawFile> files = new ArrayList<>();
-        for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(directory, location -> location.getPath().endsWith(fileName)).entrySet()) {
-            ResourceLocation resourceName = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath().substring(directory.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
+        for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(DIRECTORY, location -> location.getPath().endsWith(FILE_NAME)).entrySet()) {
+            ResourceLocation resourceName = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath().substring(DIRECTORY.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);

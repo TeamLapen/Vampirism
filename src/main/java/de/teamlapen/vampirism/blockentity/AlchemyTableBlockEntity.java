@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
 import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.BlockPos;
@@ -61,7 +61,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     };
 
     public AlchemyTableBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALCHEMICAL_TABLE.get(), pos, state);
+        super(ModBlockEntities.ALCHEMICAL_TABLE.get(), pos, state);
     }
 
     @Override

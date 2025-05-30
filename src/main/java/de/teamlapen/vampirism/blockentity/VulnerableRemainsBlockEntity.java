@@ -5,7 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.VulnerableRemainsDummyEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,7 +55,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     private boolean spawnedBackup;
 
     public VulnerableRemainsBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
+        super(ModBlockEntities.VULNERABLE_CURSED_ROOTED_DIRT.get(), pos, state);
     }
 
     private long lastDamage = 0;

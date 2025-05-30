@@ -72,7 +72,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     private int targetLevel;
 
     public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
+        super(ModBlockEntities.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
     }
 
     /**
@@ -248,7 +248,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isLocalPlayer()) {
-                    VampirismModClient.getINSTANCE().getOverlay().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
+                    VampirismModClient.getInstance().getOverlay().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
         }

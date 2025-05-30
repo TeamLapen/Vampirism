@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -119,7 +119,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModTiles.ALTAR_INFUSION.get(), AltarInfusionBlockEntity::tick);
+        return createTickerHelper(type, ModBlockEntities.ALTAR_INFUSION.get(), AltarInfusionBlockEntity::tick);
     }
 
     @Override

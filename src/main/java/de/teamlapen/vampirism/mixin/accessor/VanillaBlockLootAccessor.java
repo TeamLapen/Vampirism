@@ -11,7 +11,7 @@ import java.util.Set;
 public interface VanillaBlockLootAccessor {
 
     @Accessor("EXPLOSION_RESISTANT")
-    static Set<Item> getEXPLOSION_RESISTANT() {
+    static Set<Item> getExplosionResistantBlocks() {
         throw new IllegalStateException("Mixin did not apply");
     }
 }

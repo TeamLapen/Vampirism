@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer
 import de.teamlapen.vampirism.client.renderer.item.CoffinSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBookContentsReloadListener;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -51,6 +50,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Mod(value = REFERENCE.MODID, dist = Dist.CLIENT)
 public class VampirismModClient {
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static VampirismModClient INSTANCE;
 
@@ -99,7 +99,7 @@ public class VampirismModClient {
         this.vampireBooks.register(event);
     }
 
-    public static VampirismModClient getINSTANCE() {
+    public static VampirismModClient getInstance() {
         return INSTANCE;
     }
 

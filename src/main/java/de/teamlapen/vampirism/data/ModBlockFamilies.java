@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class ModBlockFamilies {
@@ -31,7 +30,7 @@ public class ModBlockFamilies {
     }
 
     private static BlockFamily.Builder familyBuilder(Block block) {
-        BlockFamily.Builder builder = BlockFamiliesAccessor.familyBuilder(block);
+        BlockFamily.Builder builder = BlockFamiliesAccessor.invokeFamilyBuilder(block);
         MAP.put(block, builder.getFamily());
         return builder;
     }

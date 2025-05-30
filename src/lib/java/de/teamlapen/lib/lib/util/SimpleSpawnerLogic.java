@@ -176,7 +176,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                         @Nullable
                         NaturalSpawner.SpawnState densityManager = ((ServerLevel) level).getChunkSource().getLastSpawnState();
                         try {
-                            if (densityManager != null && !((SpawnStateAccessor)densityManager).canSpawnForCategoryLocalI(limitType, new ChunkPos(pos.getX() / 16, pos.getZ() / 16))) {
+                            if (densityManager != null && !((SpawnStateAccessor)densityManager).vampirism$canSpawnForCategoryLocalI(limitType, new ChunkPos(pos.getX() / 16, pos.getZ() / 16))) {
                                 this.resetTimer();
                                 break;
                             }

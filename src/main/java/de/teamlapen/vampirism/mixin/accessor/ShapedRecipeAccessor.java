@@ -14,5 +14,4 @@ public interface ShapedRecipeAccessor {
 
     @Accessor("pattern")
     ShapedRecipePattern getPattern();
-
 }

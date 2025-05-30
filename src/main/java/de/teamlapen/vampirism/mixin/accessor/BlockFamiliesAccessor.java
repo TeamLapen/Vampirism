@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface BlockFamiliesAccessor {
 
     @Invoker("familyBuilder")
-    static BlockFamily.Builder familyBuilder(Block pBaseBlock) {
+    static BlockFamily.Builder invokeFamilyBuilder(Block pBaseBlock) {
         throw new IllegalStateException("Mixin failed to apply");
     }
 }

@@ -79,7 +79,7 @@ public class ItemExtensions {
 
         @Override
         public @NotNull Model getGenericArmorModel(@NotNull ItemStack itemStack, EquipmentClientInfo.@NotNull LayerType layerType, @NotNull Model original) {
-            VampirismArmorModel replacement = VampirismModClient.getINSTANCE().getArmorModels().getModel(getArmorModelLocation(itemStack));
+            VampirismArmorModel replacement = VampirismModClient.getInstance().getArmorModels().getModel(getArmorModelLocation(itemStack));
             if (original instanceof HumanoidModel<?> humanoidModel) {
                 replacement.copyFromHumanoid(humanoidModel);
                 if (HumanoidArmorLayerData.getRenderState() != null) {

@@ -101,7 +101,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     @Override
     public int getLevel() {
-        return ((IVampirismPlayer) player).getVampAtts().hunterLevel;
+        return ((IVampirismPlayer) player).vampirism$getVampAtts().hunterLevel;
     }
 
     @Override
@@ -123,7 +123,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
      */
     @NotNull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
-        return ((IVampirismPlayer) player).getVampAtts().getHuntSpecial();
+        return ((IVampirismPlayer) player).vampirism$getVampAtts().getHuntSpecial();
     }
 
     @Override
@@ -162,12 +162,12 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                     if (StreamSupport.stream(player.getArmorSlots().spliterator(), false).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).setSource(HunterSkills.ARMOR_JUMP.getId());
+                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).setSource(HunterSkills.ARMOR_SPEED.getId());
+                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
                         }
                     } else {

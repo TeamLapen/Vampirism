@@ -15,22 +15,31 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
 
     @Unique
     public ResourceLocation vampirism$convertedOverlay;
+
     @Unique
     public ResourceLocation vampirism$overlay;
+
     @Unique
     private int vampirism$blood;
+
     @Unique
     private boolean vampirism$poisonousBlood;
+
     @Unique
     private boolean vampirism$isHunter;
+
     @Unique
     private boolean vampirism$sleepingInCoffin;
+
     @Unique
     private float vampirism$attackTime;
+
     @Unique
     private HumanoidArm vampirism$attackArm = HumanoidArm.RIGHT;
+
     @Unique
     private Bat vampirism$bat;
+
     @Unique
     private VampirismPlayerAttributes vampirism$vampirismAttributes;
 

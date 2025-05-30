@@ -39,7 +39,6 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -134,7 +133,7 @@ public class MotherBlockEntity extends BlockEntity {
     private AABB area;
 
     public MotherBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.MOTHER.get(), pos, state);
+        super(ModBlockEntities.MOTHER.get(), pos, state);
         this.bossEvent.setProgress(1);
         this.bossEvent.setPlayBossMusic(true);
     }

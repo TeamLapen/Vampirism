@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface VillagerHostilesSensorAccessor {
 
     @Accessor("ACCEPTABLE_DISTANCE_FROM_HOSTILES")
-    static ImmutableMap<EntityType<?>, Float> getACCEPTABLE_DISTANCE_FROM_HOSTILES() {
+    static ImmutableMap<EntityType<?>, Float> getAcceptableDistanceFromHostiles() {
         throw new IllegalStateException("Mixin failed to apply");
     }
 }

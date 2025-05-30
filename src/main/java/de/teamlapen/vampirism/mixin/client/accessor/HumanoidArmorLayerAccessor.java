@@ -6,18 +6,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(HumanoidArmorLayer.class)
-public interface HumanoidArmorLayerAccessor<S extends HumanoidRenderState, M extends HumanoidModel<S>, A extends HumanoidModel<S>> {
+public interface HumanoidArmorLayerAccessor<S extends HumanoidRenderState, A extends HumanoidModel<S>> {
 
     @Invoker("usesInnerModel")
-    boolean invoke_usesInnerModel(EquipmentSlot slot);
+    boolean invokeUsesInnerModel(EquipmentSlot slot);
 
     @Invoker("renderArmorPiece")
-    void invoke_renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemStack stack, EquipmentSlot pSlot, int pPackedLight, A pModel);
-
+    void invokeRenderArmorPiece(PoseStack poseStack, MultiBufferSource bufferSource, ItemStack armorItem, EquipmentSlot slot, int packedLight, A model);
 }

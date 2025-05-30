@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModMenus;
@@ -8,8 +7,6 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.tags.ModItemTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLeveling;
-import de.teamlapen.vampirism.mixin.accessor.AbstractContainerMenuAccessor;
-import de.teamlapen.vampirism.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

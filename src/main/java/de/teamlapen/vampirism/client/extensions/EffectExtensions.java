@@ -2,14 +2,12 @@ package de.teamlapen.vampirism.client.extensions;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectUtil;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +41,7 @@ public class EffectExtensions {
         @Override
         public boolean isVisibleInInventory(@NotNull MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
-                return !withSource.hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.getSource());
+                return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
             }
             return true;
         }
@@ -51,7 +49,7 @@ public class EffectExtensions {
         @Override
         public boolean isVisibleInGui(@NotNull MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
-                return !withSource.hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.getSource());
+                return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
             }
             return true;
         }

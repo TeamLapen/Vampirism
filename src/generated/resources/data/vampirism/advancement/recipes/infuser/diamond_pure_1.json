@@ -1,6 +1,16 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_pure_blood": {
       "conditions": {
         "items": [
@@ -16,22 +26,12 @@
         "recipe": "vampirism:diamond_pure_1"
       },
       "trigger": "minecraft:recipe_unlocked"
-    },
-    "raw_diamonds": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:raw_gold"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "raw_diamonds",
+      "diamond",
       "has_pure_blood"
     ]
   ],

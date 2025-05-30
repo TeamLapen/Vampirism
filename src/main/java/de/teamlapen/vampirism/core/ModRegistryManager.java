@@ -51,7 +51,7 @@ public class ModRegistryManager {
         ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);
         ModTasks.register(eventBus);
-        ModTiles.register(eventBus);
+        ModBlockEntities.register(eventBus);
         ModAi.register(eventBus);
         ModVillage.register(eventBus);
         VampireActions.register(eventBus);
@@ -88,13 +88,12 @@ public class ModRegistryManager {
         this.eventBus.addListener(ModEntities::onRegisterSpawns);
         this.eventBus.addListener(ModRegistries::registerRegistries);
         this.eventBus.addListener(PackRepositories::registerPackRepository);
-        this.eventBus.addListener(ModTiles::registerTileExtensions);
+        this.eventBus.addListener(ModBlockEntities::registerTileExtensions);
     }
 
     public void registerForgeEventHandler() {
         IEventBus eventBus = NeoForge.EVENT_BUS;
         eventBus.addListener(ModCommands::registerCommands);
-        eventBus.addListener(ModLootTables::onLootLoad);
         eventBus.addListener(ModPotions::registerPotionMixes);
     }
 }

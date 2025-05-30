@@ -12,5 +12,5 @@ import java.util.Map;
 public interface EntityRenderDispatcherAccessor {
 
     @Accessor("renderers")
-    Map<EntityType<?>, EntityRenderer<?, ?>> renderers();
+    Map<EntityType<?>, EntityRenderer<?, ?>> getRenderers();
 }

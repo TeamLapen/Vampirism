@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ObjectiveCriteriaAccessor {
 
     @Invoker("registerCustom")
-    static ObjectiveCriteria registerCustom(String name) {
+    static ObjectiveCriteria invokeRegisterCustom(String name) {
         throw new IllegalStateException("Mixin failed to apply");
     }
 }

@@ -87,7 +87,7 @@ public class ModVillage {
                 new VillagerTrades.ItemListing[]{
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(25, 30), ModItems.PURE_BLOOD_1.get(), 1, 2, 5),
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 25), ModItems.BLOOD_INFUSED_IRON_INGOT.get(), new VampirismTrades.Price(1, 3), 8, 5),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(5, 20), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS), 1, 4, 5),
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(5, 20), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS.values().stream().toList()), 1, 4, 5),
                         new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(3, 15), ColorListsUtil.itemListToItemStacks(ColorListsUtil.COFFINS.stream().map(Block::asItem).toList()), 1, 4, 5),
                 },
                 3,
@@ -98,7 +98,7 @@ public class ModVillage {
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_SEEKER_ENHANCED.get(), 1, 1, 10),
                                 new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(42, 64), ModItems.HEART_STRIKER_ENHANCED.get(), 1, 1, 10)
                         }),
-                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS), 1, 4, 10)
+                        new VampirismTrades.ItemsForHeart(new VampirismTrades.Price(10, 30), ColorListsUtil.itemListToItemStacks(ColorListsUtil.VAMPIRE_CLOAKS.values().stream().toList()), 1, 4, 10)
                 },
                 4,
                 new VillagerTrades.ItemListing[]{

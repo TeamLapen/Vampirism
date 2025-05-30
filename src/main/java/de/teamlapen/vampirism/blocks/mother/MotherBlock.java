@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks.mother;
 
 import de.teamlapen.vampirism.blockentity.MotherBlockEntity;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -71,6 +71,6 @@ public class MotherBlock extends Block implements EntityBlock, IRemainsBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModTiles.MOTHER.get(), MotherBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.MOTHER.get(), MotherBlockEntity::serverTick);
     }
 }

@@ -49,7 +49,7 @@ public class ModItemsRender {
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        ColorListsUtil.VAMPIRE_CLOAKS.forEach(cloak -> event.registerItem(ItemExtensions.VAMPIRE_CLOAK, cloak));
+        ColorListsUtil.VAMPIRE_CLOAKS.values().forEach(cloak -> event.registerItem(ItemExtensions.VAMPIRE_CLOAK, cloak));
         event.registerItem(ItemExtensions.HUNTER_HAT, ModItems.HUNTER_HAT_TALL.get(), ModItems.HUNTER_HAT_BROAD.get());
         event.registerItem(ItemExtensions.VAMPIRE_CLOTHING, ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
         event.registerItem(ItemExtensions.HUNTER_CROSSBOW, ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());

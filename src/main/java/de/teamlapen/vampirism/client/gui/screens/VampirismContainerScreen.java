@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -20,7 +19,6 @@ import de.teamlapen.vampirism.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
@@ -28,7 +26,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -122,7 +119,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
-            if (((AbstractContainerScreenAccessor) this).invoke_isHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && refinementRemoveButtons.containsKey(slot.getSlotIndex()) && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
+            if (((AbstractContainerScreenAccessor) this).invokeIsHovering(slot, mouseX, mouseY) && slot instanceof VampirismMenu.RemovingSelectorSlot && refinementRemoveButtons.containsKey(slot.getSlotIndex()) && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
                 this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
             }
         }

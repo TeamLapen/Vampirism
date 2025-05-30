@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ItemInHandRendererAccessor {
 
     @Invoker("applyItemArmTransform")
-    void invokeApplyItemArmTransform(PoseStack pPoseStack, HumanoidArm pHand, float pEquippedProg);
+    void invokeApplyItemArmTransform(PoseStack poseStack, HumanoidArm hand, float equippedProg);
 
     @Invoker("applyItemArmAttackTransform")
-    void invokeApplyItemArmAttackTransform(PoseStack pPoseStack, HumanoidArm pHand, float pSwingProgress);
+    void invokeApplyItemArmAttackTransform(PoseStack poseStack, HumanoidArm hand, float swingProgress);
 }

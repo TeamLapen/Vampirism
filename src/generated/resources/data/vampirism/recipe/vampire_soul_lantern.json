@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "minecraft:gold_nugget",
+    "G": "#c:nuggets/gold",
     "S": "vampirism:soul_orb_vampire"
   },
   "pattern": [

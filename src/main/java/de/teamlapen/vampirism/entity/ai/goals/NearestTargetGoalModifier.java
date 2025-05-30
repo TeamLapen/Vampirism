@@ -4,9 +4,9 @@ import net.minecraft.world.entity.Mob;
 
 public interface NearestTargetGoalModifier {
 
-    void ignoreVampires(Mob mob);
+    void vampirism$ignoreVampires(Mob mob);
 
-    void ignoreFactionEntities();
+    void vampirism$ignoreFactionEntities();
 
-    void ignoreLineOfSight();
+    void vampirism$ignoreLineOfSight();
 }

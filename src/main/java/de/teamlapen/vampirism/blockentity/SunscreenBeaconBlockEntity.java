@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +21,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
     private Predicate<Player> selector;
 
     public SunscreenBeaconBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        super(ModTiles.SUNSCREEN_BEACON.get(), pos, state);
+        super(ModBlockEntities.SUNSCREEN_BEACON.get(), pos, state);
     }
 
 
