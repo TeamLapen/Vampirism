@@ -45,6 +45,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateCrucifix();
         generateNonTemplateItems();
         createDefaultModels();
+        createAlchemicalFire();
     }
 
     protected void generateNonTemplateItems() {
@@ -201,6 +202,11 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.itemModelOutput.accept(ModItems.HUNTER_AXE_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_ULTIMATE.asItem(), TextureMapping.defaultTexture(VResourceLocation.mod("item/hunter_axe_ultimate")), this.modelOutput)));
     }
 
+    protected void createAlchemicalFire() {
+        var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ITEM_ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, VResourceLocation.mod("item/alchemical_fire_layer0")).put(TextureSlot.LAYER1, VResourceLocation.mod("item/alchemical_fire_layer1")), this.modelOutput));
+        this.itemModelOutput.accept(ModItems.ITEM_ALCHEMICAL_FIRE.get(), model);
+    }
+
     protected Stream<Item> getFlatItems() {
         return Stream.of(
                 ModItems.HUNTER_COAT_CHEST_NORMAL,
@@ -287,7 +293,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), mod("item/holy_water_splash_enhanced"));
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), mod("item/holy_water_splash_ultimate"));
             put(ModItems.GARLIC_BREAD.get(), mod("item/garlic_bread"));
-            put(ModItems.ITEM_ALCHEMICAL_FIRE.get(), mod("item/alchemical_fire"));
             put(ModBlocks.MED_CHAIR.get().asItem(), mod("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), mod("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), mod("item/vampire_book"));

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.component.BottleBlood;
-import de.teamlapen.vampirism.items.component.ContainedFluid;
 import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 
 public class ItemDataUtils {
 
@@ -65,7 +65,7 @@ public class ItemDataUtils {
     public static ItemStack createFilledBloodContainer() {
         ItemStack itemStack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get());
         FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
-        itemStack.set(ModDataComponents.BLOOD_CONTAINER, new ContainedFluid(fluid));
+        itemStack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
         return itemStack;
     }
 }
