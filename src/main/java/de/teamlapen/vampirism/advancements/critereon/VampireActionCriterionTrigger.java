@@ -31,12 +31,10 @@ public class VampireActionCriterionTrigger extends SimpleCriterionTrigger<Vampir
         SNIPED_IN_BAT("sniped_in_bat"),
         POISONOUS_BITE("poisonous_bite"),
         PERFORM_RITUAL_INFUSION("perform_ritual_infusion"),
-        BAT("bat"),
         SUCK_BLOOD("suck_blood"),
         NONE("none"),
         KILL_FROZEN_HUNTER("kill_frozen_hunter"),
-        RESURRECT("resurrect"),
-        INFECT("infect");
+        RESURRECT("resurrect");
 
         private final String name;
 

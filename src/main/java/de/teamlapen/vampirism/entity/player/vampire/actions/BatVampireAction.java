@@ -45,9 +45,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
-        if (player instanceof ServerPlayer) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.BAT);
-        }
         return IActionResult.SUCCESS;
     }
 

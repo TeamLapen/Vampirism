@@ -20,6 +20,7 @@ public class ModAdvancements {
     public static final DeferredHolder<CriterionTrigger<?>, CuredVampireVillagerCriterionTrigger> TRIGGER_CURED_VAMPIRE_VILLAGER = TRIGGERS.register("cured_vampire_villager", CuredVampireVillagerCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, MapFoundCriterionTrigger> TRIGGER_MAP_FOUND = TRIGGERS.register("map_found", MapFoundCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_MOTHER_WIN = TRIGGERS.register("mother_win", PlayerTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, ActionCriterionTrigger> ACTION_TRIGGER = TRIGGERS.register("action", ActionCriterionTrigger::new);
 
     static void register(IEventBus bus) {
         TRIGGERS.register(bus);
