@@ -71,24 +71,32 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createInfuser();
 
         createTintedLeaves(ModBlocks.DARK_SPRUCE_LEAVES.get(), TexturedModel.LEAVES, -1);
+
         ResourceLocation sunscreenModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.SUNSCREEN_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/cursed_earth")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel));
         createDefaultBlockItem(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel);
+
         ResourceLocation vampireBeaconModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.VAMPIRE_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/vampire_beacon")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel));
         createDefaultBlockItem(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel);
+
         ResourceLocation infestedDarkStoneModel = ModModelTemplates.CUBE_ALL.create(ModBlocks.INFESTED_DARK_STONE.get(), new TextureMapping().put(TextureSlot.ALL, mod("block/dark_stone")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), infestedDarkStoneModel));
         createDefaultBlockItem(ModBlocks.INFESTED_DARK_STONE.get(), VResourceLocation.mod("block/infested_dark_stone"));
+
         ResourceLocation batCageModel = mod("block/bat_cage/block");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), batCageModel));
         createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+
         ResourceLocation bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), bloodContainerModel));
         this.itemModelOutput.accept(ModBlocks.BLOOD_CONTAINER.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(bloodContainerModel), ItemModelUtils.specialModel(bloodContainerModel, new BloodContainerSpecialRenderer.Unbaked())));
+
         ResourceLocation inspirationModel = mod("block/altar_inspiration/altar_inspiration");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel));
         createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
+
+        createNonTemplateModelBlock(ModBlocks.BLOOD.get());
     }
 
     protected void createCursedEarthPath() {

@@ -228,6 +228,7 @@ public class VampirismMod {
         event.enqueueWork(ModItems::registerDispenserBehaviour);
         event.enqueueWork(ModBlocks::registerStrippables);
         event.enqueueWork(ModBlocks::registerFlammables);
+        event.enqueueWork(ModFluids::registerFluidInteractions);
         TelemetryCollector.execute();
     }
 

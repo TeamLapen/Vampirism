@@ -74,6 +74,8 @@ public class ModBlocks {
     public static final DeferredBlock<SieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", SieveBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(2.5f).sound(SoundType.WOOD).noOcclusion());
     public static final DeferredBlock<BloodInfuserBlock> INFUSER = registerWithItem("blood_infuser", BloodInfuserBlock::new);
 
+    public static final DeferredBlock<LiquidBlock> BLOOD = registerBlock("blood", props -> new LiquidBlock(ModFluids.BLOOD.get(), props), () -> copyProperties(Blocks.WATER).mapColor(MapColor.CRIMSON_HYPHAE));
+
     public static final DeferredBlock<FogDiffuserBlock> FOG_DIFFUSER = registerWithItem("fog_diffuser", FogDiffuserBlock::new, () -> basicProperties().noOcclusion().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE));
     public static final DeferredBlock<SunscreenBeaconBlock> SUNSCREEN_BEACON = registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion(), itemProps -> itemProps.rarity(Rarity.RARE));
 

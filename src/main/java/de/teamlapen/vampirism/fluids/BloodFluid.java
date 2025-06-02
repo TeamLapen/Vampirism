@@ -1,90 +1,50 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidType;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
+public abstract class BloodFluid extends BaseFlowingFluid {
 
-public class BloodFluid extends Fluid {
-    public BloodFluid() {
-        super();
+    public static final Properties PROPERTIES = new Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.FLOWING_BLOOD).bucket(ModItems.BLOOD_BUCKET).block(ModBlocks.BLOOD).explosionResistance(100.0F);
+
+    public BloodFluid(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public int getAmount(@NotNull FluidState fluidState) {
-        return 0;
-    }
-
-    @NotNull
-    @Override
-    public Item getBucket() {
-        return ModItems.BLOOD_BUCKET.get();
-    }
-
-    @Override
-    public float getHeight(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos) {
-        return 0;
-    }
-
-    @Override
-    public float getOwnHeight(@NotNull FluidState fluidState) {
-        return 0;
-    }
-
-    @NotNull
-    @Override
-    public VoxelShape getShape(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos) {
-        return Shapes.block();
-    }
-
-    @Override
-    public int getTickDelay(@NotNull LevelReader worldReader) {
-        return 5;
-    }
-
-    @Override
-    public boolean isSource(@NotNull FluidState state) {
-        return true;
-    }
-
-    @Override
-    protected boolean canBeReplacedWith(@NotNull FluidState fluidState, @NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull Fluid fluid, @NotNull Direction direction) {
-        return false;
-    }
-
-    @NotNull
-    @Override
-    protected BlockState createLegacyBlock(@NotNull FluidState state) {
-        return Blocks.AIR.defaultBlockState();
-    }
-
-    @Override
-    protected float getExplosionResistance() {
-        return 100.0F;
-    }
-
-    @NotNull
-    @Override
-    protected Vec3 getFlow(@NotNull BlockGetter blockReader, @NotNull BlockPos blockPos, @NotNull FluidState fluidState) {
-        return Vec3.ZERO;
-    }
-
-    @NotNull
-    @Override
-    public FluidType getFluidType() {
-        return ModFluids.BLOOD_TYPE.get();
+    protected void animateTick(Level level, BlockPos pos, FluidState state, RandomSource random) {
+        if (!state.isSource() && !state.getValue(FALLING)) {
+            if (random.nextInt(64) == 0) {
+                level.playLocalSound(
+                        (double) pos.getX() + 0.5,
+                        (double) pos.getY() + 0.5,
+                        (double) pos.getZ() + 0.5,
+                        SoundEvents.WATER_AMBIENT,
+                        SoundSource.BLOCKS,
+                        random.nextFloat() * 0.25F + 0.75F,
+                        random.nextFloat() + 0.5F,
+                        false
+                );
+            }
+        } else if (random.nextInt(10) == 0) {
+             level.addParticle(
+                    ParticleTypes.UNDERWATER,
+                    (double) pos.getX() + random.nextDouble(),
+                    (double) pos.getY() + random.nextDouble(),
+                    (double) pos.getZ() + random.nextDouble(),
+                    0.0,
+                    0.0,
+                    0.0
+            );
+        }
     }
 }
