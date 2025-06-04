@@ -38,7 +38,6 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class ModFactions {
-
     private static final DeferredFactionRegister FACTIONS = DeferredFactionRegister.create(REFERENCE.MODID);
     private static final DeferredRegister<IMinionEntry<?, ?>> MINIONS = DeferredRegister.create(VampirismRegistries.Keys.MINION, REFERENCE.MODID);
 
