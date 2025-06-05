@@ -154,7 +154,6 @@ public class VampirismMod {
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.GRINDER.get(), (o, side) -> o.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (o, side) -> o);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.SIEVE.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_TABLE.get(), new ICapabilityProvider<>() {
@@ -163,7 +162,7 @@ public class VampirismMod {
                 return object.getCapability(object, context);
             }
         });
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (o, side) -> new InvWrapper(o));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (blockEntity, side) -> new InvWrapper(blockEntity));
     }
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {

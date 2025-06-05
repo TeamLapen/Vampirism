@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Vampirism default block container with set creative tab, registry name and unloc name
+ * Vampirism default block container with additional helpful methods
  */
 public abstract class VampirismBlockContainer extends BaseEntityBlock {
 
