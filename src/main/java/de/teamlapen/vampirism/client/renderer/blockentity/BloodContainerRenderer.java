@@ -28,8 +28,8 @@ public class BloodContainerRenderer implements BlockEntityRenderer<BloodContaine
             poseStack.pushPose();
             poseStack.translate(8 / 16f, 1 / 16f, 8 / 16f);
             poseStack.scale(10 / 16f,14 / 16f,10 / 16f);
-            VertexConsumer vertex = material.buffer(bufferSource, RenderType::entityCutout);
-            VertexUtils.addCube(vertex, poseStack, 1, filled, packedLight, -1);
+            VertexConsumer vertex = material.buffer(bufferSource, RenderType::entityTranslucent);
+            VertexUtils.addCube(vertex, poseStack, 1, filled, packedLight, packedOverlay, -1, 0.85f);
             poseStack.popPose();
         }
     }

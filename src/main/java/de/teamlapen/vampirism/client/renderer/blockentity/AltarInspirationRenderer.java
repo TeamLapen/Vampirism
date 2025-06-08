@@ -23,7 +23,7 @@ public class AltarInspirationRenderer implements BlockEntityRenderer<AltarInspir
             poseStack.translate(8 / 16f, 1 / 16f, 8 / 16f);
             poseStack.scale(8 / 16f, 11 / 16f, 8 / 16f);
             VertexConsumer buffer = ModMaterials.BLOOD_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
-            VertexUtils.addCube(buffer, poseStack, 1, fillPercentage, packedLight, -1);
+            VertexUtils.addCube(buffer, poseStack, 1, fillPercentage, packedLight, packedOverlay, -1);
             poseStack.popPose();
         }
     }

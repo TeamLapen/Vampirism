@@ -36,7 +36,7 @@ public class BloodContainerSpecialRenderer implements SpecialModelRenderer<Simpl
                 stack.translate(0.5, 1/16f, 0.5);
                 stack.scale(10f/16f,14f/16f,10f/16f);
                 VertexConsumer consumer = material.buffer(bufferSource, RenderType::entityCutout);
-                VertexUtils.addCube(consumer, stack, 1, filled, combinedLight, -1);
+                VertexUtils.addCube(consumer, stack, 1, filled, combinedLight, combinedOverlay, -1);
                 stack.popPose();
             }
         }

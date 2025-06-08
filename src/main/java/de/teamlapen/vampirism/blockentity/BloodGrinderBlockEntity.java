@@ -9,6 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -23,12 +27,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -40,9 +47,12 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public static final String KEY_GRIND_COOLDOWN_TIME = "GrindCooldown";
     public static final String KEY_PULL_COOLDOWN_TIME = "PullCooldown";
 
+    public static final int CAPACITY = (int) (FluidType.BUCKET_VOLUME * 1.5);
     public static final int GRIND_DELAY = 100;
     public static final int PULL_DELAY = 8;
     public static final AABB PULL_REACH_AABB = Block.box(5.0, 16.0, 5.0, 11.0, 22.0, 11.0).toAabbs().getFirst();
+
+    public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
 
     private final IItemHandler inputItemHandler;
 
@@ -54,7 +64,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public BloodGrinderBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_GRINDER.get(), pos, blockState);
         this.inputItemHandler = new InputHandler(this, BloodGrinderBlockEntity::isGrindable);
-        this.fluidInventory = new FluidTank(FluidType.BUCKET_VOLUME).setValidator(fluid -> fluid.is(ModFluids.BLOOD));
+        this.fluidInventory = new FluidTank(CAPACITY).setValidator(fluid -> fluid.is(ModFluids.BLOOD));
         this.inputStack = ItemStack.EMPTY;
     }
 
@@ -142,7 +152,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         int space = fluidInventory.getSpace();
         if (space < blood && !fluidInventory.isEmpty()) return;
 
-        int numberAllowedToGrind = Math.min(Math.max((space - space % blood) / blood, 1), 4);
+        int numberAllowedToGrind = Math.clamp((space - space % blood) / blood, 1, 4);
         blockEntity.fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         blockEntity.inputStack.shrink(numberAllowedToGrind);
         level.playSound(null, pos, ModSounds.BLOOD_SQUEEZE.get(), SoundSource.BLOCKS, 0.5f + level.getRandom().nextFloat() / 4, 1.0f - level.getRandom().nextFloat() / 4);
@@ -171,6 +181,45 @@ public class BloodGrinderBlockEntity extends BlockEntity {
 
     public static boolean isGrindable(ItemStack stack) {
         return VampirismAPI.bloodConversionRegistry().canBeConverted(stack);
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(FLUID, fluidInventory.getFluid())
+                .build();
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if (level != null) {
+            if (level.isClientSide) {
+                this.requestModelDataUpdate();
+            } else {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        fluidInventory.writeToNBT(registries, tag);
+        return tag;
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
+        fluidInventory.readFromNBT(lookupProvider, pkt.getTag());
+        setChanged();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public static class InputHandler implements IItemHandler {
