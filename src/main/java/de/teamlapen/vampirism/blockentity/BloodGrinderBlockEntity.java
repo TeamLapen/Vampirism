@@ -145,7 +145,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         int numberAllowedToGrind = Math.min(Math.max((space - space % blood) / blood, 1), 4);
         blockEntity.fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         blockEntity.inputStack.shrink(numberAllowedToGrind);
-        level.playSound(null, pos, ModSounds.GRINDER.get(), SoundSource.BLOCKS, 0.5f, 0.7f);
+        level.playSound(null, pos, ModSounds.BLOOD_SQUEEZE.get(), SoundSource.BLOCKS, 0.5f + level.getRandom().nextFloat() / 4, 1.0f - level.getRandom().nextFloat() / 4);
 
         blockEntity.grindCooldownTime = GRIND_DELAY;
         blockEntity.setChanged();

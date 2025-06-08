@@ -31,6 +31,12 @@
     ],
     "subtitle": "subtitles.vampirism.blessing_music"
   },
+  "block.blood_squeeze": {
+    "sounds": [
+      "vampirism:cc/block/blood_squeeze"
+    ],
+    "subtitle": "subtitles.vampirism.blood_squeeze"
+  },
   "block.boiling": {
     "sounds": [
       "vampirism:cc/block/boiling"
@@ -49,12 +55,6 @@
       "vampirism:cc/block/coffin_lid_slide"
     ],
     "subtitle": "subtitles.vampirism.coffin_lid"
-  },
-  "block.grinder": {
-    "sounds": [
-      "vampirism:cc/block/grinder"
-    ],
-    "subtitle": "subtitles.vampirism.grinder"
   },
   "block.potion_table_crafting": {
     "sounds": [
