@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import com.mojang.logging.LogUtils;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModBlockEntities;
@@ -8,12 +9,16 @@ import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.DustColorTransitionOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
@@ -36,6 +41,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -47,12 +53,14 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public static final String KEY_GRIND_COOLDOWN_TIME = "GrindCooldown";
     public static final String KEY_PULL_COOLDOWN_TIME = "PullCooldown";
 
-    public static final int CAPACITY = (int) (FluidType.BUCKET_VOLUME * 1.5);
-    public static final int GRIND_DELAY = 100;
+    public static final int CAPACITY = FluidType.BUCKET_VOLUME * 2;
+    public static final int GRIND_DELAY = 300;
     public static final int PULL_DELAY = 8;
     public static final AABB PULL_REACH_AABB = Block.box(5.0, 16.0, 5.0, 11.0, 22.0, 11.0).toAabbs().getFirst();
 
     public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
+    public static final ModelProperty<ItemStack> STACK_INSIDE = new ModelProperty<>();
+    public static final ModelProperty<Integer> GRIND_COOLDOWN = new ModelProperty<>();
 
     private final IItemHandler inputItemHandler;
 
@@ -147,46 +155,142 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         ItemStack inputStack = blockEntity.inputStack;
         if (inputStack.isEmpty() || !isGrindable(inputStack)) return;
 
-        int blood = VampirismAPI.bloodConversionRegistry().getItemBlood(inputStack).blood();
+        int blood = getBlood(inputStack);
         FluidTank fluidInventory = blockEntity.fluidInventory;
         int space = fluidInventory.getSpace();
         if (space < blood && !fluidInventory.isEmpty()) return;
 
-        int numberAllowedToGrind = Math.clamp((space - space % blood) / blood, 1, 4);
+        int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, 4);
         blockEntity.fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         blockEntity.inputStack.shrink(numberAllowedToGrind);
+
         level.playSound(null, pos, ModSounds.BLOOD_SQUEEZE.get(), SoundSource.BLOCKS, 0.5f + level.getRandom().nextFloat() / 4, 1.0f - level.getRandom().nextFloat() / 4);
 
         blockEntity.grindCooldownTime = GRIND_DELAY;
         blockEntity.setChanged();
+
+        /*
+        RandomSource random = level.getRandom();
+
+        if (level instanceof ServerLevel serverLevel) {
+            for (int i = 0; i < 5; i++) {
+                double x = pos.getX() + random.nextInt(4, 14) / 16d;
+                double z = random.nextInt(4, 14) / 16d;
+
+                double xSpeed = random.nextDouble() / 2;
+                double zSpeed = random.nextDouble() / 2;
+                double ySpeed = random.nextDouble() * 2;
+                serverLevel.sendParticles(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + random.nextFloat() / 2), x, 0.0d, z, xSpeed, ySpeed, zSpeed);
+                serverLevel.sendParticles(null, new DustColorTransitionOptions(), false, false, x, y, z, 1, 8 / 16d, 8 / 16d, 8 / 16d, 10);
+            }
+        }
+         */
     }
 
     public static void pourBloodDown(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
         FluidStack fluidStack = blockEntity.fluidInventory.getFluid();
-        if (fluidStack.isEmpty())
-            return;
+        if (fluidStack.isEmpty()) return;
+
+        int maxTransfer = Mth.clamp(50 * fluidStack.getAmount() * 2 / CAPACITY, 10, fluidStack.getAmount());
 
         FluidUtil.getFluidHandler(level, pos.below(), Direction.UP).ifPresent(belowFluidHandler -> {
-            int allowed = belowFluidHandler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
+            FluidStack simulatedStack = fluidStack.copyWithAmount(maxTransfer);
+            int allowed = belowFluidHandler.fill(simulatedStack, IFluidHandler.FluidAction.SIMULATE);
 
             if (allowed > 0) {
                 FluidStack toTransfer = fluidStack.copyWithAmount(allowed);
                 int filled = belowFluidHandler.fill(toTransfer, IFluidHandler.FluidAction.EXECUTE);
-
                 blockEntity.fluidInventory.drain(filled, IFluidHandler.FluidAction.EXECUTE);
                 blockEntity.setChanged();
+
+                RandomSource random = level.getRandom();
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + random.nextFloat() / 2), pos.getX() + 0.5, pos.getY() - 0.1, pos.getZ() + 0.5, 4, 2.5 / 16d, 0.2 / 16d, 2.5 / 16d, 4);
+                }
             }
         });
+    }
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
+        //spawnGrindingParticles(level, pos, blockEntity);
+    }
+
+    public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static void spawnGrindingParticles(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
+        ModelData modelData = blockEntity.getModelData();
+        //FluidStack fluidStack = modelData.get(BloodGrinderBlockEntity.FLUID);
+        ItemStack itemStack = modelData.get(BloodGrinderBlockEntity.STACK_INSIDE);
+        Integer grindCooldown = modelData.get(BloodGrinderBlockEntity.GRIND_COOLDOWN);
+
+        if (!level.isClientSide || itemStack == null || itemStack.isEmpty() || grindCooldown == null || grindCooldown < 0) return;
+
+        RandomSource random = level.getRandom();
+
+        double centerX = pos.getX() + 0.5;
+        double centerZ = pos.getZ() + 0.5;
+
+        for (int i = 0; i < 3; i++) {
+            double y = pos.getY() + random.nextInt(4, 12) / 16d;
+
+            double min = 0.0;
+            double max = 1.0;
+
+            double x = 0;
+            double z = 0;
+
+            int side = random.nextInt(4);
+            double offset = random.nextDouble();
+
+            switch (side) {
+                // North
+                case 0 -> {
+                    x = offset;
+                    z = min;
+                }
+                // South
+                case 1 -> {
+                    x = offset;
+                    z = max;
+                }
+                // West
+                case 2 -> {
+                    x = min;
+                    z = offset;
+                }
+                // East
+                case 3 -> {
+                    x = max;
+                    z = offset;
+                }
+            }
+
+            x += pos.getX();
+            z += pos.getZ();
+
+            double xSpeed = (x - centerX);
+            double zSpeed = (z - centerZ);
+            double ySpeed = -random.nextDouble();
+
+            //level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemStack), x, y, z, xSpeed, ySpeed, zSpeed);
+            level.addParticle(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + random.nextFloat() / 2), x, y, z, xSpeed, ySpeed, zSpeed);
+        }
     }
 
     public static boolean isGrindable(ItemStack stack) {
         return VampirismAPI.bloodConversionRegistry().canBeConverted(stack);
     }
 
+    public static int getBlood(ItemStack stack) {
+        return VampirismAPI.bloodConversionRegistry().getItemBlood(stack).blood();
+    }
+
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
                 .with(FLUID, fluidInventory.getFluid())
+                .with(STACK_INSIDE, inputStack)
+                .with(GRIND_COOLDOWN, grindCooldownTime)
                 .build();
     }
 
@@ -206,6 +310,8 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = super.getUpdateTag(registries);
         fluidInventory.writeToNBT(registries, tag);
+        tag.put(KEY_INPUT_STACK, inputStack.saveOptional(registries));
+        tag.putInt(KEY_GRIND_COOLDOWN_TIME, grindCooldownTime);
         return tag;
     }
 
@@ -213,6 +319,8 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         super.onDataPacket(net, pkt, lookupProvider);
         fluidInventory.readFromNBT(lookupProvider, pkt.getTag());
+        inputStack = ItemStack.parseOptional(lookupProvider, pkt.getTag().getCompound(KEY_INPUT_STACK));
+        grindCooldownTime = pkt.getTag().getInt(KEY_GRIND_COOLDOWN_TIME);
         setChanged();
     }
 

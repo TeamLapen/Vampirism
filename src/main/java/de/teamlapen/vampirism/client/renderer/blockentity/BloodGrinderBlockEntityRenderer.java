@@ -25,6 +25,7 @@ public class BloodGrinderBlockEntityRenderer implements BlockEntityRenderer<Bloo
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void render(BloodGrinderBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         ModelData modelData = blockEntity.getModelData();
 

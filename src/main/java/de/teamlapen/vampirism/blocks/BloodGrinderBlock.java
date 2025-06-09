@@ -49,7 +49,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderBlockEntity::serverTick);
+        return createTickerHelper(blockEntityType, ModBlockEntities.BLOOD_GRINDER.get(), level.isClientSide() ? BloodGrinderBlockEntity::clientTick : BloodGrinderBlockEntity::serverTick);
     }
 
     @Override
