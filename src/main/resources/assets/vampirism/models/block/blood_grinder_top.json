@@ -1,0 +1,26 @@
+{
+	"credit": "Made by GridExpert",
+	"parent": "block/block",
+	"textures": {
+		"particle": "block/dark_oak_planks",
+		"top": "vampirism:block/blood_grinder_top",
+		"top_side": "vampirism:block/blood_grinder_side_top",
+		"inner": "vampirism:block/blood_grinder_inner"
+	},
+	"render_type": "minecraft:cutout",
+	"elements": [
+		{
+			"from": [0, 12, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 14, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
+				"west": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#inner"}
+			}
+		}
+	]
+}

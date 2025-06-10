@@ -1,0 +1,8 @@
+{
+	"credit": "Made by GridExpert",
+	"parent": "vampirism:block/blood_grinder_top",
+	"textures": {
+		"top": "vampirism:block/blood_grinder_top_on",
+		"top_side": "vampirism:block/blood_grinder_top_on"
+	}
+}

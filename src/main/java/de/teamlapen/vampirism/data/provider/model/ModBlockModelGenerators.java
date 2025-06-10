@@ -287,7 +287,10 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         BloodGrinderBlock block = ModBlocks.BLOOD_GRINDER.get();
 
         ResourceLocation fullModel = ModelLocationUtils.getModelLocation(block);
-        ResourceLocation baseModel = ModelLocationUtils.getModelLocation(block, "_base");
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(block, "_top");
+        ResourceLocation topModelOn = ModelLocationUtils.getModelLocation(block, "_top_on");
+        ResourceLocation bottomModel = ModelLocationUtils.getModelLocation(block, "_bottom");
+        ResourceLocation glassModel = ModelLocationUtils.getModelLocation(block, "_glass");
         ResourceLocation wheelModel = ModelLocationUtils.getModelLocation(block, "_wheel");
         ResourceLocation grindingWheelModel = ModelLocationUtils.getModelLocation(block, "_wheel_grinding");
 
@@ -300,8 +303,13 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
             VariantProperties.Rotation rotation = pair.getSecond();
             Condition.TerminalCondition facing = Condition.condition().term(BloodGrinderBlock.FACING, direction);
 
-            multiPartGenerator.with(facing, Variant.variant().with(VariantProperties.MODEL, baseModel).with(VariantProperties.Y_ROT, rotation));
+            multiPartGenerator.with(facing, Variant.variant().with(VariantProperties.MODEL, bottomModel).with(VariantProperties.Y_ROT, rotation));
         });
+
+        multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.POWERED, false), Variant.variant().with(VariantProperties.MODEL, topModel));
+        multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.POWERED, true), Variant.variant().with(VariantProperties.MODEL, topModelOn));
+
+        multiPartGenerator.with(Variant.variant().with(VariantProperties.MODEL, glassModel));
 
         multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.GRINDING, false), Variant.variant().with(VariantProperties.MODEL, wheelModel));
         multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.GRINDING, true), Variant.variant().with(VariantProperties.MODEL, grindingWheelModel));

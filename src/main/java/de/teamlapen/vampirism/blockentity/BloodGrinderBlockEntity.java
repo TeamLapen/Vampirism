@@ -101,7 +101,13 @@ public class BloodGrinderBlockEntity extends BlockEntity {
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
         trySuckingItems(level, pos, blockEntity);
-        processGrinding(level, pos, blockEntity);
+
+        if (state.getValue(BloodGrinderBlock.POWERED)) {
+            processGrinding(level, pos, blockEntity);
+        } else {
+            updateGrindState(level, pos, false);
+        }
+
         pourBloodDown(level, pos, blockEntity);
     }
 

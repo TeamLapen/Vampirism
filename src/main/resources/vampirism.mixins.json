@@ -12,6 +12,7 @@
     "EntityPredicateMixin",
     "EquippableMixin",
     "FoodPropertiesMixin",
+    "HopperBlockMixin",
     "ItemMixin",
     "ItemPropertiesMixin",
     "JigsawPlacerMixin",

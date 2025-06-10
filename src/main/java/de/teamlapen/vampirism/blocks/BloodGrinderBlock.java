@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -30,11 +31,12 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     public static final MapCodec<BloodGrinderBlock> CODEC = simpleCodec(BloodGrinderBlock::new);
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty GRINDING = BooleanProperty.create("grinding");
 
     public BloodGrinderBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(GRINDING, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false).setValue(GRINDING, false));
     }
 
     @Override
@@ -70,10 +72,20 @@ public class BloodGrinderBlock extends BaseEntityBlock {
         return Optional.empty();
     }
 
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        if (level.isClientSide) return;
+
+        boolean wasPowered = state.getValue(POWERED);
+        if (wasPowered != level.hasNeighborSignal(pos)) {
+            level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
+        }
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
     @Override
@@ -90,6 +102,6 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, GRINDING);
+        builder.add(FACING, POWERED, GRINDING);
     }
 }

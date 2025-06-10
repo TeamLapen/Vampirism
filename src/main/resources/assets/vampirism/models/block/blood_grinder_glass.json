@@ -2,40 +2,11 @@
 	"credit": "Made by GridExpert",
 	"parent": "block/block",
 	"textures": {
-		"particle": "vampirism:block/blood_grinder_side",
-		"side": "vampirism:block/blood_grinder_side",
-		"filter": "vampirism:block/blood_grinder_side_filter",
-		"bottom": "vampirism:block/blood_grinder_bottom",
-		"top": "vampirism:block/blood_grinder_top",
+		"particle": "block/glass",
 		"glass": "vampirism:block/blood_grinder_glass"
 	},
 	"render_type": "minecraft:cutout",
 	"elements": [
-		{
-			"from": [0, 0, 0],
-			"to": [16, 4, 16],
-			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#filter"},
-				"east": {"uv": [0, 4, 16, 8], "texture": "#side"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#filter"},
-				"west": {"uv": [0, 4, 16, 8], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
-			}
-		},
-		{
-			"from": [0, 12, 0],
-			"to": [16, 16, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 14, 0]},
-			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#side"},
-				"east": {"uv": [0, 0, 16, 4], "texture": "#side"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#side"},
-				"west": {"uv": [0, 0, 16, 4], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#top"}
-			}
-		},
 		{
 			"from": [0, 4, 0],
 			"to": [16, 12, 0],
