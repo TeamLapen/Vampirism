@@ -152,33 +152,40 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     }
 
     public static void processGrinding(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
+        ItemStack inputStack = blockEntity.inputStack;
+        FluidTank fluidInventory = blockEntity.fluidInventory;
+
+        boolean canGrind = !inputStack.isEmpty() && isGrindable(inputStack);
+        int blood = canGrind ? getBlood(inputStack) : 0;
+        int space = fluidInventory.getSpace();
+
+        if (!canGrind || (space < blood && !fluidInventory.isEmpty())) {
+            updateGrindState(level, pos, false);
+            blockEntity.grindCooldownTime = -1;
+            return;
+        }
+
+        if (blockEntity.grindCooldownTime < 0) {
+            blockEntity.grindCooldownTime = GRIND_DELAY;
+            blockEntity.setChanged();
+            updateGrindState(level, pos, true);
+            return;
+        }
+
         if (blockEntity.grindCooldownTime > 0) {
             blockEntity.grindCooldownTime--;
-            return;
-        }
-
-        ItemStack inputStack = blockEntity.inputStack;
-        if (inputStack.isEmpty() || !isGrindable(inputStack)) {
-            updateGrindState(level, pos, false);
-            return;
-        }
-
-        int blood = getBlood(inputStack);
-        FluidTank fluidInventory = blockEntity.fluidInventory;
-        int space = fluidInventory.getSpace();
-        if (space < blood && !fluidInventory.isEmpty()) {
-            updateGrindState(level, pos, false);
+            updateGrindState(level, pos, true);
             return;
         }
 
         int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, 4);
-        blockEntity.fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
-        blockEntity.inputStack.shrink(numberAllowedToGrind);
+        fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
+        inputStack.shrink(numberAllowedToGrind);
 
         level.playSound(null, pos, ModSounds.BLOOD_SQUEEZE.get(), SoundSource.BLOCKS, 0.5f + level.getRandom().nextFloat() / 4, 1.0f - level.getRandom().nextFloat() / 4);
 
-        blockEntity.grindCooldownTime = GRIND_DELAY;
-        updateGrindState(level, pos, true);
+        blockEntity.grindCooldownTime = -1;
+        updateGrindState(level, pos, false);
         blockEntity.setChanged();
 
         /*
