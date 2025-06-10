@@ -49,6 +49,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createGarlicDiffuser();
         createCandleHolders();
         createVampireSoulLantern();
+        createBloodGrinder();
         createCursedBark();
         createHunterTable();
         createCoffin();
@@ -259,8 +260,10 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
 
     public void createVampireSoulLantern() {
         VampireSoulLanternBlock block = ModBlocks.VAMPIRE_SOUL_LANTERN.get();
+
         ResourceLocation model = ModelLocationUtils.getModelLocation(block);
         ResourceLocation hangingModel = ModelLocationUtils.getModelLocation(block, "_hanging");
+
         this.registerSimpleFlatItemModel(block.asItem());
 
         MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
@@ -268,12 +271,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         Condition.TerminalCondition standing = Condition.condition().term(VampireSoulLanternBlock.HANGING, false);
         Condition.TerminalCondition hanging = Condition.condition().term(VampireSoulLanternBlock.HANGING, true);
 
-        List.of(
-                Pair.of(Direction.NORTH, VariantProperties.Rotation.R0),
-                Pair.of(Direction.EAST, VariantProperties.Rotation.R90),
-                Pair.of(Direction.SOUTH, VariantProperties.Rotation.R180),
-                Pair.of(Direction.WEST, VariantProperties.Rotation.R270)
-        ).forEach(pair -> {
+        HORIZONTAL_ROTATION.forEach(pair -> {
             Direction direction = pair.getFirst();
             VariantProperties.Rotation rotation = pair.getSecond();
             Condition.TerminalCondition facing = Condition.condition().term(VampireSoulLanternBlock.HORIZONTAL_FACING, direction);
@@ -281,6 +279,32 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
             multiPartGenerator.with(Condition.and(facing, standing), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, rotation));
             multiPartGenerator.with(Condition.and(facing, hanging), Variant.variant().with(VariantProperties.MODEL, hangingModel).with(VariantProperties.Y_ROT, rotation));
         });
+
+        this.blockStateOutput.accept(multiPartGenerator);
+    }
+
+    protected void createBloodGrinder() {
+        BloodGrinderBlock block = ModBlocks.BLOOD_GRINDER.get();
+
+        ResourceLocation fullModel = ModelLocationUtils.getModelLocation(block);
+        ResourceLocation baseModel = ModelLocationUtils.getModelLocation(block, "_base");
+        ResourceLocation wheelModel = ModelLocationUtils.getModelLocation(block, "_wheel");
+        ResourceLocation grindingWheelModel = ModelLocationUtils.getModelLocation(block, "_wheel_grinding");
+
+        this.createDefaultBlockItem(block, fullModel);
+
+        MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
+
+        HORIZONTAL_ROTATION.forEach(pair -> {
+            Direction direction = pair.getFirst();
+            VariantProperties.Rotation rotation = pair.getSecond();
+            Condition.TerminalCondition facing = Condition.condition().term(BloodGrinderBlock.FACING, direction);
+
+            multiPartGenerator.with(facing, Variant.variant().with(VariantProperties.MODEL, baseModel).with(VariantProperties.Y_ROT, rotation));
+        });
+
+        multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.GRINDING, false), Variant.variant().with(VariantProperties.MODEL, wheelModel));
+        multiPartGenerator.with(Condition.condition().term(BloodGrinderBlock.GRINDING, true), Variant.variant().with(VariantProperties.MODEL, grindingWheelModel));
 
         this.blockStateOutput.accept(multiPartGenerator);
     }
@@ -294,7 +318,6 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     protected void createNonTemplateBlocks() {
         Stream.of(
                 ModBlocks.ALTAR_CLEANSING,
-                ModBlocks.BLOOD_GRINDER,
                 ModBlocks.ALTAR_INFUSION,
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,

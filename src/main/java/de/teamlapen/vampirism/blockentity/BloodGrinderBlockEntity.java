@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.blockentity;
 
-import com.mojang.logging.LogUtils;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.blocks.BloodGrinderBlock;
 import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -41,7 +41,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -153,12 +152,18 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         }
 
         ItemStack inputStack = blockEntity.inputStack;
-        if (inputStack.isEmpty() || !isGrindable(inputStack)) return;
+        if (inputStack.isEmpty() || !isGrindable(inputStack)) {
+            updateGrindState(level, pos, false);
+            return;
+        }
 
         int blood = getBlood(inputStack);
         FluidTank fluidInventory = blockEntity.fluidInventory;
         int space = fluidInventory.getSpace();
-        if (space < blood && !fluidInventory.isEmpty()) return;
+        if (space < blood && !fluidInventory.isEmpty()) {
+            updateGrindState(level, pos, false);
+            return;
+        }
 
         int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, 4);
         blockEntity.fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
@@ -167,6 +172,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         level.playSound(null, pos, ModSounds.BLOOD_SQUEEZE.get(), SoundSource.BLOCKS, 0.5f + level.getRandom().nextFloat() / 4, 1.0f - level.getRandom().nextFloat() / 4);
 
         blockEntity.grindCooldownTime = GRIND_DELAY;
+        updateGrindState(level, pos, true);
         blockEntity.setChanged();
 
         /*
@@ -185,6 +191,13 @@ public class BloodGrinderBlockEntity extends BlockEntity {
             }
         }
          */
+    }
+
+    private static void updateGrindState(Level level, BlockPos pos, boolean isGrinding) {
+        BlockState current = level.getBlockState(pos);
+        if (current.getBlock() instanceof BloodGrinderBlock && current.getValue(BloodGrinderBlock.GRINDING) != isGrinding) {
+            level.setBlock(pos, current.setValue(BloodGrinderBlock.GRINDING, isGrinding), Block.UPDATE_CLIENTS);
+        }
     }
 
     public static void pourBloodDown(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
@@ -214,8 +227,6 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public static void clientTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
         //spawnGrindingParticles(level, pos, blockEntity);
     }
-
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void spawnGrindingParticles(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
         ModelData modelData = blockEntity.getModelData();

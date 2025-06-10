@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +30,11 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     public static final MapCodec<BloodGrinderBlock> CODEC = simpleCodec(BloodGrinderBlock::new);
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty GRINDING = BooleanProperty.create("grinding");
 
     public BloodGrinderBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(GRINDING, false));
     }
 
     @Override
@@ -88,6 +90,6 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING);
+        builder.add(FACING, GRINDING);
     }
 }
