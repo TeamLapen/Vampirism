@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -138,14 +137,17 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER)
-                .pattern(" Z ")
-                .pattern("YDY")
-                .pattern("YXY")
-                .define('Z', Blocks.HOPPER)
-                .define('Y', PLANKS)
-                .define('D', DIAMOND)
-                .define('X', IRON_INGOT)
-                .unlockedBy("has_hopper", has(Blocks.HOPPER))
+                .pattern("RIR")
+                .pattern("PSP")
+                .pattern("PIP")
+                .define('R', REDSTONE_DUST)
+                .define('I', IRON_INGOT)
+                .define('P', PLANKS)
+                .define('S', Blocks.STONE_SLAB)
+                .unlockedBy("has_redstone_dust", has(REDSTONE_DUST))
+                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
+                .unlockedBy("has_planks", has(PLANKS))
+                .unlockedBy("has_stone_slab", has(Blocks.STONE_SLAB))
                 .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_SIEVE)
                 .pattern("XQX")
@@ -514,6 +516,14 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE)
                 .requires(ModItems.INJECTION_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
                 .unlockedBy("has_injection", has(ModItems.INJECTION_EMPTY))
+                .save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.FABRIC_FILTER)
+                .pattern("SWS")
+                .define('S', STRING)
+                .define('W', WOOL)
+                .unlockedBy("has_string", has(STRING))
+                .unlockedBy("has_wool", has(WOOL))
                 .save(output);
 
         shapeless(RecipeCategory.MISC, Items.GLASS_BOTTLE)

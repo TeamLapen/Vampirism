@@ -269,6 +269,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.VAMPIRE_CLOTHING_BOOTS,
                 ModItems.VAMPIRE_CLOTHING_LEGS,
                 ModItems.VAMPIRE_CLOTHING_CROWN,
+                ModItems.FABRIC_FILTER,
                 ModItems.GARLIC_FINDER,
                 ModItems.DARK_SPRUCE_BOAT,
                 ModItems.CURSED_SPRUCE_BOAT,

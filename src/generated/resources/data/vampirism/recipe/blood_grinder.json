@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": "#c:gems/diamond",
-    "X": "#c:ingots/iron",
-    "Y": "#minecraft:planks",
-    "Z": "minecraft:hopper"
+    "I": "#c:ingots/iron",
+    "P": "#minecraft:planks",
+    "R": "#c:dusts/redstone",
+    "S": "minecraft:stone_slab"
   },
   "pattern": [
-    " Z ",
-    "YDY",
-    "YXY"
+    "RIR",
+    "PSP",
+    "PIP"
   ],
   "result": {
     "count": 1,

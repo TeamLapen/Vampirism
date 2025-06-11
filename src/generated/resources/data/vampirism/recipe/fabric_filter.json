@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "#c:strings",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "SWS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:fabric_filter"
+  }
+}

@@ -171,4 +171,7 @@ public abstract class VBlockModelGenerators extends BlockModelGenerators {
         return template.extend().renderType(renderType).build();
     }
 
+    protected static <T extends Comparable<T>> Condition.TerminalCondition stateCondition(Property<T> property, T value) {
+        return Condition.condition().term(property, value);
+    }
 }

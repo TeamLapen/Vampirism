@@ -196,6 +196,8 @@ public class ModCreativeTabs {
             add(VAMPIRE_MINION_UPGRADE_ENHANCED);
             add(VAMPIRE_MINION_UPGRADE_SPECIAL);
 
+            add(FABRIC_FILTER);
+
             add(FEEDING_ADAPTER);
             add(OBLIVION_POTION);
             add(GARLIC_FINDER);

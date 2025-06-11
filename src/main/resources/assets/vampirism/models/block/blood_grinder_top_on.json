@@ -3,6 +3,6 @@
 	"parent": "vampirism:block/blood_grinder_top",
 	"textures": {
 		"top": "vampirism:block/blood_grinder_top_on",
-		"top_side": "vampirism:block/blood_grinder_top_on"
+		"top_side": "vampirism:block/blood_grinder_side_top_on"
 	}
 }
