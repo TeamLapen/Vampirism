@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -14,24 +15,19 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import org.jetbrains.annotations.NotNull;
 
-/**
- * Stores blood and other liquids in a {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank}
- */
 @EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class BloodContainerBlockEntity extends NetworkedBlockEntity {
 
     public static final int CAPACITY = FluidType.BUCKET_VOLUME * 5;
 
-    public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
+    public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
     public ControllableFluidTank fluidInventory;
 
-    public BloodContainerBlockEntity(@NotNull BlockPos pos, BlockState state) {
-        super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, state);
+    public BloodContainerBlockEntity(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, blockState);
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> requestModelDataUpdate());
     }
 
@@ -59,7 +55,7 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
-                .with(FLUID, fluidInventory.getFluid())
+                .with(FLUID_AMOUNT, fluidInventory.getFluid().getAmount())
                 .build();
     }
 

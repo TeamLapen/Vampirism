@@ -12,10 +12,12 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -30,6 +32,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VertexUtils {
+
+    public static void renderFluidTank(Holder<Fluid> fluid, @Nullable Integer fluidAmount, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        renderFluidTank(new FluidStack(fluid, fluidAmount == null ? 0 : fluidAmount), capacity, translation, scale, fluidAlpha, poseStack, bufferSource, packedLight, packedOverlay);
+    }
 
     @SuppressWarnings("deprecation")
     public static void renderFluidTank(@Nullable FluidStack fluidStack, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {

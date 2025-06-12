@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.blockentity;
+package de.teamlapen.lib.lib.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -11,8 +11,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A class for block entities that require interaction with metadata used on client.
+ * IMPORTANT: Override {@code loadMetaData} and {@code saveMetaData} to make it save the variables that are added in {@code getModelData}.
+ */
 public abstract class NetworkedBlockEntity extends BlockEntity {
 
     public NetworkedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -31,7 +36,7 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
     }
 
     public void loadMetaData(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        loadAdditional(tag, lookupProvider);
+        //loadAdditional(tag, lookupProvider);
     }
 
     @Override
@@ -42,7 +47,7 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
     }
 
     public void saveMetaData(CompoundTag tag, HolderLookup.Provider registries) {
-        saveAdditional(tag, registries);
+        //saveAdditional(tag, registries);
     }
 
     @Override

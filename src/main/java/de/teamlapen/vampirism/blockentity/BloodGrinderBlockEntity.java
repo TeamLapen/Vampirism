@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -53,7 +54,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     public static final int PULL_DELAY = 8;
     public static final AABB PULL_REACH_AABB = Block.box(5.0, 16.0, 5.0, 11.0, 22.0, 11.0).toAabbs().getFirst();
 
-    public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
+    public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
     private final IItemHandler inputItemHandler;
     private final IItemHandler filterItemHandler;
@@ -106,7 +107,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
-                .with(FLUID, fluidInventory.getFluid())
+                .with(FLUID_AMOUNT, fluidInventory.getFluid().getAmount())
                 .build();
     }
 
