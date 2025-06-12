@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.util;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -22,7 +21,6 @@ public class FluidTankWithListener extends FluidTank {
         super(capacity, validator);
     }
 
-    @NotNull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         if (!drainable) return FluidStack.EMPTY;
@@ -42,7 +40,7 @@ public class FluidTankWithListener extends FluidTank {
         this.drainable = drainable;
     }
 
-    public @NotNull FluidTankWithListener setListener(IFluidTankListener listener) {
+    public FluidTankWithListener setListener(IFluidTankListener listener) {
         this.listener = listener;
         return this;
     }

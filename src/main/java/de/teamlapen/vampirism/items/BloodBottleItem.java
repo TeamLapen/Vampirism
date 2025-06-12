@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
@@ -33,7 +34,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
  */
 public class BloodBottleItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final int AMOUNT = 9;
+    public static final int AMOUNT = IBottleBlood.MAX_VALUE;
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = AMOUNT * MULTIPLIER;
 
@@ -67,10 +68,10 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
 
     @Override
     public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        for (int i = 0; i <= BloodBottleItem.AMOUNT; i++) {
+        for (int i = 0; i <= AMOUNT; i++) {
             ItemStack stack = getDefaultInstance();
             stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(i));
-            output.accept(stack, i == 0 || i == BloodBottleItem.AMOUNT ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+            output.accept(stack, i == 0 || i == AMOUNT ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
     }
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.BloodGrinderBlock;
@@ -12,10 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustColorTransitionOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -26,7 +23,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,14 +35,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class BloodGrinderBlockEntity extends BlockEntity {
+public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public static final String KEY_INPUT_STACK = "InputStack";
     public static final String KEY_FILTER_STACK = "FilterStack";
@@ -63,7 +58,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     private final IItemHandler inputItemHandler;
     private final IItemHandler filterItemHandler;
 
-    public FluidTank fluidInventory;
+    public ControllableFluidTank fluidInventory;
     public ItemStack inputStack;
     public ItemStack filterStack;
     private int grindCooldownTime = -1;
@@ -73,7 +68,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         super(ModBlockEntities.BLOOD_GRINDER.get(), pos, blockState);
         this.inputItemHandler = new InputHandler(this);
         this.filterItemHandler = new FilterInputHandler(this);
-        this.fluidInventory = new FluidTank(CAPACITY).setValidator(fluid -> fluid.is(ModFluids.BLOOD));
+        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> requestModelDataUpdate()).setAllowInput(false);
         this.inputStack = ItemStack.EMPTY;
         this.filterStack = ItemStack.EMPTY;
     }
@@ -106,6 +101,23 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         tag.put(KEY_FILTER_STACK, filterStack.saveOptional(registries));
         tag.putInt(KEY_GRIND_COOLDOWN_TIME, grindCooldownTime);
         tag.putInt(KEY_PULL_COOLDOWN_TIME, pullCooldownTime);
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.builder()
+                .with(FLUID, fluidInventory.getFluid())
+                .build();
+    }
+
+    @Override
+    public void loadMetaData(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        fluidInventory.readFromNBT(lookupProvider, tag);
+    }
+
+    @Override
+    public void saveMetaData(CompoundTag tag, HolderLookup.Provider registries) {
+        fluidInventory.writeToNBT(registries, tag);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
@@ -163,7 +175,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
     public static void processGrinding(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
         ItemStack inputStack = blockEntity.inputStack;
         ItemStack filterStack = blockEntity.filterStack;
-        FluidTank fluidInventory = blockEntity.fluidInventory;
+        ControllableFluidTank fluidInventory = blockEntity.fluidInventory;
 
         boolean canGrind = !inputStack.isEmpty() && isGrindable(inputStack);
         int blood = canGrind ? getBlood(inputStack) : 0;
@@ -190,7 +202,7 @@ public class BloodGrinderBlockEntity extends BlockEntity {
 
         int numberAllowedByFilter = Math.min(filterStack.getMaxDamage() - filterStack.getDamageValue(), 4);
         int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, numberAllowedByFilter);
-        fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
+        fluidInventory.doFill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         inputStack.shrink(numberAllowedToGrind);
 
         filterStack.setDamageValue(filterStack.getDamageValue() + numberAllowedToGrind);
@@ -247,134 +259,12 @@ public class BloodGrinderBlockEntity extends BlockEntity {
         });
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
-        //spawnGrindingParticles(level, pos, blockEntity);
-    }
-
-    /*
-    public static void spawnGrindingParticles(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
-        ModelData modelData = blockEntity.getModelData();
-        //FluidStack fluidStack = modelData.get(BloodGrinderBlockEntity.FLUID);
-        ItemStack itemStack = modelData.get(BloodGrinderBlockEntity.STACK_INSIDE);
-        Integer grindCooldown = modelData.get(BloodGrinderBlockEntity.GRIND_COOLDOWN);
-
-        if (!level.isClientSide || itemStack == null || itemStack.isEmpty() || grindCooldown == null || grindCooldown < 0)
-            return;
-
-        RandomSource random = level.getRandom();
-
-        double centerX = pos.getX() + 0.5;
-        double centerZ = pos.getZ() + 0.5;
-
-        for (int i = 0; i < 3; i++) {
-            double y = pos.getY() + random.nextInt(4, 12) / 16d;
-
-            double min = 0.0;
-            double max = 1.0;
-
-            double x = 0;
-            double z = 0;
-
-            int side = random.nextInt(4);
-            double offset = random.nextDouble();
-
-            switch (side) {
-                // North
-                case 0 -> {
-                    x = offset;
-                    z = min;
-                }
-                // South
-                case 1 -> {
-                    x = offset;
-                    z = max;
-                }
-                // West
-                case 2 -> {
-                    x = min;
-                    z = offset;
-                }
-                // East
-                case 3 -> {
-                    x = max;
-                    z = offset;
-                }
-            }
-
-            x += pos.getX();
-            z += pos.getZ();
-
-            double xSpeed = (x - centerX);
-            double zSpeed = (z - centerZ);
-            double ySpeed = -random.nextDouble();
-
-            //level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemStack), x, y, z, xSpeed, ySpeed, zSpeed);
-            level.addParticle(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + random.nextFloat() / 2), x, y, z, xSpeed, ySpeed, zSpeed);
-
-
-        RandomSource random = level.getRandom();
-
-        if (level instanceof ServerLevel serverLevel) {
-            for (int i = 0; i < 5; i++) {
-                double x = pos.getX() + random.nextInt(4, 14) / 16d;
-                double z = random.nextInt(4, 14) / 16d;
-
-                double xSpeed = random.nextDouble() / 2;
-                double zSpeed = random.nextDouble() / 2;
-                double ySpeed = random.nextDouble() * 2;
-                serverLevel.sendParticles(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + random.nextFloat() / 2), x, 0.0d, z, xSpeed, ySpeed, zSpeed);
-                serverLevel.sendParticles(null, new DustColorTransitionOptions(), false, false, x, y, z, 1, 8 / 16d, 8 / 16d, 8 / 16d, 10);
-            }
-        }
-        }
-    }
-     */
-
     public static boolean isGrindable(ItemStack stack) {
         return VampirismAPI.bloodConversionRegistry().canBeConverted(stack);
     }
 
     public static int getBlood(ItemStack stack) {
         return VampirismAPI.bloodConversionRegistry().getItemBlood(stack).blood();
-    }
-
-    @Override
-    public ModelData getModelData() {
-        return ModelData.builder()
-                .with(FLUID, fluidInventory.getFluid())
-                .build();
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        if (level != null) {
-            if (level.isClientSide) {
-                this.requestModelDataUpdate();
-            } else {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            }
-        }
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = super.getUpdateTag(registries);
-        fluidInventory.writeToNBT(registries, tag);
-        return tag;
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
-        fluidInventory.readFromNBT(lookupProvider, pkt.getTag());
-        setChanged();
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public static class InputHandler implements IItemHandler {

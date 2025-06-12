@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Range;
  */
 public interface IBottleBlood {
 
-    @Range(from = 0, to = 9)
+    int MAX_VALUE = 5;
+
+    @Range(from = 0, to = MAX_VALUE)
     int blood();
 }

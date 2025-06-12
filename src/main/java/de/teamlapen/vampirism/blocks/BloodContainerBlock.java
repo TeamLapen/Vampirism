@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -80,7 +79,7 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
     public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get(), 1);
         if (te != null) {
-            FluidStack fluid = ((BloodContainerBlockEntity) te).getFluid();
+            FluidStack fluid = ((BloodContainerBlockEntity) te).fluidInventory.getFluid();
             if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
                 stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
             }
@@ -95,7 +94,7 @@ public class BloodContainerBlock extends VampirismBlockContainer implements ModD
         if (!stack.isEmpty()) {
             BlockEntity tile = (worldIn.getBlockEntity(pos));
             if (tile instanceof BloodContainerBlockEntity) {
-                ((BloodContainerBlockEntity) tile).setFluidStack(fluid);
+                ((BloodContainerBlockEntity) tile).fluidInventory.setFluid(fluid);
                 tile.setChanged();
 
             }

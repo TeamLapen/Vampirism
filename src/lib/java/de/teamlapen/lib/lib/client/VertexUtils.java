@@ -5,12 +5,21 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -21,6 +30,25 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VertexUtils {
+
+    @SuppressWarnings("deprecation")
+    public static void renderFluidTank(@Nullable FluidStack fluidStack, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        if (fluidStack != null && !fluidStack.isEmpty()) {
+            float filled = Mth.clamp((float) fluidStack.getAmount() / capacity, 0f, 1f);
+            IClientFluidTypeExtensions fluidExtension = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+            Material material = new Material(TextureAtlas.LOCATION_BLOCKS, fluidExtension.getStillTexture(fluidStack));
+
+            poseStack.pushPose();
+
+            poseStack.translate(translation);
+            poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
+
+            VertexConsumer vertex = material.buffer(bufferSource, RenderType::entityTranslucent);
+            VertexUtils.addCube(vertex, poseStack, 1, filled, packedLight, packedOverlay, -1, fluidAlpha);
+
+            poseStack.popPose();
+        }
+    }
 
     public static void addCube(VertexConsumer builder, PoseStack poseStack,
                                float width, float height, int light, int overlay, int color) {

@@ -7,61 +7,33 @@
           "type": "minecraft:model",
           "model": "vampirism:item/blood_bottle_1"
         },
-        "threshold": 0.11
+        "threshold": 0.2
       },
       {
         "model": {
           "type": "minecraft:model",
           "model": "vampirism:item/blood_bottle_2"
         },
-        "threshold": 0.22
+        "threshold": 0.4
       },
       {
         "model": {
           "type": "minecraft:model",
           "model": "vampirism:item/blood_bottle_3"
         },
-        "threshold": 0.33
+        "threshold": 0.6
       },
       {
         "model": {
           "type": "minecraft:model",
           "model": "vampirism:item/blood_bottle_4"
         },
-        "threshold": 0.44
+        "threshold": 0.8
       },
       {
         "model": {
           "type": "minecraft:model",
           "model": "vampirism:item/blood_bottle_5"
-        },
-        "threshold": 0.55
-      },
-      {
-        "model": {
-          "type": "minecraft:model",
-          "model": "vampirism:item/blood_bottle_6"
-        },
-        "threshold": 0.66
-      },
-      {
-        "model": {
-          "type": "minecraft:model",
-          "model": "vampirism:item/blood_bottle_7"
-        },
-        "threshold": 0.77
-      },
-      {
-        "model": {
-          "type": "minecraft:model",
-          "model": "vampirism:item/blood_bottle_8"
-        },
-        "threshold": 0.88
-      },
-      {
-        "model": {
-          "type": "minecraft:model",
-          "model": "vampirism:item/blood_bottle_9"
         },
         "threshold": 0.99
       }

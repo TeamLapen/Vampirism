@@ -19,7 +19,7 @@ public class VReference {
     /**
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
-    public static final int FOOD_TO_FLUID_BLOOD = 100;
+    public static final int FOOD_TO_FLUID_BLOOD = 50;
 
     public static final Supplier<Fluid> BLOOD = DeferredHolder.create(Registries.FLUID, VResourceLocation.mod("blood"));
 

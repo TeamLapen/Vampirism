@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.BloodBottleItem;
 import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.items.component.OilContent;
 import net.minecraft.core.Holder;
@@ -60,6 +61,10 @@ public class ItemDataUtils {
         ItemStack itemStack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
         itemStack.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(blood));
         return itemStack;
+    }
+
+    public static ItemStack createFilledBloodBottle() {
+        return createBloodBottle(BloodBottleItem.AMOUNT);
     }
 
     public static ItemStack createFilledBloodContainer() {
