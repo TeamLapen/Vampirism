@@ -2,20 +2,17 @@ package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlockEntities;
-import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +30,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -87,25 +83,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
             }
         }
 
-        if (!FluidUtil.interactWithFluidHandler(player, hand, level, pos, hitResult.getDirection()) && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            FluidUtil.getFluidHandler(level, pos, hitResult.getDirection()).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
-                    ItemStack glass = player.getItemInHand(hand);
-                    ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1), fluidHandler, Integer.MAX_VALUE, player, true).getResult();
-                    if (bloodBottle.isEmpty()) {
-                        player.displayClientMessage(Component.translatable("text.vampirism.container.not_enough_blood"), true);
-                    } else {
-                        if (glass.getCount() > 1) {
-                            glass.shrink(1);
-                            player.setItemInHand(hand, glass);
-                            player.addItem(bloodBottle);
-                        } else {
-                            player.setItemInHand(hand, bloodBottle);
-                        }
-                    }
-                }
-            }));
-        }
+        BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection());
 
         return InteractionResult.SUCCESS;
     }

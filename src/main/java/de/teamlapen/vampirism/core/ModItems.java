@@ -148,7 +148,7 @@ public class ModItems {
     public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle",  props -> new BloodBottleItem(props.stacksTo(16).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle",  props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
     public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<BucketItem> IMPURE_BLOOD_BUCKET = ITEMS.registerItem("impure_blood_bucket",  props -> new BucketItem(ModFluids.IMPURE_BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1)));
 

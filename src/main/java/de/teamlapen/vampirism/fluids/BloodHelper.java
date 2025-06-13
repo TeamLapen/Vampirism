@@ -5,10 +5,14 @@ import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -51,7 +55,6 @@ public class BloodHelper {
      */
     public static int getBlood(@NotNull ItemStack stack) {
         return FluidUtil.getFluidContained(stack).map(FluidStack::getAmount).orElse(0);
-
     }
 
     public static int getBlood(@NotNull IFluidHandler cap) {
@@ -161,5 +164,26 @@ public class BloodHelper {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static void handleFluidItemBlockInteraction(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
+        if (!FluidUtil.interactWithFluidHandler(player, hand, level, pos, side) && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
+            FluidUtil.getFluidHandler(level, pos, side).ifPresent((fluidHandler -> {
+                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
+                    ItemStack glass = player.getItemInHand(hand);
+                    ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get()), fluidHandler, Integer.MAX_VALUE, player, true).getResult();
+
+                    if (!bloodBottle.isEmpty()) {
+                        if (glass.getCount() > 1) {
+                            glass.shrink(1);
+                            player.setItemInHand(hand, glass);
+                            player.addItem(bloodBottle);
+                        } else {
+                            player.setItemInHand(hand, bloodBottle);
+                        }
+                    }
+                }
+            }));
+        }
     }
 }

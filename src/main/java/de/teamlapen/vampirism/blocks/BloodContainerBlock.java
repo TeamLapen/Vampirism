@@ -4,11 +4,10 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
-import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -94,25 +93,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements ModDisplayIt
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!FluidUtil.interactWithFluidHandler(player, hand, level, pos, hitResult.getDirection()) && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            FluidUtil.getFluidHandler(level, pos, hitResult.getDirection()).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
-                    ItemStack glass = player.getItemInHand(hand);
-                    ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1), fluidHandler, Integer.MAX_VALUE, player, true).getResult();
-                    if (bloodBottle.isEmpty()) {
-                        player.displayClientMessage(Component.translatable("text.vampirism.container.not_enough_blood"), true);
-                    } else {
-                        if (glass.getCount() > 1) {
-                            glass.shrink(1);
-                            player.setItemInHand(hand, glass);
-                            player.addItem(bloodBottle);
-                        } else {
-                            player.setItemInHand(hand, bloodBottle);
-                        }
-                    }
-                }
-            }));
-        }
+        BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection());
         return InteractionResult.SUCCESS;
     }
 

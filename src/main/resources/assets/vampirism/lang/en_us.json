@@ -122,7 +122,6 @@
   "text.vampirism.fog_diffuser.booting": "Starting up",
   "text.vampirism.fog_diffuser.idle": "Inactive",
   "text.vampirism.fog_diffuser.active": "Running",
-  "text.vampirism.container.not_enough_blood": "Not enough blood",
   "text.vampirism.actions": "Actions",
   "text.vampirism.status": "Status",
   "text.vampirism.vision_disabled_by_config": "Vision is disabled by config",

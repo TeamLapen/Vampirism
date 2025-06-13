@@ -91,9 +91,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1170,33 +1170,26 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
-    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState blockState, @Nullable BlockEntity tileEntity) {
-        if (isRemote()) return;
-        if (getLevel() == 0) return;
-        if (!bloodStats.needsBlood()) return;
+    // TODO: Understand why doesn't it work with other fluid handlers rather than containers.
+    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity) {
+        if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
-        if (ModBlocks.BLOOD_CONTAINER.get() == blockState.getBlock()) {
-            if (tileEntity != null) {
-                Optional.ofNullable(tileEntity.getLevel()).map(tile -> tile.getCapability(Capabilities.FluidHandler.BLOCK, pos, blockState, tileEntity, null)).ifPresent(handler -> {
-                    int blood = 0;
+        Level level = blockEntity.getLevel();
+        if (level == null) return;
 
-                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-                    if (drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
-                        FluidStack drained = handler.drain((drainable.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, IFluidHandler.FluidAction.EXECUTE);
-                        if (!drained.isEmpty()) {
-                            blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
-                        }
-                    }
-                    if (blood > 0) {
-                        drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(blockState, pos));
-                    }
-                });
+        FluidUtil.getFluidHandler(level, pos, null).ifPresent(fluidHandler -> {
+            FluidStack want = new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD);
+            FluidStack allowed = fluidHandler.drain(want, IFluidHandler.FluidAction.SIMULATE);
+            int usable = (allowed.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD;
+            if (usable <= 0) return;
 
+            FluidStack drained = fluidHandler.drain(usable, IFluidHandler.FluidAction.EXECUTE);
+            int blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
+            if (blood > 0) {
+                drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(state, pos));
             }
-        }
-
-
+        });
     }
 
     /**
