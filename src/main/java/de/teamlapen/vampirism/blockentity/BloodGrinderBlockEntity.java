@@ -69,7 +69,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
         super(ModBlockEntities.BLOOD_GRINDER.get(), pos, blockState);
         this.inputItemHandler = new InputHandler(this);
         this.filterItemHandler = new FilterInputHandler(this);
-        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> requestModelDataUpdate()).setAllowInput(false);
+        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setAllowInput(false);
         this.inputStack = ItemStack.EMPTY;
         this.filterStack = ItemStack.EMPTY;
     }

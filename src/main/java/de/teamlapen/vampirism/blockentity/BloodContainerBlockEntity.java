@@ -15,6 +15,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
 @EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -24,11 +25,11 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
 
     public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
-    public ControllableFluidTank fluidInventory;
+    private final ControllableFluidTank fluidInventory;
 
     public BloodContainerBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, blockState);
-        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> requestModelDataUpdate());
+        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged());
     }
 
     @SubscribeEvent
@@ -67,5 +68,13 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
     @Override
     public void saveMetaData(CompoundTag tag, HolderLookup.Provider registries) {
         fluidInventory.writeToNBT(registries, tag);
+    }
+
+    public FluidStack getFluid() {
+        return fluidInventory.getFluid();
+    }
+
+    public void setFluid(FluidStack fluid) {
+        fluidInventory.setFluid(fluid);
     }
 }

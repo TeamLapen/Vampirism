@@ -67,10 +67,14 @@ public class ItemDataUtils {
         return createBloodBottle(BloodBottleItem.AMOUNT);
     }
 
-    public static ItemStack createFilledBloodContainer() {
+    public static ItemStack createBloodContainer(int blood) {
         ItemStack itemStack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get());
-        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
+        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), Math.clamp(blood, 0, BloodContainerBlockEntity.CAPACITY));
         itemStack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
         return itemStack;
+    }
+
+    public static ItemStack createFilledBloodContainer() {
+        return createBloodContainer(BloodContainerBlockEntity.CAPACITY);
     }
 }

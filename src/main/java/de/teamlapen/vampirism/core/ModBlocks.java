@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.data.provider.ModLootTableProvider;
+import de.teamlapen.vampirism.items.BloodContainerItem;
 import de.teamlapen.vampirism.items.PureLevelBlockItem;
 import de.teamlapen.vampirism.items.component.PureLevel;
 import de.teamlapen.vampirism.util.VampirismVoxelShapes;
@@ -69,7 +70,7 @@ public class ModBlocks {
     public static final DeferredBlock<AltarTipBlock> ALTAR_TIP = registerWithItem("altar_tip", AltarTipBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(1f).noOcclusion());
 
     public static final DeferredBlock<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(3f).noOcclusion());
-    public static final DeferredBlock<BloodContainerBlock> BLOOD_CONTAINER = registerWithItem("blood_container", BloodContainerBlock::new, () -> basicProperties().strength(1f).isViewBlocking(UtilLib::never).noOcclusion(), itemProps -> itemProps.stacksTo(1));
+    public static final DeferredBlock<BloodContainerBlock> BLOOD_CONTAINER = registerWithItem("blood_container", BloodContainerBlock::new, () -> basicProperties().strength(1f).isViewBlocking(UtilLib::never).noOcclusion(), BloodContainerItem::new);
     public static final DeferredBlock<BloodGrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", BloodGrinderBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
     public static final DeferredBlock<SieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", SieveBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(2.5f).sound(SoundType.WOOD).noOcclusion());
     public static final DeferredBlock<BloodInfuserBlock> INFUSER = registerWithItem("blood_infuser", BloodInfuserBlock::new);
