@@ -160,7 +160,7 @@ public class VampirismHUDOverlay {
 
         } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
-            if (ModBlocks.BLOOD_CONTAINER.get() == block.getBlock()) {
+            if (VampirePlayer.isBlockBiteable(Minecraft.getInstance().level, ((BlockHitResult) p).getBlockPos())) {
                 if (VampirePlayer.get(mc.player).wantsBlood()) {
                     BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
                     if (tile != null) {

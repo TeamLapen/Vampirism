@@ -268,6 +268,10 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
         return VampirismAPI.bloodConversionRegistry().getItemBlood(stack).blood();
     }
 
+    public static boolean isFilter(ItemStack stack) {
+        return stack.is(ModItems.FABRIC_FILTER);
+    }
+
     public static class InputHandler implements IItemHandler {
 
         private final BloodGrinderBlockEntity blockEntity;
@@ -415,7 +419,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return stack.is(ModItems.FABRIC_FILTER);
+            return isFilter(stack);
         }
     }
 }

@@ -166,24 +166,32 @@ public class BloodHelper {
         return ItemStack.EMPTY;
     }
 
-    public static void handleFluidItemBlockInteraction(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
-        if (!FluidUtil.interactWithFluidHandler(player, hand, level, pos, side) && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
-            FluidUtil.getFluidHandler(level, pos, side).ifPresent((fluidHandler -> {
-                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) {
-                    ItemStack glass = player.getItemInHand(hand);
-                    ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get()), fluidHandler, Integer.MAX_VALUE, player, true).getResult();
+    public static boolean handleFluidItemBlockInteraction(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
+        boolean interacted = FluidUtil.interactWithFluidHandler(player, hand, level, pos, side);
+        if (!interacted && stack.getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
+            interacted = FluidUtil.getFluidHandler(level, pos, side).map((fluidHandler -> {
+                if (!fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.BLOOD.get())) return false;
 
-                    if (!bloodBottle.isEmpty()) {
-                        if (glass.getCount() > 1) {
-                            glass.shrink(1);
-                            player.setItemInHand(hand, glass);
-                            player.addItem(bloodBottle);
-                        } else {
-                            player.setItemInHand(hand, bloodBottle);
-                        }
+                ItemStack glass = player.getItemInHand(hand);
+                ItemStack bloodBottle = FluidUtil.tryFillContainer(new ItemStack(ModItems.BLOOD_BOTTLE.get()), fluidHandler, Integer.MAX_VALUE, player, true).getResult();
+                if (bloodBottle.isEmpty()) return false;
+
+                if (player.getAbilities().instabuild) {
+                    player.addItem(bloodBottle);
+                } else {
+                    if (glass.getCount() > 1) {
+                        glass.shrink(1);
+                        player.setItemInHand(hand, glass);
+                        player.addItem(bloodBottle);
+                    } else {
+                        player.setItemInHand(hand, bloodBottle);
                     }
                 }
-            }));
+
+                return true;
+            })).orElse(false);
         }
+
+        return interacted;
     }
 }

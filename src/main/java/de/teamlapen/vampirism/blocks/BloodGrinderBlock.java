@@ -73,9 +73,9 @@ public class BloodGrinderBlock extends BaseEntityBlock {
         if (optionalBlockEntity.isPresent()) {
             BloodGrinderBlockEntity blockEntity = optionalBlockEntity.get();
 
-            if (heldItem.is(ModItems.FABRIC_FILTER) && blockEntity.filterStack.isEmpty()) {
+            if (BloodGrinderBlockEntity.isFilter(heldItem) && blockEntity.filterStack.isEmpty()) {
                 blockEntity.filterStack = heldItem.copyWithCount(1);
-                heldItem.shrink(1);
+                if (!player.getAbilities().instabuild) heldItem.shrink(1);
                 blockEntity.updateFilterState(level, pos);
                 blockEntity.setChanged();
 
@@ -83,16 +83,16 @@ public class BloodGrinderBlock extends BaseEntityBlock {
             }
         }
 
-        BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection());
-
-        return InteractionResult.SUCCESS;
+        return BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         return getBlockEntity(level, pos).filter(blockEntity -> !blockEntity.filterStack.isEmpty()).map(blockEntity -> {
-            if (!player.getInventory().add(blockEntity.filterStack)) {
-                player.drop(blockEntity.filterStack, false);
+            if (!player.getAbilities().instabuild) {
+                if (!player.getInventory().add(blockEntity.filterStack)) {
+                    player.drop(blockEntity.filterStack, false);
+                }
             }
             blockEntity.filterStack = ItemStack.EMPTY;
             blockEntity.updateFilterState(level, pos);

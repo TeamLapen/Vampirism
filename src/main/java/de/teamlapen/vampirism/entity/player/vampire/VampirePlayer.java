@@ -199,7 +199,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             VampirismAPI.vampireVisionRegistry().getVisionId(vision);
         }
         this.vision.activate(vision);
-
     }
 
     @Override
@@ -1170,7 +1169,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
-    // TODO: Understand why doesn't it work with other fluid handlers rather than containers.
     private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity) {
         if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
 
@@ -1190,6 +1188,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(state, pos));
             }
         });
+    }
+
+    /**
+     * Checks if the block is valid to suck blood from.
+     * Does NOT check reach distance and whether the player is in the right state to bite.
+     *
+     * @param pos The pos of the block to check.
+     */
+    public static boolean isBlockBiteable(@NotNull Level level, BlockPos pos) {
+        return FluidUtil.getFluidHandler(level, pos, null).map(handler -> handler.drain(new FluidStack(ModFluids.BLOOD.get(), 1), IFluidHandler.FluidAction.SIMULATE).getAmount() > 0).orElse(false);
     }
 
     /**
