@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModBlockEntities;
+import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,11 +24,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -50,15 +47,47 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         super(properties);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AltarInspirationBlockEntity(pos, state);
     }
 
+    @Nullable
     @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!player.isShiftKeyDown()) {
+            if (BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection())) {
+                player.awardStat(ModStats.INTERACT_WITH_ALTAR_INSPIRATION.get());
+
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof AltarInspirationBlockEntity altarBlockEntity) {
+            player.awardStat(ModStats.ALTAR_OF_INSPIRATION_RITUALS_PERFORMED.get());
+            altarBlockEntity.startRitual(player);
+
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -67,37 +96,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!stack.isEmpty()) {
-            Optional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
-            if (opt.isPresent()) {
-                AltarInspirationBlockEntity tileEntity = (AltarInspirationBlockEntity) worldIn.getBlockEntity(pos);
-                if (!player.isShiftKeyDown() && tileEntity != null) {
-                    player.awardStat(ModStats.INTERACT_WITH_ALTAR_INSPIRATION.get());
-                    FluidUtil.interactWithFluidHandler(player, InteractionHand.MAIN_HAND, worldIn, pos, hit.getDirection());
-                }
-                return InteractionResult.SUCCESS;
-            }
-        } else {
-            BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-            if (tileEntity instanceof AltarInspirationBlockEntity altar) {
-                player.awardStat(ModStats.ALTAR_OF_INSPIRATION_RITUALS_PERFORMED.get());
-                altar.startRitual(player);
-            }
-        }
-
-        return InteractionResult.SUCCESS;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationBlockEntity::serverTick);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

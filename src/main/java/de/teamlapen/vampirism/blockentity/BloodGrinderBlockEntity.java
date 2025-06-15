@@ -50,7 +50,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     public static final String KEY_PULL_COOLDOWN_TIME = "PullCooldown";
 
     public static final int CAPACITY = FluidType.BUCKET_VOLUME * 2;
-    public static final int GRIND_DELAY = 300;
+    public static final int GRIND_DELAY = 400;
     public static final int PULL_DELAY = 8;
     public static final AABB PULL_REACH_AABB = Block.box(5.0, 16.0, 5.0, 11.0, 22.0, 11.0).toAabbs().getFirst();
 
