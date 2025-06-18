@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -193,5 +196,21 @@ public class BloodHelper {
         }
 
         return interacted;
+    }
+
+    public static boolean isConvertibleToBlood(FluidStack fluid) {
+        return isConvertibleToBlood(fluid.getFluid());
+    }
+
+    public static boolean isConvertibleToBlood(Fluid fluid) {
+        return VampirismAPI.bloodConversionRegistry().hasConversion(fluid);
+    }
+
+    public static IFluidBloodConversion getBloodConversion(FluidStack fluid) {
+        return getBloodConversion(fluid.getFluid());
+    }
+
+    public static IFluidBloodConversion getBloodConversion(Fluid fluid) {
+        return VampirismAPI.bloodConversionRegistry().getFluidConversion(fluid);
     }
 }

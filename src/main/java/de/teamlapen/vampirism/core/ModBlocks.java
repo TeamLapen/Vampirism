@@ -72,7 +72,7 @@ public class ModBlocks {
     public static final DeferredBlock<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(3f).noOcclusion());
     public static final DeferredBlock<BloodContainerBlock> BLOOD_CONTAINER = registerWithItem("blood_container", BloodContainerBlock::new, () -> basicProperties().strength(1f).isViewBlocking(UtilLib::never).noOcclusion(), BloodContainerItem::new);
     public static final DeferredBlock<BloodGrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", BloodGrinderBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(5).sound(SoundType.METAL).noOcclusion());
-    public static final DeferredBlock<SieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", SieveBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(2.5f).sound(SoundType.WOOD).noOcclusion());
+    public static final DeferredBlock<BloodSieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", BloodSieveBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(2.5f).sound(SoundType.WOOD).noOcclusion());
     public static final DeferredBlock<BloodInfuserBlock> INFUSER = registerWithItem("blood_infuser", BloodInfuserBlock::new);
 
     public static final DeferredBlock<LiquidBlock> BLOOD = registerBlock("blood", props -> new LiquidBlock(ModFluids.BLOOD.get(), props), () -> copyProperties(Blocks.WATER).mapColor(MapColor.CRIMSON_HYPHAE));

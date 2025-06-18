@@ -16,7 +16,7 @@ public class MigrationData {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
         fixSkillsHunter(new Mapping(HunterSkills.SKILLS));
         fixPotions(new Mapping(ModPotions.POTIONS));
-        fixTiles(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
+        fixBlockEntities(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
         fixItems(new Mapping(ModItems.ITEMS));
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
@@ -51,8 +51,9 @@ public class MigrationData {
         mapping.remap("vampirism:very_strong_harming", "strong_harming");
     }
 
-    private static void fixTiles(@NotNull Mapping mapping) {
+    private static void fixBlockEntities(@NotNull Mapping mapping) {
         mapping.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
+        mapping.remap("vampirism:sieve", "vampirism:blood_sieve");
     }
 
     private static void fixItems(@NotNull Mapping mapping) {

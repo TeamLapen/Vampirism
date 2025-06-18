@@ -24,7 +24,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -40,6 +42,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.*;
 
 @EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
@@ -67,8 +70,11 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public BloodGrinderBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_GRINDER.get(), pos, blockState);
-        this.inputItemHandler = new InputHandler(this);
-        this.filterItemHandler = new FilterInputHandler(this);
+        this.inputItemHandler = new SingleItemHandler<>(this, blockEntity -> blockEntity.inputStack, (blockEntity, stack) -> blockEntity.inputStack = stack, BloodGrinderBlockEntity::isGrindable, Item.ABSOLUTE_MAX_STACK_SIZE, this::setChanged);
+        this.filterItemHandler = new SingleItemHandler<>(this, blockEntity -> blockEntity.filterStack, (blockEntity, stack) -> blockEntity.filterStack = stack, BloodGrinderBlockEntity::isFilter, 1, () -> {
+            updateFilterState(level, worldPosition);
+            setChanged();
+        });
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setAllowInput(false);
         this.inputStack = ItemStack.EMPTY;
         this.filterStack = ItemStack.EMPTY;
@@ -81,7 +87,10 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
             if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
             return null;
         });
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> blockEntity.fluidInventory);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return null;
+            return blockEntity.fluidInventory;
+        });
     }
 
     @Override
@@ -201,12 +210,13 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
             return;
         }
 
-        int numberAllowedByFilter = Math.min(filterStack.getMaxDamage() - filterStack.getDamageValue(), 4);
+        // The durability of filters is multiplied by 100 for parity with the blood sieve, so it must be considered
+        int numberAllowedByFilter = Mth.clamp((int) Math.ceil((double) (filterStack.getMaxDamage() - filterStack.getDamageValue()) / 100), 0, 4);
         int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, numberAllowedByFilter);
         fluidInventory.doFill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         inputStack.shrink(numberAllowedToGrind);
 
-        filterStack.setDamageValue(filterStack.getDamageValue() + numberAllowedToGrind);
+        filterStack.setDamageValue(filterStack.getDamageValue() + numberAllowedToGrind * 100);
         if (filterStack.isBroken()) {
             blockEntity.filterStack = ItemStack.EMPTY;
         }
@@ -227,12 +237,15 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     }
 
     public void updateFilterState(@Nullable Level level, BlockPos pos) {
+        updateFilterState(level, pos, BloodGrinderBlock.HAS_FILTER, !filterStack.isEmpty() && !filterStack.isBroken());
+    }
+
+    public static void updateFilterState(@Nullable Level level, BlockPos pos, BooleanProperty property, boolean hasFilter) {
         if (level == null) return;
 
-        boolean hasFilter = !filterStack.isEmpty() && !filterStack.isBroken();
         BlockState current = level.getBlockState(pos);
-        if (current.getBlock() instanceof BloodGrinderBlock && current.getValue(BloodGrinderBlock.HAS_FILTER) != hasFilter) {
-            level.setBlock(pos, current.setValue(BloodGrinderBlock.HAS_FILTER, hasFilter), Block.UPDATE_CLIENTS);
+        if (current.hasProperty(property) && current.getValue(property) != hasFilter) {
+            level.setBlock(pos, current.setValue(property, hasFilter), Block.UPDATE_CLIENTS);
         }
     }
 
@@ -272,12 +285,22 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
         return stack.is(ModItems.FABRIC_FILTER);
     }
 
-    public static class InputHandler implements IItemHandler {
+    public static class SingleItemHandler<T extends BlockEntity> implements IItemHandler {
 
-        private final BloodGrinderBlockEntity blockEntity;
+        private final T blockEntity;
+        private final Function<T, ItemStack> getter;
+        private final BiConsumer<T, ItemStack> setter;
+        private final Predicate<ItemStack> validator;
+        private final int slotLimit;
+        private final Runnable onChanged;
 
-        public InputHandler(BloodGrinderBlockEntity blockEntity) {
+        public SingleItemHandler(T blockEntity, Function<T, ItemStack> getter, BiConsumer<T, ItemStack> setter, Predicate<ItemStack> validator, int slotLimit, Runnable onChanged) {
             this.blockEntity = blockEntity;
+            this.getter = getter;
+            this.setter = setter;
+            this.validator = validator;
+            this.slotLimit = slotLimit;
+            this.onChanged = onChanged;
         }
 
         @Override
@@ -287,38 +310,35 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
         @Override
         public ItemStack getStackInSlot(int slot) {
-            return blockEntity.inputStack;
+            return getter.apply(blockEntity);
         }
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            ItemStack inputStack = blockEntity.inputStack;
-            if (stack.isEmpty() || !isItemValid(slot, stack)) {
-                return stack;
-            }
+            if (stack.isEmpty() || !validator.test(stack)) return stack;
 
-            int maxInsert = getStackLimit(stack);
+            ItemStack insideStack = getter.apply(blockEntity);
+            int maxInsert = Math.min(slotLimit, stack.getMaxStackSize());
             ItemStack remainder = stack.copy();
 
-            if (inputStack.isEmpty()) {
+            if (insideStack.isEmpty()) {
                 int insertAmount = Math.min(stack.getCount(), maxInsert);
                 if (!simulate) {
-                    blockEntity.inputStack = stack.copyWithCount(insertAmount);
-                    blockEntity.setChanged();
+                    setter.accept(blockEntity, stack.copyWithCount(insertAmount));
+                    onChanged.run();
                 }
                 remainder.shrink(insertAmount);
-            } else if (ItemStack.isSameItemSameComponents(stack, inputStack)) {
-                int space = maxInsert - inputStack.getCount();
+            } else if (ItemStack.isSameItemSameComponents(insideStack, stack)) {
+                int space = maxInsert - insideStack.getCount();
                 if (space <= 0) return stack;
 
                 int insertAmount = Math.min(stack.getCount(), space);
                 if (!simulate) {
-                    blockEntity.inputStack.grow(insertAmount);
-                    blockEntity.setChanged();
+                    insideStack.grow(insertAmount);
+                    setter.accept(blockEntity, insideStack);
+                    onChanged.run();
                 }
                 remainder.shrink(insertAmount);
-            } else {
-                return stack;
             }
 
             return remainder.isEmpty() ? ItemStack.EMPTY : remainder;
@@ -326,21 +346,20 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            ItemStack inputStack = blockEntity.inputStack;
-            if (amount <= 0 || inputStack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
+            ItemStack insideStack = getter.apply(blockEntity);
+            if (amount <= 0 || insideStack.isEmpty()) return ItemStack.EMPTY;
 
-            int toExtract = Math.min(amount, inputStack.getCount());
-            ItemStack extracted = inputStack.copyWithCount(toExtract);
+            int extractAmount = Math.min(amount, insideStack.getCount());
+            ItemStack extracted = insideStack.copyWithCount(extractAmount);
 
             if (!simulate) {
-                if (toExtract == inputStack.getCount()) {
-                    blockEntity.inputStack = ItemStack.EMPTY;
+                if (extractAmount == insideStack.getCount()) {
+                    setter.accept(blockEntity, ItemStack.EMPTY);
                 } else {
-                    blockEntity.inputStack.shrink(toExtract);
+                    insideStack.shrink(extractAmount);
+                    setter.accept(blockEntity, insideStack);
                 }
-                blockEntity.setChanged();
+                onChanged.run();
             }
 
             return extracted;
@@ -348,78 +367,12 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
         @Override
         public int getSlotLimit(int slot) {
-            return Item.ABSOLUTE_MAX_STACK_SIZE;
-        }
-
-        protected int getStackLimit(ItemStack stack) {
-            return Math.min(getSlotLimit(0), stack.getMaxStackSize());
+            return slotLimit;
         }
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return isGrindable(stack);
-        }
-    }
-
-    public static class FilterInputHandler implements IItemHandler {
-
-        private final BloodGrinderBlockEntity blockEntity;
-
-        public FilterInputHandler(BloodGrinderBlockEntity blockEntity) {
-            this.blockEntity = blockEntity;
-        }
-
-        @Override
-        public int getSlots() {
-            return 1;
-        }
-
-        @Override
-        public ItemStack getStackInSlot(int slot) {
-            return blockEntity.filterStack;
-        }
-
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (stack.isEmpty() || !stack.isDamageableItem()) return stack;
-
-            ItemStack filterStack = blockEntity.filterStack;
-
-            if (filterStack.isEmpty()) {
-                if (!simulate) {
-                    blockEntity.filterStack = stack.copyWithCount(1);
-                    blockEntity.updateFilterState(blockEntity.level, blockEntity.worldPosition);
-                    blockEntity.setChanged();
-                }
-                return stack.copyWithCount(stack.getCount() - 1);
-            }
-
-            return stack;
-        }
-
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (blockEntity.filterStack.isEmpty() || amount <= 0) return ItemStack.EMPTY;
-
-            ItemStack extracted = blockEntity.filterStack.copy();
-
-            if (!simulate) {
-                blockEntity.filterStack = ItemStack.EMPTY;
-                blockEntity.updateFilterState(blockEntity.level, blockEntity.worldPosition);
-                blockEntity.setChanged();
-            }
-
-            return extracted;
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return isFilter(stack);
+            return validator.test(stack);
         }
     }
 }

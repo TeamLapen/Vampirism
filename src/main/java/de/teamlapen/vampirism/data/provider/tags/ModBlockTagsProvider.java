@@ -155,6 +155,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModBlockTags.PURPLE_STONE_TILES).add(ModBlocks.PURPLE_STONE_TILES.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
         tag(ModBlockTags.NO_SPAWN).addTag(ModBlockTags.DARK_STONE);
         tag(ModBlockTags.VAMPIRE_SPAWN).addTags(ModBlockTags.DARK_STONE_BRICKS, ModBlockTags.COBBLED_DARK_STONE, ModBlockTags.POLISHED_DARK_STONE, ModBlockTags.DARK_STONE_TILES);
+        tag(ModBlockTags.FORCE_FLUID).add(ModBlocks.BLOOD_CONTAINER.get());
         tag(Tags.Blocks.STONES).add(ModBlocks.DARK_STONE.get(), ModBlocks.INFESTED_DARK_STONE.get(), ModBlocks.POLISHED_DARK_STONE.get());
         tag(BlockTags.WALLS).add(ModBlocks.DARK_STONE_BRICK_WALL.get(), ModBlocks.POLISHED_DARK_STONE_WALL.get(), ModBlocks.COBBLED_DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_WALL.get(), ModBlocks.DARK_STONE_TILES_WALL.get(), ModBlocks.PURPLE_STONE_BRICK_WALL.get(), ModBlocks.PURPLE_STONE_TILES_WALL.get());
         tag(BlockTags.STAIRS).add(ModBlocks.DARK_STONE_BRICK_STAIRS.get(), ModBlocks.POLISHED_DARK_STONE_STAIRS.get(), ModBlocks.COBBLED_DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_STAIRS.get(), ModBlocks.DARK_STONE_TILES_STAIRS.get(), ModBlocks.PURPLE_STONE_BRICK_STAIRS.get(), ModBlocks.PURPLE_STONE_TILES_STAIRS.get());

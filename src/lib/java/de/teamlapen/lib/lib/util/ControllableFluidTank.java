@@ -1,5 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
@@ -12,6 +14,7 @@ import java.util.function.Predicate;
 public class ControllableFluidTank extends FluidTank {
 
     private Consumer<FluidStack> onFluidChanged;
+    private String saveKey = "Fluid";
     private boolean allowInput = true;
     private boolean allowOutput = true;
 
@@ -25,6 +28,11 @@ public class ControllableFluidTank extends FluidTank {
 
     public ControllableFluidTank setOnFluidChanged(Consumer<FluidStack> onFluidChanged) {
         this.onFluidChanged = onFluidChanged;
+        return this;
+    }
+
+    public ControllableFluidTank setSaveKey(String saveKey) {
+        this.saveKey = saveKey;
         return this;
     }
 
@@ -50,19 +58,38 @@ public class ControllableFluidTank extends FluidTank {
         return allowOutput;
     }
 
+    public String getSaveKey() {
+        return saveKey;
+    }
+
+    @Override
+    public FluidTank readFromNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        fluid = FluidStack.parseOptional(lookupProvider, nbt.getCompound(getSaveKey()));
+        return this;
+    }
+
+    @Override
+    public CompoundTag writeToNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        if (!fluid.isEmpty()) {
+            nbt.put(getSaveKey(), fluid.save(lookupProvider));
+        }
+
+        return nbt;
+    }
+
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        return allowInput ? super.fill(resource, action) : 0;
+        return isInputAllowed() ? super.fill(resource, action) : 0;
     }
 
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        return allowOutput ? super.drain(resource, action) : FluidStack.EMPTY;
+        return isOutputAllowed() ? super.drain(resource, action) : FluidStack.EMPTY;
     }
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        return allowOutput ? super.drain(maxDrain, action) : FluidStack.EMPTY;
+        return isOutputAllowed() ? super.drain(maxDrain, action) : FluidStack.EMPTY;
     }
 
     public int doFill(FluidStack resource, FluidAction action) {
@@ -80,12 +107,12 @@ public class ControllableFluidTank extends FluidTank {
     @Override
     protected void onContentsChanged() {
         super.onContentsChanged();
-        onFluidChanged.accept(getFluid());
+        getOnFluidChanged().accept(getFluid());
     }
 
     @Override
     public void setFluid(FluidStack stack) {
         super.setFluid(stack);
-        onFluidChanged.accept(stack);
+        getOnFluidChanged().accept(stack);
     }
 }

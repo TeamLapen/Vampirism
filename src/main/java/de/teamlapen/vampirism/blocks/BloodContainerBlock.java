@@ -39,7 +39,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements ModDisplayIt
 
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 
-    protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 16, 14);
+    private static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 16, 14);
 
     public BloodContainerBlock(Properties properties) {
         super(properties);

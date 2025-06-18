@@ -39,6 +39,8 @@ public class ModBlockTags {
     public static final TagKey<Block> NO_SPAWN = tag("no_spawn");
     public static final TagKey<Block> VAMPIRE_SPAWN = tag("vampire_spawn");
 
+    public static final TagKey<Block> FORCE_FLUID = tag("force_fluid");
+
     public static final TagKey<Block> REMAINS = tag("remains");
     public static final TagKey<Block> ACTIVE_REMAINS = tag("active_remains");
     public static final TagKey<Block> VULNERABLE_REMAINS = tag("vulnerable_remains");

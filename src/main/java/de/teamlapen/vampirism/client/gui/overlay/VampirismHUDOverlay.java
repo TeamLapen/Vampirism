@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,7 +13,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
@@ -24,9 +24,11 @@ import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -116,75 +118,73 @@ public class VampirismHUDOverlay {
 
     @SubscribeEvent
     public void onRenderCrosshair(RenderGuiLayerEvent.@NotNull Pre event) {
+        if (event.getName() != VanillaGuiLayers.CROSSHAIR) return;
 
-        if (event.getName() != VanillaGuiLayers.CROSSHAIR || mc.player == null || !mc.player.isAlive()) {
-            return;
-        }
+        LocalPlayer player = mc.player;
+        HitResult hit = mc.hitResult;
+        if (player == null || !player.isAlive() || hit == null) return;
 
-        HitResult p = Minecraft.getInstance().hitResult;
+        Window window = mc.getWindow();
 
-        if (p != null && p.getType() == HitResult.Type.ENTITY) {
-            Entity entity = ((EntityHitResult) p).getEntity();
-            if (!entity.isInvisible()) {
-                VampirismPlayerAttributes atts = VampirismPlayerAttributes.get(mc.player);
-                if (atts.vampireLevel > 0 && !mc.player.isSpectator() && !atts.getVampSpecial().bat) {
-                    VampirePlayer vampire = VampirePlayer.get(mc.player);
-                    Optional<? extends IBiteableEntity> biteableOpt;
-                    biteableOpt = switch (entity) {
+        if (hit instanceof EntityHitResult entityHit) {
+            Entity targetEntity = entityHit.getEntity();
+            if (!targetEntity.isInvisibleTo(player)) {
+                VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(player);
+
+                if (attributes.vampireLevel > 0 && !player.isSpectator() && !attributes.getVampSpecial().bat) {
+                    VampirePlayer vampire = VampirePlayer.get(player);
+                    Optional<? extends IBiteableEntity> biteableOpt = switch (targetEntity) {
                         case IBiteableEntity biteableEntity -> Optional.of(biteableEntity);
-                        case PathfinderMob pathfinderMob when pathfinderMob.isAlive() -> ExtendedCreature.getSafe(pathfinderMob);
-                        case Player player -> Optional.of(VampirePlayer.get(player));
+                        case PathfinderMob mob when mob.isAlive() -> ExtendedCreature.getSafe(mob);
+                        case Player targetPlayer -> Optional.of(VampirePlayer.get(targetPlayer));
                         default -> Optional.empty();
                     };
-                    biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(vampire)).ifPresent(biteable -> {
-                        int color = ARGB.color(255,0,0);
-                        if (entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
-                            color = ARGB.color(9, 144, 34);
-                        }
-                        renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                    biteableOpt.filter(biteable -> biteable.canBeBitten(vampire)).ifPresent(biteable -> {
+                        int color = (targetEntity instanceof IHunterMob || ExtendedCreature.getSafe(targetEntity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
+                                ? ARGB.color(9, 144, 34)
+                                : ARGB.color(255, 0, 0);
+                        renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                         event.setCanceled(true);
                     });
-
                 }
-                if (atts.hunterLevel > 0 && !mc.player.isSpectator() && mc.player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
-                    if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
-                        if (StakeItem.canKillInstantly((LivingEntity) entity, mc.player)) {
-                            if (((LivingEntity) entity).getHealth() > 0) {
-                                this.renderStakeInstantKill(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight());
-                                event.setCanceled(true);
-                            }
+
+                if (attributes.hunterLevel > 0 && !player.isSpectator() && player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
+                    if (targetEntity instanceof LivingEntity livingTargetEntity && targetEntity instanceof IVampireMob && StakeItem.canKillInstantly(livingTargetEntity, player)) {
+                        if (StakeItem.canKillInstantly(livingTargetEntity, player) && livingTargetEntity.getHealth() > 0) {
+                            this.renderStakeInstantKill(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight());
+                            event.setCanceled(true);
                         }
                     }
                 }
             }
+        } else if (hit instanceof BlockHitResult blockHit) {
+            ClientLevel level = mc.level;
+            if (level == null) return;
 
-        } else if (p != null && p.getType() == HitResult.Type.BLOCK) {
-            BlockState block = Minecraft.getInstance().level.getBlockState(((BlockHitResult) p).getBlockPos());
-            if (VampirePlayer.isBlockBiteable(Minecraft.getInstance().level, ((BlockHitResult) p).getBlockPos())) {
-                if (VampirePlayer.get(mc.player).wantsBlood()) {
-                    BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(((BlockHitResult) p).getBlockPos());
-                    if (tile != null) {
-                        Optional.ofNullable(Minecraft.getInstance().level.getCapability(Capabilities.FluidHandler.BLOCK, ((BlockHitResult) p).getBlockPos(), block, tile, null)).ifPresent(handler -> {
-                            if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
-                                renderBloodFangs(event.getGuiGraphics(), this.mc.getWindow().getGuiScaledWidth(), this.mc.getWindow().getGuiScaledHeight(), 1, ARGB.color(255,0,0));
-                                event.setCanceled(true);
-                            }
-                        });
-                    }
+            BlockPos pos = blockHit.getBlockPos();
+            BlockState state = level.getBlockState(pos);
+
+            if (VampirePlayer.isBlockBiteable(level, pos, blockHit.getDirection()) && VampirePlayer.get(player).wantsBlood()) {
+                BlockEntity blockEntity = level.getBlockEntity(pos);
+                if (blockEntity != null) {
+                    Optional.ofNullable(level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, blockEntity, null)).ifPresent(handler -> {
+                        if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
+                            renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
+                            event.setCanceled(true);
+                        }
+                    });
                 }
             }
         }
-        //Render blood feed progress
-        Options gamesettings = this.mc.options;
-        if (gamesettings.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
 
-            float progress = VampirePlayer.get(mc.player).getFeedProgress();
+        // Blood feed progress
+        if (mc.options.getCameraType().isFirstPerson() && mc.gameMode != null && mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
+            float progress = VampirePlayer.get(player).getFeedProgress();
             if (progress > 0) {
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 if (progress <= 1.0F) {
-                    int x = this.mc.getWindow().getGuiScaledWidth() / 2 - 8;
-                    int y = this.mc.getWindow().getGuiScaledHeight() / 2 - 7 + 16;
-
+                    int x = window.getGuiScaledWidth() / 2 - 8;
+                    int y = window.getGuiScaledHeight() / 2 + 9;
                     int l = (int) (progress * 14.0F) + 2;
 
                     event.getGuiGraphics().blitSprite(RenderType::guiTextured, PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);

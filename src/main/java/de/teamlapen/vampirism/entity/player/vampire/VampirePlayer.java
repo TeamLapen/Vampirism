@@ -54,6 +54,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -215,7 +216,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * <p>
      * Named like this to match biteEntity
      */
-    public void biteBlock(@NotNull BlockPos pos) {
+    public void biteBlock(@NotNull BlockPos pos, @NotNull Direction side) {
         if (player.isSpectator()) {
             LOGGER.warn("Player can't bite in spectator mode");
             return;
@@ -224,7 +225,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach {}", pos);
         } else {
-            biteBlock(pos, player.level().getBlockState(pos), player.level().getBlockEntity(pos));
+            biteBlock(pos, player.level().getBlockState(pos), side, player.level().getBlockEntity(pos));
         }
     }
 
@@ -1169,14 +1170,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
-    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity) {
+    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @NotNull Direction side, @Nullable BlockEntity blockEntity) {
         if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         Level level = blockEntity.getLevel();
         if (level == null) return;
 
-        FluidUtil.getFluidHandler(level, pos, null).ifPresent(fluidHandler -> {
+        FluidUtil.getFluidHandler(level, pos, side).ifPresent(fluidHandler -> {
             FluidStack want = new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD);
             FluidStack allowed = fluidHandler.drain(want, IFluidHandler.FluidAction.SIMULATE);
             int usable = (allowed.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD;
@@ -1196,8 +1197,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      *
      * @param pos The pos of the block to check.
      */
-    public static boolean isBlockBiteable(@NotNull Level level, BlockPos pos) {
-        return FluidUtil.getFluidHandler(level, pos, null).map(handler -> handler.drain(new FluidStack(ModFluids.BLOOD.get(), 1), IFluidHandler.FluidAction.SIMULATE).getAmount() > 0).orElse(false);
+    public static boolean isBlockBiteable(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction side) {
+        return FluidUtil.getFluidHandler(level, pos, side).map(handler -> handler.drain(new FluidStack(ModFluids.BLOOD.get(), 1), IFluidHandler.FluidAction.SIMULATE).getAmount() > 0).orElse(false);
     }
 
     /**

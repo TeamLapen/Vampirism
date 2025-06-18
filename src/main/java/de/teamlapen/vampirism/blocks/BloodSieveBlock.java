@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
+import de.teamlapen.vampirism.blockentity.BloodSieveBlockEntity;
 import de.teamlapen.vampirism.core.ModBlockEntities;
-import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -15,10 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,24 +24,33 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public class BloodGrinderBlock extends BaseEntityBlock {
+public class BloodSieveBlock extends BaseEntityBlock {
 
-    public static final MapCodec<BloodGrinderBlock> CODEC = simpleCodec(BloodGrinderBlock::new);
+    public static final MapCodec<BloodSieveBlock> CODEC = simpleCodec(BloodSieveBlock::new);
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty GRINDING = BooleanProperty.create("grinding");
     public static final BooleanProperty HAS_FILTER = BooleanProperty.create("has_filter");
 
-    public BloodGrinderBlock(Properties properties) {
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(4, 0, 4, 12, 1, 12),
+            Block.box(4, 15, 4, 12, 16, 12),
+            Block.box(5, 1, 5, 11, 15, 11),
+            Block.box(2, 5, 2, 14, 11, 14)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+    public BloodSieveBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false).setValue(GRINDING, false).setValue(HAS_FILTER, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(HAS_FILTER, false));
     }
 
     @Override
@@ -55,22 +61,22 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new BloodGrinderBlockEntity(pos, state);
+        return new BloodSieveBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.BLOOD_SIEVE.get(), BloodSieveBlockEntity::serverTick);
     }
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack heldItem = player.getItemInHand(hand);
 
-        Optional<BloodGrinderBlockEntity> optionalBlockEntity = getBlockEntity(level, pos);
+        Optional<BloodSieveBlockEntity> optionalBlockEntity = getBlockEntity(level, pos);
         if (optionalBlockEntity.isPresent()) {
-            BloodGrinderBlockEntity blockEntity = optionalBlockEntity.get();
+            BloodSieveBlockEntity blockEntity = optionalBlockEntity.get();
 
             if (BloodGrinderBlockEntity.isFilter(heldItem) && blockEntity.filterStack.isEmpty()) {
                 blockEntity.filterStack = heldItem.copyWithCount(1);
@@ -82,7 +88,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
             }
         }
 
-        return BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -104,33 +110,23 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(blockEntity.inputStack, blockEntity.filterStack)));
+            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(blockEntity.filterStack)));
             super.onRemove(state, level, pos, newState, movedByPiston);
         }
     }
 
-    protected Optional<BloodGrinderBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
+    protected Optional<BloodSieveBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BloodGrinderBlockEntity diffuser) {
+        if (blockEntity instanceof BloodSieveBlockEntity diffuser) {
             return Optional.of(diffuser);
         }
         return Optional.empty();
     }
 
-    @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
-        if (level.isClientSide) return;
-
-        boolean wasPowered = state.getValue(POWERED);
-        if (wasPowered != level.hasNeighborSignal(pos)) {
-            level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
-        }
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
@@ -147,6 +143,16 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, POWERED, GRINDING, HAS_FILTER);
+        builder.add(FACING, HAS_FILTER);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

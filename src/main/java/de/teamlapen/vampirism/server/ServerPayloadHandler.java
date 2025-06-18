@@ -195,7 +195,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             VampirePlayer vampire = VampirePlayer.get(context.player());
             msg.target().ifLeft(vampire::biteEntity);
-            msg.target().ifRight(vampire::biteBlock);
+            msg.target().ifRight(blockContact -> vampire.biteBlock(blockContact.pos(), blockContact.side()));
         });
     }
 

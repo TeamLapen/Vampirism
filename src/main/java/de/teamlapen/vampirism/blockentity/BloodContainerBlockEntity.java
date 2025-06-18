@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModBlockEntities;
+import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -23,13 +24,13 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
 
     public static final int CAPACITY = FluidType.BUCKET_VOLUME * 5;
 
-    public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
+    public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
 
     private final ControllableFluidTank fluidInventory;
 
     public BloodContainerBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, blockState);
-        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged());
+        this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD) || BloodHelper.isConvertibleToBlood(fluid)).setOnFluidChanged(fluid -> setChanged());
     }
 
     @SubscribeEvent
@@ -56,7 +57,7 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
-                .with(FLUID_AMOUNT, fluidInventory.getFluid().getAmount())
+                .with(FLUID, fluidInventory.getFluid())
                 .build();
     }
 

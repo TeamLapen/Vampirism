@@ -51,6 +51,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createCandleHolders();
         createVampireSoulLantern();
         createBloodGrinder();
+        createBloodSieve();
         createCursedBark();
         createHunterTable();
         createCoffin();
@@ -61,7 +62,6 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createMotherTrophy();
         createAltarPillar();
         createTent();
-        createBloodSieve();
         createMedChair();
         createTotem();
         createAlchemicalCauldron();
@@ -320,6 +320,24 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         this.blockStateOutput.accept(multiPartGenerator);
     }
 
+    protected void createBloodSieve() {
+        BloodSieveBlock block = ModBlocks.BLOOD_SIEVE.get();
+
+        ResourceLocation model = getModelLocation(block);
+        ResourceLocation modelEmpty = getModelLocation(block, "_empty");
+
+        this.createDefaultBlockItem(block, model);
+
+        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.properties(BloodSieveBlock.FACING, BloodSieveBlock.HAS_FILTER)
+                        .generate((facing, hasFilter) -> Variant.variant()
+                                .with(VariantProperties.MODEL, hasFilter ? model : modelEmpty)
+                                .with(VariantProperties.Y_ROT, directionToRotation(facing))
+                        )
+                )
+        );
+    }
+
     protected void createMotherTrophy() {
         createNonTemplateModelBlock(ModBlocks.MOTHER_TROPHY.get());
         ResourceLocation modelLocation = getModelLocation(ModBlocks.MOTHER_TROPHY.get());
@@ -392,18 +410,6 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
                 .with(stateCondition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
         );
         createNonTemplateModelBlock(ModBlocks.DIAGONAL_CURSED_BARK.get());
-    }
-
-    protected void createBloodSieve() {
-        ResourceLocation bloodSieve = ModModelTemplates.BLOOD_SIEVE.getDefaultModelLocation(ModBlocks.BLOOD_SIEVE.get());
-        ResourceLocation active = ModModelTemplates.BLOOD_SIEVE.createWithSuffix(ModBlocks.BLOOD_SIEVE.get(), "_active", new TextureMapping().put(ModTextureSlots.FILTER, mod("block/blood_sieve_filter_active")), this.modelOutput);
-
-        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(ModBlocks.BLOOD_SIEVE.get())
-                .with(PropertyDispatch.property(SieveBlock.PROPERTY_ACTIVE)
-                        .select(true, Variant.variant().with(VariantProperties.MODEL, active))
-                        .select(false, Variant.variant().with(VariantProperties.MODEL, bloodSieve))
-                ));
-        createDefaultBlockItem(ModBlocks.BLOOD_SIEVE.get(), bloodSieve);
     }
 
     protected void createHunterTable() {

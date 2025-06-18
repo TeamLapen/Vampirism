@@ -70,10 +70,6 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         fluidInventory.readFromNBT(registries, tag);
-        // Added for older words that were created with Vampirism 1.10 and lower
-        if (tag.contains("tank")) {
-            fluidInventory.readFromNBT(registries, tag.getCompound("tank"));
-        }
     }
 
     @Override

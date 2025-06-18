@@ -153,7 +153,6 @@ public class VampirismMod {
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (o, side) -> o);
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.SIEVE.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_TABLE.get(), new ICapabilityProvider<>() {
             @Override
             public @Nullable IItemHandler getCapability(@NotNull PotionTableBlockEntity object, @NotNull Direction context) {
