@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blockentity;
 
+import de.teamlapen.lib.lib.util.SingleItemHandler;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
@@ -50,7 +51,7 @@ public class BloodSieveBlockEntity extends BlockEntity {
 
     public BloodSieveBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.BLOOD_SIEVE.get(), pos, state);
-        this.filterItemHandler = new BloodGrinderBlockEntity.SingleItemHandler<>(this, blockEntity -> blockEntity.filterStack, (blockEntity, stack) -> blockEntity.filterStack = stack, BloodGrinderBlockEntity::isFilter, 1, () -> {
+        this.filterItemHandler = new SingleItemHandler<>(this, blockEntity -> blockEntity.filterStack, (blockEntity, stack) -> blockEntity.filterStack = stack, BloodGrinderBlockEntity::isFilter, 1, () -> {
             updateFilterState(level, worldPosition);
             setChanged();
         });
