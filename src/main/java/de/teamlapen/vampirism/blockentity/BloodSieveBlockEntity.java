@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.blocks.BloodSieveBlock;
 import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.tags.ModBlockTags;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -106,19 +105,15 @@ public class BloodSieveBlockEntity extends BlockEntity {
 
         boolean[] needsChange = new boolean[] { false };
 
-        if (level.getBlockState(pos.above()).is(ModBlockTags.FORCE_FLUID)) {
-            FluidUtil.getFluidHandler(level, pos.above(), Direction.DOWN).ifPresent(fluidHandler -> {
-                FluidStack moved = FluidUtil.tryFluidTransfer(blockEntity.inputFluidInventory, fluidHandler, 100, true);
-                needsChange[0] = !moved.isEmpty();
-            });
-        }
+        FluidUtil.getFluidHandler(level, pos.above(), Direction.DOWN).ifPresent(fluidHandler -> {
+            FluidStack moved = FluidUtil.tryFluidTransfer(blockEntity.inputFluidInventory, fluidHandler, 100, true);
+            needsChange[0] = !moved.isEmpty();
+        });
 
-        if (level.getBlockState(pos.below()).is(ModBlockTags.FORCE_FLUID)) {
-            FluidUtil.getFluidHandler(level, pos.below(), Direction.UP).ifPresent(fluidHandler -> {
-                FluidStack moved = FluidUtil.tryFluidTransfer(fluidHandler, blockEntity.outputFluidInventory, 100, true);
-                needsChange[0] = needsChange[0] || !moved.isEmpty();
-            });
-        }
+        FluidUtil.getFluidHandler(level, pos.below(), Direction.UP).ifPresent(fluidHandler -> {
+            FluidStack moved = FluidUtil.tryFluidTransfer(fluidHandler, blockEntity.outputFluidInventory, 100, true);
+            needsChange[0] = needsChange[0] || !moved.isEmpty();
+        });
 
         blockEntity.pullCooldownTime = PULL_DELAY;
         if (needsChange[0]) blockEntity.setChanged();
