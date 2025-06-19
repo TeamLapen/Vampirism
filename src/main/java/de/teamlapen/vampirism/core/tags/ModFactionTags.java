@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 
 public class ModFactionTags {
     public static final TagKey<IFaction<?>> HOSTILE_TOWARDS_NEUTRAL = tag("hostile_towards_neutral");
@@ -19,7 +18,7 @@ public class ModFactionTags {
 
     public static final TagKey<IFaction<?>> USE_GARLIC_BREAD = tag("can_use/garlic_bread");
 
-    private static @NotNull TagKey<IFaction<?>> tag(@NotNull String name) {
+    private static TagKey<IFaction<?>> tag(String name) {
         return TagKey.create(VampirismRegistries.Keys.FACTION, VResourceLocation.mod(name));
     }
 }
