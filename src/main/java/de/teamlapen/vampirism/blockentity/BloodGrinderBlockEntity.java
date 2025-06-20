@@ -25,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
@@ -144,6 +145,12 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     private static void trySuckingItems(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
         if (blockEntity.pullCooldownTime > 0) {
             blockEntity.pullCooldownTime--;
+            return;
+        }
+
+        if (level.getBlockState(pos.above()).isFaceSturdy(level, pos, Direction.DOWN, SupportType.CENTER)) {
+            blockEntity.pullCooldownTime = PULL_DELAY;
+            blockEntity.setChanged();
             return;
         }
 

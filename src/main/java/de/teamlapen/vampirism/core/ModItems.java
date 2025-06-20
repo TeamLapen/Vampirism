@@ -15,12 +15,14 @@ import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.arrow.*;
+import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -29,8 +31,10 @@ import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -223,7 +227,7 @@ public class ModItems {
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 
-    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", props -> new Item(props.stacksTo(1).durability(3200)));
+    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", props -> new Item(props.stacksTo(1).durability(4800)));
 
     public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", props -> new FeedingAdapterItem(props.stacksTo(1)));
     public static final DeferredItem<OblivionPotionItem> OBLIVION_POTION = ITEMS.registerItem("oblivion_potion", props -> new OblivionPotionItem(props.stacksTo(1).rarity(Rarity.UNCOMMON).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().onConsume(new OblivionEffect()).build())));
@@ -323,5 +327,21 @@ public class ModItems {
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
+    }
+
+    public static void registerShiftTooltips(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        List<Component> tooltipComponents = event.getToolTip();
+
+        Stream<ItemLike> descriptionItems = Stream.of(
+                ModBlocks.BLOOD_GRINDER,
+                ModBlocks.BLOOD_SIEVE,
+                FABRIC_FILTER,
+                BLOOD_BUCKET
+        );
+
+        if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {
+            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getToolTip());
+        }
     }
 }

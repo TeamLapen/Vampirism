@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer
 import de.teamlapen.vampirism.client.renderer.item.CoffinSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -88,6 +89,7 @@ public class VampirismModClient {
         NeoForge.EVENT_BUS.register(new ModKeys());
         NeoForge.EVENT_BUS.addListener(this::levelLoaded);
         NeoForge.EVENT_BUS.register(this.bloodVisionRenderer);
+        NeoForge.EVENT_BUS.addListener(ModItems::registerShiftTooltips);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");

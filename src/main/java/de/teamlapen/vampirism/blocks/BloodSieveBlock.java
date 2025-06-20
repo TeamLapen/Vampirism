@@ -110,15 +110,15 @@ public class BloodSieveBlock extends BaseEntityBlock {
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(blockEntity.filterStack)));
+            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(ItemStack.EMPTY, blockEntity.filterStack)));
             super.onRemove(state, level, pos, newState, movedByPiston);
         }
     }
 
     protected Optional<BloodSieveBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BloodSieveBlockEntity diffuser) {
-            return Optional.of(diffuser);
+        BlockEntity blockEntityOpt = level.getBlockEntity(pos);
+        if (blockEntityOpt instanceof BloodSieveBlockEntity blockEntity) {
+            return Optional.of(blockEntity);
         }
         return Optional.empty();
     }

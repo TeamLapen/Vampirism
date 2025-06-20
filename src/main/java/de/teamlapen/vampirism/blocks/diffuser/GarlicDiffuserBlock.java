@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +52,6 @@ public class GarlicDiffuserBlock extends DiffuserBlock {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         int chunks = 1 + 2 * radius.get();
-        DescriptionUtil.addDescriptionTooltip(BuiltInRegistries.BLOCK.getKey(this).getPath(), tooltipComponents, chunks, chunks);
+        DescriptionUtil.addDescriptionTooltip(this, tooltipComponents, chunks, chunks);
     }
 }

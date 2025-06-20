@@ -104,15 +104,15 @@ public class BloodGrinderBlock extends BaseEntityBlock {
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(blockEntity.inputStack, blockEntity.filterStack)));
+            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(ItemStack.EMPTY, blockEntity.inputStack, blockEntity.filterStack)));
             super.onRemove(state, level, pos, newState, movedByPiston);
         }
     }
 
     protected Optional<BloodGrinderBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BloodGrinderBlockEntity diffuser) {
-            return Optional.of(diffuser);
+        BlockEntity blockEntityOpt = level.getBlockEntity(pos);
+        if (blockEntityOpt instanceof BloodGrinderBlockEntity blockEntity) {
+            return Optional.of(blockEntity);
         }
         return Optional.empty();
     }

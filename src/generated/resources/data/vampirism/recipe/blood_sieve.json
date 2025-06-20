@@ -2,15 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "Q": "minecraft:quartz_bricks",
-    "X": "#c:ingots/iron",
-    "Y": "#minecraft:planks",
-    "Z": "minecraft:cauldron"
+    "C": "vampirism:blood_container",
+    "I": "#c:ingots/iron",
+    "P": "#minecraft:planks"
   },
   "pattern": [
-    "XQX",
-    "YZY",
-    "YXY"
+    " I ",
+    "PCP",
+    " I "
   ],
   "result": {
     "count": 1,
