@@ -60,7 +60,7 @@ public class SplashManagerMixin {
     private void vampirism$apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         if (vampirism$customSplashes.isEmpty()) return;
 
-        double chance = 0.2;
+        double chance = 0.3;
         int originalSize = splashes.size();
         int timesAdded = (int) Math.ceil((chance * originalSize) / ((1 - chance) * vampirism$customSplashes.size()));
 
