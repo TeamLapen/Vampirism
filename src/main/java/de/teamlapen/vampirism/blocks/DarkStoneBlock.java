@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -12,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,14 +37,34 @@ public class DarkStoneBlock extends Block {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (state.is(ModBlocks.DARK_STONE_BRICKS) && stack.get(ModDataComponents.BOTTLE_BLOOD) != null) {
-            int blood = stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(0)).blood();
+            boolean isCreative = player.getAbilities().instabuild;
+            boolean isStacked = stack.getCount() > 1;
 
-            if (blood >= 3) {
+            ItemStack bottle = (!isCreative && isStacked) ? stack.split(1) : stack;
+            int blood = bottle.getOrDefault(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(0)).blood();
+
+            if (blood >= 1) {
                 level.setBlockAndUpdate(pos, ModBlocks.BLOODY_DARK_STONE_BRICKS.get().defaultBlockState());
                 level.playSound(null, pos, SoundEvents.SCULK_BLOCK_SPREAD, SoundSource.BLOCKS, 4.0F, 1.0F);
 
-                if (!player.hasInfiniteMaterials()) {
-                    stack.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(blood - 3));
+                if (!isCreative) {
+                    int bloodLeft = blood - 1;
+                    ItemStack resultBottle;
+
+                    if (bloodLeft <= 0 && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
+                        resultBottle = new ItemStack(Items.GLASS_BOTTLE);
+                    } else {
+                        resultBottle = bottle;
+                        resultBottle.set(ModDataComponents.BOTTLE_BLOOD, new BottleBlood(bloodLeft));
+                    }
+
+                    if (isStacked) {
+                        if (!player.addItem(resultBottle)) {
+                            player.drop(resultBottle, false);
+                        }
+                    } else if (bloodLeft <= 0 && VampirismConfig.COMMON.autoConvertGlassBottles.get()) {
+                        player.setItemInHand(hand, resultBottle);
+                    }
                 }
 
                 return InteractionResult.SUCCESS_SERVER;
