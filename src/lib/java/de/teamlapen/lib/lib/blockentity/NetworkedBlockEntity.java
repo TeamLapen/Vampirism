@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -35,9 +34,7 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    public void loadMetaData(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        //loadAdditional(tag, lookupProvider);
-    }
+    public abstract void loadMetaData(CompoundTag tag, HolderLookup.Provider lookupProvider);
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
@@ -46,9 +43,7 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
         return tag;
     }
 
-    public void saveMetaData(CompoundTag tag, HolderLookup.Provider registries) {
-        //saveAdditional(tag, registries);
-    }
+    public abstract void saveMetaData(CompoundTag tag, HolderLookup.Provider registries);
 
     @Override
     public void setChanged() {
