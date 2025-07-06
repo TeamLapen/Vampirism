@@ -12,7 +12,7 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class BloodFluid extends BaseFlowingFluid {
 
-    public static final Properties PROPERTIES = new Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.FLOWING_BLOOD).bucket(ModItems.BLOOD_BUCKET).block(ModBlocks.BLOOD).explosionResistance(100.0F).tickRate(8);
+    public static final Properties PROPERTIES = new Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.FLOWING_BLOOD).bucket(ModItems.BLOOD_BUCKET).block(ModBlocks.BLOOD).explosionResistance(100.0F).tickRate(9);
 
     public BloodFluid(Properties properties) {
         super(properties);

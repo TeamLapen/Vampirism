@@ -24,14 +24,14 @@ public class ModFluids {
 
     public static final DeferredHolder<FluidType, FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new FluidType(FluidType.Properties.create()
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")
-            .motionScale(0.015D)
+            .motionScale(0.01D)
             .fallDistanceModifier(0.1F)
             .canHydrate(true)
             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
             .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
-            .density(1200)
-            .viscosity(1200)
+            .density(1400)
+            .viscosity(1400)
             .temperature(340)
     ));
     public static final DeferredHolder<FluidType, FluidType> IMPURE_BLOOD_TYPE = FLUID_TYPES.register("impure_blood", () -> new FluidType(FluidType.Properties.create()
