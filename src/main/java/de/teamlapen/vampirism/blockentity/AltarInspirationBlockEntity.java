@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFactions;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -28,10 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -39,7 +34,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.Optional;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
 
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
@@ -47,7 +41,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
 
     public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
-    private final ControllableFluidTank fluidInventory;
+    public final ControllableFluidTank fluidInventory;
 
     private int ritualTicksLeft = 0;
     /**
@@ -59,11 +53,6 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
     public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ALTAR_INSPIRATION.get(), pos, state);
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setAllowOutput(false);
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (blockEntity, side) -> blockEntity.fluidInventory);
     }
 
     @Override

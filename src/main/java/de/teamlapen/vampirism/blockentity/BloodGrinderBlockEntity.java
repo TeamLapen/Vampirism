@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.blockentity;
 import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
 import de.teamlapen.lib.lib.util.SingleItemHandler;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.BloodGrinderBlock;
 import de.teamlapen.vampirism.core.ModBlockEntities;
@@ -29,10 +28,6 @@ import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -44,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public static final String KEY_INPUT_STACK = "InputStack";
@@ -59,8 +53,8 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
-    private final IItemHandler inputItemHandler;
-    private final IItemHandler filterItemHandler;
+    public final IItemHandler inputItemHandler;
+    public final IItemHandler filterItemHandler;
 
     public ControllableFluidTank fluidInventory;
     public ItemStack inputStack;
@@ -78,19 +72,6 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setAllowInput(false);
         this.inputStack = ItemStack.EMPTY;
         this.filterStack = ItemStack.EMPTY;
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
-            if (side == Direction.UP) return blockEntity.inputItemHandler;
-            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
-            return null;
-        });
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
-            if (side == Direction.UP) return null;
-            return blockEntity.fluidInventory;
-        });
     }
 
     @Override

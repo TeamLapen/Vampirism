@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -10,32 +9,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class BloodContainerBlockEntity extends NetworkedBlockEntity {
 
     public static final int CAPACITY = FluidType.BUCKET_VOLUME * 5;
 
     public static final ModelProperty<FluidStack> FLUID = new ModelProperty<>();
 
-    private final ControllableFluidTank fluidInventory;
+    public final ControllableFluidTank fluidInventory;
 
     public BloodContainerBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_CONTAINER.get(), pos, blockState);
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD) || BloodHelper.isConvertibleToBlood(fluid)).setOnFluidChanged(fluid -> setChanged());
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);
     }
 
     @Override

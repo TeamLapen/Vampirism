@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.util.SingleItemHandler;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.blocks.BloodSieveBlock;
 import de.teamlapen.vampirism.core.ModBlockEntities;
@@ -16,10 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -27,7 +22,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class BloodSieveBlockEntity extends BlockEntity {
 
     public static final String KEY_INPUT_FLUID = "InputFluid";
@@ -40,10 +34,10 @@ public class BloodSieveBlockEntity extends BlockEntity {
     public static final int FILTER_DELAY = 4;
     public static final int PULL_DELAY = 4;
 
-    private final IItemHandler filterItemHandler;
+    public final IItemHandler filterItemHandler;
 
-    private final ControllableFluidTank inputFluidInventory;
-    private final ControllableFluidTank outputFluidInventory;
+    public final ControllableFluidTank inputFluidInventory;
+    public final ControllableFluidTank outputFluidInventory;
     public ItemStack filterStack;
     private int filterCooldownTime = -1;
     private int pullCooldownTime = -1;
@@ -57,19 +51,6 @@ public class BloodSieveBlockEntity extends BlockEntity {
         this.inputFluidInventory = new ControllableFluidTank(CAPACITY, BloodHelper::isConvertibleToBlood).setOnFluidChanged(fluid -> setChanged()).setSaveKey(KEY_INPUT_FLUID).setAllowOutput(false);
         this.outputFluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setSaveKey(KEY_OUTPUT_FLUID).setAllowInput(false);
         this.filterStack = ItemStack.EMPTY;
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
-            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
-            return null;
-        });
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
-            if (side == Direction.UP) return blockEntity.inputFluidInventory;
-            if (side == Direction.DOWN) return blockEntity.outputFluidInventory;
-            return null;
-        });
     }
 
     @Override

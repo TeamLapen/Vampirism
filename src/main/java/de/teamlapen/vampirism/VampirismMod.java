@@ -150,8 +150,31 @@ public class VampirismMod {
     }
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
+        // Items
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
+
+        // Blocks
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return blockEntity.inputItemHandler;
+            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
+            return null;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return null;
+            return blockEntity.fluidInventory;
+        });
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
+            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
+            return null;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return blockEntity.inputFluidInventory;
+            if (side == Direction.DOWN) return blockEntity.outputFluidInventory;
+            return null;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (blockEntity, side) -> blockEntity.fluidInventory);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (o, side) -> o);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_TABLE.get(), new ICapabilityProvider<>() {
             @Override
