@@ -157,9 +157,8 @@ public class VampirismMod {
         // Blocks
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
-            if (side == Direction.UP) return blockEntity.inputItemHandler;
-            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
-            return null;
+            if (side == Direction.DOWN) return null;
+            return blockEntity.itemHandler;
         });
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
             if (side == Direction.UP) return null;

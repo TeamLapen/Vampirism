@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blockentity;
 
 import de.teamlapen.lib.lib.blockentity.NetworkedBlockEntity;
-import de.teamlapen.lib.lib.util.SingleItemHandler;
+import de.teamlapen.lib.lib.util.MultipleItemHandler;
 import de.teamlapen.lib.lib.util.ControllableFluidTank;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.BloodGrinderBlock;
@@ -53,8 +53,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public static final ModelProperty<Integer> FLUID_AMOUNT = new ModelProperty<>();
 
-    public final IItemHandler inputItemHandler;
-    public final IItemHandler filterItemHandler;
+    public final IItemHandler itemHandler;
 
     public ControllableFluidTank fluidInventory;
     public ItemStack inputStack;
@@ -64,11 +63,13 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public BloodGrinderBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.BLOOD_GRINDER.get(), pos, blockState);
-        this.inputItemHandler = new SingleItemHandler<>(this, blockEntity -> blockEntity.inputStack, (blockEntity, stack) -> blockEntity.inputStack = stack, BloodGrinderBlockEntity::isGrindable, Item.ABSOLUTE_MAX_STACK_SIZE, this::setChanged);
-        this.filterItemHandler = new SingleItemHandler<>(this, blockEntity -> blockEntity.filterStack, (blockEntity, stack) -> blockEntity.filterStack = stack, BloodGrinderBlockEntity::isFilter, 1, () -> {
-            updateFilterState(level, worldPosition);
-            setChanged();
-        });
+        this.itemHandler = new MultipleItemHandler<>(this,
+                new MultipleItemHandler.SlotProperties<>(blockEntity -> blockEntity.inputStack, (blockEntity, stack) -> blockEntity.inputStack = stack, BloodGrinderBlockEntity::isGrindable, Item.ABSOLUTE_MAX_STACK_SIZE, this::setChanged),
+                new MultipleItemHandler.SlotProperties<>(blockEntity -> blockEntity.filterStack, (blockEntity, stack) -> blockEntity.filterStack = stack, BloodGrinderBlockEntity::isFilter, 1, () -> {
+                    updateFilterState(level, worldPosition);
+                    setChanged();
+                })
+        );
         this.fluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setAllowInput(false);
         this.inputStack = ItemStack.EMPTY;
         this.filterStack = ItemStack.EMPTY;
