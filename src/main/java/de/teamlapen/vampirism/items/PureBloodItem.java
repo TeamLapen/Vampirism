@@ -92,7 +92,7 @@ public class PureBloodItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
         int playerLevel = VampirismAPI.factionPlayerHandler(playerIn).getCurrentLevel(VReference.VAMPIRE_FACTION);
-        if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() < getLevel()).isPresent()) {
+        if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() <= getLevel()).isPresent()) {
             playerIn.startUsingItem(handIn);
             return InteractionResultHolder.sidedSuccess(playerIn.getItemInHand(handIn), worldIn.isClientSide);
         }
