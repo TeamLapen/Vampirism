@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -12,13 +12,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
+import static de.teamlapen.vampirism.api.components.IBottleBlood.MULTIPLIER;
+
 /**
  * Fluid handler capability for blood bottles.
- * Only allows storing fluid amounts that are a multiple of {@link VReference#FOOD_TO_FLUID_BLOOD}
+ * Only allows storing fluid amounts that are a multiple of {@link IBottleBlood#MULTIPLIER}
  */
 public class BloodBottleFluidHandler implements IFluidHandlerItem {
-
-    public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
 
     private final int capacity;
     protected ItemStack container;

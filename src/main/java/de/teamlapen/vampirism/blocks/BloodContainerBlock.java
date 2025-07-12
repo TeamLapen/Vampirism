@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
@@ -73,7 +73,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements ModDisplayIt
         ItemStack stack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get(), 1);
         if (blockEntity instanceof BloodContainerBlockEntity bloodContainerEntity) {
             FluidStack fluid = bloodContainerEntity.getFluid();
-            if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
+            if (!fluid.isEmpty() && fluid.getAmount() >= IBottleBlood.MULTIPLIER) {
                 stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
             }
         }
