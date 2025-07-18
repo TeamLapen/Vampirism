@@ -62,7 +62,7 @@ public class BloodBottleItem extends Item implements ModDisplayItemGenerator.Cre
             if (blood > 0) {
                 ItemStack[] leftover = new ItemStack[1];
                 BloodHelper.drain(consumed, blood, IFluidHandler.FluidAction.EXECUTE, true, container -> leftover[0] = container);
-                vampire.drinkBlood(blood / MULTIPLIER, 0, new DrinkBloodContext(consumed));
+                vampire.drinkBlood(blood / MULTIPLIER, 0, new DrinkBloodContext(consumed).setReturnsSpareBlood(false));
 
                 if (stack.getCount() == 1) {
                     return leftover[0];

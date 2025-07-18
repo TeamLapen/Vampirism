@@ -341,7 +341,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
         BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, drinkContext);
         int remainingBlood = this.bloodStats.addBlood(event.getAmount(), event.getSaturation());
-        if (event.useRemaining() && remainingBlood > 0) {
+        if (event.useRemaining() && remainingBlood > 0 && event.getBloodSource().returnsSpareBlood()) {
             handleSpareBlood(remainingBlood);
         }
         this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
