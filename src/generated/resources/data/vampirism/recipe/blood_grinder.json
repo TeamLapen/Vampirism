@@ -4,11 +4,10 @@
   "key": {
     "I": "#c:ingots/iron",
     "P": "#minecraft:planks",
-    "R": "#c:dusts/redstone",
     "S": "minecraft:stone_slab"
   },
   "pattern": [
-    "RIR",
+    "PIP",
     "PSP",
     "PIP"
   ],

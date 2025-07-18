@@ -130,23 +130,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/blood_grinder_top"
-      },
-      "when": {
-        "powered": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_top_on"
-      },
-      "when": {
-        "powered": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_glass"
+        "model": "vampirism:block/blood_grinder_base"
       }
     },
     {

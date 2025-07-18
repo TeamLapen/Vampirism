@@ -115,7 +115,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodGrinderBlockEntity blockEntity) {
         trySuckingItems(level, pos, blockEntity);
 
-        if (state.getValue(BloodGrinderBlock.POWERED)) {
+        if (state.getValue(BloodGrinderBlock.ENABLED)) {
             processGrinding(level, pos, blockEntity);
         } else {
             updateGrindState(level, pos, false);

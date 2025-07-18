@@ -6,11 +6,10 @@
 		"side": "vampirism:block/blood_grinder_side",
 		"filter": "vampirism:block/blood_grinder_side_filter",
 		"bottom": "vampirism:block/blood_grinder_bottom",
-		"top": "vampirism:block/blood_grinder_top",
 		"wheel": "vampirism:block/blood_grinder_wheel",
 		"glass": "vampirism:block/blood_grinder_glass",
-		"top_side": "vampirism:block/blood_grinder_side_top",
-		"inner": "vampirism:block/blood_grinder_inner"
+		"inner": "vampirism:block/blood_grinder_inner",
+		"top": "vampirism:block/blood_grinder_top"
 	},
 	"render_type": "minecraft:cutout",
 	"elements": [
@@ -19,10 +18,10 @@
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 14, 0]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
-				"east": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
-				"west": {"uv": [0, 0, 16, 4], "texture": "#top_side"},
+				"north": {"uv": [0, 0, 16, 4], "texture": "#side"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#side"},
+				"west": {"uv": [0, 0, 16, 4], "texture": "#side"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#inner"}
 			}

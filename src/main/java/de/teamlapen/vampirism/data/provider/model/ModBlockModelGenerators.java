@@ -288,11 +288,9 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         BloodGrinderBlock block = ModBlocks.BLOOD_GRINDER.get();
 
         ResourceLocation fullModel = getModelLocation(block);
-        ResourceLocation topModel = getModelLocation(block, "_top");
-        ResourceLocation topModelOn = getModelLocation(block, "_top_on");
         ResourceLocation bottomModelEmpty = getModelLocation(block, "_bottom_empty");
         ResourceLocation bottomModel = getModelLocation(block, "_bottom");
-        ResourceLocation glassModel = getModelLocation(block, "_glass");
+        ResourceLocation baseModel = getModelLocation(block, "_base");
         ResourceLocation wheelModel = getModelLocation(block, "_wheel");
         ResourceLocation grindingWheelModel = getModelLocation(block, "_wheel_grinding");
 
@@ -309,10 +307,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
             multiPartGenerator.with(Condition.and(stateCondition(BloodGrinderBlock.HAS_FILTER, true), facing), Variant.variant().with(VariantProperties.MODEL, bottomModel).with(VariantProperties.Y_ROT, rotation));
         });
 
-        multiPartGenerator.with(stateCondition(BloodGrinderBlock.POWERED, false), Variant.variant().with(VariantProperties.MODEL, topModel));
-        multiPartGenerator.with(stateCondition(BloodGrinderBlock.POWERED, true), Variant.variant().with(VariantProperties.MODEL, topModelOn));
-
-        multiPartGenerator.with(Variant.variant().with(VariantProperties.MODEL, glassModel));
+        multiPartGenerator.with(Variant.variant().with(VariantProperties.MODEL, baseModel));
 
         multiPartGenerator.with(stateCondition(BloodGrinderBlock.GRINDING, false), Variant.variant().with(VariantProperties.MODEL, wheelModel));
         multiPartGenerator.with(stateCondition(BloodGrinderBlock.GRINDING, true), Variant.variant().with(VariantProperties.MODEL, grindingWheelModel));
