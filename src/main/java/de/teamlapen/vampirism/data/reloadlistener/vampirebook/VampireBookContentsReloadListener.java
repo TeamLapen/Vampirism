@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.core.ModVampireBooks;
 import de.teamlapen.vampirism.misc.BookContents;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.resources.ResourceLocation;
@@ -59,7 +60,7 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent> object, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(@NotNull Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent> object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
         this.translatedBookContents = Collections.unmodifiableMap(object);
     }
 
@@ -68,6 +69,7 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
     }
 
     public static class TranslatedBookContent {
+
         private final Map<String, IBookContents> contents;
 
         public TranslatedBookContent(Map<String, IBookContents> contents) {
@@ -76,8 +78,20 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
 
         @Nullable
         public IBookContents getContentsFor(String languageCode) {
-            return contents.getOrDefault(languageCode, contents.get("en_us"));
+            IBookContents base = contents.get("en_us");
+            if (languageCode.equals("en_us") || base == null) return base;
+
+            IBookContents localized = contents.get(languageCode);
+            if (localized == null) return base;
+
+            ResourceLocation background = !localized.background().equals(ModVampireBooks.DIARY_BACKGROUND) ? localized.background() : base.background();
+
+            Map<Integer, IBookContents.IImageEntry> baseImages = base.images().stream().collect(Collectors.toMap(IBookContents.IImageEntry::id, image -> image));
+            for (IBookContents.IImageEntry localizedImage : localized.images()) {
+                baseImages.put(localizedImage.id(), localizedImage);
+            }
+
+            return new BookContents(localized.contents(), background, baseImages.values().stream().toList());
         }
     }
-
 }
