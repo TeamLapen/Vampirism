@@ -12,13 +12,13 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ActionCooldownOverlay implements LayeredDraw.Layer {
+public class ActionCooldownOverlay extends BaseOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+        if (canRenderOverlays()  && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
 

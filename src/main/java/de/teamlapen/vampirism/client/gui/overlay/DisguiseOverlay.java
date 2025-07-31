@@ -15,7 +15,7 @@ public class DisguiseOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (this.mc.player != null && VampirismConfig.CLIENT.enableDisguiseOverlayRendering.get()) {
+        if (canRenderOverlays() && VampirismConfig.CLIENT.enableDisguiseOverlayRendering.get()) {
             HunterPlayerSpecialAttribute huntSpecial = ((IVampirismPlayer) this.mc.player).getVampAtts().getHuntSpecial();
             if (huntSpecial.isDisguised()) {
                 graphics.pose().pushPose();

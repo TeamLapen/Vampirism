@@ -13,13 +13,11 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ActionDurationOverlay implements LayeredDraw.Layer {
-
-    private final Minecraft mc = Minecraft.getInstance();
+public class ActionDurationOverlay extends BaseOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+        if (canRenderOverlays() && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.mc.player).getCurrentFactionPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<?> actionHandler = factionPlayer.getActionHandler();
 

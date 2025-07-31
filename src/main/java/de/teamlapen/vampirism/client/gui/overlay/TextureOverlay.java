@@ -7,9 +7,7 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public abstract class TextureOverlay implements LayeredDraw.Layer {
-
-    protected final Minecraft mc = Minecraft.getInstance();
+public abstract class TextureOverlay extends BaseOverlay {
 
     protected void renderTextureOverlay(GuiGraphics pGuiGraphics, ResourceLocation pShaderLocation, float pAlpha) {
         RenderSystem.disableDepthTest();

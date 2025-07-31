@@ -17,8 +17,8 @@ public class SunOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (this.mc.player != null && VampirismConfig.CLIENT.enableSunOverlayRendering.get()) {
-            LocalPlayer player = this.mc.player;
+        if (canRenderOverlays() && VampirismConfig.CLIENT.enableSunOverlayRendering.get()) {
+            LocalPlayer player = this.player();
             VampirePlayer vampire = VampirePlayer.get(player);
             MobEffectInstance effect = player.getEffect(ModEffects.SUNSCREEN);
             float progress = Math.clamp(vampire.getTicksInSun() / 50f, 0f, 1f);

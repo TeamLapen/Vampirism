@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CustomBossEventOverlay implements LayeredDraw.Layer {
+public class CustomBossEventOverlay extends BaseOverlay {
     private static final ResourceLocation BAR_PROGRESS_SPRITE = VResourceLocation.mc("boss_bar/white_progress");
     private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
@@ -50,7 +50,7 @@ public class CustomBossEventOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (!VampirismConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
+        if (!canRenderOverlays() || !VampirismConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
             return;
         }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();

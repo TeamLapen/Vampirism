@@ -12,7 +12,7 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class BloodBarOverlay implements LayeredDraw.Layer {
+public class BloodBarOverlay extends BaseOverlay {
     public static final ResourceLocation BACKGROUND = VResourceLocation.mod("blood_bar/background");
     public static final ResourceLocation QUARTER = VResourceLocation.mod("blood_bar/quarter");
     public static final ResourceLocation HALF = VResourceLocation.mod("blood_bar/half");
@@ -22,9 +22,9 @@ public class BloodBarOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && Helper.isVampire(this.mc.player) && !IMCHandler.requestedToDisableBloodbar) {
-            if (this.mc.gameMode.hasExperience() && this.mc.player.isAlive()) {
-                IBloodStats stats = VampirePlayer.get(this.mc.player).getBloodStats();
+        if (canRenderOverlays() && Helper.isVampire(this.player()) && !IMCHandler.requestedToDisableBloodbar) {
+            if (this.mc.gameMode.hasExperience()) {
+                IBloodStats stats = VampirePlayer.get(this.player()).getBloodStats();
                 int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;
                 int top = this.mc.getWindow().getGuiScaledHeight() - this.mc.gui.rightHeight;
                 this.mc.gui.rightHeight += 10;
