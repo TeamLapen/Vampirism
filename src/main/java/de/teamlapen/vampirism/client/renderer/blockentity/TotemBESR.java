@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -53,11 +54,12 @@ public class TotemBESR extends VampirismBESR<TotemBlockEntity> {
     }
 
     private void renderFactionName(@NotNull IFaction<?> faction, @NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packedLight) {
+        if (!VampirismConfig.CLIENT.renderTotemFactionName.getAsBoolean()) return;
         Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())));
         matrixStack.pushPose();
         matrixStack.translate(0.5, 1, 0.5);
         matrixStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
-        matrixStack.scale(-0.025f, -0.025f, -0.025f);
+        matrixStack.scale(0.025f, -0.025f, 0.025f);
         Matrix4f matrix4f = matrixStack.last().pose();
         float f1 = 0; //Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25f);
         int j = (int) (f1 * 255f) << 24;

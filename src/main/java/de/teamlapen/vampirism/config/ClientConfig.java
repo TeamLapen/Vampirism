@@ -15,6 +15,7 @@ public class ClientConfig {
 
     // World rendering
     public final ModConfigSpec.BooleanValue renderVampireForestFog;
+    public final ModConfigSpec.BooleanValue renderTotemFactionName;
 
     // Overlay rendering
     public final ModConfigSpec.BooleanValue renderScreenOverlay;
@@ -49,6 +50,7 @@ public class ClientConfig {
         this.renderVampireEyes = builder.comment("Render vampire eye/fang face overlay").define("vampireEyes", true);
         this.renderVampireForestFog = builder.comment("Render fog in vampire biome. Might be enforced server side").define("vampireForestFog", true);
         this.renderScreenOverlay = builder.comment("Render full screen colored overlays for effects like vampire levelup").define("renderScreenOverlay", true);
+        this.renderTotemFactionName = builder.comment("Render the totem faction name as nameplate").define("renderTotemFactionName", true);
         builder.pop();
 
         builder.comment("Configure GUI").push("gui");
