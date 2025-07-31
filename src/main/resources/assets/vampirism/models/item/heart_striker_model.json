@@ -2110,7 +2110,7 @@
     "firstperson_lefthand": {
       "rotation": [
         0,
-        -90,
+        100,
         0
       ],
       "translation": [
