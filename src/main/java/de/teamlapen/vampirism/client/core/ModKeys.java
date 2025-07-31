@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.vampirism.VampirismMod;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,26 +92,26 @@ public class ModKeys {
 
     private boolean suckKeyDown = false;
 
-    private final Map<KeyMapping, Runnable> keyMappingActions;
+    private final List<KeyConfig> keyMappingActions;
     private final Minecraft mc;
     private final Object2LongArrayMap<ActionKeys> actionTriggerTime = new Object2LongArrayMap<>();
 
     public ModKeys() {
-        ImmutableMap.Builder<KeyMapping, Runnable> keyMappingActions = ImmutableMap.builder();
-        keyMappingActions.put(ACTION, this::openActionMenu);
-        keyMappingActions.put(VAMPIRISM_MENU, this::openVampirismMenu);
-        keyMappingActions.put(VISION, this::switchVision);
-        keyMappingActions.put(MINION, this::openMinionTaskMenu);
-        keyMappingActions.put(SELECT_AMMO, this::selectAmmo);
-        keyMappingActions.put(SKILL_SCREEN, this::openSkillScreen);
-        ACTION_KEYS.forEach((i, key) -> keyMappingActions.put(key, () -> toggleAction(i)));
+        ImmutableList.Builder<KeyConfig> keyMappingActions = ImmutableList.builder();
+        keyMappingActions.add(new KeyConfig(ACTION, this::openActionMenu, true));
+        keyMappingActions.add(new KeyConfig(VAMPIRISM_MENU, this::openVampirismMenu, true));
+        keyMappingActions.add(new KeyConfig(VISION, this::switchVision, true));
+        keyMappingActions.add(new KeyConfig(MINION, this::openMinionTaskMenu,true));
+        keyMappingActions.add(new KeyConfig(SELECT_AMMO, this::selectAmmo, true));
+        keyMappingActions.add(new KeyConfig(SKILL_SCREEN, this::openSkillScreen, true));
+        ACTION_KEYS.forEach((i, key) -> keyMappingActions.add(new KeyConfig(key, () -> toggleAction(i), true)));
         this.keyMappingActions = keyMappingActions.build();
         this.mc = Minecraft.getInstance();
 
     }
 
     @SubscribeEvent
-    public void handleMouseButton(InputEvent.MouseButton.Pre event) {
+    public void handleMouseButton(InputEvent.MouseButton.Post event) {
         handleInputEvent(event, event.getAction());
     }
 
@@ -124,9 +126,9 @@ public class ModKeys {
         } else {
             endSuck();
             if (action == InputConstants.PRESS) {
-                for (Map.Entry<KeyMapping, Runnable> entry : this.keyMappingActions.entrySet()) {
-                    if (entry.getKey().isDown()) {
-                        entry.getValue().run();
+                for (KeyConfig config : this.keyMappingActions) {
+                    if (config.isDown()) {
+                        config.run();
                         break;
                     }
                 }
@@ -220,6 +222,17 @@ public class ModKeys {
     private void selectAmmo() {
         if (mc.player.isAlive()) {
             SelectAmmoScreen.show();
+        }
+    }
+
+    private record KeyConfig(KeyMapping mapping, Runnable action, boolean consume) {
+
+        public boolean isDown() {
+            return this.consume ? this.mapping.consumeClick() : this.mapping.isDown();
+        }
+
+        public void run() {
+            this.action.run();
         }
     }
 }
