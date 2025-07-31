@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 public class FluidTankWithListener extends FluidTank {
 
     private boolean drainable = true;
+    @Nullable
     private IFluidTankListener listener;
 
     public FluidTankWithListener(int capacity) {
@@ -24,18 +26,11 @@ public class FluidTankWithListener extends FluidTank {
 
     @NotNull
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        if (!drainable) return FluidStack.EMPTY;
-        FluidStack stack = super.drain(maxDrain, action);
-        listener.onTankContentChanged();
-        return stack;
-    }
-
-    @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        int amount = super.fill(resource, action);
-        listener.onTankContentChanged();
-        return amount;
+    public FluidStack drain(int maxDrain, @NotNull FluidAction action) {
+        if (!this.drainable) {
+            return FluidStack.EMPTY;
+        }
+        return super.drain(maxDrain, action);
     }
 
     public void setDrainable(boolean drainable) {
@@ -49,7 +44,9 @@ public class FluidTankWithListener extends FluidTank {
 
     @Override
     protected void onContentsChanged() {
-        if (listener != null) listener.onTankContentChanged();
+        if (this.listener != null) {
+            this.listener.onTankContentChanged();
+        }
     }
 
     public interface IFluidTankListener {
