@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -51,16 +52,17 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity> {
     }
 
     private void renderFactionName(IFaction<?> faction, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        if (!VampirismConfig.CLIENT.renderTotemFactionName.getAsBoolean()) return;
         Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())));
         poseStack.pushPose();
         poseStack.translate(0.5, 1, 0.5);
         poseStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
-        poseStack.scale(-0.025f, -0.025f, -0.025f);
+        poseStack.scale(0.025f, -0.025f, 0.025f);
         Matrix4f matrix4f = poseStack.last().pose();
         Font font = Minecraft.getInstance().font;
         float nameOffset = (float) (-font.width(displayNameIn) / 2);
-        font.drawInBatch(displayNameIn, nameOffset, 0, 553648127, false, matrix4f, bufferSource, Font.DisplayMode.SEE_THROUGH, 0, packedLight);
-        font.drawInBatch(displayNameIn, nameOffset, 0, -1, false, matrix4f, bufferSource, Font.DisplayMode.SEE_THROUGH, 0, packedLight);
+        font.drawInBatch(displayNameIn, nameOffset, 0, -2130706433, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+        font.drawInBatch(displayNameIn, nameOffset, 0, -1, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
         poseStack.popPose();
     }
 
