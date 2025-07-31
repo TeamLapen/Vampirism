@@ -103,7 +103,7 @@ public class ModKeys {
     }
 
     @SubscribeEvent
-    public void handleMouseButton(InputEvent.MouseButton.Pre event) {
+    public void handleMouseButton(InputEvent.MouseButton.Post event) {
         handleInputEvent(event, event.getAction());
     }
 
