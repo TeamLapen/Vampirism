@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.fluids.BloodFluid;
-import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Blocks;
@@ -34,16 +33,9 @@ public class ModFluids {
             .viscosity(1400)
             .temperature(340)
     ));
-    public static final DeferredHolder<FluidType, FluidType> IMPURE_BLOOD_TYPE = FLUID_TYPES.register("impure_blood", () -> new FluidType(FluidType.Properties.create()
-            .viscosity(3000)
-            .temperature(309)
-            .density(1300)
-            .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood"))
-    );
 
     public static final DeferredHolder<Fluid, BaseFlowingFluid> BLOOD = FLUIDS.register("blood", () -> new BloodFluid.Source(BloodFluid.PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid> FLOWING_BLOOD = FLUIDS.register("flowing_blood", () -> new BloodFluid.Flowing(BloodFluid.PROPERTIES));
-    public static final DeferredHolder<Fluid, ImpureBloodFluid> IMPURE_BLOOD = FLUIDS.register("impure_blood", ImpureBloodFluid::new);
 
     public static void registerFluidInteractions() {
         // Lava + Blood = Netherrack (both Source and Flowing Lava, add some other block as a source variant in the future if there is an option)

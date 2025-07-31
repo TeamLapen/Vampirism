@@ -387,7 +387,6 @@ public class ModCreativeTabs {
             insert(GHOST_SPAWN_EGG, event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
-            insertAfter(IMPURE_BLOOD_BUCKET, BLOOD_BUCKET, event);
         }
     }
 

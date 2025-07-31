@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.BloodGrinderBlockEntity;
 import de.teamlapen.vampirism.core.ModBlockEntities;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

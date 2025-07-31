@@ -218,7 +218,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_COAT_LEGS_ENHANCED,
                 ModItems.HUNTER_COAT_LEGS_ULTIMATE,
                 ModItems.BLOOD_BUCKET,
-                ModItems.IMPURE_BLOOD_BUCKET,
                 ModItems.PURE_SALT,
                 ModItems.PURE_SALT_WATER,
                 ModItems.HUMAN_HEART,

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import de.teamlapen.vampirism.items.component.BottleBlood;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.core.ModBlockEntities;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

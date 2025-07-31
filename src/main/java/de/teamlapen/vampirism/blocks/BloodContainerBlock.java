@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

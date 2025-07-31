@@ -22,6 +22,8 @@ public class MigrationData {
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
         fixEffects(new Mapping(ModEffects.EFFECTS));
         fixPoiTypes(new Mapping(ModVillage.POI_TYPES));
+        fixFluids(new Mapping(ModFluids.FLUIDS));
+        fixFluidTypes(new Mapping(ModFluids.FLUID_TYPES));
     }
 
     public record Mapping(DeferredRegister<?> register) {
@@ -138,5 +140,13 @@ public class MigrationData {
 
     private static void fixPoiTypes(@NotNull Mapping mapping) {
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
+    }
+
+    private static void fixFluids(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:impure_blood", "vampirism:blood");
+    }
+
+    private static void fixFluidTypes(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:impure_blood", "vampirism:blood");
     }
 }

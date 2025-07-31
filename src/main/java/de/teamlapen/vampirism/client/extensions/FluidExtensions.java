@@ -38,22 +38,4 @@ public class FluidExtensions {
             return new FogParameters(-1.0F, 5.0F, fogParameters.shape(), fogParameters.red(), fogParameters.green(), fogParameters.blue(), fogParameters.alpha());
         }
     };
-
-    public static final IClientFluidTypeExtensions IMPURE_BLOOD = new IClientFluidTypeExtensions() {
-
-        @Override
-        public ResourceLocation getStillTexture() {
-            return VResourceLocation.mod("block/impure_blood_still");
-        }
-
-        @Override
-        public ResourceLocation getFlowingTexture() {
-            return VResourceLocation.mod("block/impure_blood_flow");
-        }
-
-        @Override
-        public int getTintColor() {
-            return 0xEEFF1111;
-        }
-    };
 }

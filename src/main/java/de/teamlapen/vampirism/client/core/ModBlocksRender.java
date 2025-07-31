@@ -74,7 +74,6 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderType() {
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
     }
 
@@ -89,6 +88,4 @@ public class ModBlocksRender {
             event.register(VResourceLocation.mod("block/coffin/coffin_top_" + value.getName()));
         }
     }
-
-
 }

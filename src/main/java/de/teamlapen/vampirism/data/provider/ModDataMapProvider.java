@@ -86,7 +86,7 @@ public class ModDataMapProvider extends DataMapProvider {
     }
 
     protected void gatherFluidBloodConversion(Builder<IFluidBloodConversion, Fluid> fluidConversions) {
-        fluidConversions.add(ModFluids.IMPURE_BLOOD, new FluidBloodConversion(0.75f), false);
+        //fluidConversions.add(ModFluids.IMPURE_BLOOD, new FluidBloodConversion(0.75f), false);
     }
 
     protected void gatherEntityBlood(Builder<IEntityBlood, EntityType<?>> entityValues) {

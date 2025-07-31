@@ -41,14 +41,14 @@ public class VertexUtils {
     public static void renderFluidTank(@Nullable FluidStack fluidStack, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (fluidStack != null && !fluidStack.isEmpty()) {
             float filled = Mth.clamp((float) fluidStack.getAmount() / capacity, 0f, 1f);
-            IClientFluidTypeExtensions fluidExtension = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-            Material material = new Material(TextureAtlas.LOCATION_BLOCKS, fluidExtension.getStillTexture(fluidStack));
 
             poseStack.pushPose();
 
             poseStack.translate(translation);
             poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
+            // The rendered fluid may sometimes appear black because of the packedLight parameter being too dark. Not sure if that's solvable, it occurs on the Minecraft side
+            Material material = new Material(TextureAtlas.LOCATION_BLOCKS, IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack));
             VertexConsumer vertex = material.buffer(bufferSource, RenderType::entityTranslucent);
             VertexUtils.addCube(vertex, poseStack, 1, filled, packedLight, packedOverlay, -1, fluidAlpha);
 

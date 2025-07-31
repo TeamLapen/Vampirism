@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.fluids;
+package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;

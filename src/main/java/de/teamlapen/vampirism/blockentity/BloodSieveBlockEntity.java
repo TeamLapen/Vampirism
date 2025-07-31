@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.blocks.BloodSieveBlock;
 import de.teamlapen.vampirism.core.ModBlockEntities;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
