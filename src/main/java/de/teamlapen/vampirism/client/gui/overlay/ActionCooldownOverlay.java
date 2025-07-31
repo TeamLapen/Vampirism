@@ -20,14 +20,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class ActionCooldownOverlay<T extends ISkillPlayer<T>> implements LayeredDraw.Layer {
+public class ActionCooldownOverlay<T extends ISkillPlayer<T>> extends BaseOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(@NotNull GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
-            VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
+        if (canRenderOverlays() && !VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+            VampirismAPI.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int y = this.mc.getWindow().getGuiScaledHeight() - 27;
@@ -35,7 +35,7 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> implements Layered
 
                 if (!VampirismConfig.CLIENT.disableHudActionCooldownRendering.get()) {
                     for (Holder<? extends IAction<T>> action : actionHandler.getUnlockedActionHolder()) {
-                        if (!(action.value().showHudCooldown(this.mc.player))) continue;
+                        if (!(action.value().showHudCooldown(this.player()))) continue;
                         if (!actionHandler.isActionOnCooldown(action)) continue;
                         Optional<ResourceLocation> texture = action.unwrapKey().map(ResourceKey::location).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                         if (texture.isPresent()) {

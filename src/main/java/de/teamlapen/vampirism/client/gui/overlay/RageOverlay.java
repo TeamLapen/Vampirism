@@ -16,8 +16,8 @@ public class RageOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (this.mc.player != null && VampirismConfig.CLIENT.enableRageOverlayRendering.get()) {
-            if (VampirePlayer.get(Minecraft.getInstance().player).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
+        if (canRenderOverlays() && VampirismConfig.CLIENT.enableRageOverlayRendering.get()) {
+            if (VampirePlayer.get(this.player()).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
                 renderTextureOverlay(graphics, RAGE_TEXTURE, 1.0F);
             }
         }

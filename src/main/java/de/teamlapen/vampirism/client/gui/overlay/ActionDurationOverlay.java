@@ -20,14 +20,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class ActionDurationOverlay<T extends ISkillPlayer<T>> implements LayeredDraw.Layer {
+public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
-            VampirismAPI.factionPlayerHandler(this.mc.player).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
+        if (canRenderOverlays() && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+            VampirismAPI.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int x = 12;
@@ -35,7 +35,7 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> implements Layered
 
                 if (!VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
                     for (Holder<? extends ILastingAction<T>> action : factionPlayer.getActionHandler().getActiveActions()) {
-                        if (!(action.value().showHudDuration(this.mc.player))) continue;
+                        if (!(action.value().showHudDuration(this.player()))) continue;
                         if (!actionHandler.isActionActive(action)) continue;
                         Optional<ResourceLocation> texture = action.unwrapKey().map(ResourceKey::location).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                         if (texture.isPresent()) {
