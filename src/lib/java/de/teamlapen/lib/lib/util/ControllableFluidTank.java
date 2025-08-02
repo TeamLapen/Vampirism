@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -13,6 +14,7 @@ import java.util.function.Predicate;
  */
 public class ControllableFluidTank extends FluidTank {
 
+    @Nullable
     private Consumer<FluidStack> onFluidChanged;
     private String saveKey = "Fluid";
     private boolean allowInput = true;
@@ -26,7 +28,7 @@ public class ControllableFluidTank extends FluidTank {
         super(capacity, validator);
     }
 
-    public ControllableFluidTank setOnFluidChanged(Consumer<FluidStack> onFluidChanged) {
+    public ControllableFluidTank setOnFluidChanged(@Nullable Consumer<FluidStack> onFluidChanged) {
         this.onFluidChanged = onFluidChanged;
         return this;
     }
@@ -44,10 +46,6 @@ public class ControllableFluidTank extends FluidTank {
     public ControllableFluidTank setAllowOutput(boolean allowOutput) {
         this.allowOutput = allowOutput;
         return this;
-    }
-
-    public Consumer<FluidStack> getOnFluidChanged() {
-        return onFluidChanged;
     }
 
     public boolean isInputAllowed() {
@@ -92,27 +90,19 @@ public class ControllableFluidTank extends FluidTank {
         return isOutputAllowed() ? super.drain(maxDrain, action) : FluidStack.EMPTY;
     }
 
-    public int doFill(FluidStack resource, FluidAction action) {
-        return super.fill(resource, action);
-    }
-
-    public FluidStack doDrain(FluidStack resource, FluidAction action) {
-        return super.drain(resource, action);
-    }
-
-    public FluidStack doDrain(int maxDrain, FluidAction action) {
-        return super.drain(maxDrain, action);
-    }
-
     @Override
     protected void onContentsChanged() {
         super.onContentsChanged();
-        getOnFluidChanged().accept(getFluid());
+        if (this.onFluidChanged != null) {
+            this.onFluidChanged.accept(getFluid());
+        }
     }
 
     @Override
     public void setFluid(FluidStack stack) {
         super.setFluid(stack);
-        getOnFluidChanged().accept(stack);
+        if (this.onFluidChanged != null) {
+            this.onFluidChanged.accept(stack);
+        }
     }
 }

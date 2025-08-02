@@ -117,16 +117,18 @@ public class BloodSieveBlockEntity extends BlockEntity {
             int inputAmount = Math.min(50, inputFluid.getAmount());
             int potentialResult = (int) (inputAmount * conversionRate);
 
-            int allowedByTank = blockEntity.outputFluidInventory.doFill(new FluidStack(ModFluids.BLOOD.get(), potentialResult), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack resource1 = new FluidStack(ModFluids.BLOOD.get(), potentialResult);
+            int allowedByTank = super.fill(resource1, IFluidHandler.FluidAction.SIMULATE);
             int allowed = Math.min(allowedByTank, durabilityLeft);
 
             if (allowed > 0) {
                 int toDrain = (int) Math.ceil(allowed / conversionRate);
-                FluidStack drained = blockEntity.inputFluidInventory.doDrain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+                FluidStack drained = super.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
 
                 if (!drained.isEmpty()) {
                     int resultBlood = (int) (drained.getAmount() * conversionRate);
-                    blockEntity.outputFluidInventory.doFill(new FluidStack(ModFluids.BLOOD.get(), resultBlood), IFluidHandler.FluidAction.EXECUTE);
+                    FluidStack resource = new FluidStack(ModFluids.BLOOD.get(), resultBlood);
+                    super.fill(resource, IFluidHandler.FluidAction.EXECUTE);
 
                     blockEntity.filterStack.setDamageValue(filterStack.getDamageValue() + drained.getAmount());
                     if (blockEntity.filterStack.isBroken()) {
