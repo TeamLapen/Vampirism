@@ -38,6 +38,8 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue disableFovChange;
     public final ModConfigSpec.BooleanValue disableBloodVisionRendering;
 
+    // Other rendering
+    public final ModConfigSpec.BooleanValue renderVampireSwordParticles;
 
     // Internal
     public final ModConfigSpec.ConfigValue<String> actionOrder;
@@ -75,6 +77,10 @@ public class ClientConfig {
         this.enableNearbyVampireOverlayRendering = builder.comment("Disable the rendering of the nearby vampire overlay in the HUD").define("enableNearbyVampireOverlayRendering", true);
         this.enableRageOverlayRendering = builder.comment("Disable the rendering of the rage overlay in the HUD").define("enableRageOverlayRendering", true);
         this.enableSunOverlayRendering = builder.comment("Disable the rendering of the sun overlay in the HUD").define("enableSunOverlayRendering", true);
+        builder.pop();
+
+        builder.comment("Other rendering").push("rendering");
+        this.renderVampireSwordParticles = builder.comment("Whether to add particles when holding a charged vampire sword").define("renderVampireSwordParticles", true);
         builder.pop();
 
         builder.push("internal");

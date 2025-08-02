@@ -1977,5 +1977,6 @@
   "vampirism.configuration.disable": "Disable",
   "vampirism.configuration.common-server": "Common Server",
   "vampirism.configuration.render": "Render",
-  "vampirism.configuration.renderTotemFactionName": "Render Totem Faction Name"
+  "vampirism.configuration.renderTotemFactionName": "Render Totem Faction Name",
+  "vampirism.configuration.renderVampireSwordParticles": "Vampire Sword Particles"
 }

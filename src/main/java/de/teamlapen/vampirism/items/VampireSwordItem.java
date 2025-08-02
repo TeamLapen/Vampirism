@@ -9,7 +9,10 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModDataComponents;
+import de.teamlapen.vampirism.core.ModFactions;
+import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
@@ -153,7 +156,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         //Try to minimize execution time, but tricky since offhand selection is not directly available, but it can only be off hand if itemSlot 0
-        if (level.isClientSide && (isSelected || slotId == 0)) {
+        if (level.isClientSide && VampirismConfig.CLIENT.renderVampireSwordParticles.get() && (isSelected || slotId == 0)) {
             float charged = getChargePercentage(stack);
             if (charged > 0 && entity.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entity instanceof LivingEntity livingEntity) {
                 boolean secondHand = !isSelected && livingEntity.getItemInHand(InteractionHand.OFF_HAND).equals(stack);
