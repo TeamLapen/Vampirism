@@ -67,6 +67,7 @@
     "client.MinecraftMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
+    "client.SplashRendererMixin",
     "client.StatsScreenMixin",
     "client.accessor.AbstractContainerScreenAccessor",
     "client.accessor.BossHealthOverlayAccessor",

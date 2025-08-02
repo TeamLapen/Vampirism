@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;

@@ -19,7 +19,7 @@ public record BloodFilled() implements RangeSelectItemModelProperty {
 
     @Override
     public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int light) {
-        return stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() / 9f;
+        return (float) stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() / BottleBlood.MAX_VALUE;
     }
 
     @Override

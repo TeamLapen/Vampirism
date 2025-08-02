@@ -5,7 +5,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 public class ModEntityTags {
     public static final TagKey<EntityType<?>> HUNTER = tag("hunter");
@@ -19,11 +18,11 @@ public class ModEntityTags {
     public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
     public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");
 
-    private static @NotNull TagKey<EntityType<?>> tag(@NotNull ResourceLocation resourceLocation) {
+    private static TagKey<EntityType<?>> tag(ResourceLocation resourceLocation) {
         return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
     }
 
-    private static @NotNull TagKey<EntityType<?>> tag(@NotNull String name) {
+    private static TagKey<EntityType<?>> tag(String name) {
         return tag(VResourceLocation.mod(name));
     }
 }

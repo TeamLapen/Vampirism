@@ -65,6 +65,7 @@ public class VampirismHorizontalBlock extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }

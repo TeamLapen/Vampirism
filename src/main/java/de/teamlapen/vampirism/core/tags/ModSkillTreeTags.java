@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 
 public class ModSkillTreeTags {
     public static final TagKey<ISkillTree> HUNTER = tag("faction/hunter");
@@ -13,7 +12,7 @@ public class ModSkillTreeTags {
     public static final TagKey<ISkillTree> LORD = tag("type/lord");
     public static final TagKey<ISkillTree> DEFAULT = tag("default");
 
-    private static @NotNull TagKey<ISkillTree> tag(@NotNull String name) {
+    private static TagKey<ISkillTree> tag(String name) {
         return TagKey.create(VampirismRegistries.Keys.SKILL_TREE, VResourceLocation.mod(name));
     }
 }

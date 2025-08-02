@@ -9,6 +9,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 public class BlockExtensions {
 
     public static final IClientBlockExtensions TENT = new IClientBlockExtensions() {
+
         @Override
         public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
             return true;

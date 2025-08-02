@@ -43,7 +43,7 @@ import de.teamlapen.vampirism.entity.player.skills.RefinementHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.util.BloodHelper;
 import de.teamlapen.vampirism.items.HunterArmorItem;
 import de.teamlapen.vampirism.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.modcompat.PlayerReviveHelper;
@@ -54,6 +54,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -91,9 +92,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -199,7 +200,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             VampirismAPI.vampireVisionRegistry().getVisionId(vision);
         }
         this.vision.activate(vision);
-
     }
 
     @Override
@@ -216,7 +216,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * <p>
      * Named like this to match biteEntity
      */
-    public void biteBlock(@NotNull BlockPos pos) {
+    public void biteBlock(@NotNull BlockPos pos, @NotNull Direction side) {
         if (player.isSpectator()) {
             LOGGER.warn("Player can't bite in spectator mode");
             return;
@@ -225,7 +225,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach {}", pos);
         } else {
-            biteBlock(pos, player.level().getBlockState(pos), player.level().getBlockEntity(pos));
+            biteBlock(pos, player.level().getBlockState(pos), side, player.level().getBlockEntity(pos));
         }
     }
 
@@ -341,7 +341,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
         BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, drinkContext);
         int remainingBlood = this.bloodStats.addBlood(event.getAmount(), event.getSaturation());
-        if (event.useRemaining() && remainingBlood > 0) {
+        if (event.useRemaining() && remainingBlood > 0 && event.getBloodSource().returnsSpareBlood()) {
             handleSpareBlood(remainingBlood);
         }
         this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
@@ -1170,33 +1170,35 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), VampirismConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
-    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState blockState, @Nullable BlockEntity tileEntity) {
-        if (isRemote()) return;
-        if (getLevel() == 0) return;
-        if (!bloodStats.needsBlood()) return;
+    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @NotNull Direction side, @Nullable BlockEntity blockEntity) {
+        if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
-        if (ModBlocks.BLOOD_CONTAINER.get() == blockState.getBlock()) {
-            if (tileEntity != null) {
-                Optional.ofNullable(tileEntity.getLevel()).map(tile -> tile.getCapability(Capabilities.FluidHandler.BLOCK, pos, blockState, tileEntity, null)).ifPresent(handler -> {
-                    int blood = 0;
+        Level level = blockEntity.getLevel();
+        if (level == null) return;
 
-                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-                    if (drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
-                        FluidStack drained = handler.drain((drainable.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, IFluidHandler.FluidAction.EXECUTE);
-                        if (!drained.isEmpty()) {
-                            blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
-                        }
-                    }
-                    if (blood > 0) {
-                        drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(blockState, pos));
-                    }
-                });
+        FluidUtil.getFluidHandler(level, pos, side).ifPresent(fluidHandler -> {
+            FluidStack want = new FluidStack(ModFluids.BLOOD.get(), need * VReference.FOOD_TO_FLUID_BLOOD);
+            FluidStack allowed = fluidHandler.drain(want, IFluidHandler.FluidAction.SIMULATE);
+            int usable = (allowed.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD;
+            if (usable <= 0) return;
 
+            FluidStack drained = fluidHandler.drain(usable, IFluidHandler.FluidAction.EXECUTE);
+            int blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
+            if (blood > 0) {
+                drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(state, pos));
             }
-        }
+        });
+    }
 
-
+    /**
+     * Checks if the block is valid to suck blood from.
+     * Does NOT check reach distance and whether the player is in the right state to bite.
+     *
+     * @param pos The pos of the block to check.
+     */
+    public static boolean isBlockBiteable(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction side) {
+        return FluidUtil.getFluidHandler(level, pos, side).map(handler -> handler.drain(new FluidStack(ModFluids.BLOOD.get(), 1), IFluidHandler.FluidAction.SIMULATE).getAmount() > 0).orElse(false);
     }
 
     /**

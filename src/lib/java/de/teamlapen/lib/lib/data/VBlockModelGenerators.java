@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.data;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -7,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -14,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -28,6 +29,13 @@ import java.util.stream.Stream;
 public abstract class VBlockModelGenerators extends BlockModelGenerators {
 
     private static final ResourceLocation CUTOUT = ResourceLocation.withDefaultNamespace("cutout");
+
+    public static final List<Pair<Direction, VariantProperties.Rotation>> HORIZONTAL_ROTATION = List.of(
+            Pair.of(Direction.NORTH, VariantProperties.Rotation.R0),
+            Pair.of(Direction.EAST, VariantProperties.Rotation.R90),
+            Pair.of(Direction.SOUTH, VariantProperties.Rotation.R180),
+            Pair.of(Direction.WEST, VariantProperties.Rotation.R270)
+    );
 
     public VBlockModelGenerators(Consumer<BlockStateGenerator> blockStateGenerator, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
         super(blockStateGenerator, itemModelOutput, modelOutput);
@@ -163,4 +171,7 @@ public abstract class VBlockModelGenerators extends BlockModelGenerators {
         return template.extend().renderType(renderType).build();
     }
 
+    protected static <T extends Comparable<T>> Condition.TerminalCondition stateCondition(Property<T> property, T value) {
+        return Condition.condition().term(property, value);
+    }
 }

@@ -29,7 +29,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> COFFIN_LID = create("block.coffin_lid");
     public static final DeferredHolder<SoundEvent, SoundEvent> BAT_SWARM = create("entity.bat_swarm");
     public static final DeferredHolder<SoundEvent, SoundEvent> BOILING = create("block.boiling");
-    public static final DeferredHolder<SoundEvent, SoundEvent> GRINDER = create("block.grinder");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_SQUEEZE = create("block.blood_squeeze");
     public static final DeferredHolder<SoundEvent, SoundEvent> TASK_COMPLETE = create("task_complete");
     public static final DeferredHolder<SoundEvent, SoundEvent> VAMPIRE_FEEDING = create("entity.vampire_feeding");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLESSING_MUSIC = create("block.blessing_music");

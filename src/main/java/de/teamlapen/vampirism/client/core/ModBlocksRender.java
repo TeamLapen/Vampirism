@@ -70,10 +70,10 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModBlockEntities.VAMPIRE_BEACON.get(), VampireBeaconRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_CONTAINER.get(), BloodContainerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderBlockEntityRenderer::new);
     }
 
     private static void registerRenderType() {
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.IMPURE_BLOOD.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
     }
 
@@ -88,6 +88,4 @@ public class ModBlocksRender {
             event.register(VResourceLocation.mod("block/coffin/coffin_top_" + value.getName()));
         }
     }
-
-
 }

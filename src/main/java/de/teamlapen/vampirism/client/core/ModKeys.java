@@ -144,11 +144,10 @@ public class ModKeys {
             if (mouseOver != null && !player.isSpectator()) {
                 VampirePlayer vampire = VampirePlayer.get(player);
                 if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT)) {
-                    if (mouseOver instanceof EntityHitResult) {
-                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(((EntityHitResult) mouseOver).getEntity().getId()));
-                    } else if (mouseOver instanceof BlockHitResult) {
-                        BlockPos pos = ((BlockHitResult) mouseOver).getBlockPos();
-                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(pos));
+                    if (mouseOver instanceof EntityHitResult entityHitResult) {
+                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(entityHitResult.getEntity().getId()));
+                    } else if (mouseOver instanceof BlockHitResult blockHitResult) {
+                        VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(blockHitResult.getBlockPos(), blockHitResult.getDirection()));
                     } else {
                         LOGGER.warn("Unknown mouse over type while trying to feed");
                     }

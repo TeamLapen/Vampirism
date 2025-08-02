@@ -184,7 +184,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             AdvancementHolder first_blood = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodBottle(), Component.translatable("advancement.vampirism.sucking_blood"), Component.translatable("advancement.vampirism.sucking_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_vampire)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.SUCK_BLOOD))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
@@ -261,7 +261,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             AdvancementHolder collect_blood = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(ItemDataUtils.createBloodBottle(9), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodBottle(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(become_lord)
                     .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_blood");

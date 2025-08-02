@@ -3,7 +3,10 @@ package de.teamlapen.vampirism.util;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +32,12 @@ public class DescriptionUtil {
         addDescriptionTooltip(name, REFERENCE.MODID, tooltipComponents, parameters);
     }
 
-    public static void addDescriptionTooltip(String name, List<Component> tooltipComponents) {
-        addDescriptionTooltip(name, REFERENCE.MODID, tooltipComponents);
+    public static void addDescriptionTooltip(ResourceLocation itemLocation, List<Component> tooltipComponents, Object... parameters) {
+        addDescriptionTooltip(itemLocation.getPath(), itemLocation.getNamespace(), tooltipComponents, parameters);
+    }
+
+    public static void addDescriptionTooltip(ItemLike item, List<Component> tooltipComponents, Object... parameters) {
+        addDescriptionTooltip(BuiltInRegistries.ITEM.getKey(item.asItem()), tooltipComponents, parameters);
     }
 
     private static String getTranslationKey(String modId, String key) {

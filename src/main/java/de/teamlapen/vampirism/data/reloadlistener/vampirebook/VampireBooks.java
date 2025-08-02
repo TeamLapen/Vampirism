@@ -44,5 +44,4 @@ public class VampireBooks {
         }
         return bookBackground;
     }
-
 }

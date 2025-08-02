@@ -28,7 +28,7 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.COFFIN_LID, definition().subtitle("subtitles.vampirism.coffin_lid").with(sound(mod("cc/block/coffin_lid_slide"))));
         this.add(ModSounds.BAT_SWARM, definition().subtitle("subtitles.vampirism.bat_swarm").with(sound(mod("cc/fx/bat_swarm"))));
         this.add(ModSounds.BOILING, definition().subtitle("subtitles.vampirism.boiling").with(sound(mod("cc/block/boiling"))));
-        this.add(ModSounds.GRINDER, definition().subtitle("subtitles.vampirism.grinder").with(sound(mod("cc/block/grinder"))));
+        this.add(ModSounds.BLOOD_SQUEEZE, definition().subtitle("subtitles.vampirism.blood_squeeze").with(sound(mod("cc/block/blood_squeeze"))));
         this.add(ModSounds.TASK_COMPLETE, definition().subtitle("subtitles.vampirism.task_complete").with(sound(mod("cc/fx/task_complete"))));
         this.add(ModSounds.BLESSING_MUSIC, definition().subtitle("subtitles.vampirism.blessing_music").with(sound(mod("cc/block/church_organ")).stream()));
         this.add(ModSounds.BLOOD_PROJECTILE_HIT, definition().subtitle("subtitles.vampirism.blood_projectile_hit").with(sound(mod("reserved/fx/blood_projectile_hit"))));

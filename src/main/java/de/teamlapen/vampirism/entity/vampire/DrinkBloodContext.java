@@ -21,6 +21,7 @@ public class DrinkBloodContext implements IDrinkBloodContext {
     private BlockState blockState;
     @Nullable
     private BlockPos blockPos;
+    private boolean returnsSpareBlood = true;
 
     public DrinkBloodContext(@NotNull LivingEntity entity) {
         this.entity = entity;
@@ -60,5 +61,16 @@ public class DrinkBloodContext implements IDrinkBloodContext {
     @Override
     public Optional<BlockPos> getBlockPos() {
         return Optional.ofNullable(blockPos);
+    }
+
+    @Override
+    public boolean returnsSpareBlood() {
+        return returnsSpareBlood;
+    }
+
+    @Override
+    public IDrinkBloodContext setReturnsSpareBlood(boolean returnsSpareBlood) {
+        this.returnsSpareBlood = returnsSpareBlood;
+        return this;
     }
 }

@@ -150,20 +150,38 @@ public class VampirismMod {
     }
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
+        // Items
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (o, side) -> o.getTank());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.GRINDER.get(), (o, side) -> o.getItemHandler());
+
+        // Blocks
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
+            if (side == Direction.DOWN) return null;
+            return blockEntity.itemHandler;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_GRINDER.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return null;
+            return blockEntity.fluidInventory;
+        });
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
+            if (side != null && side.getAxis().isHorizontal()) return blockEntity.filterItemHandler;
+            return null;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_SIEVE.get(), (blockEntity, side) -> {
+            if (side == Direction.UP) return blockEntity.inputFluidInventory;
+            if (side == Direction.DOWN) return blockEntity.outputFluidInventory;
+            return null;
+        });
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (blockEntity, side) -> blockEntity.fluidInventory);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (o, side) -> o);
-        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.SIEVE.get(), (o, side) -> o.getTank());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_TABLE.get(), new ICapabilityProvider<>() {
             @Override
             public @Nullable IItemHandler getCapability(@NotNull PotionTableBlockEntity object, @NotNull Direction context) {
                 return object.getCapability(object, context);
             }
         });
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (o, side) -> new InvWrapper(o));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (blockEntity, side) -> new InvWrapper(blockEntity));
     }
 
     private void onServerStarting(@NotNull ServerAboutToStartEvent event) {
@@ -228,6 +246,7 @@ public class VampirismMod {
         event.enqueueWork(ModItems::registerDispenserBehaviour);
         event.enqueueWork(ModBlocks::registerStrippables);
         event.enqueueWork(ModBlocks::registerFlammables);
+        event.enqueueWork(ModFluids::registerFluidInteractions);
         TelemetryCollector.execute();
     }
 

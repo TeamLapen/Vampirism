@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
+import static net.minecraft.client.data.models.model.ModelLocationUtils.*;
 
 public class ModBlockModelGenerators extends VBlockModelGenerators {
 
@@ -49,6 +50,8 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createGarlicDiffuser();
         createCandleHolders();
         createVampireSoulLantern();
+        createBloodGrinder();
+        createBloodSieve();
         createCursedBark();
         createHunterTable();
         createCoffin();
@@ -59,7 +62,6 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createMotherTrophy();
         createAltarPillar();
         createTent();
-        createBloodSieve();
         createMedChair();
         createTotem();
         createAlchemicalCauldron();
@@ -71,24 +73,32 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         createInfuser();
 
         createTintedLeaves(ModBlocks.DARK_SPRUCE_LEAVES.get(), TexturedModel.LEAVES, -1);
+
         ResourceLocation sunscreenModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.SUNSCREEN_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/cursed_earth")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel));
         createDefaultBlockItem(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel);
+
         ResourceLocation vampireBeaconModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.VAMPIRE_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/vampire_beacon")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel));
         createDefaultBlockItem(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel);
+
         ResourceLocation infestedDarkStoneModel = ModModelTemplates.CUBE_ALL.create(ModBlocks.INFESTED_DARK_STONE.get(), new TextureMapping().put(TextureSlot.ALL, mod("block/dark_stone")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), infestedDarkStoneModel));
         createDefaultBlockItem(ModBlocks.INFESTED_DARK_STONE.get(), VResourceLocation.mod("block/infested_dark_stone"));
+
         ResourceLocation batCageModel = mod("block/bat_cage/block");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), batCageModel));
         createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+
         ResourceLocation bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), bloodContainerModel));
         this.itemModelOutput.accept(ModBlocks.BLOOD_CONTAINER.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(bloodContainerModel), ItemModelUtils.specialModel(bloodContainerModel, new BloodContainerSpecialRenderer.Unbaked())));
+
         ResourceLocation inspirationModel = mod("block/altar_inspiration/altar_inspiration");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel));
         createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
+
+        createNonTemplateModelBlock(ModBlocks.BLOOD.get());
     }
 
     protected void createCursedEarthPath() {
@@ -141,7 +151,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     }
 
     protected void createAltarPillar() {
-        ResourceLocation model = ModelLocationUtils.decorateBlockModelLocation(modString("altar_pillar"));
+        ResourceLocation model = decorateBlockModelLocation(modString("altar_pillar"));
         this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(ModBlocks.ALTAR_PILLAR.get())
                 .with(PropertyDispatch.property(AltarPillarBlock.PILLAR_TYPE)
                         .select(AltarPillarBlock.EnumPillarType.NONE, Variant.variant().with(VariantProperties.MODEL, model))
@@ -160,9 +170,9 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         var boiling = ModModelTemplates.ALCHEMICAL_CAULDRON.createWithSuffix(ModBlocks.ALCHEMICAL_CAULDRON.get(), "_boiling", new TextureMapping().put(ModTextureSlots.LIQUID, mod("block/blank_liquid_boiling")), this.modelOutput);
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.ALCHEMICAL_CAULDRON.get())
                 .with(Variant.variant().with(VariantProperties.MODEL, cauldron))
-                .with(Condition.condition().term(AlchemicalCauldronBlock.LIT, true), Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/alchemy_cauldron_fire")))
-                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.FILLED), Variant.variant().with(VariantProperties.MODEL, normal))
-                .with(Condition.condition().term(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.BOILING), Variant.variant().with(VariantProperties.MODEL, boiling)));
+                .with(stateCondition(AlchemicalCauldronBlock.LIT, true), Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/alchemy_cauldron_fire")))
+                .with(stateCondition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.FILLED), Variant.variant().with(VariantProperties.MODEL, normal))
+                .with(stateCondition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.BOILING), Variant.variant().with(VariantProperties.MODEL, boiling)));
         createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
     }
 
@@ -222,7 +232,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
     }
 
     protected void createEmptyCandleHolder(CandleHolderBlock block) {
-        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(BlockStateProperties.HORIZONTAL_FACING).generate(facing -> Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)).with(VariantProperties.Y_ROT, directionToRotation(facing)))));
+        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(BlockStateProperties.HORIZONTAL_FACING).generate(facing -> Variant.variant().with(VariantProperties.MODEL, getModelLocation(block)).with(VariantProperties.Y_ROT, directionToRotation(facing)))));
     }
 
     protected void createFilledCandleHolder(CandleHolderBlock block, Item candle, ModelTemplate modelTemplate) {
@@ -251,24 +261,21 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
 
     public void createVampireSoulLantern() {
         VampireSoulLanternBlock block = ModBlocks.VAMPIRE_SOUL_LANTERN.get();
-        ResourceLocation model = ModelLocationUtils.getModelLocation(block);
-        ResourceLocation hangingModel = ModelLocationUtils.getModelLocation(block, "_hanging");
+
+        ResourceLocation model = getModelLocation(block);
+        ResourceLocation hangingModel = getModelLocation(block, "_hanging");
+
         this.registerSimpleFlatItemModel(block.asItem());
 
         MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
 
-        Condition.TerminalCondition standing = Condition.condition().term(VampireSoulLanternBlock.HANGING, false);
-        Condition.TerminalCondition hanging = Condition.condition().term(VampireSoulLanternBlock.HANGING, true);
+        Condition.TerminalCondition standing = stateCondition(VampireSoulLanternBlock.HANGING, false);
+        Condition.TerminalCondition hanging = stateCondition(VampireSoulLanternBlock.HANGING, true);
 
-        List.of(
-                Pair.of(Direction.NORTH, VariantProperties.Rotation.R0),
-                Pair.of(Direction.EAST, VariantProperties.Rotation.R90),
-                Pair.of(Direction.SOUTH, VariantProperties.Rotation.R180),
-                Pair.of(Direction.WEST, VariantProperties.Rotation.R270)
-        ).forEach(pair -> {
+        HORIZONTAL_ROTATION.forEach(pair -> {
             Direction direction = pair.getFirst();
             VariantProperties.Rotation rotation = pair.getSecond();
-            Condition.TerminalCondition facing = Condition.condition().term(VampireSoulLanternBlock.HORIZONTAL_FACING, direction);
+            Condition.TerminalCondition facing = stateCondition(VampireSoulLanternBlock.HORIZONTAL_FACING, direction);
 
             multiPartGenerator.with(Condition.and(facing, standing), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, rotation));
             multiPartGenerator.with(Condition.and(facing, hanging), Variant.variant().with(VariantProperties.MODEL, hangingModel).with(VariantProperties.Y_ROT, rotation));
@@ -277,16 +284,64 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         this.blockStateOutput.accept(multiPartGenerator);
     }
 
+    protected void createBloodGrinder() {
+        BloodGrinderBlock block = ModBlocks.BLOOD_GRINDER.get();
+
+        ResourceLocation fullModel = getModelLocation(block);
+        ResourceLocation bottomModelEmpty = getModelLocation(block, "_bottom_empty");
+        ResourceLocation bottomModel = getModelLocation(block, "_bottom");
+        ResourceLocation baseModel = getModelLocation(block, "_base");
+        ResourceLocation wheelModel = getModelLocation(block, "_wheel");
+        ResourceLocation grindingWheelModel = getModelLocation(block, "_wheel_grinding");
+
+        this.createDefaultBlockItem(block, fullModel);
+
+        MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
+
+        HORIZONTAL_ROTATION.forEach(pair -> {
+            Direction direction = pair.getFirst();
+            VariantProperties.Rotation rotation = pair.getSecond();
+            Condition.TerminalCondition facing = stateCondition(BloodGrinderBlock.FACING, direction);
+
+            multiPartGenerator.with(Condition.and(stateCondition(BloodGrinderBlock.HAS_FILTER, false), facing), Variant.variant().with(VariantProperties.MODEL, bottomModelEmpty).with(VariantProperties.Y_ROT, rotation));
+            multiPartGenerator.with(Condition.and(stateCondition(BloodGrinderBlock.HAS_FILTER, true), facing), Variant.variant().with(VariantProperties.MODEL, bottomModel).with(VariantProperties.Y_ROT, rotation));
+        });
+
+        multiPartGenerator.with(Variant.variant().with(VariantProperties.MODEL, baseModel));
+
+        multiPartGenerator.with(stateCondition(BloodGrinderBlock.GRINDING, false), Variant.variant().with(VariantProperties.MODEL, wheelModel));
+        multiPartGenerator.with(stateCondition(BloodGrinderBlock.GRINDING, true), Variant.variant().with(VariantProperties.MODEL, grindingWheelModel));
+
+        this.blockStateOutput.accept(multiPartGenerator);
+    }
+
+    protected void createBloodSieve() {
+        BloodSieveBlock block = ModBlocks.BLOOD_SIEVE.get();
+
+        ResourceLocation model = getModelLocation(block);
+        ResourceLocation modelEmpty = getModelLocation(block, "_empty");
+
+        this.createDefaultBlockItem(block, model);
+
+        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.properties(BloodSieveBlock.FACING, BloodSieveBlock.HAS_FILTER)
+                        .generate((facing, hasFilter) -> Variant.variant()
+                                .with(VariantProperties.MODEL, hasFilter ? model : modelEmpty)
+                                .with(VariantProperties.Y_ROT, directionToRotation(facing))
+                        )
+                )
+        );
+    }
+
     protected void createMotherTrophy() {
         createNonTemplateModelBlock(ModBlocks.MOTHER_TROPHY.get());
-        ResourceLocation modelLocation = ModelLocationUtils.getModelLocation(ModBlocks.MOTHER_TROPHY.get());
+        ResourceLocation modelLocation = getModelLocation(ModBlocks.MOTHER_TROPHY.get());
         this.itemModelOutput.accept(ModBlocks.MOTHER_TROPHY.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(modelLocation), ItemModelUtils.specialModel(modelLocation, new MotherTrophyItemRenderer.Unbaked())));
     }
 
     protected void createNonTemplateBlocks() {
         Stream.of(
                 ModBlocks.ALTAR_CLEANSING,
-                ModBlocks.BLOOD_GRINDER,
                 ModBlocks.ALTAR_INFUSION,
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,
@@ -335,33 +390,21 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         ResourceLocation side1 = mod("block/cursed_bark_side");
         ResourceLocation side2 = mod("block/cursed_bark_side_2");
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.DIRECT_CURSED_BARK.get())
-                .with(Condition.condition().term(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                .with(Condition.condition().term(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R0))
-                .with(Condition.condition().term(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                .with(Condition.condition().term(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                .with(Condition.condition().term(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                .with(Condition.condition().term(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .with(stateCondition(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .with(stateCondition(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R0))
+                .with(stateCondition(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                .with(stateCondition(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                .with(stateCondition(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                .with(stateCondition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.VERTICAL), Variant.variant().with(VariantProperties.MODEL, side1).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
 
-                .with(Condition.condition().term(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                .with(Condition.condition().term(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                .with(Condition.condition().term(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                .with(Condition.condition().term(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                .with(Condition.condition().term(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                .with(Condition.condition().term(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .with(stateCondition(DirectCursedBarkBlock.EAST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .with(stateCondition(DirectCursedBarkBlock.NORTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                .with(stateCondition(DirectCursedBarkBlock.WEST_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                .with(stateCondition(DirectCursedBarkBlock.SOUTH_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                .with(stateCondition(DirectCursedBarkBlock.UP_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                .with(stateCondition(DirectCursedBarkBlock.DOWN_TYPE, DirectCursedBarkBlock.Type.HORIZONTAL), Variant.variant().with(VariantProperties.MODEL, side2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
         );
         createNonTemplateModelBlock(ModBlocks.DIAGONAL_CURSED_BARK.get());
-    }
-
-    protected void createBloodSieve() {
-        ResourceLocation bloodSieve = ModModelTemplates.BLOOD_SIEVE.getDefaultModelLocation(ModBlocks.BLOOD_SIEVE.get());
-        ResourceLocation active = ModModelTemplates.BLOOD_SIEVE.createWithSuffix(ModBlocks.BLOOD_SIEVE.get(), "_active", new TextureMapping().put(ModTextureSlots.FILTER, mod("block/blood_sieve_filter_active")), this.modelOutput);
-
-        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(ModBlocks.BLOOD_SIEVE.get())
-                .with(PropertyDispatch.property(SieveBlock.PROPERTY_ACTIVE)
-                        .select(true, Variant.variant().with(VariantProperties.MODEL, active))
-                        .select(false, Variant.variant().with(VariantProperties.MODEL, bloodSieve))
-                ));
-        createDefaultBlockItem(ModBlocks.BLOOD_SIEVE.get(), bloodSieve);
     }
 
     protected void createHunterTable() {
@@ -371,9 +414,9 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         ResourceLocation hunterTableBottle = mod("block/hunter_table/hunter_table_bottle");
         MultiPartGenerator generator = MultiPartGenerator.multiPart(ModBlocks.HUNTER_TABLE.get());
         withHorizontalRotation(generator, null, hunterTable);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.WEAPON_TABLE, true), hunterTableHammer);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.ALCHEMICAL_CAULDRON, true), hunterTableGarlic);
-        withHorizontalRotation(generator, Condition.condition().term(HunterTableBlock.POTION_TABLE, true), hunterTableBottle);
+        withHorizontalRotation(generator, stateCondition(HunterTableBlock.WEAPON_TABLE, true), hunterTableHammer);
+        withHorizontalRotation(generator, stateCondition(HunterTableBlock.ALCHEMICAL_CAULDRON, true), hunterTableGarlic);
+        withHorizontalRotation(generator, stateCondition(HunterTableBlock.POTION_TABLE, true), hunterTableBottle);
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }
@@ -397,7 +440,7 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
             ModModelTemplates.COFFIN.create(VResourceLocation.mod("block/coffin/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
             var coffin = ModModelTemplates.COFFIN_BOTTOM.create(VResourceLocation.mod("block/coffin/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
             ModModelTemplates.COFFIN_TOP.create(VResourceLocation.mod("block/coffin/coffin_top_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            ResourceLocation model = ModelLocationUtils.decorateBlockModelLocation(modString("coffin_empty"));
+            ResourceLocation model = decorateBlockModelLocation(modString("coffin_empty"));
             this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, model)));
             this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(coffin));
         });
@@ -407,30 +450,28 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         ResourceLocation model = mod("block/alchemy_table/alchemy_table");
         MultiPartGenerator generator = MultiPartGenerator.multiPart(ModBlocks.ALCHEMY_TABLE.get());
         withHorizontalRotation(generator, null, model);
-        withHorizontalRotation(generator, Condition.condition().term(AlchemyTableBlock.HAS_BOTTLE_INPUT_0, true), mod("block/alchemy_table/alchemy_table_input_0"));
-        withHorizontalRotation(generator, Condition.condition().term(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true), mod("block/alchemy_table/alchemy_table_input_1"));
-        withHorizontalRotation(generator, Condition.condition().term(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true), mod("block/alchemy_table/alchemy_table_output_0"));
-        withHorizontalRotation(generator, Condition.condition().term(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true), mod("block/alchemy_table/alchemy_table_output_1"));
+        withHorizontalRotation(generator, stateCondition(AlchemyTableBlock.HAS_BOTTLE_INPUT_0, true), mod("block/alchemy_table/alchemy_table_input_0"));
+        withHorizontalRotation(generator, stateCondition(AlchemyTableBlock.HAS_BOTTLE_INPUT_1, true), mod("block/alchemy_table/alchemy_table_input_1"));
+        withHorizontalRotation(generator, stateCondition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true), mod("block/alchemy_table/alchemy_table_output_0"));
+        withHorizontalRotation(generator, stateCondition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true), mod("block/alchemy_table/alchemy_table_output_1"));
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.ALCHEMY_TABLE.get(), model);
-
     }
 
     protected void createWeaponTable() {
         ResourceLocation model = mod("block/weapon_table/weapon_table");
         MultiPartGenerator generator = MultiPartGenerator.multiPart(ModBlocks.WEAPON_TABLE.get());
         withHorizontalRotation(generator, null, model);
-        withHorizontalRotation(generator, Condition.condition().term(WeaponTableBlock.LAVA, 1), mod("block/weapon_table/weapon_table_lava1"));
-        withHorizontalRotation(generator, Condition.condition().term(WeaponTableBlock.LAVA, 2), mod("block/weapon_table/weapon_table_lava2"));
-        withHorizontalRotation(generator, Condition.condition().term(WeaponTableBlock.LAVA, 3), mod("block/weapon_table/weapon_table_lava3"));
-        withHorizontalRotation(generator, Condition.condition().term(WeaponTableBlock.LAVA, 4), mod("block/weapon_table/weapon_table_lava4"));
-        withHorizontalRotation(generator, Condition.condition().term(WeaponTableBlock.LAVA, 5), mod("block/weapon_table/weapon_table_lava5"));
+        withHorizontalRotation(generator, stateCondition(WeaponTableBlock.LAVA, 1), mod("block/weapon_table/weapon_table_lava1"));
+        withHorizontalRotation(generator, stateCondition(WeaponTableBlock.LAVA, 2), mod("block/weapon_table/weapon_table_lava2"));
+        withHorizontalRotation(generator, stateCondition(WeaponTableBlock.LAVA, 3), mod("block/weapon_table/weapon_table_lava3"));
+        withHorizontalRotation(generator, stateCondition(WeaponTableBlock.LAVA, 4), mod("block/weapon_table/weapon_table_lava4"));
+        withHorizontalRotation(generator, stateCondition(WeaponTableBlock.LAVA, 5), mod("block/weapon_table/weapon_table_lava5"));
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.WEAPON_TABLE.get(), model);
     }
 
     protected void createTent() {
-
         ResourceLocation tr = ModModelTemplates.TENT.create(mod("block/tent_tr"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tr")), this.modelOutput);
         ResourceLocation tl = ModModelTemplates.TENT.create(mod("block/tent_tl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tl")), this.modelOutput);
         ResourceLocation bl = ModModelTemplates.TENT.create(mod("block/tent_bl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_bl")), this.modelOutput);
@@ -438,12 +479,12 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
 
         Stream.of(ModBlocks.TENT, ModBlocks.TENT_MAIN).map(DeferredHolder::get).forEach(block -> {
             MultiPartGenerator generator = MultiPartGenerator.multiPart(block);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 0), br);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 1), bl);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 2), tl);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 3), tr);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 2), VResourceLocation.mod("block/tentback"), 2);
-            withHorizontalRotation(generator, Condition.condition().term(TentBlock.POSITION, 3), VResourceLocation.mod("block/tentback_flipped"));
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 0), br);
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 1), bl);
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 2), tl);
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 3), tr);
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 2), VResourceLocation.mod("block/tentback"), 2);
+            withHorizontalRotation(generator, stateCondition(TentBlock.POSITION, 3), VResourceLocation.mod("block/tentback_flipped"));
             this.blockStateOutput.accept(generator);
         });
     }
@@ -456,10 +497,10 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         Function<Condition, Condition> and = cond -> condition == null ? cond : Condition.and(cond, condition);
         List<VariantProperties.Rotation> list = Arrays.stream(VariantProperties.Rotation.values()).toList();
         generator
-                .with(and.apply(Condition.condition().term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R0) + rotation) % list.size())))
-                .with(and.apply(Condition.condition().term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R90) + rotation) % list.size())))
-                .with(and.apply(Condition.condition().term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R180) + rotation) % list.size())))
-                .with(and.apply(Condition.condition().term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R270) + rotation) % list.size())));
+                .with(and.apply(stateCondition(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R0) + rotation) % list.size())))
+                .with(and.apply(stateCondition(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R90) + rotation) % list.size())))
+                .with(and.apply(stateCondition(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R180) + rotation) % list.size())))
+                .with(and.apply(stateCondition(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.Y_ROT, list.get((list.indexOf(VariantProperties.Rotation.R270) + rotation) % list.size())));
     }
 
     protected void createCursedGrassBlock() {
@@ -478,13 +519,13 @@ public class ModBlockModelGenerators extends VBlockModelGenerators {
         Variant variant = Variant.variant().
                 with(VariantProperties.MODEL, ModModelTemplates.CUBE_BOTTOM_TOP.createWithSuffix(ModBlocks.CURSED_GRASS.get(), "_snowy", snowTextureMapping, this.modelOutput));
         this.createGrassLikeBlock(ModBlocks.CURSED_GRASS.get(), model, variant);
-        this.registerSimpleTintedItemModel(ModBlocks.CURSED_GRASS.get(), ModelLocationUtils.getModelLocation(ModBlocks.CURSED_GRASS.get()), new GrassColorSource());
+        this.registerSimpleTintedItemModel(ModBlocks.CURSED_GRASS.get(), getModelLocation(ModBlocks.CURSED_GRASS.get()), new GrassColorSource());
     }
 
     protected void createInfuser() {
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.INFUSER.get())
                 .with(Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/blood_infuser/infuser")))
-                .with(Condition.condition().term(BloodInfuserBlock.IS_ACTIVE, true), Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/blood_infuser/infuser_blood"))));
+                .with(stateCondition(BloodInfuserBlock.IS_ACTIVE, true), Variant.variant().with(VariantProperties.MODEL, VResourceLocation.mod("block/blood_infuser/infuser_blood"))));
         this.createDefaultBlockItem(ModBlocks.INFUSER.get(), VResourceLocation.mod("block/blood_infuser/infuser"));
     }
 }

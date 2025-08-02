@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 public class ModBlockTags {
     public static final TagKey<Block> CURSED_EARTH = tag("cursed_earth");
@@ -51,11 +50,11 @@ public class ModBlockTags {
 
     public static final TagKey<Block> GARLIC = common("crops/garlic");
 
-    private static @NotNull TagKey<Block> tag(@NotNull String name) {
+    private static TagKey<Block> tag(String name) {
         return BlockTags.create(VResourceLocation.mod(name));
     }
 
-    private static @NotNull TagKey<Block> common(@NotNull String name) {
+    private static TagKey<Block> common(String name) {
         return BlockTags.create(VResourceLocation.common(name));
     }
 
@@ -67,7 +66,7 @@ public class ModBlockTags {
         public static final String FARMERS_DELIGHT = "farmersdelight";
         public static final TagKey<Block> TRAY_HEAT_SOURCES = compatTag(FARMERS_DELIGHT, "tray_heat_sources");
 
-        private static @NotNull TagKey<Block> compatTag(@NotNull String namespace, @NotNull String name) {
+        private static TagKey<Block> compatTag(String namespace, String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(namespace, name));
         }
     }

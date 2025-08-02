@@ -25,12 +25,12 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.IArmPoseTransformer;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemExtensions {
 
     public static final IClientItemExtensions CRUCIFIX = new IClientItemExtensions() {
+
         @Override
         public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
             if (entityLiving.isUsingItem() && entityLiving.getUseItemRemainingTicks() > 0) {
@@ -43,7 +43,7 @@ public class ItemExtensions {
     public static final IClientItemExtensions VAMPIRE_CLOTHING = new CustomArmorItemExtension() {
 
         @Override
-        public ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack) {
+        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
             return switch (RegUtil.id(itemStack.getItem()).getPath()) {
                 case "vampire_clothing_crown" -> ModEntitiesRender.CLOTHING_CROWN;
                 case "vampire_clothing_legs" -> ModEntitiesRender.CLOTHING_PANTS;
@@ -56,7 +56,7 @@ public class ItemExtensions {
 
     public static final IClientItemExtensions VAMPIRE_CLOAK = new CustomArmorItemExtension() {
         @Override
-        public ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack) {
+        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
             return ModEntitiesRender.CLOAK;
         }
     };
@@ -64,7 +64,7 @@ public class ItemExtensions {
     public static final IClientItemExtensions HUNTER_HAT = new CustomArmorItemExtension() {
 
         @Override
-        public ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack) {
+        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
             return switch (RegUtil.id(itemStack.getItem()).getPath()) {
                 case "hunter_hat_tall" -> ModEntitiesRender.HUNTER_HAT_TALL;
                 case "hunter_hat_broad" -> ModEntitiesRender.HUNTER_HAT_BROAD;
@@ -75,10 +75,10 @@ public class ItemExtensions {
 
     public static abstract class CustomArmorItemExtension implements IClientItemExtensions {
 
-        public abstract ModelLayerLocation getArmorModelLocation(@NotNull ItemStack itemStack);
+        public abstract ModelLayerLocation getArmorModelLocation(ItemStack itemStack);
 
         @Override
-        public @NotNull Model getGenericArmorModel(@NotNull ItemStack itemStack, EquipmentClientInfo.@NotNull LayerType layerType, @NotNull Model original) {
+        public Model getGenericArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
             VampirismArmorModel replacement = VampirismModClient.getInstance().getArmorModels().getModel(getArmorModelLocation(itemStack));
             if (original instanceof HumanoidModel<?> humanoidModel) {
                 replacement.copyFromHumanoid(humanoidModel);
@@ -152,9 +152,10 @@ public class ItemExtensions {
 
 
     public static final IClientItemExtensions HUNTER_CROSSBOW = new IClientItemExtensions() {
+
         @Nullable
         @Override
-        public HumanoidModel.ArmPose getArmPose(@NotNull LivingEntity entityLiving, @NotNull InteractionHand hand, ItemStack itemStack) {
+        public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
             if (itemStack.getItem() instanceof HunterCrossbowItem crossbow) {
                 ItemStack otherStack = entityLiving.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
                 if (crossbow.canUseDoubleCrossbow(entityLiving) && otherStack.getItem() instanceof IHunterCrossbow) {
@@ -186,7 +187,7 @@ public class ItemExtensions {
         }
 
         @Override
-        public boolean applyForgeHandTransform(@NotNull PoseStack pPoseStack, LocalPlayer pPlayer, @NotNull HumanoidArm humanoidarm, ItemStack pStack, float pPartialTicks, float pEquippedProgress, float pSwingProgress) {
+        public boolean applyForgeHandTransform(PoseStack pPoseStack, LocalPlayer pPlayer, HumanoidArm humanoidarm, ItemStack pStack, float pPartialTicks, float pEquippedProgress, float pSwingProgress) {
             boolean flag = humanoidarm == pPlayer.getMainArm();
             InteractionHand pHand = flag ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
             if (pStack.getItem() instanceof HunterCrossbowItem) {

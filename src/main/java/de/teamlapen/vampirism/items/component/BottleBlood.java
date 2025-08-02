@@ -17,15 +17,8 @@ public record BottleBlood(int blood) implements IBottleBlood {
     public static final StreamCodec<RegistryFriendlyByteBuf, BottleBlood> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.VAR_INT, BottleBlood::blood, BottleBlood::new);
 
     public BottleBlood {
-        if (blood < 0 || blood > 9) {
-            throw new IllegalArgumentException("Blood amount must be between 0 and 9");
+        if (blood < 0 || blood > MAX_VALUE) {
+            throw new IllegalArgumentException("Blood amount must be between 0 and " + MAX_VALUE);
         }
     }
-//
-//    @Override
-//    public void onConsume(Level level, LivingEntity entity, ItemStack stack, Consumable consumable) {
-//        if (entity instanceof IVampire vampire) {
-//            vampire.
-//        }
-//    }
 }

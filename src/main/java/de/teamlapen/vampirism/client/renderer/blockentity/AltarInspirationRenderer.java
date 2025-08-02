@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.lib.lib.client.VertexUtils;
 import de.teamlapen.vampirism.blockentity.AltarInspirationBlockEntity;
-import de.teamlapen.vampirism.client.core.ModMaterials;
+import de.teamlapen.vampirism.core.ModFluids;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 public class AltarInspirationRenderer implements BlockEntityRenderer<AltarInspirationBlockEntity> {
 
@@ -17,14 +16,17 @@ public class AltarInspirationRenderer implements BlockEntityRenderer<AltarInspir
 
     @Override
     public void render(AltarInspirationBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        float fillPercentage = blockEntity.getFillPercentage();
-        if (fillPercentage > 0.0F) {
-            poseStack.pushPose();
-            poseStack.translate(8 / 16f, 1 / 16f, 8 / 16f);
-            poseStack.scale(8 / 16f, 11 / 16f, 8 / 16f);
-            VertexConsumer buffer = ModMaterials.BLOOD_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
-            VertexUtils.addCube(buffer, poseStack, 1, fillPercentage, packedLight, -1);
-            poseStack.popPose();
-        }
+        VertexUtils.renderFluidTank(
+                ModFluids.BLOOD,
+                blockEntity.getModelData().get(AltarInspirationBlockEntity.FLUID_AMOUNT),
+                AltarInspirationBlockEntity.CAPACITY,
+                new Vec3(8 / 16f, 1 / 16f, 8 / 16f),
+                new Vec3(8 / 16f,10.8 / 16f,8 / 16f),
+                0.85f,
+                poseStack,
+                bufferSource,
+                packedLight,
+                packedOverlay
+        );
     }
 }

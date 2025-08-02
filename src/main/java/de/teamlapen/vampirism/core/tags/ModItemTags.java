@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.NotNull;
 
 public class ModItemTags {
     public static final TagKey<Item> CURSED_EARTH = tag("cursed_earth");
@@ -77,11 +76,11 @@ public class ModItemTags {
     public static final TagKey<Item> VAMPIRE_SWORD_REPAIRABLE_SIMPLE = tag("repairable/vampire_sword/simple");
     public static final TagKey<Item> VAMPIRE_SWORD_REPAIRABLE_ENHANCED = tag("repairable/vampire_sword/enhanced");
 
-    private static @NotNull TagKey<Item> tag(@NotNull String name) {
+    private static TagKey<Item> tag(String name) {
         return ItemTags.create(VResourceLocation.mod(name));
     }
 
-    private static @NotNull TagKey<Item> common(@NotNull String name) {
+    private static TagKey<Item> common(String name) {
         return ItemTags.create(VResourceLocation.common(name));
     }
 
@@ -90,7 +89,7 @@ public class ModItemTags {
         public static final TagKey<Item> SERENE_SEASONS_AUTUMN_CROPS = compatTag(SERENE_SEASONS, "autumn_crops");
         public static final TagKey<Item> SERENE_SEASONS_SUMMER_CROPS = compatTag(SERENE_SEASONS, "summer_crops");
 
-        private static @NotNull TagKey<Item> compatTag(@NotNull String namespace, @NotNull String name) {
+        private static TagKey<Item> compatTag(String namespace, String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(namespace, name));
         }
     }

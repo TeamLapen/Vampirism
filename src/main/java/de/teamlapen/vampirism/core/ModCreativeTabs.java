@@ -196,6 +196,8 @@ public class ModCreativeTabs {
             add(VAMPIRE_MINION_UPGRADE_ENHANCED);
             add(VAMPIRE_MINION_UPGRADE_SPECIAL);
 
+            add(FABRIC_FILTER);
+
             add(FEEDING_ADAPTER);
             add(OBLIVION_POTION);
             add(GARLIC_FINDER);
@@ -385,7 +387,6 @@ public class ModCreativeTabs {
             insert(GHOST_SPAWN_EGG, event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
-            insertAfter(IMPURE_BLOOD_BUCKET, BLOOD_BUCKET, event);
         }
     }
 

@@ -16,7 +16,7 @@
     "icon": {
       "components": {
         "vampirism:bottle_blood": {
-          "blood": 9
+          "blood": 5
         }
       },
       "count": 1,

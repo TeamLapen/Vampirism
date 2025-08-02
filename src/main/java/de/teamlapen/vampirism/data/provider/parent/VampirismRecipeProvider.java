@@ -65,6 +65,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     protected static final TagKey<Item> LOG = ItemTags.LOGS;
     protected static final TagKey<Item> STICK = Tags.Items.RODS_WOODEN;
     protected static final TagKey<Item> LEATHER = Tags.Items.LEATHERS;
+    protected static final TagKey<Item> STRING = Tags.Items.STRINGS;
     protected static final TagKey<Item> STONE = Tags.Items.STONES;
     protected static final TagKey<Item> COBBLESTONE = Tags.Items.COBBLESTONES;
     protected static final TagKey<Item> GLASS = Tags.Items.GLASS_BLOCKS;

@@ -16,12 +16,14 @@ public class MigrationData {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
         fixSkillsHunter(new Mapping(HunterSkills.SKILLS));
         fixPotions(new Mapping(ModPotions.POTIONS));
-        fixTiles(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
+        fixBlockEntities(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
         fixItems(new Mapping(ModItems.ITEMS));
         fixBlocks(new Mapping(ModBlocks.BLOCKS));
         fixEntityTypes(new Mapping(ModEntities.ENTITY_TYPES));
         fixEffects(new Mapping(ModEffects.EFFECTS));
         fixPoiTypes(new Mapping(ModVillage.POI_TYPES));
+        fixFluids(new Mapping(ModFluids.FLUIDS));
+        fixFluidTypes(new Mapping(ModFluids.FLUID_TYPES));
     }
 
     public record Mapping(DeferredRegister<?> register) {
@@ -51,8 +53,9 @@ public class MigrationData {
         mapping.remap("vampirism:very_strong_harming", "strong_harming");
     }
 
-    private static void fixTiles(@NotNull Mapping mapping) {
+    private static void fixBlockEntities(@NotNull Mapping mapping) {
         mapping.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
+        mapping.remap("vampirism:sieve", "vampirism:blood_sieve");
     }
 
     private static void fixItems(@NotNull Mapping mapping) {
@@ -137,5 +140,13 @@ public class MigrationData {
 
     private static void fixPoiTypes(@NotNull Mapping mapping) {
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
+    }
+
+    private static void fixFluids(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:impure_blood", "vampirism:blood");
+    }
+
+    private static void fixFluidTypes(@NotNull Mapping mapping) {
+        mapping.remap("vampirism:impure_blood", "vampirism:blood");
     }
 }

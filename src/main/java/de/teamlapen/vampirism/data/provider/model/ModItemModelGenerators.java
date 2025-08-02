@@ -142,15 +142,11 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.itemModelOutput.accept(ModItems.BLOOD_BOTTLE.asItem(),
                 ItemModelUtils.rangeSelect(new BloodFilled(),
                         ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_0", ModModelTemplates.FLAT_ITEM)),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_1", ModModelTemplates.FLAT_ITEM)), 0.11f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_2", ModModelTemplates.FLAT_ITEM)), 0.22f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_3", ModModelTemplates.FLAT_ITEM)), 0.33f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_4", ModModelTemplates.FLAT_ITEM)), 0.44f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_5", ModModelTemplates.FLAT_ITEM)), 0.55f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_6", ModModelTemplates.FLAT_ITEM)), 0.66f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_7", ModModelTemplates.FLAT_ITEM)), 0.77f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_8", ModModelTemplates.FLAT_ITEM)), 0.88f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_9", ModModelTemplates.FLAT_ITEM)), 0.99f)
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_1", ModModelTemplates.FLAT_ITEM)), 0.20f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_2", ModModelTemplates.FLAT_ITEM)), 0.40f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_3", ModModelTemplates.FLAT_ITEM)), 0.60f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_4", ModModelTemplates.FLAT_ITEM)), 0.80f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemModel(ModItems.BLOOD_BOTTLE.get(), "_5", ModModelTemplates.FLAT_ITEM)), 0.99f)
                 ));
     }
 
@@ -163,6 +159,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                         ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_3"), VResourceLocation.mod("item/arrow_clip3"))), 0.99f)
                 ));
     }
+
     protected void generateQuarrelPouch() {
         this.itemModelOutput.accept(ModItems.QUARREL_POUCH.asItem(),
                 ItemModelUtils.rangeSelect(new ClipFilled(),
@@ -178,7 +175,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
 
         Stream.of(ModItems.HUNTER_INTEL_0, ModItems.HUNTER_INTEL_1, ModItems.HUNTER_INTEL_2, ModItems.HUNTER_INTEL_3, ModItems.HUNTER_INTEL_4, ModItems.HUNTER_INTEL_5, ModItems.HUNTER_INTEL_6, ModItems.HUNTER_INTEL_7, ModItems.HUNTER_INTEL_8, ModItems.HUNTER_INTEL_9).map(DeferredItem::asItem).forEach(item ->
                 this.itemModelOutput.accept(item, ItemModelUtils.plainModel(mod("item/hunter_intel")))
-
         );
     }
 
@@ -222,7 +218,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_COAT_LEGS_ENHANCED,
                 ModItems.HUNTER_COAT_LEGS_ULTIMATE,
                 ModItems.BLOOD_BUCKET,
-                ModItems.IMPURE_BLOOD_BUCKET,
                 ModItems.PURE_SALT,
                 ModItems.PURE_SALT_WATER,
                 ModItems.HUMAN_HEART,
@@ -269,6 +264,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.VAMPIRE_CLOTHING_BOOTS,
                 ModItems.VAMPIRE_CLOTHING_LEGS,
                 ModItems.VAMPIRE_CLOTHING_CROWN,
+                ModItems.FABRIC_FILTER,
                 ModItems.GARLIC_FINDER,
                 ModItems.DARK_SPRUCE_BOAT,
                 ModItems.CURSED_SPRUCE_BOAT,

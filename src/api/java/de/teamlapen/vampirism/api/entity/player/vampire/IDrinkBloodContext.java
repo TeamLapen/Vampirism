@@ -32,4 +32,10 @@ public interface IDrinkBloodContext {
      */
     Optional<BlockPos> getBlockPos();
 
+    /**
+     * @return Whether the player should have the extra blood that they haven't drunk poured into glass bottles in their inventory
+     */
+    boolean returnsSpareBlood();
+
+    IDrinkBloodContext setReturnsSpareBlood(boolean returnsSpareBlood);
 }

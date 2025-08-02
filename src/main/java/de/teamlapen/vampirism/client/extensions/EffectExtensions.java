@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
-import org.jetbrains.annotations.NotNull;
 
 public class EffectExtensions {
 
@@ -38,8 +37,9 @@ public class EffectExtensions {
     };
 
     public static final IClientMobEffectExtensions NIGHT_VISION = new IClientMobEffectExtensions() {
+
         @Override
-        public boolean isVisibleInInventory(@NotNull MobEffectInstance instance) {
+        public boolean isVisibleInInventory(MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
                 return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
             }
@@ -47,7 +47,7 @@ public class EffectExtensions {
         }
 
         @Override
-        public boolean isVisibleInGui(@NotNull MobEffectInstance instance) {
+        public boolean isVisibleInGui(MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
                 return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
             }
@@ -55,22 +55,23 @@ public class EffectExtensions {
         }
 
 //        @Override
-//        public boolean renderInventoryIcon(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull GuiGraphics graphics, int x, int y, int blitOffset) {
+//        public boolean renderInventoryIcon(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
 //            return true;
 //        }
 //
 //        @Override
-//        public boolean renderInventoryText(@NotNull MobEffectInstance instance, @NotNull EffectRenderingInventoryScreen<?> screen, @NotNull GuiGraphics graphics, int x, int y, int blitOffset) {
+//        public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
 //            return true;
 //        }
 
         @Override
-        public boolean renderGuiIcon(@NotNull MobEffectInstance instance, @NotNull Gui gui, @NotNull GuiGraphics graphics, int x, int y, float z, float alpha) {
+        public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphics graphics, int x, int y, float z, float alpha) {
             return true;
         }
     };
 
     public static final IClientMobEffectExtensions POISON = new IClientMobEffectExtensions() {
+
 //        @Override
 //        public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
 //            Component component = ((MutableComponent) ((EffectRenderingInventoryScreenAccessor) screen).invoke_getEffectName(instance)).append(" - ").append(MobEffectUtil.formatDuration(instance, 1.0F, Minecraft.getInstance().level.tickRateManager().tickrate()));

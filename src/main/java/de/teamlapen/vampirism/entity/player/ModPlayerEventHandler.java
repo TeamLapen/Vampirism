@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -21,7 +22,6 @@ import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
-import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.component.FactionRestriction;
 import de.teamlapen.vampirism.items.component.FactionSlayer;
 import de.teamlapen.vampirism.items.crossbow.HunterCrossbowItem;
@@ -346,7 +346,7 @@ public class ModPlayerEventHandler {
                             convert = Optional.ofNullable(event.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, event.getPos(), state, entity, event.getFace())).map(fluidHandler -> {
                                 boolean flag = false;
                                 FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.BLOOD.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
-                                if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
+                                if (drain.getAmount() >= IBottleBlood.MULTIPLIER) {
                                     flag = true;
                                 }
                                 if (flag && block instanceof AltarInspirationBlock) {

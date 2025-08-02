@@ -5,60 +5,62 @@ import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.client.gui.components.SplashRenderer;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
 
     @Unique
     private static final String VAMPIRISM_SPLASHES_LOCATION = "/assets/" + REFERENCE.MODID + "/texts/splashes.txt";
-
     @Unique
     private static final Logger vampirism$LOGGER = LogManager.getLogger();
+    @Unique
+    private static final RandomSource vampirism$RANDOM = RandomSource.create();
 
-    @Final
-    @Shadow
-    private List<String> splashes;
+    @Inject(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
+    private void vampirism$prepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<List<String>> cir) {
+        List<String> baseSplashes = cir.getReturnValue();
+        List<String> customSplashes = Collections.emptyList();
 
-    @Inject(method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("TAIL"))
-    private void applyCustomSplashes(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         try (InputStream inputStream = VampirismMod.class.getResourceAsStream(VAMPIRISM_SPLASHES_LOCATION)) {
             if (inputStream != null) {
-                try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-                    BufferedReader bufferedReader = new BufferedReader(reader);
-                    List<String> customSplashes = bufferedReader.lines().map(String::trim).filter(line -> !line.isEmpty()).toList();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                    customSplashes = reader.lines().map(String::trim).filter(line -> !line.isEmpty()).toList();
 
-                    // Vampirism's splashes are added more than one time in order to increase their chance of being displayed, otherwise they would unlikely be rolled at all
-                    double chance = 0.2;
-                    int timesAdded = (int) Math.ceil((chance * splashes.size()) / ((1 - chance) * customSplashes.size()));
-                    for (int i = 0; i < timesAdded; i++) {
-                        this.splashes.addAll(customSplashes);
-                    }
-
-                    vampirism$LOGGER.info("Successfully loaded and added {} Vampirism splashes {} times to {} vanilla ones", customSplashes.size(), timesAdded, splashes.size() - customSplashes.size() * timesAdded);
-                } catch (Exception exception) {
-                    vampirism$LOGGER.warn("Failed to load Vampirism splash file", exception);
+                    vampirism$LOGGER.info("Loaded {} Vampirism splashes", customSplashes.size());
                 }
             }
-        } catch (IOException exception) {
-            vampirism$LOGGER.warn("Failed to load Vampirism splashes", exception);
+        } catch (Exception e) {
+            vampirism$LOGGER.warn("Failed to load Vampirism splash file", e);
         }
+
+        if (!customSplashes.isEmpty()) {
+            double chance = 0.3;
+            int originalSize = baseSplashes.size();
+            int timesAdded = (int) Math.ceil((chance * originalSize) / ((1 - chance) * customSplashes.size()));
+
+            for (int i = 0; i < timesAdded; i++) {
+                for (String splash : customSplashes) {
+                    baseSplashes.add(vampirism$RANDOM.nextInt(baseSplashes.size() + 1), splash);
+                }
+            }
+
+            vampirism$LOGGER.info("Successfully loaded and added {} Vampirism splashes {} times each. Final size: {}", customSplashes.size(), timesAdded, baseSplashes.size());
+        }
+
+        cir.setReturnValue(baseSplashes);
     }
 
     @Inject(method = "getSplash", at = @At("HEAD"), cancellable = true)

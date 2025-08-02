@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
-import org.jetbrains.annotations.NotNull;
 
 public class ModBiomeTags {
     public static class HasFaction {
@@ -40,7 +39,7 @@ public class ModBiomeTags {
         public static final TagKey<Biome> ADVANCED_HUNTER = tag("no_spawn/advanced_hunter");
     }
 
-    private static @NotNull TagKey<Biome> tag(@NotNull String name) {
+    private static TagKey<Biome> tag(String name) {
         return TagKey.create(Registries.BIOME, VResourceLocation.mod(name));
     }
 }
