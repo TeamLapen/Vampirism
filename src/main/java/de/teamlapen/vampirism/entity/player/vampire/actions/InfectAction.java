@@ -49,9 +49,6 @@ public class InfectAction extends DefaultVampireAction {
                 return IActionResult.fail(Component.translatable("text.vampirism.action.infect.can_not_infect"));
             }
 
-            if (player instanceof ServerPlayer serverPlayer) {
-                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.INFECT);
-            }
             player.awardStat(ModStats.INFECTED_CREATURES.get());
             player.level().playSound(null, creature.getX(), creature.getY() + 1.5d, creature.getZ(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1, 1);
 

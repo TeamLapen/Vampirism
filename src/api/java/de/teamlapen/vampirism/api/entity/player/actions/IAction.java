@@ -78,12 +78,20 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
 
     ISkill<T> asSkill();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     static boolean is(@Nullable Holder<? extends IAction<?>> action, @Nullable TagKey<? extends IAction<?>> tag) {
         if (action == null) {
             return false;
         }
         return tag != null && action.is((TagKey) tag);
+    }
+
+    @SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
+    static boolean is(@Nullable Holder<? extends IAction<?>> first, @Nullable Holder<? extends IAction<?>> second) {
+        if (first == null) {
+            return second == null;
+        }
+        return second != null && first.is((Holder) second);
     }
 
     enum PERM {

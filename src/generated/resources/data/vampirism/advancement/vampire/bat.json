@@ -3,9 +3,9 @@
   "criteria": {
     "action": {
       "conditions": {
-        "action": "bat"
+        "action": "vampirism:bat"
       },
-      "trigger": "vampirism:vampire_action"
+      "trigger": "vampirism:action"
     },
     "main": {
       "conditions": {

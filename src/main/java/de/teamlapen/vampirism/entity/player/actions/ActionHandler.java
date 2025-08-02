@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.event.ActionEvent;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.util.Permissions;
@@ -350,6 +351,9 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
                         cooldownTimers.put(action, cooldown);
                     }
                     dirty = true;
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        ModAdvancements.ACTION_TRIGGER.get().trigger(serverPlayer, action);
+                    }
                 }
             }
             return r;

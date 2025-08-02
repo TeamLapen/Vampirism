@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class FactionLevelOverlay implements LayeredDraw.Layer {
+public class FactionLevelOverlay extends BaseOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (this.mc.player != null && this.mc.player.isAlive() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui && VampirismConfig.CLIENT.enableFactionLevelOverlayRendering.get()) {
+        if (canRenderOverlays() && this.mc.player.jumpableVehicle() == null && !this.mc.options.hideGui && VampirismConfig.CLIENT.enableFactionLevelOverlayRendering.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.mc.player);
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
             if (this.mc.gameMode != null && this.mc.gameMode.hasExperience() && !IFaction.is(faction, ModFactionTags.IS_NEUTRAL)) {

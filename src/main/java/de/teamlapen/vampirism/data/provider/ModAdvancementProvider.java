@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.core.tags.ModEntityTags;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.ItemDataUtils;
 import de.teamlapen.vampirism.util.MapUtil;
 import net.minecraft.advancements.*;
@@ -179,7 +180,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder bat = Advancement.Builder.advancement()
                     .display(Items.FEATHER, Component.translatable("advancement.vampirism.bat"), Component.translatable("advancement.vampirism.bat.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(become_vampire)
-                    .addCriterion("action", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.BAT))
+                    .addCriterion("action", ActionCriterionTrigger.TriggerInstance.of(VampireActions.BAT))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             AdvancementHolder first_blood = Advancement.Builder.advancement()
@@ -209,7 +210,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder plague_inc = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), Component.translatable("advancement.vampirism.plague_inc"), Component.translatable("advancement.vampirism.plague_inc.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(first_blood)
-                    .addCriterion("infected", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.INFECT))
+                    .addCriterion("infected", ActionCriterionTrigger.TriggerInstance.of(VampireActions.INFECT))
                     .save(consumer, REFERENCE.MODID + ":vampire/plague_inc");
             AdvancementHolder max_level = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.max_level_vampire"), Component.translatable("advancement.vampirism.max_level_vampire.desc"), null, AdvancementType.GOAL, true, true, true)

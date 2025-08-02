@@ -28,7 +28,7 @@
     "icon": {
       "components": {
         "vampirism:blood_container": {
-          "amount": 5000,
+          "amount": 12600,
           "id": "vampirism:blood"
         }
       },

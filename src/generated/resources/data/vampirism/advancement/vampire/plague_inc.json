@@ -3,9 +3,9 @@
   "criteria": {
     "infected": {
       "conditions": {
-        "action": "infect"
+        "action": "vampirism:infect"
       },
-      "trigger": "vampirism:vampire_action"
+      "trigger": "vampirism:action"
     }
   },
   "display": {
