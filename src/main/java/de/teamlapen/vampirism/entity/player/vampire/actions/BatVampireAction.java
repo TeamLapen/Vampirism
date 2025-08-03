@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -117,11 +118,19 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (VampirismConfig.SERVER.batDimensionBlacklist.get().contains(vampire.getRepresentingPlayer().getCommandSenderWorld().dimension().location().toString())) {
             vampire.getRepresentingPlayer().sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
             return true;
-        } else {
-            float exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get().floatValue();
-            if (exhaustion > 0) vampire.addExhaustion(exhaustion);
-            return vampire.getRepresentingPlayer().isInWater();
+        } else if (vampire.getRepresentingPlayer().isInWater()) {
+            return true;
         }
+        float exhaustion = VampirismConfig.BALANCE.vaBatExhaustion.get().floatValue();
+        if (exhaustion > 0) vampire.addExhaustion(exhaustion);
+        Abilities a = vampire.getRepresentingPlayer().getAbilities();
+        if (!a.mayfly) {
+            //Force the mayFly attribute to be true while bat action is active
+            //https://github.com/TeamLapen/Vampirism/issues/1456
+            a.mayfly = true;
+            vampire.getRepresentingPlayer().onUpdateAbilities();
+        }
+        return false; //Continue
     }
 
     /**
