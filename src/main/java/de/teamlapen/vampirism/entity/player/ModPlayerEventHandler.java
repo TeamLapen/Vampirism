@@ -48,6 +48,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -57,6 +58,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -77,6 +80,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.StreamSupport;
@@ -425,11 +429,39 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void sleepTimeCheck(@NotNull CanPlayerSleepEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
+            //This complete overwrites sleep check logic from net.minecraft.server.level.ServerPlayer.startSleepInBed
+            //Vanilla checks for several things in order. We only want to overwrite the last two things: NOT_POSSIBLE_NOW and NOT_SAFE.
             boolean day = Helper.isDay(event.getLevel());
             if (!day && event.getProblem() == null) {
+                //If everything is fine, but it is night, we change it to NOT POSSIBLE NOW
                 event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
-            } else if (day && (event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW || event.getProblem() == Player.BedSleepingProblem.OTHER_PROBLEM)) {
+                return;
+            }
+            if (day && (event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW || event.getProblem() == Player.BedSleepingProblem.NOT_SAFE)) {
+                //If vanilla comes up with NOT_POSSIBLE_NOW or NOT_SAFE, it means all other conditions are met.
+                //Respawn position is already set by vanilla at this point in code
+                if (!event.getEntity().isCreative()) {
+                    //Perform vanilla style check for monsters nearby, but ignore monsters that don't attack vampires
+                    Vec3 vec3 = Vec3.atBottomCenterOf(event.getPos());
+                    List<Monster> list = event.getLevel().getEntitiesOfClass(Monster.class, new AABB(vec3.x() - 8.0, vec3.y() - 5.0, vec3.z() - 8.0, vec3.x() + 8.0, vec3.y() + 5.0, vec3.z() + 8.0));
+                    boolean zombie = VampirismConfig.BALANCE.zombieIgnoreVampire.get();
+                    boolean skeleton = VampirismConfig.BALANCE.skeletonIgnoreVampire.get();
+                    boolean creeper = VampirismConfig.BALANCE.creeperIgnoreVampire.get();
+                    if (list.stream().anyMatch(monster ->
+                            {
+                                if (zombie && monster instanceof Zombie) return false;
+                                if (skeleton && (monster instanceof Skeleton || monster instanceof Stray)) return false;
+                                if (creeper && (monster instanceof Creeper)) return false;
+                                return monster.isPreventingPlayerRest(event.getEntity().serverLevel(), event.getEntity());
+                            }
+                    )) {
+                        event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
+                        return;
+                    }
+                }
+
                 event.setProblem(null);
+
             }
         }
     }
