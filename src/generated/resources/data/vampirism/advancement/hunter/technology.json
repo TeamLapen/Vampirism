@@ -34,7 +34,6 @@
     "description": {
       "translate": "advancement.vampirism.technology.desc"
     },
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:basic_tech_crossbow"

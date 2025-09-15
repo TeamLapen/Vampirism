@@ -21,7 +21,6 @@
       "translate": "advancement.vampirism.regicide.desc"
     },
     "frame": "challenge",
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:pure_blood_0"

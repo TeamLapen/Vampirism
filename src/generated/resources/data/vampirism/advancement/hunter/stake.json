@@ -21,7 +21,6 @@
       "translate": "advancement.vampirism.stake.desc"
     },
     "frame": "challenge",
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:stake"

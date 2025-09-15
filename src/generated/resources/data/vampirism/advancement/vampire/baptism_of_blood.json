@@ -1,9 +1,9 @@
 {
   "parent": "vampirism:vampire/become_vampire",
   "criteria": {
-    "kill": {
+    "flower": {
       "conditions": {
-        "action": "kill_frozen_hunter"
+        "action": "perform_ritual_inspiration"
       },
       "trigger": "vampirism:vampire_action"
     },
@@ -18,19 +18,19 @@
   },
   "display": {
     "description": {
-      "translate": "advancement.vampirism.freeze_kill.desc"
+      "translate": "advancement.vampirism.baptism_of_blood.desc"
     },
     "icon": {
       "count": 1,
-      "id": "minecraft:packed_ice"
+      "id": "vampirism:altar_inspiration"
     },
     "title": {
-      "translate": "advancement.vampirism.freeze_kill"
+      "translate": "advancement.vampirism.baptism_of_blood"
     }
   },
   "requirements": [
     [
-      "kill"
+      "flower"
     ],
     [
       "main"

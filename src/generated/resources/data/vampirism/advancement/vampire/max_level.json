@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:vampire/bat",
+  "parent": "vampirism:vampire/blood_cult",
   "criteria": {
     "level": {
       "conditions": {
@@ -15,7 +15,6 @@
       "translate": "advancement.vampirism.max_level_vampire.desc"
     },
     "frame": "goal",
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:vampire_fang"
