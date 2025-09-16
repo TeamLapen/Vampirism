@@ -333,6 +333,9 @@ public class ModItems {
         List<Component> tooltipComponents = event.getToolTip();
 
         Stream<ItemLike> descriptionItems = Stream.of(
+                ModBlocks.HUNTER_TABLE,
+                ModBlocks.MED_CHAIR,
+                ModBlocks.MOTHER_TROPHY,
                 ModBlocks.BLOOD_GRINDER,
                 ModBlocks.BLOOD_SIEVE,
                 FABRIC_FILTER,
