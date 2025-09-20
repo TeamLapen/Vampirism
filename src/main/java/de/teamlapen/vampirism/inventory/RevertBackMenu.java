@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModMenus;
+import de.teamlapen.vampirism.items.InjectionItem;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -40,8 +41,10 @@ public class RevertBackMenu extends AbstractContainerMenu {
         return stillValid(this.pAccess, player, ModBlocks.MED_CHAIR.get());
     }
 
-    public void consume() {
+    public void consume(Player player) {
         Slot slot = this.getSlot(0);
-        slot.getItem().shrink(1);
+        if (slot.getItem().getItem() instanceof InjectionItem injectionItem) {
+            injectionItem.consumeInjectionItem(slot.getItem(), player, player.getUsedItemHand());
+        }
     }
 }

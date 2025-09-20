@@ -96,6 +96,7 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
         mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
         mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
+        mapping.remap("vampirism:injection_empty", "vampirism:syringe_empty");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {

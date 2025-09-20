@@ -169,7 +169,8 @@ public class ModCreativeTabs {
             add(HUMAN_HEART);
             add(WEAK_HUMAN_HEART);
 
-            add(INJECTION_EMPTY);
+            add(SYRINGE_EMPTY);
+            add(SYRINGE_BLOOD);
             add(INJECTION_GARLIC);
             add(INJECTION_SANGUINARE);
 

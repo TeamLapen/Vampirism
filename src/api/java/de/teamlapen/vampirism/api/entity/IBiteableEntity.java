@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.extensions.IEntity;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implement this in any EntityLivingBase if you want to something special regarding bites.
@@ -9,14 +10,13 @@ import de.teamlapen.vampirism.api.extensions.IEntity;
  */
 public interface IBiteableEntity extends IEntity {
 
-
     /**
      * Called when a vampire tries to suck blood (not infect)
      *
      * @param biter The biting entity
      * @return If the entity currently can be bitten
      */
-    boolean canBeBitten(IVampire biter);
+    boolean canBeBitten(@Nullable IVampire biter);
 
     /**
      * Returns 1.0F or currentBlood/maximumBlood if applicable and implemented
@@ -41,6 +41,12 @@ public interface IBiteableEntity extends IEntity {
      * @return Amount of blood that should be added
      */
     int onBite(IVampire biter);
+
+    /**
+     * @param amount The amount of blood requested to be drained
+     * @return The inputted amount if it was a success and 0 if the mob doesn't have enough
+     */
+    int onSyringeUse(int amount);
 
     /**
      * @return Whether this creatures can be turned in general and whether the given vampire is able to do so

@@ -168,7 +168,7 @@ public class ServerPayloadHandler {
                 }
                 case REVERT_BACK -> {
                     if (player.containerMenu instanceof RevertBackMenu menu) {
-                        menu.consume();
+                        menu.consume(player);
                     }
                     handler.leaveFaction(!player.server.isHardcore());
                 }

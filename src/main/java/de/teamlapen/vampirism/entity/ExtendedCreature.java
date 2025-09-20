@@ -92,7 +92,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     }
 
     @Override
-    public boolean canBeBitten(IVampire biter) {
+    public boolean canBeBitten(@Nullable IVampire biter) {
         return getBlood() > 0;
     }
 
@@ -234,6 +234,24 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         }
 
         return amt;
+    }
+
+    @Override
+    public int onSyringeUse(int amount) {
+        int available = getBlood();
+
+        boolean isChild = entity instanceof AgeableMob ageableMob && ageableMob.getAge() < 0;
+        if (isChild) available /= 3;
+
+        // Must have strictly more than maxAmount blood to allow draining
+        if (available <= amount) {
+            return 0;
+        }
+
+        blood -= amount / (isChild ? 3 : 1);
+        this.sync();
+
+        return amount;
     }
 
     @Override

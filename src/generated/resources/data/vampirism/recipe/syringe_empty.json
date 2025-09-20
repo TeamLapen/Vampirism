@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:glass_blocks",
+    "I": "#c:ingots/iron",
+    "N": "#c:nuggets/iron"
+  },
+  "pattern": [
+    "I",
+    "G",
+    "N"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampirism:syringe_empty"
+  }
+}

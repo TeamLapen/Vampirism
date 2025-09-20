@@ -309,37 +309,49 @@
   },
   "requirements": [
     [
+      "has_my_prince"
+    ],
+    [
       "has_my_mother"
-    ],
-    [
-      "has_royal_rivalry"
-    ],
-    [
-      "has_century_of_evolution"
-    ],
-    [
-      "has_nocturnal"
-    ],
-    [
-      "has_maids_diary"
-    ],
-    [
-      "has_infusion_breakthrough"
-    ],
-    [
-      "has_dear_martha"
     ],
     [
       "has_observation_on_vampires"
     ],
     [
-      "has_sinister_intentions"
-    ],
-    [
       "has_pyromaniacs_diary"
     ],
     [
-      "has_my_prince"
+      "has_wanted"
+    ],
+    [
+      "has_case_file_144"
+    ],
+    [
+      "has_ashes_of_past_dawns"
+    ],
+    [
+      "has_nocturnal"
+    ],
+    [
+      "has_infusion_breakthrough"
+    ],
+    [
+      "has_century_of_evolution"
+    ],
+    [
+      "has_mad_mans_journal"
+    ],
+    [
+      "has_valorous_tale"
+    ],
+    [
+      "has_royal_rivalry"
+    ],
+    [
+      "has_maids_diary"
+    ],
+    [
+      "has_dear_martha"
     ],
     [
       "has_hunters_diary"
@@ -348,19 +360,7 @@
       "has_case_study_one"
     ],
     [
-      "has_case_file_144"
-    ],
-    [
-      "has_valorous_tale"
-    ],
-    [
-      "has_wanted"
-    ],
-    [
-      "has_mad_mans_journal"
-    ],
-    [
-      "has_ashes_of_past_dawns"
+      "has_sinister_intentions"
     ]
   ],
   "sends_telemetry_event": true
