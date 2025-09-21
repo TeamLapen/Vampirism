@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.client.colors;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RefinementTint implements ItemTintSource {
 
+    public static final ResourceLocation ID = VResourceLocation.mod("refinement_tint");
     public static final RefinementTint INSTANCE = new RefinementTint();
     public static final MapCodec<RefinementTint> CODEC = MapCodec.unit(INSTANCE);
 

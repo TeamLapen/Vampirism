@@ -2,14 +2,12 @@ package de.teamlapen.vampirism.client.core;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.colors.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.colors.OilBottleTint;
 import de.teamlapen.vampirism.client.colors.RefinementTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -22,14 +20,11 @@ import java.util.stream.Stream;
  */
 public class ModItemsRender {
 
-    public static final ResourceLocation ARROW_TINT = VResourceLocation.mod("arrow_tint");
-    public static final ResourceLocation OIL_TINT = VResourceLocation.mod("oil_tint");
-    public static final ResourceLocation REFINEMENT_TINT = VResourceLocation.mod("refinement_tint");
 
     static void registerColors(RegisterColorHandlersEvent.@NotNull ItemTintSources event) {
-        event.register(ARROW_TINT, CrossbowArrowTint.CODEC);
-        event.register(OIL_TINT, OilBottleTint.CODEC);
-        event.register(REFINEMENT_TINT, RefinementTint.CODEC);
+        event.register(CrossbowArrowTint.ID, CrossbowArrowTint.CODEC);
+        event.register(OilBottleTint.ID, OilBottleTint.CODEC);
+        event.register(RefinementTint.ID, RefinementTint.CODEC);
     }
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {

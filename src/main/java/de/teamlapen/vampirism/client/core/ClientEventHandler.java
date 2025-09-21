@@ -37,7 +37,6 @@ import java.util.List;
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
-    private final static Logger LOGGER = LogManager.getLogger();
 
     @SubscribeEvent
     public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
