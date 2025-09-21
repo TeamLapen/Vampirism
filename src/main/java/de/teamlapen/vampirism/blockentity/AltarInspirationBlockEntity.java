@@ -104,7 +104,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         if (!player.level().isClientSide) {
             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodEntityParticleOptions(player.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
-            fluidInventory.drain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
+            fluidInventory.forceDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
 
         setChanged();
@@ -128,7 +128,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         if (blockEntity.ritualTicksLeft == 1) {
             Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(blockEntity.targetLevel);
             int blood = requirement.map(VampireLeveling.AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
-            blockEntity.fluidInventory.drain(blood, IFluidHandler.FluidAction.EXECUTE);
+            blockEntity.fluidInventory.forceDrain(blood, IFluidHandler.FluidAction.EXECUTE);
             blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
             FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(ModFactions.VAMPIRE, blockEntity.targetLevel);
             VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());

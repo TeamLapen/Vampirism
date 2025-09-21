@@ -57,7 +57,6 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IFluidBloodConversion getFluidConversion(@NotNull Fluid fluid) {
-        Map<ResourceKey<Fluid>, IFluidBloodConversion> dataMap = BuiltInRegistries.FLUID.getDataMap(VampirismDataMaps.FLUID_BLOOD_CONVERSION.get());
         var conversion = BuiltInRegistries.FLUID.wrapAsHolder(fluid).getData(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP);
         if (conversion != null) {
             return conversion;
