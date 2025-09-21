@@ -8,6 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Set;
+
 /**
  * Interface for {@link MobEffectInstance} to supply source identifier for the instance.<br>
  * <br>
@@ -16,14 +19,9 @@ import org.jetbrains.annotations.Nullable;
 public interface EffectInstanceWithSource {
 
     /**
-     * @return the hidden effect of the effect instance
-     */
-    @Nullable
-    MobEffectInstance vampirism$getHiddenEffect();
-
-    /**
      * @return the source of this effect instance
      */
+    @Deprecated
     @Nullable
     ResourceLocation vampirism$getSource();
 
@@ -32,12 +30,29 @@ public interface EffectInstanceWithSource {
      *
      * @param source the id of the source
      */
+    @Deprecated
     void vampirism$setSource(@Nullable ResourceLocation source);
 
     /**
      * @return if this effect instance has a defined source
      */
+    @Deprecated
     boolean vampirism$hasSource();
+
+    /**
+     * @return the hidden effect of the effect instance
+     */
+    @Nullable
+    MobEffectInstance vampirism$getHiddenEffect();
+
+    Set<ResourceLocation> vampirism$getProperties();
+
+
+    void vampirism$setProperties(Collection<ResourceLocation> sources);
+
+    void vampirism$addProperty(@NotNull ResourceLocation source);
+
+    boolean vampirism$hasProperties();
 
     /**
      * remove this effect instance from the entity
@@ -50,8 +65,8 @@ public interface EffectInstanceWithSource {
         MobEffectInstance ins = entity.getEffect(effect);
         while (ins != null) {
             EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
-            if (insM.vampirism$hasSource()) {
-                if (insM.vampirism$getSource().equals(source)) {
+            if (insM.vampirism$hasProperties()) {
+                if (insM.vampirism$getProperties().contains(source)) {
                     insM.vampirism$removeEffect();
                     break;
                 }

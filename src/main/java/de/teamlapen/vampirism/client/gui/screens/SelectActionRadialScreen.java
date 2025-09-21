@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
 import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
@@ -10,16 +9,15 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.client.ClientConfigHelper;
+import de.teamlapen.vampirism.client.config.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.network.ServerboundToggleActionPacket;
+import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundToggleActionPacket;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;

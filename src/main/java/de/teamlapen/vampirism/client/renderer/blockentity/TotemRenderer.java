@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -52,7 +52,7 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity> {
     }
 
     private void renderFactionName(IFaction<?> faction, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (!VampirismConfig.CLIENT.renderTotemFactionName.getAsBoolean()) return;
+        if (!ModConfig.CLIENT.renderTotemFactionName.getAsBoolean()) return;
         Component displayNameIn = faction.getNamePlural().plainCopy().withStyle(style -> style.withColor((faction.getChatColor())));
         poseStack.pushPose();
         poseStack.translate(0.5, 1, 0.5);

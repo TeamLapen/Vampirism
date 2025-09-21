@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.tags.ModBlockTags;
-import de.teamlapen.vampirism.core.tags.ModItemTags;
-import de.teamlapen.vampirism.util.ColorListsUtil;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.tags.ModBlockTags;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;

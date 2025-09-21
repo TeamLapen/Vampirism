@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

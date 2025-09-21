@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.lib.client.VertexUtils;
-import de.teamlapen.vampirism.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

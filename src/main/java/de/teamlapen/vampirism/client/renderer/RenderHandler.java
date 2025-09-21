@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.client.renderer.entity.state.IVampirismRenderState;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModRefinements;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayerSpecialAttributes;
-import de.teamlapen.vampirism.items.CrucifixItem;
-import de.teamlapen.vampirism.mixin.client.accessor.CameraAccessor;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.VampirismEventFactory;
+import de.teamlapen.vampirism.common.blocks.CoffinBlock;
+import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModRefinements;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayerSpecialAttributes;
+import de.teamlapen.vampirism.common.items.CrucifixItem;
+import de.teamlapen.vampirism.common.mixin.client.accessor.CameraAccessor;
+import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -55,7 +55,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
-        if (VampirismConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
+        if (ModConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
             Minecraft.getInstance().getEntityRenderDispatcher().setRenderHitBoxes(false);
         }
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
@@ -76,10 +76,10 @@ public class RenderHandler {
 
         //Vampire biome/village fog
         if (mc.player.tickCount % 10 == 0) {
-            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
+            if ((ModConfig.CLIENT.renderVampireForestFog.get() || ModConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? VampirismConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
 
                 vampireBiomeFogDistanceMultiplier = VampirismEventFactory.fireVampireFogEvent(vampireBiomeFogDistanceMultiplier);
 

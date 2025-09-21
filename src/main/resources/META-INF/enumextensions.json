@@ -23,7 +23,7 @@
       "name": "VAMPIRISM_WEAPON_TABLE",
       "constructor": "(Ljava/util/function/Supplier;)V",
       "parameters": {
-        "class": "de/teamlapen/vampirism/client/ModClientEnums",
+        "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "WEAPON_TABLE_RECIPE_BOOK_CATEGORY"
       }
     },
@@ -32,7 +32,7 @@
       "name": "VAMPIRISM_DOUBLE_CROSSBOW_CHARGE",
       "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
       "parameters": {
-        "class": "de/teamlapen/vampirism/client/ModClientEnums",
+        "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "DOUBLE_CROSSBOW_CHARGE"
       }
     },
@@ -41,7 +41,7 @@
       "name": "VAMPIRISM_DOUBLE_CROSSBOW_HOLD",
       "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
       "parameters": {
-        "class": "de/teamlapen/vampirism/client/ModClientEnums",
+        "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "DOUBLE_CROSSBOW_HOLD"
       }
     },

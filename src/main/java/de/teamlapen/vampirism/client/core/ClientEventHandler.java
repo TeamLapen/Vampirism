@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.tags.ModItemTags;
-import de.teamlapen.vampirism.data.ClientSkillTreeData;
-import de.teamlapen.vampirism.effects.VampirismPotion;
-import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.items.component.AppliedOilContent;
-import de.teamlapen.vampirism.items.component.FactionRestriction;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.client.data.ClientSkillTreeData;
+import de.teamlapen.vampirism.common.potions.BasePotion;
+import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.common.items.component.FactionRestriction;
+import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,7 +41,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
-        if (VampirismConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
+        if (ModConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
             AttributeInstance speed = event.getPlayer().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.ID);
             if (vampirespeed == null) {
@@ -61,7 +61,7 @@ public class ClientEventHandler {
         AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
         FactionRestriction.addTooltipIfExist(player, stack, tooltip);
 
-        if (VampirismPotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
+        if (BasePotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
             tooltip.add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
         }
 

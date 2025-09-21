@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.lib.client.gui.components.HoverList;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.client.renderer.entity.VampireMinionRenderer;
-import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.network.ServerboundAppearancePacket;
+import de.teamlapen.vampirism.client.renderer.entities.VampireMinionRenderer;
+import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.common.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;

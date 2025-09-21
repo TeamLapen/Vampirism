@@ -2,14 +2,12 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.network.ServerboundUpgradeMinionStatPacket;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.common.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundUpgradeMinionStatPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

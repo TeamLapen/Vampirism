@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.inventory.AlchemyTableMenu;
+import de.teamlapen.vampirism.common.inventory.AlchemyTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;

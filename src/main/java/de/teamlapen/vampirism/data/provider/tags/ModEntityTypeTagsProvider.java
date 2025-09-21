@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.tags.ModEntityTags;
+import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 

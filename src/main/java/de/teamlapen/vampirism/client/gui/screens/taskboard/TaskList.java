@@ -10,9 +10,9 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.entity.player.tasks.req.ItemRequirement;
-import de.teamlapen.vampirism.entity.player.tasks.reward.ItemReward;
-import de.teamlapen.vampirism.inventory.TaskMenu;
+import de.teamlapen.vampirism.common.entity.player.tasks.req.ItemRequirement;
+import de.teamlapen.vampirism.common.entity.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.common.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -49,11 +49,11 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
     private static final ResourceLocation TASK_BACKGROUND = VResourceLocation.mod("widget/task_background");
     private static final ResourceLocation TASK_DETAILS_BACKGROUND = VResourceLocation.mod("widget/task_details_background");
 
-    protected final TaskMenu menu;
+    protected final ITaskMenu menu;
     protected final IFactionPlayer<?> factionPlayer;
     protected final Registry<Task> registry;
 
-    public TaskList(Minecraft minecraft, TaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
+    public TaskList(Minecraft minecraft, ITaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
         super(minecraft, width, height, y, 21, itemSupplier);
         this.menu = menu;
         this.factionPlayer = factionPlayer;
@@ -464,7 +464,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
             @Override
             public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float p_renderButton_3_) {
-                TaskMenu.TaskAction action = menu.buttonAction(getItem());
+                ITaskMenu.TaskAction action = menu.buttonAction(getItem());
                 WidgetSprites sprites = switch (action) {
                     case ACCEPT -> ACCEPT;
                     case COMPLETE -> COMPLETE;

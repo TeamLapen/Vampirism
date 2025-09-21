@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static de.teamlapen.vampirism.core.ModArmorMaterials.Asset.*;
+import static de.teamlapen.vampirism.common.core.ModArmorMaterials.Asset.*;
 
 public class ModEquipmentAssetProvider extends EquipmentAssetProvider {
 

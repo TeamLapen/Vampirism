@@ -6,13 +6,12 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
-import de.teamlapen.vampirism.client.ClientConfigHelper;
+import de.teamlapen.vampirism.client.config.ClientConfigHelper;
 import de.teamlapen.vampirism.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
-import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.core.ModRegistries;
+import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.tags.ModEffectTags;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.tags.ModEffectTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;

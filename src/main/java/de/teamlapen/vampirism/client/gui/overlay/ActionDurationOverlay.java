@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
-import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,14 +23,14 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (canRenderOverlays() && !VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+        if (canRenderOverlays() && !ModConfig.CLIENT.disableHudActionDurationRendering.get()) {
             VampirismAPI.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int x = 12;
                 int y = this.mc.getWindow().getGuiScaledHeight() - 27;
 
-                if (!VampirismConfig.CLIENT.disableHudActionDurationRendering.get()) {
+                if (!ModConfig.CLIENT.disableHudActionDurationRendering.get()) {
                     for (Holder<? extends ILastingAction<T>> action : factionPlayer.getActionHandler().getActiveActions()) {
                         if (!(action.value().showHudDuration(this.player()))) continue;
                         if (!actionHandler.isActionActive(action)) continue;

@@ -9,13 +9,13 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.inventory.TaskMenu;
-import de.teamlapen.vampirism.inventory.VampirismMenu;
-import de.teamlapen.vampirism.mixin.client.accessor.AbstractContainerScreenAccessor;
-import de.teamlapen.vampirism.network.ServerboundDeleteRefinementPacket;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.inventory.ITaskMenu;
+import de.teamlapen.vampirism.common.inventory.VampirismMenu;
+import de.teamlapen.vampirism.common.mixin.client.accessor.AbstractContainerScreenAccessor;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundDeleteRefinementPacket;
+import de.teamlapen.vampirism.common.util.Helper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -72,7 +72,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public @NotNull TaskMenu getTaskContainer() {
+    public @NotNull ITaskMenu getTaskContainer() {
         return this.menu;
     }
 
@@ -235,7 +235,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     private static class TaskList extends de.teamlapen.vampirism.client.gui.screens.taskboard.TaskList {
 
-        public TaskList(Minecraft minecraft, TaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
+        public TaskList(Minecraft minecraft, ITaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
             super(minecraft, menu, factionPlayer, x, y, width, height, itemSupplier);
         }
 

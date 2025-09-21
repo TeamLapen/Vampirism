@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModBiomes;
-import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.common.core.ModBiomes;
+import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
@@ -10,7 +10,6 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 

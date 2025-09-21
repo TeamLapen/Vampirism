@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.inventory.TaskMenu;
+import de.teamlapen.vampirism.common.inventory.ITaskMenu;
 
 
 /**
@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.inventory.TaskMenu;
 public interface ExtendedScreen {
 
     /**
-     * @return {@link de.teamlapen.vampirism.inventory.TaskMenu} of the screen
+     * @return {@link ITaskMenu} of the screen
      */
-    TaskMenu getTaskContainer();
+    ITaskMenu getTaskContainer();
 }

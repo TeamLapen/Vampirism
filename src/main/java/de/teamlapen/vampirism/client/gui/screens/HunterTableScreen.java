@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.player.hunter.HunterLeveling;
-import de.teamlapen.vampirism.inventory.HunterTableMenu;
-import de.teamlapen.vampirism.items.PureBloodItem;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
+import de.teamlapen.vampirism.common.inventory.HunterTableMenu;
+import de.teamlapen.vampirism.common.items.PureBloodItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;

@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.model.*;
-import de.teamlapen.vampirism.client.model.armor.*;
-import de.teamlapen.vampirism.client.renderer.entity.*;
-import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
-import de.teamlapen.vampirism.client.renderer.entity.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.renderer.entity.state.IConvertedOverlayRenderState;
-import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.client.models.armor.*;
+import de.teamlapen.vampirism.client.models.blocks.CoffinModel;
+import de.teamlapen.vampirism.client.models.entities.*;
+import de.teamlapen.vampirism.client.renderer.entities.*;
+import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
+import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
+import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
+import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;

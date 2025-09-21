@@ -34,13 +34,13 @@ sourceSets {
             // if you want intellij to ignore the package, you need to add it in the settings (File -> Settings -> Build, Execution, Deployment -> Compiler -> Excludes)
             // exclude(<package>)
             if (!include_jei.toBoolean()) {
-                exclude('de/teamlapen/vampirism/modcompat/jei')
+                exclude('de/teamlapen/vampirism/common/integration/jei')
             }
             if (!include_guideapi.toBoolean()) {
-                exclude('de/teamlapen/vampirism/modcompat/guide')
+                exclude('de/teamlapen/vampirism/common/integration/guide')
             }
             if (!include_terrablender.toBoolean()) {
-                exclude('de/teamlapen/vampirism/modcompat/terrablender')
+                exclude('de/teamlapen/vampirism/common/integration/terrablender')
             }
         }
         //noinspection GroovyAssignabilityCheck

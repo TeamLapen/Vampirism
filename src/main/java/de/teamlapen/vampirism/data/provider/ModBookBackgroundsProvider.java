@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.ModVampireBooks;
-import de.teamlapen.vampirism.data.provider.parent.BookBackgroundsProvider;
-import de.teamlapen.vampirism.misc.BookBackground;
+import de.teamlapen.vampirism.common.core.ModVampireBooks;
+import de.teamlapen.vampirism.data.provider.base.BookBackgroundsProvider;
+import de.teamlapen.vampirism.data.reloadlistener.vampirebook.BookBackground;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 

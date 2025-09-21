@@ -4,14 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.mixin.client.accessor.BossHealthOverlayAccessor;
-import de.teamlapen.vampirism.network.ClientboundUpdateMultiBossEventPacket;
-import de.teamlapen.vampirism.world.MultiBossEvent;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.mixin.client.accessor.BossHealthOverlayAccessor;
+import de.teamlapen.vampirism.common.network.packets.client.ClientboundUpdateMultiBossEventPacket;
+import de.teamlapen.vampirism.common.world.MultiBossEvent;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +50,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (!canRenderOverlays() || !VampirismConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
+        if (!canRenderOverlays() || !ModConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
             return;
         }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();

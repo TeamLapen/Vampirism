@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.world.loot.conditions.AdjustableLevelCondition;
-import de.teamlapen.vampirism.world.loot.conditions.StakeCondition;
-import de.teamlapen.vampirism.world.loot.functions.RefinementSetFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetBloodFunction;
-import de.teamlapen.vampirism.world.loot.functions.SetVampireBookFunction;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.data.loot.conditions.AdjustableLevelCondition;
+import de.teamlapen.vampirism.data.loot.conditions.StakeCondition;
+import de.teamlapen.vampirism.data.loot.functions.RefinementSetFunction;
+import de.teamlapen.vampirism.data.loot.functions.SetBloodFunction;
+import de.teamlapen.vampirism.data.loot.functions.SetVampireBookFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.stream.Stream;
 
-import static de.teamlapen.vampirism.core.ModEntities.*;
+import static de.teamlapen.vampirism.common.core.ModEntities.*;
 
 public class ModEntityLootTableProvider extends EntityLootSubProvider {
     

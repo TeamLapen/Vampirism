@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
-import de.teamlapen.vampirism.core.tags.ModBiomeTags;
+import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener;
 import io.netty.handler.codec.EncoderException;
 import net.minecraft.data.CachedOutput;
@@ -16,8 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

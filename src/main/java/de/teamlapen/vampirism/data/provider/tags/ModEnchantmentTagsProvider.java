@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModEnchantments;
-import de.teamlapen.vampirism.core.tags.ModEnchantmentTags;
+import de.teamlapen.vampirism.common.core.ModEnchantments;
+import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;

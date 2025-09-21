@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.tags.ModFluidTags;
+import de.teamlapen.vampirism.common.core.ModFluids;
+import de.teamlapen.vampirism.common.tags.ModFluidTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.taskboard.TaskBoardScreen;
-import de.teamlapen.vampirism.core.ModMenus;
+import de.teamlapen.vampirism.common.core.ModMenus;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;

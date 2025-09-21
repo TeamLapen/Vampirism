@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ServerboundNameItemPacket;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundNameItemPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.common.core.ModSounds;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

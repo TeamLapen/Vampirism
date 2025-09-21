@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "de.teamlapen.vampirism.mixin",
+  "package": "de.teamlapen.vampirism.common.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AreaEffectCloudMixin",

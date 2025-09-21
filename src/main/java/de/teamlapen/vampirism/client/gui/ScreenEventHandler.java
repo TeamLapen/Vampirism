@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blocks.CoffinBlock;
-import de.teamlapen.vampirism.blocks.TentBlock;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.blocks.TentBlock;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -30,12 +30,12 @@ public class ScreenEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onButtonClicked(ScreenEvent.MouseButtonPressed.@NotNull Pre event) {//InventoryScreen changes layout if recipe book button is clicked. Unfortunately it does not propagate this to the screen children, so we need to use this
-        if (event.getScreen() instanceof InventoryScreen && VampirismConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
+        if (event.getScreen() instanceof InventoryScreen && ModConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
             //Do the same thing MouseHelper would do. However, if GUI returns false on mouseclick it will be called again by MouseHelper
             if (event.getScreen().mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
                 event.setCanceled(true);
                 if (button != null) {
-                    button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + VampirismConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + VampirismConfig.CLIENT.overrideGuiSkillButtonY.get());
+                    button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + ModConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + ModConfig.CLIENT.overrideGuiSkillButtonY.get());
                 }
             }
         }
@@ -43,8 +43,8 @@ public class ScreenEventHandler {
 
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.@NotNull Post event) {
-        if (event.getScreen() instanceof InventoryScreen && VampirismConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
-            button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + VampirismConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + VampirismConfig.CLIENT.overrideGuiSkillButtonY.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
+        if (event.getScreen() instanceof InventoryScreen && ModConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
+            button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + ModConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + ModConfig.CLIENT.overrideGuiSkillButtonY.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
                 VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.VAMPIRISM_MENU));
             });
             event.addListener(button);

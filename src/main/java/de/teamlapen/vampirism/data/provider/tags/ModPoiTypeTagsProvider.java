@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModVillage;
-import de.teamlapen.vampirism.core.tags.ModPoiTypeTags;
+import de.teamlapen.vampirism.common.core.ModVillage;
+import de.teamlapen.vampirism.common.tags.ModPoiTypeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.PoiTypeTagsProvider;

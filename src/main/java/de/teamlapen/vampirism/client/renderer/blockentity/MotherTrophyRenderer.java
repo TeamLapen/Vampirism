@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.blockentity.MotherTrophyBlockEntity;
-import de.teamlapen.vampirism.blocks.MotherTrophyBlock;
+import de.teamlapen.vampirism.common.blockentity.MotherTrophyBlockEntity;
+import de.teamlapen.vampirism.common.blocks.MotherTrophyBlock;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.model.GhostModel;
-import de.teamlapen.vampirism.client.renderer.entity.GhostRenderer;
+import de.teamlapen.vampirism.client.models.entities.GhostModel;
+import de.teamlapen.vampirism.client.renderer.entities.GhostRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

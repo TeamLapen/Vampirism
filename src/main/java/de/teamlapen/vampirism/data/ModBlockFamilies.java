@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data;
 
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.mixin.accessor.BlockFamiliesAccessor;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.mixin.accessor.BlockFamiliesAccessor;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
 

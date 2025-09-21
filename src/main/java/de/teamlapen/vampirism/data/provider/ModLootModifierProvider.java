@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModFactions;
-import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.core.ModOils;
-import de.teamlapen.vampirism.world.loot.modifiers.SmeltItemLootModifier;
-import de.teamlapen.vampirism.world.loot.conditions.FactionCondition;
-import de.teamlapen.vampirism.world.loot.conditions.OilItemCondition;
+import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.core.ModLootTables;
+import de.teamlapen.vampirism.common.core.ModOils;
+import de.teamlapen.vampirism.data.loot.modifiers.SmeltItemLootModifier;
+import de.teamlapen.vampirism.data.loot.conditions.FactionCondition;
+import de.teamlapen.vampirism.data.loot.conditions.OilItemCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;

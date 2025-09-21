@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.blockentity.AlchemicalCauldronBlockEntity;
-import de.teamlapen.vampirism.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.blocks.TotemTopBlock;
+import de.teamlapen.vampirism.common.blockentity.AlchemicalCauldronBlockEntity;
+import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
+import de.teamlapen.vampirism.common.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.client.renderer.blockentity.*;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModFluids;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
@@ -70,7 +70,7 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModBlockEntities.VAMPIRE_BEACON.get(), VampireBeaconRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_CONTAINER.get(), BloodContainerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderRenderer::new);
     }
 
     private static void registerRenderType() {

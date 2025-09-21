@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
-import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.core.tags.ModStructureTags;
-import de.teamlapen.vampirism.core.tags.ModVampireBookTags;
-import de.teamlapen.vampirism.util.MapUtil;
-import de.teamlapen.vampirism.world.loot.functions.*;
+import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModStructureTags;
+import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
+import de.teamlapen.vampirism.common.util.MapUtil;
+import de.teamlapen.vampirism.data.loot.functions.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.network.chat.Component;

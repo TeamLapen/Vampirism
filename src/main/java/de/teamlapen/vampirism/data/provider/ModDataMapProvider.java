@@ -2,10 +2,13 @@ package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.api.datamaps.*;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.core.tags.ModItemTags;
-import de.teamlapen.vampirism.datamaps.*;
-import de.teamlapen.vampirism.entity.converted.converter.SpecialConverter;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModDataMaps;
+import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.datamaps.*;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.entity.converted.converter.SpecialConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

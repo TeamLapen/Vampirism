@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
-import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
-import de.teamlapen.vampirism.util.ColorListsUtil;
-import de.teamlapen.vampirism.world.loot.conditions.TentSpawnerCondition;
+import de.teamlapen.vampirism.common.blocks.*;
+import de.teamlapen.vampirism.common.blocks.base.BaseSplitBlock;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.mixin.accessor.VanillaBlockLootAccessor;
+import de.teamlapen.vampirism.common.util.ColorListsUtil;
+import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -105,10 +106,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.DARK_SPRUCE_SAPLING.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_SAPLING.get());
         this.add(ModBlocks.DARK_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.DARK_SPRUCE_SAPLING.get(), DARK_LEAVES_SAPLING_CHANCES));
-        this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+        this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.TOMBSTONE1.get());
         this.dropSelf(ModBlocks.TOMBSTONE2.get());
-        this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+        this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.GRAVE_CAGE.get());
         this.add(ModBlocks.CURSED_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_EARTH.get()));
         this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
@@ -139,7 +140,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
         this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
         this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
-        this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, VampirismSplitBlock.PART, VampirismSplitBlock.Part.MAIN));
+        this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
         this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());

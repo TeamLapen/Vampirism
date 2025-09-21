@@ -12,17 +12,17 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.items.StakeItem;
-import de.teamlapen.vampirism.mixin.accessor.LivingEntityAccessor;
-import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModFluids;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.items.StakeItem;
+import de.teamlapen.vampirism.common.mixin.accessor.LivingEntityAccessor;
+import de.teamlapen.vampirism.common.integration.IMCHandler;
+import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -208,7 +208,7 @@ public class VampirismHUDOverlay {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlay(RenderGuiEvent.@NotNull Pre event) {
-        if ((screenPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
+        if ((screenPercentage > 0) && ModConfig.CLIENT.renderScreenOverlay.get()) {
             PoseStack stack = event.getGuiGraphics().pose();
             stack.pushPose();
             int w = (event.getGuiGraphics().guiWidth());

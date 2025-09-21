@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.misc.BookBackground;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;

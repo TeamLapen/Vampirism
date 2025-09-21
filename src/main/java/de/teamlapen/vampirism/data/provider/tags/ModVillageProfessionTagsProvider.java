@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.core.ModVillage;
-import de.teamlapen.vampirism.core.tags.ModProfessionTags;
+import de.teamlapen.vampirism.common.core.ModVillage;
+import de.teamlapen.vampirism.common.tags.ModProfessionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;

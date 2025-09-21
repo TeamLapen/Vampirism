@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.data.provider.loot.ModBlockLootTableProvider;
 import de.teamlapen.vampirism.data.provider.loot.ModChestLootTableProvider;
 import de.teamlapen.vampirism.data.provider.loot.ModEntityLootTableProvider;

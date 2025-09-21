@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,7 +17,7 @@ public class SunOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && VampirismConfig.CLIENT.enableSunOverlayRendering.get()) {
+        if (canRenderOverlays() && ModConfig.CLIENT.enableSunOverlayRendering.get()) {
             LocalPlayer player = this.player();
             VampirePlayer vampire = VampirePlayer.get(player);
             MobEffectInstance effect = player.getEffect(ModEffects.SUNSCREEN);

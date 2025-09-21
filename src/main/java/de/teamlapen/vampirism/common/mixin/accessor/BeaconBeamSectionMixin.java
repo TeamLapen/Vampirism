@@ -1,0 +1,12 @@
+package de.teamlapen.vampirism.common.mixin.accessor;
+
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
+
+@Mixin(BeaconBlockEntity.BeaconBeamSection.class)
+public interface BeaconBeamSectionMixin {
+
+    @Invoker("increaseHeight")
+    void invokeIncreaseHeight();
+}

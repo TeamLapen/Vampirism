@@ -26,4 +26,5 @@ public class VReference {
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;
     public static final ResourceLocation PERMANENT_INVISIBLE_MOB_EFFECT = VResourceLocation.mod("permanent");
+    public static final ResourceLocation VAMPIRE_NIGHT_VISION_EFFECT = VResourceLocation.mod("night_vision");
 }

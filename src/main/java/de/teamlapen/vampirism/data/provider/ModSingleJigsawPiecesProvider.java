@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
-import de.teamlapen.vampirism.world.gen.VanillaStructureModifications;
+import de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;

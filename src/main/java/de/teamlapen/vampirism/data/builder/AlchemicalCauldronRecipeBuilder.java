@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.builder;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.common.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;

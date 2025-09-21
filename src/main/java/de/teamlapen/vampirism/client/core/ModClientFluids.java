@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.client.extensions.FluidExtensions;
-import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.common.core.ModFluids;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 public class ModClientFluids {

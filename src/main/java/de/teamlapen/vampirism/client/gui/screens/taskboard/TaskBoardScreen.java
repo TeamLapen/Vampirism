@@ -1,22 +1,18 @@
 package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.GuiRenderer;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.ExtendedScreen;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.inventory.TaskBoardMenu;
-import de.teamlapen.vampirism.inventory.TaskMenu;
+import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.inventory.TaskBoardMenu;
+import de.teamlapen.vampirism.common.inventory.ITaskMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.NotNull;
 
 public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> implements ExtendedScreen {
@@ -41,7 +37,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
-    public @NotNull TaskMenu getTaskContainer() {
+    public @NotNull ITaskMenu getTaskContainer() {
         return this.menu;
     }
 

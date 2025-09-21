@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.advancements.critereon.*;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.*;
-import de.teamlapen.vampirism.core.tags.ModEntityTags;
-import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.util.ItemDataUtils;
-import de.teamlapen.vampirism.util.MapUtil;
+import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModEntityTags;
+import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.server.advancements.critereon.*;
+import de.teamlapen.vampirism.common.util.ItemDataUtils;
+import de.teamlapen.vampirism.common.util.MapUtil;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderGetter;

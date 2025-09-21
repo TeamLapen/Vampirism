@@ -1,0 +1,31 @@
+package de.teamlapen.vampirism.common.mixin.accessor;
+
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
+
+@Mixin(Entity.class)
+public interface EntityAccessor {
+
+    @Accessor("eyeHeight")
+    float getEyeHeight();
+
+    @Accessor("eyeHeight")
+    void setEyeHeight(float eyeHeight);
+
+    @Invoker("collide")
+    Vec3 invokeCollide(Vec3 pVec);
+
+    @Accessor("dimensions")
+    EntityDimensions getDimensions();
+
+    @Accessor("dimensions")
+    void setDimensions(EntityDimensions dimensions);
+
+    @Accessor("random")
+    RandomSource getRandom();
+}

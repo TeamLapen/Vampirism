@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.network.chat.Component;

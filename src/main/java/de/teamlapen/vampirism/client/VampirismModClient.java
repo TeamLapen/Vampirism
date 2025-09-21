@@ -12,19 +12,18 @@ import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.CustomBossEventOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
-import de.teamlapen.vampirism.client.model.armor.ArmorModels;
-import de.teamlapen.vampirism.client.renderer.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.models.armor.ArmorModels;
+import de.teamlapen.vampirism.client.renderer.screen.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
-import de.teamlapen.vampirism.client.renderer.item.BloodContainerSpecialRenderer;
-import de.teamlapen.vampirism.client.renderer.item.CoffinSpecialRenderer;
-import de.teamlapen.vampirism.client.renderer.item.MotherTrophyItemRenderer;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
+import de.teamlapen.vampirism.client.renderer.items.CoffinRenderer;
+import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
-import de.teamlapen.vampirism.proxy.ClientProxy;
-import de.teamlapen.vampirism.proxy.IProxy;
-import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.common.proxy.IProxy;
+import de.teamlapen.vampirism.common.util.SupporterManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
@@ -55,8 +54,6 @@ public class VampirismModClient {
     private static final Logger LOGGER = LogManager.getLogger();
     private static VampirismModClient INSTANCE;
 
-    private final IEventBus modEventBus;
-    private final ModContainer modContainer;
     private final VampirismHUDOverlay overlay;
     private final CustomBossEventOverlay bossInfoOverlay = new CustomBossEventOverlay();
     private final RenderHandler renderHandler;
@@ -66,20 +63,18 @@ public class VampirismModClient {
 
     public VampirismModClient(IEventBus modEventBus, ModContainer modContainer) {
         INSTANCE = this;
-        this.modEventBus = modEventBus;
-        this.modContainer = modContainer;
         ClientRegistryHandler.init(modEventBus);
         this.overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         this.renderHandler = new RenderHandler(Minecraft.getInstance());
         this.bloodVisionRenderer = new BloodVisionRenderer(Minecraft.getInstance());
         this.vampireBooks = new VampireBooks();
 
-        this.modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
 
-        this.modEventBus.register(this);
-        this.modEventBus.register(this.armorModels);
-        this.modEventBus.addListener(BloodVisionRenderer::onRegisterStage);
-        this.modEventBus.addListener(this.bloodVisionRenderer::onClientSetup);
+        modEventBus.register(this);
+        modEventBus.register(this.armorModels);
+        modEventBus.addListener(BloodVisionRenderer::onRegisterStage);
+        modEventBus.addListener(this.bloodVisionRenderer::onClientSetup);
 
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
         NeoForge.EVENT_BUS.register(this.overlay);
@@ -160,8 +155,8 @@ public class VampirismModClient {
 
     @SubscribeEvent
     public void onRegisterSpecialModelRenderer(RegisterSpecialModelRendererEvent event) {
-        event.register(VResourceLocation.mod("mother_trophy"), MotherTrophyItemRenderer.Unbaked.MAP_CODEC);
-        event.register(VResourceLocation.mod("blood_container"), BloodContainerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(VResourceLocation.mod("coffin"), CoffinSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(MotherTrophyRenderer.ID, MotherTrophyRenderer.Unbaked.MAP_CODEC);
+        event.register(BloodContainerRenderer.ID, BloodContainerRenderer.Unbaked.MAP_CODEC);
+        event.register(CoffinRenderer.ID, CoffinRenderer.Unbaked.MAP_CODEC);
     }
 }

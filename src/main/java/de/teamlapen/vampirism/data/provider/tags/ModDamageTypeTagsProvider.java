@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.core.ModDamageTypes;
-import de.teamlapen.vampirism.core.tags.ModDamageTypeTags;
+import de.teamlapen.vampirism.common.core.ModDamageTypes;
+import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;

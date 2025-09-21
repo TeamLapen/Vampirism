@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.client.particle.FlyingBloodEntityParticle;
-import de.teamlapen.vampirism.client.particle.FlyingBloodParticle;
-import de.teamlapen.vampirism.client.particle.GenericParticle;
-import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.client.particles.FlyingBloodEntityParticle;
+import de.teamlapen.vampirism.client.particles.FlyingBloodParticle;
+import de.teamlapen.vampirism.client.particles.GenericParticle;
+import de.teamlapen.vampirism.common.core.ModParticles;
 import net.minecraft.client.particle.SpellParticle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

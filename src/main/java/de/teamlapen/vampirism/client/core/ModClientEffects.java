@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.client.extensions.EffectExtensions;
-import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
