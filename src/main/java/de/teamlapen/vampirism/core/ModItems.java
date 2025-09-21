@@ -195,7 +195,7 @@ public class ModItems {
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
     public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", Item::new);
-    public static final DeferredItem<BloodSyringeItem> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", props -> new BloodSyringeItem(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", props -> new Item(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
     public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", props -> new GarlicInjectionItem(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
     public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", props -> new SanguinareInjectionItem(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
 
@@ -342,7 +342,11 @@ public class ModItems {
                 ModBlocks.BLOOD_GRINDER,
                 ModBlocks.BLOOD_SIEVE,
                 FABRIC_FILTER,
-                BLOOD_BUCKET
+                BLOOD_BUCKET,
+                SYRINGE_EMPTY,
+                SYRINGE_BLOOD,
+                INJECTION_GARLIC,
+                INJECTION_SANGUINARE
         );
 
         if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {

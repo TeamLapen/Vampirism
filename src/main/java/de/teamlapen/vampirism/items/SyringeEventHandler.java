@@ -46,7 +46,7 @@ public class SyringeEventHandler {
         };
 
         biteableOpt.filter(biteable -> biteable.canBeBitten(null)).ifPresent(biteable -> {
-            int drained = biteable.onSyringeUse(BloodSyringeItem.LEVELS_PER_FILL);
+            int drained = biteable.onSyringeUse(BloodSyringeFluidHandler.LEVELS_PER_FILL);
             if (drained <= 0) return;
 
             ItemStack filledStack = new ItemStack(ModItems.SYRINGE_BLOOD.get());

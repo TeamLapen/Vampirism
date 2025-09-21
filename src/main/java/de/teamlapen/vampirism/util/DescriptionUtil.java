@@ -46,25 +46,32 @@ public class DescriptionUtil {
 
     private static List<String> normalizeTextWidth(String text, int maxLength) {
         List<String> lines = new ArrayList<>();
-        StringBuilder line = new StringBuilder();
 
-        for (String word : text.split(" ")) {
-            if (line.length() + word.length() + 1 > maxLength) {
-                if (!line.isEmpty()) {
-                    lines.add(line.toString());
-                    line = new StringBuilder();
+        for (String paragraph : text.split("\n")) {
+            StringBuilder line = new StringBuilder();
+
+            for (String word : paragraph.split(" ")) {
+                if (line.length() + word.length() + 1 > maxLength) {
+                    if (!line.isEmpty()) {
+                        lines.add(line.toString());
+                        line = new StringBuilder();
+                    }
                 }
+
+                if (!line.isEmpty()) {
+                    line.append(" ");
+                }
+
+                line.append(word);
             }
 
             if (!line.isEmpty()) {
-                line.append(" ");
+                lines.add(line.toString());
             }
 
-            line.append(word);
-        }
-
-        if (!line.isEmpty()) {
-            lines.add(line.toString());
+            if (paragraph.isEmpty()) {
+                lines.add("");
+            }
         }
 
         return lines;

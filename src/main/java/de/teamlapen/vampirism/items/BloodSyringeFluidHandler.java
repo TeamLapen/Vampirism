@@ -7,9 +7,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
-import static de.teamlapen.vampirism.items.BloodSyringeItem.AMOUNT;
-
 public class BloodSyringeFluidHandler implements IFluidHandlerItem {
+
+    public static final int LEVELS_PER_FILL = 1;
+    public static final int AMOUNT = 50;
 
     protected ItemStack container;
 

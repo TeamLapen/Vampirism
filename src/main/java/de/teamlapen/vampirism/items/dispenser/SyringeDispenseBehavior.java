@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.items.BloodSyringeItem;
+import de.teamlapen.vampirism.items.BloodSyringeFluidHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -53,7 +53,7 @@ public class SyringeDispenseBehavior extends DefaultDispenseItemBehavior {
             return stack;
         }
 
-        int drained = biteableOpt.get().onSyringeUse(BloodSyringeItem.LEVELS_PER_FILL);
+        int drained = biteableOpt.get().onSyringeUse(BloodSyringeFluidHandler.LEVELS_PER_FILL);
         if (drained <= 0) {
             return stack;
         }
