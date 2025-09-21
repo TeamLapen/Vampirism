@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
+import de.teamlapen.lib.common.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;

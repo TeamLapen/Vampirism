@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.server.commands.arguments.FactionArgument;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;

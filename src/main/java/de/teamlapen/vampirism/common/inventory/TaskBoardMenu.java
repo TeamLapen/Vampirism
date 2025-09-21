@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.inventory;
 
 import com.google.common.collect.Sets;
-import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.common.sounds.SoundHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -109,7 +109,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements ITaskMenu {
                 taskInfo.complete();
                 this.completableTasks.remove(taskInfo.getId());
                 this.taskInstances.remove(taskInfo);
-                VampLib.proxy.createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
+                SoundHelper.getSoundHandler().createMasterSoundReference(ModSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
             }
             case ACCEPT -> taskInfo.startTask(factionPlayer.asEntity().level().getGameTime() + taskInfo.getTaskDuration());
             default -> taskInfo.aboardTask();

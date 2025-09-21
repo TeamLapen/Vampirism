@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -21,7 +21,7 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
 
-public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
+public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final ToolMaterial NORMAL = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.5f, 6.0F, 14, Tags.Items.INGOTS_IRON);
     public static final ToolMaterial ENHANCED = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 7.0F, 14, Tags.Items.GEMS_DIAMOND);

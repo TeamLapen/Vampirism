@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.minion;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.HelperLib;
+import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -220,7 +220,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                     player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_upgrade"), false);
-                    HelperLib.sync(this);
+                    SyncHelper.sync(this);
                 } else {
                     player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_wrong"), false);
 

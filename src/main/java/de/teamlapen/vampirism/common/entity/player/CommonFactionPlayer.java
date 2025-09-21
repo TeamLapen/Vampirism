@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player;
 
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.entity;
 
-import de.teamlapen.lib.lib.storage.Attachment;
-import de.teamlapen.lib.lib.storage.UpdateParams;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.sync.common.storage.Attachment;
+import de.teamlapen.sync.common.storage.UpdateParams;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;

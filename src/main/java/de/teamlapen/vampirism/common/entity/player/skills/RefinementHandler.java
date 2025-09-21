@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player.skills;
 
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.ISyncableSaveData;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IRefinementPlayer;
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;

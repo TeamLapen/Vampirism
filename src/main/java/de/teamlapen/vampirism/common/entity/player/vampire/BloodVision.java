@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
-import de.teamlapen.lib.util.OptifineHandler;
+import de.teamlapen.lib.client.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.common.config.ModConfig;

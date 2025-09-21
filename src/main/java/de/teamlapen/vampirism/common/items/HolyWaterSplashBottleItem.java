@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.entity.ThrowableItemEntity;

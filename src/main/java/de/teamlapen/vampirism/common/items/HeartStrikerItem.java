@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.items.component.PureLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.*;
 
-public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
+public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final ToolMaterial IRON = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -4.1f, 3.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_SIMPLE);
     public static final ToolMaterial DIAMOND = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -4.0f, 5.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);

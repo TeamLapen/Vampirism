@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.server.config;
 
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.core.registries.Registries;

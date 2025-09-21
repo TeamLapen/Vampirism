@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.server.advancements.critereon.HunterActionCriterionTrigger;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;

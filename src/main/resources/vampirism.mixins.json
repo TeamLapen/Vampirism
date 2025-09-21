@@ -60,7 +60,6 @@
     "client.CapeLayerMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
-    "client.KeyMappingMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",

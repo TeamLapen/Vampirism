@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.entity.player;
 
-import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.storage.Attachment;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.entities.IPlayerEventListener;
+import de.teamlapen.sync.common.storage.Attachment;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.core.HolderLookup;

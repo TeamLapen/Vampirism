@@ -5,8 +5,8 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
-import de.teamlapen.lib.lib.util.FluidLib;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
+import de.teamlapen.lib.common.fluids.FluidHelper;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -168,7 +168,7 @@ public class VampirismHUDOverlay {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
                 if (blockEntity != null) {
                     Optional.ofNullable(level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, blockEntity, null)).ifPresent(handler -> {
-                        if (FluidLib.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
+                        if (FluidHelper.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
                             renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
                             event.setCanceled(true);
                         }

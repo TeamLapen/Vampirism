@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;

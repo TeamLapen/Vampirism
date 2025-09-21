@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.items;
 
 
-import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.common.sounds.SoundHelper;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -90,7 +90,7 @@ public class BlessableItem extends Item {
             if (att.blessingSoundReference != null) {
                 att.blessingSoundReference.stopPlaying();
             }
-            att.blessingSoundReference = VampLib.proxy.createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, livingEntity.blockPosition(), 1, 1);
+            att.blessingSoundReference = SoundHelper.getSoundHandler().createSoundReference(ModSounds.BLESSING_MUSIC.get(), SoundSource.PLAYERS, livingEntity.blockPosition(), 1, 1);
             att.blessingSoundReference.startPlaying();
         }
         if (remainingUseDuration % 20 == 1) {

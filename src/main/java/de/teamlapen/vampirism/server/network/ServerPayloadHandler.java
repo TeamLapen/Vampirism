@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.server.network;
 
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.storage.Attachment;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.SyncHelper;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
+import de.teamlapen.sync.common.storage.Attachment;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -71,7 +71,7 @@ public class ServerPayloadHandler {
                 VampirePlayer.get(player).setSkinData(msg.data());
             } else if (entity1 instanceof MinionEntity<?> minion) {
                 minion.getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name(), msg.data()));
-                HelperLib.sync(minion);
+                SyncHelper.sync(minion);
             }
         });
     }
@@ -268,7 +268,7 @@ public class ServerPayloadHandler {
             Entity entity = player.level().getEntity(msg.entityId());
             if (entity instanceof MinionEntity) {
                 if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId(), (MinionEntity<?>) entity)).orElse(false)) {
-                    HelperLib.sync((MinionEntity<?>) entity);
+                    SyncHelper.sync((MinionEntity<?>) entity);
                 }
             }
         });

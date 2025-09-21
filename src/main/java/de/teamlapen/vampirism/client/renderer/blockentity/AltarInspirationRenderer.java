@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.VertexUtils;
+import de.teamlapen.lib.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.common.blockentity.AltarInspirationBlockEntity;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import net.minecraft.client.renderer.MultiBufferSource;

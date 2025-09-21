@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.server.commands.BasicCommand;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.common.blockentity.TentBlockEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class VampireBookItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
+public class VampireBookItem extends Item implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     private static final RandomSource RANDOM = RandomSource.create();
 

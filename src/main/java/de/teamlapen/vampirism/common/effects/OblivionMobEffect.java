@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.effects;
 
-import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillHandler;
+import de.teamlapen.vampirism.common.util.LogUtil;
 import de.teamlapen.vampirism.server.VampirismLogger;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;

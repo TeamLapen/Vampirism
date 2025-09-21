@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens.skills;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;

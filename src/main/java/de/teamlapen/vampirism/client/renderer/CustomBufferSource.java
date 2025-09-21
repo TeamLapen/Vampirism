@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import de.teamlapen.vampirism.client.renderer.screen.BloodVisionRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ARGB;

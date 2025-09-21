@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
+import de.teamlapen.lib.common.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.common.core.ModMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;

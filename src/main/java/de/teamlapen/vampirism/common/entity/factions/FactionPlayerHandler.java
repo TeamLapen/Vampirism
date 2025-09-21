@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.common.entity.factions;
 
-import de.teamlapen.lib.lib.storage.Attachment;
-import de.teamlapen.lib.lib.storage.UpdateParams;
-import de.teamlapen.lib.lib.util.LogUtil;
+import de.teamlapen.sync.common.storage.Attachment;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -23,6 +22,7 @@ import de.teamlapen.vampirism.common.entity.minion.management.PlayerMinionContro
 import de.teamlapen.vampirism.common.entity.player.ActionKeys;
 import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.util.LogUtil;
 import de.teamlapen.vampirism.server.VampirismLogger;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.vampirism.common.util.DamageHandler;

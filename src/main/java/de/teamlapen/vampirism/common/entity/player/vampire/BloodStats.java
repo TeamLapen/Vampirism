@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.ISyncableSaveData;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;

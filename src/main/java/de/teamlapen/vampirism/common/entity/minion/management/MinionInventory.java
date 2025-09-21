@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.minion.management;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

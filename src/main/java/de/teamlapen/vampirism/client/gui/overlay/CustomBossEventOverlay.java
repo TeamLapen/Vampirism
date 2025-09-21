@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.INoGlobalCommandTask;

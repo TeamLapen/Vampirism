@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.components.HoverList;
+import de.teamlapen.lib.client.gui.components.HoverList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.VampireMinionRenderer;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;

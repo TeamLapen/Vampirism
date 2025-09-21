@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.server.commands.arguments.MinionArgument;
 import de.teamlapen.vampirism.common.entity.minion.management.MinionInventory;
 import de.teamlapen.vampirism.common.entity.minion.management.PlayerMinionController;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.blocks;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.core.ModFactions;

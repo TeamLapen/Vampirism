@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.BooleanDataSlot;
+import de.teamlapen.lib.common.inventory.BooleanDataSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
@@ -131,7 +131,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
      * @return if there's a recipe available for the given setup, which requires more lava
      */
     public boolean isMissingLava() {
-        return missingLava.getB();
+        return missingLava.getAsBoolean();
     }
 
     @Override

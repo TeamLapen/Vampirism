@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 
-import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.common.Language;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
@@ -20,7 +20,7 @@ public class VampireBooks {
 
     @NotNull
     public IBookContents getContentsFor(IVampireBook book) {
-        return getContentsFor(book, VampLib.proxy.getActiveLanguage());
+        return getContentsFor(book, Language.getActiveLanguage());
     }
 
     @NotNull

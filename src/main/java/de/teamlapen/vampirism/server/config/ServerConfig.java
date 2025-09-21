@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.server.config;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ModConfigSpec;

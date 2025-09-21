@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.blocks;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BloodContainerBlock extends BaseEntityBlock implements ModDisplayItemGenerator.CreativeTabItemProvider {
+public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 

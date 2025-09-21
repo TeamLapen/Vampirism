@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.server.commands.test;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import net.minecraft.commands.CommandSourceStack;

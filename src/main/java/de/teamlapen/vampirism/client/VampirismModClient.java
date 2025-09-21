@@ -1,19 +1,18 @@
 package de.teamlapen.vampirism.client;
 
 import com.mojang.authlib.GameProfile;
-import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.util.OptifineHandler;
+import de.teamlapen.lib.common.ILifecycleListener;
+import de.teamlapen.lib.client.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.CustomBossEventOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.models.armor.ArmorModels;
-import de.teamlapen.vampirism.client.renderer.screen.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.renderer.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
@@ -106,7 +105,7 @@ public class VampirismModClient {
 
     @SubscribeEvent
     public void setupClient(@NotNull FMLClientSetupEvent event) {
-        VampirismMod.proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        VampirismMod.proxy.onInitStep(ILifecycleListener.Step.CLIENT_SETUP, event);
         event.enqueueWork(ModBlocksRender::register);
         event.enqueueWork(() -> {
             Sheets.addWoodType(ModBlocks.WoodTypes.DARK_SPRUCE);

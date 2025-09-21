@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.blockentity;
 
-import de.teamlapen.lib.lib.util.SingleItemHandler;
-import de.teamlapen.lib.lib.util.ControllableFluidTank;
+import de.teamlapen.lib.common.blockentities.SingleItemHandler;
+import de.teamlapen.lib.common.fluids.ControllableFluidTank;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.common.blocks.BloodSieveBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;

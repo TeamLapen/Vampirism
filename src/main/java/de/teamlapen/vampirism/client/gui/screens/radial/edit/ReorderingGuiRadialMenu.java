@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.lib.client.gui.components.SimpleList;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.DrawCallback;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.lib.client.gui.components.SimpleList;
+import de.teamlapen.lib.client.gui.screens.radialmenu.DrawCallback;
+import de.teamlapen.lib.client.gui.screens.radialmenu.GuiRadialMenu;
+import de.teamlapen.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
+import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.vampirism.api.util.ItemOrdering;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.ChatFormatting;
@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;

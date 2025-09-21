@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism;
 
-import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.lib.entity.IPlayerEventListener;
-import de.teamlapen.lib.lib.storage.IAttachedSyncable;
-import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.sync.SyncRegistry;
+import de.teamlapen.sync.common.entities.IPlayerEventListener;
+import de.teamlapen.sync.common.storage.IAttachedSyncable;
+import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -142,13 +142,13 @@ public class VampirismMod {
 
     @SuppressWarnings("unchecked")
     private void enqueueIMC(final @NotNull InterModEnqueueEvent event) {
-        onInitStep(IInitListener.Step.ENQUEUE_IMC, event);
-        HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
-        HelperRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
-        HelperRegistry.registerSyncableEntityCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.FACTION_PLAYER_HANDLER.get(), FactionPlayerHandler.class);
+        onInitStep(ILifecycleListener.Step.ENQUEUE_IMC, event);
+        SyncRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
+        SyncRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
+        SyncRegistry.registerSyncableEntityCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
+        SyncRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
+        SyncRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
+        SyncRegistry.registerSyncablePlayerCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.FACTION_PLAYER_HANDLER.get(), FactionPlayerHandler.class);
     }
 
     private void registerCapabilities(@NotNull RegisterCapabilitiesEvent event) {
@@ -209,7 +209,7 @@ public class VampirismMod {
     }
 
     private void loadComplete(final @NotNull FMLLoadCompleteEvent event) {
-        onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        onInitStep(ILifecycleListener.Step.LOAD_COMPLETE, event);
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
             VampirismLogger.init();
@@ -228,13 +228,13 @@ public class VampirismMod {
     }
 
     private void processIMC(final @NotNull InterModProcessEvent event) {
-        onInitStep(IInitListener.Step.PROCESS_IMC, event);
+        onInitStep(ILifecycleListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
         CrossbowArrowHandler.collectCrossbowArrows();
     }
 
     private void setup(final @NotNull FMLCommonSetupEvent event) {
-        onInitStep(IInitListener.Step.COMMON_SETUP, event);
+        onInitStep(ILifecycleListener.Step.COMMON_SETUP, event);
 
         NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
         NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
@@ -252,7 +252,7 @@ public class VampirismMod {
         TelemetryCollector.execute();
     }
 
-    private void onInitStep(IInitListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {
+    private void onInitStep(ILifecycleListener.@NotNull Step step, @NotNull ParallelDispatchEvent event) {
         proxy.onInitStep(step, event);
     }
 }

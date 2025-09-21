@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.proxy;
 
 import com.mojang.authlib.GameProfile;
-import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 /**
  * Proxy interface
  */
-public interface IProxy extends IInitListener {
+public interface IProxy extends ILifecycleListener {
 
     default void displayNameSwordScreen(ItemStack stack) {
     }

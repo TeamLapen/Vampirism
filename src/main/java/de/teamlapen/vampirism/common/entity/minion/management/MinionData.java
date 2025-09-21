@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.minion.management;
 
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.sync.SyncHelper;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
@@ -166,7 +166,7 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().getInventory(), new ItemStack(ModItems.OBLIVION_POTION.get())));
             }
         });
-        HelperLib.sync(entity);
+        SyncHelper.sync(entity);
     }
 
     @Override

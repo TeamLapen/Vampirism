@@ -23,9 +23,6 @@ sourceSets {
     api {
         compileClasspath += configurations["compileClasspath"]
     }
-    lib {
-        compileClasspath += configurations["compileClasspath"]
-    }
     //noinspection GroovyAssignabilityCheck
     main {
 
@@ -43,8 +40,6 @@ sourceSets {
                 exclude('de/teamlapen/vampirism/common/integration/terrablender')
             }
         }
-        //noinspection GroovyAssignabilityCheck
-        compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
 
@@ -94,10 +89,8 @@ tasks.named('processResources', ProcessResources).configure {
 tasks.named('jar', Jar).configure {
     from sourceSets.main.output.classesDirs
     from sourceSets.api.output.classesDirs
-    from sourceSets.lib.output.classesDirs
     from sourceSets.main.output.resourcesDir
     from sourceSets.api.output.resourcesDir
-    from sourceSets.lib.output.resourcesDir
 
     from{
         fileTree('build/translations').matching{

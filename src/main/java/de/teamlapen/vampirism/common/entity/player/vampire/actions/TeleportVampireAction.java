@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.vampire.actions;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.core.ModSounds;
-import de.teamlapen.vampirism.common.entity.AreaParticleCloudEntity;
+import de.teamlapen.vampirism.common.entity.AreaParticleCloud;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,7 +71,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
+        AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
         particleCloud.setPos(ox, oy, oz);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getBbHeight());

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.server.commands;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.common.items.VampireSwordItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

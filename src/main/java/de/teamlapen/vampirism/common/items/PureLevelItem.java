@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.items.component.PureLevel;
 import net.minecraft.ChatFormatting;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class PureLevelItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
+public class PureLevelItem extends Item implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public PureLevelItem(Properties properties) {
         super(properties.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW));

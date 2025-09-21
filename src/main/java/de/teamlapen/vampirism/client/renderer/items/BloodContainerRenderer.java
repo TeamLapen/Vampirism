@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.lib.lib.client.VertexUtils;
+import de.teamlapen.lib.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.core.ModDataComponents;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.core.ModEffects;

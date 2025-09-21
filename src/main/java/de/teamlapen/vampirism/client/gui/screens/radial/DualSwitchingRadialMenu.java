@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens.radial;
 
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.GuiRadialMenu;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.lib.client.gui.screens.radialmenu.GuiRadialMenu;
+import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenu;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

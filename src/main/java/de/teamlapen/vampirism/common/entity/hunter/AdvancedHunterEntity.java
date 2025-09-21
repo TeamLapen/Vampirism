@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;

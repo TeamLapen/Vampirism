@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.common.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.common.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.core.ModStats;

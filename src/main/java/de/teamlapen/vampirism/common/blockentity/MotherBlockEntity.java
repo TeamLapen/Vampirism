@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.blockentity;
 
-import de.teamlapen.lib.lib.util.SpawnHelper;
+import de.teamlapen.lib.common.entities.SpawnHelper;
 import de.teamlapen.vampirism.common.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.common.blocks.mother.MotherTreeStructure;
 import de.teamlapen.vampirism.common.core.*;

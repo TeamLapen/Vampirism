@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.lib.lib.client.gui.GuiRenderer;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenu;
-import de.teamlapen.lib.lib.client.gui.screens.radialmenu.RadialMenuSlot;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
+import de.teamlapen.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
+import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenu;
+import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;

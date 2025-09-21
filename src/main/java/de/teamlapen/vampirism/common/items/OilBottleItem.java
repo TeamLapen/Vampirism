@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IOilItem;
 import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class OilBottleItem extends Item implements IOilItem, ModDisplayItemGenerator.CreativeTabItemProvider {
+public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public OilBottleItem(Properties properties) {
         super(properties);

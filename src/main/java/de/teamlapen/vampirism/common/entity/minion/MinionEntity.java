@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.entity.minion;
 
 import com.mojang.authlib.GameProfile;
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.lib.storage.ISyncable;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.SyncHelper;
+import de.teamlapen.sync.common.storage.ISyncable;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
@@ -420,7 +420,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     public void onTaskChanged() {
-        HelperLib.sync(this);
+        SyncHelper.sync(this);
     }
 
     public void openAppearanceScreen() {
@@ -605,7 +605,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Checkout the minion data from the playerMinionController (if available).
      * Call as early as possible but only if being added to world
      * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToLevel()} or if tracking starts before during {@link de.teamlapen.lib.lib.storage.ISyncable#serializeUpdateNBT(HolderLookup.Provider, UpdateParams)}
+     * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToLevel()} or if tracking starts before during {@link ISyncable#serializeUpdateNBT(HolderLookup.Provider, UpdateParams)}
      */
     private void checkoutMinionData(HolderLookup.Provider provider) {
         if (playerMinionController != null && minionData == null) {

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
-import de.teamlapen.lib.lib.client.gui.ProgressBar;
+import de.teamlapen.lib.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.common.inventory.diffuser.DiffuserMenu;

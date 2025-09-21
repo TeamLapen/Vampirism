@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.server.commands;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.server.commands.arguments.FactionArgument;

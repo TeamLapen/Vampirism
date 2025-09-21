@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.entity.player.actions;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.ISyncableSaveData;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;

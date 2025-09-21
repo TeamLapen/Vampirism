@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.entity.player.skills;
 
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
-import de.teamlapen.lib.lib.storage.UpdateParams;
-import de.teamlapen.lib.lib.util.LiveMap;
+import de.teamlapen.sync.common.storage.ISyncableSaveData;
+import de.teamlapen.sync.common.storage.UpdateParams;
+import de.teamlapen.lib.util.collections.LiveMap;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(GuiGraphics.class)
-public interface GuiGraphicsAccessor extends de.teamlapen.lib.util.GuiGraphicsAccessor {
+public interface GuiGraphicsAccessor extends de.teamlapen.lib.client.gui.GuiGraphicsAccessor {
 
     @Accessor("bufferSource")
     @Override

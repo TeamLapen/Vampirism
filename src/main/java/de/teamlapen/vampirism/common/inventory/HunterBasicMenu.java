@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainerMenu;
+import de.teamlapen.lib.common.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;

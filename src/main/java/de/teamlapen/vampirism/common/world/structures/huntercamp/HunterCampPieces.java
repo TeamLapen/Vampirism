@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.structures.huntercamp;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.common.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.common.blocks.TentBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;

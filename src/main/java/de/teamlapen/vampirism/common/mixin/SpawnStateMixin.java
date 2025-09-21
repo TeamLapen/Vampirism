@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.mixin;
 
-import de.teamlapen.lib.util.SpawnStateAccessor;
+import de.teamlapen.lib.server.SpawnStateAccessor;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.NaturalSpawner;

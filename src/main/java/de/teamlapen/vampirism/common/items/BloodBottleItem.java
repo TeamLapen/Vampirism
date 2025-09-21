@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -29,7 +29,7 @@ import static de.teamlapen.vampirism.api.components.IBottleBlood.MULTIPLIER;
 /**
  * Can only store blood in {@link BloodBottleItem#CAPACITY} tenth units.
  */
-public class BloodBottleItem extends Item implements ModDisplayItemGenerator.CreativeTabItemProvider {
+public class BloodBottleItem extends Item implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final int AMOUNT = IBottleBlood.MAX_VALUE;
     public static final int CAPACITY = AMOUNT * MULTIPLIER;

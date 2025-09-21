@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.mixin;
 
-import de.teamlapen.lib.lib.util.AndTargetSelector;
+import de.teamlapen.lib.util.AndTargetSelector;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.common.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.common.mixin.accessor.TargetConditionAccessor;

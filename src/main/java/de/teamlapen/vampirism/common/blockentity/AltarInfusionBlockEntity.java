@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.blockentity;
 
-import de.teamlapen.lib.lib.blockentity.InventoryBlockEntity;
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.util.ValuedObject;
+import de.teamlapen.lib.common.blockentities.InventoryBlockEntity;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
+import de.teamlapen.lib.util.ValuedObject;
 import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.common.blocks.AltarTipBlock;

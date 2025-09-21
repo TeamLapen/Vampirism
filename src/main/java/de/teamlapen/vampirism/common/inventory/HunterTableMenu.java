@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.common.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;

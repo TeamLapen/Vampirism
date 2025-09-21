@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import de.teamlapen.lib.lib.util.ResourceLocationTypeAdapter;
+import de.teamlapen.lib.util.serialization.ResourceLocationTypeAdapter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.settings.Supporter;

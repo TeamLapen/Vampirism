@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider.models;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.lib.lib.data.VBlockModelGenerators;
+import de.teamlapen.lib.data.BaseBlockModelGenerators;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.blocks.*;
 import de.teamlapen.vampirism.common.blocks.candle.CandleHolderBlock;
@@ -30,7 +30,7 @@ import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
 import static net.minecraft.client.data.models.model.ModelLocationUtils.*;
 
-public class ModBlockModelGenerators extends VBlockModelGenerators {
+public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
     public ModBlockModelGenerators(net.minecraft.client.data.models.BlockModelGenerators generators) {
         super(generators.blockStateOutput, generators.itemModelOutput, generators.modelOutput);

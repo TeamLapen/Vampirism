@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.server.commands;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;

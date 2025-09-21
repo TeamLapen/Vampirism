@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.minion;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.HelperLib;
+import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -154,7 +154,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                     player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_upgrade"), false);
-                    HelperLib.sync(this);
+                    SyncHelper.sync(this);
                 } else {
                     player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_wrong"), false);
 

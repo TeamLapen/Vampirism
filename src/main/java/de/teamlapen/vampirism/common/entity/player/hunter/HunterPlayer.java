@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.hunter;
 
-import de.teamlapen.lib.HelperLib;
+import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
@@ -202,7 +202,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         MinionWorldData.getData(this.player.level()).ifPresent(a -> {
             a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
                 (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
-                HelperLib.sync(minion);
+                SyncHelper.sync(minion);
             });
         });
     }

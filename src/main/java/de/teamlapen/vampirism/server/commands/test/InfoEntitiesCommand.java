@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.VEnums;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.common.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.core.ModItems;

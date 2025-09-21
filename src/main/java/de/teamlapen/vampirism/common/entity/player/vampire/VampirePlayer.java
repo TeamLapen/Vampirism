@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
-import de.teamlapen.lib.HelperLib;
-import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.storage.IStateSyncable;
-import de.teamlapen.lib.lib.storage.ISyncableSaveData;
-import de.teamlapen.lib.lib.storage.UpdateParams;
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.lib.util.ISoundReference;
+import de.teamlapen.lib.common.sounds.SoundHelper;
+import de.teamlapen.sync.SyncHelper;
+import de.teamlapen.sync.common.storage.IStateSyncable;
+import de.teamlapen.sync.common.storage.ISyncableSaveData;
+import de.teamlapen.sync.common.storage.UpdateParams;
+import de.teamlapen.lib.util.UtilLib;
+import de.teamlapen.lib.client.sound.ISoundReference;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.effects.ModEffectInstanceHelper;
@@ -1089,7 +1089,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             feed_victim = nbt.getInt(KEY_FEED_VICTIM_ID);
             if (feed_victim != -1) {
                 if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
-                    feedingSoundReference = VampLib.proxy.createSoundReference(ModSounds.VAMPIRE_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
+                    feedingSoundReference = SoundHelper.getSoundHandler().createSoundReference(ModSounds.VAMPIRE_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
                     feedingSoundReference.startPlaying();
                 }
             } else {
@@ -1374,7 +1374,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void updateMinionAttributes(boolean enabled) {
         MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
-            HelperLib.sync(minion);
+            SyncHelper.sync(minion);
         }));
     }
 

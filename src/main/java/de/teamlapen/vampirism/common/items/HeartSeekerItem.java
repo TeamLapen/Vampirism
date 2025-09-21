@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
+public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
     public static final ToolMaterial IRON = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -3.6f, 1.7F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_SIMPLE);
     public static final ToolMaterial DIAMOND = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -3.5f, 2.7F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);

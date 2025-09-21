@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;

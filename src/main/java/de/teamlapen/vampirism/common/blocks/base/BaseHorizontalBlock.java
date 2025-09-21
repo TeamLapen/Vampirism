@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.blocks.base;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.data.provider.models.ModBlockModelGenerators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

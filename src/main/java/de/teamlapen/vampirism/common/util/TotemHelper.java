@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;

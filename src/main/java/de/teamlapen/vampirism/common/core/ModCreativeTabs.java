@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
+import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
@@ -35,7 +35,7 @@ public class ModCreativeTabs {
                     .displayItems(new VampirismDisplayItemGenerator())
                     .build());
 
-    public static class VampirismDisplayItemGenerator extends ModDisplayItemGenerator {
+    public static class VampirismDisplayItemGenerator extends BaseDisplayItemGenerator {
 
         @Override
         protected void addAll() {

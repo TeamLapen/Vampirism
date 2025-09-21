@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.lib.lib.client.gui.components.SimpleList;
+import de.teamlapen.lib.client.gui.components.SimpleList;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectMinionTaskPacket;

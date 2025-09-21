@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.blockentity;
 
-import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.server.SimpleSpawnerLogic;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEntities;

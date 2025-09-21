@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.vampire.actions;
 
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionResult;

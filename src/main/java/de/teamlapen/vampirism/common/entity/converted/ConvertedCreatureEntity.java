@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.converted;
 
-import de.teamlapen.lib.lib.storage.ISyncable;
-import de.teamlapen.lib.lib.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.ISyncable;
+import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.common.core.ModEntities;
