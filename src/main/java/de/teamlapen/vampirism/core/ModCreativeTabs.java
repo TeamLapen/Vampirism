@@ -282,9 +282,9 @@ public class ModCreativeTabs {
             add(ModItems.DARK_SPRUCE_HANGING_SIGN);
 
             add(CURSED_SPRUCE_LOG);
-            add(CURSED_SPRUCE_LOG_CURED);
+            add(CURSED_SPRUCE_LOG_ACTIVE);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_WOOD_CURED);
+            add(CURSED_SPRUCE_WOOD_ACTIVE);
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);

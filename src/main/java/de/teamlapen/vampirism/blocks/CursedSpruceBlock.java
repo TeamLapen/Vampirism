@@ -51,7 +51,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEf
         DirectCursedBarkBlock.Type type = null;
         List<Direction> directions = Arrays.stream(Direction.values()).collect(Collectors.toList());
         Direction direction = null;
-        if (state.getBlock() == ModBlocks.CURSED_SPRUCE_LOG.get()) {
+        if (state.getBlock() == ModBlocks.CURSED_SPRUCE_LOG_ACTIVE.get()) {
             switch (state.getValue(RotatedPillarBlock.AXIS)) {
                 case X -> {
                     directions.remove(Direction.WEST);
@@ -76,7 +76,7 @@ public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEf
                     }
                 }
             }
-        } else if (state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD.get()) {
+        } else if (state.getBlock() == ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get()) {
             direction = directions.get(random.nextInt(directions.size()));
             switch (state.getValue(RotatedPillarBlock.AXIS)) {
                 case X -> {

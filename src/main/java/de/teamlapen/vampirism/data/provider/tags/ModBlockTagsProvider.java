@@ -125,7 +125,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
 
         tag(BlockTags.REPLACEABLE_BY_TREES).add(ModBlocks.CURSED_HANGING_ROOTS.get());
         tag(ModBlockTags.DARK_SPRUCE_LOG).add(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_WOOD.get(), ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
-        tag(ModBlockTags.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_LOG_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_WOOD_CURED.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+        tag(ModBlockTags.CURSED_SPRUCE_LOG).add(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_LOG_ACTIVE.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_WOOD.get(), ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get(), ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
         tag(BlockTags.LEAVES).add(ModBlocks.DARK_SPRUCE_LEAVES.get());
         tag(BlockTags.SAPLINGS).add(ModBlocks.DARK_SPRUCE_SAPLING.get());
         tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.DARK_SPRUCE_TRAPDOOR.get(), ModBlocks.CURSED_SPRUCE_TRAPDOOR.get());

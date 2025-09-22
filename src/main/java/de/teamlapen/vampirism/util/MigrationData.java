@@ -126,6 +126,8 @@ public class MigrationData {
         mapping.remap("dark_spruce_pressure_place", "vampirism:dark_spruce_pressure_plate");
         mapping.remap("cursed_spruce_pressure_place", "vampirism:cursed_spruce_pressure_plate");
         mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
+        mapping.remap("vampirism:cursed_spruce_log_cured", "vampirism:cursed_spruce_log");
+        mapping.remap("vampirism:cursed_spruce_wood_cured", "vampirism:cursed_spruce_wood");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

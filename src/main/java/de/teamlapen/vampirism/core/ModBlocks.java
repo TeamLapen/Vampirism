@@ -146,11 +146,10 @@ public class ModBlocks {
     public static final DeferredBlock<CeilingHangingSignBlock> DARK_SPRUCE_HANGING_SIGN = registerBlock("dark_spruce_hanging_sign", props -> new CeilingHangingSignBlock(WoodTypes.DARK_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_HANGING_SIGN, DARK_SPRUCE_PLANKS));
     public static final DeferredBlock<WallHangingSignBlock> DARK_SPRUCE_WALL_HANGING_SIGN = registerBlock("dark_spruce_wall_hanging_sign", props -> new WallHangingSignBlock(WoodTypes.DARK_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_WALL_HANGING_SIGN, DARK_SPRUCE_PLANKS).overrideLootTable(DARK_SPRUCE_HANGING_SIGN.get().getLootTable()));
 
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG_CURED = registerWithItem("cursed_spruce_log_cured", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD_CURED = registerWithItem("cursed_spruce_wood_cured", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG = registerWithItem("cursed_spruce_log", props -> new CursedSpruceBlock(props, CURSED_SPRUCE_LOG_CURED), logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD = registerWithItem("cursed_spruce_wood", props -> new CursedSpruceBlock(props, CURSED_SPRUCE_WOOD_CURED), logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG = registerWithItem("cursed_spruce_log", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD = registerWithItem("cursed_spruce_wood", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG_ACTIVE = registerWithItem("cursed_spruce_log_active", props -> new CursedSpruceBlock(props, CURSED_SPRUCE_LOG), logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD_ACTIVE = registerWithItem("cursed_spruce_wood_active", props -> new CursedSpruceBlock(props, CURSED_SPRUCE_WOOD), logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = registerWithItem("stripped_cursed_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_WOOD = registerWithItem("stripped_cursed_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
 
@@ -485,8 +484,8 @@ public class ModBlocks {
                 .put(DARK_SPRUCE_WOOD.get(), STRIPPED_DARK_SPRUCE_WOOD.get())
                 .put(CURSED_SPRUCE_LOG.get(), STRIPPED_CURSED_SPRUCE_LOG.get())
                 .put(CURSED_SPRUCE_WOOD.get(), STRIPPED_CURSED_SPRUCE_WOOD.get())
-                .put(CURSED_SPRUCE_LOG_CURED.get(), STRIPPED_CURSED_SPRUCE_LOG.get())
-                .put(CURSED_SPRUCE_WOOD_CURED.get(), STRIPPED_CURSED_SPRUCE_WOOD.get())
+                .put(CURSED_SPRUCE_LOG_ACTIVE.get(), STRIPPED_CURSED_SPRUCE_LOG.get())
+                .put(CURSED_SPRUCE_WOOD_ACTIVE.get(), STRIPPED_CURSED_SPRUCE_WOOD.get())
                 .build();
     }
 
@@ -515,8 +514,8 @@ public class ModBlocks {
                 DARK_SPRUCE_WOOD,
                 STRIPPED_DARK_SPRUCE_LOG,
                 STRIPPED_DARK_SPRUCE_WOOD,
-                CURSED_SPRUCE_LOG_CURED,
-                CURSED_SPRUCE_WOOD_CURED,
+                CURSED_SPRUCE_LOG_ACTIVE,
+                CURSED_SPRUCE_WOOD_ACTIVE,
                 CURSED_SPRUCE_LOG,
                 CURSED_SPRUCE_WOOD,
                 STRIPPED_CURSED_SPRUCE_LOG,

@@ -46,10 +46,10 @@ public class MotherPiece extends ScatteredFeaturePiece {
 
     protected void placeRoots(@NotNull WorldGenLevel level, @NotNull BoundingBox box, @NotNull RandomSource random) {
         BlockState state0 = ModBlocks.REMAINS.get().defaultBlockState();
-        BlockState state1 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
-        BlockState state2 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
-        BlockState state3 = ModBlocks.CURSED_SPRUCE_WOOD.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.X);
-        BlockState state4 = ModBlocks.CURSED_SPRUCE_LOG.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
+        BlockState state1 = ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
+        BlockState state2 = ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
+        BlockState state3 = ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.X);
+        BlockState state4 = ModBlocks.CURSED_SPRUCE_LOG_ACTIVE.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
         BlockState state5 = Blocks.AIR.defaultBlockState();
         BlockState state6 = ModBlocks.MOTHER.get().defaultBlockState();
 
