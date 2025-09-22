@@ -309,58 +309,58 @@
   },
   "requirements": [
     [
-      "has_nocturnal"
-    ],
-    [
-      "has_infusion_breakthrough"
-    ],
-    [
-      "has_sinister_intentions"
+      "has_observation_on_vampires"
     ],
     [
       "has_hunters_diary"
     ],
     [
-      "has_mad_mans_journal"
-    ],
-    [
-      "has_dear_martha"
-    ],
-    [
-      "has_valorous_tale"
-    ],
-    [
-      "has_ashes_of_past_dawns"
-    ],
-    [
-      "has_royal_rivalry"
-    ],
-    [
-      "has_observation_on_vampires"
-    ],
-    [
       "has_wanted"
-    ],
-    [
-      "has_pyromaniacs_diary"
     ],
     [
       "has_maids_diary"
     ],
     [
-      "has_century_of_evolution"
+      "has_pyromaniacs_diary"
     ],
     [
-      "has_case_file_144"
-    ],
-    [
-      "has_my_prince"
+      "has_ashes_of_past_dawns"
     ],
     [
       "has_case_study_one"
     ],
     [
       "has_my_mother"
+    ],
+    [
+      "has_case_file_144"
+    ],
+    [
+      "has_royal_rivalry"
+    ],
+    [
+      "has_century_of_evolution"
+    ],
+    [
+      "has_dear_martha"
+    ],
+    [
+      "has_nocturnal"
+    ],
+    [
+      "has_my_prince"
+    ],
+    [
+      "has_valorous_tale"
+    ],
+    [
+      "has_infusion_breakthrough"
+    ],
+    [
+      "has_mad_mans_journal"
+    ],
+    [
+      "has_sinister_intentions"
     ]
   ],
   "sends_telemetry_event": true

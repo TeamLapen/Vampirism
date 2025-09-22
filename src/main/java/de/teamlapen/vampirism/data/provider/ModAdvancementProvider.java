@@ -270,7 +270,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/yuck");
             AdvancementHolder freeze_kill = Advancement.Builder.advancement()
-                    .display(Blocks.PACKED_ICE, Component.translatable("advancement.vampirism.freeze_kill"), Component.translatable("advancement.vampirism.freeze_kill.desc"), null, AdvancementType.TASK, true, true, false)
+                    .display(Items.CLOCK, Component.translatable("advancement.vampirism.freeze_kill"), Component.translatable("advancement.vampirism.freeze_kill.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_vampire)
                     .addCriterion("kill", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.KILL_FROZEN_HUNTER))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))

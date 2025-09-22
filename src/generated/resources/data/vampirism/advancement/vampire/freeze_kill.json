@@ -22,7 +22,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "minecraft:packed_ice"
+      "id": "minecraft:clock"
     },
     "title": {
       "translate": "advancement.vampirism.freeze_kill"
