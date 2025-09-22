@@ -7,7 +7,7 @@ import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.GeneralEventHandler;
+import de.teamlapen.vampirism.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.blockentity.PotionTableBlockEntity;
 import de.teamlapen.vampirism.client.VampirismModClient;
@@ -42,7 +42,6 @@ import de.teamlapen.vampirism.common.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.common.proxy.IProxy;
 import de.teamlapen.vampirism.server.ServerProxy;
 import de.teamlapen.vampirism.common.recipes.ExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.misc.sit.SitHandler;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications;
@@ -106,9 +105,7 @@ public class VampirismMod {
         this.modBus.register(ModPacketDispatcher.class);
         this.modBus.register(MigrationData.class);
 
-        NeoForge.EVENT_BUS.register(Permissions.class);
-        NeoForge.EVENT_BUS.register(SitHandler.class);
-        NeoForge.EVENT_BUS.register(new GeneralEventHandler());
+        NeoForge.EVENT_BUS.register(new ServerEventHandler());
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onServerStarting);
         NeoForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);

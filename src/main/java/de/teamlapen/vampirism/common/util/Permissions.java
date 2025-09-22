@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+@EventBusSubscriber
 public class Permissions {
     public static final PermissionDynamicContextKey<IAction<?>> ACTION_CONTEXT = new PermissionDynamicContextKey<>((Class<IAction<?>>) (Object) IAction.class, "action", action -> RegUtil.id(action).toString());
 

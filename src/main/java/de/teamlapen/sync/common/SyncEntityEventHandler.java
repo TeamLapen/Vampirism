@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 @EventBusSubscriber(modid = REFERENCE.MODID)
-public class CommonEntityEventHandler {
+public class SyncEntityEventHandler {
 
     private static Collection<AttachmentType<IPlayerEventListener>> listeners() {
         return SyncRegistry.getEventListenerCaps();
