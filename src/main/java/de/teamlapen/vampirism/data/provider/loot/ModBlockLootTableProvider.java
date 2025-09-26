@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModDataComponents;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.mixin.accessor.VanillaBlockLootAccessor;
 import de.teamlapen.vampirism.util.ColorListsUtil;
@@ -10,6 +11,7 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.util.Unit;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -113,14 +116,12 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.add(ModBlocks.CURSED_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_EARTH.get()));
         this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
         this.dropPottedContents(ModBlocks.POTTED_CURSED_ROOTS.get());
-        this.dropSelf(ModBlocks.CURSED_SPRUCE_LOG.get());
-        this.add(ModBlocks.CURSED_SPRUCE_LOG_ACTIVE.get(), block -> this.createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_SPRUCE_LOG.get()));
+        this.dropCursedSpruce(ModBlocks.CURSED_SPRUCE_LOG.get());
         this.add(ModBlocks.DIRECT_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_STAIRS.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_STAIRS.get());
         this.dropSelf(ModBlocks.DARK_SPRUCE_WOOD.get());
-        this.dropSelf(ModBlocks.CURSED_SPRUCE_WOOD.get());
-        this.add(ModBlocks.CURSED_SPRUCE_WOOD_ACTIVE.get(), block -> this.createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_SPRUCE_WOOD.get()));
+        this.dropCursedSpruce(ModBlocks.CURSED_SPRUCE_WOOD.get());
         this.dropSelf(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
         this.dropSelf(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
         this.dropSelf(ModBlocks.DARK_SPRUCE_SIGN.get());
@@ -200,6 +201,22 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));
         ColorListsUtil.HANGING_CHANDELIERS.forEach(this::dropSelf);
     }
+
+    private void dropCursedSpruce(CursedSpruceBlock block) {
+        this.add(block, LootTable.lootTable()
+                .withPool(
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(
+                                        LootItem.lootTableItem(block.asItem())
+                                                .when(this.hasSilkTouch())
+                                                .apply(SetComponentsFunction.setComponent(ModDataComponents.ACTIVE.get(), Unit.INSTANCE))
+                                                .otherwise(LootItem.lootTableItem(block.asItem()))
+                                )
+                )
+        );
+    }
+
 
     @Override
     protected Iterable<Block> getKnownBlocks() {

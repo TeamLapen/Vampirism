@@ -57,8 +57,8 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     }
 
     private boolean canAttachTo(BlockGetter blockReader, BlockPos pos, Direction direction) {
-        BlockState blockstate = blockReader.getBlockState(pos);
-        return blockstate.getBlock() instanceof CursedSpruceBlock cursedSpruce && !cursedSpruce.isCured();
+        BlockState state = blockReader.getBlockState(pos);
+        return state.getBlock() instanceof CursedSpruceBlock && state.getValue(CursedSpruceBlock.ACTIVE);
     }
 
     @Override

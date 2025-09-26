@@ -61,8 +61,9 @@
     "trunk_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "vampirism:cursed_spruce_log_active",
+        "Name": "vampirism:cursed_spruce_log",
         "Properties": {
+          "active": "true",
           "axis": "y"
         }
       }
