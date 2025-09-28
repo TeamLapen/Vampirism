@@ -73,6 +73,19 @@ public class AltarInspirationBlockEntity extends BlockEntity implements FluidTan
         return modelData;
     }
 
+    @Override
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
+        pTag.putInt("blood", tank.getFluidAmount());
+
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
+        tank.setFluid(new FluidStack(ModFluids.BLOOD.get(), pTag.getInt("blood")));
+    }
+
     public FluidTankWithListener getTank() {
         return tank;
     }
