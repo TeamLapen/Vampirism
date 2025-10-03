@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import de.teamlapen.lib.util.OptifineHandler;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.event.VampireFogEvent;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
@@ -203,20 +202,24 @@ public class RenderHandler implements ResourceManagerReloadListener {
                 flag = false;
             }
             if (flag) {
-                int color;
+                //Determine color based on relative blood level and potentially poisonous blood (if skill is unlocked)
                 Optional<ExtendedCreature> opt = entity instanceof PathfinderMob && entity.isAlive() ? ExtendedCreature.getSafe(entity) : Optional.empty();
-                if (opt.map(creature -> creature.getBlood() > 0 && !creature.hasPoisonousBlood()).orElse(false)) {
-                    color = 0xFF0000;
-                } else if (VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || entity instanceof IHunterMob)) {
-                    color = 0x07FF07;
+                float relBload = opt.filter(creature -> !creature.hasPoisonousBlood()).filter(creature -> creature.getBlood() > 0).map(creature -> creature.getBlood() / (float) creature.getMaxBlood()).orElse(0F);
+                int r, g, b;
+                if (relBload == 0F && VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || entity instanceof IHunterMob)) {
+                    r = 0x07;
+                    g = 0xE0;
+                    b = 0x07; //Greenish
                 } else {
-                    color = 0xA0A0A0;
+                    int r1 = 255, g1 = 0, b1 = 0;  // Red
+                    int r2 = 160, g2 = 160, b2 = 160;  // Gray
+                    //Interpolate between red and gray based on relative blood level
+                    r = Math.round((1 - relBload) * r2 + relBload * r1);
+                    g = Math.round((1 - relBload) * g2 + relBload * g1);
+                    b = Math.round((1 - relBload) * b2 + relBload * b1);
                 }
                 EntityRenderDispatcher renderManager = mc.getEntityRenderDispatcher();
                 var bloodVisionBuffer = this.bloodVisionBuffer.getBuffer(event.getMultiBufferSource());
-                int r = color >> 16 & 255;
-                int g = color >> 8 & 255;
-                int b = color & 255;
                 int alpha = (int) ((dist > ENTITY_NEAR_SQ_DISTANCE ? 50 : (dist / (double) ENTITY_NEAR_SQ_DISTANCE * 50d)) * getBloodVisionProgress(event.getPartialTick()));
                 bloodVisionBuffer.setColor(r, g, b, alpha);
                 float f = Mth.lerp(event.getPartialTick(), entity.yRotO, entity.getYRot());
