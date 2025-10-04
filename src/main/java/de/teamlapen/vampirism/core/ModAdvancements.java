@@ -21,6 +21,7 @@ public class ModAdvancements {
     public static final DeferredHolder<CriterionTrigger<?>, MapFoundCriterionTrigger> TRIGGER_MAP_FOUND = TRIGGERS.register("map_found", MapFoundCriterionTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_MOTHER_WIN = TRIGGERS.register("mother_win", PlayerTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, ActionCriterionTrigger> ACTION_TRIGGER = TRIGGERS.register("action", ActionCriterionTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_BLOOD_FOOD_CONSUMED = TRIGGERS.register("blood_food_consumed", PlayerTrigger::new);
 
     static void register(IEventBus bus) {
         TRIGGERS.register(bus);

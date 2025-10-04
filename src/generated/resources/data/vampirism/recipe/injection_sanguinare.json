@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "vampirism:injection_empty",
+    "vampirism:syringe_empty",
     "vampirism:vampire_fang",
     "vampirism:vampire_fang",
     "vampirism:vampire_fang",

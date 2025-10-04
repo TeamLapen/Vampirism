@@ -11,11 +11,21 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_glass_pane": {
+    "has_iron_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "#c:glass_panes"
+            "items": "#c:ingots/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_iron_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:nuggets/iron"
           }
         ]
       },
@@ -23,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:injection_empty"
+        "recipe": "vampirism:syringe_empty"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +41,14 @@
   "requirements": [
     [
       "has_the_recipe",
+      "has_iron_ingot",
       "has_glass",
-      "has_glass_pane"
+      "has_iron_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:injection_empty"
+      "vampirism:syringe_empty"
     ]
   }
 }

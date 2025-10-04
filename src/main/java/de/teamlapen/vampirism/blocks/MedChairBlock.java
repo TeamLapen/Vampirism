@@ -67,11 +67,9 @@ public class MedChairBlock extends VampirismHorizontalBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player.isAlive()) {
-            if (handleInjections(player, level, stack, pos)) {
-                player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
-                stack.shrink(1);
-                if (stack.isEmpty()) {
-                    player.getInventory().removeItem(stack);
+            if (stack.getItem() instanceof InjectionItem injectionItem) {
+                if (handleInjections(stack, injectionItem, level, pos, player, hand)) {
+                    return InteractionResult.SUCCESS_SERVER;
                 }
             }
         } else if (level.isClientSide) {
@@ -80,12 +78,15 @@ public class MedChairBlock extends VampirismHorizontalBlock {
         return InteractionResult.SUCCESS_SERVER;
     }
 
-    private boolean handleInjections(Player player, Level level, ItemStack stack, BlockPos pos) {
+    private boolean handleInjections(ItemStack stack, InjectionItem injectionItem, Level level, BlockPos pos, Player player, InteractionHand hand) {
         FactionPlayerHandler handler = FactionPlayerHandler.get(player);
         Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
 
-        if (stack.getItem() instanceof InjectionItem injectionItem) {
-            return injectionItem.handleInjection(level, pos, player, handler, faction);
+        if (injectionItem.handleInjection(level, pos, player, handler, faction)) {
+            injectionItem.consumeInjectionItem(stack, player, hand);
+            player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
+
+            return true;
         }
 
         return false;

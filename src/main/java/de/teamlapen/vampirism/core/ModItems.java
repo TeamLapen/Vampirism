@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.items.crossbow.arrow.*;
+import de.teamlapen.vampirism.items.dispenser.SyringeDispenseBehavior;
 import de.teamlapen.vampirism.util.DescriptionUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -193,9 +194,10 @@ public class ModItems {
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart",  props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.CONFUSION, 20*20))))).build())));
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
-    public static final DeferredItem<Item> INJECTION_EMPTY = ITEMS.registerItem("injection_empty", Item::new);
-    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", GarlicInjectionItem::new);
-    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", SanguinareInjectionItem::new);
+    public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", Item::new);
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", props -> new Item(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
+    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", props -> new GarlicInjectionItem(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
+    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", props -> new SanguinareInjectionItem(props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get())));
 
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -315,6 +317,7 @@ public class ModItems {
     }
 
     public static void registerDispenserBehaviour() {
+        DispenserBlock.registerBehavior(ModItems.SYRINGE_EMPTY.get(), new SyringeDispenseBehavior());
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.DARK_SPRUCE_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.CURSED_SPRUCE_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.DARK_SPRUCE_CHEST_BOAT.get()));
@@ -333,10 +336,17 @@ public class ModItems {
         List<Component> tooltipComponents = event.getToolTip();
 
         Stream<ItemLike> descriptionItems = Stream.of(
+                ModBlocks.HUNTER_TABLE,
+                ModBlocks.MED_CHAIR,
+                ModBlocks.MOTHER_TROPHY,
                 ModBlocks.BLOOD_GRINDER,
                 ModBlocks.BLOOD_SIEVE,
                 FABRIC_FILTER,
-                BLOOD_BUCKET
+                BLOOD_BUCKET,
+                SYRINGE_EMPTY,
+                SYRINGE_BLOOD,
+                INJECTION_GARLIC,
+                INJECTION_SANGUINARE
         );
 
         if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {

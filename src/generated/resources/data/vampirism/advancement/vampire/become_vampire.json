@@ -15,6 +15,7 @@
     "description": {
       "translate": "advancement.vampirism.become_vampire.desc"
     },
+    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:vampire_fang"

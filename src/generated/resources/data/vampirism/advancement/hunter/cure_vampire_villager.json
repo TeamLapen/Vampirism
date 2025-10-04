@@ -17,7 +17,6 @@
     "description": {
       "translate": "advancement.vampirism.cure_vampire_villager.desc"
     },
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "minecraft:golden_apple"

@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.BloodBottleItem;
+import de.teamlapen.vampirism.items.BloodSyringeFluidHandler;
 import de.teamlapen.vampirism.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.misc.SettingsProvider;
 import de.teamlapen.vampirism.misc.VampirismLogger;
@@ -153,6 +154,8 @@ public class VampirismMod {
         // Items
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodSyringeFluidHandler(item), ModItems.SYRINGE_EMPTY.get());
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodSyringeFluidHandler(item), ModItems.SYRINGE_BLOOD.get());
 
         // Blocks
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);

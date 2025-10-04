@@ -5,9 +5,7 @@ import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.HolyWaterBottleItem;
-import de.teamlapen.vampirism.items.HolyWaterSplashBottleItem;
 import de.teamlapen.vampirism.mixin.accessor.SpreadingSnowyDirtBlockAccessor;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
 import net.minecraft.core.BlockPos;
@@ -20,7 +18,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -59,23 +56,22 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
      * copied from {@link SpreadingSnowyDirtBlock#randomTick(BlockState, ServerLevel, BlockPos, RandomSource)} changing dirt to cursed earth
      */
     @Override
-    public void randomTick(BlockState p_222508_, ServerLevel p_222509_, BlockPos p_222510_, RandomSource p_222511_) {
-        if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(p_222508_, p_222509_, p_222510_)) {
-            if (!p_222509_.isAreaLoaded(p_222510_, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-            p_222509_.setBlockAndUpdate(p_222510_, ModBlocks.CURSED_EARTH.get().defaultBlockState());
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(state, level, pos)) {
+            if (!level.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
+            level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
         } else {
-            if (!p_222509_.isAreaLoaded(p_222510_, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-            if (p_222509_.getMaxLocalRawBrightness(p_222510_.above()) >= 9) {
+            if (!level.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
+            if (level.getMaxLocalRawBrightness(pos.above()) >= 9) {
                 BlockState blockstate = this.defaultBlockState();
 
                 for (int i = 0; i < 4; ++i) {
-                    BlockPos blockpos = p_222510_.offset(p_222511_.nextInt(3) - 1, p_222511_.nextInt(5) - 3, p_222511_.nextInt(3) - 1);
-                    if (p_222509_.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && SpreadingSnowyDirtBlockAccessor.invokeCanPropagate(blockstate, p_222509_, blockpos)) {
-                        p_222509_.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, p_222509_.getBlockState(blockpos.above()).is(Blocks.SNOW)));
+                    BlockPos blockpos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
+                    if (level.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && SpreadingSnowyDirtBlockAccessor.invokeCanPropagate(blockstate, level, blockpos)) {
+                        level.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, level.getBlockState(blockpos.above()).is(Blocks.SNOW)));
                     }
                 }
             }
-
         }
     }
 
@@ -145,17 +141,8 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
     }
 
     @Override
-    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        Item heldItem = stack.getItem();
-        if (heldItem instanceof HolyWaterBottleItem && !(heldItem instanceof HolyWaterSplashBottleItem)) {
-            int uses = heldItem == ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get() ? 100 : (heldItem == ModItems.HOLY_WATER_BOTTLE_ENHANCED.get() ? 50 : 25);
-            if (!player.getAbilities().instabuild && player.getRandom().nextInt(uses) == 0) {
-                stack.setCount(stack.getCount() - 1);
-            }
-            worldIn.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
-            return InteractionResult.SUCCESS;
-        }
-        return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        return HolyWaterBottleItem.onHolyWaterUsedOnBlock(stack, player, () -> level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState()));
     }
 
     @Override

@@ -1126,7 +1126,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level, EntitySpawnReason.EVENT);
         //noinspection ConstantConditions
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, null, newVillager, false);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
         spawnEntity(newVillager);
     }
 
@@ -1138,7 +1138,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
         }
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
         spawnEntity(newVillager, oldEntity, true, true);
     }
 
@@ -1153,7 +1153,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
             newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
         }
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
         UtilLib.replaceEntity(oldEntity, newVillager);
     }
 
@@ -1200,14 +1200,14 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
                 this.spawnVillagerDefault(true, false);
             }
             for (Villager villager : villagerEntities) {
-                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));
+                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
             }
             this.updateTrainer(false);
 
         } else if (IFaction.is(ModFactions.HUNTER, this.controllingFaction)) {
             updateTrainer(true);
             for (Villager villager : villagerEntities) {
-                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(false));
+                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
             }
 
             if (fullConvert) {

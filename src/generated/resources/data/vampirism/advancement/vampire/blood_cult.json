@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:vampire/become_vampire",
+  "parent": "vampirism:vampire/baptism_of_blood",
   "criteria": {
     "flower": {
       "conditions": {
@@ -20,7 +20,6 @@
     "description": {
       "translate": "advancement.vampirism.blood_cult.desc"
     },
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "vampirism:altar_infusion"

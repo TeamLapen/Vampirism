@@ -73,16 +73,17 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         if (isEmpty()) {
             Block orDefault = this.fullHolderByContent.getOrDefault(BuiltInRegistries.ITEM.getKey(item), () -> Blocks.AIR).get();
             if (orDefault != Blocks.AIR) {
-                if (stack.getCount() < getNumberOfCandles()) {
+                if (stack.getCount() < getNumberOfCandles() && !player.isCreative()) {
                     player.displayClientMessage(Component.translatable("text.vampirism.candle_holder.not_enough_candles", getNumberOfCandles()), true);
                 } else {
-                    level.setBlock(pos, getFilledState(state, orDefault), 3);
+                    level.setBlock(pos, getFilledState(state, orDefault), Block.UPDATE_ALL);
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(getNumberOfCandles());
                     }
                     level.playSound(player, pos, SoundType.CANDLE.getPlaceSound(), SoundSource.BLOCKS, (SoundType.CANDLE.getVolume() + 1.0F) / 2.0F, SoundType.CANDLE.getPitch() * 0.8F);
-                    return InteractionResult.SUCCESS_SERVER;
                 }
+
+                return InteractionResult.SUCCESS_SERVER;
             }
         } else if (player.getAbilities().mayBuild && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             if (state.getValue(LIT)) {
@@ -90,7 +91,7 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
                 return InteractionResult.SUCCESS_SERVER;
             } else {
                 if (this.emptyBlock != null) {
-                    level.setBlock(pos, this.getEmptyState(state, this.emptyBlock.get()), 3);
+                    level.setBlock(pos, this.getEmptyState(state, this.emptyBlock.get()), Block.UPDATE_ALL);
                     if (!player.getAbilities().instabuild) {
                         player.addItem(new ItemStack(candle.get(), getNumberOfCandles()));
                     }

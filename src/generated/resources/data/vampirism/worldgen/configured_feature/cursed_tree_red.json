@@ -63,6 +63,7 @@
       "state": {
         "Name": "vampirism:cursed_spruce_log",
         "Properties": {
+          "active": "true",
           "axis": "y"
         }
       }

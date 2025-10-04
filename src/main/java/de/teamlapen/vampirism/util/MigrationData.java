@@ -96,6 +96,7 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
         mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
         mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
+        mapping.remap("vampirism:injection_empty", "vampirism:syringe_empty");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
@@ -125,6 +126,8 @@ public class MigrationData {
         mapping.remap("dark_spruce_pressure_place", "vampirism:dark_spruce_pressure_plate");
         mapping.remap("cursed_spruce_pressure_place", "vampirism:cursed_spruce_pressure_plate");
         mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
+        mapping.remap("vampirism:cursed_spruce_log_cured", "vampirism:cursed_spruce_log");
+        mapping.remap("vampirism:cursed_spruce_wood_cured", "vampirism:cursed_spruce_wood");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {
