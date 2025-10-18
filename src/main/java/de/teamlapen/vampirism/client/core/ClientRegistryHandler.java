@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
+import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.client.renderer.tooltips.QuarrelPouchClientTooltip;
 import de.teamlapen.vampirism.common.items.tooltip.QuarrelPouchTooltip;
-import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;

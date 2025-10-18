@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRefinements;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -13,6 +12,7 @@ import de.teamlapen.vampirism.common.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.common.items.component.FactionRestriction;
 import de.teamlapen.vampirism.common.mixin.accessor.EntityAccessor;
+import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,8 @@ import net.minecraft.world.item.component.UseCooldown;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 public class CrucifixItem extends Item implements IItemWithTier {
 

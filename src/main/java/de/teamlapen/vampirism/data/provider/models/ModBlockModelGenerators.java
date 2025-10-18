@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.data.provider.models;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.data.BaseBlockModelGenerators;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.blocks.*;
-import de.teamlapen.vampirism.common.blocks.candle.CandleHolderBlock;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
+import de.teamlapen.vampirism.common.blocks.*;
+import de.teamlapen.vampirism.common.blocks.candle.CandleHolderBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
+import de.teamlapen.vampirism.data.ModBlockFamilies;
 import net.minecraft.client.color.item.GrassColorSource;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
@@ -22,13 +22,15 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
-import static net.minecraft.client.data.models.model.ModelLocationUtils.*;
+import static net.minecraft.client.data.models.model.ModelLocationUtils.decorateBlockModelLocation;
+import static net.minecraft.client.data.models.model.ModelLocationUtils.getModelLocation;
 
 public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 

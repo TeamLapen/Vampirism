@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.common.blocks;
 
 import de.teamlapen.vampirism.api.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.items.HolyWaterBottleItem;
-import de.teamlapen.vampirism.common.items.HolyWaterSplashBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

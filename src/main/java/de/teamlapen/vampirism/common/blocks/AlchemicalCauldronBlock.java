@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.blockentity.AlchemicalCauldronBlockEntity;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.mixin.client;
 
-import de.teamlapen.vampirism.client.renderer.entities.state.*;
+import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;

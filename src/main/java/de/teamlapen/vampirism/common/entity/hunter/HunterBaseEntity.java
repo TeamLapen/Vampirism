@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.entity.hunter;
 
-import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

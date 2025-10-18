@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.common.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.common.datamaps.ItemBlood;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.FoodProperties;

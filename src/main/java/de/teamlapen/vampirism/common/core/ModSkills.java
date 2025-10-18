@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillPointProvider;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
 

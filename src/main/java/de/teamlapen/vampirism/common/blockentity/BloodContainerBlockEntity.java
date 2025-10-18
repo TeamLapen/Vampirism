@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.fluids.ControllableFluidTank;
-import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

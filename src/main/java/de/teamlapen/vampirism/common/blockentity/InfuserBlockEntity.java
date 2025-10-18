@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.vampirism.common.blocks.BloodInfuserBlock;
-import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.inventory.InfuserMenu;
 import de.teamlapen.vampirism.common.inventory.InfuserSlots;
 import de.teamlapen.vampirism.common.recipes.InfuserRecipe;

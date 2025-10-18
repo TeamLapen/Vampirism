@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.world.entity.LivingEntity;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

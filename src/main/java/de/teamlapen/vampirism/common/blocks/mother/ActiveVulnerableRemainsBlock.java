@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.blocks.mother;
 
 import de.teamlapen.vampirism.common.blockentity.VulnerableRemainsBlockEntity;
-import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;

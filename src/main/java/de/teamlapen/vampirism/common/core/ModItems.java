@@ -5,17 +5,17 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
-import de.teamlapen.vampirism.common.items.*;
-import de.teamlapen.vampirism.common.items.consume.*;
-import de.teamlapen.vampirism.common.items.crossbow.arrow.*;
-import de.teamlapen.vampirism.common.items.dispenser.SyringeDispenseBehavior;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.items.*;
 import de.teamlapen.vampirism.common.items.component.FactionRestriction;
+import de.teamlapen.vampirism.common.items.consume.*;
 import de.teamlapen.vampirism.common.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.common.items.crossbow.TechCrossbowItem;
+import de.teamlapen.vampirism.common.items.crossbow.arrow.*;
+import de.teamlapen.vampirism.common.items.dispenser.SyringeDispenseBehavior;
+import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.DescriptionUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -42,7 +42,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**

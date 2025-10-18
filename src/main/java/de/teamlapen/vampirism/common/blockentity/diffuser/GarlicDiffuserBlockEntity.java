@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.blockentity.diffuser;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.datamaps.IGarlicDiffuserFuel;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.common.inventory.diffuser.GarlicDiffuserMenu;

@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.client.extensions.BlockExtensions;
+import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.common.blockentity.AlchemicalCauldronBlockEntity;
 import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.blocks.TotemTopBlock;
-import de.teamlapen.vampirism.client.extensions.BlockExtensions;
-import de.teamlapen.vampirism.client.renderer.blockentity.*;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFluids;
-import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;

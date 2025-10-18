@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.hunter.skills;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.server.advancements.critereon.PlayerFactionSubPredicate;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
@@ -17,6 +16,7 @@ import de.teamlapen.vampirism.common.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.common.entity.player.skills.VampirismSkill;
+import de.teamlapen.vampirism.server.advancements.critereon.PlayerFactionSubPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;

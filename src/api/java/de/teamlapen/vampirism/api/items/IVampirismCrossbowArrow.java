@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;

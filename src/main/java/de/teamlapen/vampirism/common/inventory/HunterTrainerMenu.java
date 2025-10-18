@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.inventory;
 
 import de.teamlapen.lib.common.inventory.InventoryHelper;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModMenus;
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;

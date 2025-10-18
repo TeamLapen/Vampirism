@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.lib.client.gui.MultilineTooltip;
+import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;

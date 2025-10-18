@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.common.items.component;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Codec;
-
+import com.mojang.serialization.DataResult;
 import de.teamlapen.vampirism.common.items.CrossbowArrowItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

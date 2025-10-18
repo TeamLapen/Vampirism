@@ -1,8 +1,8 @@
 package de.teamlapen.sync;
 
+import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.sync.common.storage.IAttachedSyncable;
 import de.teamlapen.sync.common.storage.ISyncable;
-import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerChunkCache;

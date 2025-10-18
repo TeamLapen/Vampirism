@@ -1,9 +1,9 @@
 package de.teamlapen.sync.client;
 
-import de.teamlapen.sync.common.storage.IAttachedSyncable;
-import de.teamlapen.sync.common.storage.ISyncable;
 import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
+import de.teamlapen.sync.common.storage.IAttachedSyncable;
+import de.teamlapen.sync.common.storage.ISyncable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

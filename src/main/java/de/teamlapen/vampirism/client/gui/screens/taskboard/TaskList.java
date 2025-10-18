@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.lib.client.gui.MultilineTooltip;
+import de.teamlapen.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;

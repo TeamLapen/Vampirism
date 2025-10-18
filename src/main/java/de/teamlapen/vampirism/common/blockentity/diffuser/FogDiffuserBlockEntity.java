@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.blockentity.diffuser;
 
 import de.teamlapen.vampirism.api.datamaps.IFogDiffuserFuel;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.inventory.diffuser.DiffuserMenu;
 import de.teamlapen.vampirism.common.inventory.diffuser.FogDiffuserMenu;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;

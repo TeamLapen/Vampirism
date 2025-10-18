@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

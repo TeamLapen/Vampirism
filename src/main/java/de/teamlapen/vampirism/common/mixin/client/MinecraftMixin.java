@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.ClientProxy;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.mixin.client.accessor.BossHealthOverlayAccessor;
-import de.teamlapen.vampirism.client.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.LerpingBossEvent;

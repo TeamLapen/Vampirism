@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.entity.player.skills;
 
+import de.teamlapen.lib.util.collections.LiveMap;
 import de.teamlapen.sync.common.storage.ISyncableSaveData;
 import de.teamlapen.sync.common.storage.UpdateParams;
-import de.teamlapen.lib.util.collections.LiveMap;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -17,9 +17,9 @@ import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.data.reloadlistener.skills.ISkillTreeData;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
+import de.teamlapen.vampirism.data.reloadlistener.skills.ISkillTreeData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;

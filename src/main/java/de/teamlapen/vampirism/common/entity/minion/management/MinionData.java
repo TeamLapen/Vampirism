@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.entity.minion.management;
 
-import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
+import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.vampirism.api.entity.minion.IMinionData;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntry;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.common.util.RegUtil;
+import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

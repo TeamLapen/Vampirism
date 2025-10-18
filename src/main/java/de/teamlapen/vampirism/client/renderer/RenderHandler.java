@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
+import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;

@@ -1,13 +1,8 @@
 package de.teamlapen.vampirism.api;
 
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.Items;
 import net.neoforged.fml.common.asm.enumextension.EnumProxy;
-
-import java.util.function.Supplier;
 
 public class VEnums {
     /**

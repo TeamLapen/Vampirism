@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.client;
 
 import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.blocks.TentBlock;
-import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.common.proxy.CommonProxy;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
-import de.teamlapen.vampirism.common.proxy.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;

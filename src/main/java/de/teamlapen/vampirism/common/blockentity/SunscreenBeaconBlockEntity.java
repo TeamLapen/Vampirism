@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.blockentity;
 
-import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.blockentities.MultipleItemHandler;
+import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.fluids.ControllableFluidTank;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.common.blocks.BloodGrinderBlock;

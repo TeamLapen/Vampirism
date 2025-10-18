@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.blocks.AlchemyTableBlock;
-import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.inventory.AlchemyTableMenu;
 import de.teamlapen.vampirism.common.items.component.OilContent;
 import net.minecraft.core.BlockPos;

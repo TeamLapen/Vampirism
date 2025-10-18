@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.entity.converted.ConvertedCreatureEntity;
+import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;

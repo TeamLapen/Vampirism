@@ -7,7 +7,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Implemented by any crossbow.

@@ -1,10 +1,10 @@
 package de.teamlapen.sync.common;
 
+import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.entities.IPlayerEventListener;
+import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.sync.common.storage.Attachment;
 import de.teamlapen.sync.common.storage.ISyncable;
-import de.teamlapen.sync.SyncRegistry;
-import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.PathfinderMob;

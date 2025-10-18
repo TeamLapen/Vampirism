@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.common.inventory;
 
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

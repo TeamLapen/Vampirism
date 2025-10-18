@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class ModEffectInstanceHelper {
 

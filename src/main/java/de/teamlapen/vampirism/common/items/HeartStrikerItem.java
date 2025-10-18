@@ -3,10 +3,12 @@ package de.teamlapen.vampirism.common.items;
 import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.items.component.PureLevel;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ToolMaterial;
 
 public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 

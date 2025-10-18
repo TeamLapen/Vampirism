@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.items;
 
 import de.teamlapen.vampirism.common.core.ModArmorMaterials;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.items.component.FactionRestriction;
+import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;

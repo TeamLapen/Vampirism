@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui.overlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseOverlay implements LayeredDraw.Layer {
