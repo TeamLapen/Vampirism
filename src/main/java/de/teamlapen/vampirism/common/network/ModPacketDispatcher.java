@@ -13,9 +13,11 @@ import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEnti
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.server.network.ServerPayloadHandler;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModPacketDispatcher {
 
     private static final String PROTOCOL_VERSION = Integer.toString(1);

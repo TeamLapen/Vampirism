@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
@@ -42,9 +43,11 @@ import java.util.function.Function;
 public class ExtendedCreature extends Attachment implements IExtendedCreatureVampirism {
     public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("extended_creature");
 
+    public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
+
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "max_blood";
-    private final static String POISONOUS_BLOOD = "poisonousBlood";
+    private final static String KEY_POISONOUS_BLOOD = "poisonousBlood";
 
     public static @NotNull Optional<ExtendedCreature> getSafe(@NotNull Entity mob) {
         if (mob instanceof PathfinderMob pathfinderMob) {
@@ -55,7 +58,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
 
     private final PathfinderMob entity;
     private final boolean canBecomeVampire;
-    private boolean poisonousBlood;
+    private int poisonousBlood;
     /**
      * If the blood value of these creatures should be calculated
      */
@@ -83,7 +86,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
             canBecomeVampire = false;
         }
         blood = maxBlood;
-        poisonousBlood = false;
+        poisonousBlood = 0;
     }
 
     @Override
@@ -92,7 +95,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     }
 
     @Override
-    public boolean canBeBitten(IVampire biter) {
+    public boolean canBeBitten(@Nullable IVampire biter) {
         return getBlood() > 0;
     }
 
@@ -112,7 +115,6 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
             if (getBlood() != -1) {
                 this.blood = blood;
             }
-
         }
     }
 
@@ -153,11 +155,6 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     }
 
     @Override
-    public boolean hasPoisonousBlood() {
-        return poisonousBlood;
-    }
-
-    @Override
     public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
@@ -165,8 +162,8 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         if (nbt.contains(KEY_MAX_BLOOD)) {
             setBlood(nbt.getInt(KEY_MAX_BLOOD));
         }
-        if (nbt.contains(POISONOUS_BLOOD)) {
-            setPoisonousBlood(nbt.getBoolean(POISONOUS_BLOOD));
+        if (nbt.contains(KEY_POISONOUS_BLOOD)) {
+            setPoisonousBlood(nbt.getInt(KEY_POISONOUS_BLOOD));
         }
     }
 
@@ -237,11 +234,39 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     }
 
     @Override
-    public void setPoisonousBlood(boolean poisonous) {
-        if (poisonous == !poisonousBlood) {
-            poisonousBlood = poisonous;
-            sync();
+    public int onSyringeUse(int amount) {
+        int available = getBlood();
+
+        boolean isChild = entity instanceof AgeableMob ageableMob && ageableMob.getAge() < 0;
+        if (isChild) available /= 3;
+
+        // Must have strictly more than maxAmount blood to allow draining
+        if (available <= amount) {
+            return 0;
         }
+
+        blood -= amount / (isChild ? 3 : 1);
+        this.sync();
+
+        return amount;
+    }
+
+    @Override
+    public boolean hasPoisonousBlood() {
+        return poisonousBlood > 0;
+    }
+
+    @Override
+    public int getPoisonousBloodDuration() {
+        return poisonousBlood;
+    }
+
+    @Override
+    public void setPoisonousBlood(int poisonous) {
+        if (Helper.isVampire(entity)) return;
+
+        poisonousBlood = poisonous;
+        sync();
     }
 
     public int getRemainingBarkTicks() {
@@ -272,6 +297,15 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
                     sync();
                 }
             }
+            if (poisonousBlood > 0) {
+                poisonousBlood--;
+                if (poisonousBlood == 0) {
+                    sync();
+                }
+            }
+            if (Helper.isVampire(entity)) {
+                poisonousBlood = 0;
+            }
         }
         if (markForBloodCalculation) {
             IEntityBlood entry = VampirismAPI.entityRegistry().getOrCreateEntry(entity);
@@ -293,7 +327,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         var nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, blood);
         nbt.putInt(KEY_MAX_BLOOD, maxBlood);
-        nbt.putBoolean(POISONOUS_BLOOD, poisonousBlood);
+        if (poisonousBlood > 0) nbt.putInt(KEY_POISONOUS_BLOOD, poisonousBlood);
         return nbt;
     }
 
@@ -305,8 +339,8 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         if (compound.contains(KEY_BLOOD)) {
             setBlood(compound.getInt(KEY_BLOOD));
         }
-        if (compound.contains(POISONOUS_BLOOD)) {
-            setPoisonousBlood(compound.getBoolean(POISONOUS_BLOOD));
+        if (compound.contains(KEY_POISONOUS_BLOOD)) {
+            setPoisonousBlood(compound.getInt(KEY_POISONOUS_BLOOD));
         }
     }
 
@@ -315,7 +349,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_BLOOD, getBlood());
         nbt.putInt(KEY_MAX_BLOOD, getBlood());
-        nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
+        nbt.putInt(KEY_POISONOUS_BLOOD, getPoisonousBloodDuration());
         return nbt;
     }
 

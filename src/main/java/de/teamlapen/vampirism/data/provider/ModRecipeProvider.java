@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
+import de.teamlapen.vampirism.common.recipes.*;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
@@ -13,10 +14,6 @@ import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.items.PureBloodItem;
 import de.teamlapen.vampirism.common.items.VampireCloakItem;
 import de.teamlapen.vampirism.common.items.component.PureLevel;
-import de.teamlapen.vampirism.common.recipes.ApplicableOilRecipe;
-import de.teamlapen.vampirism.common.recipes.CleanOilRecipe;
-import de.teamlapen.vampirism.common.recipes.ConfigCondition;
-import de.teamlapen.vampirism.common.recipes.RerollVampireBookRecipe;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.util.RegUtil;
@@ -83,6 +80,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
         SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, modString("reroll_vampire_book"));
+        SpecialRecipeBuilder.special(FillBottleFromSyringeRecipe::new).save(output, modString("fill_bottle_from_syringe"));
     }
 
     private void recipesFunctionalBlocks() {
@@ -498,23 +496,25 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_bread", has(BREAD))
                 .save(output);
 
-        shaped(RecipeCategory.MISC, ModItems.INJECTION_EMPTY)
-                .pattern("X")
-                .pattern("X")
-                .pattern("Y")
-                .define('X', GLASS)
-                .define('Y', GLASS_PANE)
+        shaped(RecipeCategory.MISC, ModItems.SYRINGE_EMPTY)
+                .pattern("I")
+                .pattern("G")
+                .pattern("N")
+                .define('I', IRON_INGOT)
+                .define('G', GLASS)
+                .define('N', IRON_NUGGET)
+                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .unlockedBy("has_glass", has(GLASS))
-                .unlockedBy("has_glass_pane", has(GLASS_PANE))
+                .unlockedBy("has_iron_nugget", has(IRON_NUGGET))
                 .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC)
-                .requires(ModItems.INJECTION_EMPTY)
+                .requires(ModItems.SYRINGE_EMPTY)
                 .requires(GARLIC)
-                .unlockedBy("has_injection", has(ModItems.INJECTION_EMPTY))
+                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
                 .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE)
-                .requires(ModItems.INJECTION_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
-                .unlockedBy("has_injection", has(ModItems.INJECTION_EMPTY))
+                .requires(ModItems.SYRINGE_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
+                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
                 .save(output);
 
         shaped(RecipeCategory.MISC, ModItems.FABRIC_FILTER)

@@ -20,7 +20,6 @@
     "description": {
       "translate": "advancement.vampirism.sucking_blood.desc"
     },
-    "hidden": true,
     "icon": {
       "components": {
         "vampirism:bottle_blood": {

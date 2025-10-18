@@ -7,6 +7,7 @@ import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.common.items.BloodSyringeFluidHandler;
 import de.teamlapen.vampirism.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.blockentity.PotionTableBlockEntity;
@@ -102,10 +103,7 @@ public class VampirismMod {
         this.modBus.addListener(this::registerCapabilities);
         this.modBus.addListener(this::finalizeConfiguration);
         this.modBus.addListener(VersionUpdater::catchModVersionMismatch);
-        this.modBus.register(ModPacketDispatcher.class);
-        this.modBus.register(MigrationData.class);
 
-        NeoForge.EVENT_BUS.register(new ServerEventHandler());
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         NeoForge.EVENT_BUS.addListener(this::onServerStarting);
         NeoForge.EVENT_BUS.addListener(VersionUpdater::checkVersionUpdated);
@@ -152,6 +150,8 @@ public class VampirismMod {
         // Items
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodBottleFluidHandler(item, BloodBottleItem.CAPACITY), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new FluidHandlerItemStack(ModDataComponents.BLOOD_CONTAINER, item, BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodSyringeFluidHandler(item), ModItems.SYRINGE_EMPTY.get());
+        event.registerItem(Capabilities.FluidHandler.ITEM, (item, b) -> new BloodSyringeFluidHandler(item), ModItems.SYRINGE_BLOOD.get());
 
         // Blocks
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.BLOOD_CONTAINER.get(), (blockEntity, side) -> blockEntity.fluidInventory);

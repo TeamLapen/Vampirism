@@ -48,16 +48,20 @@ public class ControllableFluidTank extends FluidTank {
         return this;
     }
 
+    public @Nullable Consumer<FluidStack> getOnFluidChanged() {
+        return onFluidChanged;
+    }
+
+    public String getSaveKey() {
+        return saveKey;
+    }
+
     public boolean isInputAllowed() {
         return allowInput;
     }
 
     public boolean isOutputAllowed() {
         return allowOutput;
-    }
-
-    public String getSaveKey() {
-        return saveKey;
     }
 
     @Override
@@ -73,6 +77,18 @@ public class ControllableFluidTank extends FluidTank {
         }
 
         return nbt;
+    }
+
+    public int forceFill(FluidStack resource, FluidAction action) {
+        return super.fill(resource, action);
+    }
+
+    public FluidStack forceDrain(FluidStack resource, FluidAction action) {
+        return super.drain(resource, action);
+    }
+
+    public FluidStack forceDrain(int maxDrain, FluidAction action) {
+        return super.drain(maxDrain, action);
     }
 
     @Override

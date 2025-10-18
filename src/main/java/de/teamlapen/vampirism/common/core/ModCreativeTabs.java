@@ -169,7 +169,8 @@ public class ModCreativeTabs {
             add(HUMAN_HEART);
             add(WEAK_HUMAN_HEART);
 
-            add(INJECTION_EMPTY);
+            add(SYRINGE_EMPTY);
+            add(SYRINGE_BLOOD);
             add(INJECTION_GARLIC);
             add(INJECTION_SANGUINARE);
 
@@ -281,9 +282,9 @@ public class ModCreativeTabs {
             add(ModItems.DARK_SPRUCE_HANGING_SIGN);
 
             add(CURSED_SPRUCE_LOG);
-            add(CURSED_SPRUCE_LOG_CURED);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_WOOD_CURED);
+            add(CURSED_SPRUCE_LOG.get().getActiveBlockItem());
+            add(CURSED_SPRUCE_WOOD.get().getActiveBlockItem());
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);

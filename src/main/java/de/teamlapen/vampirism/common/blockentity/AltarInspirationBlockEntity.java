@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.common.blockentity;
 import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.fluids.ControllableFluidTank;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModFluids;
-import de.teamlapen.vampirism.common.core.ModParticles;
-import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling;
@@ -14,10 +11,12 @@ import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling.Altar
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
+import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -105,7 +104,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         if (!player.level().isClientSide) {
             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodEntityParticleOptions(player.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
-            fluidInventory.drain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
+            fluidInventory.forceDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
 
         setChanged();
@@ -129,10 +128,13 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         if (blockEntity.ritualTicksLeft == 1) {
             Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(blockEntity.targetLevel);
             int blood = requirement.map(VampireLeveling.AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
-            blockEntity.fluidInventory.drain(blood, IFluidHandler.FluidAction.EXECUTE);
+            blockEntity.fluidInventory.forceDrain(blood, IFluidHandler.FluidAction.EXECUTE);
             blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
             FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(ModFactions.VAMPIRE, blockEntity.targetLevel);
             VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
+            if (blockEntity.ritualPlayer instanceof ServerPlayer serverPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INSPIRATION);
+            }
         }
 
         blockEntity.ritualTicksLeft--;

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.items.consume;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
@@ -9,6 +10,7 @@ import de.teamlapen.vampirism.common.entity.player.vampire.BloodStats;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ExtraCodecs;
@@ -50,6 +52,9 @@ public record BloodFoodProperties(int blood, float saturation, boolean canAlways
             case Player player -> FactionPlayerHandler.get(player).factionPlayer(ModFactions.VAMPIRE).ifPresent(vampire -> {
                         ((BloodStats) vampire.getBloodStats()).eat(this);
                         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, Mth.randomBetween(randomsource, 0.9F, 1.0F));
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            ModAdvancements.TRIGGER_BLOOD_FOOD_CONSUMED.get().trigger(serverPlayer);
+                        }
                     });
             case VampireMinionEntity minion -> minion.eat(level, stack, this);
             default -> {

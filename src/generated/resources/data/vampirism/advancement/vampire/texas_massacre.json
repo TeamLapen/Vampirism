@@ -1,0 +1,26 @@
+{
+  "parent": "vampirism:vampire/first_blood",
+  "criteria": {
+    "blood_food_consumed": {
+      "trigger": "vampirism:blood_food_consumed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.texas_massacre.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "vampirism:human_heart"
+    },
+    "title": {
+      "translate": "advancement.vampirism.texas_massacre"
+    }
+  },
+  "requirements": [
+    [
+      "blood_food_consumed"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

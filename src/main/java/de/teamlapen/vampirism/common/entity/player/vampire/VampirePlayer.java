@@ -291,8 +291,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public boolean canBeBitten(IVampire biter) {
-        return !(player.isSpectator() || player.isCreative());
+    public boolean canBeBitten(@Nullable IVampire biter) {
+        return biter != null && !(player.isSpectator() || player.isCreative());
     }
 
     @Override
@@ -569,6 +569,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         int sucked = (int) Math.ceil((amt * perc));
         bloodStats.removeBlood(sucked, true);
         return sucked;
+    }
+
+    @Override
+    public int onSyringeUse(int amount) {
+        return 0;
     }
 
     public int removeBlood(float percentage) {

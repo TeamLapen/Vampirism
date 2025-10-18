@@ -201,7 +201,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
         // The durability of filters is multiplied by 100 for parity with the blood sieve, so it must be considered
         int numberAllowedByFilter = Mth.clamp((int) Math.ceil((double) (filterStack.getMaxDamage() - filterStack.getDamageValue()) / 100), 0, 4);
         int numberAllowedToGrind = Mth.clamp((space - space % blood) / blood, 1, numberAllowedByFilter);
-        fluidInventory.fill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
+        fluidInventory.forceFill(new FluidStack(ModFluids.BLOOD, blood * numberAllowedToGrind), IFluidHandler.FluidAction.EXECUTE);
         inputStack.shrink(numberAllowedToGrind);
 
         filterStack.setDamageValue(filterStack.getDamageValue() + numberAllowedToGrind * 100);

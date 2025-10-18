@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:vampire/blood_cult",
+  "parent": "vampirism:vampire/become_vampire",
   "criteria": {
     "kill": {
       "conditions": {
@@ -20,7 +20,6 @@
     "description": {
       "translate": "advancement.vampirism.freeze_kill.desc"
     },
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "minecraft:clock"

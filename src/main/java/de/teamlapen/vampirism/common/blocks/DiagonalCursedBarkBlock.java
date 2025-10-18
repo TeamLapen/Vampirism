@@ -85,7 +85,7 @@ public class DiagonalCursedBarkBlock extends CursedBarkBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (Helper.isVampire(entity) || (entity instanceof Player && ((Player) entity).getAbilities().invulnerable)) return;
+        if (Helper.isVampire(entity) || (entity instanceof Player player && player.getAbilities().invulnerable)) return;
         BlockPos targetPos = pos;
         for (Map.Entry<BooleanProperty, Pair<Direction, Direction>> entry : DIRECTION_MAP.entrySet()) {
             if (state.getValue(entry.getKey())) {

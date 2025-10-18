@@ -465,7 +465,7 @@ public class GuideBook implements IGuideBook {
 
         //Hunter
         helper.info(ModBlocks.GARLIC.get()).build(entries);
-        helper.info(ModItems.INJECTION_EMPTY.get(), ModItems.INJECTION_GARLIC.get(), ModItems.INJECTION_SANGUINARE.get()).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
+        helper.info(ModItems.SYRINGE_EMPTY.get(), ModItems.INJECTION_GARLIC.get(), ModItems.INJECTION_SANGUINARE.get()).recipes("general/injection_0", "general/injection_1", "general/injection_2").build(entries);
         helper.info(ModItems.HUNTER_INTEL_0.get()).setLinks(VResourceLocation.mod("guide.vampirism.blocks.hunter_table")).setFormats(loc(ModBlocks.HUNTER_TABLE.get())).build(entries);
         helper.info(ModItems.PURIFIED_GARLIC.get()).setFormats(loc(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())).setLinks(VResourceLocation.mod("guide.vampirism.blocks.garlic_diffuser")).recipes("purified_garlic").build(entries);
         helper.info(ModItems.PITCHFORK.get()).recipes("pitchfork").build(entries);
