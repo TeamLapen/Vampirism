@@ -83,5 +83,8 @@
   "injectors": {
     "defaultRequire": 1
   },
+  "overwrites": {
+    "requireAnnotations": true
+  },
   "minVersion": "0.8.5"
 }
