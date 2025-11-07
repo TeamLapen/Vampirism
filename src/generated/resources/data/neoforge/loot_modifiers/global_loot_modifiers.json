@@ -1,11 +1,11 @@
 {
   "entries": [
-    "vampirism:add_loot_jungle_temple",
-    "vampirism:add_loot_desert_pyramid",
-    "vampirism:add_loot_stronghold_library",
-    "vampirism:add_loot_stronghold_corridor",
+    "vampirism:smelting",
     "vampirism:add_loot_abandoned_mineshaft",
-    "vampirism:smelting"
+    "vampirism:add_loot_jungle_temple",
+    "vampirism:add_loot_stronghold_corridor",
+    "vampirism:add_loot_desert_pyramid",
+    "vampirism:add_loot_stronghold_library"
   ],
   "replace": false
 }

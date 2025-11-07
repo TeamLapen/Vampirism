@@ -5,15 +5,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.ashes_of_past_dawns.author"
-                },
                 "id": "vampirism:ashes_of_past_dawns"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -23,15 +20,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.case_file_144.author"
-                },
                 "id": "vampirism:case_file_144"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -41,12 +35,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:case_study_one"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -56,13 +50,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": "Matheo",
                 "id": "vampirism:century_of_evolution"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -72,12 +65,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:dear_martha"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -87,12 +80,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:hunters_diary"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -102,15 +95,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.infusion_breakthrough.author"
-                },
                 "id": "vampirism:infusion_breakthrough"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -120,15 +110,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.mad_mans_journal.author"
-                },
                 "id": "vampirism:mad_mans_journal"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -138,12 +125,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:maids_diary"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -153,12 +140,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:my_mother"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -168,12 +155,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:my_prince"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -183,15 +170,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.nocturnal.author"
-                },
                 "id": "vampirism:nocturnal"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -201,12 +185,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:observation_on_vampires"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -216,13 +200,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": "Pyromaniac Pik",
                 "id": "vampirism:pyromaniacs_diary"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -232,15 +215,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": {
-                  "translate": "vampire_book.vampirism.royal_rivalry.author"
-                },
                 "id": "vampirism:royal_rivalry"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -250,13 +230,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": "Sinister Solace",
                 "id": "vampirism:sinister_intentions"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -266,12 +245,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
                 "id": "vampirism:valorous_tale"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -281,13 +260,12 @@
       "conditions": {
         "items": [
           {
-            "components": {
+            "items": "vampirism:vampire_book",
+            "predicates": {
               "vampirism:vampire_book": {
-                "author": "Kae din Saarin",
                 "id": "vampirism:wanted"
               }
-            },
-            "items": "vampirism:vampire_book"
+            }
           }
         ]
       },
@@ -309,43 +287,37 @@
   },
   "requirements": [
     [
-      "has_dear_martha"
-    ],
-    [
-      "has_hunters_diary"
+      "has_century_of_evolution"
     ],
     [
       "has_sinister_intentions"
     ],
     [
-      "has_wanted"
-    ],
-    [
-      "has_pyromaniacs_diary"
+      "has_royal_rivalry"
     ],
     [
       "has_case_file_144"
     ],
     [
-      "has_valorous_tale"
+      "has_ashes_of_past_dawns"
     ],
     [
       "has_mad_mans_journal"
     ],
     [
-      "has_royal_rivalry"
-    ],
-    [
-      "has_case_study_one"
+      "has_hunters_diary"
     ],
     [
       "has_maids_diary"
     ],
     [
-      "has_my_mother"
+      "has_pyromaniacs_diary"
     ],
     [
-      "has_my_prince"
+      "has_nocturnal"
+    ],
+    [
+      "has_case_study_one"
     ],
     [
       "has_infusion_breakthrough"
@@ -354,13 +326,19 @@
       "has_observation_on_vampires"
     ],
     [
-      "has_nocturnal"
+      "has_valorous_tale"
     ],
     [
-      "has_century_of_evolution"
+      "has_my_prince"
     ],
     [
-      "has_ashes_of_past_dawns"
+      "has_my_mother"
+    ],
+    [
+      "has_wanted"
+    ],
+    [
+      "has_dear_martha"
     ]
   ],
   "sends_telemetry_event": true

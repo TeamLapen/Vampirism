@@ -17,8 +17,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -32,10 +34,21 @@ import org.jetbrains.annotations.Nullable;
 public class AlchemicalFireBlock extends Block {
 
     public static final IntegerProperty AGE = IntegerProperty.create("age", 0, 15);
+    public static final BooleanProperty NORTH = PipeBlock.NORTH;
+    public static final BooleanProperty EAST = PipeBlock.EAST;
+    public static final BooleanProperty SOUTH = PipeBlock.SOUTH;
+    public static final BooleanProperty WEST = PipeBlock.WEST;
+    public static final BooleanProperty UP = PipeBlock.UP;
 
     public AlchemicalFireBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(AGE, 0)
+                .setValue(NORTH, false)
+                .setValue(EAST, false)
+                .setValue(SOUTH, false)
+                .setValue(WEST, false)
+                .setValue(UP, false));
     }
 
     @Override
@@ -119,5 +132,6 @@ public class AlchemicalFireBlock extends Block {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(AGE);
+        builder.add(NORTH, EAST, SOUTH, WEST, UP);
     }
 }

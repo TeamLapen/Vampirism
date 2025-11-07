@@ -1,10 +1,6 @@
 {
   "values": [
     "#vampirism:hunter_intel",
-    "vampirism:vampire_book",
-    {
-      "id": "guideapi_vp:vampirism-guidebook",
-      "required": false
-    }
+    "vampirism:vampire_book"
   ]
 }

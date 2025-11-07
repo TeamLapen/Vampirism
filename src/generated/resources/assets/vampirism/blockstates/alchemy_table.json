@@ -2,8 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "vampirism:block/alchemy_table/alchemy_table",
-        "y": 0
+        "model": "vampirism:block/alchemy_table/alchemy_table"
       },
       "when": {
         "facing": "north"
@@ -38,8 +37,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/alchemy_table/alchemy_table_input_0",
-        "y": 0
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_0"
       },
       "when": {
         "AND": [
@@ -102,8 +100,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/alchemy_table/alchemy_table_input_1",
-        "y": 0
+        "model": "vampirism:block/alchemy_table/alchemy_table_input_1"
       },
       "when": {
         "AND": [
@@ -166,8 +163,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/alchemy_table/alchemy_table_output_0",
-        "y": 0
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_0"
       },
       "when": {
         "AND": [
@@ -230,8 +226,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/alchemy_table/alchemy_table_output_1",
-        "y": 0
+        "model": "vampirism:block/alchemy_table/alchemy_table_output_1"
       },
       "when": {
         "AND": [

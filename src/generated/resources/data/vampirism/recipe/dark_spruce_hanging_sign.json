@@ -4,7 +4,7 @@
   "group": "hanging_sign",
   "key": {
     "#": "vampirism:stripped_dark_spruce_log",
-    "X": "minecraft:chain"
+    "X": "minecraft:iron_chain"
   },
   "pattern": [
     "X X",

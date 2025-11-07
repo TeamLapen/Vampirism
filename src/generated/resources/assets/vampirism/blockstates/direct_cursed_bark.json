@@ -11,8 +11,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/cursed_bark_side",
-        "y": 0
+        "model": "vampirism:block/cursed_bark_side"
       },
       "when": {
         "north_type": "vertical"
@@ -39,7 +38,7 @@
     {
       "apply": {
         "model": "vampirism:block/cursed_bark_side",
-        "x": 270
+        "y": 270
       },
       "when": {
         "up_type": "vertical"
@@ -48,7 +47,7 @@
     {
       "apply": {
         "model": "vampirism:block/cursed_bark_side",
-        "x": 90
+        "y": 90
       },
       "when": {
         "down_type": "vertical"
@@ -93,7 +92,7 @@
     {
       "apply": {
         "model": "vampirism:block/cursed_bark_side_2",
-        "x": 270
+        "y": 270
       },
       "when": {
         "up_type": "horizontal"
@@ -102,7 +101,7 @@
     {
       "apply": {
         "model": "vampirism:block/cursed_bark_side_2",
-        "x": 90
+        "y": 90
       },
       "when": {
         "down_type": "horizontal"

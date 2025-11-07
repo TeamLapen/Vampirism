@@ -2,8 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table"
       },
       "when": {
         "facing": "north"
@@ -38,8 +37,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava1",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table_lava1"
       },
       "when": {
         "AND": [
@@ -102,8 +100,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava2",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table_lava2"
       },
       "when": {
         "AND": [
@@ -166,8 +163,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava3",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table_lava3"
       },
       "when": {
         "AND": [
@@ -230,8 +226,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava4",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table_lava4"
       },
       "when": {
         "AND": [
@@ -294,8 +289,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/weapon_table/weapon_table_lava5",
-        "y": 0
+        "model": "vampirism:block/weapon_table/weapon_table_lava5"
       },
       "when": {
         "AND": [

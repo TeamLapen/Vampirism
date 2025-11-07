@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.world.features;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModEntities;
@@ -10,7 +9,6 @@ import de.teamlapen.vampirism.common.mixin.accessor.OrePlacementAccessor;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.world.features.treedecorators.TrunkCursedVineDecorator;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -42,11 +40,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
-import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalInt;
 
 public class VampirismFeatures {
@@ -120,9 +115,8 @@ public class VampirismFeatures {
     public static void createBiomeModifier(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
-        HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = context.registryLookup(Registries.BIOME).orElseThrow();
-        context.register(VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(new AndHolderSet<>(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.VAMPIRE), new NotHolderSet<>(biomeRegistryLookup, biomeLookup.getOrThrow(ModBiomeTags.NoSpawn.VAMPIRE))), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3), 80)));
-        context.register(ADVANCED_VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(new AndHolderSet<>(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.ADVANCED_VAMPIRE), new NotHolderSet<>(biomeRegistryLookup, biomeLookup.getOrThrow(ModBiomeTags.NoSpawn.ADVANCED_VAMPIRE))), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 3), 30)));
+        context.register(VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3), 80)));
+        context.register(ADVANCED_VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.ADVANCED_VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 3), 30)));
         context.register(VAMPIRE_DUNGEON_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
     }
 }

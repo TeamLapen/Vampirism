@@ -9,12 +9,10 @@
       "y": 90
     },
     "facing=north,lit=false": {
-      "model": "vampirism:block/candelabra_lime",
-      "y": 0
+      "model": "vampirism:block/candelabra_lime"
     },
     "facing=north,lit=true": {
-      "model": "vampirism:block/candelabra_lime_lit",
-      "y": 0
+      "model": "vampirism:block/candelabra_lime_lit"
     },
     "facing=south,lit=false": {
       "model": "vampirism:block/candelabra_lime",

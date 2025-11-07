@@ -5,8 +5,7 @@
       "y": 90
     },
     "facing=north": {
-      "model": "vampirism:block/candelabra",
-      "y": 0
+      "model": "vampirism:block/candelabra"
     },
     "facing=south": {
       "model": "vampirism:block/candelabra",

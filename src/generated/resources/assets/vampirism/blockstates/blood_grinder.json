@@ -2,135 +2,133 @@
   "multipart": [
     {
       "apply": {
-        "model": "vampirism:block/blood_grinder_bottom_empty",
-        "y": 0
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "false"
-          },
-          {
-            "facing": "north"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom",
-        "y": 0
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "true"
-          },
-          {
-            "facing": "north"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom_empty",
-        "y": 90
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "false"
-          },
-          {
-            "facing": "east"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom",
-        "y": 90
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "true"
-          },
-          {
-            "facing": "east"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom_empty",
-        "y": 180
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "false"
-          },
-          {
-            "facing": "south"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom",
-        "y": 180
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "true"
-          },
-          {
-            "facing": "south"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom_empty",
-        "y": 270
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "false"
-          },
-          {
-            "facing": "west"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/blood_grinder_bottom",
-        "y": 270
-      },
-      "when": {
-        "AND": [
-          {
-            "has_filter": "true"
-          },
-          {
-            "facing": "west"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
         "model": "vampirism:block/blood_grinder_base"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom_empty"
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "false"
+          },
+          {
+            "facing": "north"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom_empty",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "false"
+          },
+          {
+            "facing": "east"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom_empty",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "false"
+          },
+          {
+            "facing": "south"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom_empty",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "false"
+          },
+          {
+            "facing": "west"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom"
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "true"
+          },
+          {
+            "facing": "north"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "true"
+          },
+          {
+            "facing": "east"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "true"
+          },
+          {
+            "facing": "south"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/blood_grinder_bottom",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "has_filter": "true"
+          },
+          {
+            "facing": "west"
+          }
+        ]
       }
     },
     {

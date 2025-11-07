@@ -25,7 +25,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.AbstractCandleBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
@@ -79,19 +78,19 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         var sunscreenModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.SUNSCREEN_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/cursed_earth")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.SUNSCREEN_BEACON.get(), plainVariant(sunscreenModel)));
-        createDefaultBlockItem(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel);
+//        createDefaultBlockItem(ModBlocks.SUNSCREEN_BEACON.get(), sunscreenModel);
 
         ResourceLocation vampireBeaconModel = ModModelTemplates.BEACON_MODEL.create(ModBlocks.VAMPIRE_BEACON.get(), new TextureMapping().put(ModTextureSlots.BEACON, mod("block/vampire_beacon")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.VAMPIRE_BEACON.get(), plainVariant(vampireBeaconModel)));
-        createDefaultBlockItem(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel);
+//        createDefaultBlockItem(ModBlocks.VAMPIRE_BEACON.get(), vampireBeaconModel);
 
         ResourceLocation infestedDarkStoneModel = ModModelTemplates.CUBE_ALL.create(ModBlocks.INFESTED_DARK_STONE.get(), new TextureMapping().put(TextureSlot.ALL, mod("block/dark_stone")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), plainVariant(infestedDarkStoneModel)));
-        createDefaultBlockItem(ModBlocks.INFESTED_DARK_STONE.get(), VResourceLocation.mod("block/infested_dark_stone"));
+//        createDefaultBlockItem(ModBlocks.INFESTED_DARK_STONE.get(), VResourceLocation.mod("block/infested_dark_stone"));
 
         ResourceLocation batCageModel = mod("block/bat_cage/block");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), plainVariant(batCageModel)));
-        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+//        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
 
         ResourceLocation bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
@@ -99,7 +98,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         ResourceLocation inspirationModel = mod("block/altar_inspiration/altar_inspiration");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), plainVariant(inspirationModel)));
-        createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
+//        createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
 
         createNonTemplateModelBlock(ModBlocks.BLOOD.get());
     }
@@ -107,8 +106,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     protected void createCursedEarthPath() {
         ResourceLocation pathModel = ModModelTemplates.DIRT_PATH.create(ModBlocks.CURSED_EARTH_PATH.get(), new TextureMapping().put(TextureSlot.PARTICLE, mod("block/cursed_earth")).put(TextureSlot.BOTTOM, mod("block/cursed_earth")).put(TextureSlot.SIDE, mod("block/cursed_earth_path_side")).put(TextureSlot.TOP, mod("block/cursed_earth_path_top")), this.modelOutput);
         Variant variant = plainModel(pathModel);
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(Blocks.DIRT_PATH, createRotatedVariants(variant)));
-        createDefaultBlockItem(ModBlocks.CURSED_EARTH_PATH.get(), pathModel);
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.CURSED_EARTH_PATH.get(), createRotatedVariants(variant)));
+//        createDefaultBlockItem(ModBlocks.CURSED_EARTH_PATH.get(), pathModel);
     }
 
     protected void createPlants() {
@@ -126,14 +125,14 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.woodProvider(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()).logWithHorizontal(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()).wood(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
         this.woodProvider(ModBlocks.CURSED_SPRUCE_LOG.get()).logWithHorizontal(ModBlocks.CURSED_SPRUCE_LOG.get()).wood(ModBlocks.CURSED_SPRUCE_WOOD.get());
         this.woodProvider(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()).logWithHorizontal(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()).wood(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
-        createDefaultBlockItem(ModBlocks.DARK_SPRUCE_LOG.get());
-        createDefaultBlockItem(ModBlocks.DARK_SPRUCE_WOOD.get());
-        createDefaultBlockItem(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
-        createDefaultBlockItem(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
-        createDefaultBlockItem(ModBlocks.CURSED_SPRUCE_LOG.get());
-        createDefaultBlockItem(ModBlocks.CURSED_SPRUCE_WOOD.get());
-        createDefaultBlockItem(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
-        createDefaultBlockItem(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
+//        createDefaultBlockItem(ModBlocks.DARK_SPRUCE_LOG.get());
+//        createDefaultBlockItem(ModBlocks.DARK_SPRUCE_WOOD.get());
+//        createDefaultBlockItem(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get());
+//        createDefaultBlockItem(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get());
+//        createDefaultBlockItem(ModBlocks.CURSED_SPRUCE_LOG.get());
+//        createDefaultBlockItem(ModBlocks.CURSED_SPRUCE_WOOD.get());
+//        createDefaultBlockItem(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get());
+//        createDefaultBlockItem(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get());
 
         this.createHangingSign(ModBlocks.DARK_SPRUCE_LOG.get(), ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get());
         this.createHangingSign(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
@@ -142,25 +141,30 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     protected void createGarlicDiffuser() {
         ResourceLocation normalModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), plainVariant(normalModel)));
-        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), normalModel);
+//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), normalModel);
         ResourceLocation weakModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), plainVariant(weakModel)));
-        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), weakModel);
+//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), weakModel);
         ResourceLocation improvedModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside_improved")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), plainVariant(improvedModel)));
-        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), improvedModel);
+//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), improvedModel);
     }
 
     protected void createAltarPillar() {
         ResourceLocation model = decorateBlockModelLocation(modString("altar_pillar"));
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.ALTAR_PILLAR.get(), plainVariant(VResourceLocation.mod("altar_pillar_filled")))
+        ResourceLocation stone = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_stone", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/stone_bricks")), this.modelOutput);
+        ResourceLocation iron = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_iron", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/iron_block")), this.modelOutput);
+        ResourceLocation gold = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_gold", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/gold_block")), this.modelOutput);
+        ResourceLocation bone = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_bone", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/bone_block_side")), this.modelOutput);
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.ALTAR_PILLAR.get(), plainVariant(VResourceLocation.mod("altar_pillar")))
                 .with(PropertyDispatch.modify(AltarPillarBlock.PILLAR_TYPE)
-                        .select(AltarPillarBlock.EnumPillarType.STONE, x -> x.withModel(ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_stone", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/stone_bricks")), this.modelOutput)))
-                        .select(AltarPillarBlock.EnumPillarType.IRON, x -> x.withModel(ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_iron", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/iron_block")), this.modelOutput)))
-                        .select(AltarPillarBlock.EnumPillarType.GOLD, x -> x.withModel(ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_gold", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/gold_block")), this.modelOutput)))
-                        .select(AltarPillarBlock.EnumPillarType.BONE, x -> x.withModel(ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(ModBlocks.ALTAR_PILLAR.get(), "_bone", new TextureMapping().put(ModTextureSlots.FILLER, VResourceLocation.mc("block/bone_block_side")), this.modelOutput)))
+                        .select(AltarPillarBlock.EnumPillarType.STONE, x -> x.withModel(stone))
+                        .select(AltarPillarBlock.EnumPillarType.IRON, x -> x.withModel(iron))
+                        .select(AltarPillarBlock.EnumPillarType.GOLD, x -> x.withModel(gold))
+                        .select(AltarPillarBlock.EnumPillarType.BONE, x -> x.withModel(bone))
+                        .select(AltarPillarBlock.EnumPillarType.NONE, x -> x.withModel(model))
                 ));
-        createDefaultBlockItem(ModBlocks.ALTAR_PILLAR.get(), model);
+//        createDefaultBlockItem(ModBlocks.ALTAR_PILLAR.get(), model);
     }
 
     protected void createAlchemicalCauldron() {
@@ -173,51 +177,51 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 .with(condition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.FILLED), plainVariant(normal))
                 .with(condition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.BOILING), plainVariant(boiling))
         );
-        createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
+//        createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
     }
 
     protected void createTotem() {
         createNonTemplateModelBlock(ModBlocks.TOTEM_BASE.get());
-        createDefaultBlockItem(ModBlocks.TOTEM_BASE.get());
+//        createDefaultBlockItem(ModBlocks.TOTEM_BASE.get());
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP.get(), plainVariant(ModModelTemplates.TOTEM.getDefaultModelLocation(ModBlocks.TOTEM_TOP.get()))));
-        createDefaultBlockItem(ModBlocks.TOTEM_TOP.get(), ModModelTemplates.TOTEM.getDefaultModelLocation(ModBlocks.TOTEM_TOP.get()));
+//        createDefaultBlockItem(ModBlocks.TOTEM_TOP.get(), ModModelTemplates.TOTEM.getDefaultModelLocation(ModBlocks.TOTEM_TOP.get()));
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), plainVariant(ModModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), new TextureMapping().put(ModTextureSlots.OUTER, VResourceLocation.mc("block/glowstone")), this.modelOutput))));
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), plainVariant(ModModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), new TextureMapping().put(ModTextureSlots.OUTER, VResourceLocation.mc("block/glowstone")), this.modelOutput))));
         ResourceLocation totemCraftedModel = ModModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_CRAFTED.get(), new TextureMapping().put(ModTextureSlots.OUTER, VResourceLocation.mc("block/obsidian")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_CRAFTED.get(), plainVariant(totemCraftedModel)));
-        createDefaultBlockItem(ModBlocks.TOTEM_TOP_CRAFTED.get(), totemCraftedModel);
+//        createDefaultBlockItem(ModBlocks.TOTEM_TOP_CRAFTED.get(), totemCraftedModel);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(ModModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().put(ModTextureSlots.OUTER, VResourceLocation.mc("block/obsidian")), this.modelOutput))));
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(ModModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().put(ModTextureSlots.OUTER, VResourceLocation.mc("block/obsidian")), this.modelOutput))));
     }
 
     protected void createCandleHolders() {
         createEmptyCandleHolder(ModBlocks.CANDLE_STICK.get());
-        createDefaultBlockItem(ModBlocks.CANDLE_STICK.get());
+//        createDefaultBlockItem(ModBlocks.CANDLE_STICK.get());
         createEmptyCandleHolder(ModBlocks.WALL_CANDLE_STICK.get());
 
         for (int i = 1; i < ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.size(); i++) {
             Pair<CandleHolderBlock, CandleHolderBlock> pair = ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.get(i);
             createCandleStick(pair.getFirst(), pair.getSecond(), pair.getFirst().getCandle().get());
-            createDefaultBlockItem(pair.getFirst());
+//            createDefaultBlockItem(pair.getFirst());
         }
 
         createEmptyCandleHolder(ModBlocks.CANDELABRA.get());
-        createDefaultBlockItem(ModBlocks.CANDELABRA.get());
+//        createDefaultBlockItem(ModBlocks.CANDELABRA.get());
         createEmptyCandleHolder(ModBlocks.WALL_CANDELABRA.get());
 
         for (int i = 1; i < ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.size(); i++) {
             Pair<CandleHolderBlock, CandleHolderBlock> pair = ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.get(i);
             createCandelabra(pair.getFirst(), pair.getSecond(), pair.getFirst().getCandle().get());
-            createDefaultBlockItem(pair.getFirst());
+//            createDefaultBlockItem(pair.getFirst());
         }
 
         createNonTemplateModelBlock(ModBlocks.CHANDELIER.get());
-        createDefaultBlockItem(ModBlocks.CHANDELIER.get());
+//        createDefaultBlockItem(ModBlocks.CHANDELIER.get());
 
         for (int i = 1; i < ColorListsUtil.HANGING_CHANDELIERS.size(); i++) {
             CandleHolderBlock block = ColorListsUtil.HANGING_CHANDELIERS.get(i);
             createChandelier(block, block.getCandle().get());
-            createDefaultBlockItem(block);
+//            createDefaultBlockItem(block);
         }
     }
 
@@ -243,6 +247,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model))
                 .with(HORIZONTAL_ROTATION)
                 .with(PropertyDispatch.modify(AbstractCandleBlock.LIT)
+                        .select(false, x -> x)
                         .select(true, x -> x.withModel(litModel))));
     }
 
@@ -253,6 +258,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model))
                 .with(HORIZONTAL_ROTATION)
                 .with(PropertyDispatch.modify(AbstractCandleBlock.LIT)
+                        .select(false, x -> x)
                         .select(true, x -> x.withModel(litModel)))
         );
     }
@@ -270,14 +276,14 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         MultiVariant modeVariant = plainVariant(getModelLocation(block));
         MultiVariant hangingVariant = plainVariant(getModelLocation(block, "_hanging"));
 
-        multiPartGenerator.with(standing.term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH), modeVariant);
-        multiPartGenerator.with(standing.term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST), modeVariant.with(Y_ROT_90));
-        multiPartGenerator.with(standing.term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH), modeVariant.with(Y_ROT_180));
-        multiPartGenerator.with(standing.term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST), modeVariant.with(Y_ROT_270));
-        multiPartGenerator.with(hanging.term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH), hangingVariant);
-        multiPartGenerator.with(hanging.term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST), hangingVariant.with(Y_ROT_90));
-        multiPartGenerator.with(hanging.term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH), hangingVariant.with(Y_ROT_180));
-        multiPartGenerator.with(hanging.term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST), hangingVariant.with(Y_ROT_270));
+        multiPartGenerator.with(and(standing, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), modeVariant);
+        multiPartGenerator.with(and(standing, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), modeVariant.with(Y_ROT_90));
+        multiPartGenerator.with(and(standing, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), modeVariant.with(Y_ROT_180));
+        multiPartGenerator.with(and(standing, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), modeVariant.with(Y_ROT_270));
+        multiPartGenerator.with(and(hanging, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), hangingVariant);
+        multiPartGenerator.with(and(hanging, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), hangingVariant.with(Y_ROT_90));
+        multiPartGenerator.with(and(hanging, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), hangingVariant.with(Y_ROT_180));
+        multiPartGenerator.with(and(hanging, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), hangingVariant.with(Y_ROT_270));
 
         this.blockStateOutput.accept(multiPartGenerator);
     }
@@ -293,7 +299,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         var wheelModel = plainVariant(getModelLocation(block, "_wheel"));
         var grindingWheelModel = plainVariant(getModelLocation(block, "_wheel_grinding"));
 
-        this.createDefaultBlockItem(block, fullModelLoc);
+//        this.createDefaultBlockItem(block, fullModelLoc);
 
         MultiPartGenerator multiPartGenerator = MultiPartGenerator.multiPart(block);
 
@@ -303,14 +309,14 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         ConditionBuilder notGrinding = condition(BloodGrinderBlock.GRINDING, false);
 
         multiPartGenerator.with(baseModel);
-        multiPartGenerator.with(noFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH), bottomModelEmpty);
-        multiPartGenerator.with(noFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST), bottomModelEmpty.with(Y_ROT_90));
-        multiPartGenerator.with(noFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH), bottomModelEmpty.with(Y_ROT_180));
-        multiPartGenerator.with(noFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST), bottomModelEmpty.with(Y_ROT_270));
-        multiPartGenerator.with(hasFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH), bottomModel);
-        multiPartGenerator.with(hasFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST), bottomModel.with(Y_ROT_90));
-        multiPartGenerator.with(hasFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH), bottomModel.with(Y_ROT_180));
-        multiPartGenerator.with(hasFilter.term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST), bottomModel.with(Y_ROT_270));
+        multiPartGenerator.with(and(noFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), bottomModelEmpty);
+        multiPartGenerator.with(and(noFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), bottomModelEmpty.with(Y_ROT_90));
+        multiPartGenerator.with(and(noFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), bottomModelEmpty.with(Y_ROT_180));
+        multiPartGenerator.with(and(noFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), bottomModelEmpty.with(Y_ROT_270));
+        multiPartGenerator.with(and(hasFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)), bottomModel);
+        multiPartGenerator.with(and(hasFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)), bottomModel.with(Y_ROT_90));
+        multiPartGenerator.with(and(hasFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH)), bottomModel.with(Y_ROT_180));
+        multiPartGenerator.with(and(hasFilter, condition(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST)), bottomModel.with(Y_ROT_270));
 
         multiPartGenerator.with(notGrinding, wheelModel);
         multiPartGenerator.with(grinding, grindingWheelModel);
@@ -324,12 +330,13 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         ResourceLocation model = getModelLocation(block);
         ResourceLocation modelEmpty = getModelLocation(block, "_empty");
 
-        this.createDefaultBlockItem(block, model);
+//        this.createDefaultBlockItem(block, model);
 
 
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model))
                 .with(HORIZONTAL_ROTATION)
                 .with(PropertyDispatch.modify(BloodSieveBlock.HAS_FILTER)
+                        .select(true, x -> x)
                         .select(false, x -> x.withModel(modelEmpty))));
     }
 
@@ -418,7 +425,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition(HunterTableBlock.ALCHEMICAL_CAULDRON, true), plainVariant(mod("block/hunter_table/hunter_table_garlic")));
         withHorizontalRotation(generator, condition(HunterTableBlock.POTION_TABLE, true), plainVariant(mod("block/hunter_table/hunter_table_bottle")));
         this.blockStateOutput.accept(generator);
-        createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
+//        createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }
 
     protected void createAlchemicalFire() {
@@ -445,12 +452,12 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
     protected void createCoffin() {
         Stream.of(ModBlocks.COFFIN_WHITE, ModBlocks.COFFIN_ORANGE, ModBlocks.COFFIN_MAGENTA, ModBlocks.COFFIN_LIGHT_BLUE, ModBlocks.COFFIN_YELLOW, ModBlocks.COFFIN_LIME, ModBlocks.COFFIN_PINK, ModBlocks.COFFIN_GRAY, ModBlocks.COFFIN_LIGHT_GRAY, ModBlocks.COFFIN_CYAN, ModBlocks.COFFIN_PURPLE, ModBlocks.COFFIN_BLUE, ModBlocks.COFFIN_BROWN, ModBlocks.COFFIN_GREEN, ModBlocks.COFFIN_RED, ModBlocks.COFFIN_BLACK).map(DeferredHolder::get).forEach(block -> {
-            ModModelTemplates.COFFIN.create(VResourceLocation.mod("block/coffin/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            var coffin = ModModelTemplates.COFFIN_BOTTOM.create(VResourceLocation.mod("block/coffin/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            ModModelTemplates.COFFIN_TOP.create(VResourceLocation.mod("block/coffin/coffin_top_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
+            var coffin = ModModelTemplates.COFFIN.create(VResourceLocation.mod("block/coffin/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
+            var coffinBottom = ModModelTemplates.COFFIN_BOTTOM.create(VResourceLocation.mod("block/coffin/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
+            var coffinTop = ModModelTemplates.COFFIN_TOP.create(VResourceLocation.mod("block/coffin/coffin_top_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
             ResourceLocation model = decorateBlockModelLocation(modString("coffin_empty"));
             this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model)));
-            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(coffin));
+            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(coffinBottom));
         });
     }
 
@@ -463,7 +470,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true), plainVariant(mod("block/alchemy_table/alchemy_table_output_0")));
         withHorizontalRotation(generator, condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true), plainVariant(mod("block/alchemy_table/alchemy_table_output_1")));
         this.blockStateOutput.accept(generator);
-        createDefaultBlockItem(ModBlocks.ALCHEMY_TABLE.get(), model);
+//        createDefaultBlockItem(ModBlocks.ALCHEMY_TABLE.get(), model);
     }
 
     protected void createWeaponTable() {
@@ -476,19 +483,24 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition().term(WeaponTableBlock.LAVA, 4), plainVariant(mod("block/weapon_table/weapon_table_lava4")));
         withHorizontalRotation(generator, condition().term(WeaponTableBlock.LAVA, 5), plainVariant(mod("block/weapon_table/weapon_table_lava5")));
         this.blockStateOutput.accept(generator);
-        createDefaultBlockItem(ModBlocks.WEAPON_TABLE.get(), model);
+//        createDefaultBlockItem(ModBlocks.WEAPON_TABLE.get(), model);
     }
 
     protected void createTent() {
-
+        MultiVariant floor_br = plainVariant(ModModelTemplates.TENT.create(mod("block/tent_br"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_br")), this.modelOutput));
+        MultiVariant floor_bl = plainVariant(ModModelTemplates.TENT.create(mod("block/tent_bl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_bl")), this.modelOutput));
+        MultiVariant floor_tl = plainVariant(ModModelTemplates.TENT.create(mod("block/tent_tl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tl")), this.modelOutput));
+        MultiVariant floor_tr = plainVariant(ModModelTemplates.TENT.create(mod("block/tent_tr"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tr")), this.modelOutput));
+        MultiVariant tent_back = plainVariant(mod("block/tentback"));
+        MultiVariant tent_back_flipped = plainVariant(mod("block/tentback_flipped"));
         Stream.of(ModBlocks.TENT, ModBlocks.TENT_MAIN).map(DeferredHolder::get).forEach(block -> {
             MultiPartGenerator generator = MultiPartGenerator.multiPart(block);
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 0), plainVariant(ModModelTemplates.TENT.create(mod("block/tent_br"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_br")), this.modelOutput)));
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 1), plainVariant(ModModelTemplates.TENT.create(mod("block/tent_bl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_bl")), this.modelOutput)));
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 2), plainVariant(ModModelTemplates.TENT.create(mod("block/tent_tl"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tl")), this.modelOutput)));
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 3), plainVariant(ModModelTemplates.TENT.create(mod("block/tent_tr"), new TextureMapping().put(ModTextureSlots.FLOOR, mod("block/tent/floor_tr")), this.modelOutput)));
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 2), plainVariant(VResourceLocation.mod("block/tentback")), 2);
-            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 3), plainVariant(VResourceLocation.mod("block/tentback_flipped")));
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 0), floor_br);
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 1), floor_bl);
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 2), floor_tl);
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 3), floor_tr);
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 2), tent_back, 2);
+            withHorizontalRotation(generator, condition().term(TentBlock.POSITION, 3), tent_back_flipped);
             this.blockStateOutput.accept(generator);
         });
     }
@@ -530,6 +542,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.INFUSER.get())
                 .with(plainVariant(VResourceLocation.mod("block/blood_infuser/infuser")))
                 .with(condition(BloodInfuserBlock.IS_ACTIVE, true), plainVariant(VResourceLocation.mod("block/blood_infuser/infuser_blood"))));
-        this.createDefaultBlockItem(ModBlocks.INFUSER.get(), VResourceLocation.mod("block/blood_infuser/infuser"));
+//        this.createDefaultBlockItem(ModBlocks.INFUSER.get(), VResourceLocation.mod("block/blood_infuser/infuser"));
     }
 }

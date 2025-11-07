@@ -2,6 +2,7 @@
 	"credit": "Made by GridExpert",
 	"parent": "block/block",
 	"textures": {
+      "particle": "vampirism:block/blood_grinder_wheel",
 		"wheel": "vampirism:block/blood_grinder_wheel"
 	},
 	"render_type": "minecraft:cutout",

@@ -1,14 +1,10 @@
 {
-  "type": "vampirism:extended_add_spawns",
+  "type": "neoforge:add_spawns",
   "biomes": "#vampirism:has_spawn/vampire",
-  "excludedBiomes": "#vampirism:no_spawn/vampire",
   "spawners": {
-    "category": "vampirism:vampire",
-    "super": {
-      "type": "vampirism:vampire",
-      "maxCount": 3,
-      "minCount": 1,
-      "weight": 80
-    }
+    "type": "vampirism:vampire",
+    "maxCount": 3,
+    "minCount": 1,
+    "weight": 80
   }
 }

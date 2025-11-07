@@ -9,12 +9,10 @@
       "y": 90
     },
     "facing=north,lit=false": {
-      "model": "vampirism:block/wall_candle_stick_light_blue",
-      "y": 0
+      "model": "vampirism:block/wall_candle_stick_light_blue"
     },
     "facing=north,lit=true": {
-      "model": "vampirism:block/wall_candle_stick_light_blue_lit",
-      "y": 0
+      "model": "vampirism:block/wall_candle_stick_light_blue_lit"
     },
     "facing=south,lit=false": {
       "model": "vampirism:block/wall_candle_stick_light_blue",

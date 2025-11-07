@@ -14,7 +14,9 @@
     },
     "icon": {
       "components": {
-        "minecraft:item_name": "{\"translate\":\"filled_map.vampirism.ancient_remains\"}",
+        "minecraft:item_name": {
+          "translate": "filled_map.vampirism.ancient_remains"
+        },
         "minecraft:map_color": 8721929
       },
       "count": 1,

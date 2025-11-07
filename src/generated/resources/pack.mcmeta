@@ -1,6 +1,10 @@
 {
   "pack": {
     "description": "Vampirism resources",
-    "pack_format": 46
+    "max_format": [
+      69,
+      0
+    ],
+    "min_format": 69
   }
 }

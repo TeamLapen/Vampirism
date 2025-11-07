@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": "minecraft:chain",
+    "A": "minecraft:iron_chain",
     "C": "vampirism:candelabra",
     "I": "#c:ingots/iron"
   },

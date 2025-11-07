@@ -9,12 +9,10 @@
       "y": 90
     },
     "facing=north,has_filter=false": {
-      "model": "vampirism:block/blood_sieve_empty",
-      "y": 0
+      "model": "vampirism:block/blood_sieve_empty"
     },
     "facing=north,has_filter=true": {
-      "model": "vampirism:block/blood_sieve",
-      "y": 0
+      "model": "vampirism:block/blood_sieve"
     },
     "facing=south,has_filter=false": {
       "model": "vampirism:block/blood_sieve_empty",

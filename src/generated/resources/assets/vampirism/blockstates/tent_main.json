@@ -2,8 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "vampirism:block/tent_br",
-        "y": 0
+        "model": "vampirism:block/tent_br"
       },
       "when": {
         "AND": [
@@ -66,8 +65,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/tent_bl",
-        "y": 0
+        "model": "vampirism:block/tent_bl"
       },
       "when": {
         "AND": [
@@ -130,8 +128,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/tent_tl",
-        "y": 0
+        "model": "vampirism:block/tent_tl"
       },
       "when": {
         "AND": [
@@ -194,8 +191,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/tent_tr",
-        "y": 0
+        "model": "vampirism:block/tent_tr"
       },
       "when": {
         "AND": [
@@ -290,8 +286,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/tentback",
-        "y": 0
+        "model": "vampirism:block/tentback"
       },
       "when": {
         "AND": [
@@ -322,8 +317,7 @@
     },
     {
       "apply": {
-        "model": "vampirism:block/tentback_flipped",
-        "y": 0
+        "model": "vampirism:block/tentback_flipped"
       },
       "when": {
         "AND": [

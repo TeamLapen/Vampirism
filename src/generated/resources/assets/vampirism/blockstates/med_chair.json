@@ -9,12 +9,10 @@
       "y": 90
     },
     "facing=north,part=bottom": {
-      "model": "vampirism:block/medchairbase",
-      "y": 0
+      "model": "vampirism:block/medchairbase"
     },
     "facing=north,part=top": {
-      "model": "vampirism:block/medchairhead",
-      "y": 0
+      "model": "vampirism:block/medchairhead"
     },
     "facing=south,part=bottom": {
       "model": "vampirism:block/medchairbase",

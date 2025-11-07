@@ -8,7 +8,14 @@
         {
           "model": "vampirism:block/alchemical_fire_floor1"
         }
-      ]
+      ],
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
     },
     {
       "apply": [
@@ -24,7 +31,21 @@
         {
           "model": "vampirism:block/alchemical_fire_side_alt1"
         }
-      ]
+      ],
+      "when": {
+        "OR": [
+          {
+            "north": "true"
+          },
+          {
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        ]
+      }
     },
     {
       "apply": [
@@ -44,7 +65,21 @@
           "model": "vampirism:block/alchemical_fire_side_alt1",
           "y": 90
         }
-      ]
+      ],
+      "when": {
+        "OR": [
+          {
+            "east": "true"
+          },
+          {
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        ]
+      }
     },
     {
       "apply": [
@@ -64,7 +99,21 @@
           "model": "vampirism:block/alchemical_fire_side_alt1",
           "y": 180
         }
-      ]
+      ],
+      "when": {
+        "OR": [
+          {
+            "south": "true"
+          },
+          {
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        ]
+      }
     },
     {
       "apply": [
@@ -84,7 +133,40 @@
           "model": "vampirism:block/alchemical_fire_side_alt1",
           "y": 270
         }
-      ]
+      ],
+      "when": {
+        "OR": [
+          {
+            "west": "true"
+          },
+          {
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        ]
+      }
+    },
+    {
+      "apply": [
+        {
+          "model": "vampirism:block/alchemical_fire_up0"
+        },
+        {
+          "model": "vampirism:block/alchemical_fire_up1"
+        },
+        {
+          "model": "vampirism:block/alchemical_fire_up_alt0"
+        },
+        {
+          "model": "vampirism:block/alchemical_fire_up_alt1"
+        }
+      ],
+      "when": {
+        "up": "true"
+      }
     }
   ]
 }

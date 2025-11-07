@@ -2,6 +2,7 @@
 	"credit": "Made by Grid and FoxPrince",
 	"render_type": "minecraft:cutout",
 	"textures": {
+      "particle": "vampirism:item/garlic",
 		"garlic": "vampirism:item/garlic"
 	},
 	"elements": [

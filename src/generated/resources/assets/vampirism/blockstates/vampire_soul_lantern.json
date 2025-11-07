@@ -2,32 +2,15 @@
   "multipart": [
     {
       "apply": {
-        "model": "vampirism:block/vampire_soul_lantern",
-        "y": 0
+        "model": "vampirism:block/vampire_soul_lantern"
       },
       "when": {
         "AND": [
-          {
-            "facing": "north"
-          },
           {
             "hanging": "false"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/vampire_soul_lantern_hanging",
-        "y": 0
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "north"
           },
           {
-            "hanging": "true"
+            "facing": "north"
           }
         ]
       }
@@ -40,10 +23,57 @@
       "when": {
         "AND": [
           {
-            "facing": "east"
+            "hanging": "false"
           },
           {
+            "facing": "east"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/vampire_soul_lantern",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
             "hanging": "false"
+          },
+          {
+            "facing": "south"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/vampire_soul_lantern",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "hanging": "false"
+          },
+          {
+            "facing": "west"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/vampire_soul_lantern_hanging"
+      },
+      "when": {
+        "AND": [
+          {
+            "hanging": "true"
+          },
+          {
+            "facing": "north"
           }
         ]
       }
@@ -56,26 +86,10 @@
       "when": {
         "AND": [
           {
+            "hanging": "true"
+          },
+          {
             "facing": "east"
-          },
-          {
-            "hanging": "true"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/vampire_soul_lantern",
-        "y": 180
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "south"
-          },
-          {
-            "hanging": "false"
           }
         ]
       }
@@ -88,26 +102,10 @@
       "when": {
         "AND": [
           {
-            "facing": "south"
-          },
-          {
             "hanging": "true"
-          }
-        ]
-      }
-    },
-    {
-      "apply": {
-        "model": "vampirism:block/vampire_soul_lantern",
-        "y": 270
-      },
-      "when": {
-        "AND": [
-          {
-            "facing": "west"
           },
           {
-            "hanging": "false"
+            "facing": "south"
           }
         ]
       }
@@ -120,10 +118,10 @@
       "when": {
         "AND": [
           {
-            "facing": "west"
+            "hanging": "true"
           },
           {
-            "hanging": "true"
+            "facing": "west"
           }
         ]
       }

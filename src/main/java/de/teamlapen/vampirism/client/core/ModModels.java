@@ -35,7 +35,7 @@ public class ModModels {
     public enum CoffinType {
         BOTTOM("bottom", "_bottom"),
         TOP("top", "_top"),
-        MAIN("main", "_");
+        MAIN("main", "");
 
         private final String name;
         private final String modelSuffix;

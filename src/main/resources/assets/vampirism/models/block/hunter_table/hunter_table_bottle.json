@@ -2,6 +2,7 @@
 	"credit": "Made by Grid and FoxPrince",
 	"render_type": "minecraft:cutout",
 	"textures": {
+      "particle": "vampirism:item/vampire_blood_bottle",
 		"bottle": "vampirism:item/vampire_blood_bottle"
 	},
 	"elements": [

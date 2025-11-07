@@ -18,7 +18,7 @@
       }
     ],
     "snowy=true": {
-      "model": "vampirism:block/cursed_grass_snowy"
+      "model": "vampirism:block/cursed_grass_snow"
     }
   }
 }
